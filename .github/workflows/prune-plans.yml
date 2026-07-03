@@ -1,0 +1,19 @@
+name: planloft-prune
+# Installed into <user>/planloft-plans by the github-pages adapter (ADR-0001 §D15, §D20).
+# Daily prune of expired plan folders.
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Prune expired plans
+        run: node .planloft/prune.mjs

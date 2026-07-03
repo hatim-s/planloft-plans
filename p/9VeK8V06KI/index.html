@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>planloft — hello</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body>
+<main class="planloft-plan">
+<article><h1>planloft — hello</h1>
+<p>This page was published by <strong>planloft</strong> — a Claude Code / Codex plugin that hoists
+agent-written plans and docs into a themed, shareable store.</p>
+<h2>What just happened</h2>
+<ul>
+<li>A plan was captured to a per-project global store (<code>~/.planloft/docs/&lt;project&gt;/</code>).</li>
+<li><code>planloft deploy</code> rendered it to self-contained HTML with the <code>minimal</code> theme.</li>
+<li>It was pushed to a public GitHub Pages repo and served at an unguessable URL.</li>
+<li>It auto-expires after 30 days unless redeployed.</li>
+</ul>
+<h2>Steps it ran</h2>
+<ul>
+<li>resolve target path + theme</li>
+<li>render markdown → HTML (marked)</li>
+<li>ensure repo + Pages + prune Action</li>
+<li>commit, push, return the link</li>
+</ul>
+</article>
+</main>
+</body>
+</html>

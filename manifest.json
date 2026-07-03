@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "deploys": [
+    {
+      "id": "9VeK8V06KI",
+      "project": "path-c60c2d",
+      "slug": "planloft-hello",
+      "title": "planloft — hello",
+      "kind": "plan",
+      "createdAt": "2026-07-03T22:05:45.389Z",
+      "expiresAt": "2026-08-02T22:05:45.390Z"
+    }
+  ]
+}
