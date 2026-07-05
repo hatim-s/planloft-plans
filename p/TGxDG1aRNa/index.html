@@ -188,12 +188,13 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       list-style-type: square;
     }
   
-.planloft-plan{max-width:none;margin:0;padding:0;background:#000;color:#fff;}
-.planloft-plan article{margin:0;background:#000;color:#fff;}
-.planloft-plan > article > main{width:min(980px,calc(100vw - 32px));margin:0 auto;padding:56px 0 96px;}
+.planloft-plan{max-width:none!important;width:auto!important;margin:0!important;padding:0!important;background:#000!important;color:#fff!important;}
+.planloft-plan article{background:#000!important;color:#fff!important;}
+.planloft-plan article>.bolt-plan{width:min(980px,calc(100vw - 32px));margin:0 auto;padding:56px 0 96px;}
+.planloft-plan article>.bolt-plan pre,.planloft-plan article>.bolt-plan code{white-space:pre-wrap;}
 
 </style>
-<main>
+<div class="bolt-plan">
 
   <h1>Bolt Derived Path Dependencies Plan</h1>
   <p class="meta">Goal: add optional, generic, path-level derived state to Bolt without hardcoding component dependency semantics.</p>
@@ -203,36 +204,35 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   <section>
     <h2>Intent</h2>
 
-<pre><code>&lt;h3&gt;Why We Are Doing This&lt;/h3&gt;
-&lt;p&gt;Bolt already solves path-indexed subscriptions: components read a path, writes notify that path and parent paths, and unrelated subscribers stay asleep. Dynamic UI builders need one more primitive: path-indexed derivation. A component&#39;s persisted state may be computed from other arbitrary paths, and downstream components may subscribe to that computed state as if it were normal store state.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Dynamic UI use case: any node/component can expose state at a path.&lt;/li&gt;
-  &lt;li&gt;Dependency use case: any node/component can derive state from any other path or set of paths.&lt;/li&gt;
-  &lt;li&gt;Chaining use case: &lt;code&gt;A.input&lt;/code&gt; changes, &lt;code&gt;B.value&lt;/code&gt; recomputes, then &lt;code&gt;C.value&lt;/code&gt; recomputes from &lt;code&gt;B.value&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Mixed ownership use case: some paths stay manual; some paths are derived; some derived paths read manual override paths.&lt;/li&gt;
-  &lt;li&gt;Genericity requirement: Bolt must not know about components, forms, graphs, canvases, screens, or UI node IDs. It should only know paths, reads, writes, derivations, and listeners.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Why We Are Doing This</h3>
+    <p>Bolt already solves path-indexed subscriptions: components read a path, writes notify that path and parent paths, and unrelated subscribers stay asleep. Dynamic UI builders need one more primitive: path-indexed derivation. A component's persisted state may be computed from other arbitrary paths, and downstream components may subscribe to that computed state as if it were normal store state.</p>
+    <ul>
+      <li>Dynamic UI use case: any node/component can expose state at a path.</li>
+      <li>Dependency use case: any node/component can derive state from any other path or set of paths.</li>
+      <li>Chaining use case: <code>A.input</code> changes, <code>B.value</code> recomputes, then <code>C.value</code> recomputes from <code>B.value</code>.</li>
+      <li>Mixed ownership use case: some paths stay manual; some paths are derived; some derived paths read manual override paths.</li>
+      <li>Genericity requirement: Bolt must not know about components, forms, graphs, canvases, screens, or UI node IDs. It should only know paths, reads, writes, derivations, and listeners.</li>
+    </ul>
 
-&lt;h3&gt;What We Are Doing&lt;/h3&gt;
-&lt;p&gt;Add a store-level &lt;code&gt;derive&lt;/code&gt; API. A derived registration has one target path, a set of source paths, and a pure compute function. When a source path is affected by a write, Bolt recomputes the target path before notifying React subscribers. Derived writes flow through the same path notification system, so downstream subscribers and downstream derived targets update naturally.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;New public primitive: &lt;code&gt;api.derive(targetPath, sourcePaths, compute, options?)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;New internal graph: derived nodes indexed by target path and source path.&lt;/li&gt;
-  &lt;li&gt;New update pipeline: user write -&gt; derived graph settles -&gt; deduped listener notification.&lt;/li&gt;
-  &lt;li&gt;New safety layer: cycle detection, duplicate target rejection, manual-write policy, dispose cleanup.&lt;/li&gt;
-  &lt;li&gt;New docs: explain derived paths as optional generic path runtime, not component graph feature.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>What We Are Doing</h3>
+    <p>Add a store-level <code>derive</code> API. A derived registration has one target path, a set of source paths, and a pure compute function. When a source path is affected by a write, Bolt recomputes the target path before notifying React subscribers. Derived writes flow through the same path notification system, so downstream subscribers and downstream derived targets update naturally.</p>
+    <ul>
+      <li>New public primitive: <code>api.derive(targetPath, sourcePaths, compute, options?)</code>.</li>
+      <li>New internal graph: derived nodes indexed by target path and source path.</li>
+      <li>New update pipeline: user write -> derived graph settles -> deduped listener notification.</li>
+      <li>New safety layer: cycle detection, duplicate target rejection, manual-write policy, dispose cleanup.</li>
+      <li>New docs: explain derived paths as optional generic path runtime, not component graph feature.</li>
+    </ul>
 
-&lt;h3&gt;How We Are Doing It&lt;/h3&gt;
-&lt;p&gt;Keep the core store path-centric. Register derived dependencies by normalized path keys. On every successful write, compute the transitive set of affected derived nodes, topologically order them, recompute targets, add changed targets back into the changed-path set, then notify all affected listeners once. If no derived registrations exist, the hot path stays almost identical to current Bolt.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Do not add React-only state. Derivation lives in &lt;code&gt;createInternalBoltStore&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Do not add selectors. Computation is explicit and target-path materialized.&lt;/li&gt;
-  &lt;li&gt;Do not add async derivation in v1. Async belongs in effects/jobs later.&lt;/li&gt;
-  &lt;li&gt;Do not allow arbitrary writes inside compute. Compute returns the target value only.&lt;/li&gt;
-  &lt;li&gt;Do not make derived state mandatory. Empty graph means current behavior.&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
+    <h3>How We Are Doing It</h3>
+    <p>Keep the core store path-centric. Register derived dependencies by normalized path keys. On every successful write, compute the transitive set of affected derived nodes, topologically order them, recompute targets, add changed targets back into the changed-path set, then notify all affected listeners once. If no derived registrations exist, the hot path stays almost identical to current Bolt.</p>
+    <ul>
+      <li>Do not add React-only state. Derivation lives in <code>createInternalBoltStore</code>.</li>
+      <li>Do not add selectors. Computation is explicit and target-path materialized.</li>
+      <li>Do not add async derivation in v1. Async belongs in effects/jobs later.</li>
+      <li>Do not allow arbitrary writes inside compute. Compute returns the target value only.</li>
+      <li>Do not make derived state mandatory. Empty graph means current behavior.</li>
+    </ul>
   </section>
 
   <section>
@@ -253,60 +253,64 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   <section>
     <h2>Public API Plan</h2>
 
-<pre><code>&lt;h3&gt;Store API&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;type BoltDeriveOptions&amp;lt;TValue&amp;gt; = {
-</code></pre>
-<p>  equality?: (previous: TValue, next: TValue) =&gt; boolean;
+    <h3>Store API</h3>
+    <pre><code>type BoltDeriveOptions&lt;TValue&gt; = {
+  equality?: (previous: TValue, next: TValue) =&gt; boolean;
   initialize?: boolean;
-  manualWrites?: &quot;reject&quot; | &quot;allow&quot;;
-};</p>
-<p>type BoltDerivedContext&lt;TState extends object, TValue&gt; = {
-  get: BoltStoreApi&lt;TState&gt;[&quot;get&quot;];
+  manualWrites?: "reject" | "allow";
+};
+
+type BoltDerivedContext&lt;TState extends object, TValue&gt; = {
+  get: BoltStoreApi&lt;TState&gt;["get"];
   getState: () =&gt; TState;
   previous: TValue;
   targetPath: string;
   sourcePaths: readonly string[];
   changedPaths: readonly string[];
-};</p>
-<p>type BoltDeriveCompute&lt;TState extends object, TValue&gt; = (
+};
+
+type BoltDeriveCompute&lt;TState extends object, TValue&gt; = (
   ctx: BoltDerivedContext&lt;TState, TValue&gt;,
-) =&gt; TValue;</p>
-<p>derive: &lt;TargetPath extends BoltPath&lt;TState&gt;&gt;(
+) =&gt; TValue;
+
+derive: &lt;TargetPath extends BoltPath&lt;TState&gt;&gt;(
   targetPath: TargetPath,
   sourcePaths: readonly BoltRuntimePath[],
   compute: BoltDeriveCompute&lt;TState, BoltPathValue&lt;TState, TargetPath&gt;&gt;,
   options?: BoltDeriveOptions&lt;BoltPathValue&lt;TState, TargetPath&gt;&gt;,
-) =&gt; () =&gt; void;</code></pre></p>
-<pre><code>&lt;h3&gt;Usage&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;const dispose = api.derive(
-</code></pre>
-<p>  &quot;B.value&quot;,
-  [&quot;A.x1.y1&quot;, &quot;A.other&quot;, &quot;B.override&quot;],
+) =&gt; () =&gt; void;</code></pre>
+
+    <h3>Usage</h3>
+    <pre><code>const dispose = api.derive(
+  "B.value",
+  ["A.x1.y1", "A.other", "B.override"],
   ({ get, previous }) =&gt; {
-    const override = get(&quot;B.override&quot;);
+    const override = get("B.override");
     if (override !== undefined) return override;
-    return computeB(get(&quot;A.x1.y1&quot;), get(&quot;A.other&quot;), previous);
+    return computeB(get("A.x1.y1"), get("A.other"), previous);
   },
-);</code></pre></p>
-<pre><code>&lt;h3&gt;React Usage&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;function DynamicNodeRuntime({ node }) {
-</code></pre>
-<p>  const api = useApi();</p>
-<p>  useEffect(() =&gt; {
+);</code></pre>
+
+    <h3>React Usage</h3>
+    <pre><code>function DynamicNodeRuntime({ node }) {
+  const api = useApi();
+
+  useEffect(() =&gt; {
     return api.derive(node.outputPath, node.inputPaths, ({ get, previous }) =&gt; {
       return node.compute(get, previous);
     });
-  }, [api, node]);</p>
-<p>  return null;
-}</code></pre></p>
-<pre><code>&lt;h3&gt;Manual State Policy&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Default: &lt;code&gt;manualWrites: &quot;reject&quot;&lt;/code&gt;. A normal &lt;code&gt;set(targetPath, ...)&lt;/code&gt; to a derived target throws. This prevents silent fights between user writes and derived writes.&lt;/li&gt;
-  &lt;li&gt;Escape hatch: &lt;code&gt;manualWrites: &quot;allow&quot;&lt;/code&gt;. Normal writes can change the target, but the next source change may overwrite it. Document this as advanced behavior.&lt;/li&gt;
-  &lt;li&gt;Recommended dynamic UI pattern: manual state lives at a separate source path such as &lt;code&gt;B.override&lt;/code&gt; or &lt;code&gt;B.local&lt;/code&gt;; derived output lives at &lt;code&gt;B.value&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Do not support compute functions that call &lt;code&gt;set&lt;/code&gt;. Compute returns one target value. Multi-target derivation can be a later feature.&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
+  }, [api, node]);
+
+  return null;
+}</code></pre>
+
+    <h3>Manual State Policy</h3>
+    <ul>
+      <li>Default: <code>manualWrites: "reject"</code>. A normal <code>set(targetPath, ...)</code> to a derived target throws. This prevents silent fights between user writes and derived writes.</li>
+      <li>Escape hatch: <code>manualWrites: "allow"</code>. Normal writes can change the target, but the next source change may overwrite it. Document this as advanced behavior.</li>
+      <li>Recommended dynamic UI pattern: manual state lives at a separate source path such as <code>B.override</code> or <code>B.local</code>; derived output lives at <code>B.value</code>.</li>
+      <li>Do not support compute functions that call <code>set</code>. Compute returns one target value. Multi-target derivation can be a later feature.</li>
+    </ul>
   </section>
 
   <section>
@@ -365,84 +369,90 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   return a === b || isPrefixPath(a, b) || isPrefixPath(b, a);
 }
 
-<p>function isPrefixPath(prefix: string, path: string) {
-  return path.startsWith(prefix + &quot;.&quot;);
+function isPrefixPath(prefix: string, path: string) {
+  return path.startsWith(prefix + ".");
 }</code></pre>
-  </section></p>
+  </section>
+
   <section>
     <h2>Internal Architecture</h2>
 
-<pre><code>&lt;h3&gt;Data Structures&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;type DerivedNode&amp;lt;TState extends object&amp;gt; = {
-</code></pre>
-<p>  id: number;
+    <h3>Data Structures</h3>
+    <pre><code>type DerivedNode&lt;TState extends object&gt; = {
+  id: number;
   targetPathKey: string;
   targetSegments: readonly string[];
   sourcePathKeys: readonly string[];
   compute: BoltDeriveCompute&lt;TState, unknown&gt;;
   equality: (previous: unknown, next: unknown) =&gt; boolean;
-  manualWrites: &quot;reject&quot; | &quot;allow&quot;;
-};</p>
-<p>const listenersByPath = new Map&lt;string, Set&lt;Listener&gt;&gt;();
+  manualWrites: "reject" | "allow";
+};
+
+const listenersByPath = new Map&lt;string, Set&lt;Listener&gt;&gt;();
 const derivedByTarget = new Map&lt;string, DerivedNode&lt;TState&gt;&gt;();
 const derivedNodes = new Map&lt;number, DerivedNode&lt;TState&gt;&gt;();
-let nextDerivedId = 1;</code></pre></p>
-<pre><code>&lt;h3&gt;Why Not Only &lt;code&gt;sourcePath -&amp;gt; nodes&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;A source dependency on &lt;code&gt;A.x.y&lt;/code&gt; must recompute when &lt;code&gt;A&lt;/code&gt; is replaced. A source dependency on &lt;code&gt;A&lt;/code&gt; must recompute when &lt;code&gt;A.x.y&lt;/code&gt; changes. Exact source maps alone miss one side. Start with a simple scan across registered derived nodes, then add a trie later only if benchmarks require it.&lt;/p&gt;
+let nextDerivedId = 1;</code></pre>
 
-&lt;h3&gt;Hot Path Constraint&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;If &lt;code&gt;derivedNodes.size === 0&lt;/code&gt;, &lt;code&gt;set&lt;/code&gt; should keep current behavior: write path, notify root/prefixes, return.&lt;/li&gt;
-  &lt;li&gt;If graph exists, call derivation settlement before notification.&lt;/li&gt;
-  &lt;li&gt;Do not run graph scans for empty graph.&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
+    <h3>Why Not Only <code>sourcePath -&gt; nodes</code></h3>
+    <p>A source dependency on <code>A.x.y</code> must recompute when <code>A</code> is replaced. A source dependency on <code>A</code> must recompute when <code>A.x.y</code> changes. Exact source maps alone miss one side. Start with a simple scan across registered derived nodes, then add a trie later only if benchmarks require it.</p>
+
+    <h3>Hot Path Constraint</h3>
+    <ul>
+      <li>If <code>derivedNodes.size === 0</code>, <code>set</code> should keep current behavior: write path, notify root/prefixes, return.</li>
+      <li>If graph exists, call derivation settlement before notification.</li>
+      <li>Do not run graph scans for empty graph.</li>
+    </ul>
   </section>
 
   <section>
     <h2>Update Pipeline</h2>
 
-<pre><code>&lt;h3&gt;Current Pipeline&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;set(path, value)
-</code></pre>
-<p>  normalize path
+    <h3>Current Pipeline</h3>
+    <pre><code>set(path, value)
+  normalize path
   write state
   if root unchanged: return
   if root path: notifyAll()
-  else: notifyPrefixes(path)</code></pre></p>
-<pre><code>&lt;h3&gt;New Pipeline&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;set(path, value)
-</code></pre>
-<p>  normalize path
+  else: notifyPrefixes(path)</code></pre>
+
+    <h3>New Pipeline</h3>
+    <pre><code>set(path, value)
+  normalize path
   reject manual write if path is owned derived target and manualWrites is reject
   write state
-  if root unchanged: return</p>
-<p>  changedPathKeys = Set(pathKey)</p>
-<p>  if derived graph exists:
+  if root unchanged: return
+
+  changedPathKeys = Set(pathKey)
+
+  if derived graph exists:
     derivedChangedPathKeys = settleDerived(changedPathKeys)
-    merge derivedChangedPathKeys into changedPathKeys</p>
-<p>  notifyChangedPaths(changedPathKeys)</code></pre></p>
-<pre><code>&lt;h3&gt;Derived Settlement&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;settleDerived(initialChangedPathKeys)
-</code></pre>
-<p>  affectedNodes = collectTransitiveAffectedNodes(initialChangedPathKeys)
+    merge derivedChangedPathKeys into changedPathKeys
+
+  notifyChangedPaths(changedPathKeys)</code></pre>
+
+    <h3>Derived Settlement</h3>
+    <pre><code>settleDerived(initialChangedPathKeys)
+  affectedNodes = collectTransitiveAffectedNodes(initialChangedPathKeys)
   orderedNodes = topologicallySortAffectedNodes(affectedNodes)
-  allChanged = Set()</p>
-<p>  for node of orderedNodes:
+  allChanged = Set()
+
+  for node of orderedNodes:
     previous = read target
     next = node.compute(context)
     if node.equality(previous, next): continue
     write target as derived write
-    allChanged.add(node.targetPathKey)</p>
-<p>  return allChanged</code></pre></p>
-<pre><code>&lt;h3&gt;Transitive Collection&lt;/h3&gt;
-&lt;p&gt;When &lt;code&gt;A&lt;/code&gt; changes and &lt;code&gt;B&lt;/code&gt; derives from &lt;code&gt;A&lt;/code&gt;, &lt;code&gt;B&lt;/code&gt; is affected. When &lt;code&gt;C&lt;/code&gt; derives from &lt;code&gt;B&lt;/code&gt;, &lt;code&gt;C&lt;/code&gt; must also be included before notification. Build this set before recomputing so ordering can be stable.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;collectTransitiveAffectedNodes(changedPathKeys)
-</code></pre>
-<p>  queue = [...changedPathKeys]
+    allChanged.add(node.targetPathKey)
+
+  return allChanged</code></pre>
+
+    <h3>Transitive Collection</h3>
+    <p>When <code>A</code> changes and <code>B</code> derives from <code>A</code>, <code>B</code> is affected. When <code>C</code> derives from <code>B</code>, <code>C</code> must also be included before notification. Build this set before recomputing so ordering can be stable.</p>
+    <pre><code>collectTransitiveAffectedNodes(changedPathKeys)
+  queue = [...changedPathKeys]
   affected = Set()
-  seenChangeKeys = Set(queue)</p>
-<p>  while queue not empty:
+  seenChangeKeys = Set(queue)
+
+  while queue not empty:
     changed = queue.shift()
     for node of derivedNodes.values():
       if node already affected: continue
@@ -450,9 +460,11 @@ let nextDerivedId = 1;</code></pre></p>
         affected.add(node)
         if node.targetPathKey not in seenChangeKeys:
           seenChangeKeys.add(node.targetPathKey)
-          queue.push(node.targetPathKey)</p>
-<p>  return affected</code></pre>
-  </section></p>
+          queue.push(node.targetPathKey)
+
+  return affected</code></pre>
+  </section>
+
   <section>
     <h2>Topological Ordering And Cycles</h2>
     <p>Derived nodes form a graph. Node <code>X</code> must compute before node <code>Y</code> when <code>Y</code> has a source path overlapping <code>X.targetPathKey</code>.</p>
@@ -472,17 +484,18 @@ let nextDerivedId = 1;</code></pre></p>
     <pre><code>function notifyChangedPaths(changedPathKeys: Iterable&lt;string&gt;) {
   const listeners = new Set&lt;Listener&gt;();
 
-<p>  for (const pathKey of changedPathKeys) {
-    if (pathKey === &quot;&quot;) {
+  for (const pathKey of changedPathKeys) {
+    if (pathKey === "") {
       collectAllListeners(listenersByPath, listeners);
     } else {
-      collectPath(listeners, &quot;&quot;);
+      collectPath(listeners, "");
       for (const prefix of pathPrefixes(pathKey)) {
         collectPath(listeners, prefix);
       }
     }
-  }</p>
-<p>  listeners.forEach((listener) =&gt; listener());
+  }
+
+  listeners.forEach((listener) =&gt; listener());
 }</code></pre>
     <ul>
       <li>Dedup listeners so one component subscribed to multiple affected paths renders once.</li>
@@ -490,111 +503,111 @@ let nextDerivedId = 1;</code></pre></p>
       <li>Do not notify derived target subscribers until all derived paths settle.</li>
       <li>Root replacement still notifies all subscribers.</li>
     </ul>
-  </section></p>
+  </section>
+
   <section>
     <h2>Implementation Steps</h2>
 
-<pre><code>&lt;h3&gt;Step 1: Add Types&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Edit &lt;code&gt;src/bolt/types.ts&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;BoltDeriveOptions&lt;/code&gt;, &lt;code&gt;BoltDerivedContext&lt;/code&gt;, &lt;code&gt;BoltDeriveCompute&lt;/code&gt;, and &lt;code&gt;BoltDerive&lt;/code&gt; types.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;derive&lt;/code&gt; to &lt;code&gt;BoltStoreApi&amp;lt;TState&amp;gt;&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;No separate React hook in v1. &lt;code&gt;useApi().derive&lt;/code&gt; is enough.&lt;/li&gt;
-  &lt;li&gt;Export public derive types from &lt;code&gt;src/bolt/bolt.ts&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 1: Add Types</h3>
+    <ul class="checklist">
+      <li>Edit <code>src/bolt/types.ts</code>.</li>
+      <li>Add <code>BoltDeriveOptions</code>, <code>BoltDerivedContext</code>, <code>BoltDeriveCompute</code>, and <code>BoltDerive</code> types.</li>
+      <li>Add <code>derive</code> to <code>BoltStoreApi&lt;TState&gt;</code>.</li>
+      <li>No separate React hook in v1. <code>useApi().derive</code> is enough.</li>
+      <li>Export public derive types from <code>src/bolt/bolt.ts</code>.</li>
+    </ul>
 
-&lt;h3&gt;Step 2: Add Path Helpers&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Edit &lt;code&gt;src/bolt/utils.ts&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;isPrefixPath(prefix, path)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;pathsOverlap(a, b)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;pathPrefixes(pathKey)&lt;/code&gt; returning &lt;code&gt;[&quot;a&quot;, &quot;a.b&quot;, &quot;a.b.c&quot;]&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add listener collection helpers or replace &lt;code&gt;notifyPrefixes&lt;/code&gt; with a deduped &lt;code&gt;notifyChangedPaths&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Keep existing exported functions if tests/docs still use them, or update imports carefully.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 2: Add Path Helpers</h3>
+    <ul class="checklist">
+      <li>Edit <code>src/bolt/utils.ts</code>.</li>
+      <li>Add <code>isPrefixPath(prefix, path)</code>.</li>
+      <li>Add <code>pathsOverlap(a, b)</code>.</li>
+      <li>Add <code>pathPrefixes(pathKey)</code> returning <code>["a", "a.b", "a.b.c"]</code>.</li>
+      <li>Add listener collection helpers or replace <code>notifyPrefixes</code> with a deduped <code>notifyChangedPaths</code>.</li>
+      <li>Keep existing exported functions if tests/docs still use them, or update imports carefully.</li>
+    </ul>
 
-&lt;h3&gt;Step 3: Split Write From Notify&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Edit &lt;code&gt;src/bolt/bolt.ts&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Extract current write body into &lt;code&gt;writePathKey(pathKey, valueOrUpdater)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Return &lt;code&gt;true&lt;/code&gt; when root state reference changed; return &lt;code&gt;false&lt;/code&gt; for no-op.&lt;/li&gt;
-  &lt;li&gt;Do not notify inside &lt;code&gt;writePathKey&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Keep root write behavior: root path replaces whole state directly.&lt;/li&gt;
-  &lt;li&gt;Keep nested write behavior: use current Mutative &lt;code&gt;create&lt;/code&gt; + &lt;code&gt;writePath&lt;/code&gt; path unless repository has already moved to a custom immutable writer.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 3: Split Write From Notify</h3>
+    <ul class="checklist">
+      <li>Edit <code>src/bolt/bolt.ts</code>.</li>
+      <li>Extract current write body into <code>writePathKey(pathKey, valueOrUpdater)</code>.</li>
+      <li>Return <code>true</code> when root state reference changed; return <code>false</code> for no-op.</li>
+      <li>Do not notify inside <code>writePathKey</code>.</li>
+      <li>Keep root write behavior: root path replaces whole state directly.</li>
+      <li>Keep nested write behavior: use current Mutative <code>create</code> + <code>writePath</code> path unless repository has already moved to a custom immutable writer.</li>
+    </ul>
 
-&lt;h3&gt;Step 4: Add Derived Registration&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Add &lt;code&gt;derive&lt;/code&gt; inside &lt;code&gt;createInternalBoltStore&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Normalize target and source paths once at registration.&lt;/li&gt;
-  &lt;li&gt;Reject duplicate target path already present in &lt;code&gt;derivedByTarget&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Reject source path that overlaps target path.&lt;/li&gt;
-  &lt;li&gt;Create &lt;code&gt;DerivedNode&lt;/code&gt; with stable &lt;code&gt;id&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Default &lt;code&gt;equality&lt;/code&gt; to &lt;code&gt;Object.is&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Default &lt;code&gt;initialize&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Default &lt;code&gt;manualWrites&lt;/code&gt; to &lt;code&gt;&quot;reject&quot;&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Register node in &lt;code&gt;derivedNodes&lt;/code&gt; and &lt;code&gt;derivedByTarget&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Run graph cycle validation after temporary registration; rollback if invalid.&lt;/li&gt;
-  &lt;li&gt;If &lt;code&gt;initialize !== false&lt;/code&gt;, compute target once, write if changed, settle downstream, notify changed paths.&lt;/li&gt;
-  &lt;li&gt;Return dispose function that removes node from both maps. Dispose must be idempotent.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 4: Add Derived Registration</h3>
+    <ul class="checklist">
+      <li>Add <code>derive</code> inside <code>createInternalBoltStore</code>.</li>
+      <li>Normalize target and source paths once at registration.</li>
+      <li>Reject duplicate target path already present in <code>derivedByTarget</code>.</li>
+      <li>Reject source path that overlaps target path.</li>
+      <li>Create <code>DerivedNode</code> with stable <code>id</code>.</li>
+      <li>Default <code>equality</code> to <code>Object.is</code>.</li>
+      <li>Default <code>initialize</code> to <code>true</code>.</li>
+      <li>Default <code>manualWrites</code> to <code>"reject"</code>.</li>
+      <li>Register node in <code>derivedNodes</code> and <code>derivedByTarget</code>.</li>
+      <li>Run graph cycle validation after temporary registration; rollback if invalid.</li>
+      <li>If <code>initialize !== false</code>, compute target once, write if changed, settle downstream, notify changed paths.</li>
+      <li>Return dispose function that removes node from both maps. Dispose must be idempotent.</li>
+    </ul>
 
-&lt;h3&gt;Step 5: Add Settlement&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Add &lt;code&gt;collectTransitiveAffectedNodes&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;topologicallySortDerivedNodes&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;settleDerived(initialChangedPathKeys)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Compute context uses current post-write state.&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;changedPaths&lt;/code&gt; in context should include the original write path and any prior derived writes in this transaction.&lt;/li&gt;
-  &lt;li&gt;Compute receives &lt;code&gt;previous&lt;/code&gt; target value from current state before this node writes.&lt;/li&gt;
-  &lt;li&gt;Derived target write uses same immutable write function but bypasses manual-write rejection.&lt;/li&gt;
-  &lt;li&gt;If compute throws, let &lt;code&gt;set&lt;/code&gt; throw. Do not partially notify listeners after a failed compute.&lt;/li&gt;
-  &lt;li&gt;Document atomicity limit: state may already have been written before compute throws unless a full transaction rollback layer is added. For v1, prefer fail-fast during tests; later transaction rollback can be separate.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 5: Add Settlement</h3>
+    <ul class="checklist">
+      <li>Add <code>collectTransitiveAffectedNodes</code>.</li>
+      <li>Add <code>topologicallySortDerivedNodes</code>.</li>
+      <li>Add <code>settleDerived(initialChangedPathKeys)</code>.</li>
+      <li>Compute context uses current post-write state.</li>
+      <li><code>changedPaths</code> in context should include the original write path and any prior derived writes in this transaction.</li>
+      <li>Compute receives <code>previous</code> target value from current state before this node writes.</li>
+      <li>Derived target write uses same immutable write function but bypasses manual-write rejection.</li>
+      <li>If compute throws, let <code>set</code> throw. Do not partially notify listeners after a failed compute.</li>
+      <li>Document atomicity limit: state may already have been written before compute throws unless a full transaction rollback layer is added. For v1, prefer fail-fast during tests; later transaction rollback can be separate.</li>
+    </ul>
 
-&lt;h3&gt;Step 6: Add Manual-Write Guard&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Before user-origin writes, check &lt;code&gt;derivedByTarget.get(pathKey)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;If found and &lt;code&gt;manualWrites === &quot;reject&quot;&lt;/code&gt;, throw clear error: &lt;code&gt;Bolt derived target &quot;B.value&quot; cannot be set directly. Write an input/override path or register with manualWrites: &quot;allow&quot;.&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Derived-origin writes bypass this guard.&lt;/li&gt;
-  &lt;li&gt;If &lt;code&gt;manualWrites === &quot;allow&quot;&lt;/code&gt;, user writes target normally and downstream derivations can still react.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 6: Add Manual-Write Guard</h3>
+    <ul class="checklist">
+      <li>Before user-origin writes, check <code>derivedByTarget.get(pathKey)</code>.</li>
+      <li>If found and <code>manualWrites === "reject"</code>, throw clear error: <code>Bolt derived target "B.value" cannot be set directly. Write an input/override path or register with manualWrites: "allow".</code></li>
+      <li>Derived-origin writes bypass this guard.</li>
+      <li>If <code>manualWrites === "allow"</code>, user writes target normally and downstream derivations can still react.</li>
+    </ul>
 
-&lt;h3&gt;Step 7: Add Notification Deduping&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Replace final &lt;code&gt;notifyPrefixes(listenersByPath, pathKey)&lt;/code&gt; with &lt;code&gt;notifyChangedPaths(listenersByPath, changedPathKeys)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Preserve root replacement behavior: root changed path means notify every unique listener.&lt;/li&gt;
-  &lt;li&gt;For multiple changed nested paths, collect root/prefix listeners for each path and call each listener once.&lt;/li&gt;
-  &lt;li&gt;Keep unsubscribe-during-notification safety by copying listeners before invocation.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 7: Add Notification Deduping</h3>
+    <ul class="checklist">
+      <li>Replace final <code>notifyPrefixes(listenersByPath, pathKey)</code> with <code>notifyChangedPaths(listenersByPath, changedPathKeys)</code>.</li>
+      <li>Preserve root replacement behavior: root changed path means notify every unique listener.</li>
+      <li>For multiple changed nested paths, collect root/prefix listeners for each path and call each listener once.</li>
+      <li>Keep unsubscribe-during-notification safety by copying listeners before invocation.</li>
+    </ul>
 
-&lt;h3&gt;Step 8: Add Tests&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Add &lt;code&gt;src/bolt/bolt.test.ts&lt;/code&gt; or &lt;code&gt;src/bolt/derive.test.ts&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;&quot;test&quot;: &quot;bun test&quot;&lt;/code&gt; to &lt;code&gt;package.json&lt;/code&gt; if absent.&lt;/li&gt;
-  &lt;li&gt;Use &lt;code&gt;createBoltStore&lt;/code&gt; for framework-independent tests.&lt;/li&gt;
-  &lt;li&gt;Keep React rendering tests out of v1 unless existing setup supports them. Store semantics are core risk.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 8: Add Tests</h3>
+    <ul class="checklist">
+      <li>Add <code>src/bolt/bolt.test.ts</code> or <code>src/bolt/derive.test.ts</code>.</li>
+      <li>Add <code>"test": "bun test"</code> to <code>package.json</code> if absent.</li>
+      <li>Use <code>createBoltStore</code> for framework-independent tests.</li>
+      <li>Keep React rendering tests out of v1 unless existing setup supports them. Store semantics are core risk.</li>
+    </ul>
 
-&lt;h3&gt;Step 9: Update README&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Add &lt;code&gt;Derived paths&lt;/code&gt; section after Reading and writing.&lt;/li&gt;
-  &lt;li&gt;Show manual override source pattern.&lt;/li&gt;
-  &lt;li&gt;Explain chain behavior.&lt;/li&gt;
-  &lt;li&gt;Explain cycle rejection.&lt;/li&gt;
-  &lt;li&gt;Update &lt;code&gt;When not to reach for Bolt&lt;/code&gt;; remove blanket &quot;no derived/computed state&quot; claim.&lt;/li&gt;
-  &lt;li&gt;Do not oversell: async derivation, devtools, middleware ecosystem still out of scope.&lt;/li&gt;
-&lt;/ul&gt;
+    <h3>Step 9: Update README</h3>
+    <ul class="checklist">
+      <li>Add <code>Derived paths</code> section after Reading and writing.</li>
+      <li>Show manual override source pattern.</li>
+      <li>Explain chain behavior.</li>
+      <li>Explain cycle rejection.</li>
+      <li>Update <code>When not to reach for Bolt</code>; remove blanket "no derived/computed state" claim.</li>
+      <li>Do not oversell: async derivation, devtools, middleware ecosystem still out of scope.</li>
+    </ul>
 
-&lt;h3&gt;Step 10: Validate&lt;/h3&gt;
-&lt;ul class=&quot;checklist&quot;&gt;
-  &lt;li&gt;Run &lt;code&gt;bun test&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Run &lt;code&gt;bun run build:lib&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Run &lt;code&gt;bun run build&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Run &lt;code&gt;git diff --check&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Inspect &lt;code&gt;git diff&lt;/code&gt; for accidental changes to unrelated untracked files.&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
+    <h3>Step 10: Validate</h3>
+    <ul class="checklist">
+      <li>Run <code>bun test</code>.</li>
+      <li>Run <code>bun run build:lib</code>.</li>
+      <li>Run <code>bun run build</code>.</li>
+      <li>Run <code>git diff --check</code>.</li>
+      <li>Inspect <code>git diff</code> for accidental changes to unrelated untracked files.</li>
+    </ul>
   </section>
 
   <section>
@@ -822,7 +835,7 @@ let nextDerivedId = 1;</code></pre></p>
     </ul>
   </section>
 
-</main>
+</div>
 </article>
 </main>
 </body>
