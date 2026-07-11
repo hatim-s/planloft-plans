@@ -18,6 +18,15 @@
       "kind": "plan",
       "createdAt": "2026-07-05T11:36:08.335Z",
       "expiresAt": "2026-08-04T12:10:31.419Z"
+    },
+    {
+      "id": "EfMEfseCwD",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "progress-and-roadmap",
+      "title": "progress-and-roadmap",
+      "kind": "note",
+      "createdAt": "2026-07-11T12:27:25.046Z",
+      "expiresAt": "2026-08-10T12:27:25.047Z"
     }
   ]
 }
