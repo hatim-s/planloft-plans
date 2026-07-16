@@ -116,9 +116,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       <textarea class="dsq-open" id="q1_1" placeholder="e.g. we wanted it to feel less like a generic SaaS tool and more like…"></textarea>
     </div>
     <div class="dsq-q" data-q="1.2" data-section="I. Philosophy &amp; brand intent">
-      <label class="dsq-q-label" for="q1_2"><span class="dsq-qnum">2.</span>Pick the <strong>3 words that dominate</strong> how the platform should feel — then rank them below, and finish: "it must never <em>feel</em> ___", "it must never be <em>mistaken for</em> ___ (a product or site)".</label>
+      <label class="dsq-q-label" for="q1_2"><span class="dsq-qnum">2.</span>Pick the <strong>3 words that dominate</strong> how the platform should feel — then rank them below, and finish: "it feels <em>closest to</em> ___ (a product or site)", "it must never <em>feel</em> ___", "it must never be <em>mistaken for</em> ___".</label>
       <div class="dsq-choices" data-cname="c1_2"><label><input type="checkbox" name="c1_2" value="Warm">Warm</label><label><input type="checkbox" name="c1_2" value="Calm">Calm</label><label><input type="checkbox" name="c1_2" value="Luxurious">Luxurious</label><label><input type="checkbox" name="c1_2" value="Editorial">Editorial</label><label><input type="checkbox" name="c1_2" value="Premium">Premium</label><label><input type="checkbox" name="c1_2" value="Trustworthy">Trustworthy</label><label><input type="checkbox" name="c1_2" value="Crafted">Crafted</label><label><input type="checkbox" name="c1_2" value="Quietly confident">Quietly confident</label><label><input type="checkbox" name="c1_2" value="Minimal">Minimal</label><label><input type="checkbox" name="c1_2" value="Serious">Serious</label><label><input type="checkbox" name="c1_2" value="Organic / natural">Organic / natural</label><label><input type="checkbox" name="c1_2" value="Playful">Playful</label></div>
-      <textarea id="q1_2" data-fill="Ranked 1→3, never feels, never mistaken for" placeholder="1. …   2. …   3. …   Never feels: …   Never mistaken for: …"></textarea>
+      <textarea id="q1_2" data-fill="Ranked 1→3, closest to, never feels, never mistaken for" placeholder="1. …   2. …   3. …   Closest to: …   Never feels: …   Never mistaken for: …"></textarea>
     </div>
     <div class="dsq-q" data-q="1.3" data-section="I. Philosophy &amp; brand intent">
       <label class="dsq-q-label" for="c1_3"><span class="dsq-qnum">3.</span>When two options both "look fine", what's the tiebreaker? Tick up to two and number them 1 / 2 in the box below — or write your own.</label>
@@ -203,7 +203,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       <div class="dsq-inference"><span class="dsq-inf-tag">Our inference</span>Toolbars, titles and section bands sit on the sand background; scrollable content lives inside a white rounded card that owns its own scrolling. Canvases / builders are the full-bleed exception.</div>
       <div class="dsq-choices" data-cname="c4_1"><label><input type="radio" name="c4_1" value="Shipped and final intent" data-agree="1">Shipped and final intent</label><label><input type="radio" name="c4_1" value="Shipped, but parts are not final">Shipped, but parts are not final — noted below</label><label><input type="radio" name="c4_1" value="Misread">Misread — noted below</label></div>
       <textarea class="dsq-reveal dsq-hidden" id="q4_1r" data-fill="What's not final / what we misread" placeholder="Which part, and what's the real rule…"></textarea>
-      <textarea id="q4_1" data-fill="Controls collapse into a 'Filters' popover when" placeholder="e.g. more than N controls / the toolbar would wrap / never…"></textarea>
     </div>
     <div class="dsq-q" data-q="4.2" data-section="IV. Layouts &amp; page anatomy">
       <label class="dsq-q-label" for="q4_2"><span class="dsq-qnum">16.</span>We count six page skeletons — list, details-with-tabs, settings (left rail + card), builder (split panels around a canvas), overview (framed preview + info sidebar), full-page form. How do you choose one for a new feature — and what should an agent do when a screen fits <em>none</em> of them?</label>
@@ -214,7 +213,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       <label class="dsq-q-label" for="c4_3"><span class="dsq-qnum">17.</span>Spacing and density: generous 48px table rows, roomy card padding, tight title-to-subtitle gaps. When the assistant is unsure, which way should it err?</label>
       <div class="dsq-choices" data-cname="c4_3"><label><input type="radio" name="c4_3" value="Err airier — generosity is part of the look" checked data-inferred="1">Err airier — generosity is part of the look<span class="dsq-tag">our read</span></label><label><input type="radio" name="c4_3" value="Err denser — it's a pro tool">Err denser — it's a pro tool</label><label><input type="radio" name="c4_3" value="Depends on the surface">Depends on the surface — noted below</label></div>
     </div>
-    <div class="dsq-notes" data-section="IV. Layouts &amp; page anatomy"><label for="n4">Section IV — corrections &amp; notes</label><textarea id="n4" placeholder="Skeletons we missed, full-bleed exceptions, density nuances, anything we got wrong…"></textarea></div>
+    <div class="dsq-notes" data-section="IV. Layouts &amp; page anatomy"><label for="n4">Section IV — corrections &amp; notes</label><textarea id="n4" placeholder="Skeletons we missed, full-bleed exceptions, density nuances, when controls collapse into a 'Filters' popover, anything we got wrong…"></textarea></div>
   </section>
   <!-- SECTION 5 -->
   <section class="dsq-section">
@@ -455,7 +454,13 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     acceptBtn.addEventListener('click', function () {
       var section = acceptBtn.closest('.dsq-section');
       if (!section) return;
-      Array.prototype.slice.call(section.querySelectorAll('.dsq-q')).forEach(agreeBlock);
+      var sectionBlocks = Array.prototype.slice.call(section.querySelectorAll('.dsq-q'));
+      sectionBlocks.forEach(agreeBlock);
+      var acceptedCount = sectionBlocks.filter(blockHasDefaults).length;
+      var openCount = sectionBlocks.length - acceptedCount;
+      acceptBtn.textContent = openCount > 0
+        ? acceptedCount + ' accepted — ' + openCount + ' open question' + (openCount === 1 ? '' : 's') + ' still need' + (openCount === 1 ? 's' : '') + ' you'
+        : acceptedCount + ' accepted — this section is done';
       persist();
     });
   });
