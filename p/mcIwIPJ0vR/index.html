@@ -93,8 +93,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 </style>
 <div class="dsq-root" id="dsq">
   <p class="dsq-eyebrow">UnifyApps Platform · Design system validation</p>
-  <h1 class="dsq-title">Designer questionnaire <span class="dsq-count">28 questions</span></h1>
-  <p class="dsq-lede">We are turning the platform's design system — the new deep-green and sand look — into a <strong>living guide that an AI assistant uses when it builds and modifies platform screens</strong>. To draft that guide, we studied the product and its styles and <em>inferred</em> the rules and intent behind them. You created this system, so you are the ground truth: please confirm what we got right, correct what we got wrong, and add the rules that only exist in your head.</p>
+  <h1 class="dsq-title">Designer questionnaire <span class="dsq-count">44 questions</span></h1>
+  <p class="dsq-lede">We are turning the platform's design system — the new deep-green and sand look — into a <strong>living guide that an AI assistant uses when it builds and modifies platform screens</strong>. To draft that guide, we studied the product and its styles and <em>inferred</em> the rules and intent behind them. You created this system, so you are the ground truth: please confirm what we got right, correct what we got wrong, and add the rules that only exist in your head. The final section is a <strong>practical playbook</strong> — concrete "if I want to show X, how should it look?" scenarios. When someone prompts an agent to build a screen and leaves the design unsaid, your answers there become the defaults the agent assumes.</p>
   <p class="dsq-lede">Most questions offer <strong>answer choices with our code-derived reading already selected</strong> — marked with a small <span class="dsq-tag" style="vertical-align:1px;">our read</span> tag. If we're right, leave it and move on; if not, pick the right option or untick ours. Type only where you disagree or where nuance matters. Genuinely open questions stay free-text.</p>
   <div class="dsq-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#847347" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5m0 3h.01" stroke-linecap="round"/></svg><span>Your answers <strong>autosave in this browser</strong> as you type or click. When you're done, press <strong>"Copy my answers"</strong> at the bottom and paste the result into a message to Hatim (Slack or email — whatever is easiest).</span></div>
   <!-- SECTION 1 -->
@@ -302,6 +302,103 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     <div class="dsq-q" data-q="6.4" data-section="VI. What we missed">
       <label class="dsq-q-label" for="q6_4"><span class="dsq-qnum">+</span>Anything else? Last words for the assistant before it designs its first screen in your system.</label>
       <textarea class="dsq-open" id="q6_4"></textarea>
+    </div>
+  </section>
+  <!-- SECTION 7 -->
+  <section class="dsq-section">
+    <div class="dsq-section-head"><span class="dsq-section-num">VII.</span><h2>Practical playbook — how should X look?</h2></div>
+    <p class="dsq-section-sub">Concrete scenarios. When someone prompts an agent to build a screen and doesn't specify the design, your answers here become the defaults the agent assumes. Pre-selected options are what we'd guess from the current product.</p>
+    <div class="dsq-q" data-q="7.1" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_1"><span class="dsq-qnum">29.</span>"Show a list of many entities" (automations, users, connections…). What's the default shape?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_1"><label><input type="radio" name="c7_1" value="White bordered card on the sand plane; roomy 48px rows; serif entity name + muted sans metadata; kebab menu at the row's right edge; the create CTA in the toolbar above, never inside the table" checked data-inferred="1">White bordered card on the sand plane; roomy 48px rows; serif entity name + muted sans metadata; kebab at the row's right edge; create CTA in the toolbar above, never inside the table<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_1" value="Denser rows (~36px) — show more per screen">Denser rows (~36px) — show more per screen</label><label><input type="radio" name="c7_1" value="Inline icon actions on hover instead of a kebab">Inline icon actions on hover instead of a kebab</label><label><input type="radio" name="c7_1" value="Depends on the entity — no single default">Depends on the entity — no single default</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_1" placeholder="What must every row show? What never belongs in a row?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.2" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_2"><span class="dsq-qnum">30.</span>"Show one entity's details." How is the page composed by default?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_2"><label><input type="radio" name="c7_2" value="Back chevron + serif entity title + status chip, with a quiet meta line beneath (version, deployed time); sections as a pill tab row under the header" checked data-inferred="1">Back chevron + serif entity title + status chip, with a quiet meta line beneath (version, deployed time…); sections as a pill tab row under the header<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_2" value="Sections in a left sidebar instead of tabs">Sections in a left sidebar instead of tabs</label><label><input type="radio" name="c7_2" value="Minimal header; status and meta move to a right info panel">Minimal header; status and meta move to a right info panel</label><label><input type="radio" name="c7_2" value="Depends on entity complexity">Depends on entity complexity</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_2" placeholder="When do tabs stop scaling — and what's the fallback?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.3" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_3"><span class="dsq-qnum">31.</span>"Let the user create or edit something." Full page, modal, or drawer — what's the rule?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_3"><label><input type="radio" name="c7_3" value="Full-page centered form column for primary entities; modal for quick/small creates; drawer for contextual edits beside content" checked data-inferred="1">Full-page centered form column for primary entities; modal for quick / small creates; drawer for contextual edits beside content<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_3" value="Modals for almost everything">Modals for almost everything</label><label><input type="radio" name="c7_3" value="Drawers for almost everything">Drawers for almost everything</label><label><input type="radio" name="c7_3" value="Full page always — never trap a form in an overlay">Full page always — never trap a form in an overlay</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_3" placeholder="What tips a form from modal to full page — field count, importance, something else?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.4" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_4"><span class="dsq-qnum">32.</span>"Offer a dangerous / destructive action" (delete, revoke, purge). Placement, color, confirmation?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_4"><label><input type="radio" name="c7_4" value="Tucked in the kebab/overflow menu in red; always a confirmation modal; red is reserved for destruction only" checked data-inferred="1">Tucked in the kebab / overflow menu in red; always a confirmation modal; red is reserved for destruction only<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_4" value="A visible red button on the page is fine">A visible red button on the page is fine</label><label><input type="radio" name="c7_4" value="Confirmation only when the action is irreversible">Confirmation only when the action is irreversible</label><label><input type="radio" name="c7_4" value="Type-to-confirm for the most dangerous operations">Type-to-confirm for the most dangerous operations</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_4"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.5" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_5"><span class="dsq-qnum">33.</span>"The screen has no content yet." Which elements does a standard empty state include? Pre-ticked = today's recipe.</label>
+      <div class="dsq-choices" data-cname="c7_5"><label><input type="checkbox" name="c7_5" value="Icon" checked data-inferred="1">Icon<span class="dsq-tag">our read</span></label><label><input type="checkbox" name="c7_5" value="Short title" checked data-inferred="1">Short title<span class="dsq-tag">our read</span></label><label><input type="checkbox" name="c7_5" value="One-sentence description" checked data-inferred="1">One-sentence description<span class="dsq-tag">our read</span></label><label><input type="checkbox" name="c7_5" value="Learn-more link" checked data-inferred="1">Learn-more link<span class="dsq-tag">our read</span></label><label><input type="checkbox" name="c7_5" value="Primary action button" checked data-inferred="1">Primary action button<span class="dsq-tag">our read</span></label><label><input type="checkbox" name="c7_5" value="Illustration">Illustration</label><label><input type="checkbox" name="c7_5" value="Sample / demo data">Sample / demo data</label><label><input type="checkbox" name="c7_5" value="Keep it minimal — title only">Keep it minimal — title only</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_5"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.6" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_6"><span class="dsq-qnum">34.</span>"Show a dashboard of metrics." Cards, tables, charts — what's the default composition?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_6"><label><input type="radio" name="c7_6" value="Stat cards up top, chart/table cards below — all white bordered cards floating on the sand plane" checked data-inferred="1">Stat cards up top, chart / table cards below — all white bordered cards floating on the sand plane<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_6" value="One dense table with inline sparklines — numbers over pictures">One dense table with inline sparklines — numbers over pictures</label><label><input type="radio" name="c7_6" value="A single hero chart with supporting stats">A single hero chart with supporting stats</label><label><input type="radio" name="c7_6" value="No default — depends on the data">No default — depends on the data</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_6" placeholder="Which of the muted accent hues should charts reach for first — and in what order?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.7" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_7"><span class="dsq-qnum">35.</span>"Something is running" (a build, sync, or long test). How does the UI say so?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_7"><label><input type="radio" name="c7_7" value="Inline status where the entity lives — small icon + word (e.g. 'Running'); progress detail on the entity's own page, not in toasts" checked data-inferred="1">Inline status where the entity lives — small icon + word (e.g. "Running"); progress detail on the entity's own page, not in toasts<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_7" value="A persistent toast / snackbar with progress">A persistent toast / snackbar with progress</label><label><input type="radio" name="c7_7" value="A banner across the top of the page">A banner across the top of the page</label><label><input type="radio" name="c7_7" value="Depends on duration — quick ops inline, long ops get a surface of their own">Depends on duration — quick ops inline, long ops get a surface of their own</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_7"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.8" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_8"><span class="dsq-qnum">36.</span>"The user just did something — it worked (or failed)." Toast, inline, or banner?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_8"><label><input type="radio" name="c7_8" value="Quiet toast for success; errors inline, next to the thing that failed">Quiet toast for success; errors inline, next to the thing that failed</label><label><input type="radio" name="c7_8" value="Toast for both success and failure">Toast for both success and failure</label><label><input type="radio" name="c7_8" value="Inline for both — no toasts">Inline for both — no toasts</label><label><input type="radio" name="c7_8" value="Banner for errors, toast for success">Banner for errors, toast for success</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_8" placeholder="Tone and duration rules — how quiet, how long, when does it self-dismiss?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.9" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_9"><span class="dsq-qnum">37.</span>"The screen needs lots of filters and controls above its content." Where do they live?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_9"><label><input type="radio" name="c7_9" value="On the sand plane above the card — chrome on the plane, content in the card; the card only holds content and scrolls internally" checked data-inferred="1">On the sand plane above the card — chrome on the plane, content in the card; the card holds only content and scrolls internally<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_9" value="Inside the card, above the rows">Inside the card, above the rows</label><label><input type="radio" name="c7_9" value="A collapsible filter panel in a side rail">A collapsible filter panel in a side rail</label><label><input type="radio" name="c7_9" value="Depends on how many controls there are">Depends on how many controls there are</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_9" placeholder="At what point do controls collapse into a 'Filters' popover?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.10" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_10"><span class="dsq-qnum">38.</span>"A multi-step setup / wizard." Stepper style and footer buttons?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_10"><label><input type="radio" name="c7_10" value="Steps as a left rail (like connection create); footer buttons right-aligned with the primary rightmost, cancel/back before it" checked data-inferred="1">Steps as a left rail (like connection create); footer buttons right-aligned — primary rightmost, cancel / back before it<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_10" value="Horizontal stepper across the top">Horizontal stepper across the top</label><label><input type="radio" name="c7_10" value="One long scrolling form with section anchors — no stepper">One long scrolling form with section anchors — no stepper</label><label><input type="radio" name="c7_10" value="Depends on step count">Depends on step count</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_10"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.11" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_11"><span class="dsq-qnum">39.</span>"Show search results" (global search across the platform). How are they presented?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_11"><label><input type="radio" name="c7_11" value="Command-palette style overlay with grouped results">Command-palette style overlay with grouped results</label><label><input type="radio" name="c7_11" value="A dedicated results page, grouped by entity type">A dedicated results page, grouped by entity type</label><label><input type="radio" name="c7_11" value="A dropdown under the search field">A dropdown under the search field</label><label><input type="radio" name="c7_11" value="Overlay for quick jumps, page for deep searches">Overlay for quick jumps, page for deep searches</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_11" placeholder="What does a single result row show — icon, serif name, type, breadcrumb…?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.12" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_12"><span class="dsq-qnum">40.</span>"Content overflows" — long names, many tags, wide tables. Truncate, wrap, or scroll?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_12"><label><input type="radio" name="c7_12" value="Truncate with a tooltip on fixed chrome (rails, table cells, headers); never sideways scroll on chrome; wrap only in reading surfaces" checked data-inferred="1">Truncate with a tooltip on fixed chrome (rails, table cells, headers); never sideways scroll on chrome; wrap only in reading surfaces<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_12" value="Wrap by default — never hide content">Wrap by default — never hide content</label><label><input type="radio" name="c7_12" value="Horizontal scroll is acceptable in wide tables">Horizontal scroll is acceptable in wide tables</label><label><input type="radio" name="c7_12" value="Depends on the surface">Depends on the surface</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_12" placeholder="Rules for many tags in one cell — show N + overflow count?"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.13" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_13"><span class="dsq-qnum">41.</span>When — if ever — would you break the one-green-primary-per-screen rule?</label>
+      <div class="dsq-choices dsq-stack" data-cname="c7_13"><label><input type="radio" name="c7_13" value="Almost never — a split button counts as the one primary; two competing solid greens is always wrong" checked data-inferred="1">Almost never — a split button counts as the one primary; two competing solid greens is always wrong<span class="dsq-tag">our read</span></label><label><input type="radio" name="c7_13" value="Never, no exceptions">Never, no exceptions</label><label><input type="radio" name="c7_13" value="Two are allowed when a page genuinely has two equal jobs">Two are allowed when a page genuinely has two equal jobs</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_13" placeholder="If there's a legitimate exception you've shipped, describe it…"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.14" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_14"><span class="dsq-qnum">42.</span>The escape hatch: a new screen fits none of the existing skeletons. What should an agent (or designer) do — what's the reasoning process, and who gets consulted?</label>
+      <textarea class="dsq-open" id="q7_14" placeholder="e.g. start from the nearest skeleton and bend it; never invent a new nav pattern; flag it to design when…"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.15" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_15"><span class="dsq-qnum">43.</span>What do you find yourself repeatedly correcting in AI- or dev-built screens? Tick the usual suspects, then tell us the ones we didn't list.</label>
+      <div class="dsq-choices" data-cname="c7_15"><label><input type="checkbox" name="c7_15" value="Spacing / rhythm off">Spacing / rhythm off</label><label><input type="checkbox" name="c7_15" value="Wrong grays (too cool / blue)">Wrong grays (too cool / blue)</label><label><input type="checkbox" name="c7_15" value="Shadows creeping back">Shadows creeping back</label><label><input type="checkbox" name="c7_15" value="Serif / sans misuse">Serif / sans misuse</label><label><input type="checkbox" name="c7_15" value="Over-bold weights">Over-bold weights</label><label><input type="checkbox" name="c7_15" value="Too many accent colors">Too many accent colors</label><label><input type="checkbox" name="c7_15" value="Wrong corner radii">Wrong corner radii</label><label><input type="checkbox" name="c7_15" value="Misplaced or duplicated primary buttons">Misplaced / duplicated primary buttons</label><label><input type="checkbox" name="c7_15" value="Missing or lazy empty states">Missing / lazy empty states</label></div>
+      <p class="dsq-other">Other / correction</p>
+      <textarea id="q7_15" placeholder="The corrections you make over and over — be specific, these become agent rules…"></textarea>
+    </div>
+    <div class="dsq-q" data-q="7.16" data-section="VII. Practical playbook">
+      <label class="dsq-q-label" for="q7_16"><span class="dsq-qnum">44.</span>When a person prompts an agent for a new screen, what context should they <em>always</em> include so the result lands close to right the first time?</label>
+      <textarea class="dsq-open" id="q7_16" placeholder="e.g. which module it lives in, the nearest existing screen to match, entity type, expected data volume…"></textarea>
     </div>
   </section>
   <!-- ACTIONS -->
