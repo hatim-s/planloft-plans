@@ -75,6 +75,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .dsq-choices.dsq-stack { flex-direction:column; gap:6px; }
   .dsq-choices.dsq-stack label { border-radius:8px; justify-content:flex-start; line-height:1.45; padding:9px 13px; text-align:left; width:100%; }
   .dsq-mini-title { color:var(--dsq-ink-2); font-size:13px; font-weight:600; margin:10px 0 2px; }
+  .dsq-ctx-toggle { background:none; border:none; color:var(--dsq-ink-3); cursor:pointer; display:inline-block; font-family:var(--dsq-sans); font-size:12.5px; font-weight:600; margin:0; padding:2px 0; }
+  .dsq-ctx-toggle:hover { color:var(--dsq-green); text-decoration:underline; }
+  .dsq-ctx-wrap { margin-top:6px; }
   .dsq-tag { background:#e9efe8; border-radius:999px; color:var(--dsq-green); flex:none; font-size:9.5px; font-weight:700; letter-spacing:.6px; padding:1px 7px; text-transform:uppercase; white-space:nowrap; }
   .dsq-choices label:has(input:checked) .dsq-tag { background:rgba(255,255,255,.2); color:#fff; }
   .dsq-q textarea { background:#fff; border:1px solid var(--dsq-border-strong); border-radius:8px; color:var(--dsq-ink); display:block; font-family:var(--dsq-sans); font-size:14px; line-height:1.55; margin-bottom:10px; min-height:56px; padding:10px 12px; resize:vertical; width:100%; }
@@ -356,6 +359,33 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   var TAG_TEXT = 'our read';
   var root = document.getElementById('dsq');
   if (!root) return;
+  // progressive-disclosure context input on every choice question (kept out of static HTML so empty boxes don't wall the form)
+  Array.prototype.slice.call(root.querySelectorAll('.dsq-q')).forEach(function (block) {
+    if (!block.querySelector('.dsq-choices')) return;
+    var qid = block.getAttribute('data-q');
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'dsq-ctx-toggle';
+    toggle.textContent = '+ Add context';
+    var wrap = document.createElement('div');
+    wrap.className = 'dsq-ctx-wrap dsq-hidden';
+    var mini = document.createElement('p');
+    mini.className = 'dsq-other';
+    mini.textContent = 'Additional context';
+    var area = document.createElement('textarea');
+    area.className = 'dsq-ctx';
+    area.id = 'ctx' + qid.replace('.', '_');
+    area.placeholder = 'Anything more we should know — nuance, exceptions, examples…';
+    wrap.appendChild(mini);
+    wrap.appendChild(area);
+    toggle.addEventListener('click', function () {
+      var expanded = !wrap.classList.toggle('dsq-hidden');
+      toggle.textContent = expanded ? '− Hide context' : '+ Add context';
+      if (expanded) area.focus();
+    });
+    block.appendChild(toggle);
+    block.appendChild(wrap);
+  });
   var fields = Array.prototype.slice.call(root.querySelectorAll('.dsq-q textarea, .dsq-notes textarea'));
   var choiceInputs = Array.prototype.slice.call(root.querySelectorAll('.dsq-choices input'));
   var groups = {};
@@ -398,6 +428,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     }
     if (Array.isArray(saved.touched)) saved.touched.forEach(function (qid) { touched[qid] = true; });
   } catch (err) { /* private mode etc — degrade silently */ }
+  // auto-expand context boxes restored with content
+  Array.prototype.slice.call(root.querySelectorAll('.dsq-ctx')).forEach(function (area) {
+    if (!area.value.trim()) return;
+    var wrap = area.closest('.dsq-ctx-wrap');
+    wrap.classList.remove('dsq-hidden');
+    var toggle = wrap.previousElementSibling;
+    if (toggle && toggle.classList.contains('dsq-ctx-toggle')) toggle.textContent = '− Hide context';
+  });
   // ---- autosave ----
   var saveTimer = null;
   function persist() {
@@ -546,6 +584,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       });
       var wroteText = false;
       Array.prototype.slice.call(block.querySelectorAll('textarea')).forEach(function (area) {
+        if (area.classList.contains('dsq-ctx')) {
+          if (area.value.trim()) lines.push('**Additional context:** ' + area.value.trim());
+          return;
+        }
         if (area.classList.contains('dsq-hidden')) return;
         var fillLabel = area.getAttribute('data-fill');
         var answer = area.value.trim();
