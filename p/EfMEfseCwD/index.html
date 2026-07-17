@@ -113,6 +113,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .road p.why{color:var(--muted)}
   .road p.dep{font-size:13px;color:var(--muted)}
   .road p.dep b{color:var(--ink);font-weight:600}
+  .road ul{margin:10px 0 0 18px;padding:0;color:var(--muted);font-size:13.5px}
+  .road li{margin:6px 0}
+  .road li b{color:var(--ink)}
 
   /* lanes */
   .lane{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:14px 0}
@@ -134,7 +137,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   table.mini td,table.mini th{border:1px solid var(--line);padding:5px 10px;text-align:left}
   table.mini th{color:var(--muted);font-weight:600;background:var(--panel2)}
 </style>
-<div class="wrap">
 <div class="wrap">
 
   <header class="hero">
@@ -250,6 +252,36 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     <p>Batch eval rigor (N-iteration thresholds rather than a single smoke), redo as a post-v1 call, a DNS-rebind stance for the proxy, and structured agent-service logs keyed by <code>sessionId</code>/<code>runId</code>.</p>
   </div>
 
+  <h2 class="sec">Research-backed lanes</h2>
+  <p class="secsub">Two focused tracks build on the current repeat substrate and bolt’s path-aware store primitives.</p>
+
+  <div class="card road">
+    <div class="qhead"><span class="qnum">E</span><span class="qtitle">Lane E — List block with item context</span><span class="size M">S → L</span></div>
+    <p>The repeat substrate mostly exists: element-level <code>repeat={statePath,key}</code>, <code>${field}</code> item templates, and repeat-ancestor-scoped <code>$bindItem</code> already support per-item fields inside repeated Cards. The missing piece is a first-class <b>List</b> block and item-scoped ergonomics.</p>
+    <ul>
+      <li><b>E1 · S — Lock the List contract:</b> element-level repeat, one item-template child, <code>statusPath</code> plus empty/loading/error states, key policy, and accessible semantics.</li>
+      <li><b>E2 · M — Build it:</b> definition, component, registry, palette and inspector support, plus render/DSL tests. Canvas selection and DnD over repeated DOM are the main risk.</li>
+      <li><b>E3 · M — Docs/grammar:</b> add the List example and conventions to <code>DSL.md</code>, catalog grammar, and prompt examples; reconcile the existing Table/Chart documentation drift.</li>
+      <li><b>E4 · M — Scoped-data tests:</b> nested item paths, <code>$bindItem</code>, per-item Table/Chart, state transitions, and key reorder.</li>
+      <li><b>E5 · L — Item-identity action payloads:</b> keep <code>on:select</code> identity work separate; json-render currently turns <code>$item</code> params into paths and <code>emit</code> has no payload channel.</li>
+      <li><b>E6 · L, deferred — Virtualization:</b> variable-height charts, focus, and SSR/hydration complexity.</li>
+    </ul>
+    <p class="why">First increment: E1 → E2 layered on existing repeat, with E4 tests. Charts and tables per item work via <code>$bindItem</code> from day one.</p>
+  </div>
+
+  <div class="card road">
+    <div class="qhead"><span class="qnum">F</span><span class="qtitle">Lane F — Render perf: use bolt properly</span><span class="size M">S → M</span></div>
+    <p><b>Reproduced root cause:</b> bolt’s path-granular notifications are discarded twice. The preview adapter subscribes at the store root and rebuilds a whole-state snapshot per write; json-render then sends it through one changing React context, defeating <code>ElementRenderer</code> memoization. Bolt already has the needed path subscriptions, topologically settled derived paths, and reference-stable partial writes.</p>
+    <ul>
+      <li><b>F1 · S — Instrument:</b> add a preview render-count probe to confirm the issue and measure the win.</li>
+      <li><b>F2 · S — Expose granularity:</b> add <code>RuntimeStores.subscribePath(pointer)</code> and <code>getPath(pointer)</code> over the two-tier stores.</li>
+      <li><b>F3 · M — Granular binding:</b> create bolt-backed <code>useRuntimeValue(pointer)</code> with <code>useSyncExternalStore</code> and memoized block shells that subscribe only to bound pointers. Blocks must stop reading json-render’s <code>StateContext</code> for values.</li>
+      <li><b>F4 · M — Derived bindings:</b> register bolt <code>derive(target, [queryResultPointer], compute)</code> at spec assembly, with disposal lifecycle, so refreshes recompute only dependents.</li>
+      <li><b>F5 · L, optional — Upstream json-render:</b> pursue a per-path subscription API only if stock components should inherit the fix.</li>
+    </ul>
+    <p class="why">F1 → F4 solves the reported typing case in-repo and showcases bolt’s derived-dependency flow ahead of N6.</p>
+  </div>
+
   <h2 class="sec">Lanes</h2>
   <p class="secsub">Independent work can proceed now; the product-critical lane has a clear public-release sequence.</p>
 
@@ -269,10 +301,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     <h3>Lane D — Infra <span class="who">N6 + N7</span></h3>
     <p class="note">Fill-in work that can run alongside the other lanes.</p>
   </div>
+  <div class="lane">
+    <h3>Lane E — List block with item context <span class="who">E1 → E4</span></h3>
+    <p class="note">Follow N4, or run in parallel with a second pair of hands; keep identity payloads and virtualization as separate follow-ons.</p>
+  </div>
+  <div class="lane">
+    <h3>Lane F — Render perf: use bolt properly <span class="who">F1 → F4</span></h3>
+    <p class="note">A first-wave, user-visible performance fix: restore bolt’s path-level subscriptions and derived bindings in preview.</p>
+  </div>
 
   <div class="block rec">
     <span class="lbl">Recommended first wave</span>
-    <p><b>Start N1 + N4 + N6 in parallel today, with N2 immediately behind N1.</b> That yields visitable published apps, a humane editor, and the path to a safe public deploy.</p>
+    <p><b>Start N1 + N4 + N6 + Lane F in parallel today, with N2 immediately behind N1.</b> Lane E follows N4 or runs with a second pair of hands. This yields visitable published apps, a humane editor, responsive previews, and the path to a safe public deploy.</p>
   </div>
 
   <footer>
