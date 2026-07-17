@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>progress-and-roadmap</title>
+<title>AI App Builder — Progress &amp; Roadmap</title>
 <style>/* planloft theme: minimal — mono, black & white, tight */
 :root {
   --ink: #111;
@@ -135,280 +135,154 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   table.mini th{color:var(--muted);font-weight:600;background:var(--panel2)}
 </style>
 <div class="wrap">
+<div class="wrap">
 
   <header class="hero">
     <div style="margin-bottom:10px">
-      <span class="pill good">Barebone builder shipped</span>
-      <span class="pill">Phase: v1 build</span>
-      <span class="pill">Design locked</span>
-      <span class="pill warn">Pre-auth · local only</span>
+      <span class="pill good">v2 roadmap</span>
+      <span class="pill">Progress verified</span>
+      <span class="pill">Main branch</span>
+      <span class="pill warn">Public serving pending</span>
     </div>
     <h1>AI App Builder — Progress &amp; Roadmap</h1>
-    <p class="status"><b>Barebone builder shipped — July 11, 2026.</b> Human + agent co-editing the same page, live, end-to-end.</p>
-    <p>A builder where a human and an AI agent work on the same application simultaneously — pages stored as JSON specs, rendered to React at runtime, the agent a first-class collaborator editing through the same granular operations as the human.</p>
+    <p class="status"><b>Updated July 17, 2026.</b> The July 11 roadmap is superseded; status is verified against code on <code>main</code>, not commit messages.</p>
+    <p>The barebone builder has crossed the first useful product threshold: async data, richer blocks, a drag-and-drop canvas, session undo, and a substantially more steerable agent loop are all shipped.</p>
   </header>
 
-  <!-- ============ 1. JOURNEY ============ -->
-  <h2 class="sec">Journey so far</h2>
-  <p class="secsub">From interrogation to a live co-editing loop in one sustained push.</p>
+  <h2 class="sec">Where we are</h2>
+  <p class="secsub">Shipped since July 11 — all merged to <code>main</code>, CI green.</p>
 
   <div class="card">
     <div class="tl">
       <div class="tl-item done">
-        <h3>Design grill <span class="when">June – July 2026</span></h3>
-        <p>Three adversarial interview rounds (25 + 17 + 7 questions) stress-tested every macro choice. Output: <code>ARCHITECTURE.md</code> — 15 sections, a 44-entry decision log, and an explicitly ordered deferred list. Design declared <b>locked</b> before a line of product code was written.</p>
+        <h3>Async-data slice 1 <span class="when">PRs #5–#10 · was R1</span></h3>
+        <p>QueryRuntime is wired into the studio: reactive <code>{$state}</code> params, auto/manual modes, app-scoped queries, an SSRF-guarded CORS proxy, live Data-panel results, and <code>runQuery</code>/<code>setState</code> actions.</p>
       </div>
       <div class="tl-item done">
-        <h3>Scaffold + contracts <span class="when">July 11</span></h3>
-        <p>pnpm/turborepo monorepo scaffolded. <code>docs/CONTRACTS.md</code> carved the repo into three exclusive ownership zones with frozen shared interfaces (Convex function API, package exports, A↔C HTTP contract) and an append-only <code>docs/INTEGRATION-NOTES.md</code> channel. bolt vendored with PRs #3 (path-aware immutable writer) + #4 (<code>derive</code>) merged — 28 tests green. Convex local anon deployment + codegen wired.</p>
+        <h3>Table + Chart blocks <span class="when">was R3</span></h3>
+        <p>Hardened with input validation, style-injection guards, and component tests.</p>
       </div>
       <div class="tl-item done">
-        <h3>Three parallel workstreams <span class="when">July 11</span></h3>
-        <ul>
-          <li><b>A — Builder UI</b> (<code>apps/studio</code>, catalog registry): studio shell, 3-pane builder, chat panel, preview route, 7 shadcn-styled blocks + <code>UnknownBlock</code> fallback.</li>
-          <li><b>B — Backend &amp; runtime</b> (<code>packages/backend</code>, <code>dsl</code>, <code>runtime</code>): all contract Convex functions (20 tests), DSL parser / stream-parser / serializer with round-trip suite (10 tests), runtime stores + QueryRuntime + spec assembly (10 tests).</li>
-          <li><b>C — Agent service</b> (<code>services/agent</code>): 8 tools, pi session wrapper, session manager, Hono HTTP server, ~200ms delta batcher (28 tests).</li>
-        </ul>
-        <div class="block find" style="margin-top:12px">
-          <span class="lbl">Process highlight</span>
-          <p>The build itself was multi-agent: <b>Fable orchestrators</b> ran the workstreams, <b>Codex</b> handled brute implementation, and <b>Sonnet/Opus review passes</b> caught issues pre-integration (finalize-retry bugs, prompt-rejection surfacing, typed-api gaps). The contract-and-ownership scheme let all three streams land without a single cross-stream file conflict.</p>
-        </div>
+        <h3>Drag-and-drop canvas + Layers panel <span class="when">PRs #11–#12 · was R7</span></h3>
+        <p>Palette drag-insert, reorder/reparent, and a hierarchy tree are all routed through undo tracking.</p>
       </div>
       <div class="tl-item done">
-        <h3>Integration — two landmines found &amp; defused <span class="when">July 11</span></h3>
-        <ul>
-          <li><b>Convex rejects <code>$</code>-prefixed field names</b> — a platform document restriction that <code>convex-test</code> never surfaces. It broke the locked binding architecture end-to-end: json-render expressions (<code>$bindState</code>, <code>$template</code>) couldn't be stored or even passed as args. Fix: <code>encodeDollarKeys</code>/<code>decodeDollarKeys</code> codec in <code>@app-builder/shared</code> applied at the wire boundary — a single seam; A and C needed no structural changes.</li>
-          <li><b>Bare <code>pi-agent-core</code> breaks openai-codex OAuth</b> — switched to <code>pi-coding-agent</code>'s <code>createAgentSession</code> (the fallback path pre-approved in decision P1), restoring model access.</li>
-          <li>Plus: chat sessionId convention mismatch (A used <code>pageId</code>, C minted UUIDs) reconciled to <code>sessionId = pageId</code>; string function refs swapped for typed generated <code>api</code>.</li>
-        </ul>
+        <h3>Session undo <span class="when">PRs #13–#20 · was R6</span></h3>
+        <p>Op-log core with capture, inverse operations, preconditions, and a capped log; Cmd+Z, header Undo, granular and per-run agent reverts. Publishing intentionally clears the log; redo is out of v1 scope.</p>
       </div>
       <div class="tl-item done">
-        <h3>Live smoke verified <span class="when">July 11</span></h3>
-        <p>Full mutation-path smoke against the live local deployment passed (insert / setProps / setBindings / move / remove / publish / presence / messages; all studio routes 200). Then the real thing: <b>a chat prompt produced a signup page — heading, bound email input, terms checkbox, submit button — appearing live on the canvas</b> via agent → <code>write_subtree</code> DSL → Convex → subscription.</p>
+        <h3>Agent steering &amp; hardening <span class="when">R11 + R2 in tool form</span></h3>
+        <p>SDK-native deliver/abort, a run-lifecycle state machine, debounced human-edit injection with per-page conflict tracking, multi-page awareness, 30-minute idle eviction, and <code>actor</code>/<code>opId</code>/<code>runId</code> attribution on every mutation.</p>
+      </div>
+      <div class="tl-item done">
+        <h3>Substrate + fix of the week</h3>
+        <p><code>opSignals</code>, per-block versions, <code>replaceProps</code>, and block-level <code>writeSubtree</code> isolation validation are in place. Agent bindings now target <code>/queries/&lt;id&gt;/data/*</code>, matching the runtime envelope rather than the prior incorrect <code>/queries/&lt;id&gt;/*</code> path.</p>
       </div>
     </div>
-    <div class="block rec">
-      <span class="lbl">Where that leaves us</span>
-      <p>19 commits, 6 tested packages, <b>98 passing tests</b> (backend 20 · agent 28 · bolt 28 · dsl 10 · runtime 10 · shared 2), typecheck green monorepo-wide, and a verified human+agent co-editing loop. The skeleton is real; everything below builds on it.</p>
+    <div class="block find">
+      <span class="lbl">Review signal</span>
+      <p>The R6/R11 stack landed through eight stacked PRs and a three-agent review fleet: 76 findings triaged, 34 fixed.</p>
     </div>
   </div>
 
-  <!-- ============ 2. WHAT WORKS ============ -->
-  <h2 class="sec">What works today</h2>
-  <p class="secsub">Verified against the repo and the July 11 live smoke. Dashes mark the honest gaps inside each path.</p>
+  <h2 class="sec">Status of the July 11 items</h2>
+  <p class="secsub">Completed work is separated from the remaining product and deployment gates.</p>
 
-  <div class="grid3">
-    <div class="cap">
-      <h3>Human path</h3>
-      <ul>
-        <li>3-pane builder at <code>:3100</code> — palette / canvas / inspector</li>
-        <li>Click-insert from palette; selection + move/delete on canvas</li>
-        <li>Inspector prop editing (Zod-typed per catalog)</li>
-        <li>Preview route rendering the real spec — state bindings + <code>on</code> actions (<code>validateForm</code>) verified</li>
-        <li>Publish → immutable release snapshot + version pill</li>
-        <li>Optimistic granular mutations; fractional-index ordering; cycle-rejected reparent</li>
-        <li class="gap">Bindings edited as raw JSON textarea; no drag-and-drop; no undo</li>
-      </ul>
-    </div>
-    <div class="cap">
-      <h3>Agent path</h3>
-      <ul>
-        <li>Chat panel → agent service at <code>:8787</code> (Hono; health / sessions / messages)</li>
-        <li><code>pi-coding-agent</code> <code>createAgentSession</code> with openai-codex OAuth</li>
-        <li>All 8 contract tools: <code>read_page</code> · <code>write_subtree</code> · <code>set_props</code> · <code>move_block</code> · <code>delete_block</code> · <code>list_pages</code> · <code>create_page</code> · <code>set_page_queries</code></li>
-        <li>DSL authoring: <code>write_subtree</code> parses HTML-like DSL → transactional Convex write</li>
-        <li><code>read_page</code> returns DSL — agent reads what it writes (round-trip tested)</li>
-        <li>Presence pill (thinking / editing / idle); chat deltas batched ~200ms into Convex</li>
-        <li class="gap">Blocks appear at once per tool call — no streamed canvas growth yet</li>
-      </ul>
-    </div>
-    <div class="cap">
-      <h3>Infra</h3>
-      <ul>
-        <li>Convex local anon deployment; row-per-block schema per design</li>
-        <li>Read-then-patch granular mutations only (no tree replaces)</li>
-        <li><code>$</code>-key codec at every wire boundary (<code>@app-builder/shared</code>)</li>
-        <li><code>releases.publish</code> / <code>getLive</code> — frozen spec blobs + pointer flip</li>
-        <li>bolt 0.2.0-alpha vendored, PRs #3+#4 merged, 28 tests</li>
-        <li>98 tests across 6 packages; every commit compiles</li>
-        <li class="gap">No auth, no cloud deployment, agent HTTP API unauthenticated (trusted-local only)</li>
-      </ul>
-    </div>
+  <div class="card">
+    <table class="mini">
+      <tr><th>Item</th><th>Status</th></tr>
+      <tr><td>R1 QueryRuntime wiring</td><td>✓ Done</td></tr>
+      <tr><td>R2 Streamed authoring</td><td>✓ Done — incremental tool calls; artifact envelope retired as designed</td></tr>
+      <tr><td>R3 Table + Charts</td><td>✓ Done</td></tr>
+      <tr><td>R4 Published-app serving</td><td>◐ Release snapshots + publish exist; no public route consumes <code>getLive</code></td></tr>
+      <tr><td>R5 Clerk auth + ownership</td><td>× Not started — <code>ownerId:"local"</code>, no auth checks</td></tr>
+      <tr><td>R6 Session undo</td><td>✓ Done</td></tr>
+      <tr><td>R7 DnD canvas</td><td>✓ Done — plus Layers panel</td></tr>
+      <tr><td>R8 Interaction builder UI</td><td>◐ <code>on:</code> map remains a raw JSON textarea</td></tr>
+      <tr><td>R9 Bindings editor UX</td><td>◐ Manual pointer strings; copy-path button only</td></tr>
+      <tr><td>R10 bolt npm publish</td><td>× Still vendored as <code>@app-builder/bolt</code></td></tr>
+      <tr><td>R11 Agent hardening</td><td>✓ Done — evals still shallow</td></tr>
+      <tr><td>R12 Cloud deploy + secrets</td><td>× Not started — SSRF proxy exists; no Railway, Convex cloud, or secrets</td></tr>
+      <tr><td>Slice 2 mutations + optimistic</td><td>× Designed, not built; type stubs only</td></tr>
+    </table>
   </div>
 
-  <!-- ============ 3. ROADMAP ============ -->
-  <h2 class="sec">Next big leaps</h2>
-  <p class="secsub">From ARCHITECTURE.md §13's deferred list, integration notes, and known gaps. Sizes: S ≈ hours, M ≈ a focused day or two, L ≈ multi-day.</p>
+  <h2 class="sec">Next steps — priority × impact</h2>
+  <p class="secsub">Focus next on the public-product story while keeping independent UX and infrastructure work moving.</p>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">R1</span><span class="qtitle">Wire QueryRuntime into the studio</span><span class="size M">M</span></div>
-    <p>Page-query editor UI + <code>/queries/{id}</code> bindings + the <code>runQuery</code> custom action. The <code>QueryRuntime</code> class (TanStack <code>QueryObserver</code> → bolt page store) already exists and is tested — it's simply not mounted in the builder or preview.</p>
-    <p class="why">Why it matters: this unlocks <b>dynamic data apps — the core product promise</b>. Until then the builder produces static pages.</p>
-    <p class="dep"><b>Depends on:</b> nothing — highest-leverage item on the board.</p>
+    <div class="qhead"><span class="qnum">N1</span><span class="qtitle">Serve published apps</span><span class="size M">M</span></div>
+    <p>Finish R4: add the public <code>/[appSlug]</code> catch-all route, hydrate it from <code>releases.getLive</code>, use per-app slugs and release-pinned query configs. <b>Publish becomes real.</b></p>
+    <p class="why">The gap that blocks the product story: releases are snapshotted, but <code>preview</code> still renders draft blocks.</p>
   </div>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">R2</span><span class="qtitle">Streamed page-artifact authoring</span><span class="size M">M</span></div>
-    <p>Agent emits <code>&lt;page-artifact&gt;</code> DSL as assistant text; the service SAX-parses it incrementally (<code>createStreamParser</code> already ships in <code>@app-builder/dsl</code>) and flushes batched inserts so the canvas <b>grows live during generation</b>. Today authoring is a single tool call — blocks appear all at once.</p>
-    <p class="why">Why it matters: this is the signature demo moment and the design's chosen authoring pipeline (decision Q3).</p>
-    <p class="dep"><b>Depends on:</b> nothing hard; touches agent session plumbing, so sequence with R11.</p>
+    <div class="qhead"><span class="qnum">N2</span><span class="qtitle">Clerk auth + ownership</span><span class="size M">M</span></div>
+    <p>Use <code>ConvexProviderWithClerk</code> and <code>ctx.auth.getUserIdentity()</code> in every function; enforce <code>ownerId</code> on all reads and writes.</p>
+    <p class="why">Safety gate for everything public. It blocks N3 and makes N1 safe to expose.</p>
   </div>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">R3</span><span class="qtitle">Table + Charts blocks</span><span class="size M">M</span></div>
-    <p>TanStack Table + shadcn markup; Recharts + shadcn <code>ChartContainer</code>. New catalog entries flow automatically into renderer, validation, and the agent's grammar (catalog-is-the-contract).</p>
-    <p class="why">Why it matters: tables and charts are what internal-tool builders actually build. Deliberately deferred to P1-after-launch — that time is now.</p>
-    <p class="dep"><b>Depends on:</b> R1 — without real query data these blocks have nothing to show.</p>
+    <div class="qhead"><span class="qnum">N3</span><span class="qtitle">Mutations + optimistic data</span><span class="size L">L</span></div>
+    <p>Implement the locked slice-2 design: <code>MutationConfig</code>, <code>runMutation</code>, <code>invalidates</code>, and append/update/remove optimistic verbs with automatic rollback. Shared type stubs already exist.</p>
+    <p class="why">Read-only apps are demos; writes make them applications.</p>
   </div>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">R4</span><span class="qtitle">Published-app serving (public routes)</span><span class="size M">M</span></div>
-    <p>Public catch-all route rendering releases by app slug via <code>releases.getLive</code>, adopting <code>@json-render/next</code> (SSR from frozen spec). Release snapshots already exist — there is no public renderer route yet, only the builder's preview.</p>
-    <p class="why">Why it matters: "publish" currently produces a version number nobody can visit. This closes the build → ship loop.</p>
-    <p class="dep"><b>Depends on:</b> nothing for the route; R5 before any real public exposure.</p>
+    <div class="qhead"><span class="qnum">N4</span><span class="qtitle">Interaction + bindings editor UX</span><span class="size M">M</span></div>
+    <p>Replace raw JSON textareas with a catalog-validated event-to-action picker, a binding path picker with <code>/queries/&lt;id&gt;/data</code> and <code>$state</code> autocomplete, and a template helper.</p>
+    <p class="why">The largest daily-use friction; unblocked today.</p>
   </div>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">R5</span><span class="qtitle">Clerk auth + ownership enforcement</span><span class="size M">M</span></div>
-    <p><code>ConvexProviderWithClerk</code>, <code>ctx.auth.getUserIdentity()</code> in every function, <code>ownerId</code> enforced on all reads/writes. Single-owner, no orgs (decision V5).</p>
-    <p class="why">Why it matters: hard prerequisite for any deployment beyond localhost; today every row is anonymous.</p>
-    <p class="dep"><b>Depends on:</b> nothing; blocks R12.</p>
+    <div class="qhead"><span class="qnum">N5</span><span class="qtitle">Cloud deploy + server-side secrets</span><span class="size M">M</span></div>
+    <p>Deploy the agent service on Railway, move to Convex cloud, authenticate the agent HTTP API, and move query auth headers server-side.</p>
+    <p class="why">Depends on N2. Query config credentials currently ship to every visitor, so public apps must not expose them.</p>
   </div>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">R6</span><span class="qtitle">Session undo (Hatim's V4 design)</span><span class="size L">L</span></div>
-    <p>In-memory capped client op log, humans only; agent ops arrive over the subscription tagged <code>actor: agent</code> and are <b>individually revertible</b> (inverse op, skip-if-overwritten-since); log nuked on publish. Undo executes as normal granular mutations.</p>
-    <p class="why">Why it matters: granular revert of agent changes is the trust mechanism for co-editing — "the agent did something weird" must have a one-click answer.</p>
-    <p class="dep"><b>Depends on:</b> touches every mutation path — land after R7/R8/R9 settle the editor's write surface.</p>
+    <div class="qhead"><span class="qnum">N6</span><span class="qtitle">Publish bolt to npm</span><span class="size S">S</span></div>
+    <p>Publish <code>@hatimcodes/bolt</code> and replace the vendored package. Independent hygiene that unblocks external reuse.</p>
   </div>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">R7</span><span class="qtitle">Drag-and-drop canvas</span><span class="size M">M</span></div>
-    <p>Drag from palette + drag-to-reorder/reparent on canvas. Backend already speaks this language (<code>moveBlock</code> with <code>beforeBlockId</code>, fractional indexing, cycle rejection) — today's UI is click-insert + move buttons.</p>
-    <p class="why">Why it matters: table-stakes builder ergonomics; the current interaction model reads as a prototype.</p>
-    <p class="dep"><b>Depends on:</b> nothing.</p>
+    <div class="qhead"><span class="qnum">N7</span><span class="qtitle">Quality backlog</span><span class="size S">S each</span></div>
+    <p>Batch eval rigor (N-iteration thresholds rather than a single smoke), redo as a post-v1 call, a DNS-rebind stance for the proxy, and structured agent-service logs keyed by <code>sessionId</code>/<code>runId</code>.</p>
   </div>
 
-  <div class="card road">
-    <div class="qhead"><span class="qnum">R8</span><span class="qtitle">Interaction builder UI</span><span class="size M">M</span></div>
-    <p>Visual editor for <code>on: {event: {action, params}}</code> — built-ins (<code>setState</code>, nav, <code>validateForm</code>) plus <code>runQuery</code> / <code>navigate</code>. The data model is already in place and verified (<code>setBindings</code> smoke-tested).</p>
-    <p class="why">Why it matters: interactions are what separate an app from a mockup; today they're hand-written JSON.</p>
-    <p class="dep"><b>Depends on:</b> R1 for <code>runQuery</code> to be meaningful.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">R9</span><span class="qtitle">Bindings / expression editor UX</span><span class="size S">S</span></div>
-    <p>Replace the inspector's raw JSON textarea with a purpose-built editor: path picker for <code>$state</code>/<code>$bindState</code>, template string helper, visible/repeat toggles.</p>
-    <p class="why">Why it matters: bindings are the product's superpower and currently its worst UX; also removes a class of hand-typed <code>$</code>-key mistakes.</p>
-    <p class="dep"><b>Depends on:</b> nothing.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">R10</span><span class="qtitle">bolt npm publish</span><span class="size S">S</span></div>
-    <p>Publish <code>@hatimcodes/bolt 0.2.0</code> (PRs #3+#4 already merged in the vendored copy, 28 tests) and swap <code>packages/bolt</code> for the npm dependency.</p>
-    <p class="why">Why it matters: removes vendored drift risk and gives bolt its own release cadence (decision S2).</p>
-    <p class="dep"><b>Depends on:</b> nothing; fully independent.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">R11</span><span class="qtitle">Agent hardening</span><span class="size M">M</span></div>
-    <p>Steering mid-generation (interrupt/redirect a running session), a deliberate <code>read_page</code> context-injection policy (when the agent sees human edits), and multi-page awareness beyond <code>list_pages</code>.</p>
-    <p class="why">Why it matters: real co-editing sessions are messy — the human edits <i>while</i> the agent generates. Today's session is fire-and-forget per message.</p>
-    <p class="dep"><b>Depends on:</b> pairs naturally with R2 (same session internals).</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">R12</span><span class="qtitle">Cloud deployment: Railway + Convex cloud + secrets proxy</span><span class="size M">M</span></div>
-    <p>Agent service to Railway (decision V7), Convex from local anon to cloud, auth on the agent HTTP API (currently open + permissive CORS), then the credentialed-datasource Convex-action proxy (decision R3, deferred).</p>
-    <p class="why">Why it matters: nothing is real until someone else can use it; the secrets proxy unlocks authenticated APIs — most real data sources.</p>
-    <p class="dep"><b>Depends on:</b> R5 (auth first). Secrets proxy also wants R1 in place.</p>
-  </div>
-
-  <!-- ============ 4. PARALLELIZATION ============ -->
-  <h2 class="sec">Parallelization map</h2>
-  <p class="secsub">Five independent lanes — the same trick as the A/B/C barebone build. Arrows (→) are sequential within a lane; ∥ marks items that can run concurrently. All five lanes can start simultaneously.</p>
+  <h2 class="sec">Lanes</h2>
+  <p class="secsub">Independent work can proceed now; the product-critical lane has a clear public-release sequence.</p>
 
   <div class="lane">
-    <h3>Lane 1 — Data layer <span class="who">Workstream B profile</span></h3>
-    <p class="note">The core-promise lane. Runtime + backend heavy; strictly sequential — each step feeds the next.</p>
-    <div class="chain">
-      <span class="step">R1 QueryRuntime wiring<span class="sz M">M</span></span><span class="arrow">→</span>
-      <span class="step">R3 Table + Charts<span class="sz M">M</span></span><span class="arrow">→</span>
-      <span class="step">R12b Secrets/datasource proxy<span class="sz M">M</span></span>
-    </div>
+    <h3>Lane A — Product-critical path <span class="who">N1 → N2 → N5</span></h3>
+    <p class="note">Publish → auth → deploy. This lane ends with a URL you can hand someone.</p>
   </div>
-
   <div class="lane">
-    <h3>Lane 2 — Agent UX <span class="who">Workstream C profile</span></h3>
-    <p class="note">Same owner, same session internals. Streaming first (it restructures the session loop), hardening rides on the new shape.</p>
-    <div class="chain">
-      <span class="step">R2 Streamed authoring<span class="sz M">M</span></span><span class="arrow">→</span>
-      <span class="step">R11 Steering + context policy<span class="sz M">M</span></span>
-    </div>
+    <h3>Lane B — Data <span class="who">N3</span></h3>
+    <p class="note">Slice-2 mutations; independent of Lane A.</p>
   </div>
-
   <div class="lane">
-    <h3>Lane 3 — Publish &amp; auth <span class="who">Workstream A + infra profile</span></h3>
-    <p class="note">The "someone else can use it" lane. Public route can start immediately; auth gates real exposure; deploy last.</p>
-    <div class="chain">
-      <span class="step">R4 Public release routes<span class="sz M">M</span></span><span class="arrow">→</span>
-      <span class="step">R5 Clerk + ownership<span class="sz M">M</span></span><span class="arrow">→</span>
-      <span class="step">R12a Railway + Convex cloud<span class="sz M">M</span></span>
-    </div>
+    <h3>Lane C — Editor UX <span class="who">N4</span></h3>
+    <p class="note">Independent, with a large perceived-quality win.</p>
   </div>
-
   <div class="lane">
-    <h3>Lane 4 — Editor UX <span class="who">Workstream A profile</span></h3>
-    <p class="note">Three parallel-safe UI builds (disjoint components), then undo — it instruments every mutation path, so it lands once the write surface stops moving.</p>
-    <div class="chain">
-      <span class="step">R7 Drag-and-drop<span class="sz M">M</span></span><span class="par">∥</span>
-      <span class="step">R9 Bindings editor<span class="sz S">S</span></span><span class="par">∥</span>
-      <span class="step">R8 Interaction builder<span class="sz M">M</span></span><span class="arrow">→</span>
-      <span class="step">R6 Session undo<span class="sz L">L</span></span>
-    </div>
-  </div>
-
-  <div class="lane">
-    <h3>Lane 5 — Infra <span class="who">Anyone / anytime</span></h3>
-    <p class="note">Fully independent; slot in whenever.</p>
-    <div class="chain">
-      <span class="step">R10 bolt npm publish + swap<span class="sz S">S</span></span>
-    </div>
-  </div>
-
-  <div class="block find">
-    <span class="lbl">Cross-lane couplings (the only ones)</span>
-    <ul>
-      <li><b>R8 (interactions) ← R1:</b> the <code>runQuery</code> action needs QueryRuntime mounted. R8's UI shell can still be built against <code>setState</code>/nav first.</li>
-      <li><b>R3 (table/charts) spans ownership:</b> catalog components are A-territory, data plumbing is B-territory — same coordination pattern as the barebone build, one integration note each way.</li>
-      <li><b>R2 ∥ human editing:</b> streamed inserts + concurrent human edits is exactly the LWW/row-per-block design's home turf — no new machinery, but smoke-test the combination.</li>
-    </ul>
+    <h3>Lane D — Infra <span class="who">N6 + N7</span></h3>
+    <p class="note">Fill-in work that can run alongside the other lanes.</p>
   </div>
 
   <div class="block rec">
     <span class="lbl">Recommended first wave</span>
-    <p>Kick off all five lanes at once with the barebone staffing pattern: <b>R1</b> (Lane 1) + <b>R2</b> (Lane 2) + <b>R4</b> (Lane 3) + <b>R7/R9</b> (Lane 4) + <b>R10</b> (Lane 5). That wave alone turns the barebone into a demoable product: dynamic data, live-growing canvas, visitable published apps, and a builder that feels like one.</p>
+    <p><b>Start N1 + N4 + N6 in parallel today, with N2 immediately behind N1.</b> That yields visitable published apps, a humane editor, and the path to a safe public deploy.</p>
   </div>
 
-  <!-- ============ 5. FOOTER ============ -->
   <footer>
     <p><b>Repo:</b> <code>/Users/admin/Projects/ai-app-builder</code> (pnpm + turborepo monorepo)</p>
-    <p><b>Run it:</b></p>
-    <pre>pnpm install
-pnpm --filter @app-builder/backend dev     # Convex local dev deployment
-pnpm dev                                    # studio :3100 + agent service :8787</pre>
-    <table class="mini">
-      <tr><th>Provenance</th><th>Source</th></tr>
-      <tr><td>Locked design</td><td><code>/Users/admin/Projects/ai-builder-design/ARCHITECTURE.md</code> (15 sections, 44-entry decision log)</td></tr>
-      <tr><td>Grill rounds</td><td><code>grill-round-1/2/3.html</code> (25 + 17 + 7 questions)</td></tr>
-      <tr><td>Contracts &amp; ownership</td><td><code>docs/CONTRACTS.md</code></td></tr>
-      <tr><td>Integration findings</td><td><code>docs/INTEGRATION-NOTES.md</code> (append-only, all four entries)</td></tr>
-      <tr><td>Build history</td><td><code>git log</code> — 19 commits; test run July 11, 2026: 98 passing across 6 packages</td></tr>
-    </table>
-    <p style="margin-top:14px">Compiled July 11, 2026 · facts verified against the repo and the live smoke test · dark-theme companion to the grill docs.</p>
+    <p><b>Source:</b> <code>.grill-sessions/roadmap-v2.md</code></p>
+    <p>Compiled July 17, 2026 · v2 status verified against code on <code>main</code> · dark-theme companion to the grill docs.</p>
   </footer>
 
 </div>
+
 </article>
 </main>
 </body>
