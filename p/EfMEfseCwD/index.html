@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>AI App Builder — Progress &amp; Roadmap</title>
+<title>AI App Builder — Progress &amp; Roadmap (v2.2)</title>
 <style>/* planloft theme: minimal — mono, black & white, tight */
 :root {
   --ink: #111;
@@ -141,14 +141,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
   <header class="hero">
     <div style="margin-bottom:10px">
-      <span class="pill good">v2 roadmap</span>
+      <span class="pill good">v2.2 roadmap</span>
       <span class="pill">Progress verified</span>
       <span class="pill">Main branch</span>
       <span class="pill warn">Public serving pending</span>
     </div>
     <h1>AI App Builder — Progress &amp; Roadmap</h1>
-    <p class="status"><b>Updated July 17, 2026.</b> The July 11 roadmap is superseded; status is verified against code on <code>main</code>, not commit messages.</p>
-    <p>The barebone builder has crossed the first useful product threshold: async data, richer blocks, a drag-and-drop canvas, session undo, and a substantially more steerable agent loop are all shipped.</p>
+    <p class="status"><b>Updated July 18, 2026.</b> The July 11 roadmap is superseded; status is verified against code on <code>main</code>, not commit messages.</p>
+    <p>The builder now has async data, richer blocks, drag-and-drop, session undo, a steerable agent loop, structured editor controls, a first-class List block, and path-granular preview rendering.</p>
   </header>
 
   <h2 class="sec">Where we are</h2>
@@ -200,8 +200,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       <tr><td>R5 Clerk auth + ownership</td><td>× Not started — <code>ownerId:"local"</code>, no auth checks</td></tr>
       <tr><td>R6 Session undo</td><td>✓ Done</td></tr>
       <tr><td>R7 DnD canvas</td><td>✓ Done — plus Layers panel</td></tr>
-      <tr><td>R8 Interaction builder UI</td><td>◐ <code>on:</code> map remains a raw JSON textarea</td></tr>
-      <tr><td>R9 Bindings editor UX</td><td>◐ Manual pointer strings; copy-path button only</td></tr>
+      <tr><td>R8 Interaction builder UI</td><td>✓ Done — structured event, visible, and repeat editors</td></tr>
+      <tr><td>R9 Bindings editor UX</td><td>✓ Done — PathPicker, TemplateInput, Combobox, scoped autocomplete</td></tr>
       <tr><td>R10 bolt npm publish</td><td>× Still vendored as <code>@app-builder/bolt</code></td></tr>
       <tr><td>R11 Agent hardening</td><td>✓ Done — evals still shallow</td></tr>
       <tr><td>R12 Cloud deploy + secrets</td><td>× Not started — SSRF proxy exists; no Railway, Convex cloud, or secrets</td></tr>
@@ -231,9 +231,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   </div>
 
   <div class="card road">
-    <div class="qhead"><span class="qnum">N4</span><span class="qtitle">Interaction + bindings editor UX</span><span class="size M">M</span></div>
-    <p>Replace raw JSON textareas with a catalog-validated event-to-action picker, a binding path picker with <code>/queries/&lt;id&gt;/data</code> and <code>$state</code> autocomplete, and a template helper.</p>
-    <p class="why">The largest daily-use friction; unblocked today.</p>
+    <div class="qhead"><span class="qnum">N4</span><span class="qtitle">Interaction + bindings editor UX</span><span class="size S">Done</span></div>
+    <p>Shipped in PRs #28–#31: structured event, visible, and repeat editors; <code>PathPicker</code>, <code>TemplateInput</code>, and <code>Combobox</code> primitives; repeat-scoped data-path autocomplete; scalar-safe literals; and an accessibility pass.</p>
+    <p class="why">The largest daily-use editor friction is resolved.</p>
   </div>
 
   <div class="card road">
@@ -282,43 +282,77 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     <p class="why">F1 → F4 solves the reported typing case in-repo and showcases bolt’s derived-dependency flow ahead of N6.</p>
   </div>
 
+  <h2 class="sec">v2.2 status update <span style="color:var(--muted);font-size:13px;font-weight:500;text-transform:none;letter-spacing:0">July 18, 2026</span></h2>
+  <p class="secsub">All work below merged to <code>main</code> through stacked PRs, a two-round review loop, and green CI.</p>
+
+  <div class="card">
+    <div class="tl">
+      <div class="tl-item done">
+        <h3>N4 — Interaction + bindings editor UX <span class="when">PRs #28–#31</span></h3>
+        <p>Structured event, visible, and repeat editors; PathPicker, TemplateInput, and Combobox primitives; data-panel path autocomplete with repeat scope; scalar-type-safe literals; and an a11y pass.</p>
+      </div>
+      <div class="tl-item done">
+        <h3>Lane E — List block <span class="when">PRs #34–#41</span></h3>
+        <p>List contract + item scope, per-item Typography/Table/Chart context, queryId data sources with loading/empty/error + retry states, <code>$item</code>/<code>$index</code> action sugar, canvas instance-aware geometry, and agent grammar + DSL docs. Item-identity payload polish (E5) and virtualization (E6) remain deferred.</p>
+      </div>
+      <div class="tl-item done">
+        <h3>Lane F — bolt-powered render perf <span class="when">PRs #32–#39</span></h3>
+        <p>Vendored json-render now subscribes per path for O(1) re-renders per state write, verified by the development render probe. Bolt-backed derived page state has graph cycle validation, atomic registration, derived-config agent tools, and root-pointer canonicalization.</p>
+      </div>
+      <div class="tl-item done">
+        <h3>Same-day regression fix <span class="when">b81854a</span></h3>
+        <p>Corrected the <code>$state</code> vs <code>$bindState</code> default for interactive value bindings and fixed canvas click capture.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block rec">
+    <span class="lbl">Revised priorities</span>
+    <p><b>Lane 1:</b> N1 public serving → N2 Clerk auth + ownership. <b>Lane 2:</b> N5 cloud deploy — Railway agent service, Convex cloud migration, and server-side secrets. N3 (mutations), N6 (bolt npm publish), and N7 (quality backlog) are deferred for now.</p>
+  </div>
+
+  <div class="block find">
+    <span class="lbl">Under exploration</span>
+    <p>Separate PlanLoft docs will follow design discussion for: a data-binding UX rethink; component styles, app-wide tokens, and direct CSS; studio light mode; and richer agent chat with streaming, observability, and image attachments.</p>
+  </div>
+
   <h2 class="sec">Lanes</h2>
   <p class="secsub">Independent work can proceed now; the product-critical lane has a clear public-release sequence.</p>
 
   <div class="lane">
-    <h3>Lane A — Product-critical path <span class="who">N1 → N2 → N5</span></h3>
-    <p class="note">Publish → auth → deploy. This lane ends with a URL you can hand someone.</p>
+    <h3>Lane 1 — Product-critical path <span class="who">N1 → N2</span></h3>
+    <p class="note">Public serving, then Clerk auth + ownership: the path to a safe public app.</p>
   </div>
   <div class="lane">
-    <h3>Lane B — Data <span class="who">N3</span></h3>
-    <p class="note">Slice-2 mutations; independent of Lane A.</p>
+    <h3>Lane 2 — Infrastructure <span class="who">N5</span></h3>
+    <p class="note">Railway agent service, Convex cloud migration, and server-side secrets follow the auth gate.</p>
   </div>
   <div class="lane">
-    <h3>Lane C — Editor UX <span class="who">N4</span></h3>
-    <p class="note">Independent, with a large perceived-quality win.</p>
+    <h3>Completed — Editor UX <span class="who">N4</span></h3>
+    <p class="note">Structured interaction and binding controls are now shipped.</p>
   </div>
   <div class="lane">
-    <h3>Lane D — Infra <span class="who">N6 + N7</span></h3>
-    <p class="note">Fill-in work that can run alongside the other lanes.</p>
+    <h3>Deferred — Data &amp; hygiene <span class="who">N3 + N6 + N7</span></h3>
+    <p class="note">Mutations, bolt npm publishing, and the quality backlog are parked for now.</p>
   </div>
   <div class="lane">
-    <h3>Lane E — List block with item context <span class="who">E1 → E4</span></h3>
-    <p class="note">Follow N4, or run in parallel with a second pair of hands; keep identity payloads and virtualization as separate follow-ons.</p>
+    <h3>Completed — List block <span class="who">Lane E</span></h3>
+    <p class="note">Item-scoped Lists are shipped; identity payload polish and virtualization remain separate follow-ons.</p>
   </div>
   <div class="lane">
-    <h3>Lane F — Render perf: use bolt properly <span class="who">F1 → F4</span></h3>
-    <p class="note">A first-wave, user-visible performance fix: restore bolt’s path-level subscriptions and derived bindings in preview.</p>
+    <h3>Completed — Render performance <span class="who">Lane F</span></h3>
+    <p class="note">Preview now uses per-path subscriptions and bolt-derived state rather than whole-state rerendering.</p>
   </div>
 
   <div class="block rec">
-    <span class="lbl">Recommended first wave</span>
-    <p><b>Start N1 + N4 + N6 + Lane F in parallel today, with N2 immediately behind N1.</b> Lane E follows N4 or runs with a second pair of hands. This yields visitable published apps, a humane editor, responsive previews, and the path to a safe public deploy.</p>
+    <span class="lbl">Recommended next wave</span>
+    <p><b>Start N1 public serving, then N2 Clerk auth + ownership; run N5 infrastructure work immediately behind them.</b> The editor and rendering foundations are now ready for a safe, handoff-ready public deploy.</p>
   </div>
 
   <footer>
     <p><b>Repo:</b> <code>/Users/admin/Projects/ai-app-builder</code> (pnpm + turborepo monorepo)</p>
     <p><b>Source:</b> <code>.grill-sessions/roadmap-v2.md</code></p>
-    <p>Compiled July 17, 2026 · v2 status verified against code on <code>main</code> · dark-theme companion to the grill docs.</p>
+    <p>Compiled July 18, 2026 · v2.2 status verified against code on <code>main</code> · dark-theme companion to the grill docs.</p>
   </footer>
 
 </div>
