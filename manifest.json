@@ -29,6 +29,42 @@
       "expiresAt": "2026-08-16T10:14:33.000Z"
     },
     {
+      "id": "N8GSl8SiYq",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "binding-ux-plan",
+      "title": "AI App Builder — Binding UX Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-18T14:14:35.000Z",
+      "expiresAt": "2026-08-17T14:14:35.000Z"
+    },
+    {
+      "id": "QeCHFGknMc",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "styling-system-plan",
+      "title": "AI App Builder — Styling System Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-18T14:14:35.000Z",
+      "expiresAt": "2026-08-17T14:14:35.000Z"
+    },
+    {
+      "id": "X7gPUv9dYi",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "studio-light-mode-plan",
+      "title": "AI App Builder — Studio Light Mode Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-18T14:14:35.000Z",
+      "expiresAt": "2026-08-17T14:14:35.000Z"
+    },
+    {
+      "id": "NwyuKeA17G",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "agent-chat-ux-plan",
+      "title": "AI App Builder — Agent Chat UX Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-18T14:14:35.000Z",
+      "expiresAt": "2026-08-17T14:14:35.000Z"
+    },
+    {
       "id": "mcIwIPJ0vR",
       "project": "github.com/unify-apps/www",
       "slug": "platform-design-system-questionnaire",

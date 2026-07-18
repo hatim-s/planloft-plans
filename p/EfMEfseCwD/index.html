@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>AI App Builder — Progress &amp; Roadmap (v2.2)</title>
+<title>AI App Builder — Progress &amp; Roadmap (v2.3)</title>
 <style>/* planloft theme: minimal — mono, black & white, tight */
 :root {
   --ink: #111;
@@ -141,13 +141,13 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
   <header class="hero">
     <div style="margin-bottom:10px">
-      <span class="pill good">v2.2 roadmap</span>
+      <span class="pill good">v2.3 roadmap</span>
       <span class="pill">Progress verified</span>
       <span class="pill">Main branch</span>
       <span class="pill warn">Public serving pending</span>
     </div>
     <h1>AI App Builder — Progress &amp; Roadmap</h1>
-    <p class="status"><b>Updated July 18, 2026.</b> The July 11 roadmap is superseded; status is verified against code on <code>main</code>, not commit messages.</p>
+    <p class="status"><b>Updated July 18, 2026.</b> The July 11 roadmap is superseded; status is verified against code on <code>main</code>, not commit messages. Four resolved UX explorations now have implementation plans.</p>
     <p>The builder now has async data, richer blocks, drag-and-drop, session undo, a steerable agent loop, structured editor controls, a first-class List block, and path-granular preview rendering.</p>
   </header>
 
@@ -311,9 +311,15 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     <p><b>Lane 1:</b> N1 public serving → N2 Clerk auth + ownership. <b>Lane 2:</b> N5 cloud deploy — Railway agent service, Convex cloud migration, and server-side secrets. N3 (mutations), N6 (bolt npm publish), and N7 (quality backlog) are deferred for now.</p>
   </div>
 
-  <div class="block find">
-    <span class="lbl">Under exploration</span>
-    <p>Separate PlanLoft docs will follow design discussion for: a data-binding UX rethink; component styles, app-wide tokens, and direct CSS; studio light mode; and richer agent chat with streaming, observability, and image attachments.</p>
+  <h2 class="sec">Explorations resolved <span style="color:var(--muted);font-size:13px;font-weight:500;text-transform:none;letter-spacing:0">July 18, 2026</span></h2>
+  <p class="secsub">Decisions are locked with Hatim. Each exploration has a focused PlanLoft implementation plan.</p>
+  <div class="card road">
+    <ol style="margin:0;padding-left:22px;color:var(--muted)">
+      <li><a href="../N8GSl8SiYq/">Binding UX rethink</a> — friendly names with tooltip paths, catalog-owned binding direction, picker-level envelope aliasing, and one quick-win-first stack.</li>
+      <li><a href="../QeCHFGknMc/">Styling system</a> — minimal dual-mode shadcn-compatible tokens, scoped CSS vars and presets, curated style props/utilities, and a sanitized escape hatch.</li>
+      <li><a href="../X7gPUv9dYi/">Studio light mode</a> — system default and independently themed canvas surfaces from day one.</li>
+      <li><a href="../NwyuKeA17G/">Agent chat UX</a> — message parts, tool cards with Revert, collapsible reasoning summaries, image attachments, and focused agent tools.</li>
+    </ol>
   </div>
 
   <h2 class="sec">Lanes</h2>
@@ -352,7 +358,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   <footer>
     <p><b>Repo:</b> <code>/Users/admin/Projects/ai-app-builder</code> (pnpm + turborepo monorepo)</p>
     <p><b>Source:</b> <code>.grill-sessions/roadmap-v2.md</code></p>
-    <p>Compiled July 18, 2026 · v2.2 status verified against code on <code>main</code> · dark-theme companion to the grill docs.</p>
+    <p>Compiled July 18, 2026 · v2.3 status verified against code on <code>main</code> · dark-theme companion to the grill docs.</p>
   </footer>
 
 </div>
