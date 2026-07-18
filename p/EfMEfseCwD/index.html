@@ -4,366 +4,81 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>AI App Builder — Progress &amp; Roadmap (v2.3)</title>
-<style>/* planloft theme: minimal — mono, black & white, tight */
-:root {
-  --ink: #111;
-  --paper: #fff;
-  --rule: #e5e5e5;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-}
-.planloft-plan {
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: 3rem 1.25rem 6rem;
-}
-h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
-h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
-h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
-ul { padding-left: 1.1rem; }
-li { margin: 0.15rem 0; }
-a { color: var(--ink); text-underline-offset: 2px; }
-code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
-pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
-hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+<title>AI App Builder — Progress &amp; Roadmap</title>
+<style>
+  :root { --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --ink:#e7ebf0; --muted:#9aa4b2; --line:#2a2f3a; --accent:#7c9cff; --good:#43c59e; --warn:#ffb454; --bad:#ff6b6b; --rec:#13351f; --recline:#2f7d52; --find:#1a2230; --findline:#33507a; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  a { color:var(--accent); }
+  .wrap { max-width:980px; margin:0 auto; padding:32px 20px 80px; }
+  .hero { border:1px solid var(--line); background:linear-gradient(180deg,#191d27,#13161d); border-radius:14px; padding:26px 28px; margin-bottom:26px; }
+  .hero h1 { margin:0 0 6px; font-size:26px; letter-spacing:-.3px; }
+  .hero p { margin:6px 0; color:var(--muted); }
+  .hero .status { color:var(--ink); font-size:16px; }
+  .hero .status b { color:var(--good); }
+  .pill { display:inline-block; padding:3px 10px; margin-right:6px; border:1px solid var(--line); border-radius:999px; background:#222838; color:var(--accent); font-size:11px; letter-spacing:.4px; text-transform:uppercase; }
+  .pill.good { color:#7ee2b8; background:#14291e; border-color:#265c40; }
+  .pill.warn { color:#ffd9a0; background:#2b2312; border-color:#5c4a26; }
+  h2.sec { margin:38px 0 4px; font-size:20px; letter-spacing:-.2px; }
+  .secsub { margin:0 0 14px; color:var(--muted); font-size:14px; }
+  .card,.lane { margin:16px 0; padding:20px 22px; border:1px solid var(--line); border-radius:14px; background:var(--panel); }
+  .grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin:14px 0; }
+  .cap { padding:16px 18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); }
+  .cap h3 { margin:0 0 10px; color:var(--accent); font-size:14px; letter-spacing:.4px; text-transform:uppercase; }
+  .cap ul { margin:0; padding:0; list-style:none; }
+  .cap li { position:relative; padding:3px 0 3px 22px; color:var(--ink); font-size:13.5px; }
+  .cap li::before { position:absolute; left:0; content:"✓"; color:var(--good); font-weight:700; }
+  .block { margin:12px 0; padding:12px 14px; border-radius:10px; font-size:14px; }
+  .block .lbl { display:block; margin-bottom:5px; font-size:11px; letter-spacing:.6px; opacity:.85; text-transform:uppercase; }
+  .find { border:1px solid var(--findline); background:var(--find); } .find .lbl { color:#9ec1ff; }
+  .rec { border:1px solid var(--recline); background:var(--rec); } .rec .lbl { color:#7ee2b8; }
+  .block p { margin:6px 0; } .block ul { margin:6px 0 6px 18px; padding:0; }
+  .qhead { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .qnum { color:var(--accent); font-size:14px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .qtitle { font-size:17px; font-weight:650; letter-spacing:-.2px; }
+  .size { display:inline-block; margin-left:auto; padding:2px 8px; border:1px solid var(--line); border-radius:6px; font-size:11px; font-weight:700; letter-spacing:.5px; }
+  .size.S { color:#7ee2b8; background:#14291e; border-color:#265c40; } .size.M { color:#ffd9a0; background:#2b2312; border-color:#5c4a26; } .size.L { color:#ffb0b0; background:#2e1717; border-color:#6b2f2f; }
+  .road p { margin:6px 0; font-size:14px; } .road .why,.road .dep { color:var(--muted); } .road .dep { font-size:13px; }
+  .lane { padding:16px 20px; } .lane h3 { margin:0 0 4px; font-size:16px; letter-spacing:-.1px; } .lane p { margin:2px 0 10px; color:var(--muted); font-size:13.5px; }
+  .chain { display:flex; align-items:center; flex-wrap:wrap; gap:8px; } .step { padding:7px 12px; border:1px solid var(--line); border-radius:9px; background:var(--panel2); font-size:13px; font-weight:600; } .arrow { color:var(--muted); }
+  footer { margin-top:44px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:13.5px; }
+  code { padding:0 5px; border:1px solid var(--line); border-radius:5px; background:#0c0e12; color:#cdd6e3; font-size:13px; }
 </style>
 </head>
 <body>
-<main class="planloft-plan">
-<article><style>
-  :root{
-    --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --ink:#e7ebf0; --muted:#9aa4b2;
-    --line:#2a2f3a; --accent:#7c9cff; --good:#43c59e; --warn:#ffb454; --bad:#ff6b6b;
-    --rec:#13351f; --recline:#2f7d52; --find:#1a2230; --findline:#33507a;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
-    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
-  a{color:var(--accent)}
-  .wrap{max-width:980px;margin:0 auto;padding:32px 20px 80px;}
-  header.hero{border:1px solid var(--line);background:linear-gradient(180deg,#191d27,#13161d);
-    border-radius:14px;padding:26px 28px;margin-bottom:26px;}
-  header.hero h1{margin:0 0 6px;font-size:26px;letter-spacing:-.3px}
-  header.hero p{margin:6px 0;color:var(--muted)}
-  header.hero p.status{color:var(--ink);font-size:16px}
-  header.hero p.status b{color:var(--good)}
-  .pill{display:inline-block;font-size:11px;letter-spacing:.4px;text-transform:uppercase;
-    background:#222838;color:var(--accent);border:1px solid var(--line);border-radius:999px;
-    padding:3px 10px;margin-right:6px}
-  .pill.good{color:#7ee2b8;background:#14291e;border-color:#265c40}
-  .pill.warn{color:#ffd9a0;background:#2b2312;border-color:#5c4a26}
-  h2.sec{font-size:20px;letter-spacing:-.2px;margin:38px 0 4px}
-  p.secsub{margin:0 0 14px;color:var(--muted);font-size:14px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-    padding:20px 22px;margin:16px 0;scroll-margin-top:20px}
-  code{background:#0c0e12;border:1px solid var(--line);border-radius:5px;padding:0 5px;color:#cdd6e3;font-size:13px}
-  pre{background:#0c0e12;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
-    overflow-x:auto;font-size:12.5px;line-height:1.45;color:#cdd6e3;margin:8px 0}
-  .block{border-radius:10px;padding:12px 14px;margin:12px 0;font-size:14px}
-  .find{background:var(--find);border:1px solid var(--findline)}
-  .rec{background:var(--rec);border:1px solid var(--recline)}
-  .block .lbl{display:block;font-size:11px;letter-spacing:.6px;text-transform:uppercase;
-    margin-bottom:5px;opacity:.85}
-  .find .lbl{color:#9ec1ff}
-  .rec .lbl{color:#7ee2b8}
-  .block p{margin:6px 0}
-  .block ul{margin:6px 0 6px 18px;padding:0}
-
-  /* timeline */
-  .tl{position:relative;margin:8px 0 0;padding-left:26px}
-  .tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
-  .tl-item{position:relative;padding:0 0 22px}
-  .tl-item:last-child{padding-bottom:2px}
-  .tl-item::before{content:"";position:absolute;left:-24px;top:5px;width:12px;height:12px;border-radius:50%;
-    background:var(--panel2);border:2px solid var(--accent)}
-  .tl-item.done::before{background:var(--good);border-color:var(--good)}
-  .tl-item h3{margin:0 0 4px;font-size:15.5px;letter-spacing:-.1px}
-  .tl-item h3 .when{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
-  .tl-item p{margin:4px 0;color:var(--muted);font-size:14px}
-  .tl-item ul{margin:6px 0 0 18px;padding:0;color:var(--muted);font-size:13.5px}
-  .tl-item ul b{color:var(--ink)}
-
-  /* capability grid */
-  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:14px 0}
-  .cap{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-  .cap h3{margin:0 0 10px;font-size:14px;letter-spacing:.4px;text-transform:uppercase;color:var(--accent)}
-  .cap ul{margin:0;padding:0;list-style:none}
-  .cap li{position:relative;padding:3px 0 3px 22px;font-size:13.5px;color:var(--ink)}
-  .cap li::before{content:"✓";position:absolute;left:0;color:var(--good);font-weight:700}
-  .cap li .sub{color:var(--muted)}
-  .cap li.gap::before{content:"—";color:var(--warn)}
-  .cap li.gap{color:var(--muted)}
-
-  /* roadmap */
-  .road .qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;flex-wrap:wrap}
-  .qnum{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;font-size:14px}
-  .qtitle{font-size:17px;font-weight:650;letter-spacing:-.2px}
-  .size{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;border-radius:6px;
-    padding:2px 8px;border:1px solid var(--line);margin-left:auto}
-  .size.S{color:#7ee2b8;background:#14291e;border-color:#265c40}
-  .size.M{color:#ffd9a0;background:#2b2312;border-color:#5c4a26}
-  .size.L{color:#ffb0b0;background:#2e1717;border-color:#6b2f2f}
-  .road p{margin:6px 0;font-size:14px}
-  .road p.why{color:var(--muted)}
-  .road p.dep{font-size:13px;color:var(--muted)}
-  .road p.dep b{color:var(--ink);font-weight:600}
-  .road ul{margin:10px 0 0 18px;padding:0;color:var(--muted);font-size:13.5px}
-  .road li{margin:6px 0}
-  .road li b{color:var(--ink)}
-
-  /* lanes */
-  .lane{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:14px 0}
-  .lane h3{margin:0 0 4px;font-size:16px;letter-spacing:-.1px}
-  .lane h3 .who{font-size:11.5px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--accent);
-    border:1px solid var(--line);background:#222838;border-radius:999px;padding:2px 9px;margin-left:10px;vertical-align:2px}
-  .lane p.note{margin:2px 0 10px;color:var(--muted);font-size:13.5px}
-  .chain{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-  .step{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 12px;
-    font-size:13px;font-weight:600}
-  .step .sz{font-weight:700;font-size:11px;margin-left:6px}
-  .step .sz.S{color:var(--good)} .step .sz.M{color:var(--warn)} .step .sz.L{color:var(--bad)}
-  .arrow{color:var(--muted);font-size:15px}
-  .par{color:var(--muted);font-size:12px;letter-spacing:.4px;text-transform:uppercase;margin:0 2px}
-
-  footer{margin-top:44px;border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:13.5px}
-  footer b{color:var(--ink)}
-  table.mini{border-collapse:collapse;font-size:13px;margin:8px 0}
-  table.mini td,table.mini th{border:1px solid var(--line);padding:5px 10px;text-align:left}
-  table.mini th{color:var(--muted);font-weight:600;background:var(--panel2)}
-</style>
-<div class="wrap">
-
+<main class="wrap">
   <header class="hero">
-    <div style="margin-bottom:10px">
-      <span class="pill good">v2.3 roadmap</span>
-      <span class="pill">Progress verified</span>
-      <span class="pill">Main branch</span>
-      <span class="pill warn">Public serving pending</span>
-    </div>
+    <div style="margin-bottom:10px"><span class="pill good">Current state</span><span class="pill">Main branch</span><span class="pill">Design decisions locked</span><span class="pill warn">Public serving pending</span></div>
     <h1>AI App Builder — Progress &amp; Roadmap</h1>
-    <p class="status"><b>Updated July 18, 2026.</b> The July 11 roadmap is superseded; status is verified against code on <code>main</code>, not commit messages. Four resolved UX explorations now have implementation plans.</p>
-    <p>The builder now has async data, richer blocks, drag-and-drop, session undo, a steerable agent loop, structured editor controls, a first-class List block, and path-granular preview rendering.</p>
+    <p class="status"><b>Builder core shipped.</b> Status verified against code on <code>main</code>.</p>
+    <p>A human and an AI agent co-edit JSON-defined applications live: specs render to React at runtime, and both collaborators use the same granular mutation model.</p>
   </header>
 
-  <h2 class="sec">Where we are</h2>
-  <p class="secsub">Shipped since July 11 — all merged to <code>main</code>, CI green.</p>
-
-  <div class="card">
-    <div class="tl">
-      <div class="tl-item done">
-        <h3>Async-data slice 1 <span class="when">PRs #5–#10 · was R1</span></h3>
-        <p>QueryRuntime is wired into the studio: reactive <code>{$state}</code> params, auto/manual modes, app-scoped queries, an SSRF-guarded CORS proxy, live Data-panel results, and <code>runQuery</code>/<code>setState</code> actions.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Table + Chart blocks <span class="when">was R3</span></h3>
-        <p>Hardened with input validation, style-injection guards, and component tests.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Drag-and-drop canvas + Layers panel <span class="when">PRs #11–#12 · was R7</span></h3>
-        <p>Palette drag-insert, reorder/reparent, and a hierarchy tree are all routed through undo tracking.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Session undo <span class="when">PRs #13–#20 · was R6</span></h3>
-        <p>Op-log core with capture, inverse operations, preconditions, and a capped log; Cmd+Z, header Undo, granular and per-run agent reverts. Publishing intentionally clears the log; redo is out of v1 scope.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Agent steering &amp; hardening <span class="when">R11 + R2 in tool form</span></h3>
-        <p>SDK-native deliver/abort, a run-lifecycle state machine, debounced human-edit injection with per-page conflict tracking, multi-page awareness, 30-minute idle eviction, and <code>actor</code>/<code>opId</code>/<code>runId</code> attribution on every mutation.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Substrate + fix of the week</h3>
-        <p><code>opSignals</code>, per-block versions, <code>replaceProps</code>, and block-level <code>writeSubtree</code> isolation validation are in place. Agent bindings now target <code>/queries/&lt;id&gt;/data/*</code>, matching the runtime envelope rather than the prior incorrect <code>/queries/&lt;id&gt;/*</code> path.</p>
-      </div>
-    </div>
-    <div class="block find">
-      <span class="lbl">Review signal</span>
-      <p>The R6/R11 stack landed through eight stacked PRs and a three-agent review fleet: 76 findings triaged, 34 fixed.</p>
-    </div>
+  <h2 class="sec">Shipped</h2>
+  <p class="secsub">The product foundation and the first builder-quality wave are in the codebase.</p>
+  <div class="grid3">
+    <section class="cap"><h3>Foundation</h3><ul><li>Monorepo scaffold with frozen shared contracts</li><li>Studio builder: app/page creation, palette, inspector, chat, publish snapshot</li><li>Agent service translating Pi tools to DSL and live canvas blocks</li><li>Preview route and nine-block catalog</li></ul></section>
+    <section class="cap"><h3>Data layer</h3><ul><li>QueryRuntime wired end-to-end with reactive <code>{$state}</code> params</li><li>Auto/manual modes, app-scoped queries, SSRF-guarded CORS proxy</li><li>Data panel with live results and <code>runQuery</code>/<code>setState</code> actions</li><li>Table and Chart blocks with validation and style-injection guards</li></ul></section>
+    <section class="cap"><h3>Editor</h3><ul><li>Drag-and-drop canvas and Layers hierarchy through undo tracking</li><li>Structured event, visible, and repeat editors</li><li>PathPicker, TemplateInput, Combobox, and repeat-scoped autocomplete</li><li>Scalar-safe literals and accessibility pass</li></ul></section>
+    <section class="cap"><h3>Undo</h3><ul><li>Session-scoped op log with capture, inverses, preconditions, and cap</li><li>Cmd+Z and header Undo button</li><li>Granular and per-run agent reverts</li><li>Publish clears the log; redo remains intentionally out of v1</li></ul></section>
+    <section class="cap"><h3>Agent</h3><ul><li>SDK-native steering: deliver/abort, run registry, idle eviction</li><li>Human-edit injection with per-page conflict tracking</li><li>Multi-page awareness and mutation attribution</li><li>Op-signal feed, block versions, and eval harness</li></ul></section>
+    <section class="cap"><h3>List + rendering</h3><ul><li>List contract, <code>itemScope</code>, and per-item context</li><li>Query-backed source with loading, empty, error, and retry states</li><li><code>$item</code>/<code>$index</code> action sugar with reserved-segment hardening</li><li>Path-granular preview rendering and derived page state</li></ul></section>
   </div>
 
-  <h2 class="sec">Status of the July 11 items</h2>
-  <p class="secsub">Completed work is separated from the remaining product and deployment gates.</p>
-
-  <div class="card">
-    <table class="mini">
-      <tr><th>Item</th><th>Status</th></tr>
-      <tr><td>R1 QueryRuntime wiring</td><td>✓ Done</td></tr>
-      <tr><td>R2 Streamed authoring</td><td>✓ Done — incremental tool calls; artifact envelope retired as designed</td></tr>
-      <tr><td>R3 Table + Charts</td><td>✓ Done</td></tr>
-      <tr><td>R4 Published-app serving</td><td>◐ Release snapshots + publish exist; no public route consumes <code>getLive</code></td></tr>
-      <tr><td>R5 Clerk auth + ownership</td><td>× Not started — <code>ownerId:"local"</code>, no auth checks</td></tr>
-      <tr><td>R6 Session undo</td><td>✓ Done</td></tr>
-      <tr><td>R7 DnD canvas</td><td>✓ Done — plus Layers panel</td></tr>
-      <tr><td>R8 Interaction builder UI</td><td>✓ Done — structured event, visible, and repeat editors</td></tr>
-      <tr><td>R9 Bindings editor UX</td><td>✓ Done — PathPicker, TemplateInput, Combobox, scoped autocomplete</td></tr>
-      <tr><td>R10 bolt npm publish</td><td>× Still vendored as <code>@app-builder/bolt</code></td></tr>
-      <tr><td>R11 Agent hardening</td><td>✓ Done — evals still shallow</td></tr>
-      <tr><td>R12 Cloud deploy + secrets</td><td>× Not started — SSRF proxy exists; no Railway, Convex cloud, or secrets</td></tr>
-      <tr><td>Slice 2 mutations + optimistic</td><td>× Designed, not built; type stubs only</td></tr>
-    </table>
-  </div>
-
-  <h2 class="sec">Next steps — priority × impact</h2>
-  <p class="secsub">Focus next on the public-product story while keeping independent UX and infrastructure work moving.</p>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">N1</span><span class="qtitle">Serve published apps</span><span class="size M">M</span></div>
-    <p>Finish R4: add the public <code>/[appSlug]</code> catch-all route, hydrate it from <code>releases.getLive</code>, use per-app slugs and release-pinned query configs. <b>Publish becomes real.</b></p>
-    <p class="why">The gap that blocks the product story: releases are snapshotted, but <code>preview</code> still renders draft blocks.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">N2</span><span class="qtitle">Clerk auth + ownership</span><span class="size M">M</span></div>
-    <p>Use <code>ConvexProviderWithClerk</code> and <code>ctx.auth.getUserIdentity()</code> in every function; enforce <code>ownerId</code> on all reads and writes.</p>
-    <p class="why">Safety gate for everything public. It blocks N3 and makes N1 safe to expose.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">N3</span><span class="qtitle">Mutations + optimistic data</span><span class="size L">L</span></div>
-    <p>Implement the locked slice-2 design: <code>MutationConfig</code>, <code>runMutation</code>, <code>invalidates</code>, and append/update/remove optimistic verbs with automatic rollback. Shared type stubs already exist.</p>
-    <p class="why">Read-only apps are demos; writes make them applications.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">N4</span><span class="qtitle">Interaction + bindings editor UX</span><span class="size S">Done</span></div>
-    <p>Shipped in PRs #28–#31: structured event, visible, and repeat editors; <code>PathPicker</code>, <code>TemplateInput</code>, and <code>Combobox</code> primitives; repeat-scoped data-path autocomplete; scalar-safe literals; and an accessibility pass.</p>
-    <p class="why">The largest daily-use editor friction is resolved.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">N5</span><span class="qtitle">Cloud deploy + server-side secrets</span><span class="size M">M</span></div>
-    <p>Deploy the agent service on Railway, move to Convex cloud, authenticate the agent HTTP API, and move query auth headers server-side.</p>
-    <p class="why">Depends on N2. Query config credentials currently ship to every visitor, so public apps must not expose them.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">N6</span><span class="qtitle">Publish bolt to npm</span><span class="size S">S</span></div>
-    <p>Publish <code>@hatimcodes/bolt</code> and replace the vendored package. Independent hygiene that unblocks external reuse.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">N7</span><span class="qtitle">Quality backlog</span><span class="size S">S each</span></div>
-    <p>Batch eval rigor (N-iteration thresholds rather than a single smoke), redo as a post-v1 call, a DNS-rebind stance for the proxy, and structured agent-service logs keyed by <code>sessionId</code>/<code>runId</code>.</p>
-  </div>
-
-  <h2 class="sec">Research-backed lanes</h2>
-  <p class="secsub">Two focused tracks build on the current repeat substrate and bolt’s path-aware store primitives.</p>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">E</span><span class="qtitle">Lane E — List block with item context</span><span class="size M">S → L</span></div>
-    <p>The repeat substrate mostly exists: element-level <code>repeat={statePath,key}</code>, <code>${field}</code> item templates, and repeat-ancestor-scoped <code>$bindItem</code> already support per-item fields inside repeated Cards. The missing piece is a first-class <b>List</b> block and item-scoped ergonomics.</p>
-    <ul>
-      <li><b>E1 · S — Lock the List contract:</b> element-level repeat, one item-template child, <code>statusPath</code> plus empty/loading/error states, key policy, and accessible semantics.</li>
-      <li><b>E2 · M — Build it:</b> definition, component, registry, palette and inspector support, plus render/DSL tests. Canvas selection and DnD over repeated DOM are the main risk.</li>
-      <li><b>E3 · M — Docs/grammar:</b> add the List example and conventions to <code>DSL.md</code>, catalog grammar, and prompt examples; reconcile the existing Table/Chart documentation drift.</li>
-      <li><b>E4 · M — Scoped-data tests:</b> nested item paths, <code>$bindItem</code>, per-item Table/Chart, state transitions, and key reorder.</li>
-      <li><b>E5 · L — Item-identity action payloads:</b> keep <code>on:select</code> identity work separate; json-render currently turns <code>$item</code> params into paths and <code>emit</code> has no payload channel.</li>
-      <li><b>E6 · L, deferred — Virtualization:</b> variable-height charts, focus, and SSR/hydration complexity.</li>
-    </ul>
-    <p class="why">First increment: E1 → E2 layered on existing repeat, with E4 tests. Charts and tables per item work via <code>$bindItem</code> from day one.</p>
-  </div>
-
-  <div class="card road">
-    <div class="qhead"><span class="qnum">F</span><span class="qtitle">Lane F — Render perf: use bolt properly</span><span class="size M">S → M</span></div>
-    <p><b>Reproduced root cause:</b> bolt’s path-granular notifications are discarded twice. The preview adapter subscribes at the store root and rebuilds a whole-state snapshot per write; json-render then sends it through one changing React context, defeating <code>ElementRenderer</code> memoization. Bolt already has the needed path subscriptions, topologically settled derived paths, and reference-stable partial writes.</p>
-    <ul>
-      <li><b>F1 · S — Instrument:</b> add a preview render-count probe to confirm the issue and measure the win.</li>
-      <li><b>F2 · S — Expose granularity:</b> add <code>RuntimeStores.subscribePath(pointer)</code> and <code>getPath(pointer)</code> over the two-tier stores.</li>
-      <li><b>F3 · M — Granular binding:</b> create bolt-backed <code>useRuntimeValue(pointer)</code> with <code>useSyncExternalStore</code> and memoized block shells that subscribe only to bound pointers. Blocks must stop reading json-render’s <code>StateContext</code> for values.</li>
-      <li><b>F4 · M — Derived bindings:</b> register bolt <code>derive(target, [queryResultPointer], compute)</code> at spec assembly, with disposal lifecycle, so refreshes recompute only dependents.</li>
-      <li><b>F5 · L, optional — Upstream json-render:</b> pursue a per-path subscription API only if stock components should inherit the fix.</li>
-    </ul>
-    <p class="why">F1 → F4 solves the reported typing case in-repo and showcases bolt’s derived-dependency flow ahead of N6.</p>
-  </div>
-
-  <h2 class="sec">v2.2 status update <span style="color:var(--muted);font-size:13px;font-weight:500;text-transform:none;letter-spacing:0">July 18, 2026</span></h2>
-  <p class="secsub">All work below merged to <code>main</code> through stacked PRs, a two-round review loop, and green CI.</p>
-
-  <div class="card">
-    <div class="tl">
-      <div class="tl-item done">
-        <h3>N4 — Interaction + bindings editor UX <span class="when">PRs #28–#31</span></h3>
-        <p>Structured event, visible, and repeat editors; PathPicker, TemplateInput, and Combobox primitives; data-panel path autocomplete with repeat scope; scalar-type-safe literals; and an a11y pass.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Lane E — List block <span class="when">PRs #34–#41</span></h3>
-        <p>List contract + item scope, per-item Typography/Table/Chart context, queryId data sources with loading/empty/error + retry states, <code>$item</code>/<code>$index</code> action sugar, canvas instance-aware geometry, and agent grammar + DSL docs. Item-identity payload polish (E5) and virtualization (E6) remain deferred.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Lane F — bolt-powered render perf <span class="when">PRs #32–#39</span></h3>
-        <p>Vendored json-render now subscribes per path for O(1) re-renders per state write, verified by the development render probe. Bolt-backed derived page state has graph cycle validation, atomic registration, derived-config agent tools, and root-pointer canonicalization.</p>
-      </div>
-      <div class="tl-item done">
-        <h3>Same-day regression fix <span class="when">b81854a</span></h3>
-        <p>Corrected the <code>$state</code> vs <code>$bindState</code> default for interactive value bindings and fixed canvas click capture.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="block rec">
-    <span class="lbl">Revised priorities</span>
-    <p><b>Lane 1:</b> N1 public serving → N2 Clerk auth + ownership. <b>Lane 2:</b> N5 cloud deploy — Railway agent service, Convex cloud migration, and server-side secrets. N3 (mutations), N6 (bolt npm publish), and N7 (quality backlog) are deferred for now.</p>
-  </div>
-
-  <h2 class="sec">Explorations resolved <span style="color:var(--muted);font-size:13px;font-weight:500;text-transform:none;letter-spacing:0">July 18, 2026</span></h2>
-  <p class="secsub">Decisions are locked with Hatim. Each exploration has a focused PlanLoft implementation plan.</p>
-  <div class="card road">
-    <ol style="margin:0;padding-left:22px;color:var(--muted)">
-      <li><a href="../N8GSl8SiYq/">Binding UX rethink</a> — friendly names with tooltip paths, catalog-owned binding direction, picker-level envelope aliasing, and one quick-win-first stack.</li>
-      <li><a href="../QeCHFGknMc/">Styling system</a> — minimal dual-mode shadcn-compatible tokens, scoped CSS vars and presets, curated style props/utilities, and a sanitized escape hatch.</li>
-      <li><a href="../X7gPUv9dYi/">Studio light mode</a> — system default and independently themed canvas surfaces from day one.</li>
-      <li><a href="../NwyuKeA17G/">Agent chat UX</a> — message parts, tool cards with Revert, collapsible reasoning summaries, image attachments, and focused agent tools.</li>
-    </ol>
-  </div>
+  <h2 class="sec">Open items — next candidates</h2>
+  <p class="secsub">Sizes: S = hours, M = a focused day or two, L = multi-day.</p>
+  <section class="card road"><div class="qhead"><span class="qnum">N1</span><span class="qtitle">Serve published apps</span><span class="size M">M</span></div><p>Release snapshots and the Publish button exist, but no public route consumes <code>getLive</code>; preview still renders drafts.</p><p class="why">The biggest product gap: this turns a build into a URL someone can use.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N2</span><span class="qtitle">Clerk auth + ownership</span><span class="size M">M</span></div><p>Everything currently uses <code>ownerId:"local"</code> with no auth checks. This gates safe public serving.</p><p class="dep"><b>Sequence:</b> immediately behind N1.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N5</span><span class="qtitle">Cloud deploy</span><span class="size M">M</span></div><p>Railway agent service, Convex cloud migration, authenticated agent API, and server-side secrets; query auth headers currently ship to visitors.</p><p class="dep"><b>Depends on:</b> N2.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">Styling &amp; UX wave</span><span class="qtitle">Decisions locked; implementation plans ready</span></div><p><a href="../X7gPUv9dYi/">Studio light mode</a> (S, prerequisite): independent canvas theming and system default.</p><p><a href="../N8GSl8SiYq/">Binding UX rethink</a>: friendly names and tooltip paths, catalog-owned direction, envelope aliasing, bind affordances for all prop types.</p><p><a href="../QeCHFGknMc/">Styling system</a>: minimal dual theme tokens, presets, curated style props, safelist, and sanitized style-object escape hatch.</p><p><a href="../NwyuKeA17G/">Agent chat UX</a>: message parts, tool timeline cards with Revert linkage, collapsible thinking, image attachments, and capability spike.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">Deferred</span><span class="qtitle">Good candidates after the critical path</span></div><p><b>N3 — Slice-2 mutations + optimistic</b> (L): design locked, type stubs only.</p><p><b>N6 — bolt npm publish</b> (S).</p><p><b>N7 — Quality backlog:</b> eval rigor, redo decision, DNS-rebind stance, structured agent logging, List item-identity payloads and virtualization, and a bolt derive performance assertion.</p></section>
 
   <h2 class="sec">Lanes</h2>
-  <p class="secsub">Independent work can proceed now; the product-critical lane has a clear public-release sequence.</p>
-
-  <div class="lane">
-    <h3>Lane 1 — Product-critical path <span class="who">N1 → N2</span></h3>
-    <p class="note">Public serving, then Clerk auth + ownership: the path to a safe public app.</p>
-  </div>
-  <div class="lane">
-    <h3>Lane 2 — Infrastructure <span class="who">N5</span></h3>
-    <p class="note">Railway agent service, Convex cloud migration, and server-side secrets follow the auth gate.</p>
-  </div>
-  <div class="lane">
-    <h3>Completed — Editor UX <span class="who">N4</span></h3>
-    <p class="note">Structured interaction and binding controls are now shipped.</p>
-  </div>
-  <div class="lane">
-    <h3>Deferred — Data &amp; hygiene <span class="who">N3 + N6 + N7</span></h3>
-    <p class="note">Mutations, bolt npm publishing, and the quality backlog are parked for now.</p>
-  </div>
-  <div class="lane">
-    <h3>Completed — List block <span class="who">Lane E</span></h3>
-    <p class="note">Item-scoped Lists are shipped; identity payload polish and virtualization remain separate follow-ons.</p>
-  </div>
-  <div class="lane">
-    <h3>Completed — Render performance <span class="who">Lane F</span></h3>
-    <p class="note">Preview now uses per-path subscriptions and bolt-derived state rather than whole-state rerendering.</p>
-  </div>
-
-  <div class="block rec">
-    <span class="lbl">Recommended next wave</span>
-    <p><b>Start N1 public serving, then N2 Clerk auth + ownership; run N5 infrastructure work immediately behind them.</b> The editor and rendering foundations are now ready for a safe, handoff-ready public deploy.</p>
-  </div>
-
-  <footer>
-    <p><b>Repo:</b> <code>/Users/admin/Projects/ai-app-builder</code> (pnpm + turborepo monorepo)</p>
-    <p><b>Source:</b> <code>.grill-sessions/roadmap-v2.md</code></p>
-    <p>Compiled July 18, 2026 · v2.3 status verified against code on <code>main</code> · dark-theme companion to the grill docs.</p>
-  </footer>
-
-</div>
-
-</article>
+  <section class="lane"><h3>Lane 1 — Product critical path</h3><div class="chain"><span class="step">N1 public route</span><span class="arrow">→</span><span class="step">N2 auth + ownership</span></div><p>Ends with a URL you can hand someone.</p></section>
+  <section class="lane"><h3>Lane 2 — Infrastructure</h3><div class="chain"><span class="step">N5 Cloud deploy</span><span class="arrow">+</span><span class="step">Railway setup</span></div></section>
+  <section class="lane"><h3>Lane 3 — Styling / UX wave</h3><div class="chain"><span class="step">Light mode first</span><span class="arrow">→</span><span class="step">Binding UX</span><span class="arrow">∥</span><span class="step">Styling</span><span class="arrow">∥</span><span class="step">Chat UX</span></div></section>
+  <div class="block rec"><span class="lbl">Order of operations</span><p>Start public serving and auth as the critical path. The styling and UX plans are safe to run in parallel once light mode establishes the canvas theme seam. Slot deferred work in after these lanes.</p></div>
+  <footer><p><b>Source:</b> <code>/Users/admin/Projects/ai-app-builder/.grill-sessions/roadmap-v2.md</code></p><p>Final-state roadmap compiled July 18, 2026.</p></footer>
 </main>
 </body>
 </html>
