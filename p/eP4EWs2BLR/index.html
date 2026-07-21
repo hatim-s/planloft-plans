@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>AI App Builder — N19 Gemini Chat Plan</title><style>
+:root{--bg:#0f1115;--panel:#171a21;--panel2:#1d212b;--ink:#e7ebf0;--muted:#9aa4b2;--line:#2a2f3a;--accent:#7c9cff;--good:#43c59e;--warn:#ffb454}*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}a{color:var(--accent)}.wrap{max-width:980px;margin:auto;padding:32px 20px 80px}.hero,.card{border:1px solid var(--line);background:linear-gradient(180deg,#191d27,#13161d);border-radius:14px}.hero{padding:26px 28px;margin-bottom:26px}.hero h1{font-size:26px;letter-spacing:-.3px;margin:0 0 6px}.hero p{margin:6px 0;color:var(--muted)}.pill{display:inline-block;padding:3px 10px;margin-right:6px;border:1px solid #265c40;border-radius:999px;background:#14291e;color:#7ee2b8;font-size:11px;letter-spacing:.4px;text-transform:uppercase}.sec{font-size:20px;letter-spacing:-.2px;margin:38px 0 4px}.secsub{margin:0 0 14px;color:var(--muted);font-size:14px}.card{background:var(--panel);padding:20px 22px;margin:16px 0}.card p{margin:0}.card ul,.card ol{margin:0;padding-left:21px;color:var(--muted)}.card li{margin:8px 0}.card li b{color:var(--ink)}.decision{border-left:3px solid var(--accent);background:#1a2230}code{padding:1px 5px;background:#0c0e12;border:1px solid var(--line);border-radius:5px;color:#cdd6e3;font-size:13px}footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}</style></head><body><main class="wrap">
+<header class="hero"><div><span class="pill">Implementation plan</span><span class="pill">AI App Builder</span></div><h1>AI App Builder — N19 Gemini Chat Plan</h1><p>Locked scope and implementation sequence for the next product wave.</p></header>
+<p class="secsub">Decisions locked 2026-07-21.</p>
+<h2 class="sec">Decisions (pi supports Gemini natively — verified)</h2>
+<section class="card"><ul>
+<li>Native pi google provider; pinned <code>gemini-2.5-flash</code>.</li>
+<li><b>Thinking: keep pi's implicit medium</b> (deviates from low-default rec; watch cost).</li>
+<li>OpenAI fallback: pre-run/emergency only; never auto-replay after tools executed.</li>
+<li><b>Per-user BYOK Gemini keys</b> (deviates from server-key rec): encrypted key storage, key management UI, session-scoped injection into the agent service.</li>
+<li>N19 includes production chat enablement + telemetry + rollout guard.</li>
+</ul></section>
+<h2 class="sec">Work items</h2>
+<section class="card"><ol>
+<li>S — Provider swap: PI_PROVIDER=google, model pin, env schema (ties into N14), docs.</li>
+<li>L — BYOK: Convex table for encrypted user keys (encryption strategy: Convex env master key + AES-GCM), settings UI (add/rotate/remove, validation ping), agent service accepts per-request key material via authed channel — never logged; fallback to server key if user key absent? (decision: BYOK-first, server key as operator fallback for onboarding).</li>
+<li>S — Failure surfacing: missing/invalid key → actionable chat error with settings deep-link (no silent fallback after tools ran).</li>
+<li>M — Prod enablement: remove dev-only chat gate, per-run token/cost telemetry rows, rollout guard env flag.</li>
+</ol></section>
+<section class="card decision"><p>Risks: BYOK security review required (key transit studio→agent, memory handling, log scrubbing); do before shipping.</p></section>
+<footer><p><b>Source:</b> <code>.grill-sessions/plan-n19-gemini.md</code></p><p>Compiled July 21, 2026 · dark-theme companion to the roadmap.</p></footer>
+</main></body></html>
