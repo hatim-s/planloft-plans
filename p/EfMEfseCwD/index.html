@@ -48,9 +48,9 @@
 <body>
 <main class="wrap">
   <header class="hero">
-    <div style="margin-bottom:10px"><span class="pill good">Current state</span><span class="pill">Main branch</span><span class="pill">Design decisions locked</span><span class="pill warn">Public serving pending</span></div>
+    <div style="margin-bottom:10px"><span class="pill good">Current state</span><span class="pill">Main branch</span><span class="pill good">N1, N2, N8–N11 shipped</span><span class="pill warn">Cloud deploy next</span></div>
     <h1>AI App Builder — Progress &amp; Roadmap</h1>
-    <p class="status"><b>Builder core shipped.</b> Status verified against code on <code>main</code>.</p>
+    <p class="status"><b>Builder core and the first public-product wave shipped.</b> Status verified against code on <code>main</code>.</p>
     <p>A human and an AI agent co-edit JSON-defined applications live: specs render to React at runtime, and both collaborators use the same granular mutation model.</p>
   </header>
 
@@ -63,25 +63,30 @@
     <section class="cap"><h3>Undo</h3><ul><li>Session-scoped op log with capture, inverses, preconditions, and cap</li><li>Cmd+Z and header Undo button</li><li>Granular and per-run agent reverts</li><li>Publish clears the log; redo remains intentionally out of v1</li></ul></section>
     <section class="cap"><h3>Agent</h3><ul><li>SDK-native steering: deliver/abort, run registry, idle eviction</li><li>Human-edit injection with per-page conflict tracking</li><li>Multi-page awareness and mutation attribution</li><li>Op-signal feed, block versions, and eval harness</li></ul></section>
     <section class="cap"><h3>List + rendering</h3><ul><li>List contract, <code>itemScope</code>, and per-item context</li><li>Query-backed source with loading, empty, error, and retry states</li><li><code>$item</code>/<code>$index</code> action sugar with reserved-segment hardening</li><li>Path-granular preview rendering and derived page state</li></ul></section>
+    <section class="cap"><h3>Public serving + tenancy</h3><ul><li><b>N1:</b> released apps served by app and page slug</li><li>Public-by-link, release-pinned queries, and release-snapshot theming</li><li><b>N2:</b> Clerk sign-in/up and route guards</li><li>Single-owner apps, Convex isolation, agent JWT refresh, and local-app migration</li></ul></section>
+    <section class="cap"><h3>Studio styling + bindings</h3><ul><li><b>N8:</b> Light/Dark/System switch with isolated canvas theme</li><li><b>N10:</b> per-app themes, presets, bounded utilities, and safe style objects</li><li><b>N9:</b> friendly PathPicker, binding affordances, and data tabs</li><li><a href="../X7gPUv9dYi/">Light mode plan</a> · <a href="../N8GSl8SiYq/">Binding UX plan</a> · <a href="../QeCHFGknMc/">Styling plan</a></li></ul></section>
+    <section class="cap"><h3>Agent chat</h3><ul><li><b>N11:</b> markdown and grouped runs with tool cards</li><li>Canvas highlights, per-run revert, and collapsible thinking traces</li><li>Image attachments in Convex storage</li><li><code>set_bindings</code>, <code>replace_props</code>, and <code>read_app_state</code> tools · <a href="../NwyuKeA17G/">plan</a></li></ul></section>
   </div>
 
   <h2 class="sec">Open items — next candidates</h2>
-  <p class="secsub">Sizes: S = hours, M = a focused day or two, L = multi-day.</p>
-  <section class="card road"><div class="qhead"><span class="qnum">N1</span><span class="qtitle">Serve published apps</span><span class="size M">M</span></div><p>Release snapshots and the Publish button exist, but no public route consumes <code>getLive</code>; preview still renders drafts.</p><p class="why">The biggest product gap: this turns a build into a URL someone can use.</p></section>
-  <section class="card road"><div class="qhead"><span class="qnum">N2</span><span class="qtitle">Clerk auth + ownership</span><span class="size M">M</span></div><p>Everything currently uses <code>ownerId:"local"</code> with no auth checks. This gates safe public serving.</p><p class="dep"><b>Sequence:</b> immediately behind N1.</p></section>
+  <p class="secsub">N12–N19 are under research; the decision questionnaire is pending. Sizes: S = hours, M = a focused day or two, L = multi-day.</p>
   <section class="card road"><div class="qhead"><span class="qnum">N5</span><span class="qtitle">Cloud deploy</span><span class="size M">M</span></div><p>Railway agent service, Convex cloud migration, authenticated agent API, and server-side secrets; query auth headers currently ship to visitors.</p><p class="dep"><b>Depends on:</b> N2.</p></section>
-  <section class="card road"><div class="qhead"><span class="qnum">N8</span><span class="qtitle"><strong>Studio light mode</strong></span><a href="../X7gPUv9dYi/">Plan</a><span class="size S">S</span></div><p>Decisions locked. Independent canvas theming from day one, with system default; prerequisite for the styling system's token layer.</p></section>
-  <section class="card road"><div class="qhead"><span class="qnum">N9</span><span class="qtitle"><strong>Binding UX rethink</strong></span><a href="../N8GSl8SiYq/">Plan</a></div><p>Decisions locked; ships as one PR stack, quick wins first. Friendly names and tooltip paths, catalog-owned binding direction, envelope aliasing, and bind affordances for all prop types.</p></section>
-  <section class="card road"><div class="qhead"><span class="qnum">N10</span><span class="qtitle"><strong>Styling system</strong></span><a href="../QeCHFGknMc/">Plan</a></div><p>Decisions locked. Minimal theme tokens with dual system-following sets, presets, curated style props, utility safelist, and a sanitized style-object escape hatch.</p></section>
-  <section class="card road"><div class="qhead"><span class="qnum">N11</span><span class="qtitle"><strong>Agent chat UX</strong></span><a href="../NwyuKeA17G/">Plan</a></div><p>Decisions locked. Message parts schema, tool timeline cards with Revert linkage, collapsible thinking traces, image attachments, and a one-day capability spike first.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N12</span><span class="qtitle">Error &amp; empty states platform-wide</span></div><p>Error screens, 404s, loading and service-down handling, and empty states across studio and published apps.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N13</span><span class="qtitle">Agent UI rebuild on AI Elements</span></div><p>Redo the entire agent chat UI on Vercel AI Elements.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N14</span><span class="qtitle">Env-file loading everywhere</span></div><p>Audit and fix <code>.env</code> loading across every package, app, and service.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N15</span><span class="qtitle">Landing page + onboarding flow</span></div><p>Build the marketing landing page and the first-use onboarding path.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N16</span><span class="qtitle">Inspector form overhaul</span></div><p>TanStack Form data/logic layer plus shadcn UI for a polished inspector form experience.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N17</span><span class="qtitle">Delete flows</span></div><p>Delete pages, apps, and blocks with appropriate destructive-action confirmations.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N18</span><span class="qtitle">Studio overhaul</span></div><p>Better UI and a smoother, more fluid builder experience.</p></section>
+  <section class="card road"><div class="qhead"><span class="qnum">N19</span><span class="qtitle">Gemini Flash for chat</span></div><p>Redo the AI chat experience to run on Gemini Flash API keys.</p></section>
   <section class="card road"><div class="qhead"><span class="qnum">Deferred</span><span class="qtitle">Good candidates after the critical path</span></div><p><b>N3 — Slice-2 mutations + optimistic</b> (L): design locked, type stubs only.</p><p><b>N6 — bolt npm publish</b> (S).</p><p><b>N7 — Quality backlog:</b> eval rigor, redo decision, DNS-rebind stance, structured agent logging, List item-identity payloads and virtualization, and a bolt derive performance assertion.</p></section>
 
   <h2 class="sec">Lanes</h2>
-  <section class="lane"><h3>Lane 1 — Product critical path</h3><div class="chain"><span class="step">N1 public route</span><span class="arrow">→</span><span class="step">N2 auth + ownership</span></div><p>Ends with a URL you can hand someone.</p></section>
-  <section class="lane"><h3>Lane 2 — Infrastructure</h3><div class="chain"><span class="step">N5 Cloud deploy</span><span class="arrow">+</span><span class="step">Railway setup</span></div></section>
-  <section class="lane"><h3>Lane 3 — Styling / UX wave</h3><div class="chain"><span class="step">N8 light mode first</span><span class="arrow">→</span><span class="step">N9 Binding UX</span><span class="arrow">∥</span><span class="step">N10 Styling</span><span class="arrow">∥</span><span class="step">N11 Chat UX</span></div></section>
-  <div class="block rec"><span class="lbl">Order of operations</span><p>Start public serving and auth as the critical path. The styling and UX plans are safe to run in parallel once light mode establishes the canvas theme seam. Slot deferred work in after these lanes.</p></div>
-  <footer><p><b>Source:</b> <code>/Users/admin/Projects/ai-app-builder/.grill-sessions/roadmap-v2.md</code></p><p>Final-state roadmap compiled July 18, 2026.</p></footer>
+  <section class="lane"><h3>Lane 2 — Infrastructure</h3><div class="chain"><span class="step">N5 cloud deploy</span><span class="arrow">+</span><span class="step">Railway setup</span></div><p>Next up: deploy the agent service and migrate the hosted platform.</p></section>
+  <section class="lane"><h3>New wave</h3><div class="chain"><span class="step">N12</span><span class="arrow">→</span><span class="step">N13</span><span class="arrow">→</span><span class="step">N14</span><span class="arrow">→</span><span class="step">N15–N19</span></div><p>Candidate work pending research and product decisions.</p></section>
+  <section class="lane"><h3>Deferred</h3><div class="chain"><span class="step">N3 slice-2 mutations</span><span class="arrow">∥</span><span class="step">N6 bolt npm publish</span><span class="arrow">∥</span><span class="step">N7 quality backlog</span></div></section>
+  <div class="block rec"><span class="lbl">Order of operations</span><p>Run N5 as the immediate infrastructure lane. Use the decision questionnaire to choose and sequence the N12–N19 new wave; keep N3, N6, and N7 deferred.</p></div>
+  <footer><p><b>Source:</b> <code>/Users/admin/Projects/ai-app-builder/.grill-sessions/roadmap-v2.md</code></p><p>Roadmap refreshed July 21, 2026.</p></footer>
 </main>
 </body>
 </html>
