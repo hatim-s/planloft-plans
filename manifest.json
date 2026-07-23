@@ -171,6 +171,15 @@
       "kind": "plan",
       "createdAt": "2026-07-24T00:10:00.000Z",
       "expiresAt": "2026-08-23T00:10:00.000Z"
+    },
+    {
+      "id": "QfU52tNdFP",
+      "project": "github.com/unify-apps/www",
+      "slug": "automation-cleanup-pipeline-v2",
+      "title": "Automation cleanup pipeline v2 — rewrite spec",
+      "kind": "plan",
+      "createdAt": "2026-07-23T19:05:35.885Z",
+      "expiresAt": "2026-08-22T19:05:35.886Z"
     }
   ]
 }
