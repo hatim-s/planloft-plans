@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>AI App Builder — N21 Landing Redesign Plan</title><style>
+:root{--bg:#0f1115;--panel:#171a21;--panel2:#1d212b;--ink:#e7ebf0;--muted:#9aa4b2;--line:#2a2f3a;--accent:#7c9cff;--good:#43c59e;--warn:#ffb454}*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}a{color:var(--accent)}.wrap{max-width:980px;margin:auto;padding:32px 20px 80px}.hero,.card{border:1px solid var(--line);background:linear-gradient(180deg,#191d27,#13161d);border-radius:14px}.hero{padding:26px 28px;margin-bottom:26px}.hero h1{font-size:26px;letter-spacing:-.3px;margin:0 0 6px}.hero p{margin:6px 0;color:var(--muted)}.pill{display:inline-block;padding:3px 10px;margin-right:6px;border:1px solid #265c40;border-radius:999px;background:#14291e;color:#7ee2b8;font-size:11px;letter-spacing:.4px;text-transform:uppercase}.sec{font-size:20px;letter-spacing:-.2px;margin:38px 0 4px}.secsub{margin:0 0 14px;color:var(--muted);font-size:14px}.card{background:var(--panel);padding:20px 22px;margin:16px 0}.card p{margin:0}.card ul,.card ol{margin:0;padding-left:21px;color:var(--muted)}.card li{margin:8px 0}.card li b{color:var(--ink)}.decision{border-left:3px solid var(--accent);background:#1a2230}code{padding:1px 5px;background:#0c0e12;border:1px solid var(--line);border-radius:5px;color:#cdd6e3;font-size:13px}footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}</style></head><body><main class="wrap">
+<header class="hero"><div><span class="pill">Implementation plan</span><span class="pill">AI App Builder</span></div><h1>AI App Builder — N21 Landing Redesign Plan</h1><p>Locked marketing narrative, demonstration strategy, and performance boundaries.</p></header>
+<p class="secsub">Decisions locked 2026-07-24.</p>
+<h2 class="sec">Decisions</h2><section class="card"><ul>
+<li><b>Direction:</b> full GSAP cinematic scrollytelling, with ScrollTrigger pinning and scrubbing across narrative sections; Motion is reserved for stray micro-reveals.</li>
+<li><b>Hero demo:</b> scripted replay on the inline real renderer using a canned spec and op-list timer—not a live agent or backend. Mobile/reduced-motion gets poster plus WebM fallback.</li>
+<li><b>Positioning:</b> fear-primary headline: “Revert the agent's bad run. Keep your own edits.” The stronger “can't destroy your app” promise waits for server-side op-log persistence. Show speed rather than claim it.</li>
+<li><b>Sections:</b> pill nav; cinematic hero/replay; build → bad-op villain → revert loop; JSON-spec moat; guarantees; early-access pricing; final CTA; footer.</li>
+<li><b>Identity:</b> an <code>app/(marketing)/</code> route group with a display face and one semantic accent for agent elements, over the studio's shared grayscale base.</li>
+<li><b>Component sources:</b> Tailark dusk hero, cult-ui texture overlay, and MagicUI flickering grid—each must be vetted for bundle size and SSR, then adapted to product tokens to avoid a stock look.</li>
+<li><b>Delete:</b> remove the <code>ProductMock</code> div rather than restyling it.</li>
+</ul></section>
+<h2 class="sec">Work items</h2><section class="card"><ol>
+<li><b>M — Replay harness:</b> frozen demo-spec fixture and op-list player over the runtime renderer, CI smoke test, and lazy mount below the poster.</li>
+<li><b>M — GSAP architecture:</b> ScrollTrigger scaffolding, pinned scrub sections, mobile/reduced-motion degradation, and leaf-component isolation with cleanup.</li>
+<li><b>S/M — Section build:</b> curated component adaptations on marketing tokens.</li>
+<li><b>S — Pricing:</b> Free and roughly $20/month Pro tiers, visibly marked “Early access — billing coming soon,” plus email capture. Capture endpoint/provider is a build-time decision.</li>
+<li><b>S — Copy pass:</b> fear axis, technical moat, and receipts without naming competitors.</li>
+<li><b>S — Performance gate:</b> LCP budget through lazy replay mount, split GSAP bundle, and Lighthouse CI check.</li>
+</ol></section>
+<footer><p><b>Source:</b> <code>/Users/admin/Projects/ai-app-builder/.grill-sessions/plan-n21-landing.md</code></p><p>Compiled July 24, 2026 · dark-theme companion to the roadmap.</p></footer>
+</main></body></html>

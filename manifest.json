@@ -144,6 +144,33 @@
       "kind": "plan",
       "createdAt": "2026-07-21T12:00:00.000Z",
       "expiresAt": "2026-08-20T12:00:00.000Z"
+    },
+    {
+      "id": "V9k3HgLrQ2",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "n20-studio-taste",
+      "title": "AI App Builder — N20 Studio Taste Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-24T00:10:00.000Z",
+      "expiresAt": "2026-08-23T00:10:00.000Z"
+    },
+    {
+      "id": "aQ7mJ5TxZc",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "n21-landing-redesign",
+      "title": "AI App Builder — N21 Landing Redesign Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-24T00:10:00.000Z",
+      "expiresAt": "2026-08-23T00:10:00.000Z"
+    },
+    {
+      "id": "Lp4Wc8NdY1",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "n22-editing-ergonomics",
+      "title": "AI App Builder — N22 Editing Ergonomics Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-24T00:10:00.000Z",
+      "expiresAt": "2026-08-23T00:10:00.000Z"
     }
   ]
 }
