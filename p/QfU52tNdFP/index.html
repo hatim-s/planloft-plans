@@ -53,20 +53,20 @@ blockquote {
 <article><h1>Automation Cleanup Pipeline v2 — Ground-Up Rewrite Design</h1>
 <p><strong>Date:</strong> 2026-07-24
 <strong>Author:</strong> @hatim (claude-code)
-<strong>Status:</strong> Proposed — pending OPEN DECISIONS sign-off (§10)
+<strong>Status:</strong> Accepted — all decisions resolved (§10 DECISIONS RECORD); this document is the implementation contract enforced on every v2 PR
 <strong>Supersedes:</strong> the 9-PR refactor stack #26005..#26051 (<code>refactor/automation-cleanup-p*</code>) and its <code>packages/llm-tools/TODO.md</code>
-<strong>Ground truth:</strong> <code>origin/main</code> @ <code>d911ae9752ec</code>; stack tip @ <code>4ed0c46c9e66</code>; PR #26696 @ <code>3e44eed2b4ac</code></p>
+<strong>Ground truth:</strong> <code>origin/main</code> @ <code>d911ae9752ec</code>; stack tip @ <code>4ed0c46c9e66</code>; PR #26696 ported from its pinned head @ <code>3e44eed2b4ac</code> (D-7)</p>
 <hr>
 <h2>1. Context and history</h2>
 <p>The automation cleanup pipeline in <code>packages/llm-tools</code> repairs, normalizes, and validates AI-authored workflow definitions before they reach the platform. On main today it is a synchronous ordered reducer of <strong>20 plugins</strong> (<code>src/tools/cleanUpAutomationConfig.ts</code>), fed by an async prefetch facade that fetches builder resources, resolves dynamic schemas, and prefetches storage/SQL entity schemas. It is exposed through two MCP tools (<code>cleanup_automation_config</code>, <code>batch_upsert_nodes</code>) and throws five typed aggregate error families serialized verbatim onto the wire.</p>
 <p>A July 2026 audit produced a 9-PR refactor stack (phases 0–7, decisions D1–D6/Q7–Q12 locked in <code>TODO.md</code>). That stack built genuinely good bones: a mutative draft runner with structural sharing and no-op identity, a per-plugin reporter, a shared validation-error kit with a single guard, one canonical pill grammar, a unified graph/edge-classification layer, and a consolidated schema flattener. It completed on 2026-07-14 and rebased onto main on 2026-07-16.</p>
-<p>Main did not stop. Between the stack&#39;s base and today, main added storage pill record-path rewriting, SQL entity normalization + validation (a fifth error family), variable output-schema mirroring, recursive filter-conditions validation, storage filter-column validation, output-pill type resolution for strict dynamic inputs, arbitrary numeric pill indices, and the variable-resource validation exclusion — seven behavioral families the stack lacks entirely, plus one direct grammar regression (the stack&#39;s <code>[0]</code>-only pill index). PR #26696 (call-automation target-schema resolution, ~3.6k insertions across 55 files) is in flight on the old layout. A third rebase would be a semantic merge across every hot seam the stack restructured — the registry, the prefetch wrapper, the context bag, and the input/output validation modules — with rename/delete conflicts hiding behavior loss.</p>
-<p>A rewrite beats a third rebase for three reasons. First, the stack&#39;s own architecture shows strain it cannot fix incrementally: a flat 16-entry array whose dependency structure lives in comments, a context bag accreting untyped artifacts, validators forced through a mutating-draft interface, and a stale pill-occurrence cache that validates pre-normalization text. Second, the drift is not textual but semantic — porting seven feature families into a moved-and-renamed tree is riskier than porting proven foundations onto current main&#39;s behavior. Third, the user&#39;s target design (steps with substeps, typed shared utilities, explicit patterns) is a different shape than the stack&#39;s flat registry; rebasing would preserve the wrong skeleton.</p>
-<p>This spec defines v2: same observable behavior as main-plus-#26696, new internal architecture. The old stack&#39;s characterization tests and still-binding locked decisions (§2, §7) remain the safety net. Behavior changes are never smuggled in — each one is an OPEN DECISION (§10) or an explicitly gated follow-up.</p>
+<p>Main did not stop. Between the stack&#39;s base and today, main added storage pill record-path rewriting, SQL entity normalization + validation (a fifth error family), variable output-schema mirroring, recursive filter-conditions validation, storage filter-column validation, output-pill type resolution for strict dynamic inputs, arbitrary numeric pill indices, and the variable-resource validation exclusion — seven behavioral families the stack lacks entirely, plus one direct grammar regression (the stack&#39;s <code>[0]</code>-only pill index). PR #26696 (call-automation target-schema resolution, ~3.6k insertions across 55 files) is in flight on the old layout. A third rebase would be a semantic merge across every hot seam the stack restructured, with rename/delete conflicts hiding behavior loss. A rewrite beats a third rebase; the reasoning is recorded in the review history and stands.</p>
+<p>This spec defines v2 after design review. The review ratified the five-step taxonomy and shared-utility strategy, and ordered six structural changes now baked in: <strong>one draft and one collector for the whole run</strong> (§3.2), <strong>no cross-substep short-circuit — a precedence-preserving finalize decides the thrown error</strong> (§3.3), <strong>a redesigned unified violation vocabulary</strong> (error shapes are not frozen contracts; only the MCP envelope&#39;s top-level keys are, §6), <strong>substeps re-cut along validation-category/resource lines with authorized plugin merges</strong> (§3.1), <strong>shared utils as encapsulated categories leaning toward classes</strong> (§4), and <strong>the whole v2 stack built before anything merges, porting #26696 from its pinned head</strong> (§8). The old stack&#39;s characterization tests and the still-binding locked decisions (§2, §7) remain the safety net for everything except the deliberately redesigned error interior.</p>
 <hr>
 <h2>2. Behavioral ground truth</h2>
 <p>The surface being preserved is everything observable from the four entry points: <code>cleanUpAutomationConfig</code> (sync), <code>cleanUpAutomationConfigWithSchemaValidation</code> (async), <code>applyUpdateWorkflow</code>/<code>batch_upsert_nodes</code>, and the MCP tool handlers in <code>registerWorkflowTools.ts</code> → <code>mcp.ts</code>.</p>
-<p><strong>The executed order (contract, not implementation detail):</strong></p>
+<p><strong>The v2 behavior contract in one sentence:</strong> for every input, v2 makes the <em>same accept/reject decision</em> as main-plus-#26696, throws an error whose <em>winning family matches what today&#39;s sequential ordering would have thrown first</em>, and produces the <em>same cleaned workflow</em> on acceptance — while the error payload interior is redesigned (§6) and additional findings from families that today never got to run are attached, never promoted.</p>
+<p><strong>The executed legacy order (still the semantic contract for transforms and for finalize precedence):</strong></p>
 <pre><code>fixPillMappings → triggerWebhookPillBody → normalizeFormulaStringQuotes
 → normalizeEmptyStringFormulaValues → storagePillRecordPaths → cleanAppOnlyContext
 → httpEndpointUrlSplit → inferNodeTypes → normalizeStorageFieldPaths
@@ -78,7 +78,7 @@ blockquote {
 </code></pre>
 <p>Verified against <code>origin/main:packages/llm-tools/src/tools/cleanUpAutomationConfig.ts</code> (20 registry entries; 22 public names — <code>refreshConnectionMap</code>/<code>appendConnectionIds</code> are dormant names with no registry entry; <code>mapPath</code>/<code>refreshConnectionMap</code> options are never read).</p>
 <h3>Invariants table</h3>
-<p>Every row is a bug if violated, not a refactor. Sources: scout inventory of main + <code>TODO.md</code> invariants block (still binding in full).</p>
+<p>Every row is a bug if violated, not a refactor. Sources: scout inventory of main + <code>TODO.md</code> invariants block (still binding except where I5 supersedes).</p>
 <table>
 <thead>
 <tr>
@@ -89,7 +89,7 @@ blockquote {
 </thead>
 <tbody><tr>
 <td>I1</td>
-<td>Plugin execution order above is observable behavior; reorderings are decisions</td>
+<td>The relative transform order above is observable behavior; the substep re-cut (§3.1) preserves the union of transforms in relative order; reorderings beyond that are decisions</td>
 <td><code>cleanUpAutomationConfig.ts</code> registry; order test in the 2,597-line characterization</td>
 </tr>
 <tr>
@@ -109,8 +109,8 @@ blockquote {
 </tr>
 <tr>
 <td>I5</td>
-<td>Five typed error families (input schema, output pill, dynamic output, topology, SQL) keep exact codes, messages, violation/note payloads, and <code>toJSON</code> envelopes; MCP serializes <code>.error</code> verbatim, everything else becomes <code>TOOL_CALL_ERROR</code></td>
-<td><code>workflowToolErrors.ts</code>; the five <code>types.ts</code> files</td>
+<td><strong>(Superseded shape, preserved keys.)</strong> The MCP error envelope keeps top-level <code>code</code>, <code>message</code>, <code>violations</code>, <code>notes</code> keys so envelope-parsing consumers don&#39;t break; the <em>interior</em> — violation payload shapes, per-family classes, codes-per-family definitions — is redesigned per §6. Which inputs throw, and the winning family, are preserved per the behavior contract above</td>
+<td><code>workflowToolErrors.ts</code>; §6</td>
 </tr>
 <tr>
 <td>I6</td>
@@ -124,7 +124,7 @@ blockquote {
 </tr>
 <tr>
 <td>I8</td>
-<td>Notes never block. Input notes default from <code>WORKFLOW_CLEANUP_VERBOSE</code>; output notes from <code>NODE_ENV===&#39;development&#39;</code>; notes-only runs emit one JSON <code>console.warn</code></td>
+<td>Notes never block. Input notes default from <code>WORKFLOW_CLEANUP_VERBOSE</code>; output notes from <code>NODE_ENV===&#39;development&#39;</code>; notes-only runs emit one JSON <code>console.warn</code> per family policy</td>
 <td><code>validateNodeInputs.ts:45-50</code>; <code>validateOutputPills.ts:79-83</code></td>
 </tr>
 <tr>
@@ -159,7 +159,7 @@ blockquote {
 </tr>
 <tr>
 <td>I15</td>
-<td>Topology aggregates all six violation kinds before throwing; runs after context/type cleanup, before group IDs</td>
+<td>Topology aggregates all six violation kinds; a topology-dirty run&#39;s thrown error is the topology family (finalize precedence)</td>
 <td><code>validateAutomationTopology.ts</code></td>
 </tr>
 <tr>
@@ -184,96 +184,123 @@ blockquote {
 </tr>
 <tr>
 <td>I20</td>
-<td>#26696 adds no new error family — it extends existing input/output codes with optional <code>targetAutomationId</code></td>
+<td>#26696 adds no new blocking family — its call-automation conditions extend the input/output families, carrying <code>targetAutomationId</code> in <code>details</code> under the new vocabulary</td>
 <td>PR head <code>outputPillValidationTypes.ts</code></td>
 </tr>
 </tbody></table>
-<p><strong>Still-binding locked decisions from the old stack</strong> (rewrite status per the stack-architecture scout): D1 connection-machinery deletion (internal only — the MCP field survives, see OD-2), D2 type-filtered edges (semantic, see OD-4), D3 strict grammar (architecture binding; grammar content updated to main&#39;s <code>[n]</code>), D4 skip-internal-only (principle binding, shape replaced), D5 defs enums (binding), D6 no batch schema validation (binding product constraint), Q7 immutability/reporter behavior (binding; interface replaced), Q8 <code>mapDeepStrings</code> (keep as-is), Q10 typed group-ID wire contract (deferred behind OD-3). Q9/Q12 are obsolete shapes.</p>
+<p><strong>Still-binding locked decisions from the old stack:</strong> D1 connection-machinery deletion (internal only — the MCP field survives, D-2), D2 type-filtered edges (adopted, D-4), D3 strict grammar (architecture binding; grammar content is main&#39;s <code>[n]</code>), D4 skip-internal-only (principle binding, shape replaced), D5 defs enums (binding), D6 no batch schema validation (binding product constraint), Q7 immutability behavior (binding; interface replaced by the single-draft engine), Q8 <code>mapDeepStrings</code> (keep as-is), Q10 typed group-ID wire contract (dissolved into the unified vocabulary, D-3). Q9/Q12 are obsolete shapes.</p>
 <hr>
 <h2>3. Target architecture</h2>
-<h3>3.1 Step taxonomy — five dependency-oriented steps</h3>
-<p>Chosen: the pipeline-design scout&#39;s <strong>Candidate A</strong>. It is the smallest decomposition where step boundaries coincide with real dependency edges, and it maps all 20 substeps <strong>with zero reordering</strong> — the five-step partition falls exactly on main&#39;s existing sequence. Candidate B (three coarse phases) makes &quot;Rewrite&quot; a 12-substep catch-all that defeats context slicing; Candidate C (artifact stages including prefetch) couples the taxonomy rewrite to network/prefetch changes that need separate characterization — it remains a plausible later evolution, not the first move.</p>
+<h3>3.1 Step and substep taxonomy</h3>
+<p>The five steps are ratified (D-1): <strong>normalize → resolveContracts → buildGraph → validateOutputs → validateInputs</strong>. Substeps are re-cut along validation-category / node-resource lines instead of one-substep-per-legacy-plugin, with two authorized merges. Every merge preserves the union of transforms in exact relative order; characterization tests keep passing with import/name updates only.</p>
 <pre><code>automation-cleanup
 ├── normalize                 — canonicalize authored syntax before anything parses it
-│   ├── fixPillMappings                 { { x } } → {{ x }} (automation grammar only)
-│   ├── triggerWebhookPillBody          trigger.outputs.* → trigger.outputs.body.*
-│   ├── normalizeFormulaStringQuotes    safe &#39;…&#39; → \&quot;…\&quot; inside = formulas
-│   ├── normalizeEmptyStringFormulaValues  &quot;&quot; → =&quot;&quot; (whitespace is data)
-│   ├── storagePillRecordPaths          storage envelope rewriting (.properties, objects[0])
-│   ├── cleanAppOnlyContext             strip resourceName from Branch/branch/stop
-│   └── httpEndpointUrlSplit            baseUrl origin/path split, fail-open on ambiguity
-├── resolveContracts          — derive node types and schema-backed shapes
-│   ├── inferNodeTypes                  trigger → override map → control/callable → ACTION
-│   ├── normalizeStorageFieldPaths      uiSchema-owned filter/sort path canonicalization
-│   ├── normalizeSqlEntityPaths         ENTITY_/_pr_/:param rewrites from prefetched schemas
-│   ├── normalizeDynamicSchemaFieldInputs  loader-key → ua:field_name remapping
-│   └── normalizeVariableNodeOutputSchema  mirror inputSchema.schema; clear inputs
+│   ├── repairPills            ⟵ fixPillMappings + triggerWebhookPillBody
+│   │                             { { x } } → {{ x }}, then trigger.outputs.* → trigger.outputs.body.*
+│   ├── normalizeFormulas      ⟵ normalizeFormulaStringQuotes + normalizeEmptyStringFormulaValues
+│   │                             safe &#39;…&#39; → \&quot;…\&quot; inside = formulas, then &quot;&quot; → =&quot;&quot;
+│   ├── normalizeStoragePills  ⟵ storagePillRecordPaths (storage envelope rewriting, single-pass)
+│   ├── cleanAppOnlyContext    ⟵ itself (strip resourceName from Branch/branch/stop)
+│   └── httpEndpointUrlSplit   ⟵ itself (baseUrl origin/path split, fail-open on ambiguity)
+├── resolveContracts          — derive node types and schema-backed shapes, cut per resource domain
+│   ├── inferNodeTypes                  ⟵ itself
+│   ├── normalizeStorageFieldPaths      ⟵ itself (uiSchema-owned filter/sort canonicalization)
+│   ├── normalizeSqlEntityPaths         ⟵ itself (ENTITY_/_pr_/:param rewrites)
+│   ├── normalizeDynamicSchemaFieldInputs ⟵ itself (loader-key → ua:field_name)
+│   └── normalizeVariableNodeOutputSchema ⟵ itself (mirror inputSchema.schema; clear inputs)
 ├── buildGraph                — finalize graph state, validate topology, derive groups
-│   ├── disableLoopCaptureIterations    captureIterations=false on every LOOP
-│   ├── validateTopology                ⛔ blocking barrier (6 aggregated violation kinds)
-│   └── generateGroupIds                FlowBuilder-mirroring derivation
+│   ├── disableLoopCaptureIterations    ⟵ itself
+│   ├── validateTopology                ⟵ itself   [family: topology]
+│   └── generateGroupIds                ⟵ itself   [family: groupId, advisory — see D-3]
+│                                          requires: validateTopology
 ├── validateOutputs           — producer contracts before consumer references
-│   ├── validateDynamicOutputSchemas    ⛔ blocking barrier (authored schema presence)
-│   └── validateOutputPills             ⛔ ladder (I2); notes warn
+│   ├── validateDynamicOutputSchemas    ⟵ itself   [family: dynamicOutput]
+│   └── validateOutputPills             ⟵ itself   [family: outputPill]
+│                                          requires: repairPills, inferNodeTypes
 └── validateInputs            — repair then validate authored inputs
-    ├── schemaGeneratorJsonSchema       repair + ⛔ INVALID_JSON_SCHEMA aggregation
-    ├── validateSqlEntityPaths          ⛔ UNKNOWN_ENTITY/COLUMN/VARIABLE
-    └── validateInputSchema             ⛔ eight-rule engine (I6); notes warn
+    ├── schemaGeneratorJsonSchema       ⟵ itself   [family: inputSchema; also transforms]
+    ├── validateSqlEntityPaths          ⟵ itself   [family: sql]
+    │                                      requires: normalizeSqlEntityPaths
+    └── validateInputSchema             ⟵ itself   [family: inputSchema]
 </code></pre>
-<p>PR #26696 maps onto this tree without a new substep: its resolution work is prefetch (§3.5), its input-shape and output rungs live inside <code>validateInputs.validateInputSchema</code> and <code>validateOutputs.validateOutputPills</code> exactly as on the PR head.</p>
-<h3>3.2 Substep contract</h3>
-<p>One mutative draft boundary and one fresh <code>FindingCollector</code> per substep. Context is a compile-time slice declared through <code>reads</code>; the reporter is a separate parameter so &quot;data read&quot; and &quot;effects emitted&quot; never blur. Validators receive the same signature but their tests assert draft identity — the <code>kind</code> field is enforced by contract tests, not by a second interface (two interfaces would force the two genuine mixed substeps, <code>schemaGeneratorJsonSchema</code> and <code>generateGroupIds</code>, into an awkward third shape).</p>
+<p><strong>Legacy plugin → v2 substep mapping (compat table, also the <code>pluginsToSkip</code> alias table):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Legacy plugin name</th>
+<th>v2 substep</th>
+<th>Merge?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fixPillMappings</code></td>
+<td><code>repairPills</code> (phase 1)</td>
+<td>merged</td>
+</tr>
+<tr>
+<td><code>triggerWebhookPillBody</code></td>
+<td><code>repairPills</code> (phase 2)</td>
+<td>merged</td>
+</tr>
+<tr>
+<td><code>normalizeFormulaStringQuotes</code></td>
+<td><code>normalizeFormulas</code> (phase 1)</td>
+<td>merged</td>
+</tr>
+<tr>
+<td><code>normalizeEmptyStringFormulaValues</code></td>
+<td><code>normalizeFormulas</code> (phase 2)</td>
+<td>merged</td>
+</tr>
+<tr>
+<td><code>storagePillRecordPaths</code></td>
+<td><code>normalizeStoragePills</code></td>
+<td>renamed</td>
+</tr>
+<tr>
+<td>all 15 remaining names</td>
+<td>same-named substep</td>
+<td>1:1</td>
+</tr>
+</tbody></table>
+<p>Merged substeps keep <strong>per-legacy-name internal phase toggles</strong>: <code>resolvePipelineSelection</code> maps a legacy <code>pluginsToSkip</code> name to <code>(substep, phase)</code>, so skipping <code>fixPillMappings</code> disables only phase 1 of <code>repairPills</code> — existing skip-based tests and callers observe identical behavior. New substep IDs are also accepted in the internal API.</p>
+<p><strong>Merges evaluated and rejected</strong> (one line each): <code>normalizeStoragePills</code> into <code>repairPills</code> — non-contiguous in legacy order (formula normalizers sit between) and resource-specific policy, not grammar repair. <code>cleanAppOnlyContext</code> + <code>httpEndpointUrlSplit</code> — contiguous but unrelated domains (context pruning vs URL surgery); a merge buys nothing and muddies the category cut. <code>normalizeSqlEntityPaths</code> + <code>validateSqlEntityPaths</code> — same resource but opposite phases straddling the graph barrier, different finding policies; they share the analyzer via <code>validation/sql/</code> instead. The deep-walker duplication scout 3 found across the five string plugins is collapsed by the shared <code>json</code> category (§4.8), not by further substep merges.</p>
+<p>PR #26696 maps onto this tree without a new substep: its resolution work is prefetch (§3.5), its input-shape and output rungs live inside <code>validateInputSchema</code> and <code>validateOutputPills</code> exactly as on the PR head.</p>
+<h3>3.2 Single draft, single collector — the substep contract</h3>
+<p>One <code>mutative.create()</code> wraps the <strong>entire pipeline run</strong>. One <code>ViolationsCollector</code> instance lives for the whole run. There is no per-substep draft machinery and no per-substep collector: substeps receive the shared draft and a <em>scoped reporter</em> handle; attribution lives in the collector, which tags every entry with <code>{stepId, substepId, family}</code>. Findings that embed draft-backed values are detached <strong>once</strong>, in a single pass at finalize (the last operation inside the draft callback, before mutative revokes proxies) — not per-substep.</p>
+<p>Whole-pipeline no-op identity (D-9) holds <em>because of</em> the single <code>create()</code>: a run in which no substep mutates returns the caller&#39;s exact object reference, mutative&#39;s native contract, with structural sharing on partial change.</p>
 <pre><code class="language-ts">export type AutomationSubstepKind = &#39;transform&#39; | &#39;validate&#39; | &#39;transformAndValidate&#39;;
 
-export interface SubstepReporter&lt;TViolation, TNote&gt; {
-  violation(entry: TViolation): void;
-  note(entry: TNote): void;
+export interface ScopedReporter {
+  violation(entry: AutomationViolationInput): void;  // collector adds stepId/substepId/family
+  note(entry: AutomationNoteInput): void;
 }
 
-export interface SubstepFindingPolicy&lt;TViolation, TNote&gt; {
-  /** Present ⇒ violations block: the runner creates and throws this typed error. */
-  readonly createError?: (
-    violations: readonly TViolation[],
-    notes: readonly TNote[],
-  ) =&gt; Error;
-  /** Present ⇒ notes-only runs emit this console.warn per the existing policies (I8). */
-  readonly notesWarningMessage?: string;
-}
-
-export interface AutomationSubstepSpec&lt;
-  TReads extends AutomationPipelineContextKey,
-  TViolation,
-  TNote,
-&gt; {
-  readonly id: AutomationConfigPluginName;   // stable — pluginsToSkip compat (I17)
+export interface AutomationSubstepSpec&lt;TReads extends AutomationPipelineContextKey&gt; {
+  readonly id: AutomationSubstepId;
+  readonly legacyPluginNames: readonly AutomationConfigPluginName[]; // skip-compat + phase toggles
   readonly description: string;
   readonly kind: AutomationSubstepKind;
+  /** Present ⇒ this substep&#39;s violations belong to a finding family (validators + schemaGenerator). */
+  readonly family?: AutomationViolationFamily;
+  /** Prerequisites: if any listed substep recorded blocking violations or threw, this substep is SKIPPED. */
+  readonly requires?: readonly AutomationSubstepId[];
   readonly reads: readonly TReads[];
-  readonly findings?: SubstepFindingPolicy&lt;TViolation, TNote&gt;;
   run(
     draft: Draft&lt;AutomationWorkflowDefinition&gt;,
     context: Readonly&lt;Pick&lt;AutomationPipelineContext, TReads&gt;&gt;,
-    reporter: SubstepReporter&lt;TViolation, TNote&gt;,
+    reporter: ScopedReporter,
   ): void;
 }
-
-export function defineAutomationSubstep&lt;
-  const TReads extends AutomationPipelineContextKey,
-  TViolation = never,
-  TNote = never,
-&gt;(spec: AutomationSubstepSpec&lt;TReads, TViolation, TNote&gt;) {
-  return spec;
-}
 </code></pre>
-<pre><code class="language-ts">export interface AutomationPipelineStep {
-  readonly id: AutomationPipelineStepId;      // &#39;normalize&#39; | &#39;resolveContracts&#39; | …
-  readonly description: string;
-  readonly substeps: readonly AutomationSubstep[];  // runner-private erased form
-}
-</code></pre>
-<p>The heterogeneous manifest needs one private type-erased adapter inside the runner; leaf modules keep their precise finding types. Erasure never escapes <code>pipeline/</code>.</p>
-<p><code>AutomationPipelineContext</code> is a plain readonly object (no getter factory): <code>resourceNodeTypeMap</code>, <code>nodeSchemaResources</code>, <code>entityTypeSchemas</code> (<code>undefined</code> = prefetch absent, per I12), <code>nodeDynamicSchemas</code>, <code>inputSchemaValidation</code>, plus #26696&#39;s <code>callAutomationTargetSchemas</code>, <code>callAutomationNodeTargets</code>, and <code>callAutomationResolutionCompleted</code>, plus the pipeline-owned <code>outputPillOccurrencesByNode</code> artifact (§3.4, OD-5).</p>
-<h3>3.3 Execution engine</h3>
+<ul>
+<li><code>defineAutomationSubstep</code> (const-generic factory) makes <code>reads</code> compile-time meaningful; the heterogeneous manifest uses one private type-erased adapter inside <code>pipeline/</code>; erasure never escapes.</li>
+<li>Validation substeps must not write the draft — enforced by contract tests that run each validator in an isolated test harness draft and assert identity; the production engine trusts the contract.</li>
+<li>Transforms report nothing unless <code>family</code> is declared (<code>schemaGeneratorJsonSchema</code> and <code>generateGroupIds</code> are the two mixed substeps; the single interface absorbs them without a third shape).</li>
+<li>Because one draft spans the run, a substep that throws mid-mutation leaves its partial writes in the draft. This is acceptable <em>only because</em> the run is already doomed: the exception is captured as a blocking finding (§3.3), dependents with <code>requires</code> skip, and finalize throws — the partially mutated workflow is never published.</li>
+</ul>
+<p><code>AutomationPipelineContext</code> is a plain readonly object (no getter factory): <code>resourceNodeTypeMap</code>, <code>nodeSchemaResources</code>, <code>entityTypeSchemas</code> (<code>undefined</code> = prefetch absent, per I12), <code>nodeDynamicSchemas</code>, <code>inputSchemaValidation</code>, plus #26696&#39;s <code>callAutomationTargetSchemas</code>, <code>callAutomationNodeTargets</code>, <code>callAutomationResolutionCompleted</code>, plus the pipeline-owned <code>outputPillOccurrencesByNode</code> artifact (§3.4, D-5).</p>
+<h3>3.3 Execution engine — no short-circuit, precedence-preserving finalize</h3>
 <p>One immutable manifest; ordering lives nowhere else:</p>
 <pre><code class="language-ts">export const AUTOMATION_CLEANUP_PIPELINE = {
   name: &#39;automation-cleanup&#39;,
@@ -282,29 +309,33 @@ export function defineAutomationSubstep&lt;
 </code></pre>
 <p>Runner semantics:</p>
 <ul>
-<li><strong>Serial, declaration order.</strong> Substeps cannot call <code>next()</code>, insert siblings, or mutate the registry. Step boundaries grant cache lifetime and trace grouping, never parallelism.</li>
-<li><strong>One <code>mutative.create()</code> per substep.</strong> No-op substeps return the original reference; after 20 no-ops the public result is the caller&#39;s object (identity delta gated by OD-9). Validation substeps&#39; drafts are asserted untouched by contract tests.</li>
-<li><strong>Skip semantics.</strong> <code>pluginsToSkip</code> survives as a compatibility alias resolving directly to substep IDs — unchanged behavior for every existing caller and test, including silent-ignore of unknown names in the compat wrapper (characterized). An internal <code>stepsToSkip</code> expands to descendant substep IDs before execution; neither is MCP-exposed (I17). A single <code>resolvePipelineSelection()</code> owns validation, expansion, and dependency warnings, consumed by both runner and <code>describePipeline()</code>.</li>
-<li><strong>Per-substep attribution.</strong> Each run yields a <code>SubstepExecutionRecord { stepId, substepId, status: &#39;completed&#39;|&#39;skipped&#39;|&#39;blocked&#39;|&#39;failed&#39;, changed, durationMs, violationCount, noteCount }</code> with an injectable clock. Records are opt-in diagnostics; the default public result is only the workflow. Nothing is appended to MCP payloads.</li>
-<li><strong>Error aggregation policy, per step:</strong><ul>
-<li><em>Within one validation substep:</em> collect every violation in that domain, then the runner evaluates <code>findings.createError</code> immediately after the substep returns. <code>normalize</code>/<code>resolveContracts</code> substeps have no finding policy — they are fail-open transforms.</li>
-<li><em>Across substeps:</em> stop at the first blocking substep. <code>buildGraph.validateTopology</code> and <code>validateOutputs.validateDynamicOutputSchemas</code> are in-step barriers; group IDs never run on invalid topology, pill paths never validate against missing dynamic contracts. This preserves main&#39;s first-blocking-error precedence exactly.</li>
-<li><em>Unexpected throws:</em> fail immediately, wrapped once with <code>stepId</code>/<code>substepId</code>/<code>cause</code>. The public <code>message</code> stays the original error message for parity (adopting the stack&#39;s <code>Automation cleanup plugin &quot;&lt;name&gt;&quot; failed:</code> prefix is OD-8). Typed automation errors pass through unwrapped, recognized by the single guard (§6).</li>
-<li><em>Notes:</em> attach to the substep&#39;s typed error when violations exist; otherwise apply that substep&#39;s <code>notesWarningMessage</code> policy and continue (I8).</li>
+<li><strong>Serial, declaration order, inside one draft.</strong> Substeps cannot call <code>next()</code>, insert siblings, or mutate the registry. Step boundaries grant artifact lifetime and trace grouping, never parallelism.</li>
+<li><strong>A substep failure never aborts the run.</strong> Blocking violations do not stop execution; unexpected exceptions do not propagate. Every substep executes unless a declared prerequisite failed.</li>
+<li><strong><code>requires</code> / SKIPPED.</strong> When any prerequisite in <code>requires</code> recorded blocking violations or threw, the dependent substep does not execute; the collector records <code>{substepId, status:&#39;skipped&#39;, reason, failedPrerequisite}</code>. The declared prerequisite edges, exhaustively:<ul>
+<li><code>generateGroupIds</code> requires <code>validateTopology</code> — group traversal on invalid topology is unsafe/corrupting (the known case, main parity: group IDs never ran after a topology throw).</li>
+<li><code>validateOutputPills</code> requires <code>repairPills</code> + <code>inferNodeTypes</code> — the occurrence artifact and producer map are only meaningful over repaired pills and typed producers (scout 4&#39;s stale-cache finding; scout 1 §4.2 producer rungs).</li>
+<li><code>validateSqlEntityPaths</code> requires <code>normalizeSqlEntityPaths</code> — it re-analyzes <em>normalized</em> SQL; running it on raw SQL manufactures <code>UNKNOWN_ENTITY</code> noise.</li>
+<li><code>validateTopology</code> requires <code>inferNodeTypes</code> + <code>cleanAppOnlyContext</code> — topology dispatches on node type and the app-only context rule; these matter only when a prerequisite <em>threw</em> (transforms record no violations), preventing false topology findings from a crashed normalizer.</li>
+<li>Nothing else declares <code>requires</code>. <code>validateDynamicOutputSchemas</code> → <code>validateOutputPills</code> is deliberately <em>not</em> an edge: pill validation fails open on a missing dynamic schema (scout 1 §4.3), so it runs and its findings attach; finalize precedence still throws the dynamic-output family first, exactly as today.</li>
 </ul>
 </li>
-<li><strong>Introspection.</strong> <code>describePipeline()</code> returns JSON-safe <code>{ steps: [{ id, description, substeps: [{ id, description, kind, reads }] }] }</code> without executing; a snapshot test pins it and the README pipeline table is generated from it — the mechanism that would have caught the stack&#39;s 16-vs-20 drift. <code>mode: &#39;inspect&#39;</code> runs in memory, returns <code>blockedBy</code> instead of throwing, and marks later substeps <code>blocked</code> rather than executing them against rejected state. No &quot;collect across all validators&quot; mode: it would validate states the production order never produces.</li>
+<li><strong>Unexpected exceptions are findings.</strong> The runner catches a substep throw and records a blocking <code>internal</code>-family finding <code>{code:&#39;SUBSTEP_EXECUTION_FAILED&#39;, stepId, substepId, message: &lt;original message&gt;, details:{cause}}</code> (attribution per D-8: raw message preserved, attribution in fields). Execution continues per <code>requires</code>.</li>
+<li><strong>Finalize decides the thrown error.</strong> After the last substep (and the single detachment pass), finalize picks the <strong>earliest blocking event by manifest position</strong> — which reproduces exactly the family today&#39;s sequential ordering would have thrown first: topology → dynamic-output → output-pills → input-schema (schemaGenerator) → sql → input-schema (final). An <code>internal</code> finding takes its substep&#39;s position. The thrown <code>AutomationCleanupError</code> carries the winning substep&#39;s violations as <code>violations</code> and <strong>all</strong> other collected findings, notes, and skip records in the payload (§6). If the winner is an <code>internal</code> finding, finalize instead rethrows the original error wrapped once (<code>stepId</code>/<code>substepId</code>/<code>cause</code> as fields, message unchanged) so MCP&#39;s <code>TOOL_CALL_ERROR</code> path behaves as today; the ledger rides on the wrapper&#39;s fields, not the wire.</li>
+<li><strong>No blocking events:</strong> the draft closes, identity contract applies (D-9), per-family notes-only <code>console.warn</code> policies fire (I8), the workflow returns.</li>
+<li><strong>Skip semantics.</strong> <code>pluginsToSkip</code> survives as a compatibility alias resolving to <code>(substep, phase)</code> per the §3.1 table — unchanged behavior for every existing caller and test, including silent-ignore of unknown names in the compat wrapper (characterized). Internal <code>stepsToSkip</code> expands to descendant substeps; neither is MCP-exposed (I17). <code>resolvePipelineSelection()</code> owns validation, expansion, and dependency warnings, consumed by runner and <code>describePipeline()</code>.</li>
+<li><strong>Attribution &amp; diagnostics.</strong> The collector&#39;s entries are the attribution record; the runner additionally yields opt-in <code>SubstepExecutionRecord { stepId, substepId, status: &#39;completed&#39;|&#39;skipped&#39;|&#39;failed&#39;, durationMs, violationCount, noteCount }</code> with an injectable clock (per-substep <code>changed</code> is gone — a single draft makes per-substep identity deltas unobservable; whole-run identity is the contract). Nothing is appended to MCP payloads.</li>
+<li><strong>Introspection.</strong> <code>describePipeline()</code> returns JSON-safe <code>{ steps: [{ id, description, substeps: [{ id, legacyPluginNames, description, kind, family?, requires?, reads }] }] }</code> without executing; a snapshot test pins it and the README pipeline table is generated from it. <code>mode: &#39;inspect&#39;</code> runs fully (it always could now — nothing short-circuits), returns the would-be finalize decision plus the complete ledger instead of throwing.</li>
 </ul>
 <h3>3.4 Pipeline artifacts</h3>
-<p>The stack&#39;s context bag failed because artifacts had no provenance or freshness. v2 gives the two cross-substep artifacts explicit owners:</p>
+<p>Two cross-substep artifacts with explicit owners, both step-scoped, both born inside the draft and dead before finalize:</p>
 <ul>
-<li><strong><code>WorkflowGraph</code></strong> (§4.1) — constructed by the <code>buildGraph</code> step runner from the immutable result of <code>disableLoopCaptureIterations</code>, injected only into <code>validateTopology</code>/<code>generateGroupIds</code>, dead at step end. Safe across the group-ID write because group IDs change no adjacency input.</li>
-<li><strong><code>outputPillOccurrencesByNode</code></strong> — collected once from the immutable result of the <code>normalize</code> step (after <code>fixPillMappings</code>/<code>triggerWebhookPillBody</code>/<code>storagePillRecordPaths</code> have finished rewriting pills), keyed by stable node index, consumed by <code>validateOutputs</code>. This fixes the stack&#39;s stale pre-normalization cache and its duplicate-node-ID aliasing while keeping the single-walk win. Prefetch-time discovery is a separate conservative scan (OD-5 governs whether that scan also normalizes braces first).</li>
+<li><strong><code>WorkflowGraph</code></strong> (§4.1) — constructed by the <code>buildGraph</code> step runner from draft state after <code>disableLoopCaptureIterations</code>, injected only into <code>validateTopology</code>/<code>generateGroupIds</code>, dead at step end. Safe across the group-ID write because group IDs change no adjacency input. Never escapes the draft callback.</li>
+<li><strong><code>outputPillOccurrencesByNode</code></strong> — collected once from draft state at the end of the <code>normalize</code> step (after <code>repairPills</code>/<code>normalizeStoragePills</code> have finished rewriting pills), keyed by stable node index, consumed by <code>validateOutputs</code>. This fixes the stack&#39;s stale pre-normalization cache and its duplicate-node-ID aliasing while keeping the single-walk win. Prefetch-time discovery is a separate conservative scan that normalizes braces on a throwaway copy first (D-5).</li>
 </ul>
 <h3>3.5 Prefetch (async facade)</h3>
-<p>Three named phases replace the monolithic wrapper — functions, not a builder class (§4.6):</p>
+<p>A planner class plus two functions (§4.9):</p>
 <ol>
-<li><code>buildPrefetchPlan(workflow)</code> — pure, deterministic: deduplicated builder-resource keys (consumer pass + referenced-producer pill pass), storage entity-type candidates, SQL entity candidates, call-automation target IDs (#26696). Two-phase by necessity: dynamic-loader needs are only knowable after builder resources arrive, so the plan has an <code>extendWithBuilderResources(resources)</code> second pass.</li>
+<li><strong><code>PrefetchPlanner</code></strong> — pure, deterministic, network-free. <code>fromWorkflow(workflow)</code> accumulates deduplicated builder-resource keys (consumer pass + referenced-producer pill pass over the brace-normalized throwaway copy, D-5), storage entity-type candidates, SQL entity candidates, call-automation target IDs (#26696). <code>extendWithBuilderResources(resources)</code> is the necessary second pass — dynamic-loader needs are only knowable after builder resources arrive. <code>plan()</code> returns the readonly plan.</li>
 <li><code>executePrefetchPlan(plan, dependencies)</code> — owns all I/O and concurrency (<code>Promise.all</code> waves as today), preserves the fail-closed/fail-open asymmetry (I13) and the three-state outcome semantics (I12). <code>fetchEntityType</code> and <code>fetchEntityTypeOutcome</code> stay distinct; their not-found contracts differ.</li>
 <li><code>createCleanupContext(plan, result, options)</code> — pure readonly assembly with visible defaults; computed maps override same-named caller options as today.</li>
 </ol>
@@ -313,14 +344,21 @@ export function defineAutomationSubstep&lt;
 <pre><code>packages/llm-tools/src/tools/automation/
   cleanUpAutomationConfig.ts                     # public sync wrapper (signature unchanged)
   cleanUpAutomationConfigWithSchemaValidation.ts # public async wrapper (signature unchanged)
-  workflowTypes.ts                               # generated-model-derived aliases (stack Q8-adjacent; drop getNodeAppResource)
+  workflowTypes.ts                               # generated-model-derived aliases (drop getNodeAppResource)
   pipeline/        # manifest.ts, runAutomationPipeline.ts, defineAutomationSubstep.ts,
-                   # resolvePipelineSelection.ts, describePipeline.ts, pipelineContext.ts, types.ts
-  shared/          # FindingCollector.ts, mapJsonValue.ts, foldJsonValue.ts, pillGrammar.ts,
-                   # textSimilarity.ts, validationErrorKit.ts, resourceIdentity.ts, jsonRecord.ts, notesPolicy.ts
-  graph/           # WorkflowGraph.ts, buildWorkflowGraph.ts, edgeClassification.ts, findJoinNode.ts
+                   # finalizePipelineRun.ts, resolvePipelineSelection.ts, describePipeline.ts,
+                   # pipelineContext.ts, types.ts
+  shared/
+    violations/    # vocabulary.ts (families, codes, shapes), ViolationsCollector.ts,
+                   # AutomationCleanupError.ts, isAutomationCleanupError.ts
+    pillGrammar/   # grammar.ts (private regexes), scan.ts, parse.ts, policies.ts
+    json/          # mapJsonValue.ts, foldJsonValue.ts, jsonRecord.ts
+    similarity/    # SimilarityScorer.ts
+    resourceIdentity.ts
+    notesPolicy.ts
+  graph/           # WorkflowGraph.ts, edgeClassification.ts, findJoinNode.ts
   steps/
-    normalize/           # 7 substep files + colocated leaf helpers + __tests__/
+    normalize/           # 5 substep files (repairPills has phase files) + __tests__/
     resolveContracts/    # 5 substep files + storageFieldPaths/, sqlEntityPaths/ leaf domains
     buildGraph/          # 3 substep files + topology/ checks
     validateOutputs/     # 2 substep files
@@ -328,18 +366,17 @@ export function defineAutomationSubstep&lt;
   validation/
     inputSchema/         # rules engine, flattenSchema.ts, SchemaIndex.ts, dynamic-schema modules
     outputPills/         # ladder, matching.ts, builders, storage/call output schemas
-    sql/                 # analyzer, masking, tokenizer, structure (moved from sqlEntityPaths)
-    isAutomationValidationError.ts
-  prefetch/        # buildPrefetchPlan.ts, executePrefetchPlan.ts, createCleanupContext.ts,
+    sql/                 # analyzer, masking, tokenizer, structure
+  prefetch/        # PrefetchPlanner.ts, executePrefetchPlan.ts, createCleanupContext.ts,
                    # resolveNodeDynamicSchemas.ts, storage/sql/call resolvers
   changelog/
 </code></pre>
-<p>No barrels anywhere (repo law). Heavy validation domains stay under <code>validation/</code> with thin step adapters importing them — a step folder never exceeds 7–8 peers, and the 584-line <code>outputPillValidationResult.ts</code> splits into <code>matching.ts</code> / <code>builders.ts</code> / gate constants to satisfy the 200-line law. Tests co-locate with their substep or domain (<code>&lt;subject&gt;.test.ts</code>, <code>&lt;substep&gt;.pipeline.test.ts</code>).</p>
+<p>No barrels anywhere (repo law). Heavy validation domains stay under <code>validation/</code> with thin step adapters importing them; the 584-line <code>outputPillValidationResult.ts</code> splits into <code>matching.ts</code> / <code>builders.ts</code> / gate constants (200-line law). Tests co-locate (<code>&lt;subject&gt;.test.ts</code>, <code>&lt;substep&gt;.pipeline.test.ts</code>).</p>
 <hr>
-<h2>4. Shared utilities</h2>
-<p>The user asked for util classes. The honest rule applied below: <strong>a class must own lifecycle, cached derived state, or an invariant-bearing boundary — otherwise it is a function.</strong> Three classes earn it; the rest are rejected with the reason stated.</p>
-<h3>4.1 <code>WorkflowGraph</code> — class ✅</h3>
-<p>Collapses: graph maps built independently by topology and group IDs in both trees (4 direct consumers), the duplicated edge-policy copies (5 sites: <code>classifyOutgoingEdges</code>, <code>getBranchEdgeProps</code>, topology <code>edgeUtils</code>, topology traversability, two join wrappers), and the 2 join-finding wrappers per tree. Owns one workflow revision with lazily cached <code>nodeMap</code>/<code>incoming</code>/<code>outgoing</code>/<code>root</code>, and delegates to the single <code>edgeClassification.ts</code> rule table (strategy map, §5) for <code>classifyOutgoing</code>/<code>findJoin</code>. Step-scoped only (§3.4); no mutation methods; multi-root/unreachable diagnostics exposed explicitly instead of the silent first-root pick. Class justified: related derived views with one lifetime and real lazy caching.</p>
+<h2>4. Shared utilities — encapsulated categories</h2>
+<p>Per the review directive, every util category is an explicit encapsulation layer with <strong>one file-or-folder each</strong>, leaning toward classes. A class must own lifecycle, cached derived state, or an invariant-bearing boundary; where a class is genuinely worse, the category keeps function modules but still gets the one-folder encapsulation treatment, with the reason stated in one line.</p>
+<h3>4.1 <code>WorkflowGraph</code> — class, folder <code>graph/</code></h3>
+<p><strong>Encapsulates:</strong> all graph derivation and edge policy — the maps built independently by topology and group IDs (4 consumers), the 5 duplicated edge-policy copies, the 2 join wrappers. Owns one workflow revision with lazily cached <code>nodeMap</code>/<code>incoming</code>/<code>outgoing</code>/<code>root</code>, delegating to the single <code>edgeClassification.ts</code> rule table (strategy map, §5.3). Step-scoped only; no mutation methods; multi-root/unreachable diagnostics exposed explicitly instead of the silent first-root pick.</p>
 <pre><code class="language-ts">export class WorkflowGraph {
   constructor(workflow: Readonly&lt;AutomationWorkflowDefinition&gt;);
   node(nodeId: string): AutomationNode | undefined;
@@ -351,108 +388,127 @@ export function defineAutomationSubstep&lt;
   findJoin(branchEdges: readonly AutomationWorkflowEdge[], ownerId: string): string | undefined;
 }
 </code></pre>
-<h3>4.2 <code>FindingCollector</code> — class ✅</h3>
-<p>Collapses: the stack&#39;s closure-based reporter plus main&#39;s five in-plugin aggregation patterns. Owns the two arrays, <strong>draft detachment before mutative revokes proxies</strong> (the one subtle lifecycle behavior that justifies a class), and one-shot <code>snapshot()</code> returning detached readonly arrays. The runner constructs one per substep and injects only the narrow <code>SubstepReporter</code> view, so leaf code can neither clear nor inspect partial findings. ≤80 lines.</p>
-<h3>4.3 <code>SchemaIndex</code> — class ✅</h3>
-<p>Collapses: repeated path lookups and direct-child scans across the eight input rules and the output-pill flatten caches (9 direct flatten call sites across both trees). Thin wrapper over <code>FlattenedSchemaResult</code> with lazy <code>directChildKeys</code> caching — the hoisting the old stack&#39;s Phase 5 wanted. The flatten algorithm itself <strong>stays a function</strong> (<code>flattenSchema.ts</code>) because it carries the bundling-sensitive <code>retrieveSchemaInternal</code> deep import (I16) and adapter injection; the class only indexes its result.</p>
-<h3>4.4 <code>pillGrammar</code> — functions + brand, class ❌</h3>
-<p>Collapses the worst duplication in the package: 13 modules defining or consuming pill syntax (loose fixer pattern, webhook derivative, strict parser, two generic template regexes, storage brace test, formula <code>}}</code>-seeker, dynamic-schema template regex, …). One module owns the offset-aware nested scanner, <code>parseOutputPillBody</code>, format/normalize helpers, and three <em>named policies</em> — <code>anyTemplateExpression</code>, <code>recoverableBraceForm</code>, <code>validOutputPill</code> — so consumers select semantics explicitly instead of re-deriving regexes. Grammar content is <strong>main&#39;s</strong> (arbitrary <code>[n]</code> indices, <code>\S+</code> producer IDs); the agreement-table test is updated accordingly. A <code>PillExpression</code> string brand (§5) marks parsed output. Class rejected: callers parse once and read fields — an instance per occurrence buys allocation, not an invariant.</p>
-<h3>4.5 <code>validationErrorKit</code> + single guard — factory functions, class ❌ (it <em>generates</em> classes)</h3>
-<p>Collapses: 5 copy-pasted error envelopes on main (a 6th if OD-3 adds group IDs) plus the duplicated guard list in <code>workflowToolErrors.ts</code> — 10 envelope definitions across the union. <code>createValidationErrorKit({ name, errorCode, message, includeNotes })</code> produces class + factory + guard with exact legacy JSON (the dynamic-output family keeps its no-notes envelope). <code>isAutomationValidationError</code> is the one union guard consumed by both the runner pass-through and MCP serialization; a table-completeness test proves every blocking substep&#39;s error family is registered — closing the stack&#39;s &quot;manually extended union&quot; gap.</p>
-<h3>4.6 Prefetch — three pure functions, builder class ❌</h3>
-<p>The pipeline-design scout floated <code>PrefetchPlanBuilder</code>; the conventions scout rejected fluent builders and this spec sides with the latter: the three phases (§3.5) have natural one-way data flow, there is no invariant to protect between <code>.add()</code> calls, and pure functions are independently unit-testable (taste test 9). Rejected in one sentence: a builder&#39;s only state would be accumulation that a plain function&#39;s local <code>Map</code> already provides. Collapses the 9 repeated full-workflow discovery scans into one plan pass plus the necessary post-fetch extension.</p>
-<h3>4.7 Remaining function modules</h3>
-<table>
-<thead>
-<tr>
-<th>Module</th>
-<th>Collapses (union counts from the duplication scout)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>mapJsonValue</code> / <code>foldJsonValue</code></td>
-<td>9 hand-rolled deep walkers (5 on main — the pattern re-grew after the stack removed 4); identity-preserving, arrays/plain-records only, path-aware fold for read-only consumers; storage-pill rewriting becomes single-pass</td>
-</tr>
-<tr>
-<td><code>textSimilarity</code></td>
-<td>2 byte-identical Levenshtein copies + 2 Fuse constructions; <strong>fixes</strong> the per-call single-item <code>Fuse</code> instantiation the old stack claimed but never completed</td>
-</tr>
-<tr>
-<td><code>resourceIdentity</code> (<code>getNodeResourceIdentity</code> → <code>{appName, resourceName, key}</code>)</td>
-<td>17 extraction sites + 4 direct <code>`${app}::${resource}`</code> formattings; <code>ResourceKey</code> brand</td>
-</tr>
-<tr>
-<td><code>jsonRecord</code> guard</td>
-<td>10 local <code>isRecord</code>/<code>isPlainObject</code> definitions that subtly disagree; one prototype-checked JSON-record predicate</td>
-</tr>
-<tr>
-<td><code>notesPolicy</code> (<code>shouldCollectValidationNotes</code>)</td>
-<td>4 policy call sites; codifies the two intentionally different defaults (I8) so &quot;cleanup&quot; can never merge them</td>
-</tr>
-<tr>
-<td><code>edgeClassification</code> rule table</td>
-<td>the 5 graph-policy copies (§4.1); one per-node-type entry owns classify + branchProps + traversable</td>
-</tr>
-</tbody></table>
+<h3>4.2 <code>ViolationsCollector</code> — class, folder <code>shared/violations/</code> (pipeline-scoped)</h3>
+<p><strong>Encapsulates:</strong> the whole run&#39;s finding ledger — every violation, note, skip record, and captured exception, tagged with <code>{stepId, substepId, family}</code>. The runner constructs <strong>one</strong> per run; substeps see only the narrow <code>ScopedReporter</code> view from <code>scoped(stepId, substepId, family)</code>, so leaf code can neither clear nor inspect partial findings.</p>
+<pre><code class="language-ts">export class ViolationsCollector {
+  scoped(stepId: AutomationPipelineStepId, substepId: AutomationSubstepId,
+         family?: AutomationViolationFamily): ScopedReporter;
+  recordSkip(substepId: AutomationSubstepId, failedPrerequisite: AutomationSubstepId): void;
+  recordException(stepId: AutomationPipelineStepId, substepId: AutomationSubstepId, error: unknown): void;
+  hasBlocking(substepId: AutomationSubstepId): boolean;   // drives `requires`
+  finalize(): FinalizedFindings;   // ONE detachment pass; one-shot; called inside the draft tail
+}
+</code></pre>
+<p>Class justified: one-shot lifecycle, the detach-at-finalize invariant, and the blocking index that <code>requires</code> evaluation reads.</p>
+<h3>4.3 <code>SchemaIndex</code> — class, file <code>validation/inputSchema/SchemaIndex.ts</code></h3>
+<p><strong>Encapsulates:</strong> repeated path lookups and direct-child scans across the eight input rules and the output-pill flatten caches (9 flatten call sites). Thin wrapper over <code>FlattenedSchemaResult</code> with lazy <code>directChildKeys</code> caching. The flatten algorithm <strong>stays a function</strong> (<code>flattenSchema.ts</code>) because it carries the bundling-sensitive <code>retrieveSchemaInternal</code> deep import (I16) and adapter injection; the class only indexes its result.</p>
+<h3>4.4 <code>PillGrammar</code> — encapsulated namespace-folder <code>shared/pillGrammar/</code>, internals stay functions</h3>
+<p><strong>Encapsulates:</strong> the worst duplication in the package — 13 modules defining or consuming pill syntax. The folder is the <em>only</em> place regexes for pill syntax may live (<code>grammar.ts</code> is folder-private by convention and lint-guarded by an architecture test); <code>scan.ts</code> owns the offset-aware nested scanner; <code>parse.ts</code> owns <code>parseOutputPillBody</code> + format/normalize helpers and the <code>PillExpression</code> brand; <code>policies.ts</code> names the three semantic policies — <code>anyTemplateExpression</code>, <code>recoverableBraceForm</code>, <code>validOutputPill</code> — so consumers select semantics explicitly. Grammar content is <strong>main&#39;s</strong> (arbitrary <code>[n]</code>, <code>\S+</code> producer IDs); the agreement-table test updates accordingly. Class rejected in one line: callers parse once and read fields — an instance per occurrence buys allocation, not an invariant; the folder boundary supplies the encapsulation a class would.</p>
+<h3>4.5 <code>SimilarityScorer</code> — class, folder <code>shared/similarity/</code></h3>
+<p><strong>Encapsulates:</strong> the 2 byte-identical Levenshtein copies + 2 Fuse constructions. Now a class <em>because it finally has state worth owning</em>: one instance holds the normalized-candidate cache and a reused Fuse index per candidate set, fixing the per-call single-item <code>Fuse</code> instantiation the old stack claimed but never completed (scout 2 §3.9). <code>normalizeIdentifier</code>/<code>getEditDistance</code> remain pure module functions in the same folder; domain thresholds/ranking stay outside.</p>
+<h3>4.6 <code>resourceIdentity</code> — function module + brand, file <code>shared/resourceIdentity.ts</code></h3>
+<p><strong>Encapsulates:</strong> 17 extraction sites + 4 direct <code>`${app}::${resource}`</code> formattings behind <code>getNodeResourceIdentity(node) → {appName, resourceName, key}</code> and the <code>ResourceKey</code> brand, minted only here. Class worse in one line: stateless parse/format with no lifecycle — a brand plus two named functions is the entire invariant.</p>
+<h3>4.7 <code>notesPolicy</code> — function module, file <code>shared/notesPolicy.ts</code></h3>
+<p><strong>Encapsulates:</strong> the 4 policy call sites and the two intentionally different defaults (I8: input ← <code>WORKFLOW_CLEANUP_VERBOSE</code>, output ← <code>NODE_ENV===&#39;development&#39;</code>) behind <code>shouldCollectValidationNotes(family, options)</code> so &quot;cleanup&quot; can never merge them. Class worse in one line: two pure predicates over env/options; instantiating policy would be ceremony.</p>
+<h3>4.8 <code>json</code> — function modules, folder <code>shared/json/</code></h3>
+<p><strong>Encapsulates:</strong> the 9 hand-rolled deep walkers (5 on main — the pattern re-grew after the stack removed 4) and the 10 subtly disagreeing <code>isRecord</code> guards. <code>mapJsonValue</code> (identity-preserving), <code>foldJsonValue</code> (path-aware, read-only), <code>jsonRecord</code> (one prototype-checked predicate). Arrays/plain records only; storage-pill rewriting becomes single-pass. Class worse in one line: pure structural recursion with no state — the folder is the boundary.</p>
+<h3>4.9 <code>PrefetchPlanner</code> — class, folder <code>prefetch/</code></h3>
+<p><strong>Encapsulates:</strong> the 9 repeated full-workflow discovery scans behind genuinely stateful two-pass accumulation (§3.5): builder-resource keys are known up front, dynamic-loader needs only after resources arrive, so the instance&#39;s lifecycle <em>is</em> the two-phase protocol — <code>fromWorkflow()</code> → <code>extendWithBuilderResources()</code> → <code>plan()</code>. It never fetches; <code>executePrefetchPlan</code> and <code>createCleanupContext</code> remain pure-boundary functions because I/O ownership and readonly assembly have one-way data flow with no invariant between calls.</p>
+<p>The old <code>validationErrorKit</code> category dissolves: with one error class and one guard (§6), there is nothing left to generate — <code>shared/violations/</code> owns the entire vocabulary.</p>
 <hr>
 <h2>5. Design patterns charter</h2>
 <p>Distilled from the conventions scout into enforceable rules; each has in-repo precedent. Repo law (200-line files, no barrels, no single-letter iterators, named exports, interfaces-over-types, const maps not enums, <code>satisfies</code>, <code>.js</code> ESM specifiers, no <code>/src</code> imports, 100-col format) applies to every file and is not repeated per rule.</p>
 <ol>
-<li><strong>One declarative manifest, two levels max.</strong> Steps contain substeps; array order is execution order; entries carry only <code>id</code> + direct function reference + finding policy. No glob discovery, DI, priorities, dependency sorting, string lookup, or inline lambdas. Ordering rationale is a one-line comment above the entry in the grammar <code>&lt;Verb&gt; &lt;fact&gt; before &lt;consumer&gt; reads &lt;dependent fact&gt;.</code> <em>Precedent:</em> main&#39;s ordered registry + the page pipeline&#39;s visible macro stages (<code>cleanUpConfig.ts:462-520</code>); stack README declaring order observable.</li>
+<li><strong>One declarative manifest, two levels max.</strong> Steps contain substeps; array order is execution order; entries carry only <code>id</code> + direct function reference + <code>family</code>/<code>requires</code> metadata. No glob discovery, DI, priorities, dependency sorting beyond declared <code>requires</code>, string lookup, or inline lambdas. Ordering rationale is a one-line comment above the entry: <code>&lt;Verb&gt; &lt;fact&gt; before &lt;consumer&gt; reads &lt;dependent fact&gt;.</code></li>
 <li><strong>Greppability ceiling.</strong> Grep one substep ID → manifest entry, implementation, tests, changelog. If reading the manifest requires decoding predicates or factory-generated handlers, it has become a framework: simplify.</li>
-<li><strong>Strategy map when one discriminator drives ≥2 behaviors; exhaustive switch for one local operation on a discriminated union.</strong> Never two switches on the same discriminator. <em>Precedent:</em> stack&#39;s <code>edgeClassification.ts</code> rule table replacing main&#39;s parallel switches; main&#39;s two-variant <code>switch (loader.operationId)</code> staying a switch.</li>
-<li><strong>Branded strings only where a real grammar is repeatedly parsed/formatted:</strong> <code>PillExpression</code>, <code>ResourceKey</code>, <code>GroupId</code>. Only named parse/format/create functions mint them; convert to plain strings at generated-model/JSON/MCP boundaries; never brand ordinary IDs. No runtime value-object classes.</li>
-<li><strong>Findings are data; exceptions mean the substep could not execute its contract.</strong> Validators report through the injected reporter and never throw for workflow content; the runner alone converts blocking findings to typed errors (policy in the manifest, representation in the kit). Fail-open unavailability is a note or skip, never a throw. Traversal control uses explicit <code>continue</code>/<code>skipSubtree</code>, never exceptions. <em>Precedent:</em> page violation checkers (pure, list-returning) + stack reporter/runner split.</li>
-<li><strong>Error vocabulary grammar.</strong> <code>Automation&lt;Topic&gt;ValidationError</code> / <code>create…</code> / <code>is…</code> / aggregate <code>isAutomationValidationError</code>; envelope codes <code>AUTOMATION_&lt;TOPIC&gt;_VALIDATION_FAILED</code>; finding codes concise upper-snake conditions (<code>MALFORMED_PILL</code>) without the envelope prefix. The kit owns representation only — never throw/log/suppress policy.</li>
-<li><strong>Immutability contract.</strong> Public entry points never mutate input. Exactly one <code>mutative.create()</code> per substep; only the thin adapter sees <code>Draft</code>; parsers/planners/rankers/graph-builders/validators are draft-free pure functions; drafts never cross <code>await</code>, caches, contexts, or error payloads; no-op preserves the original reference. Local <code>Map</code>/<code>Set</code> accumulation inside a pure-result function is fine when the accumulator does not escape mutable.</li>
+<li><strong>Strategy map when one discriminator drives ≥2 behaviors; exhaustive switch for one local operation on a discriminated union.</strong> Never two switches on the same discriminator. <em>Precedent:</em> <code>edgeClassification.ts</code> rule table; main&#39;s two-variant <code>switch (loader.operationId)</code> staying a switch.</li>
+<li><strong>Branded strings only where a real grammar is repeatedly parsed/formatted:</strong> <code>PillExpression</code>, <code>ResourceKey</code>, <code>GroupId</code>. Only named parse/format/create functions mint them; convert to plain strings at generated-model/JSON/MCP boundaries; never brand ordinary IDs. No runtime value-object classes for strings.</li>
+<li><strong>Findings are data; nothing inside the pipeline throws.</strong> Validators report through the scoped reporter and never throw for workflow content; the runner captures unexpected substep exceptions as <code>internal</code>-family findings; <strong>finalize is the only throw site</strong>. Fail-open unavailability is a note or skip, never a throw. Traversal control uses explicit <code>continue</code>/<code>skipSubtree</code>, never exceptions.</li>
+<li><strong>Error vocabulary grammar.</strong> One violation shape (§6); family names lower-camel in code, envelope codes <code>AUTOMATION_&lt;TOPIC&gt;_VALIDATION_FAILED</code>, finding codes concise upper-snake conditions (<code>MALFORMED_PILL</code>) without the envelope prefix. <code>shared/violations/</code> owns representation only — never throw/log/suppress policy.</li>
+<li><strong>Immutability contract.</strong> Public entry points never mutate input. <strong>Exactly one <code>mutative.create()</code> per pipeline run</strong>; only substep adapters see <code>Draft</code>; parsers/planners/rankers/graph-builders/validators are draft-free pure functions; drafts never cross <code>await</code>, caches, contexts, or error payloads (the collector&#39;s single finalize pass detaches before the draft closes); a fully no-op run preserves the caller&#39;s reference. Local <code>Map</code>/<code>Set</code> accumulation inside a pure-result function is fine when the accumulator does not escape mutable.</li>
 <li><strong>Two traversal algebras, no universal Visitor.</strong> Path-aware JSON fold + identity-preserving JSON map for payloads; explicit <code>for...of</code> over nodes/edges in the owning step; named BFS/DFS graph helpers for control flow. Domain parsers consume leaf values; they do not own recursion.</li>
-<li><strong>Naming.</strong> Files and executable IDs lower-camel verb-first sharing one stem (<code>validateTopology</code> = id = function = file); only draft adapters get the <code>Plugin</code> suffix; leaf checks are <code>check&lt;Invariant&gt;</code>; ordered polymorphic objects are <code>&lt;subject&gt;ValidationRule</code>; tests <code>&lt;subject&gt;.test.ts</code> / <code>&lt;substep&gt;.pipeline.test.ts</code>. Ban <code>util</code>, <code>helper</code>, <code>manager</code>, <code>process</code>, <code>data</code> as name substance.</li>
-<li><strong>Documentation placement.</strong> Code comment = present-tense invariant; manifest comment = ordering dependency; JSDoc = non-obvious contract (identity, fail-open, wire shape, the RJSF deep-import constraint) only; one root <code>automation/README.md</code> with a <code>describePipeline()</code>-generated order section; named specs (<code>OUTPUT_PILL_VALIDATION.md</code>) only for genuine grammars/protocols; changelog = trigger/tried/decision history. Never a runtime invariant only in a changelog; never PR history in a code comment.</li>
-<li><strong>No i18n in this package</strong> — MCP/backend diagnostics, sentence case, wire-visible text preserved byte-for-byte.</li>
-<li><strong>Release taste gate:</strong> the conventions scout&#39;s 12-question rubric (≥20/24, zeros on questions 2/6/7/8/12 blocking) runs at PR-7 review.</li>
+<li><strong>Naming.</strong> Files and executable IDs lower-camel verb-first sharing one stem (<code>validateTopology</code> = id = function = file); leaf checks are <code>check&lt;Invariant&gt;</code>; ordered polymorphic objects are <code>&lt;subject&gt;ValidationRule</code>; tests <code>&lt;subject&gt;.test.ts</code> / <code>&lt;substep&gt;.pipeline.test.ts</code>. Ban <code>util</code>, <code>helper</code>, <code>manager</code>, <code>process</code>, <code>data</code> as name substance.</li>
+<li><strong>Documentation placement.</strong> Code comment = present-tense invariant; manifest comment = ordering dependency; JSDoc = non-obvious contract (identity, fail-open, wire shape, the RJSF deep-import constraint) only; one root <code>automation/README.md</code> with a <code>describePipeline()</code>-generated order section; named specs (<code>OUTPUT_PILL_VALIDATION.md</code>) only for genuine grammars/protocols; changelog = trigger/tried/decision history.</li>
+<li><strong>No i18n in this package</strong> — MCP/backend diagnostics, sentence case, wire-visible text governed by §6 (not byte-frozen; key-stable).</li>
+<li><strong>Release taste gate:</strong> the conventions scout&#39;s 12-question rubric (≥20/24, zeros on questions 2/6/7/8/12 blocking) runs at the flip PR review.</li>
 </ol>
 <hr>
 <h2>6. Error and reporting contract</h2>
+<p><strong>Design freedom, one constraint.</strong> Error codes, class definitions, and payload shapes are <em>not</em> frozen contracts — the five copy-pasted legacy families are replaced by one unified vocabulary and one error class. The single constraint: the MCP envelope&#39;s <strong>top-level keys <code>code</code>, <code>message</code>, <code>violations</code>, <code>notes</code> remain present</strong> so envelope-parsing consumers don&#39;t break. New keys may be added; interior shapes are redesigned.</p>
+<p><strong>Unified violation shape</strong> — one shape across all families:</p>
+<pre><code class="language-ts">export type AutomationViolationFamily =
+  | &#39;topology&#39; | &#39;dynamicOutput&#39; | &#39;outputPill&#39; | &#39;inputSchema&#39; | &#39;sql&#39;
+  | &#39;groupId&#39;      // advisory: silent group-ID failures become first-class findings (D-3)
+  | &#39;internal&#39;;    // captured unexpected substep exceptions
+
+export interface AutomationViolation {
+  readonly family: AutomationViolationFamily;
+  readonly code: string;           // per-family const map, e.g. MALFORMED_PILL, MISSING_ROOT
+  readonly stepId: AutomationPipelineStepId;
+  readonly substepId: AutomationSubstepId;
+  readonly nodeId?: string;
+  readonly path?: string;          // input path / pill path / schema pointer, family-normalized
+  readonly message: string;
+  readonly details?: JsonRecord;   // suggestions, expected/actual, targetAutomationId (#26696), cause summary
+}
+// AutomationNote: same shape; notes never block (I8).
+</code></pre>
 <ul>
-<li><strong>Typed families (wire-frozen):</strong> <code>AUTOMATION_INPUT_SCHEMA_VALIDATION_FAILED</code>, <code>AUTOMATION_OUTPUT_PILL_VALIDATION_FAILED</code>, <code>AUTOMATION_DYNAMIC_OUTPUT_SCHEMA_VALIDATION_FAILED</code> (no <code>notes</code> field — historical shape preserved), <code>AUTOMATION_TOPOLOGY_VALIDATION_FAILED</code>, <code>AUTOMATION_SQL_VALIDATION_FAILED</code>. All produced by the kit; <code>.error</code> envelope, mirrored <code>code</code>/<code>violations</code>/<code>notes</code>, <code>toJSON()</code> — byte-identical to main. #26696&#39;s optional <code>targetAutomationId</code> fields ride inside the existing input/output payloads (I20).</li>
-<li><strong>Single guard.</strong> <code>isAutomationValidationError</code> is consumed by exactly two call sites: runner pass-through (typed errors skip attribution wrapping) and <code>stringifyWorkflowToolError</code>. A completeness test enumerates blocking substeps in the manifest and asserts each <code>createError</code> product satisfies the guard — new families cannot silently miss dispatch (the drift class the stack fixed once by hand).</li>
-<li><strong>Unexpected errors</strong> wrap once: <code>{ stepId, substepId, cause }</code>, public message unchanged pending OD-8.</li>
-<li><strong>Notes policy</strong> stays per-family (I8) behind <code>shouldCollectValidationNotes</code>; the runner owns the single JSON <code>console.warn</code>; leaf code never logs.</li>
-<li><strong>Dispatch layers unchanged:</strong> <code>applyUpdateWorkflow</code> keeps <code>{success:false, error, violations, notes?, errorCause}</code>; MCP keeps <code>content:[{type:&#39;text&#39;,text}]</code> + <code>isError:true</code>; unrecognized failures keep <code>{code:&#39;TOOL_CALL_ERROR&#39;, tool, message, violations?, notes?}</code>.</li>
-<li><strong>Wire compatibility statement:</strong> every MCP envelope — tool input schemas (including the required <code>connectionMap</code> no-op field, pending OD-2), success JSON, error JSON, warning shapes — is byte-compatible with main today. PR-0 snapshots them; PR-7 proves them.</li>
+<li><strong>Blocking families:</strong> <code>topology</code>, <code>dynamicOutput</code>, <code>outputPill</code>, <code>inputSchema</code>, <code>sql</code>, <code>internal</code>. <strong><code>groupId</code> is advisory</strong> (D-3): <code>MISSING_ROOT</code>/<code>CYCLE</code>/<code>CONFLICTING_ASSIGNMENT</code> are recorded and surfaced in the ledger — real corruption is no longer silent — but never win finalize, preserving main&#39;s accept/reject behavior. Promoting the family to blocking is a one-line flip plus a decision entry, later.</li>
+<li><strong>One error class, one guard.</strong> <code>AutomationCleanupError</code> is built by finalize only. Envelope:</li>
+</ul>
+<pre><code class="language-ts">{
+  code: &#39;AUTOMATION_&lt;TOPIC&gt;_VALIDATION_FAILED&#39;,   // winning family&#39;s envelope code (values kept per family)
+  message: &#39;&lt;winning family message&gt;&#39;,
+  violations: AutomationViolation[],   // the winning substep&#39;s blocking violations (today&#39;s payload position)
+  notes: AutomationNote[],             // full-run notes
+  findings: AutomationViolation[],     // complete ledger: every family incl. groupId advisories + internal
+  skipped: [{ substepId, failedPrerequisite, reason }],
+}
+</code></pre>
+<p>  <code>isAutomationCleanupError</code> is the single guard, consumed by exactly two call sites: finalize/wrapper dispatch and <code>stringifyWorkflowToolError</code>. A completeness test enumerates blocking families in the vocabulary and asserts finalize can produce each — new families cannot silently miss dispatch.</p>
+<ul>
+<li><strong><code>internal</code> winner exception:</strong> when the earliest blocking event is a captured substep exception, finalize rethrows the original error wrapped once (<code>stepId</code>/<code>substepId</code>/<code>cause</code> as fields, public message unchanged — D-8); MCP serializes it as <code>TOOL_CALL_ERROR</code> exactly as unexpected errors serialize today. The ledger rides on wrapper fields, not the wire.</li>
+<li><strong>The groupId typed-error question (old OD-3) dissolves here:</strong> silent failures are first-class <code>groupId</code>-family violations in the same vocabulary — no separate error class, no separate wire family.</li>
+<li><strong>Notes policy</strong> stays per-family (I8) behind <code>shouldCollectValidationNotes</code>; finalize owns the per-family JSON <code>console.warn</code> for notes-only runs; leaf code never logs.</li>
+<li><strong>Dispatch layers:</strong> <code>applyUpdateWorkflow</code> keeps <code>{success:false, error, violations, notes?, errorCause}</code> populated from the new envelope; MCP keeps <code>content:[{type:&#39;text&#39;,text}]</code> + <code>isError:true</code>; unrecognized failures keep <code>{code:&#39;TOOL_CALL_ERROR&#39;, tool, message, violations?, notes?}</code>.</li>
+<li><strong>Wire statement:</strong> MCP tool <em>input</em> schemas (including the required <code>connectionMap</code> no-op field, D-2), success JSON, and warning mechanics are unchanged. Error envelopes are key-stable, shape-redesigned; v2-0 snapshots the new envelope as the contract going forward.</li>
 </ul>
 <hr>
 <h2>7. Test strategy</h2>
 <h3>Carried over verbatim (assertions unchanged, locations moved)</h3>
 <ul>
-<li>All per-plugin behavior locks from main&#39;s 2,597-line characterization plus the <del>36 focused suites (</del>285 declarations) — re-homed to <code>steps/&lt;step&gt;/__tests__/</code> per substep.</li>
-<li>The pill-grammar agreement matrix — candidate set preserved, expectations updated once for main&#39;s <code>[n]</code> grammar (D3 evidence).</li>
+<li>All per-plugin behavior locks from main&#39;s 2,597-line characterization plus the <del>36 focused suites (</del>285 declarations) — re-homed to <code>steps/&lt;step&gt;/__tests__/</code> per substep; merged substeps import both legacy suites with name updates only.</li>
+<li>The pill-grammar agreement matrix — candidate set preserved, expectations updated once for main&#39;s <code>[n]</code> grammar.</li>
 <li>The four platform group-ID fixtures + manual-fallback equality gate (I14).</li>
-<li>Topology characterization incl. the Loop/Scope reconvergence regression (caught a real review blocker).</li>
-<li>Identity/immutability <code>toBe</code> assertions: no-op root identity, untouched siblings, second-pass idempotence, input immutability, reporter isolation.</li>
-<li>Exact structured-error payload tests incl. the dynamic-output no-notes exception.</li>
+<li>Topology characterization incl. the Loop/Scope reconvergence regression.</li>
+<li>Identity/immutability <code>toBe</code> assertions: no-op root identity (now via the single draft), untouched siblings, second-pass idempotence, input immutability, reporter scoping.</li>
 <li>Output-matching ladder/threshold/gate tests — no loosening of exact-membership acceptance.</li>
 <li>Prefetch locks: resource-key dedupe, both discovery passes, three-state outcomes, raw fetch-error propagation.</li>
-<li>All ~72 declarations from #26696&#39;s 18 test files (call-automation resolution, batch shapes, hostile keys, endpoint-isolated fail-open).</li>
+<li>All ~72 declarations from #26696&#39;s 18 test files (ported from the pinned head; they are the parity oracle for call-automation behavior).</li>
 </ul>
-<h3>Not carried over</h3>
-<p>Registry-filter isolation tests (<code>AUTOMATION_CONFIG_PLUGIN_NAMES.filter(...)</code>), the four curated skip-list constants, compatibility-shim/state-shape tests, and the old <code>tools/plugins/__tests__</code> location.</p>
+<h3>Rewritten, not carried verbatim</h3>
+<p>Exact structured-error payload tests: the <em>conditions</em> that produce each violation are preserved one-for-one, but assertions target the new unified shape and envelope (§6). Registry-filter isolation tests, curated skip-list constants, compatibility-shim tests, and the old <code>tools/plugins/__tests__</code> location are dropped.</p>
 <h3>New in v2</h3>
 <ol>
-<li><code>describePipeline()</code> snapshot — the manifest is a pinned contract (order, kinds, reads).</li>
-<li>Per-substep contract tests — validators leave the draft identical; transforms report nothing unless declared.</li>
-<li><code>resolvePipelineSelection</code> tests — compat alias behavior, step expansion, dependency warnings, unknown-name handling.</li>
+<li><code>describePipeline()</code> snapshot — order, kinds, families, <code>requires</code>, reads, legacy-name mapping pinned.</li>
+<li><strong>Finalize-precedence equivalence</strong> — for every characterization fixture that throws today, v2 throws the same winning family with the same accept/reject decision; multi-fault fixtures (topology + pill + input faults in one workflow) assert winner + complete attached ledger.</li>
+<li><strong>Skip-record tests</strong> — topology-dirty fixtures assert <code>generateGroupIds</code> records SKIPPED with the failed prerequisite; SQL-normalize-crash fixtures assert <code>validateSqlEntityPaths</code> skips.</li>
+<li><strong>Exception-capture tests</strong> — an injected throwing substep yields an <code>internal</code> finding with attribution, later substeps still run (minus dependents), finalize rethrows the original when it wins and attaches it when it doesn&#39;t.</li>
+<li>Per-substep contract tests — validators leave an isolated harness draft identical; transforms report nothing without a declared family.</li>
+<li><code>resolvePipelineSelection</code> tests — legacy-name → (substep, phase) mapping, step expansion, unknown-name silent-ignore in compat mode.</li>
 <li>Artifact-freshness tests — pills repaired in <code>normalize</code> are visible to <code>validateOutputs</code> (the stack&#39;s stale-cache bug, locked forever).</li>
 <li>Offline-profile tests — schema-backed substeps are explicit no-ops without fetched context; <code>batch_upsert_nodes</code> parity (D6).</li>
-<li>Prefetch attribution tests for async failures, not only sync throws.</li>
-<li>Error-guard completeness test (§6).</li>
-<li>Graph diagnostics tests — zero/multiple roots, unreachable nodes, cycles.</li>
-<li>Architecture test: <code>src/tools/automation/**</code> must not import platform <code>FlowBuilder</code> (activates with OD-6).</li>
-<li>Side-by-side equivalence harness (PR-3..PR-6): old and new engines run the same fixtures; deep-equal output plus locked reference behavior.</li>
+<li>Error completeness test (§6) + new-envelope snapshot.</li>
+<li>Graph diagnostics tests — zero/multiple roots, unreachable nodes, cycles → <code>groupId</code> advisories in the ledger.</li>
+<li>Architecture tests: no platform <code>FlowBuilder</code> import under <code>automation/**</code> (D-6); no pill regex outside <code>shared/pillGrammar/</code>.</li>
+<li>Side-by-side equivalence harness (v2-3..v2-6): old and new engines run the same fixtures; deep-equal output on acceptance; winning-family equality on rejection.</li>
 </ol>
 <hr>
 <h2>8. Migration plan — the rebuilt PR stack</h2>
-<p>Nine PRs, sliced by <em>what each proves</em>, not by the old phase labels. Every PR lands green on current main; behavior decisions ride in no PR unless §10 approved them first.</p>
+<p><strong>The entire v2 stack is built before anything merges</strong> (D-7). Do not wait for #26696 to land: port from its pinned head <code>3e44eed2b4ac</code>; its 72 test declarations are the parity oracle. <strong>Divergence risk:</strong> if the PR branch advances past the pin, re-diff the head before v2-5/v2-6 and fold deltas as amendments; #26696 closes against the v2 stack when it merges. Old PRs #26005..#26051 close (with a comment linking this spec) when the v2 stack is complete; the <code>www-stack</code> worktree stays read-only reference until then.</p>
+<p><strong>Review loop (every PR):</strong> a codex reviewer pass runs against this spec&#39;s contract and posts findings as PR comments; a fixer pass then resolves every finding (fix or explicit disposition comment) before the PR is marked stack-ready. The taste gate (§5.12) runs at v2-7.</p>
+<p>Eight PRs, sliced by what each proves. The single-draft engine and the unified error vocabulary land in v2-2 — earlier than the old plan — because every substep port depends on both; the taxonomy merges mean the mechanical ports fit in two slices instead of four.</p>
 <table>
 <thead>
 <tr>
@@ -463,52 +519,46 @@ export function defineAutomationSubstep&lt;
 </thead>
 <tbody><tr>
 <td><strong>v2-0</strong></td>
-<td>Characterization ledger on current main (post-#26696 merge per OD-7): snapshot the 20-name order, MCP Zod fields, all five error envelopes, notes defaults, skip behavior incl. unknown names, end-to-end reference behavior, idempotence; add missing locks for the four post-stack plugins</td>
-<td>The baseline is <em>current main</em>, not the stack&#39;s README. Zero production changes</td>
+<td>Characterization ledger on <code>origin/main</code> @ <code>d911ae9752ec</code>: snapshot the 20-name legacy order, MCP Zod fields, notes defaults, skip behavior incl. unknown names, end-to-end reference behavior, idempotence; import #26696&#39;s test suites from the pinned head (marked pending); pin the <strong>new</strong> error-envelope schema (§6) as a contract snapshot</td>
+<td>The baseline is current main + pinned PR head; the new envelope is a reviewed artifact before any code produces it. Zero production changes</td>
 </tr>
 <tr>
 <td><strong>v2-1</strong></td>
-<td>Flow enums + pure <code>findJoinNodeId</code>/<code>getGroupId</code> kernel to <code>packages/defs</code> (OD-6); platform re-exports</td>
+<td>Flow enums + pure <code>findJoinNodeId</code>/<code>getGroupId</code> kernel to <code>packages/defs</code> (D-6); platform re-exports</td>
 <td>One vocabulary/kernel; platform behavior unchanged (its own suite green)</td>
 </tr>
 <tr>
 <td><strong>v2-2</strong></td>
-<td><code>pipeline/</code> contracts, <code>defineAutomationSubstep</code>, <code>FindingCollector</code>, skip resolver, <code>describePipeline</code>, inert runner; <code>shared/</code> foundations (pillGrammar w/ main grammar, mapJsonValue/fold, textSimilarity w/ Fuse fix, errorKit, resourceIdentity, jsonRecord, notesPolicy)</td>
-<td>Engine represents all 20 substeps; draft detachment, no-op identity, skip expansion, blocking semantics all unit-proven; no production rewiring</td>
+<td><strong>Single-draft engine</strong>: <code>pipeline/</code> (manifest types, runner, finalize, selection resolver, describePipeline), <code>shared/violations/</code> (vocabulary, <code>ViolationsCollector</code>, <code>AutomationCleanupError</code>, guard), <code>shared/</code> categories (pillGrammar folder w/ main grammar, json, <code>SimilarityScorer</code> w/ Fuse fix, resourceIdentity, notesPolicy)</td>
+<td>Engine represents all substeps incl. merges and <code>requires</code>; single-create identity, detach-at-finalize, precedence decision, skip records, exception capture all unit-proven against synthetic substeps; no production rewiring</td>
 </tr>
 <tr>
 <td><strong>v2-3</strong></td>
-<td><code>normalize</code> + <code>resolveContracts</code> slices (12 substeps) on the new contract, incl. current storage-pill/SQL-normalize/variable behavior</td>
-<td>Side-by-side: identical output + locked identity behavior for every non-blocking input</td>
+<td><code>normalize</code> + <code>resolveContracts</code> (10 substeps incl. the two merges) on the new contract, with current storage-pill/SQL-normalize/variable behavior</td>
+<td>Side-by-side: identical output + no-op identity for every non-blocking input; merged substeps pass both legacy suites via phase toggles</td>
 </tr>
 <tr>
 <td><strong>v2-4</strong></td>
-<td><code>buildGraph</code> step + <code>WorkflowGraph</code>; topology checks; group IDs (traversal per OD-4, failure semantics per OD-3)</td>
-<td>Four fixtures byte-identical (or the OD-4 delta explicitly listed and approved); same first topology error and payload</td>
+<td><code>buildGraph</code> + <code>WorkflowGraph</code>; topology checks; group IDs with unified type-filtered traversal (D-4) and advisory <code>groupId</code> findings (D-3)</td>
+<td>Four fixtures byte-identical; same winning topology family and violation set; groupId advisories appear in ledger without changing accept/reject</td>
 </tr>
 <tr>
 <td><strong>v2-5</strong></td>
-<td><code>validateOutputs</code> + <code>validateInputs</code> + <code>SchemaIndex</code>; typed-error creation moves to runner policies; guard gains completeness test; #26696 input-shape/output-rung behavior ported</td>
-<td>Violation contents, ordering, precedence, notes, warnings match main for all families incl. call-automation</td>
+<td><code>validateOutputs</code> + <code>validateInputs</code> + <code>SchemaIndex</code>; finalize fully wired across all families; #26696 input-shape/output-rung behavior ported from the pinned head</td>
+<td>Winning family + violation conditions match main for every rejecting fixture incl. call-automation; multi-fault fixtures prove attachment; oracle suites green</td>
 </tr>
 <tr>
 <td><strong>v2-6</strong></td>
-<td><code>prefetch/</code> three-phase functions + async wrapper; occurrence artifact wiring (OD-5); call-automation resolution ported</td>
-<td>Request set, dedupe, outcome maps, and final context match main byte-for-byte (network mocked)</td>
+<td><code>prefetch/</code>: <code>PrefetchPlanner</code>, <code>executePrefetchPlan</code>, <code>createCleanupContext</code>; occurrence artifact wiring (D-5); #26696 resolution ported</td>
+<td>Request set, dedupe, outcome maps, and final context match main byte-for-byte (network mocked); brace-normalized discovery covers the D-5 gap</td>
 </tr>
 <tr>
 <td><strong>v2-7</strong></td>
-<td>Production flip: both public wrappers delegate to the engine; README order section generated from <code>describePipeline()</code>; MCP routing/error tests; old implementation kept behind a test-only comparison seam</td>
-<td>No wire/API change; taste-gate review (§5.12)</td>
-</tr>
-<tr>
-<td><strong>v2-8</strong></td>
-<td>Delete old registry, getter context, dormant <code>refreshConnectionMap</code>/<code>appendConnectionIds</code> names + unused options, duplicated helpers, comparison seam; final changelog</td>
-<td>One pipeline, one order declaration; grep for old paths returns nothing; all characterization still green</td>
+<td>Production flip <strong>and</strong> legacy deletion in one PR (nothing was live mid-stack, so no double-maintenance window): both public wrappers delegate to the engine; MCP dispatch consumes the new envelope; delete old registry, getter context, dormant names, five legacy error families, duplicated helpers; README order section generated from <code>describePipeline()</code>; taste-gate review (§5.12)</td>
+<td>No tool-input/API change; envelope key-stability tests green; grep for old paths returns nothing; all characterization + finalize-equivalence green</td>
 </tr>
 </tbody></table>
-<p><strong>Closing the old stack:</strong> after v2-2 merges (the point of no return), close #26005..#26051 with a comment linking this spec and the superseding PRs; keep the <code>www-stack</code> worktree read-only as reference until v2-8 lands, then delete the branches. <code>TODO.md</code>&#39;s still-binding decisions are absorbed into §2 of this spec; the file itself dies with the branches.</p>
-<p><strong>Absorbing PR #26696:</strong> recommendation (OD-7) is to land it on main first — it is behaviorally complete with 72 test declarations, and its features are prefetch/context extensions that v2-5/v2-6 port cleanly with its own tests as the parity oracle. The rewrite then targets one frozen baseline instead of chasing an in-flight branch.</p>
+<p>The stack merges bottom-up only when v2-7 has passed its gates and the codex-review/fixer loop on every PR is clean.</p>
 <hr>
 <h2>9. Risks and mitigations</h2>
 <table>
@@ -519,61 +569,129 @@ export function defineAutomationSubstep&lt;
 </tr>
 </thead>
 <tbody><tr>
-<td>Main keeps evolving during the rebuild (the exact failure mode that killed the stack)</td>
-<td>Short stack (9 small PRs, ~2–3 weeks), v2-0 ledger re-run + diff against <code>origin/main</code> before v2-7 flips; any new plugin lands once, on whichever tree owns production at that moment</td>
+<td>Main keeps evolving during the rebuild (the failure mode that killed the stack)</td>
+<td>Short stack (8 PRs, ~2–3 weeks) built continuously; v2-0 ledger re-run + diff against <code>origin/main</code> before v2-7; any new plugin lands once, on whichever tree owns production at that moment</td>
 </tr>
 <tr>
-<td>Behavior deltas hidden inside unifications (join traversal, grammar, identity)</td>
-<td>Every unification is an OPEN DECISION with a fixture gate; side-by-side harness runs old vs new on shared fixtures from v2-3 through v2-7</td>
+<td>#26696 head diverges from the pin</td>
+<td>Pinned SHA recorded; mandatory re-diff before v2-5/v2-6; the PR&#39;s own tests are the oracle so drift surfaces as red oracle suites, not silence</td>
 </tr>
 <tr>
-<td>Per-substep draft overhead (20 <code>create()</code> boundaries)</td>
-<td>Mutative clones changed paths only; v2-3 adds a coarse benchmark fixture (large workflow, no-op and heavy-change variants) with a budget assertion; the Fuse fix and single-walk occurrence collection are net wins</td>
+<td>Behavior deltas hidden inside unifications (join traversal, grammar, identity, merges)</td>
+<td>Every unification is a recorded decision (§10) with a fixture gate; side-by-side harness runs old vs new from v2-3 through v2-6; merged substeps run both legacy suites</td>
 </tr>
 <tr>
-<td>200-line law fragments cohesive algorithms (584-line ranking module, 252-line topology)</td>
+<td>Single draft lets a crashed transform leak partial writes downstream</td>
+<td>The run is already doomed (exception = blocking finding); <code>requires</code> skips dependents; finalize throws; partially mutated workflows are never published; exception-capture tests lock this</td>
+</tr>
+<tr>
+<td>No-short-circuit runs validators over states the legacy engine never validated</td>
+<td>Findings from later substeps are <em>attachments</em>, never the winning family; finalize-precedence equivalence tests prove the thrown family matches the sequential baseline on every rejecting fixture</td>
+</tr>
+<tr>
+<td>Envelope redesign breaks an unknown consumer relying on interior shapes</td>
+<td>Top-level keys preserved by contract test; v2-0&#39;s new-envelope snapshot is reviewed before implementation; <code>code</code> values keep per-family form</td>
+</tr>
+<tr>
+<td>200-line law fragments cohesive algorithms</td>
 <td>Split along the domain seams the stack already proved (matching/builders/gates; per-check topology files) — never mid-algorithm</td>
 </tr>
 <tr>
-<td>Double-maintenance window between v2-7 and v2-8</td>
-<td>Flip and delete are adjacent PRs; the comparison seam is test-only and dies in v2-8</td>
+<td>Prefetch semantics subtly change under the planner split</td>
+<td>Planner is pure/mockable; v2-6&#39;s gate is byte-equality of request sets and context maps, not &quot;tests pass&quot;</td>
 </tr>
 <tr>
-<td>#26696 conflicts or stalls</td>
-<td>OD-7 default: land it first; if it stalls, v2 ports from the PR head with its tests, and the PR is closed against v2-5/v2-6</td>
-</tr>
-<tr>
-<td>Silent wire drift (the class of bug the guard list once had)</td>
-<td>Envelope snapshots in v2-0, guard completeness test, <code>describePipeline()</code> README generation, MCP contract tests in v2-7</td>
-</tr>
-<tr>
-<td>Prefetch semantics subtly change under the three-phase split</td>
-<td>Phase functions are pure/mockable; v2-6&#39;s gate is byte-equality of request sets and context maps, not &quot;tests pass&quot;</td>
+<td>Performance: one big draft + full-run execution</td>
+<td>Mutative clones changed paths only; the run does the same work as today minus early exits on doomed runs (rare path); v2-3 adds a coarse benchmark fixture with a budget assertion; the Fuse fix and single-walk occurrences are net wins</td>
 </tr>
 </tbody></table>
 <hr>
-<h2>10. OPEN DECISIONS</h2>
-<p>Each lists the recommendation first. Everything not listed here is decided by this spec.</p>
-<h3>OD-1 — Step taxonomy</h3>
-<p><strong>Recommend: Candidate A — five dependency-oriented steps</strong> (normalize → resolveContracts → buildGraph → validateOutputs → validateInputs), zero reordering, all 20 names as stable substep IDs. <em>Alt B:</em> three coarse barrier phases — smaller engine, but a 12-substep &quot;Rewrite&quot; catch-all defeats context slicing and step-scoped caches. <em>Alt C:</em> artifact-producing stages incl. prefetch — best introspection, but couples the rewrite to network-semantics changes; viable later evolution on top of A.</p>
-<h3>OD-2 — <code>connectionMap</code> MCP field</h3>
-<p><strong>Recommend: keep it required and no-op</strong> with the existing backward-compat description; delete only the internal machinery (dormant plugin, context field, unused options) in v2-8. <em>Alt:</em> make it optional + deprecated — small schema change, needs caller inventory. <em>Alt:</em> delete it (the old stack&#39;s choice) — a breaking MCP contract change that does not belong in a structural rewrite.</p>
-<h3>OD-3 — Group-ID failure semantics</h3>
-<p><strong>Recommend: main parity in the rewrite</strong> (silent no-op on missing root, silent stop on conflicting assignment), with the stack&#39;s typed <code>AutomationGroupIdGenerationError</code> (MISSING_ROOT / CYCLE / CONFLICTING_ASSIGNMENT) as an explicit follow-up PR after v2-8. The typed error is better engineering but is a new wire-visible error family — a behavior decision, not a rewrite. <em>Alt:</em> adopt the typed error inside v2-4 — one less PR, but mixes a wire change into a parity-gated slice. <em>Alt:</em> never adopt — leaves real corruption silent.</p>
-<h3>OD-4 — Join-traversal unification (old D2)</h3>
-<p><strong>Recommend: adopt the unified type-filtered edge traversal</strong> for both topology and group IDs, gated on the four fixtures producing identical output (the old stack verified this and survived review, including the Loop/Scope <code>Next</code>-fallback fix). Main&#39;s group-ID path still hands <em>all</em> outgoing edges to <code>FlowBuilder.findJoinNodeId</code>, so malformed graphs can differ. <em>Alt:</em> preserve main&#39;s split semantics — pure parity, but permanently forks graph policy into two copies and re-inherits the drift the stack fixed. <em>Alt:</em> unify later — carries two edge policies through the whole stack.</p>
-<h3>OD-5 — Pill-occurrence freshness and the raw-brace prefetch gap</h3>
-<p><strong>Recommend: collect occurrences once after the <code>normalize</code> step</strong> (fixing the stack&#39;s stale-cache bug, keyed by node index), <strong>and</strong> normalize braces in a throwaway copy before the <em>generic</em> prefetch producer scan — extending the fix #26696 made for call-automation only. Discovery becomes slightly broader (spaced-brace producers get their resources fetched); validation semantics are unchanged since validators already see post-fix text. <em>Alt:</em> preserve the gap byte-for-byte — pure parity, but leaves a known inconsistency where <code>{ { x } }</code> producers are invisible to prefetch yet valid after repair. <em>Alt:</em> per-validator re-scan (main&#39;s model) — correct but rewalks the workflow ~6 times.</p>
-<h3>OD-6 — FlowBuilder dependency direction</h3>
-<p><strong>Recommend: extract the pure <code>findJoinNodeId</code>/<code>getGroupId</code> kernel plus flow enums to <code>packages/defs</code></strong> as v2-1 (the old stack already proved the enum half; platform keeps compat re-exports). A package importing <code>apps/platform</code> UI code is an inverted dependency and blocks the architecture test. <em>Alt:</em> keep importing platform <code>FlowBuilder</code> — zero risk now, entrenches the inversion. <em>Alt:</em> copy the algorithms into llm-tools — forks group-ID semantics from the UI, the one thing I14 forbids.</p>
-<h3>OD-7 — PR #26696 absorption</h3>
-<p><strong>Recommend: land #26696 on main first</strong>, then rebuild v2 on the merged baseline using its 72 test declarations as the parity oracle in v2-5/v2-6. <em>Alt:</em> port from the PR head into v2 and close the PR — decouples from its review timeline but risks divergence if the PR evolves. <em>Alt:</em> ask for a rebase onto v2 — repeats the stale-stack failure mode on someone else&#39;s branch.</p>
-<h3>OD-8 — Unexpected-error public message</h3>
-<p><strong>Recommend: keep the raw error message</strong> (main parity) with <code>stepId</code>/<code>substepId</code>/<code>cause</code> as internal fields; adopt the stack&#39;s <code>Automation cleanup plugin &quot;&lt;name&gt;&quot; failed: …</code> prefix as a tiny opt-in follow-up with its own error-contract test. <em>Alt:</em> adopt the prefix in v2-2 — better diagnostics day one, but an observable message change inside the rewrite. <em>Alt:</em> prefix only in MCP <code>TOOL_CALL_ERROR</code> serialization — splits the contract in two places.</p>
-<h3>OD-9 — Whole-pipeline no-op identity</h3>
-<p><strong>Recommend: adopt the stack&#39;s identity contract</strong> — a fully no-op run returns the caller&#39;s exact object reference — as an explicit, tested delta in v2-4. Main&#39;s <code>generateGroupIds</code> always clones when a root exists, so this is a reference-only observable change (JSON output identical); callers using identity to detect change get a strict improvement. <em>Alt:</em> preserve main&#39;s cloning — parity, but forfeits the cheapest change-detection signal and the structural-sharing test suite&#39;s strongest assertion.</p>
-<hr>
-<p><em>Companion decision manifest for the review form: <code>spec-decisions.json</code> (scratchpad).</em></p>
+<h2>10. DECISIONS RECORD</h2>
+<p>All decisions are resolved. This section is normative; deviations require a new decision entry.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>D-1</strong></td>
+<td>Step taxonomy</td>
+<td><strong>Candidate A ratified</strong> — five dependency-oriented steps. Substeps <strong>re-cut</strong> along validation-category/resource lines with two authorized merges (<code>repairPills</code>, <code>normalizeFormulas</code>); rejected merges recorded in §3.1. Legacy plugin names survive as skip-compat aliases with phase toggles</td>
+</tr>
+<tr>
+<td><strong>D-2</strong></td>
+<td><code>connectionMap</code> MCP field</td>
+<td><strong>Keep required and no-op</strong> with the existing backward-compat description; delete only internal machinery (dormant plugin, context field, unused options) in v2-7</td>
+</tr>
+<tr>
+<td><strong>D-3</strong></td>
+<td>Group-ID failure semantics</td>
+<td><strong>Dissolved into the unified vocabulary</strong>: <code>MISSING_ROOT</code>/<code>CYCLE</code>/<code>CONFLICTING_ASSIGNMENT</code> are first-class advisory <code>groupId</code>-family violations in the ledger — no longer silent, never blocking. Accept/reject parity with main preserved; promotion to blocking is a future one-line flip + decision entry</td>
+</tr>
+<tr>
+<td><strong>D-4</strong></td>
+<td>Join-traversal unification</td>
+<td><strong>Adopt</strong> the unified type-filtered edge traversal for both topology and group IDs, gated on the four fixtures producing identical output (stack-proven incl. the Loop/Scope <code>Next</code>-fallback fix)</td>
+</tr>
+<tr>
+<td><strong>D-5</strong></td>
+<td>Pill-occurrence freshness + raw-brace prefetch gap</td>
+<td><strong>Adopt both fixes</strong>: collect occurrences once after <code>normalize</code> (keyed by node index), and normalize braces on a throwaway copy before the generic prefetch producer scan — extending #26696&#39;s call-automation-only fix. Discovery broadens slightly; validation semantics unchanged</td>
+</tr>
+<tr>
+<td><strong>D-6</strong></td>
+<td>FlowBuilder dependency direction</td>
+<td><strong>Extract</strong> the pure <code>findJoinNodeId</code>/<code>getGroupId</code> kernel + flow enums to <code>packages/defs</code> (v2-1); platform keeps compat re-exports; architecture test forbids platform imports</td>
+</tr>
+<tr>
+<td><strong>D-7</strong></td>
+<td>PR #26696 absorption</td>
+<td><strong>OVERRIDDEN by the user</strong>: do <em>not</em> wait for #26696 to land. Build the entire v2 stack now, porting from the pinned head <code>3e44eed2b4ac</code>; its tests are the parity oracle; divergence handled by mandatory re-diff (§8); the PR closes against the v2 stack</td>
+</tr>
+<tr>
+<td><strong>D-8</strong></td>
+<td>Unexpected-error public message</td>
+<td><strong>Keep the raw error message</strong> (main parity). Attribution (<code>stepId</code>/<code>substepId</code>/<code>cause</code>) lives in fields on the captured <code>internal</code> finding and the finalize rethrow wrapper — never in the public message</td>
+</tr>
+<tr>
+<td><strong>D-9</strong></td>
+<td>Whole-pipeline no-op identity</td>
+<td><strong>Adopt</strong>: a fully no-op run returns the caller&#39;s exact object reference — now a direct consequence of the single <code>create()</code> (§3.2), tested explicitly as a deliberate delta from main&#39;s always-cloning group-ID helper</td>
+</tr>
+<tr>
+<td><strong>D-10</strong></td>
+<td>Single draft + single collector</td>
+<td><strong>User directive</strong>: one <code>mutative.create()</code> wraps the entire pipeline; one <code>ViolationsCollector</code> per run with <code>scoped()</code> attribution; per-substep draft/collector machinery deleted from the design</td>
+</tr>
+<tr>
+<td><strong>D-11</strong></td>
+<td>No short-circuit + precedence-preserving finalize</td>
+<td><strong>User directive + pushback resolution</strong>: substep failures never abort the run; declared <code>requires</code> produce SKIPPED records; finalize throws the family today&#39;s sequential order would have thrown first, with all other findings attached</td>
+</tr>
+<tr>
+<td><strong>D-12</strong></td>
+<td>Detach-at-finalize</td>
+<td><strong>Pushback resolution</strong>: draft-backed finding payloads are detached in one pass at finalize (draft-callback tail), not per-substep</td>
+</tr>
+<tr>
+<td><strong>D-13</strong></td>
+<td>Error vocabulary freedom, envelope keys stable</td>
+<td><strong>User directive + pushback resolution</strong>: one unified violation shape and one <code>AutomationCleanupError</code>; the five legacy families are deleted; the only frozen wire surface is the envelope&#39;s top-level <code>code</code>/<code>message</code>/<code>violations</code>/<code>notes</code> keys</td>
+</tr>
+<tr>
+<td><strong>D-14</strong></td>
+<td>Shared utils as encapsulated categories</td>
+<td><strong>User directive</strong>: every category is one class or one explicitly encapsulated file/folder (§4); classes for <code>WorkflowGraph</code>, <code>ViolationsCollector</code>, <code>SchemaIndex</code>, <code>SimilarityScorer</code>, <code>PrefetchPlanner</code>; folder-encapsulated function modules (with stated reasons) for <code>pillGrammar</code>, <code>resourceIdentity</code>, <code>notesPolicy</code>, <code>json</code></td>
+</tr>
+<tr>
+<td><strong>D-15</strong></td>
+<td>Whole-stack-before-merge + review loop</td>
+<td><strong>User directive</strong>: all eight PRs built and gated before any merge; every PR gets a codex reviewer pass posting findings as PR comments, then a fixer pass resolving them; old stack PRs close when v2 completes</td>
+</tr>
+</tbody></table>
 </article>
 <section class="planloft-comments"><!-- TODO(impl) ADR-0001 §D19: mount giscus (repo/category from config). --></section>
 </main>
