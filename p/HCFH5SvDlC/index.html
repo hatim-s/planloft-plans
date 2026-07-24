@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>AI App Builder — D2 Events Platform Plan</title><style>
+:root{--bg:#0f1115;--panel:#171a21;--panel2:#1d212b;--ink:#e7ebf0;--muted:#9aa4b2;--line:#2a2f3a;--accent:#7c9cff;--good:#43c59e;--warn:#ffb454}*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}a{color:var(--accent)}.wrap{max-width:980px;margin:auto;padding:32px 20px 80px}.hero,.card{border:1px solid var(--line);background:linear-gradient(180deg,#191d27,#13161d);border-radius:14px}.hero{padding:26px 28px;margin-bottom:26px}.hero h1{font-size:26px;letter-spacing:-.3px;margin:0 0 6px}.hero p{margin:6px 0;color:var(--muted)}.pill{display:inline-block;padding:3px 10px;margin-right:6px;border:1px solid #265c40;border-radius:999px;background:#14291e;color:#7ee2b8;font-size:11px;letter-spacing:.4px;text-transform:uppercase}.sec{font-size:20px;letter-spacing:-.2px;margin:38px 0 4px}.secsub{margin:0 0 14px;color:var(--muted);font-size:14px}.card{background:var(--panel);padding:20px 22px;margin:16px 0}.card p{margin:0}.card ul,.card ol{margin:0;padding-left:21px;color:var(--muted)}.card li{margin:8px 0}.card li b{color:var(--ink)}.decision{border-left:3px solid var(--accent);background:#1a2230}code{padding:1px 5px;background:#0c0e12;border:1px solid var(--line);border-radius:5px;color:#cdd6e3;font-size:13px}footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}</style></head><body><main class="wrap">
+<header class="hero"><div><span class="pill">Implementation plan</span><span class="pill">AI App Builder</span></div><h1>AI App Builder — D2 Events Platform Plan</h1><p>Contract expansion for composable event sequences, guarded mutation flows, and page/application lifecycle handlers.</p></header>
+<p class="secsub">Decisions locked July 24, 2026 after two questionnaire rounds.</p>
+<h2 class="sec">Framing</h2><section class="card"><p>The vendored json-render fork already executes multi-action arrays serially with awaited, live parameter re-resolution, success/error branches, confirmations, and an action-observer seam. This lane chiefly widens the shared-to-DSL-to-validation-to-Studio-to-agent contract.</p></section>
+<h2 class="sec">Decisions</h2><section class="card"><ul>
+<li><b>Multi-handler shape:</b> widen shared <code>on</code> to <code>ActionBinding | ActionBinding[]</code>. Sequences execute serially and await each action against a live snapshot.</li>
+<li><b>Conditions and branches:</b> add <code>when?: VisibilityCondition</code>, using the visible-editor grammar; evaluate each action mid-sequence. Expose existing per-action <code>onSuccess</code>/<code>onError</code> in the UI and grammar.</li>
+<li><b>Errors:</b> continue after an error. The emit loop catches each failure, notifies the observer and a toast, then runs remaining actions.</li>
+<li><b>Mutation guard-assist:</b> adding an action after <code>runMutation</code> inserts an editable/removable <code>when { status == success }</code> guard by default.</li>
+<li><b>Payloads:</b> add <code>emit(event,payload)</code> and <code>{"$event":"field"}</code> parameter tokens for row/list/chart identity.</li>
+<li><b>Page/app lifecycle:</b> add <code>pages.handlers</code> and <code>apps.handlers</code> with OCC mutations/tools and release snapshots. Page events are <code>load</code>/<code>paramChange</code>; app supports <code>load</code>. Declarative <code>initialState</code> also ships.</li>
+<li><b>Ordering:</b> seed initial state, compute derived values, fire once-per-visit page/app load handlers with a StrictMode guard, then launch debounced auto-queries.</li>
+<li><b>Loop safety and DSL:</b> thread a chain-depth cap of about 16 through execution; hard-stop and surface dev/devtools errors. Parse array-valued <code>on:press='[{...},{...}]'</code> while retaining single-action sugar.</li>
+<li><b>Studio:</b> ship the full Interactions tab now, including sequence rows, conditions, branches, payload affordance, handler editors, and event-log panel backed by the observer seam.</li>
+</ul></section>
+<h2 class="sec">Cross-lane contract</h2><section class="card decision"><p><b>D1's <code>runMutation</code> status mirror must settle before its handler resolves.</b> That lets a following D2 action observe successful completion through its automatic guard.</p></section>
+<h2 class="sec">Out of scope</h2><section class="card"><p>Timers/intervals, a custom or cross-page event bus, page unload, and exposing raw <code>watch</code> fields remain deferred.</p></section>
+<h2 class="sec">Work items</h2><section class="card"><ol>
+<li><b>M — Contract PR:</b> array handlers, conditions/branches, payload tokens, DSL parser and round-trip tests, plus Convex validation.</li>
+<li><b>M — Page/app handlers:</b> fields, mutations/tools, OCC, release/public decode, initial state, and lifecycle ordering.</li>
+<li><b>S — Loop protection:</b> chain-depth counter through execution.</li>
+<li><b>M — Interactions tab:</b> sequence editor, branches, mutation guard-assist, payload affordance, and handler editors.</li>
+<li><b>S — Event log:</b> surface observer dispatch, params, duration, outcome, and depth.</li>
+<li><b>S — Agent/docs:</b> update the agent guide and DSL reference.</li>
+</ol></section>
+<section class="card decision"><p><b>Sequence:</b> 1 → 2/3 in parallel → 4 → 5/6.</p></section>
+<footer><p><b>Source:</b> <code>/Users/admin/Projects/ai-app-builder/.grill-sessions/plan-d2-events.md</code></p><p>Compiled July 24, 2026 · dark-theme companion to the roadmap.</p></footer>
+</main></body></html>

@@ -180,6 +180,24 @@
       "kind": "plan",
       "createdAt": "2026-07-23T19:05:35.885Z",
       "expiresAt": "2026-10-22T03:20:58.711Z"
+    },
+    {
+      "id": "vfHrz4Qd6l",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "d1-data-mutations",
+      "title": "AI App Builder — D1 Data & Mutations Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-24T00:10:00.000Z",
+      "expiresAt": "2026-08-23T00:10:00.000Z"
+    },
+    {
+      "id": "HCFH5SvDlC",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "d2-events-platform",
+      "title": "AI App Builder — D2 Events Platform Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-24T00:10:00.000Z",
+      "expiresAt": "2026-08-23T00:10:00.000Z"
     }
   ]
 }
