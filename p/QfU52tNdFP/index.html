@@ -53,7 +53,9 @@ blockquote {
 <article><h1>Automation Cleanup Pipeline v2 — Ground-Up Rewrite Design</h1>
 <p><strong>Date:</strong> 2026-07-24
 <strong>Author:</strong> @hatim (claude-code)
-<strong>Status:</strong> Accepted — all decisions resolved (§10 DECISIONS RECORD); this document is the implementation contract enforced on every v2 PR
+<strong>Status:</strong> IMPLEMENTED
+<strong>Implemented:</strong> 2026-07-24 — v2-7 flipped the production entry points, deleted the legacy
+pipeline, generated the module README from <code>describePipeline()</code>, and closed the release taste gate.
 <strong>Supersedes:</strong> the 9-PR refactor stack #26005..#26051 (<code>refactor/automation-cleanup-p*</code>) and its <code>packages/llm-tools/TODO.md</code>
 <strong>Ground truth:</strong> <code>origin/main</code> @ <code>d911ae9752ec</code>; stack tip @ <code>4ed0c46c9e66</code>; PR #26696 ported from its pinned head @ <code>3e44eed2b4ac</code> (D-7)</p>
 <hr>
@@ -534,8 +536,8 @@ export interface AutomationViolation {
 </tr>
 <tr>
 <td><strong>v2-3</strong></td>
-<td><code>normalize</code> + <code>resolveContracts</code> (10 substeps incl. the two merges) on the new contract, with current storage-pill/SQL-normalize/variable behavior</td>
-<td>Side-by-side: identical output + no-op identity for every non-blocking input; merged substeps pass both legacy suites via phase toggles</td>
+<td><code>normalize</code> + <code>resolveContracts</code> (10 substeps incl. the two merges) on the new contract, with current storage-pill/SQL-normalize/variable behavior; <code>schemaGeneratorJsonSchema</code> pulled forward from v2-5</td>
+<td>Side-by-side: identical output + no-op identity for every non-blocking input; merged substeps pass both legacy suites via phase toggles; schema-generator repair stays equivalence-proven</td>
 </tr>
 <tr>
 <td><strong>v2-4</strong></td>
@@ -544,7 +546,7 @@ export interface AutomationViolation {
 </tr>
 <tr>
 <td><strong>v2-5</strong></td>
-<td><code>validateOutputs</code> + <code>validateInputs</code> + <code>SchemaIndex</code>; finalize fully wired across all families; #26696 input-shape/output-rung behavior ported from the pinned head</td>
+<td><code>validateOutputs</code> + remaining <code>validateInputs</code> (<code>validateSqlEntityPaths</code>, <code>validateInputSchema</code>) + <code>SchemaIndex</code>; finalize fully wired across all families; #26696 input-shape/output-rung behavior ported from the pinned head</td>
 <td>Winning family + violation conditions match main for every rejecting fixture incl. call-automation; multi-fault fixtures prove attachment; oracle suites green</td>
 </tr>
 <tr>
@@ -558,6 +560,7 @@ export interface AutomationViolation {
 <td>No tool-input/API change; envelope key-stability tests green; grep for old paths returns nothing; all characterization + finalize-equivalence green</td>
 </tr>
 </tbody></table>
+<p><strong>2026-07-24 amendment (PR #26761):</strong> Pull <code>schemaGeneratorJsonSchema</code> into v2-3 because it shares <code>repairJsonSchema</code> machinery and walker discipline with the normalize substeps; v2-5 now contains only the remaining input validators.</p>
 <p>The stack merges bottom-up only when v2-7 has passed its gates and the codex-review/fixer loop on every PR is clean.</p>
 <hr>
 <h2>9. Risks and mitigations</h2>
