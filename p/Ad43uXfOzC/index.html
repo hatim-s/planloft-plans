@@ -108,9 +108,33 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 <p class="meta"><em>brain-bloom → Sprig · Next 16 · Convex · Clerk · Base UI · AI panel · authored 2026-07-27</em></p>
 
 <div class="tldr">
-<p><strong>TL;DR</strong> — Nine phases, each merging to <code>main</code> green. Order is deliberate: toolchain → design system → canvas hardening → Convex → Clerk → data cutover → routes/rendering → AI panel → polish. Supabase and Groq are deleted from the repo by phase 6. Every phase is implemented by <code>codex gpt-5.6-sol</code> at high reasoning against a written API contract, then reviewed twice (Codex on logic, Opus on quality) before merge.</p>
-<p><strong>Three of your answers need amending</strong> — Clerk Elements is deprecated, Next 16 collapsed your three caching flags into one, and AI Elements' Base UI compatibility is unverified. Details in §2. <strong>One architectural deviation</strong> proposed in §4 (drop the <code>edges</code> table). Both need your sign-off before P0 starts.</p>
+<p><strong>TL;DR</strong> — Nine phases, each merging to <code>main</code> green. Order is deliberate: toolchain → design system → canvas hardening → Convex → Clerk → data cutover → routes/rendering → AI panel → polish. Supabase and Groq are deleted from the repo by phase 6. Codex <code>gpt-5.6-sol</code> at high reasoning implements against a written API contract; <strong>every UI layer is built by Opus subagents, not Codex</strong>; each phase is reviewed twice (Codex on logic, Opus on quality) before merge.</p>
+<p><strong>All decisions locked</strong> (see §0). Product renames to <strong>Sprig</strong> — all-new branding. The <code>edges</code> table is dropped. Clerk Elements is out, Core 3 hooks are in, and every component is ours. <strong>Zero API keys are required to build the whole thing</strong> — Convex runs an anonymous local deployment and Clerk runs keyless; see §0.2.</p>
 </div>
+
+<h2>0 · Locked decisions <span class="tag new">signed off</span></h2>
+
+<table>
+<tr><th>#</th><th>Decision</th><th>Consequence</th></tr>
+<tr><td>1</td><td><strong>Drop the <code>edges</code> table.</strong> Tree structure lives in <code>nodes.parentLocalId</code>; xyflow edges are derived client-side.</td><td>§4 schema is final. "Move subtree" is a one-field update. A future <code>links</code> table would mean genuine cross-branch links, not a mirror.</td></tr>
+<tr><td>2</td><td><strong>Clerk Core 3 hooks, all components ours.</strong> No <code>@clerk/elements</code> (deprecated), no prebuilt <code>&lt;SignIn/&gt;</code>.</td><td><code>useSignIn</code> / <code>useSignUp</code> drive custom markup styled to §6. More code we own, zero Clerk visual surface.</td></tr>
+<tr><td>3</td><td><strong>Rename everything — all-new branding as Sprig.</strong></td><td>package name, metadata, README, UI copy, favicon, git repo, and local directory. Full sweep in P0.</td></tr>
+<tr><td>4</td><td><strong>Local-first, no keys.</strong> Assume nothing is provisioned; keep everything on local servers.</td><td>See §0.2 — this turned out to cost nothing. No phase is deferred.</td></tr>
+<tr><td>5</td><td><strong>Opus builds every UI layer.</strong> Codex gets logic only, with explicit API contracts and code-taste direction.</td><td>Design system, auth screens, canvas chrome, and the AI panel are Opus subagent work. §8 splits the protocol by layer.</td></tr>
+</table>
+
+<h3>0.2 — Building with zero API keys</h3>
+
+<p>Your instruction was to assume keys and defer anything that hard-needs one. Having checked each dependency, <strong>nothing needs deferring</strong> — all three run without an account:</p>
+
+<table>
+<tr><th>Service</th><th>No-key path</th><th>Limits</th></tr>
+<tr><td>Convex</td><td><strong>Anonymous local deployment.</strong> <code>npx convex dev</code> offers "run locally without an account"; it starts the open-source backend on your machine and records the choice in <code>.env.local</code>. Data and admin key live in <code>~/.convex/anonymous-convex-backend-state/</code>. The local dashboard works too.</td><td>Beta feature. Function calls and bandwidth don't count against any plan quota. Claiming it into a cloud project later is a migration, not a rewrite.</td></tr>
+<tr><td>Clerk</td><td><strong>Keyless mode.</strong> <code>@clerk/nextjs</code> auto-generates temporary dev credentials on first run — no dashboard, no keys. You claim the app later to get real keys.</td><td><strong>Local development only.</strong> Deploying to Vercel requires claiming the app and setting real keys. OAuth providers (Google/GitHub) need the claimed dashboard, so P5 builds email-code first and wires OAuth buttons behind a flag.</td></tr>
+<tr><td>Anthropic</td><td><strong>OAuth, no API key.</strong> <code>ant auth login</code> stores a profile under <code>~/.config/anthropic/</code>. For the AI SDK, mint a short-lived token with <code>ant auth print-credentials --access-token</code> and send <code>Authorization: Bearer &lt;token&gt;</code> plus the <code>anthropic-beta: oauth-2025-04-20</code> header — OAuth tokens do <strong>not</strong> go on <code>x-api-key</code>.</td><td>Token is short-lived and does not auto-refresh when passed as a header — the provider module re-mints it. Note this bills your API org; it is not the same entitlement as a Claude Code subscription. One <code>getAnthropicProvider()</code> module: API key if set, OAuth bearer otherwise.</td></tr>
+</table>
+
+<p>Net effect on the plan: <strong>P4, P5, and P8 all proceed as scheduled.</strong> The only deferred work is the production cutover — claiming the Clerk app, promoting the Convex deployment to cloud, and setting Vercel env vars — which moves into P9 as a documented runbook rather than blocking any build phase.</p>
 
 <h2>1 · Where we're starting</h2>
 
@@ -198,8 +222,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
 <h2>4 · Convex data model</h2>
 
-<div class="callout warn">
-<p><strong>Proposed deviation from C1 — needs your yes/no.</strong> You picked normalized <code>mindmaps</code> / <code>nodes</code> / <code>edges</code>. For a mindmap the edge set is <em>fully determined</em> by the tree: every node has exactly one parent. A separate <code>edges</code> table would be a denormalized mirror we have to keep transactionally in sync for zero gain — and it makes "move subtree" a two-table write instead of one field update. I propose <strong>nodes carry <code>parentLocalId</code></strong> and xyflow edges are derived on the client. If you ever want cross-branch links (non-tree edges), we add a <code>links</code> table then, and it means something different. Say the word if you want the edges table anyway.</p>
+<div class="callout">
+<p><strong>Deviation from C1 — accepted (decision 1).</strong> For a mindmap the edge set is <em>fully determined</em> by the tree: every node has exactly one parent. A separate <code>edges</code> table would be a denormalized mirror kept transactionally in sync for zero gain, and would make "move subtree" a two-table write instead of one field update. Nodes carry <code>parentLocalId</code>; xyflow edges are derived on the client. Cross-branch links, if ever wanted, become a <code>links</code> table that means something genuinely different.</p>
 </div>
 
 <pre><code>// convex/schema.ts
@@ -368,7 +392,7 @@ export async function requireReadable(ctx, publicId) { /* owner OR visibility ==
 <ul>
 <li>Scratch Next 16 app: <code>cacheComponents: true</code> + Clerk + Convex <code>preloadQuery</code> inside Suspense. <code>next build</code> must pass. Record the exact <code>ClerkProvider</code> placement that works.</li>
 <li>Same app: <code>npx shadcn init</code> (Base UI default) → <code>npx ai-elements@latest add conversation message prompt-input tool</code> → render a streaming conversation. Record breakages.</li>
-<li>Rename <code>brain-bloom</code> → <code>sprig</code>: package name, metadata, README, page titles. Repo dir/remote left alone unless you say otherwise.</li>
+<li><strong>Rename everything</strong> (decision 3): package name, all metadata, README, page titles, UI copy, favicon, git remote, and the local directory. No <code>brain-bloom</code> string survives outside git history.</li>
 <li>Create <code>.logs/</code> (gitignored), <code>docs/ENV.md</code>, <code>docs/SCRIPTS.md</code>.</li>
 </ul>
 <p><strong>Exit:</strong> a written go/no-go on <code>cacheComponents</code> and on AI Elements, with the fallback chosen if either fails.</p>
@@ -434,7 +458,7 @@ export async function requireReadable(ctx, publicId) { /* owner OR visibility ==
 <h3>P5 — Clerk auth cutover</h3>
 <p class="meta">Branch <code>feat/p5-clerk</code> · <em>codex for wiring, Opus 4.8 for the auth UI</em></p>
 <ul>
-<li>Clerk app; Google + GitHub OAuth + email verification code; JWT template named <code>convex</code>.</li>
+<li><strong>Keyless mode</strong> — no account, no keys. Email verification code works immediately; Google + GitHub buttons are built and gated behind a flag until the app is claimed in P9. JWT template named <code>convex</code>.</li>
 <li><code>&lt;ClerkProvider&gt;</code> inside <code>&lt;body&gt;</code> (per P0 finding), wrapping <code>ConvexProviderWithClerk</code> — that nesting order is mandatory.</li>
 <li><code>proxy.ts</code>: <code>clerkMiddleware</code> route protection; all Supabase middleware deleted.</li>
 <li>Custom <code>/sign-in</code> and <code>/sign-up</code> on Core 3 <code>useSignIn</code> / <code>useSignUp</code> hooks, styled to §6. Handle <code>needs_first_factor</code>, <code>needs_second_factor</code>, <code>complete</code>, and <code>errors.fields</code> per input.</li>
@@ -507,19 +531,35 @@ export async function requireReadable(ctx, publicId) { /* owner OR visibility ==
 
 <h2>8 · Delegation protocol</h2>
 
-<p>Per your G6 answer and <code>CLAUDE.md</code>. Each phase runs the same loop:</p>
+<p>Work splits by layer, per decision 5. <strong>Codex never touches UI.</strong></p>
 
-<pre><code># 1. brief written to .logs/prompts/pN.md — API contracts, file list, patterns, constraints
+<table>
+<tr><th>Layer</th><th>Who</th><th>What they're given</th></tr>
+<tr><td>Convex functions, op-log/undo reducers, AI tool layer, migration script, layout algorithms, tests</td><td><strong>Codex <code>gpt-5.6-sol</code>, high reasoning</strong></td><td>Exact API contracts (signatures, argument validators, return shapes, error types), the file list to create, the patterns to use, and explicit code-taste direction — see the brief template below</td></tr>
+<tr><td>Design system, theme tokens, node/canvas chrome, auth screens, dashboard, AI panel, every component</td><td><strong>Opus subagents</strong></td><td>The §6 token set, the interaction spec, accessibility requirements, and the surrounding component conventions</td></tr>
+<tr><td>Review (every phase)</td><td>Codex reviewer on logic → Opus critique on quality and smells</td><td>The diff plus the phase's exit criteria</td></tr>
+</table>
+
+<h4>Codex brief template — every brief carries all six sections</h4>
+<ol>
+<li><strong>Goal</strong> — one paragraph, plus the exit criteria verbatim from the phase.</li>
+<li><strong>API contract</strong> — every function's full signature, Convex validators, return type, and thrown error types. No prose descriptions of shapes; write the TypeScript.</li>
+<li><strong>File manifest</strong> — the exact paths to create or modify. Nothing outside the manifest gets touched.</li>
+<li><strong>Patterns</strong> — which existing file to mirror, the module boundary, and the data flow it must respect.</li>
+<li><strong>Code taste</strong> — named exports only, one export statement per file, never write code in <code>index.ts</code> (exports only), docstrings on every exported function/class/method, inline comments only where the logic is non-obvious, no defensive handling for cases that cannot occur, no abstractions for hypothetical future needs, match the surrounding code's idiom.</li>
+<li><strong>Verification</strong> — the exact commands that must pass (<code>pnpm typecheck</code>, <code>pnpm lint</code>, <code>pnpm test</code>) and the tests to write first.</li>
+</ol>
+
+<pre><code># brief lives at .logs/prompts/pN.md — see the six sections above
 timeout 5400 codex exec --sandbox workspace-write \
   -m gpt-5.6-sol -c 'model_reasoning_effort="high"' \
   "$(cat .logs/prompts/pN.md)" &gt; .logs/pN.log 2&gt;&1
 
-# 2. liveness check — artifacts, not process existence
-wc -l .logs/pN.log &amp;&amp; git diff --stat     # unchanged for ~5 min ⇒ kill + restart
+# liveness = artifacts, not process existence
+wc -l .logs/pN.log &amp;&amp; git diff --stat     # both unchanged ~5 min ⇒ kill + restart
 
-# 3. review: codex reviewer on logic  →  Opus subagent on quality/smells
-# 4. pnpm tsc &amp;&amp; pnpm lint &amp;&amp; pnpm test
-# 5. report to you → you approve → merge</code></pre>
+# then: codex logic review → Opus quality critique → pnpm typecheck && lint && test
+# → report → approve → merge</code></pre>
 
 <p>Never piped through <code>tail</code>/<code>grep</code> (pipes buffer until exit and a healthy run looks hung). Always redirected to <code>.logs/</code>, always wrapped in <code>timeout</code>. Codex is stateless per invocation, so kill-and-restart is cheap — completed file writes survive.</p>
 
@@ -542,17 +582,15 @@ wc -l .logs/pN.log &amp;&amp; git diff --stat     # unchanged for ~5 min ⇒ kil
 
 <div class="grid2">
 <div>
-<h4>Env vars <span class="tag new">you provision</span></h4>
+<h4>Env vars <span class="tag new">none needed to build</span></h4>
 <table>
-<tr><th>Var</th><th>Phase</th></tr>
-<tr><td><code>NEXT_PUBLIC_CONVEX_URL</code></td><td>P4</td></tr>
-<tr><td><code>CONVEX_DEPLOYMENT</code></td><td>P4</td></tr>
-<tr><td><code>CLERK_JWT_ISSUER_DOMAIN</code></td><td>P4</td></tr>
-<tr><td><code>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code></td><td>P5</td></tr>
-<tr><td><code>CLERK_SECRET_KEY</code></td><td>P5</td></tr>
-<tr><td><code>CLERK_WEBHOOK_SIGNING_SECRET</code></td><td>P5</td></tr>
-<tr><td><code>ANTHROPIC_API_KEY</code></td><td>P8</td></tr>
-<tr><td colspan="2"><em>Removed:</em> <code>NEXT_PUBLIC_SUPABASE_*</code> (P6), <code>GROQ_API_KEY</code> (P8)</td></tr>
+<tr><th>Var</th><th>Phase</th><th>Local dev</th></tr>
+<tr><td><code>CONVEX_DEPLOYMENT</code>, <code>NEXT_PUBLIC_CONVEX_URL</code></td><td>P4</td><td>Written automatically by the anonymous local deployment</td></tr>
+<tr><td><code>CLERK_JWT_ISSUER_DOMAIN</code></td><td>P4</td><td>Read from the keyless dev instance</td></tr>
+<tr><td><code>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code>, <code>CLERK_SECRET_KEY</code></td><td>P5</td><td>Not needed — keyless mode auto-provisions</td></tr>
+<tr><td><code>CLERK_WEBHOOK_SIGNING_SECRET</code></td><td>P5</td><td>Only for the claimed app; local uses a direct upsert-on-first-request</td></tr>
+<tr><td><code>ANTHROPIC_API_KEY</code></td><td>P8</td><td>Optional — falls back to the OAuth bearer from <code>ant auth</code></td></tr>
+<tr><td colspan="3"><em>Removed:</em> <code>NEXT_PUBLIC_SUPABASE_*</code> (P6), <code>GROQ_API_KEY</code> (P8)</td></tr>
 </table>
 </div>
 <div>
@@ -569,16 +607,18 @@ wc -l .logs/pN.log &amp;&amp; git diff --stat     # unchanged for ~5 min ⇒ kil
 </div>
 </div>
 
-<h2>11 · What I need from you</h2>
+<h2>11 · Production cutover (deferred to P9)</h2>
+
+<p>The only work the no-key strategy postpones. None of it blocks a build phase.</p>
 
 <ol>
-<li><strong>§4 deviation</strong> — drop the <code>edges</code> table in favor of <code>parentLocalId</code>? (My recommendation: yes.)</li>
-<li><strong>§2 corrections</strong> — confirm Clerk Core 3 hooks in place of the deprecated Elements, and that the unified <code>cacheComponents</code> flag is what you wanted from your three separate picks.</li>
-<li><strong>Rename depth</strong> — Sprig in package/UI/docs only, or also rename the git repo and directory?</li>
-<li><strong>Accounts</strong> — nothing blocks until P4. When P4 starts you'll need Convex; P5 needs Clerk with Google + GitHub OAuth configured; P8 needs an Anthropic key.</li>
+<li><strong>Claim the Clerk app</strong> — converts the keyless dev instance into a real application, yielding <code>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code> and <code>CLERK_SECRET_KEY</code>. Google and GitHub OAuth are configured here; until then P5 ships email-code sign-in with the OAuth buttons behind a flag.</li>
+<li><strong>Promote the Convex deployment</strong> — create the cloud project, push the schema, run the migration script against it, set <code>CONVEX_DEPLOYMENT</code> and <code>NEXT_PUBLIC_CONVEX_URL</code>, and point <code>auth.config.ts</code> at the claimed Clerk issuer domain.</li>
+<li><strong>Anthropic</strong> — set <code>ANTHROPIC_API_KEY</code> in Vercel. The OAuth bearer path is a local-dev convenience; it can't run on a server that has no <code>~/.config/anthropic</code> profile.</li>
+<li><strong>Vercel</strong> — env vars for all of the above, then a production deploy.</li>
 </ol>
 
-<p>Answer 1–3 and P0 starts immediately.</p>
+<p>Each step lands in <code>docs/ENV.md</code> as a runbook during P9, not as tribal knowledge.</p>
 
 </div>
 </article>
