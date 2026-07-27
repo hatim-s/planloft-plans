@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Sprig — Brain Bloom Overhaul Plan</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body>
+<main class="planloft-plan">
+<article><style>
+  .sp { --sp-line:#d9ded9; --sp-mute:#5f6b63; --sp-accent:#2f6b4a; --sp-warn:#8a5a12; --sp-bad:#8a2f2f;
+        --sp-bg:#fbfcfb; --sp-code:#f2f5f2; }
+  @media (prefers-color-scheme: dark) {
+    .sp { --sp-line:#2a322d; --sp-mute:#93a099; --sp-accent:#7fd4a4; --sp-warn:#e0b169; --sp-bad:#e59a9a;
+          --sp-bg:#12150f; --sp-code:#171b16; }
+  }
+  .sp { line-height:1.6; }
+  .sp h2 { margin-top:2.6em; padding-bottom:.3em; border-bottom:2px solid var(--sp-line); }
+  .sp h3 { margin-top:1.9em; }
+  .sp h4 { margin-top:1.4em; margin-bottom:.4em; font-size:1em; }
+  .sp table { border-collapse:collapse; width:100%; font-size:.92em; margin:1em 0; display:block; overflow-x:auto; }
+  .sp th, .sp td { border:1px solid var(--sp-line); padding:7px 10px; text-align:left; vertical-align:top; }
+  .sp th { background:var(--sp-code); font-weight:650; }
+  .sp code { background:var(--sp-code); padding:1px 5px; border-radius:4px; font-size:.9em; }
+  .sp pre { background:var(--sp-code); border:1px solid var(--sp-line); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.85em; line-height:1.45; }
+  .sp pre code { background:none; padding:0; }
+  .sp .callout { border-left:3px solid var(--sp-accent); background:var(--sp-code); padding:12px 16px; margin:1.2em 0; border-radius:0 8px 8px 0; }
+  .sp .callout.warn { border-left-color:var(--sp-warn); }
+  .sp .callout.bad { border-left-color:var(--sp-bad); }
+  .sp .callout p:first-child { margin-top:0; }
+  .sp .callout p:last-child { margin-bottom:0; }
+  .sp .tag { display:inline-block; font-size:.72em; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+             padding:2px 7px; border-radius:999px; border:1px solid var(--sp-line); color:var(--sp-mute); vertical-align:middle; }
+  .sp .tag.chg { color:var(--sp-warn); border-color:var(--sp-warn); }
+  .sp .tag.new { color:var(--sp-accent); border-color:var(--sp-accent); }
+  .sp .phase { border:1px solid var(--sp-line); border-radius:10px; padding:16px 18px; margin:1.1em 0; }
+  .sp .phase > h3 { margin-top:0; }
+  .sp .meta { font-size:.85em; color:var(--sp-mute); margin:.2em 0 1em; }
+  .sp .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; }
+  .sp .flowdiag { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8em; background:var(--sp-code);
+                  border:1px solid var(--sp-line); border-radius:8px; padding:14px; overflow-x:auto; white-space:pre; }
+  .sp ul, .sp ol { padding-left:1.3em; }
+  .sp li { margin:.25em 0; }
+  .sp hr { border:0; border-top:1px solid var(--sp-line); margin:2.5em 0; }
+  .sp .tldr { border:2px solid var(--sp-accent); border-radius:10px; padding:16px 20px; }
+</style>
+
+<div class="sp">
+
+<h1>Sprig — full-stack overhaul plan</h1>
+<p class="meta"><em>brain-bloom → Sprig · Next 16 · Convex · Clerk · Base UI · AI panel · authored 2026-07-27</em></p>
+
+<div class="tldr">
+<p><strong>TL;DR</strong> — Nine phases, each merging to <code>main</code> green. Order is deliberate: toolchain → design system → canvas hardening → Convex → Clerk → data cutover → routes/rendering → AI panel → polish. Supabase and Groq are deleted from the repo by phase 6. Every phase is implemented by <code>codex gpt-5.6-sol</code> at high reasoning against a written API contract, then reviewed twice (Codex on logic, Opus on quality) before merge.</p>
+<p><strong>Three of your answers need amending</strong> — Clerk Elements is deprecated, Next 16 collapsed your three caching flags into one, and AI Elements' Base UI compatibility is unverified. Details in §2. <strong>One architectural deviation</strong> proposed in §4 (drop the <code>edges</code> table). Both need your sign-off before P0 starts.</p>
+</div>
+
+<h2>1 · Where we're starting</h2>
+
+<table>
+<tr><th>Area</th><th>Today</th><th>After</th></tr>
+<tr><td>Framework</td><td><code>next: "latest"</code> (floating 15.x), React 19.0.0, webpack</td><td>Next 16.2.x pinned, React 19.2.x, Turbopack, React Compiler</td></tr>
+<tr><td>Rendering</td><td>Per-request SSR, no caching strategy</td><td><code>cacheComponents</code> (static shell + streamed dynamic holes)</td></tr>
+<tr><td>Styling</td><td>Tailwind 3.4, shadcn/radix, ~40 <code>components/ui</code> files (most unused), HSL vars, neutral+green</td><td>Tailwind 4 CSS-first <code>@theme</code>, Base UI, OKLCH tokens, sage/moss/bone</td></tr>
+<tr><td>Data</td><td>Supabase: one <code>mindmaps</code> row, <code>nodes</code>/<code>edges</code> JSON blobs, whole-doc rewrite per save</td><td>Convex normalized tables, node-level mutations, live queries, debounced autosave</td></tr>
+<tr><td>Auth</td><td>Supabase email+password, middleware session refresh</td><td>Clerk — Google, GitHub, email code — custom UI on Core 3 hooks</td></tr>
+<tr><td>AI</td><td>2 server actions, groq/llama, hand-rolled JSON parsing, no tool calls</td><td>Route handler, AI SDK 7 + Claude, 8 typed tools, streamed to an <code>ai-elements</code> panel</td></tr>
+<tr><td>Canvas</td><td>xyflow 12.6, dagre 1.1, React context provider, custom leveled keyboard nav</td><td>xyflow 12.11, dagre 3, Zustand store — <em>bilateral layout + keyboard nav preserved verbatim</em></td></tr>
+<tr><td>Routes</td><td><code>/</code> → redirect to latest map, <code>/[mindmapSlug]</code>, <code>(auth-pages)/*</code></td><td><code>/</code> landing · <code>/maps</code> · <code>/maps/[publicId]</code> · <code>/new</code> · <code>/share/[publicId]</code> · <code>/sign-in</code>, <code>/sign-up</code></td></tr>
+<tr><td>Tests</td><td>None</td><td>Vitest on layout, node builders, AI reducers, Convex functions</td></tr>
+</table>
+
+<h2>2 · Corrections to your answers <span class="tag chg">read this</span></h2>
+
+<p>Four things you picked have moved since. Each has a replacement that keeps your intent.</p>
+
+<h4>2.1 — D2: Clerk Elements is deprecated</h4>
+<div class="callout warn">
+<p>You picked <code>elements</code> for fully custom auth markup. <code>@clerk/elements</code> was deprecated with <strong>Clerk Core 3</strong> (March 2026) and only ever supported Core 2. The replacement covers the identical use case with less code: the redesigned <code>useSignIn</code> / <code>useSignUp</code> hooks, which expose step methods that map to the flow (<code>signIn.password()</code>, <code>signIn.emailCode.sendCode()</code>), a <code>status</code> property (<code>needs_first_factor</code> | <code>needs_second_factor</code> | <code>complete</code>), <code>fetchStatus</code> for loading, and structured <code>errors.fields</code>.</p>
+<p><strong>Plan takes:</strong> fully custom sign-in/sign-up markup built on Core 3 hooks. Same design control you asked for, actively maintained.</p>
+</div>
+
+<h4>2.2 — E2: your three caching flags are now one</h4>
+<div class="callout warn">
+<p>You checked <code>ppr</code>, <code>use-cache</code>, and <code>dyn-io</code> separately. In Next 16 they were unified: <code>cacheComponents: true</code> controls all three. <code>experimental.ppr</code> and the <code>experimental_ppr</code> route segment config <strong>have been removed</strong> — PPR is now the default App Router behavior under <code>cacheComponents</code>. So the config is one line, and it brings dynamic-IO strictness with it whether you want it separately or not.</p>
+<p>Bonus behavior you didn't ask for but get: <code>cacheComponents</code> makes Next use React <code>&lt;Activity&gt;</code> to preserve component state across client-side navigation. Good for the canvas (map state survives a trip to the dashboard and back); needs checking against dropdowns/dialogs.</p>
+</div>
+
+<h4>2.3 — E3: <code>preloadQuery</code> cannot live in the static shell</h4>
+<div class="callout warn">
+<p>Convex's <code>preloadQuery</code> uses <code>no-store</code>, so any Server Component that awaits it is ineligible for static rendering. That is not a blocker — it is exactly what PPR's dynamic hole is for — but it dictates the shape: the page shell (nav, chrome, skeleton) is static, and <code>preloadQuery</code> lives inside a <code>&lt;Suspense&gt;</code> boundary that streams. Convex also gives <strong>no cross-call consistency</strong> between multiple <code>preloadQuery</code> calls, so each page makes exactly one.</p>
+</div>
+
+<h4>2.4 — F7 + G1: AI Elements × Base UI is unverified</h4>
+<div class="callout bad">
+<p>Base UI became shadcn's default in July 2026 (<code>shadcn init</code> defaults to it; <code>-b radix</code> opts out). AI Elements documents its prerequisites as shadcn/ui + Tailwind 4 + React 19, and says nothing about Base UI. Its components are shadcn-convention wrappers, so they most likely work — but "most likely" is not a foundation for a phase.</p>
+<p><strong>Plan takes:</strong> P0 spike installs AI Elements into a Base UI project and renders a streaming conversation. If it breaks, fallback is to hand-port the 7 components we actually need (Conversation, Message, Response, PromptInput, Tool, Task, Suggestion) — they are small, and we own the code either way.</p>
+</div>
+
+<h4>2.5 — Clerk × <code>cacheComponents</code> has reported build failures</h4>
+<div class="callout bad">
+<p>There are open reports of build/prerender errors when <code>cacheComponents</code> is enabled alongside Clerk. Known guidance: place <code>&lt;ClerkProvider&gt;</code> <em>inside</em> <code>&lt;body&gt;</code> rather than wrapping <code>&lt;html&gt;</code>, avoid a blanket <code>&lt;ClerkProvider dynamic&gt;</code> at the root, and push <code>dynamic</code> + Suspense down to the components that actually read auth. <code>auth()</code> in a server component opts that whole route into dynamic rendering.</p>
+<p><strong>Plan takes:</strong> P0 spike proves Next 16 + <code>cacheComponents</code> + Clerk + Convex <code>preloadQuery</code> builds clean before we commit to it. If it doesn't, <code>cacheComponents</code> ships on the public routes only (landing, share links) and authenticated routes stay plain dynamic — you lose nothing real, since authenticated map pages were never cacheable anyway.</p>
+</div>
+
+<h2>3 · Target architecture</h2>
+
+<div class="flowdiag">  Browser
+    │
+    │  1. GET /maps/abc123
+    ▼
+  Next 16 (Vercel)  ── proxy.ts (node runtime) ── Clerk session check
+    │
+    ├── static shell (PPR) ........ nav, canvas chrome, skeletons   [cached]
+    └── &lt;Suspense&gt; ─── preloadQuery(api.maps.get, {publicId}, {token})   [streamed]
+                                │
+                                ▼
+                          Convex ── validates Clerk JWT (auth.config.ts)
+                                │       owner check: identity.subject == users.clerkId
+                                ▼
+                      mindmaps / nodes / operations / threads / messages
+                                ▲
+    ┌───────────────────────────┘  live subscription (websocket)
+    │
+  Client: usePreloadedQuery → Zustand flow store → xyflow canvas
+    │                                    ▲
+    │  debounced autosave (optimistic)   │ apply / undo op batches
+    ▼                                    │
+  Convex mutations                       │
+                                         │
+  AI panel ──POST /api/chat──▶ AI SDK 7 (Claude) ──tool calls──▶ Convex mutations
+     ▲                                                              │
+     └────────── streamed UIMessage parts ◀─────────────────────────┘</div>
+
+<p>Three rules that fall out of this:</p>
+<ul>
+<li><strong>Convex is the only writer.</strong> The AI route handler never mutates local state; it calls Convex mutations, and the canvas updates because it is subscribed. No dual-source-of-truth bugs.</li>
+<li><strong>Every mutation is an op batch.</strong> User edits and AI edits go through the same <code>applyOps</code> path, which records an inverse. Undo is uniform.</li>
+<li><strong>The canvas is client-only.</strong> xyflow never server-renders; everything <em>around</em> it streams.</li>
+</ul>
+
+<h2>4 · Convex data model</h2>
+
+<div class="callout warn">
+<p><strong>Proposed deviation from C1 — needs your yes/no.</strong> You picked normalized <code>mindmaps</code> / <code>nodes</code> / <code>edges</code>. For a mindmap the edge set is <em>fully determined</em> by the tree: every node has exactly one parent. A separate <code>edges</code> table would be a denormalized mirror we have to keep transactionally in sync for zero gain — and it makes "move subtree" a two-table write instead of one field update. I propose <strong>nodes carry <code>parentLocalId</code></strong> and xyflow edges are derived on the client. If you ever want cross-branch links (non-tree edges), we add a <code>links</code> table then, and it means something different. Say the word if you want the edges table anyway.</p>
+</div>
+
+<pre><code>// convex/schema.ts
+export default defineSchema({
+  users: defineTable({
+    clerkId: v.string(),
+    email: v.string(),
+    name: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+  }).index("by_clerk_id", ["clerkId"]),
+
+  mindmaps: defineTable({
+    ownerId: v.id("users"),
+    publicId: v.string(),               // nanoid(10) — the URL id
+    title: v.string(),
+    visibility: v.union(v.literal("private"), v.literal("public")),
+    lastOpenedAt: v.number(),
+  })
+    .index("by_owner", ["ownerId", "lastOpenedAt"])
+    .index("by_public_id", ["publicId"]),
+
+  nodes: defineTable({
+    mindmapId: v.id("mindmaps"),
+    localId: v.string(),                // xyflow node id, stable, e.g. "r-7"
+    side: v.union(v.literal("root"), v.literal("left"), v.literal("right")),
+    parentLocalId: v.optional(v.string()),   // undefined ⇒ root
+    order: v.number(),                  // sibling ordering, sparse (100, 200, …)
+    title: v.string(),
+    description: v.optional(v.string()),
+    link: v.optional(v.string()),
+  })
+    .index("by_mindmap", ["mindmapId"])
+    .index("by_mindmap_local", ["mindmapId", "localId"])
+    .index("by_parent", ["mindmapId", "parentLocalId", "order"]),
+
+  operations: defineTable({             // undo log — one row per applied batch
+    mindmapId: v.id("mindmaps"),
+    actor: v.union(v.literal("user"), v.literal("ai")),
+    messageId: v.optional(v.id("messages")),
+    label: v.string(),                  // "Added 3 nodes under Imperialism"
+    ops: v.array(v.any()),              // forward patch
+    inverse: v.array(v.any()),          // exact undo patch
+    undoneAt: v.optional(v.number()),
+  }).index("by_mindmap", ["mindmapId"]),
+
+  threads: defineTable({                // one chat thread per mindmap (F5)
+    mindmapId: v.id("mindmaps"),
+    ownerId: v.id("users"),
+  }).index("by_mindmap", ["mindmapId"]),
+
+  messages: defineTable({
+    threadId: v.id("threads"),
+    role: v.union(v.literal("user"), v.literal("assistant")),
+    parts: v.any(),                     // AI SDK 7 UIMessage parts array
+  }).index("by_thread", ["threadId"]),
+});</code></pre>
+
+<h4>Authorization (D4)</h4>
+<p>One helper, used by every query and mutation without exception. No function touches a table directly.</p>
+<pre><code>// convex/lib/auth.ts
+export async function requireOwner(ctx, mindmapId) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) throw new ConvexError("UNAUTHENTICATED");
+  const user = await ctx.db.query("users")
+    .withIndex("by_clerk_id", q =&gt; q.eq("clerkId", identity.subject)).unique();
+  const map = await ctx.db.get(mindmapId);
+  if (!user || !map || map.ownerId !== user._id) throw new ConvexError("FORBIDDEN");
+  return { user, map };
+}
+
+// Public read path for share links (A4) — separate, deliberately narrow:
+export async function requireReadable(ctx, publicId) { /* owner OR visibility === "public" */ }</code></pre>
+
+<h4>Persistence semantics (C2, C3)</h4>
+<ul>
+<li>Canvas edits are batched and flushed on a 600 ms trailing debounce, with Convex optimistic updates so the UI never waits.</li>
+<li><code>SaveMindmap.tsx</code> becomes a status pill: <em>saving… / saved 2s ago / offline</em>.</li>
+<li>Live subscription is on. Second tab sees changes. No presence, no CRDT — last write wins, which is correct for single-user.</li>
+</ul>
+
+<h2>5 · AI panel design</h2>
+
+<h4>5.1 Tool contract</h4>
+<p>All tools are defined once with zod 4 schemas, executed server-side in the route handler, and each mutating tool returns the <code>operationId</code> that undoes it.</p>
+
+<table>
+<tr><th>Tool</th><th>Input</th><th>Kind</th></tr>
+<tr><td><code>readMap</code></td><td><code>{}</code> → compact outline of the whole tree</td><td>read</td></tr>
+<tr><td><code>readSubtree</code></td><td><code>{ localId, depth }</code></td><td>read</td></tr>
+<tr><td><code>addNodes</code></td><td><code>{ parentLocalId, nodes: [{ title, description?, link? }] }</code></td><td>write</td></tr>
+<tr><td><code>updateNode</code></td><td><code>{ localId, title?, description?, link? }</code></td><td>write</td></tr>
+<tr><td><code>deleteSubtree</code></td><td><code>{ localId }</code></td><td>write</td></tr>
+<tr><td><code>moveSubtree</code></td><td><code>{ localId, newParentLocalId, index? }</code></td><td>write</td></tr>
+<tr><td><code>expandBranch</code></td><td><code>{ localId, depth, breadth }</code> — generates then adds</td><td>write</td></tr>
+<tr><td><code>restructureMap</code></td><td><code>{ instruction }</code> — whole-map rebalance, one op batch</td><td>write</td></tr>
+</table>
+
+<p>Q&amp;A about the map (F2 <code>summarize</code>) needs no tool — it falls out of <code>readMap</code> plus a plain answer. Whole-map regeneration (F2 <code>regenerate</code>) is <code>deleteSubtree(root children)</code> + <code>addNodes</code> inside a single batch, so one undo reverses it.</p>
+
+<h4>5.2 Context strategy (F4)</h4>
+<p>You picked all three of selected-node, full-map, and read-tools. They compose rather than conflict:</p>
+<ul>
+<li>The <strong>selected node</strong> is always injected as a context chip in the prompt — visible in the UI, removable.</li>
+<li>The <strong>full map outline</strong> is injected when it is under ~200 nodes (measured in tokens, hard cap).</li>
+<li>Above that cap, the outline is dropped and the model uses <code>readMap</code> / <code>readSubtree</code> instead. One code path, one threshold constant.</li>
+</ul>
+
+<h4>5.3 Undo model (F3 — auto-apply)</h4>
+<div class="callout">
+<p>You chose auto-apply + undo over preview-diff. That is a better feel and a harder engineering bar: it makes the undo log load-bearing, not a nicety. The contract:</p>
+<ol>
+<li>Every mutating tool call writes its rows <strong>and</strong> its inverse patch in the <em>same Convex transaction</em>. There is no window where a change exists without its undo.</li>
+<li>All tool calls in one assistant turn share one <code>operationId</code>. One click undoes the whole turn, not one node of it.</li>
+<li>The affected nodes flash an accent highlight on the canvas for ~1.2s (B5 purposeful motion), so a change is never silent.</li>
+<li>Each assistant message renders an Undo action; undo is itself an op batch, so redo is free.</li>
+<li><code>deleteSubtree</code>'s inverse stores the full subtree payload. Deletes are recoverable, not tombstoned.</li>
+</ol>
+</div>
+
+<h4>5.4 Panel UI (F1, F7, F8)</h4>
+<ul>
+<li>Right side, <code>react-resizable-panels</code>, collapsible, width persisted to <code>localStorage</code>. Sheet on mobile.</li>
+<li>AI Elements: Conversation, Message, Response, PromptInput, Tool, Task, Suggestion, Reasoning, Actions.</li>
+<li>Tool cards show the actual call and its result, so an auto-applied edit is always inspectable.</li>
+<li><code>NodeAiEdit.tsx</code> becomes "Ask AI about this node" — opens the panel, pre-fills the chip, focuses the input. The old popover mini-form is deleted.</li>
+<li><code>/new</code> stays as a first-run experience but calls the same tool layer via a one-shot server action.</li>
+</ul>
+
+<h2>6 · Design tokens — "organic bloom" (B1)</h2>
+
+<p>Starting palette, tuned live in P2. Tailwind 4 CSS-first, OKLCH, dark as default with a system-aware toggle.</p>
+
+<pre><code>@theme {
+  /* dark (default) — moss on deep forest */
+  --color-bg:        oklch(0.17 0.012 145);
+  --color-surface:   oklch(0.21 0.014 145);
+  --color-elevated:  oklch(0.25 0.016 145);
+  --color-line:      oklch(0.31 0.014 145);
+  --color-fg:        oklch(0.94 0.008 110);
+  --color-fg-muted:  oklch(0.72 0.013 130);
+  --color-primary:   oklch(0.74 0.115 148);   /* moss */
+  --color-accent:    oklch(0.80 0.115 42);    /* bloom — AI highlights, diffs */
+  --color-danger:    oklch(0.66 0.150 25);
+  --radius-node:     14px;
+}
+/* light — bone paper, same hues, inverted lightness ramp */</code></pre>
+
+<table>
+<tr><th>Surface</th><th>Treatment</th></tr>
+<tr><td>Canvas</td><td>Dot grid at 8% <code>--color-line</code>, dot size scales with zoom</td></tr>
+<tr><td>Node card</td><td>Flat <code>--color-surface</code>, 1px hairline, 14px radius, no shadow; active node gets a 2px <code>--color-primary</code> ring</td></tr>
+<tr><td>Edges</td><td>Smooth bezier, 1.5px, <code>--color-line</code>; animate stroke on AI change using <code>--color-accent</code></td></tr>
+<tr><td>Type</td><td>Geist Sans / Geist Mono via <code>next/font</code></td></tr>
+<tr><td>Motion</td><td>Layout transitions, panel slide, AI diff flash only. All gated on <code>prefers-reduced-motion</code></td></tr>
+<tr><td>Deleted</td><td><code>particles.tsx</code>, <code>aurora-text.tsx</code>, and the old floating sidebar (B7)</td></tr>
+</table>
+
+<h2>7 · Phase plan</h2>
+
+<p>Nine phases. Each is one branch, must pass <code>pnpm tsc</code> + <code>pnpm lint</code> + owned tests, gets Codex-logic review and Opus-quality review, and merges before the next starts. Conventional commits throughout.</p>
+
+<div class="phase">
+<h3>P0 — De-risk spikes + rename <span class="tag new">gate</span></h3>
+<p class="meta">Branch <code>chore/p0-spikes</code> · throwaway code except the rename · <strong>blocks everything</strong></p>
+<p><strong>Goal:</strong> prove the two unverified integrations before they can poison a real phase.</p>
+<ul>
+<li>Scratch Next 16 app: <code>cacheComponents: true</code> + Clerk + Convex <code>preloadQuery</code> inside Suspense. <code>next build</code> must pass. Record the exact <code>ClerkProvider</code> placement that works.</li>
+<li>Same app: <code>npx shadcn init</code> (Base UI default) → <code>npx ai-elements@latest add conversation message prompt-input tool</code> → render a streaming conversation. Record breakages.</li>
+<li>Rename <code>brain-bloom</code> → <code>sprig</code>: package name, metadata, README, page titles. Repo dir/remote left alone unless you say otherwise.</li>
+<li>Create <code>.logs/</code> (gitignored), <code>docs/ENV.md</code>, <code>docs/SCRIPTS.md</code>.</li>
+</ul>
+<p><strong>Exit:</strong> a written go/no-go on <code>cacheComponents</code> and on AI Elements, with the fallback chosen if either fails.</p>
+</div>
+
+<div class="phase">
+<h3>P1 — Toolchain</h3>
+<p class="meta">Branch <code>chore/p1-next16</code> · no behavior change · <em>codex: sol/high</em></p>
+<ul>
+<li>Pin <code>next@16.2.x</code> exactly — kill <code>"latest"</code> on next, supabase, and everything else floating.</li>
+<li>React 19.2.x; Turbopack for dev and build; <code>reactCompiler: true</code> + <code>babel-plugin-react-compiler</code>.</li>
+<li><code>middleware.ts</code> → <code>proxy.ts</code> (node runtime, edge unsupported there). Still Supabase session refresh at this point — swapped in P5.</li>
+<li>Node 20.9+ enforced via <code>engines</code> + <code>.nvmrc</code>.</li>
+<li>Vitest + <code>@vitest/coverage-v8</code>, first tests: <code>createNode</code>, <code>createEdge</code>, <code>generateLeveledNodes</code>.</li>
+<li>zod 3 → 4; purge recharts, embla, day-picker, input-otp, vaul, lodash.</li>
+<li><code>cacheComponents</code> deliberately <strong>off</strong> — it lands in P7 once auth is real.</li>
+</ul>
+<p><strong>Exit:</strong> <code>pnpm build</code> on Turbopack, app behaviorally identical, React Compiler not breaking the canvas (measure a render profile before/after).</p>
+</div>
+
+<div class="phase">
+<h3>P2 — Design system</h3>
+<p class="meta">Branch <code>feat/p2-design-system</code> · <em>codex for mechanics, Opus 4.8 for component work</em></p>
+<ul>
+<li>Tailwind 3 → 4: CSS-first <code>@theme</code>, delete <code>tailwind.config.ts</code>, <code>postcss.config.js</code>, autoprefixer, <code>tailwindcss-animate</code>.</li>
+<li>Install the shadcn migration skill (<code>npx skills add https://github.com/shadcn/ui --skill migrate-radix-to-base</code>) and migrate component-by-component. Note <code>asChild</code> → <code>render</code>.</li>
+<li>Delete every <code>components/ui</code> file with no importer; re-add the survivors from the Base UI registry.</li>
+<li>Drop every now-unused <code>@radix-ui/*</code> dep.</li>
+<li>Implement the §6 token set; Geist via <code>next/font</code>; restyle nodes, edges, canvas, header.</li>
+<li>Delete <code>particles.tsx</code>, <code>aurora-text.tsx</code>, old sidebar.</li>
+</ul>
+<p><strong>Exit:</strong> visual parity-or-better with zero Radix imports left; light and dark both audited for contrast.</p>
+</div>
+
+<div class="phase">
+<h3>P3 — Canvas hardening <span class="tag chg">A3 guard</span></h3>
+<p class="meta">Branch <code>refactor/p3-canvas</code> · pure refactor, no backend touch · <em>codex: sol/high</em></p>
+<div class="callout warn"><p>You said keyboard nav and the bilateral layout must not change. So this phase is <strong>test-first</strong>: characterization tests are written against today's behavior <em>before</em> any dependency moves. If dagre 3 or the Zustand swap changes a single node position or key binding, the tests fail and we know immediately.</p></div>
+<ul>
+<li>Golden-snapshot tests: <code>initLayout</code> output for 5 fixture maps; <code>generateLeveledNodes</code> levels; every binding in <code>useMindmapNavigation</code>.</li>
+<li>xyflow 12.6 → 12.11; dagre 1.1 → 3.0 (full TS rewrite — types ship natively, drop any <code>@types/dagre</code>).</li>
+<li><code>MindmapFlowProvider</code> context → Zustand store (xyflow's own recommendation), same public hook surface so call sites barely move.</li>
+<li>Split the god-provider: graph state, selection state, and layout are three slices.</li>
+</ul>
+<p><strong>Exit:</strong> all characterization tests green, zero diff in layout snapshots, keyboard nav manually verified.</p>
+</div>
+
+<div class="phase">
+<h3>P4 — Convex foundation</h3>
+<p class="meta">Branch <code>feat/p4-convex</code> · additive only, Supabase still serving · <em>codex: sol/high</em></p>
+<ul>
+<li><code>npx convex dev</code>, project <code>sprig</code>; schema from §4; <code>auth.config.ts</code> pointed at <code>CLERK_JWT_ISSUER_DOMAIN</code>.</li>
+<li>Queries: <code>maps.listForOwner</code>, <code>maps.getByPublicId</code>, <code>maps.getTree</code>, <code>chat.thread</code>.</li>
+<li>Mutations: <code>maps.create</code>, <code>maps.rename</code>, <code>maps.remove</code>, <code>maps.setVisibility</code>, and the single <code>ops.apply</code> entry point every write funnels through.</li>
+<li><code>ops.apply</code> + <code>ops.undo</code>: forward patch, inverse patch, one transaction. This is the load-bearing piece for §5.3 — it gets the most test coverage in the repo.</li>
+<li><code>requireOwner</code> / <code>requireReadable</code> helpers; no function bypasses them.</li>
+<li><code>convex-test</code> suite: ownership denial cases, undo round-trips (apply → undo → deep-equal original), subtree delete/restore.</li>
+</ul>
+<p><strong>Exit:</strong> Convex functions fully tested against zero UI. Nothing in <code>app/</code> imports Convex yet.</p>
+</div>
+
+<div class="phase">
+<h3>P5 — Clerk auth cutover</h3>
+<p class="meta">Branch <code>feat/p5-clerk</code> · <em>codex for wiring, Opus 4.8 for the auth UI</em></p>
+<ul>
+<li>Clerk app; Google + GitHub OAuth + email verification code; JWT template named <code>convex</code>.</li>
+<li><code>&lt;ClerkProvider&gt;</code> inside <code>&lt;body&gt;</code> (per P0 finding), wrapping <code>ConvexProviderWithClerk</code> — that nesting order is mandatory.</li>
+<li><code>proxy.ts</code>: <code>clerkMiddleware</code> route protection; all Supabase middleware deleted.</li>
+<li>Custom <code>/sign-in</code> and <code>/sign-up</code> on Core 3 <code>useSignIn</code> / <code>useSignUp</code> hooks, styled to §6. Handle <code>needs_first_factor</code>, <code>needs_second_factor</code>, <code>complete</code>, and <code>errors.fields</code> per input.</li>
+<li>Clerk webhook → <code>users</code> upsert in Convex (keeps <code>clerkId</code> ↔ user row in sync).</li>
+<li>Delete <code>actions/auth.ts</code>, <code>utils/supabase/*</code>, <code>providers/SupabaseProvider.tsx</code>, <code>(auth-pages)/*</code>, all four Supabase auth pages.</li>
+</ul>
+<p><strong>Exit:</strong> sign in with all three methods, session survives reload, protected routes bounce anonymous users, <code>@supabase/*</code> gone from <code>package.json</code>.</p>
+</div>
+
+<div class="phase">
+<h3>P6 — Data cutover</h3>
+<p class="meta">Branch <code>feat/p6-data</code> · the risky one · <em>codex: sol/high</em></p>
+<ul>
+<li>One-shot migration script (<code>scripts/migrate-supabase-to-convex.ts</code>): read the Supabase JSON blobs, walk each tree, emit normalized node rows with <code>parentLocalId</code>/<code>order</code>, mint <code>publicId</code>s, map old <code>owner_user_id</code> → your Clerk user. Idempotent, dry-run flag, prints a per-map diff.</li>
+<li>Replace <code>data/*.ts</code> with Convex queries; <code>usePreloadedQuery</code> + live subscription in the canvas.</li>
+<li>Wire the Zustand store's write path to debounced <code>ops.apply</code> with optimistic updates.</li>
+<li><code>SaveMindmap.tsx</code> → save-status pill.</li>
+<li>Delete <code>@supabase/ssr</code>, <code>@supabase/supabase-js</code>, and every remaining reference. Supabase is now gone from the repo.</li>
+</ul>
+<p><strong>Exit:</strong> old maps present and editable in Convex; two tabs stay in sync; kill the network and the pill says offline.</p>
+</div>
+
+<div class="phase">
+<h3>P7 — Routes &amp; rendering</h3>
+<p class="meta">Branch <code>feat/p7-routes</code> · <em>codex: sol/high</em></p>
+<ul>
+<li>New shape: <code>/</code> landing (static) · <code>/maps</code> dashboard · <code>/maps/[publicId]</code> · <code>/new</code> · <code>/share/[publicId]</code> read-only · <code>/sign-in</code>, <code>/sign-up</code>.</li>
+<li><code>publicId</code> = <code>nanoid(10)</code>, distinct from the internal Convex id (E5) — share links never leak a document id.</li>
+<li>Share links: <code>visibility: "public"</code> toggle, <code>requireReadable</code> path, no edit affordances, <code>noindex</code>.</li>
+<li>Enable <code>cacheComponents: true</code> per the P0 finding. <code>"use cache"</code> + <code>cacheLife</code> on the landing page and public share pages; <code>cacheTag</code> invalidation when a public map changes.</li>
+<li>Every dynamic hole wrapped in Suspense with a real skeleton — one <code>preloadQuery</code> per page, no exceptions (§2.3).</li>
+<li>Audit React <code>&lt;Activity&gt;</code> state preservation against dialogs, dropdowns, and the canvas viewport.</li>
+</ul>
+<p><strong>Exit:</strong> <code>next build</code> shows a static shell for <code>/</code> and <code>/share/*</code>; dashboard and canvas stream; no hydration warnings.</p>
+</div>
+
+<div class="phase">
+<h3>P8 — AI panel <span class="tag new">the new thing</span></h3>
+<p class="meta">Branch <code>feat/p8-ai-panel</code> · biggest phase, split into 8a logic / 8b UI · <em>codex: sol/high, then Opus 4.8 for panel polish</em></p>
+<p><strong>8a — tool layer.</strong></p>
+<ul>
+<li><code>app/api/chat/route.ts</code>: AI SDK 7 <code>streamText</code> with Claude. Note the v7 rename — system prompt is <code>instructions</code>, not <code>system</code>.</li>
+<li>The 8 tools from §5.1, zod 4 schemas, each executing against Convex and returning its <code>operationId</code>.</li>
+<li>Context assembly per §5.2 with the hard token cap.</li>
+<li><code>UIMessage</code> parts persisted to <code>messages</code>; thread resumes on reload.</li>
+<li>Unit tests on the reducers: tool output → op batch → inverse, for every tool.</li>
+</ul>
+<p><strong>8b — panel UI.</strong></p>
+<ul>
+<li>Resizable right panel, AI Elements per §5.4 (or the hand-ported fallback from P0).</li>
+<li>Selected-node context chip, wired to the Zustand selection slice.</li>
+<li>Undo action per assistant message; accent flash on touched nodes.</li>
+<li>Suggestions seeded from map state ("expand Imperialism", "add 3 subtopics to X").</li>
+<li><code>NodeAiEdit.tsx</code> rewired to open the panel; <code>actions/ai-edit.ts</code>, <code>actions/ai-gen.ts</code>, <code>sample-edit.json</code>, and <code>groq-sdk</code> deleted.</li>
+</ul>
+<p><strong>Exit:</strong> add/edit/delete/move/expand/restructure all work end-to-end and every one of them undoes cleanly.</p>
+</div>
+
+<div class="phase">
+<h3>P9 — Polish</h3>
+<p class="meta">Branch <code>chore/p9-polish</code></p>
+<ul>
+<li>Lighthouse + Core Web Vitals on landing and canvas; bundle audit.</li>
+<li>Error states: not-found, forbidden, offline, AI failure, rate limit — real copy, real recovery paths.</li>
+<li>Keyboard a11y pass on the panel; focus management on open/close.</li>
+<li><code>docs/ENV.md</code>, <code>docs/SCRIPTS.md</code>, <code>README.md</code>, <code>CLAUDE.md</code>/<code>AGENTS.md</code> refreshed for the new stack.</li>
+<li>Final Opus architecture critique across the whole diff.</li>
+</ul>
+</div>
+
+<h2>8 · Delegation protocol</h2>
+
+<p>Per your G6 answer and <code>CLAUDE.md</code>. Each phase runs the same loop:</p>
+
+<pre><code># 1. brief written to .logs/prompts/pN.md — API contracts, file list, patterns, constraints
+timeout 5400 codex exec --sandbox workspace-write \
+  -m gpt-5.6-sol -c 'model_reasoning_effort="high"' \
+  "$(cat .logs/prompts/pN.md)" &gt; .logs/pN.log 2&gt;&1
+
+# 2. liveness check — artifacts, not process existence
+wc -l .logs/pN.log &amp;&amp; git diff --stat     # unchanged for ~5 min ⇒ kill + restart
+
+# 3. review: codex reviewer on logic  →  Opus subagent on quality/smells
+# 4. pnpm tsc &amp;&amp; pnpm lint &amp;&amp; pnpm test
+# 5. report to you → you approve → merge</code></pre>
+
+<p>Never piped through <code>tail</code>/<code>grep</code> (pipes buffer until exit and a healthy run looks hung). Always redirected to <code>.logs/</code>, always wrapped in <code>timeout</code>. Codex is stateless per invocation, so kill-and-restart is cheap — completed file writes survive.</p>
+
+<h2>9 · Risks</h2>
+
+<table>
+<tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr>
+<tr><td>Clerk × <code>cacheComponents</code> build failure</td><td>Medium</td><td>P0 gate; fallback = cacheComponents on public routes only</td></tr>
+<tr><td>AI Elements incompatible with Base UI</td><td>Medium</td><td>P0 gate; fallback = hand-port 7 components (we own the code regardless)</td></tr>
+<tr><td>dagre 3 changes layout geometry</td><td>Medium</td><td>Golden snapshots written <em>before</em> upgrade in P3</td></tr>
+<tr><td>Zustand swap breaks keyboard nav (violates A3)</td><td>Medium</td><td>Characterization tests on every binding before the refactor</td></tr>
+<tr><td>Auto-apply AI edit is unrecoverable</td><td>Low / severe</td><td>Inverse patch in the same transaction; delete stores full subtree; undo tested per tool</td></tr>
+<tr><td>React Compiler degrades xyflow renders</td><td>Low</td><td>Profile before/after in P1; <code>"use no memo"</code> escape hatch on the canvas</td></tr>
+<tr><td>Migration loses map data</td><td>Low</td><td>Dry-run + per-map diff; Supabase kept readable until P6 merges</td></tr>
+<tr><td>Old <code>/[bigint]</code> URLs break</td><td>Certain</td><td>Accepted — you're the only user (A2)</td></tr>
+<tr><td>AI SDK 7 API drift (<code>system</code> → <code>instructions</code>, split CallSettings)</td><td>Certain</td><td>Written into the P8 brief explicitly</td></tr>
+</table>
+
+<h2>10 · Environment &amp; scripts</h2>
+
+<div class="grid2">
+<div>
+<h4>Env vars <span class="tag new">you provision</span></h4>
+<table>
+<tr><th>Var</th><th>Phase</th></tr>
+<tr><td><code>NEXT_PUBLIC_CONVEX_URL</code></td><td>P4</td></tr>
+<tr><td><code>CONVEX_DEPLOYMENT</code></td><td>P4</td></tr>
+<tr><td><code>CLERK_JWT_ISSUER_DOMAIN</code></td><td>P4</td></tr>
+<tr><td><code>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code></td><td>P5</td></tr>
+<tr><td><code>CLERK_SECRET_KEY</code></td><td>P5</td></tr>
+<tr><td><code>CLERK_WEBHOOK_SIGNING_SECRET</code></td><td>P5</td></tr>
+<tr><td><code>ANTHROPIC_API_KEY</code></td><td>P8</td></tr>
+<tr><td colspan="2"><em>Removed:</em> <code>NEXT_PUBLIC_SUPABASE_*</code> (P6), <code>GROQ_API_KEY</code> (P8)</td></tr>
+</table>
+</div>
+<div>
+<h4>Scripts <span class="tag chg">docs/SCRIPTS.md</span></h4>
+<table>
+<tr><th>Script</th><th>Phase</th></tr>
+<tr><td><code>dev</code> → <code>next dev --turbopack</code></td><td>P1</td></tr>
+<tr><td><code>convex:dev</code>, <code>convex:deploy</code></td><td>P4</td></tr>
+<tr><td><code>test</code>, <code>test:watch</code>, <code>test:coverage</code></td><td>P1</td></tr>
+<tr><td><code>typecheck</code> (rename from <code>tsc</code>)</td><td>P1</td></tr>
+<tr><td><code>migrate:convex</code></td><td>P6</td></tr>
+</table>
+<p class="meta">Per CLAUDE.md, <code>docs/SCRIPTS.md</code> and <code>docs/ENV.md</code> are updated in the same commit as any script or env change.</p>
+</div>
+</div>
+
+<h2>11 · What I need from you</h2>
+
+<ol>
+<li><strong>§4 deviation</strong> — drop the <code>edges</code> table in favor of <code>parentLocalId</code>? (My recommendation: yes.)</li>
+<li><strong>§2 corrections</strong> — confirm Clerk Core 3 hooks in place of the deprecated Elements, and that the unified <code>cacheComponents</code> flag is what you wanted from your three separate picks.</li>
+<li><strong>Rename depth</strong> — Sprig in package/UI/docs only, or also rename the git repo and directory?</li>
+<li><strong>Accounts</strong> — nothing blocks until P4. When P4 starts you'll need Convex; P5 needs Clerk with Google + GitHub OAuth configured; P8 needs an Anthropic key.</li>
+</ol>
+
+<p>Answer 1–3 and P0 starts immediately.</p>
+
+</div>
+</article>
+</main>
+</body>
+</html>

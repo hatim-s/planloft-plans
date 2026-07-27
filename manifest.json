@@ -198,6 +198,15 @@
       "kind": "plan",
       "createdAt": "2026-07-24T00:10:00.000Z",
       "expiresAt": "2026-08-23T00:10:00.000Z"
+    },
+    {
+      "id": "Ad43uXfOzC",
+      "project": "github.com/hatim-s/brain-bloom",
+      "slug": "sprig-overhaul",
+      "title": "Sprig — Brain Bloom Overhaul Plan",
+      "kind": "plan",
+      "createdAt": "2026-07-27T15:42:54.616Z",
+      "expiresAt": "2026-08-26T15:42:54.617Z"
     }
   ]
 }
