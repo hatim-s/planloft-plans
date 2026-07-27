@@ -5,11 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
 <title>Sprig — Brain Bloom Overhaul Plan</title>
-<style>/* planloft theme: minimal — mono, black & white, tight */
+<style>/* planloft theme: minimal-dual — the minimal skin, with real dark-mode support.
+   Identical typography and spacing to `minimal`; the only addition is a
+   prefers-color-scheme block so the page follows the reader's browser theme
+   instead of forcing light paper. */
 :root {
+  color-scheme: light dark;
   --ink: #111;
   --paper: #fff;
   --rule: #e5e5e5;
+  --fill: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e7ebe8;
+    --paper: #0f1210;
+    --rule: #272d29;
+    --fill: #191d1a;
+  }
 }
 * { box-sizing: border-box; }
 body {
@@ -29,17 +42,18 @@ h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; lette
 ul { padding-left: 1.1rem; }
 li { margin: 0.15rem 0; }
 a { color: var(--ink); text-underline-offset: 2px; }
-code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
-pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+code { background: var(--fill); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--fill); padding: 1rem; overflow: auto; border-radius: 4px; }
 hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 </style>
 </head>
 <body>
 <main class="planloft-plan">
 <article><style>
-  /* Theme-agnostic: planloft's page theme owns fg/bg. Everything here is a tint of the
-     host background (rgba greys) or a hue readable on both light and dark paper, so this
-     fragment never fights the theme — and never inverts on its own. */
+  /* The page theme (minimal-dual) owns fg/bg and flips on prefers-color-scheme.
+     Surfaces here are tints of whatever the host background is, so they follow it for
+     free; only the accent hues need a dark variant, gated on the same query so the two
+     can never disagree. */
   .sp {
     --sp-line:  rgba(128,138,132,0.35);
     --sp-mute:  rgba(112,122,116,1);
@@ -48,6 +62,15 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     --sp-bad:   #b3452f;
     --sp-code:  rgba(128,138,132,0.13);
     line-height:1.6;
+  }
+  @media (prefers-color-scheme: dark) {
+    .sp {
+      --sp-mute:  rgba(150,161,154,1);
+      --sp-accent:#7fd4a4;
+      --sp-warn:  #e0b169;
+      --sp-bad:   #e59a9a;
+      --sp-code:  rgba(128,138,132,0.16);
+    }
   }
   .sp h2 { margin-top:2.6em; padding-bottom:.3em; border-bottom:2px solid var(--sp-line); }
   .sp h3 { margin-top:1.9em; }
