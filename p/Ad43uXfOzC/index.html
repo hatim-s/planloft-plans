@@ -37,13 +37,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 <body>
 <main class="planloft-plan">
 <article><style>
-  .sp { --sp-line:#d9ded9; --sp-mute:#5f6b63; --sp-accent:#2f6b4a; --sp-warn:#8a5a12; --sp-bad:#8a2f2f;
-        --sp-bg:#fbfcfb; --sp-code:#f2f5f2; }
-  @media (prefers-color-scheme: dark) {
-    .sp { --sp-line:#2a322d; --sp-mute:#93a099; --sp-accent:#7fd4a4; --sp-warn:#e0b169; --sp-bad:#e59a9a;
-          --sp-bg:#12150f; --sp-code:#171b16; }
+  /* Theme-agnostic: planloft's page theme owns fg/bg. Everything here is a tint of the
+     host background (rgba greys) or a hue readable on both light and dark paper, so this
+     fragment never fights the theme — and never inverts on its own. */
+  .sp {
+    --sp-line:  rgba(128,138,132,0.35);
+    --sp-mute:  rgba(112,122,116,1);
+    --sp-accent:#2f8f5f;
+    --sp-warn:  #a3701a;
+    --sp-bad:   #b3452f;
+    --sp-code:  rgba(128,138,132,0.13);
+    line-height:1.6;
   }
-  .sp { line-height:1.6; }
   .sp h2 { margin-top:2.6em; padding-bottom:.3em; border-bottom:2px solid var(--sp-line); }
   .sp h3 { margin-top:1.9em; }
   .sp h4 { margin-top:1.4em; margin-bottom:.4em; font-size:1em; }
