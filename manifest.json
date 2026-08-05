@@ -2,15 +2,6 @@
   "version": 1,
   "deploys": [
     {
-      "id": "TGxDG1aRNa",
-      "project": "github.com/hatim-s/bolt",
-      "slug": "bolt-derived-path-dependencies",
-      "title": "Bolt Derived Path Dependencies Plan",
-      "kind": "plan",
-      "createdAt": "2026-07-05T11:36:08.335Z",
-      "expiresAt": "2026-08-04T12:10:31.419Z"
-    },
-    {
       "id": "EfMEfseCwD",
       "project": "github.com/hatim-s/ai-app-builder",
       "slug": "progress-and-roadmap",
