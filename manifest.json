@@ -189,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-07-27T15:42:54.616Z",
       "expiresAt": "2026-08-26T16:40:33.549Z"
+    },
+    {
+      "id": "tqXFifmuuB",
+      "project": "github.com/unify-apps/ua-builder-no-prompt",
+      "slug": "workflow-agent-knowledge-roadmap",
+      "title": "workflow-agent-knowledge-roadmap",
+      "kind": "note",
+      "createdAt": "2026-08-05T08:12:37.447Z",
+      "expiresAt": "2026-09-04T08:12:37.447Z"
     }
   ]
 }

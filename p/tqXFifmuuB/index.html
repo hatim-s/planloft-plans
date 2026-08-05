@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>workflow-agent-knowledge-roadmap</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body>
+<main class="planloft-plan">
+<article><style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: #111111;
+    font: 15px/1.58 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .planloft-plan { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+  .planloft-plan article { max-width: none !important; }
+  #roadmap { max-width: 1120px; margin: 0 auto; padding: 56px 28px 96px; }
+  #roadmap a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  #roadmap h1, #roadmap h2, #roadmap h3 { letter-spacing: -0.025em; line-height: 1.15; }
+  #roadmap h1 { max-width: 900px; margin: 12px 0 18px; font-size: clamp(2.35rem, 6vw, 5rem); font-weight: 650; }
+  #roadmap h2 { margin: 72px 0 18px; padding-top: 4px; font-size: clamp(1.55rem, 3vw, 2.25rem); }
+  #roadmap h3 { margin: 28px 0 10px; font-size: 1.08rem; }
+  #roadmap p { max-width: 82ch; }
+  #roadmap .eyebrow, #roadmap .meta, #roadmap .tag {
+    font-size: .76rem; letter-spacing: .09em; text-transform: uppercase;
+  }
+  #roadmap .meta { color: #555; }
+  #roadmap .lede { max-width: 790px; font-size: 1.18rem; line-height: 1.55; }
+  #roadmap .rule { height: 1px; margin: 38px 0; background: #d8d8d8; }
+  #roadmap .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  #roadmap .card, #roadmap .callout, #roadmap .phase {
+    border: 1px solid #cfcfcf; border-radius: 2px; padding: 18px;
+    background: transparent;
+  }
+  #roadmap .card p, #roadmap .phase p { margin-bottom: 0; }
+  #roadmap .callout { margin: 26px 0; border-width: 2px; }
+  #roadmap .callout strong { display: block; margin-bottom: 5px; }
+  #roadmap table { width: 100%; margin: 18px 0 28px; border-collapse: collapse; font-size: .9rem; }
+  #roadmap th, #roadmap td { padding: 11px 10px; border-bottom: 1px solid #d7d7d7; text-align: left; vertical-align: top; }
+  #roadmap th { font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; }
+  #roadmap code { padding: .08em .3em; border: 1px solid #d8d8d8; border-radius: 2px; font-size: .86em; }
+  #roadmap pre { overflow: auto; padding: 18px; border: 1px solid #d0d0d0; line-height: 1.45; }
+  #roadmap pre code { padding: 0; border: 0; }
+  #roadmap ul, #roadmap ol { max-width: 86ch; padding-left: 1.3rem; }
+  #roadmap li { margin: .42rem 0; }
+  #roadmap .status { display: inline-block; min-width: 3.1em; font-weight: 700; }
+  #roadmap .phases { counter-reset: phase; display: grid; gap: 12px; }
+  #roadmap .phase { display: grid; grid-template-columns: 52px 1fr; gap: 16px; }
+  #roadmap .phase::before { counter-increment: phase; content: counter(phase, decimal-leading-zero); font: 650 1.1rem/1 ui-monospace, monospace; }
+  #roadmap .phase h3 { margin-top: 0; }
+  #roadmap .sources li { margin-bottom: .7rem; }
+  #roadmap .muted { color: #5b5b5b; }
+  @media (max-width: 780px) {
+    #roadmap { padding: 34px 18px 72px; }
+    #roadmap .grid { grid-template-columns: 1fr; }
+    #roadmap .phase { grid-template-columns: 38px 1fr; }
+    #roadmap table { display: block; overflow-x: auto; white-space: normal; }
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #07110c; color: #f2f7f3; }
+    #roadmap .meta, #roadmap .muted { color: #aab7ae; }
+    #roadmap .rule { background: #314038; }
+    #roadmap .card, #roadmap .callout, #roadmap .phase,
+    #roadmap pre, #roadmap code { border-color: #3a4a40; }
+    #roadmap th, #roadmap td { border-bottom-color: #34443a; }
+  }
+  @media print {
+    body { background: #fff; color: #111; }
+    #roadmap { max-width: none; padding: 20px; }
+    #roadmap h2 { break-after: avoid; }
+    #roadmap .card, #roadmap .phase, #roadmap table { break-inside: avoid; }
+  }
+</style>
+
+<div id="roadmap">
+  <div class="eyebrow">Research report · 05 August 2026</div>
+  <h1>Workflow agent knowledge &amp; validation roadmap</h1>
+  <p class="lede">A source-grounded plan for deciding what workflow agents should reason about, what they should load on demand, and what the platform should enforce before a workflow reaches runtime.</p>
+  <p class="meta">UACode <code>1c24bac</code> · WWW <code>e6012dd</code> on <code>refactor/automation-cleanup-modular</code> · UA Builder <code>43509e0</code></p>
+
+  <div class="callout">
+    <strong>Decision</strong>
+    Do not begin by adding a large body of prompt knowledge. First repair the source catalog and the two destructive cleanup defects found in WWW. Then generate a versioned contract catalog, add deterministic validators, and retain only semantic choice, surprising runtime behavior, safety boundaries, and cross-node lifecycle rules in skills.
+  </div>
+
+  <nav aria-label="Report sections">
+    <a href="#findings">Critical findings</a> ·
+    <a href="#current">Current setup</a> ·
+    <a href="#architecture">Target architecture</a> ·
+    <a href="#skills">Skill portfolio</a> ·
+    <a href="#validation">Validation backlog</a> ·
+    <a href="#roadmap-steps">Incremental roadmap</a> ·
+    <a href="#evidence">Evidence</a>
+  </nav>
+
+  <h2 id="scope">Scope and evidence standard</h2>
+  <p>The research combined three read-only code scouts and a direct audit of the active cleanup pipeline. It inventoried all Storage resources, 229 resources across ten internal platform domains, and 178 resources across utilities, files, code, variables, caches, streams, signals, and latches. The platform scout traced 196 Java implementations; the utility scout traced the corresponding Java builders, runtime handlers, selected tests, and checked-in platform-feature workflows.</p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="tag">Authority 1</div>
+      <h3>Java runtime</h3>
+      <p>Builders, action handlers, trigger handlers, dynamic schema providers, and runtime validation define what executes.</p>
+    </section>
+    <section class="card">
+      <div class="tag">Authority 2</div>
+      <h3>Node contracts</h3>
+      <p><code>configs/workflow-nodes</code> defines the authoring surface. Any disagreement with Java is a defect to resolve, not something to silently teach around.</p>
+    </section>
+    <section class="card">
+      <div class="tag">Evidence only</div>
+      <h3>Workflows and notes</h3>
+      <p>Checked-in workflows show real conventions. Notes accelerate discovery but are not normative: UACode’s own wiki stress audit found guessed fields and false entity names.</p>
+    </section>
+  </div>
+
+  <p class="muted">Usage counts in this report are checked-in <code>configs/platform-features</code> occurrences, not production telemetry. The runtime skill list is a UAT snapshot fetched on 03 August 2026, not a live read.</p>
+
+  <h2 id="findings">Critical findings</h2>
+  <table>
+    <thead><tr><th>Priority</th><th>Finding</th><th>Why it matters</th><th>Disposition</th></tr></thead>
+    <tbody>
+      <tr><td><span class="status">P0</span></td><td>WWW clears every <code>create_variables.inputs</code>.</td><td>Java initializes values from those inputs; cleanup currently changes workflow behavior and a test codifies the loss.</td><td>Remove the clearing step. Preserve inputs; validate keys and schema mirroring.</td></tr>
+      <tr><td><span class="status">P0</span></td><td>Storage field cleanup corrupts valid aliases such as <code>mTm</code> and incompletely canonicalizes nested paths.</td><td>A supported backend system field can become <code>properties_mTm</code>.</td><td>Fix alias-aware canonicalization before expanding Storage cleanup.</td></tr>
+      <tr><td><span class="status">P0</span></td><td>Twelve internal resource schemas contain <code>required</code> names absent from <code>properties</code>.</td><td>Generic schema validation cannot infer the intended contract.</td><td>Add global UACode catalog lint and correct the contracts.</td></tr>
+      <tr><td><span class="status">P0</span></td><td>Multiple JSON↔Java contracts disagree.</td><td>Examples: signal output, notification receiver/output, auth outputs, unified-entity fields, file copy options, append-line type, template fallback.</td><td>Fix source/runtime contracts and denylist unsafe resources until resolved.</td></tr>
+      <tr><td><span class="status">P0</span></td><td>Current variable and code skills contain false claims.</td><td><code>find_and_update_variables.source</code> is a plain name, Playwright uses <code>script</code>, and Python supports dependency modes.</td><td>Correct after grounding; add variant-specific validators.</td></tr>
+      <tr><td><span class="status">P1</span></td><td>Existing skills mix judgment, generated catalog data, deterministic mechanics, and temporary defects.</td><td>This inflates context and makes stale workarounds durable.</td><td>Split routing, skills, generated references, and validators into distinct layers.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The malformed catalog entries</h3>
+  <p>The complete <code>required ⊆ properties</code> scan found these twelve concrete defects:</p>
+  <ul>
+    <li><code>standard_entities_create_api_access_profile.resourceType</code></li>
+    <li><code>standard_entities_deploy_entity.object_type</code></li>
+    <li><code>standard_entities_fetch_deploy_entities.object_type</code></li>
+    <li><code>standard_entities_fetch_users_roles.fetchBy</code></li>
+    <li><code>standard_entities_get_deploy_entity.object_type</code></li>
+    <li><code>standard_entities_restore_deployed_entity.object_type</code></li>
+    <li><code>notification_delete_all.eventType</code></li>
+    <li><code>notification_delete_notification.eventType</code></li>
+    <li><code>notification_mark_notification_as_read.eventType</code></li>
+    <li><code>unified_entity_find_by_sql.model_id</code></li>
+    <li><code>auth_perform_multipurpose_operation.payload</code></li>
+    <li><code>auth_update_identity_provider.identityProviderId</code></li>
+  </ul>
+
+  <h2 id="current">Current workflow-agent setup</h2>
+  <p>The local checkout has twelve relevant skills. Builder/editor load implementation skills dynamically; the planner loads business/capability skills and debugging support. The 03 August UAT snapshot exposes nine core skills to builder/editor and nine to planner. Local files and utilities work is newer than that snapshot and is therefore not claimed as published.</p>
+
+  <table>
+    <thead><tr><th>Current skill</th><th>Role today</th><th>Assessment</th></tr></thead>
+    <tbody>
+      <tr><td><code>callables</code></td><td>Callable/API/interface triggers, calls, responses, deployment</td><td>Keep semantic contract; move exhaustive variants to references; enforce leaf/schema rules in WWW.</td></tr>
+      <tr><td><code>storage-records</code></td><td>CRUD, filters, patches, triggers, outputs</td><td>Keep action-choice and safety judgment; generate contracts; remove stale clone and multi-trigger warnings.</td></tr>
+      <tr><td><code>analytics-and-reports</code></td><td>Aggregates, reports, SQL, exports</td><td>Keep; add the single audit family here rather than a new skill.</td></tr>
+      <tr><td><code>platform-users-and-assets</code></td><td>Users, teams, roles, permissions, many admin actions</td><td>Too broad. Retain identity/recipient resolution; extract workflow operations and notifications.</td></tr>
+      <tr><td><code>files-and-attachments</code></td><td>File objects, internal file actions, document formats, attachments</td><td>Convert to router plus references for file core, iterators, document connectors, and attachment envelopes.</td></tr>
+      <tr><td><code>utilities</code></td><td>In-memory transforms, encryption, templates</td><td>Keep as a sibling for now; correct runtime traps and route file-shaped work away.</td></tr>
+      <tr><td><code>code-by-unifyapps</code></td><td>Language variants, schemas, pills, libraries</td><td>Slim heavily; correct Playwright and Python; move ordinary programming guidance and catalogs to references.</td></tr>
+      <tr><td><code>variable-by-unifyapps</code></td><td>Scalar/list variable lifecycle</td><td>Correct create inputs and plain-name find/update source; validate ancestry and duplicate names.</td></tr>
+      <tr><td><code>branching-and-convergence</code></td><td>IF, BRANCH, SCOPE, convergence</td><td>Keep cross-node semantics; migrate mechanically provable topology to blockers.</td></tr>
+      <tr><td><code>workflow-error-handling</code></td><td>Step error, retry, SCOPE behavior</td><td>Keep intent and trade-offs; validate mirrored runtime fields and retry bounds.</td></tr>
+      <tr><td><code>workflow-performance</code></td><td>Node cache and batch-callable choices</td><td>Keep; add a small cache-actions reference, not another top-level skill.</td></tr>
+      <tr><td><code>workflow-debugging</code></td><td>Side-effect gate and trace triage</td><td>Keep planner-only; place temporary runtime defects in generated operational notes.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>What WWW already does</h3>
+  <p>The active pipeline is modular and substantial. It prepares structure, loads one static asset wave, normalizes known representations, resolves output schemas, validates pills and generic inputs, applies UI-equivalent defaults, runs callable/API and SQL checks, and invokes backend validation once for remote cleanup. New work should extend these seams, not create a parallel validator.</p>
+  <pre><code>prepareWorkflow
+  clean context → infer types → disable loop capture
+  → structural round-trip → topology → group IDs
+load static assets once
+normalizeWorkflow
+resolveOutputs
+validatePills
+validateInputs
+validateNodes
+backend validation once</code></pre>
+  <p>Safe cleanup is semantics-preserving and idempotent. If a repair requires guessing business intent, emit a blocker or advisory instead.</p>
+
+  <h2 id="architecture">Target knowledge architecture</h2>
+  <pre><code>Layer 0  Source contracts
+         UACode node JSON + Java builders/actions + dynamic schema providers
+                    ↓ generated, revision-stamped
+Layer 1  workflow-capability-index.md
+         tiny always-available router; no field tables or runtime exposition
+                    ↓ load on exact intent
+Layer 2  Skills
+         judgment, surprising semantics, safety, cross-node lifecycle
+                    ↓ consult only relevant topic
+Layer 3  Generated knowledge
+         action inputs, required/conditional keys, enums, outputs, source links,
+         known Java/JSON conflicts, checked-in usage counts
+                    ↓ prove before publish
+Layer 4  WWW + UACode validation
+         canonicalizers, blockers, advisories, catalog and drift CI</code></pre>
+
+  <h3>The capability index</h3>
+  <p>Add <code>prompts/skills/workflow-capability-index.md</code>, approximately 60–100 lines, and make it available to planner, builder, and editor. It should contain only:</p>
+  <ul>
+    <li>User intent → owning skill.</li>
+    <li><code>appName/resourceName</code> family → owning skill or knowledge-only route.</li>
+    <li>“Wrong skill? stop and switch” boundaries.</li>
+    <li>Authority order and the source revision/date.</li>
+    <li>Planner owns business intent; builder/editor own emission contracts; cleanup owns deterministic invariants.</li>
+    <li>Never infer one action’s input/output shape from a similarly named action.</li>
+  </ul>
+  <p>It should not contain action tables, copied schemas, tutorials, examples, or descriptions of runtime orchestration.</p>
+
+  <h3>Generated knowledge</h3>
+  <p>Generate <code>prompts/knowledge/workflow-nodes/&lt;family&gt;/</code> from UACode. Each action entry should include resource name, inputs, required and conditional fields, enums, outputs/pill paths, Java builder/runtime pointers, known conflicts, checked-in usage count, source SHA, and generation date. Generated files should fail CI on unexplained drift. A reviewed delta overlay should record facts only Java can reveal.</p>
+
+  <h3>Decision rule</h3>
+  <table>
+    <thead><tr><th>Put it in…</th><th>When the fact is…</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td>Capability index</td><td>A routing fact needed before the agent knows what to load.</td><td>Notification vs user lookup; signal vs latch; meta-authoring only.</td></tr>
+      <tr><td>Skill</td><td>A semantic choice, runtime surprise, safety decision, or cross-node lifecycle.</td><td>All-signals fan-in; full replacement vs patch; sync vs async callable.</td></tr>
+      <tr><td>Generated knowledge</td><td>Exhaustive, schema-shaped, source-derived, or likely to drift.</td><td>Required keys, enum literals, output pill paths, action inventories.</td></tr>
+      <tr><td>Canonicalizer</td><td>A single meaning has multiple mechanically equivalent spellings.</td><td>Known pill braces, storage aliases, dynamic loader placement.</td></tr>
+      <tr><td>Blocking validator</td><td>The workflow is provably invalid or unsafe.</td><td>Empty destructive filter, missing response leaf, zero iterator batch size.</td></tr>
+      <tr><td>Advisory</td><td>The shape is legal but risky and intent cannot be inferred.</td><td>Unbounded long wait, broad audit query, retry without idempotency.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="skills">Recommended skill portfolio</h2>
+  <table>
+    <thead><tr><th>Priority</th><th>Skill</th><th>Trigger and core knowledge</th><th>Agent placement</th></tr></thead>
+    <tbody>
+      <tr><td>P1</td><td><code>signals-and-waits</code></td><td>Callbacks, approval, rendezvous, fan-in, streaming coordination. Signal IDs, all-ID wait, timeout pairing, long-wait persistence, loop completion.</td><td>Planner: coordination intent. Builder/editor: exact contract.</td></tr>
+      <tr><td>P1</td><td><code>notifications</code></td><td>In-app/push channel, user vs group receiver cardinality, template/CTA/application, runtime output.</td><td>Planner: channel and business recipient. Builder/editor: fields and pills.</td></tr>
+      <tr><td>P1</td><td><code>workflow-operations</code></td><td>Deploy, run lookup, cancel, retry/repeat, cleanup and operational triggers; permissions and recursion guards.</td><td>Planner: remediation intent. Builder/editor: run/workflow identifiers.</td></tr>
+      <tr><td>P1</td><td><code>workflow-latches</code></td><td>Known fan-out completion: create → dispatch → countdown → wait, positive count, persistence and timeout.</td><td>Planner: choose latch vs signal. Builder/editor: topology and inputs.</td></tr>
+      <tr><td>P2</td><td><code>workflow-streams</code></td><td>Delivery/commit/replay/delay/DLQ policy, map event payloads, consumer groups and commit dependencies.</td><td>Planner: delivery semantics. Builder/editor: exact stream lifecycle.</td></tr>
+      <tr><td>P2</td><td><code>unified-entity-graph</code></td><td>Explicit unified-model, relationship, OpenCypher/Gremlin intent; direction, field mappings, query outputs, RBAC risks.</td><td>Planner: domain graph intent. Builder/editor: conditional skill only.</td></tr>
+      <tr><td>P2</td><td><code>authentication-and-sessions</code></td><td>Only after workflow-specific contracts are corrected. Actor/session semantics, MFA and surface differences, secret-handling safety.</td><td>Planner: explicit journey and actor. Builder/editor: workflow surface only.</td></tr>
+      <tr><td>P3</td><td><code>data-pipelines</code></td><td>Pipeline lifecycle and triggers if observed demand justifies it.</td><td>Conditional; do not add until usage/evals demonstrate need.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Do not add top-level skills for</h3>
+  <ul>
+    <li><code>audit_by_unifyapps</code>: fold the one read-only report action into <code>analytics-and-reports</code>.</li>
+    <li><code>platform_tools_by_unifyapps</code>: route as meta-authoring knowledge only; ordinary business workflows should not emit discovery actions.</li>
+    <li>Cache actions: add a focused reference beneath <code>workflow-performance</code>.</li>
+    <li>Every connector/resource: ordinary schema facts belong in generated knowledge and validators.</li>
+  </ul>
+
+  <h3>Placement matrix</h3>
+  <table>
+    <thead><tr><th>Concern</th><th>Planner</th><th>Builder</th><th>Editor</th><th>Deterministic pipeline</th></tr></thead>
+    <tbody>
+      <tr><td>Business capability and ambiguity</td><td>Own</td><td>Consume brief</td><td>Consume edit intent</td><td>—</td></tr>
+      <tr><td>Action/resource selection</td><td>Name capability only</td><td>Own</td><td>Own</td><td>Validate known pair</td></tr>
+      <tr><td>Exact inputs, enums, pills</td><td>Never</td><td>Generated ref + skill</td><td>Generated ref + skill</td><td>Enforce</td></tr>
+      <tr><td>Destructive scope / auth actor</td><td>Clarify intent</td><td>Emit resolved scope</td><td>Preserve or narrow</td><td>Block unsafe form</td></tr>
+      <tr><td>Cross-node topology and lifecycle</td><td>Describe behavior</td><td>Construct</td><td>Surgically preserve</td><td>Prove graph invariants</td></tr>
+      <tr><td>Runtime troubleshooting</td><td>Debugging skill</td><td>—</td><td>—</td><td>Structured violations/evidence</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="validation">Validation and cleanup backlog</h2>
+
+  <h3>P0 · prevent corruption and catalog drift</h3>
+  <ul>
+    <li><strong>WWW:</strong> preserve <code>create_variables.inputs</code>; normalize only output schema. Replace the current destructive test with preservation and schema-key tests.</li>
+    <li><strong>WWW:</strong> canonicalize every Java-supported Storage system alias and nested path form. Add idempotence cases for aliases, verbose names, dot paths, and underscore paths.</li>
+    <li><strong>UACode CI:</strong> globally enforce <code>required ⊆ properties</code>, with explicit dynamic-schema exceptions.</li>
+    <li><strong>UACode contract parity:</strong> compare resource registrations with JSON inventory and Java-consumed input/output keys. Fail unexplained additions, removals, and type conflicts.</li>
+    <li><strong>Denylist until fixed:</strong> <code>files_by_unifyapps_copy_file</code>; cleanup cannot safely infer append vs overwrite.</li>
+    <li><strong>Runtime fixes:</strong> return booleans for Storage delete/archive, align append-line type, correct signal/notification/auth/unified-entity schemas, and prevent encryption secret logging.</li>
+  </ul>
+
+  <h3>P1 · common blocking validations</h3>
+  <table>
+    <thead><tr><th>Family</th><th>Add to WWW / UACode</th><th>Safe repair?</th></tr></thead>
+    <tbody>
+      <tr><td>Variables</td><td>Input/output schemas mirror; keys are declared; normal update source is a valid upstream pill; find/update source is a unique plain name; reject duplicate names.</td><td>Output-schema mirroring only. Never delete values.</td></tr>
+      <tr><td>Callables/API</td><td>Every reachable leaf has matching response; result keys/types match trigger; API response names/status/body/2xx match; async output exposes only <code>result</code>.</td><td>No business-value fill, deployment, or version change.</td></tr>
+      <tr><td>Storage</td><td>Action-specific required IDs/payloads; nonempty patch/bulk operations; destructive multi-write filter/page guard; alias-aware fields.</td><td>Known spelling/default only.</td></tr>
+      <tr><td>Code</td><td>Exact variant keys; Playwright <code>script</code> and flags; Python mode conditionals; no registry secrets.</td><td>No code rewrite.</td></tr>
+      <tr><td>Signals/latches</td><td>Nonempty IDs, emit/wait correlation where literal, positive latch count, create/wait/countdown topology, timeout duration/unit pairing.</td><td>Never invent IDs or timeouts.</td></tr>
+      <tr><td>Notifications</td><td>User receiver array, group receiver scalar, in-app template ID, actual delete/read IDs, corrected output path.</td><td>No recipient/channel guessing.</td></tr>
+      <tr><td>Error/retry/cache</td><td><code>fallbackMode</code> equals runtime <code>options.stepError</code>; MANUAL has error edge; retry bounds; cache TTL/policy/key compatibility.</td><td>Mirror only when one valid source exists.</td></tr>
+      <tr><td>Branching/pills</td><td>Default/minimum arms, sequential IDs, edge/condition parity, producer dominance, mapped-array/type compatibility.</td><td>IDs/group IDs only if deterministic.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>P2 · specialist validations and advisories</h3>
+  <ul>
+    <li><strong>Files/iterators:</strong> file object vs URL/base64 compatibility; upload discriminators; batch size ≥ 1; JSON iterator encoding/start fields; text iterator’s distinct defaults; action-specific outputs.</li>
+    <li><strong>Utilities:</strong> list SQL has data sources and referenced names; nonempty filters; 1-based index bounds where literal; explicit epoch unit; warn when blank date would silently become now.</li>
+    <li><strong>Streams:</strong> object event, consumer group for commit flows, delay pairing, DLQ dependency, replay/force-republish semantics.</li>
+    <li><strong>Unified entity:</strong> Java-required relationship fields, bounded query limit, destructive filter, explicit permission for <code>skipRBAC</code>, corrected outputs.</li>
+    <li><strong>Auth:</strong> workflow vs interface surface, supported pills, explicit brief requirement, secret/session logging sinks.</li>
+    <li><strong>Workflow operations:</strong> bounded cancel/cleanup target, required run/workflow IDs, self-retry maximum/guard.</li>
+    <li><strong>Analytics/audit:</strong> projection/filter/sort/time semantics; advise when omitted <code>assetId</code> broadens an audit query.</li>
+  </ul>
+
+  <h3>Runtime surprises worth teaching—until fixed</h3>
+  <ul>
+    <li>Variable creation values are real node inputs; find/update resolves a plain name, while normal update uses a producer pill.</li>
+    <li>Plural signal wait waits for all IDs; long waits preserve only selected outputs; loop completion uses <code>completed: true</code>.</li>
+    <li>In-app notifications need <code>content.templateId</code>; USER and USER_GROUP receiver cardinalities differ.</li>
+    <li>Storage patch accepts bare or dotted field names, not underscore filter spelling; <code>UNSET</code> needs no value.</li>
+    <li>List indexing is 1-based; blank date can become “now”; an empty/invalid utility filter can evaluate true.</li>
+    <li>JSON iterator defaults differ from text iterator; zero batch size can loop indefinitely.</li>
+    <li>AES-SHA mismatch returns <code>isValid:false</code> instead of throwing; the flow must branch on it.</li>
+    <li>Async callable output is only <code>{result:boolean}</code>; synchronous callee fields are invalid pills.</li>
+  </ul>
+
+  <h2 id="roadmap-steps">Incremental roadmap</h2>
+  <div class="phases">
+    <section class="phase">
+      <div><h3>Freeze evidence and protect current work</h3><p>Record UACode/WWW/UA Builder SHAs, preserve the dirty checkout, publish a machine-readable issue ledger, and assign every claim an owner, source path, and intended layer.</p><p><strong>Exit:</strong> no untracked contract decision; zero source edits mixed into research.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>Fix P0 source and cleanup defects</h3><p>Stop variable-value deletion; repair Storage alias/nested canonicalization; add global schema lint; fix or denylist broken resource contracts; update stale skill claims only after source decisions land.</p><p><strong>Exit:</strong> regression tests fail on the old behavior and pass on preservation/canonicalization.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>Build the contract generator</h3><p>Generate action catalogs from JSON plus Java registration/consumption overlays. Stamp revision and date. Emit an unresolved-conflict report; never silently merge conflicting authorities.</p><p><strong>Exit:</strong> deterministic regeneration is clean and CI catches a seeded drift.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>Add high-value WWW blockers</h3><p>Implement variable, callable, Storage, Playwright, signal/latch, notification, retry/error, branch, and pill rules in the existing phase pipeline. Preserve fixed ordering and one asset wave.</p><p><strong>Exit:</strong> focused rule tests, idempotence, immutability, package typecheck, and backend parity fixtures pass.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>Add the routing index</h3><p>Ship the 60–100 line capability index to planner/builder/editor. Test that it routes exact intents without leaking implementation fields into planner briefs.</p><p><strong>Exit:</strong> routing evals cover every current and proposed skill, including wrong-skill cases.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>Refactor existing skills</h3><p>Slim Storage, callables, code, files, variables, and platform. Move exhaustive tables to generated references. Remove rules now owned by deterministic validation and split platform administration from identity resolution.</p><p><strong>Exit:</strong> fewer tokens, no lost semantic decisions, and builder/editor goldens stay equivalent or improve.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>First new-skill wave</h3><p>Add signals-and-waits, workflow-latches, notifications, and workflow-operations. Fold audit into analytics and cache actions into workflow-performance.</p><p><strong>Exit:</strong> planner business-language tests plus builder/editor valid/invalid goldens for each family.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>Conditional specialist wave</h3><p>Add streams, unified-entity graph, and authentication only after their contracts and security boundaries are corrected. Add data-pipelines only if evals or production telemetry show demand.</p><p><strong>Exit:</strong> no skill teaches around an unresolved blocker; security-sensitive flows require explicit intent.</p></div>
+    </section>
+    <section class="phase">
+      <div><h3>Continuous drift and quality gates</h3><p>Run catalog lint, Java-registration parity, generated-doc drift, WWW validators, agent routing evals, golden workflow tests, and prompt-size budgets in CI. Track validator false positives and skill load rates.</p><p><strong>Exit:</strong> a node contract change cannot land without updated generated knowledge or an explicit reviewed conflict.</p></div>
+    </section>
+  </div>
+
+  <h3>Recommended delivery slices</h3>
+  <ol>
+    <li><strong>PR A — Contract guardrails:</strong> UACode catalog lint and twelve schema fixes; explicit denylist ledger.</li>
+    <li><strong>PR B — Cleanup correctness:</strong> variable preservation and Storage canonicalization with focused tests.</li>
+    <li><strong>PR C — Generator:</strong> action/reference generation, Java overlay, revision stamp, drift CI.</li>
+    <li><strong>PR D — Common validators:</strong> variables, callables, Storage, Playwright, error/retry, branches/pills.</li>
+    <li><strong>PR E — Knowledge routing:</strong> capability index, skill slimming, routing evals.</li>
+    <li><strong>PR F — Coordination skills:</strong> signals, latches, notifications, workflow operations plus validators.</li>
+    <li><strong>PR G — Specialists:</strong> streams, unified entity, auth after source corrections.</li>
+  </ol>
+
+  <h3>Definition of done</h3>
+  <ul>
+    <li>Every skill fact is either semantic judgment or links to a revisioned generated source.</li>
+    <li>No skill preserves a workaround for a corrected deterministic defect.</li>
+    <li>Planner output stays in business language; builder/editor load exact contracts only when relevant.</li>
+    <li>Every blocking validator has a minimal failing fixture and a valid near-neighbor fixture.</li>
+    <li>Every canonicalizer is immutable, idempotent, and meaning-preserving.</li>
+    <li>Unknown or runtime-defined contracts fail open only where the existing pipeline explicitly permits it; confirmed invalid contracts fail closed.</li>
+    <li>Checked-in notes cannot introduce a field/entity claim without a source pointer.</li>
+  </ul>
+
+  <h2 id="evidence">Evidence index</h2>
+  <p class="muted">Paths are repository-relative to the named checkout. Line references are from the audited revisions above.</p>
+  <ul class="sources">
+    <li><strong>WWW pipeline:</strong> <code>packages/llm-tools/src/tools/automation/README.md:1-44,68-83,125-134</code>; <code>engine/runCleanupPipeline.ts:54-99,102-165,177-196</code>.</li>
+    <li><strong>Variable P0:</strong> WWW <code>steps/normalizeWorkflow/contracts/normalizeVariableNodeOutputSchema.ts:32-49</code>; UACode <code>workflow/rt/.../variable/CreateVariableAction.java:35-50</code>, <code>UpdateVariablesAction.java:52-98</code>, <code>FindAndUpdateVariablesAction.java:24-41,59-79</code>.</li>
+    <li><strong>Storage P0:</strong> WWW <code>domain/storageFieldPath.ts:3-33</code>; UACode <code>infra/utils/.../BaseEntity.java:22-31</code>, <code>entity/client/.../EntityUtils.java:144-170,440-485</code>.</li>
+    <li><strong>Storage contracts:</strong> UACode <code>StorageByUnifyAppsActionBuilder.java:79-133,142-182</code>; update/bulk action JSON and Java handlers; delete/archive handlers; dynamic schema providers.</li>
+    <li><strong>Signals:</strong> <code>EmitSignalAction.java:23-33</code>, <code>WaitForSignalsAction.java:50-97,110-179</code>, <code>LongWaitForSignalsAction.java:37-85</code>, <code>SignalObserver.java:98-105</code>.</li>
+    <li><strong>Notifications:</strong> <code>SendNotificationAction.java:44-80</code>; <code>notification_by_unifyapps_send_notification.json:12-54,260-281,526-535</code>.</li>
+    <li><strong>Callables:</strong> <code>BaseWorkflowTriggerHandler.java:22-67</code>, <code>ReturnResponseToApiHandlerBuilder.java:103-197</code>, <code>CallWorkflowNodeRuntime.java:147-174</code>.</li>
+    <li><strong>Runtime options:</strong> <code>DefaultNodeRuntimeBuilder.java:22-29,65-70</code>, <code>RetryConfig.java:15-29</code>, <code>Options.java:18-39</code>, <code>CacheConfig.java:9-15,57-65</code>.</li>
+    <li><strong>Code:</strong> <code>code_by_unifyapps_playwright.json:120-156</code>, <code>PlaywrightScriptExecuteAction.java:33-73</code>, <code>code_by_unifyapps_python.json:120-274</code>, <code>PythonCodeExecutionAction.java:78-111,163-184,208-286</code>.</li>
+    <li><strong>Files/utilities:</strong> <code>CopyFileAction.java:48-63,89-106</code>, <code>AbstractJsonIterator.java:99-113,199-220</code>, <code>BatchedJsonRecordsIterator.java:56-72</code>, <code>RunSQLQueryOnListAction.java:35-75</code>, <code>DateToEpochAction.java:31-49</code>.</li>
+    <li><strong>Unified entity/auth:</strong> <code>UnifiedEntityCreateRelationshipAction.java:34-43</code>, <code>UnifiedEntityDeleteRelationshipsAction.java:28-37</code>, <code>AuthByUnifyAppsActionBuilder.java:50-87</code>, <code>AuthRestAPI.java:961-1150</code>.</li>
+    <li><strong>Notes reliability:</strong> <code>docs/harness-wiki/README.md:1-21</code>; <code>STRESS_TEST_REPORT.md:15-19,38-60</code>. The latter records actively misleading notes and guessed schema fields.</li>
+    <li><strong>Current local skill surface:</strong> <code>prompts/skills/*.md</code> and <code>.claude/agents/workflow/{workflow-planner,workflow-builder,workflow-editor}.md</code>. UAT snapshot: <code>.scratchpad/workflow-agents.json:1-8</code>, fetched <code>2026-08-03T14:54:39.064Z</code>.</li>
+  </ul>
+
+  <div class="rule"></div>
+  <p class="meta">Research artifact only. No workflow prompt, skill, UACode, or WWW source file was modified.</p>
+</div>
+</article>
+</main>
+</body>
+</html>
