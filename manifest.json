@@ -209,15 +209,6 @@
       "expiresAt": "2026-09-05T04:53:32.588Z"
     },
     {
-      "id": "nKsD1IWDXi",
-      "project": "path-125fea",
-      "slug": "attest-implementation-plan",
-      "title": "attest — Implementation Plan",
-      "kind": "plan",
-      "createdAt": "2026-08-06T06:42:27.329Z",
-      "expiresAt": "2026-09-05T06:42:27.330Z"
-    },
-    {
       "id": "d6omNNpVrp",
       "project": "github.com/hatim-s/attest",
       "slug": "attest-implementation-plan",
@@ -225,6 +216,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T05:03:27.678Z",
       "expiresAt": "2026-09-05T07:32:33.156Z"
+    },
+    {
+      "id": "nKsD1IWDXi",
+      "project": "path-125fea",
+      "slug": "attest-implementation-plan",
+      "title": "attest — Implementation Plan",
+      "kind": "plan",
+      "createdAt": "2026-08-06T06:42:27.329Z",
+      "expiresAt": "2026-09-05T07:33:42.150Z"
     }
   ]
 }
