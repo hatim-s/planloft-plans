@@ -207,6 +207,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T04:15:33.970Z",
       "expiresAt": "2026-09-05T04:53:32.588Z"
+    },
+    {
+      "id": "d6omNNpVrp",
+      "project": "github.com/hatim-s/attest",
+      "slug": "attest-implementation-plan",
+      "title": "attest — Implementation Plan",
+      "kind": "plan",
+      "createdAt": "2026-08-06T05:03:27.678Z",
+      "expiresAt": "2026-09-05T05:03:27.679Z"
     }
   ]
 }
