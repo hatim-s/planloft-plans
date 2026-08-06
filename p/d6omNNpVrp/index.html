@@ -60,23 +60,23 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <p>Contracts block nearly everything. Tracks 0A/0B/0C run in parallel; specs within 0A are ∥ after the envelope shapes are sketched together in one sitting.</p>
 <h3>Track 0A — Contract specs (write as public-ready docs in <code>docs/specs/</code>) <code>[fable]</code></h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>0A.1</strong> (M) Agent contract spec: CLI invocation (stdin/stdout JSON envelope, exit codes, env allowlist) + HTTP equivalent; timeout/retry/cancellation/concurrency semantics. dep: —</li>
-<li><input disabled="" type="checkbox"> <strong>0A.2</strong> (M) Trace schema spec <code>attest.trace/v1alpha1</code>: span envelope, OTel GenAI attribute mapping table, unknown-field preservation, versioning policy. dep: — ∥</li>
-<li><input disabled="" type="checkbox"> <strong>0A.3</strong> (M) Config format spec: suites/cases/datasets/metrics/judges/run settings; <code>config_version</code>; YAML/JSON equivalence rules. dep: — ∥</li>
-<li><input disabled="" type="checkbox"> <strong>0A.4</strong> (S) Metric contract spec: declarative assertion set v0 + executable/HTTP metric interface (<code>{case, output, trace}</code> → score JSON). dep: 0A.3 shapes</li>
-<li><input disabled="" type="checkbox"> <strong>0A.5</strong> (M) Zod schemas for all four contracts in <code>packages/contracts</code>; generated JSON Schema checked into <code>schemas/</code>; golden tests guarding Zod→JSON-Schema conversion. <code>[codex:sol]</code> dep: 0A.1–0A.4</li>
+<li><input disabled="" type="checkbox"> <strong>0A.1</strong> (M) Agent contract spec: CLI invocation (stdin/stdout JSON envelope, exit codes, env allowlist) + HTTP equivalent; timeout/retry/cancellation/concurrency semantics. dep: — ⏳ phase0-orchestrator 2026-08-06</li>
+<li><input disabled="" type="checkbox"> <strong>0A.2</strong> (M) Trace schema spec <code>attest.trace/v1alpha1</code>: span envelope, OTel GenAI attribute mapping table, unknown-field preservation, versioning policy. dep: — ∥ ⏳ phase0-orchestrator 2026-08-06</li>
+<li><input disabled="" type="checkbox"> <strong>0A.3</strong> (M) Config format spec: suites/cases/datasets/metrics/judges/run settings; <code>config_version</code>; YAML/JSON equivalence rules. dep: — ∥ ⏳ phase0-orchestrator 2026-08-06</li>
+<li><input disabled="" type="checkbox"> <strong>0A.4</strong> (S) Metric contract spec: declarative assertion set v0 + executable/HTTP metric interface (<code>{case, output, trace}</code> → score JSON). dep: 0A.3 shapes ⏳ phase0-orchestrator 2026-08-06</li>
+<li><input disabled="" type="checkbox"> <strong>0A.5</strong> (M) Zod schemas for all four contracts in <code>packages/contracts</code>; generated JSON Schema checked into <code>schemas/</code>; golden tests guarding Zod→JSON-Schema conversion. <code>[codex:sol]</code> dep: 0A.1–0A.4 ⏳ phase0-orchestrator 2026-08-06</li>
 </ul>
 <h3>Track 0B — Repo scaffold <code>[codex:terra]</code>, ∥ with 0A</h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>0B.1</strong> (M) Monorepo: Bun workspaces + Turborepo; packages <code>cli</code>, <code>core</code>, <code>contracts</code>, <code>web</code>, <code>schemas</code>, <code>docs</code>; tsconfig project refs; ESLint + Prettier; <code>docs/SCRIPTS.md</code> seeded. dep: —</li>
-<li><input disabled="" type="checkbox"> <strong>0B.2</strong> (S) CI skeleton (GitHub Actions): typecheck, lint, format-check, Vitest, on macOS + Linux, Node 22 + Bun. dep: 0B.1</li>
-<li><input disabled="" type="checkbox"> <strong>0B.3</strong> (S) Fixture/testing conventions: <code>conformance/</code> layout, fake-agent harness skeleton, colocated test policy doc. dep: 0B.1</li>
-<li><input disabled="" type="checkbox"> <strong>0B.4</strong> (S) <code>.logs/</code> + scratch conventions, <code>.gitignore</code> (incl. <code>PLAN.md</code>, <code>.attest/</code>, <code>.logs/</code>), LICENSE (Apache-2.0), NOTICE, DCO. dep: 0B.1</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0B.1</strong> (M) Monorepo: Bun workspaces + Turborepo; packages <code>cli</code>, <code>core</code>, <code>contracts</code>, <code>web</code>, <code>schemas</code>, <code>docs</code>; tsconfig project refs; ESLint + Prettier; <code>docs/SCRIPTS.md</code> seeded. dep: — ✅ phase0-orchestrator 2026-08-06 scaffolded and validated</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0B.2</strong> (S) CI skeleton (GitHub Actions): typecheck, lint, format-check, Vitest, on macOS + Linux, Node 22 + Bun. dep: 0B.1 ✅ phase0-orchestrator 2026-08-06 scaffolded and validated</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0B.3</strong> (S) Fixture/testing conventions: <code>conformance/</code> layout, fake-agent harness skeleton, colocated test policy doc. dep: 0B.1 ✅ phase0-orchestrator 2026-08-06 scaffolded and validated</li>
+<li><input disabled="" type="checkbox"> <strong>0B.4</strong> (S) <code>.logs/</code> + scratch conventions, <code>.gitignore</code> (incl. <code>PLAN.md</code>, <code>.attest/</code>, <code>.logs/</code>), LICENSE (Apache-2.0), NOTICE, DCO. dep: 0B.1 ⏳ phase0-orchestrator 2026-08-06</li>
 </ul>
 <h3>Track 0C — Human-gated ∥</h3>
 <ul>
 <li><input disabled="" type="checkbox"> <strong>0C.1</strong> (S) <strong>[HUMAN]</strong> Final name decision: candidates, npm/PyPI/crates/domain checks. Blocks public README/docs-site branding, not development.</li>
-<li><input disabled="" type="checkbox"> <strong>0C.2</strong> (S) Telemetry disclosure copy + documented event schema (counts/version/OS only). <code>[codex:luna]</code> dep: —</li>
+<li><input disabled="" type="checkbox"> <strong>0C.2</strong> (S) Telemetry disclosure copy + documented event schema (counts/version/OS only). <code>[codex:luna]</code> dep: — ⏳ phase0-orchestrator 2026-08-06</li>
 </ul>
 <hr>
 <h2>Phase 1 — Core Runtime (weeks 2–6)</h2>
