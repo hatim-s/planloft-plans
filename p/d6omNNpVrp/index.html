@@ -101,7 +101,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input checked="" disabled="" type="checkbox"> <strong>1S.1</strong> (M) Kysely + portable driver layer (<code>node:sqlite</code>, libsql fallback), WAL mode, <code>.attest/runs.db</code>, single-writer discipline. dep: 0B.1 ✅ 2026-08-06 p1-store-orchestrator portable driver and WAL behavior implemented and verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1S.2</strong> (M) Schema v1 + numbered transactional migrations + migration runner; ULIDs, UTC, immutable completed runs. dep: 1S.1. <strong>[HUMAN]</strong> review schema before freeze. ✅ 2026-08-06 p1-store-orchestrator exact supplied schema and transactional migration behavior implemented and verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1S.3</strong> (S) Run writer: normalized runs/cases/results + canonical raw JSON blobs; content hashes; git SHA + config-hash metadata. dep: 1S.2 ✅ 2026-08-06 p1-store-orchestrator run lifecycle, canonical persistence, and summaries implemented and verified</li>
-<li><input disabled="" type="checkbox"> <strong>1S.4</strong> (S) Versioned run-bundle export (JSON/NDJSON) — the future cloud ingest format. dep: 1S.3 ⏳ p1-store-orchestrator 2026-08-06</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1S.4</strong> (S) Versioned run-bundle export (JSON/NDJSON) — the future cloud ingest format. dep: 1S.3 ✅ 2026-08-06 codex canonical NDJSON export, atomic file output, and verified reader implemented</li>
 </ul>
 <h3>Track 1D — Diff + CI mode <code>[codex:terra]</code></h3>
 <ul>
