@@ -132,13 +132,13 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <p>Tracks 2V/2U ∥ after API shape agreed; 2T runs in runtime land ∥ with all UI work.</p>
 <h3>Track 2V — View server <code>[codex:terra]</code></h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>2V.1</strong> (M) Hono loopback server: versioned JSON API over store, 127.0.0.1 bind, session token for writes, Origin validation. dep: 1S.3</li>
-<li><input disabled="" type="checkbox"> <strong>2V.2</strong> (S) <code>attest view</code> command: port pick, browser open, graceful shutdown. dep: 2V.1</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>2V.1</strong> (M) Hono loopback server: versioned JSON API over store, 127.0.0.1 bind, session token for writes, Origin validation. dep: 1S.3 ✅ 2026-08-07 root 4bb121a versioned read API and protected shutdown write</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>2V.2</strong> (S) <code>attest view</code> command: port pick, browser open, graceful shutdown. dep: 2V.1 ✅ 2026-08-07 root 4bb121a compiled loopback smoke and Ctrl+C shutdown verified</li>
 </ul>
 <h3>Track 2U — SPA <code>[opus]</code>; trace waterfall + diff view <code>[fable]</code> if large</h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>2U.1</strong> (M) Web scaffold: Vite + TanStack Router/Query, Tailwind + shadcn/ui, theme (light/dark), embedded-build wiring into CLI artifact. dep: 0B.1</li>
-<li><input disabled="" type="checkbox"> <strong>2U.2</strong> (M) Run list + run detail (cases table, TanStack Table, virtualized). dep: 2U.1, 2V.1</li>
+<li><input disabled="" type="checkbox"> <strong>2U.1</strong> (M) Web scaffold: Vite + TanStack Router/Query, Tailwind + shadcn/ui, theme (light/dark), embedded-build wiring into CLI artifact. dep: 0B.1 ⏳ root 2026-08-07</li>
+<li><input disabled="" type="checkbox"> <strong>2U.2</strong> (M) Run list + run detail (cases table, TanStack Table, virtualized). dep: 2U.1, 2V.1 ⏳ root 2026-08-07</li>
 <li><input disabled="" type="checkbox"> <strong>2U.3</strong> (L) Trace waterfall: custom virtualized span tree/timeline component. dep: 2U.2</li>
 <li><input disabled="" type="checkbox"> <strong>2U.4</strong> (L) Diff view: A/B run compare, verdict-transition matrix, per-case drill-in. dep: 2U.2, 1D.1</li>
 <li><input disabled="" type="checkbox"> <strong>2U.5</strong> (S) Distribution charts (tree-shaken ECharts): score histograms, pass-rate summaries. dep: 2U.2</li>
