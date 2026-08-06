@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>attest — Implementation Plan</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body data-planloft-kind="plan">
+<main class="planloft-plan">
+<article><h1>attest — Implementation Plan</h1>
+<blockquote>
+<p>Source of truth for build execution. Strategy/stack rationale live in DECISIONS.md, STACK.md, ROADMAP.md — this file is the work.</p>
+</blockquote>
+<h2>Agent protocol (read first)</h2>
+<ol>
+<li><strong>Canonical copy</strong> lives in the planloft store: <code>~/.planloft/docs/attest/attest-implementation-plan.md</code>. The repo-root <code>PLAN.md</code> is a <strong>gitignored local working copy</strong> — never commit it.</li>
+<li><strong>Before starting work</strong>: sync your local copy from the store if it&#39;s newer (<code>planloft copy attest-implementation-plan</code> or read the store file directly).</li>
+<li><strong>Claiming</strong>: mark an item in-progress by appending <code>⏳ &lt;agent/session&gt; &lt;date&gt;</code> to its line. Do not claim items whose dependencies are unchecked.</li>
+<li><strong>Completing</strong>: flip <code>[ ]</code> → <code>[x]</code>, append <code>✅ &lt;date&gt; &lt;agent&gt; &lt;one-line note or commit sha&gt;</code>.</li>
+<li><strong>After any status change, rehost so all agents + the human stay updated</strong>:<pre><code class="language-bash">node /Users/admin/Projects/planloft/dist/cli.js hoist PLAN.md --slug attest-implementation-plan --title &quot;attest — Implementation Plan&quot; --kind plan
+node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-plan
+</code></pre>
+(If <code>planloft</code> is on PATH, use it directly.)</li>
+<li><strong>Scope discipline</strong>: an item = one delegable unit. If you split it, add child items under it rather than silently expanding scope. New discoveries go to the <strong>Backlog</strong> section, never inline into locked phases.</li>
+<li><strong>Delegation hints</strong> per CLAUDE.md: <code>[codex:luna]</code> straightforward implementation, <code>[codex:terra]</code> small logic tasks, <code>[codex:sol]</code> large logic tasks, <code>[opus]</code> UI tasks, <code>[fable]</code> large UI or contract/design work. Orchestrator reviews all output; Opus critiques quality on merged tracks.</li>
+<li>Every item lands as a conventional commit that typechecks, lints, and passes owned tests. HITL for anything touching a real database.</li>
+</ol>
+<p><strong>Legend</strong>: <code>dep:</code> blocking dependencies · <code>∥</code> = parallel-safe within its track · sizes S/M/L.</p>
+<hr>
+<h2>Phase 0 — Contracts &amp; Scaffold (weeks 1–2)</h2>
+<p>Contracts block nearly everything. Tracks 0A/0B/0C run in parallel; specs within 0A are ∥ after the envelope shapes are sketched together in one sitting.</p>
+<h3>Track 0A — Contract specs (write as public-ready docs in <code>docs/specs/</code>) <code>[fable]</code></h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>0A.1</strong> (M) Agent contract spec: CLI invocation (stdin/stdout JSON envelope, exit codes, env allowlist) + HTTP equivalent; timeout/retry/cancellation/concurrency semantics. dep: — ✅ 2026-08-06 phase0-orchestrator specs authored</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0A.2</strong> (M) Trace schema spec <code>attest.trace/v1alpha1</code>: span envelope, OTel GenAI attribute mapping table, unknown-field preservation, versioning policy. dep: — ∥ ✅ 2026-08-06 phase0-orchestrator specs authored</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0A.3</strong> (M) Config format spec: suites/cases/datasets/metrics/judges/run settings; <code>config_version</code>; YAML/JSON equivalence rules. dep: — ∥ ✅ 2026-08-06 phase0-orchestrator specs authored</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0A.4</strong> (S) Metric contract spec: declarative assertion set v0 + executable/HTTP metric interface (<code>{case, output, trace}</code> → score JSON). dep: 0A.3 shapes ✅ 2026-08-06 phase0-orchestrator specs authored</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0A.5</strong> (M) Zod schemas for all four contracts in <code>packages/contracts</code>; generated JSON Schema checked into <code>schemas/</code>; golden tests guarding Zod→JSON-Schema conversion. <code>[codex:sol]</code> dep: 0A.1–0A.4 ⏳ phase0-orchestrator 2026-08-06 ✅ 2026-08-06 codex implemented and verified contracts plus generated schemas</li>
+</ul>
+<h3>Track 0B — Repo scaffold <code>[codex:terra]</code>, ∥ with 0A</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>0B.1</strong> (M) Monorepo: Bun workspaces + Turborepo; packages <code>cli</code>, <code>core</code>, <code>contracts</code>, <code>web</code>, <code>schemas</code>, <code>docs</code>; tsconfig project refs; ESLint + Prettier; <code>docs/SCRIPTS.md</code> seeded. dep: — ✅ phase0-orchestrator 2026-08-06 scaffolded and validated</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0B.2</strong> (S) CI skeleton (GitHub Actions): typecheck, lint, format-check, Vitest, on macOS + Linux, Node 22 + Bun. dep: 0B.1 ✅ phase0-orchestrator 2026-08-06 scaffolded and validated</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0B.3</strong> (S) Fixture/testing conventions: <code>conformance/</code> layout, fake-agent harness skeleton, colocated test policy doc. dep: 0B.1 ✅ phase0-orchestrator 2026-08-06 scaffolded and validated</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0B.4</strong> (S) <code>.logs/</code> + scratch conventions, <code>.gitignore</code> (incl. <code>PLAN.md</code>, <code>.attest/</code>, <code>.logs/</code>), LICENSE (Apache-2.0), NOTICE, DCO. dep: 0B.1 ✅ 2026-08-06 phase0-orchestrator PR #1</li>
+</ul>
+<h3>Track 0C — Human-gated ∥</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>0C.1</strong> (S) <strong>[HUMAN]</strong> Final name decision: candidates, npm/PyPI/crates/domain checks. Blocks public README/docs-site branding, not development.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>0C.2</strong> (S) Telemetry disclosure copy + documented event schema (counts/version/OS only). <code>[codex:luna]</code> dep: — ✅ 2026-08-06 phase0-orchestrator PR #2 docs/TELEMETRY.md</li>
+</ul>
+<hr>
+<h2>Phase 1 — Core Runtime (weeks 2–6)</h2>
+<p>Five tracks, parallel after 0A.5 lands. Track 1X (test infra) starts immediately and feeds all others.</p>
+<h3>Track 1R — Runner <code>[codex:sol]</code></h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>1R.1</strong> (L) CLI agent invoker: spawn, stdin/stdout envelope, output caps, deadline, <strong>full process-tree kill</strong> (macOS/Linux). De-risk prototype #2. dep: 0A.1</li>
+<li><input disabled="" type="checkbox"> <strong>1R.2</strong> (M) HTTP agent invoker: request envelope, timeouts, retry policy, connection reuse. dep: 0A.1 ∥ w/ 1R.1</li>
+<li><input disabled="" type="checkbox"> <strong>1R.3</strong> (M) Concurrency pool: bounded parallel case execution, cancellation propagation, progress events. dep: 1R.1 or 1R.2</li>
+<li><input disabled="" type="checkbox"> <strong>1R.4</strong> (S) Env-var allowlist forwarding + temp working directory per invocation. dep: 1R.1</li>
+<li><input disabled="" type="checkbox"> <strong>1R.5</strong> (M) Response/trace ingestion: parse, validate against contracts, preserve unknown fields, reject malformed with actionable errors. dep: 0A.5</li>
+</ul>
+<h3>Track 1M — Metrics <code>[codex:sol]</code>, ∥ with 1R</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>1M.1</strong> (M) Declarative assertion engine: contains/regex/json-schema/equality/threshold composition; deterministic, property-tested. dep: 0A.4</li>
+<li><input disabled="" type="checkbox"> <strong>1M.2</strong> (M) Executable-contract custom metrics: spawn/HTTP call w/ <code>{case, output, trace}</code>, score envelope validation. dep: 0A.4, reuses 1R.1 internals</li>
+<li><input disabled="" type="checkbox"> <strong>1M.3</strong> (M) Judge interface + TanStack AI SDK adapter (Anthropic + OpenAI, BYO keys); rubric prompt templates; recorded request/response for reproducibility. dep: 0A.4. ⚠️ keep SDK behind own interface — swappable.</li>
+<li><input disabled="" type="checkbox"> <strong>1M.4</strong> (S) Metric result model: score, pass/fail, rationale, cost/usage capture. dep: 1M.1</li>
+</ul>
+<h3>Track 1S — Store <code>[codex:terra]</code>, ∥</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>1S.1</strong> (M) Kysely + portable driver layer (<code>node:sqlite</code>, libsql fallback), WAL mode, <code>.attest/runs.db</code>, single-writer discipline. dep: 0B.1</li>
+<li><input disabled="" type="checkbox"> <strong>1S.2</strong> (M) Schema v1 + numbered transactional migrations + migration runner; ULIDs, UTC, immutable completed runs. dep: 1S.1. <strong>[HUMAN]</strong> review schema before freeze.</li>
+<li><input disabled="" type="checkbox"> <strong>1S.3</strong> (S) Run writer: normalized runs/cases/results + canonical raw JSON blobs; content hashes; git SHA + config-hash metadata. dep: 1S.2</li>
+<li><input disabled="" type="checkbox"> <strong>1S.4</strong> (S) Versioned run-bundle export (JSON/NDJSON) — the future cloud ingest format. dep: 1S.3</li>
+</ul>
+<h3>Track 1D — Diff + CI mode <code>[codex:terra]</code></h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>1D.1</strong> (M) Diff engine: run A vs B, per-case verdict transitions, metric deltas, regression classification. dep: 1S.3</li>
+<li><input disabled="" type="checkbox"> <strong>1D.2</strong> (S) CLI diff output (table + summary) <code>attest diff</code>. dep: 1D.1</li>
+<li><input disabled="" type="checkbox"> <strong>1D.3</strong> (S) CI mode: thresholds, exit codes, JSON + JUnit output. dep: 1D.1</li>
+<li><input disabled="" type="checkbox"> <strong>1D.4</strong> (S) Judge/agent response caching keyed by content hash (re-run economics). dep: 1S.3</li>
+</ul>
+<h3>Track 1X — Test infra <code>[codex:luna]</code>, starts day one</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>1X.1</strong> (M) Fake hostile agents (CLI + HTTP): hang, malformed/huge/partial output, stderr noise, non-zero exit, orphan children. dep: 0B.3</li>
+<li><input disabled="" type="checkbox"> <strong>1X.2</strong> (S) Golden conformance fixtures per contract, wired into CI. dep: 0A.5</li>
+<li><input disabled="" type="checkbox"> <strong>1X.3</strong> (S) SQLite crash/reopen + migration tests. dep: 1S.2</li>
+<li><input disabled="" type="checkbox"> <strong>1X.4</strong> (S) Parser/trace-ingestion fuzz harness (scheduled CI lane, non-blocking). dep: 1R.5</li>
+</ul>
+<p><strong>Phase 1 gate</strong>: vertical slice green — config → parallel CLI+HTTP execution → SQLite → diff → JSON output, driven by conformance fixtures. No live LLM in required CI.</p>
+<hr>
+<h2>Phase 2 — Dashboard &amp; Agent-Native Evals (weeks 6–10)</h2>
+<p>Tracks 2V/2U ∥ after API shape agreed; 2T runs in runtime land ∥ with all UI work.</p>
+<h3>Track 2V — View server <code>[codex:terra]</code></h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>2V.1</strong> (M) Hono loopback server: versioned JSON API over store, 127.0.0.1 bind, session token for writes, Origin validation. dep: 1S.3</li>
+<li><input disabled="" type="checkbox"> <strong>2V.2</strong> (S) <code>attest view</code> command: port pick, browser open, graceful shutdown. dep: 2V.1</li>
+</ul>
+<h3>Track 2U — SPA <code>[opus]</code>; trace waterfall + diff view <code>[fable]</code> if large</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>2U.1</strong> (M) Web scaffold: Vite + TanStack Router/Query, Tailwind + shadcn/ui, theme (light/dark), embedded-build wiring into CLI artifact. dep: 0B.1</li>
+<li><input disabled="" type="checkbox"> <strong>2U.2</strong> (M) Run list + run detail (cases table, TanStack Table, virtualized). dep: 2U.1, 2V.1</li>
+<li><input disabled="" type="checkbox"> <strong>2U.3</strong> (L) Trace waterfall: custom virtualized span tree/timeline component. dep: 2U.2</li>
+<li><input disabled="" type="checkbox"> <strong>2U.4</strong> (L) Diff view: A/B run compare, verdict-transition matrix, per-case drill-in. dep: 2U.2, 1D.1</li>
+<li><input disabled="" type="checkbox"> <strong>2U.5</strong> (S) Distribution charts (tree-shaken ECharts): score histograms, pass-rate summaries. dep: 2U.2</li>
+</ul>
+<h3>Track 2E — Static report <code>[codex:sol]</code></h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>2E.1</strong> (M) Report build entry: same components, run bundle inlined, zero network, single self-contained HTML. De-risk prototype #4. dep: 2U.2</li>
+<li><input disabled="" type="checkbox"> <strong>2E.2</strong> (S) <code>attest report</code> command + size warnings/truncation at 10k-case scale; perf test. dep: 2E.1</li>
+</ul>
+<h3>Track 2T — Trajectory assertions <code>[codex:terra]</code>, ∥ with UI tracks</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>2T.1</strong> (M) Trace-based assertions: tool-called, order, arg matchers, span filters — as declarative assertion extensions. dep: 1M.1, 1R.5</li>
+<li><input disabled="" type="checkbox"> <strong>2T.2</strong> (S) OTel→attest converter + real traces from two frameworks as fixtures. De-risk prototype #5. dep: 0A.2</li>
+</ul>
+<h3>Track 2W — UI editor (CUT LINE: slips before 2U.3/2U.4 do)</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>2W.1</strong> (M) YAML CST round-trip engine: comment/format-preserving node patches, atomic rename, stale-file refusal, golden round-trip tests. De-risk prototype #3. <code>[codex:sol]</code> dep: 0A.3</li>
+<li><input disabled="" type="checkbox"> <strong>2W.2</strong> (M) Editor UI: case add/edit forms writing through 2W.1 via server write API. <code>[opus]</code> dep: 2W.1, 2V.1</li>
+</ul>
+<p><strong>Phase 2 gate</strong>: Playwright flows green — view a traced run, diff two runs, export report; editor round-trip if 2W survived.</p>
+<hr>
+<h2>Phase 3 — Simulation, Polish, Launch (weeks 10–14)</h2>
+<h3>Track 3S — Multi-turn simulation <code>[codex:sol]</code> — <strong>cut line: if not solid by wk 12 → v0.2 headline, launch does not slip</strong></h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>3S.1</strong> (M) Conversation envelope: <code>messages</code>, <code>turn_index</code>, <code>conversation_id</code>; stateless replay default; opaque state token option. dep: 0A.1</li>
+<li><input disabled="" type="checkbox"> <strong>3S.2</strong> (L) Simulator orchestration loop: persona prompts, termination policy (max_turns/timeout/failure/<code>finished</code>), simulator I/O recorded separately from agent. dep: 3S.1, 1M.3</li>
+<li><input disabled="" type="checkbox"> <strong>3S.3</strong> (S) Conversation-level metrics wiring + transcript view in dashboard. dep: 3S.2, 2U.2</li>
+</ul>
+<h3>Track 3L — Launch assets ∥</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>3L.1</strong> (M) Quickstart &lt;5 min: <code>attest init</code> starter config + example agents (CLI, HTTP, traced). dep: Phase 1 gate</li>
+<li><input disabled="" type="checkbox"> <strong>3L.2</strong> (S) <strong>[HUMAN-assisted]</strong> Cold-test quickstart on ~5 friendly devs; fix every trip. dep: 3L.1</li>
+<li><input disabled="" type="checkbox"> <strong>3L.3</strong> (M) Docs site (Astro Starlight): specs from 0A, guides, metric reference. dep: 0C.1 (branding)</li>
+<li><input disabled="" type="checkbox"> <strong>3L.4</strong> (M) README + demo video/GIF + comparison table. dep: 3L.1</li>
+<li><input disabled="" type="checkbox"> <strong>3L.5</strong> (S) Telemetry implementation per 0C.2 (first-run notice, <code>ATTEST_TELEMETRY=0</code>). dep: 0C.2</li>
+<li><input disabled="" type="checkbox"> <strong>3L.6</strong> (M) Release pipeline: Changesets, npm publish, bun-compiled binaries (darwin/linux × arm64/x64), checksums, Homebrew tap, install smoke tests. dep: 0B.2</li>
+<li><input disabled="" type="checkbox"> <strong>3L.7</strong> (S) Cloud waitlist link in CLI + README; GitHub Action wrapper for CI installs. dep: 3L.6</li>
+<li><input disabled="" type="checkbox"> <strong>3L.8</strong> (S) <strong>[HUMAN]</strong> Launch: Show HN + PH staged, Tue–Thu. dep: all above</li>
+</ul>
+<hr>
+<h2>Backlog (discoveries + deferred — never inline into phases)</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Windows support (first post-launch compat milestone)</li>
+<li><input disabled="" type="checkbox"> Framework adapters: LangGraph, OpenAI Agents SDK, Vercel AI SDK, CrewAI (+ example repos)</li>
+<li><input disabled="" type="checkbox"> Human review queue / judge calibration</li>
+<li><input disabled="" type="checkbox"> Managed judge inference (cloud upsell)</li>
+<li><input disabled="" type="checkbox"> Cloud beta epic — break down at month 4: Workers + D1 (per-org sharding) + R2, Queues ingest of run bundles, auth decision</li>
+<li><input disabled="" type="checkbox"> Parquet export (only on real analytical demand)</li>
+</ul>
+<hr>
+<p><em>Rehost after every status change — see Agent protocol step 5.</em></p>
+</article>
+</main>
+</body>
+</html>
