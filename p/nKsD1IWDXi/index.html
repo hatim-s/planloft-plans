@@ -83,17 +83,20 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <p>Five tracks, parallel after 0A.5 lands. Track 1X (test infra) starts immediately and feeds all others.</p>
 <h3>Track 1R — Runner <code>[codex:sol]</code></h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>1R.1</strong> (L) CLI agent invoker: spawn, stdin/stdout envelope, output caps, deadline, <strong>full process-tree kill</strong> (macOS/Linux). De-risk prototype #2. dep: 0A.1 ⏳ p1-runner-fable 2026-08-06</li>
-<li><input disabled="" type="checkbox"> <strong>1R.2</strong> (M) HTTP agent invoker: request envelope, timeouts, retry policy, connection reuse. dep: 0A.1 ∥ w/ 1R.1 ⏳ p1-runner-fable 2026-08-06</li>
-<li><input disabled="" type="checkbox"> <strong>1R.3</strong> (M) Concurrency pool: bounded parallel case execution, cancellation propagation, progress events. dep: 1R.1 or 1R.2</li>
-<li><input disabled="" type="checkbox"> <strong>1R.4</strong> (S) Env-var allowlist forwarding + temp working directory per invocation. dep: 1R.1</li>
-<li><input disabled="" type="checkbox"> <strong>1R.5</strong> (M) Response/trace ingestion: parse, validate against contracts, preserve unknown fields, reject malformed with actionable errors. dep: 0A.5</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1R.1</strong> (L) CLI agent invoker: spawn, stdin/stdout envelope, output caps, deadline, <strong>full process-tree kill</strong> (macOS/Linux). De-risk prototype #2. dep: 0A.1 ✅ 2026-08-06 root adversarial fixes, canonical fixture migration, and process hygiene verified</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1R.2</strong> (M) HTTP agent invoker: request envelope, timeouts, retry policy, connection reuse. dep: 0A.1 ∥ w/ 1R.1 ✅ 2026-08-06 root canonical transport coverage and cancellation precedence verified</li>
+<li><input disabled="" type="checkbox"> <strong>1R.3</strong> (M) Concurrency pool: bounded parallel case execution, cancellation propagation, progress events. dep: 1R.1 or 1R.2 ⏳ p1-runner-fable 2026-08-06</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1R.4</strong> (S) Env-var allowlist forwarding + temp working directory per invocation. dep: 1R.1 ✅ 2026-08-06 p1-runner-fable PR #9</li>
+<li><input disabled="" type="checkbox"> <strong>1R.5</strong> (M) Response/trace ingestion: parse, validate against contracts, preserve unknown fields, reject malformed with actionable errors. dep: 0A.5 ⏳ p1-runner-fable 2026-08-06</li>
 </ul>
 <h3>Track 1M — Metrics <code>[codex:sol]</code>, ∥ with 1R</h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>1M.1</strong> (M) Declarative assertion engine: contains/regex/json-schema/equality/threshold composition; deterministic, property-tested. dep: 0A.4</li>
-<li><input disabled="" type="checkbox"> <strong>1M.2</strong> (M) Executable-contract custom metrics: spawn/HTTP call w/ <code>{case, output, trace}</code>, score envelope validation. dep: 0A.4, reuses 1R.1 internals</li>
-<li><input disabled="" type="checkbox"> <strong>1M.3</strong> (M) Judge interface + TanStack AI SDK adapter (Anthropic + OpenAI, BYO keys); rubric prompt templates; recorded request/response for reproducibility. dep: 0A.4. ⚠️ keep SDK behind own interface — swappable.</li>
+<li><input disabled="" type="checkbox"> <strong>1M.1</strong> (M) Declarative assertion engine: contains/regex/json-schema/equality/threshold composition; deterministic, property-tested. dep: 0A.4<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>1M.1a</strong> (M) Adversarial review remediation: isolate metric faults, schemas, transport deadlines, judge evidence/cache, and persistence mapping. dep: 0A.4 ✅ 2026-08-06 codex p1-metrics full root lint, typecheck, test, and format validation green; intentionally uncommitted per request</li>
+</ul>
+</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1M.2</strong> (M) Executable-contract custom metrics: spawn/HTTP call w/ <code>{case, output, trace}</code>, score envelope validation. dep: 0A.4, reuses 1R.1 internals ⏳ codex p1-metrics 2026-08-06 ✅ 2026-08-06 codex executable metric transports and coverage implemented; intentionally uncommitted per request</li>
+<li><input disabled="" type="checkbox"> <strong>1M.3</strong> (M) Judge interface + TanStack AI SDK adapter (Anthropic + OpenAI, BYO keys); rubric prompt templates; recorded request/response for reproducibility. dep: 0A.4. ⚠️ keep SDK behind own interface — swappable. ⏳ codex p1-metrics 2026-08-06</li>
 <li><input disabled="" type="checkbox"> <strong>1M.4</strong> (S) Metric result model: score, pass/fail, rationale, cost/usage capture. dep: 1M.1</li>
 </ul>
 <h3>Track 1S — Store <code>[codex:terra]</code>, ∥</h3>
@@ -105,17 +108,20 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 </ul>
 <h3>Track 1D — Diff + CI mode <code>[codex:terra]</code></h3>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> <strong>1D.1</strong> (M) Diff engine: run A vs B, per-case verdict transitions, metric deltas, regression classification. dep: 1S.3 ⏳ p1-store-orchestrator 2026-08-06 ✅ 2026-08-06 p1-store diff classification and store shell implemented and verified</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1D.1</strong> (M) Diff engine: run A vs B, per-case verdict transitions, metric deltas, regression classification. dep: 1S.3 ⏳ p1-store-orchestrator 2026-08-06 ✅ 2026-08-06 p1-store diff classification and store shell implemented and verified<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>1D.1a</strong> (S) Review remediation: preserve primary verdict transitions, annotate comparable flaky results, validate CI thresholds, and emit XML 1.0-safe JUnit. dep: 1D.1 ✅ 2026-08-06 root diff-only implementation; contracts/root-barrel reconciliation pending</li>
+</ul>
+</li>
 <li><input disabled="" type="checkbox"> <strong>1D.2</strong> (S) CLI diff output (table + summary) <code>attest diff</code>. dep: 1D.1 ⏳ partial: structured RunDiff + summarizeDiff done in #6; <code>attest diff</code> CLI rendering deferred to gate integration</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1D.3</strong> (S) CI mode: thresholds, exit codes, JSON + JUnit output. dep: 1D.1 ⏳ p1-store-orchestrator 2026-08-06 ✅ 2026-08-06 p1-store thresholds and deterministic serializers implemented and verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1D.4</strong> (S) Judge/agent response caching keyed by content hash (re-run economics). dep: 1S.3 ⏳ p1-store-orchestrator 2026-08-06 ✅ 2026-08-06 p1-store cache round-trip and usage tracking implemented and verified</li>
 </ul>
 <h3>Track 1X — Test infra <code>[codex:luna]</code>, starts day one</h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>1X.1</strong> (M) Fake hostile agents (CLI + HTTP): hang, malformed/huge/partial output, stderr noise, non-zero exit, orphan children. dep: 0B.3</li>
-<li><input disabled="" type="checkbox"> <strong>1X.2</strong> (S) Golden conformance fixtures per contract, wired into CI. dep: 0A.5</li>
-<li><input checked="" disabled="" type="checkbox"> <strong>1X.3</strong> (S) SQLite crash/reopen + migration tests. dep: 1S.2 ✅ 2026-08-06 p1-store-orchestrator crash recovery, concurrent migration, rollback, and forced-libsql coverage verified</li>
-<li><input disabled="" type="checkbox"> <strong>1X.4</strong> (S) Parser/trace-ingestion fuzz harness (scheduled CI lane, non-blocking). dep: 1R.5</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.1</strong> (M) Fake hostile agents (CLI + HTTP): hang, malformed/huge/partial output, stderr noise, non-zero exit, orphan children. dep: 0B.3 ✅ 2026-08-06 p1-testinfra-orchestrator PR #8 — 11 behaviors × CLI/HTTP, PID-tracked orphan child</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.2</strong> (S) Golden conformance fixtures per contract, wired into CI. dep: 0A.5 ✅ 2026-08-06 p1-testinfra-orchestrator PR #8 — 32 fixtures, six contract dirs, anti-vacuity guards</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.3</strong> (S) SQLite crash/reopen + migration tests. dep: 1S.2 ✅ 2026-08-06 p1-store-orchestrator crash recovery, concurrent migration, rollback, and forced-libsql coverage verified (reassigned from 1X → owned by 1S PR)</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.4</strong> (S) Parser/trace-ingestion fuzz harness (scheduled CI lane, non-blocking). dep: 1R.5 ✅ 2026-08-06 p1-testinfra-orchestrator PR #8 — fast-check, FUZZ=1 gate, weekly fuzz.yml (note: runs against parsers directly; 1R.5 ingestion wiring can extend it)</li>
 </ul>
 <p><strong>Phase 1 gate</strong>: vertical slice green — config → parallel CLI+HTTP execution → SQLite → diff → JSON output, driven by conformance fixtures. No live LLM in required CI.</p>
 <hr>
@@ -172,6 +178,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <hr>
 <h2>Backlog (discoveries + deferred — never inline into phases)</h2>
 <ul>
+<li><input checked="" disabled="" type="checkbox"> Phase 1 final re-review remediation: embedded migration asset, complete shared record validation, cursor/config/diff fixes, lint expansion, and harness repairs. ⏳ root 2026-08-06 ✅ 2026-08-06 root all re-review items fixed; full format, tests, typecheck, build, and lint green</li>
 <li><input disabled="" type="checkbox"> Windows support (first post-launch compat milestone)</li>
 <li><input disabled="" type="checkbox"> Framework adapters: LangGraph, OpenAI Agents SDK, Vercel AI SDK, CrewAI (+ example repos)</li>
 <li><input disabled="" type="checkbox"> Human review queue / judge calibration</li>
