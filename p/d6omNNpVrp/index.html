@@ -91,7 +91,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 </ul>
 <h3>Track 1M — Metrics <code>[codex:sol]</code>, ∥ with 1R</h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>1M.1</strong> (M) Declarative assertion engine: contains/regex/json-schema/equality/threshold composition; deterministic, property-tested. dep: 0A.4 ⏳ codex p1-metrics 2026-08-06<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>1M.1</strong> (M) Declarative assertion engine: contains/regex/json-schema/equality/threshold composition; deterministic, property-tested. dep: 0A.4 ✅ 2026-08-06 PR #10 merged with assertion coverage and adversarial remediation<ul>
 <li><input checked="" disabled="" type="checkbox"> <strong>1M.1a</strong> (M) Adversarial review remediation: isolate metric faults, schemas, transport deadlines, judge evidence/cache, and persistence mapping. dep: 0A.4 ✅ 2026-08-06 codex p1-metrics full root lint, typecheck, test, and format validation green; intentionally uncommitted per request</li>
 </ul>
 </li>
@@ -100,7 +100,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 </ul>
 </li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1M.3</strong> (M) Judge interface + TanStack AI SDK adapter (Anthropic + OpenAI, BYO keys); rubric prompt templates; recorded request/response for reproducibility. dep: 0A.4. ⚠️ keep SDK behind own interface — swappable. ✅ 2026-08-06 codex judge cache, reproducibility evidence, cancellation, and deterministic adapter-seam tests verified</li>
-<li><input disabled="" type="checkbox"> <strong>1M.4</strong> (S) Metric result model: score, pass/fail, rationale, cost/usage capture. dep: 1M.1</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1M.4</strong> (S) Metric result model: score, pass/fail, rationale, cost/usage capture. dep: 1M.1 ✅ 2026-08-06 PR #10 merged with durable store mapping</li>
 </ul>
 <h3>Track 1S — Store <code>[codex:terra]</code>, ∥</h3>
 <ul>
@@ -115,7 +115,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input checked="" disabled="" type="checkbox"> <strong>1D.1a</strong> (S) Review remediation: preserve primary verdict transitions, annotate comparable flaky results, validate CI thresholds, and emit XML 1.0-safe JUnit. dep: 1D.1 ✅ 2026-08-06 root diff-only implementation; contracts/root-barrel reconciliation pending</li>
 </ul>
 </li>
-<li><input disabled="" type="checkbox"> <strong>1D.2</strong> (S) CLI diff output (table + summary) <code>attest diff</code>. dep: 1D.1 ⏳ partial: structured RunDiff + summarizeDiff done in #6; <code>attest diff</code> CLI rendering deferred to gate integration</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1D.2</strong> (S) CLI diff output (table + summary) <code>attest diff</code>. dep: 1D.1 ✅ 2026-08-07 root e976519 added human and JSON CLI rendering</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1D.3</strong> (S) CI mode: thresholds, exit codes, JSON + JUnit output. dep: 1D.1 ⏳ p1-store-orchestrator 2026-08-06 ✅ 2026-08-06 p1-store thresholds and deterministic serializers implemented and verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1D.4</strong> (S) Judge/agent response caching keyed by content hash (re-run economics). dep: 1S.3 ⏳ p1-store-orchestrator 2026-08-06 ✅ 2026-08-06 p1-store cache round-trip and usage tracking implemented and verified</li>
 </ul>
@@ -126,7 +126,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input checked="" disabled="" type="checkbox"> <strong>1X.3</strong> (S) SQLite crash/reopen + migration tests. dep: 1S.2 ✅ 2026-08-06 p1-store-orchestrator crash recovery, concurrent migration, rollback, and forced-libsql coverage verified (reassigned from 1X → owned by 1S PR)</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1X.4</strong> (S) Parser/trace-ingestion fuzz harness (scheduled CI lane, non-blocking). dep: 1R.5 ✅ 2026-08-06 p1-testinfra-orchestrator PR #8 — fast-check, FUZZ=1 gate, weekly fuzz.yml (note: runs against parsers directly; 1R.5 ingestion wiring can extend it)</li>
 </ul>
-<p><strong>Phase 1 gate</strong>: vertical slice green — config → parallel CLI+HTTP execution → SQLite → diff → JSON output, driven by conformance fixtures. No live LLM in required CI. ⏳ root 2026-08-07</p>
+<p><strong>Phase 1 gate</strong>: vertical slice green — config → parallel CLI+HTTP execution → SQLite → diff → JSON output, driven by conformance fixtures. No live LLM in required CI. ✅ 2026-08-07 root e976519; full CI-equivalent suite green</p>
 <hr>
 <h2>Phase 2 — Dashboard &amp; Agent-Native Evals (weeks 6–10)</h2>
 <p>Tracks 2V/2U ∥ after API shape agreed; 2T runs in runtime land ∥ with all UI work.</p>
@@ -169,7 +169,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 </ul>
 <h3>Track 3L — Launch assets ∥</h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>3L.1</strong> (M) Quickstart &lt;5 min: <code>attest init</code> starter config + example agents (CLI, HTTP, traced). dep: Phase 1 gate</li>
+<li><input disabled="" type="checkbox"> <strong>3L.1</strong> (M) Quickstart &lt;5 min: <code>attest init</code> starter config + example agents (CLI, HTTP, traced). dep: Phase 1 gate ⏳ root 2026-08-07</li>
 <li><input disabled="" type="checkbox"> <strong>3L.2</strong> (S) <strong>[HUMAN-assisted]</strong> Cold-test quickstart on ~5 friendly devs; fix every trip. dep: 3L.1</li>
 <li><input disabled="" type="checkbox"> <strong>3L.3</strong> (M) Docs site (Astro Starlight): specs from 0A, guides, metric reference. dep: 0C.1 (branding)</li>
 <li><input disabled="" type="checkbox"> <strong>3L.4</strong> (M) README + demo video/GIF + comparison table. dep: 3L.1</li>
