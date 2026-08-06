@@ -115,10 +115,10 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 </ul>
 <h3>Track 1X — Test infra <code>[codex:luna]</code>, starts day one</h3>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>1X.1</strong> (M) Fake hostile agents (CLI + HTTP): hang, malformed/huge/partial output, stderr noise, non-zero exit, orphan children. dep: 0B.3</li>
-<li><input disabled="" type="checkbox"> <strong>1X.2</strong> (S) Golden conformance fixtures per contract, wired into CI. dep: 0A.5</li>
-<li><input checked="" disabled="" type="checkbox"> <strong>1X.3</strong> (S) SQLite crash/reopen + migration tests. dep: 1S.2 ✅ 2026-08-06 p1-store-orchestrator crash recovery, concurrent migration, rollback, and forced-libsql coverage verified</li>
-<li><input disabled="" type="checkbox"> <strong>1X.4</strong> (S) Parser/trace-ingestion fuzz harness (scheduled CI lane, non-blocking). dep: 1R.5</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.1</strong> (M) Fake hostile agents (CLI + HTTP): hang, malformed/huge/partial output, stderr noise, non-zero exit, orphan children. dep: 0B.3 ✅ 2026-08-06 p1-testinfra-orchestrator PR #8 — 11 behaviors × CLI/HTTP, PID-tracked orphan child</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.2</strong> (S) Golden conformance fixtures per contract, wired into CI. dep: 0A.5 ✅ 2026-08-06 p1-testinfra-orchestrator PR #8 — 32 fixtures, six contract dirs, anti-vacuity guards</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.3</strong> (S) SQLite crash/reopen + migration tests. dep: 1S.2 ✅ 2026-08-06 p1-store-orchestrator crash recovery, concurrent migration, rollback, and forced-libsql coverage verified (reassigned from 1X → owned by 1S PR)</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1X.4</strong> (S) Parser/trace-ingestion fuzz harness (scheduled CI lane, non-blocking). dep: 1R.5 ✅ 2026-08-06 p1-testinfra-orchestrator PR #8 — fast-check, FUZZ=1 gate, weekly fuzz.yml (note: runs against parsers directly; 1R.5 ingestion wiring can extend it)</li>
 </ul>
 <p><strong>Phase 1 gate</strong>: vertical slice green — config → parallel CLI+HTTP execution → SQLite → diff → JSON output, driven by conformance fixtures. No live LLM in required CI.</p>
 <hr>
