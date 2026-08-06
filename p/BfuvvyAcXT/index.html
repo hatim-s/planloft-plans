@@ -165,7 +165,44 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
   <div class="risk"><b>Top technical risks:</b> contract churn · unreproducible judge behavior · safe process supervision (timeouts, process-tree kill) · lossless YAML round-tripping · report performance at large trace volume · Bun ecosystem maturity. De-risk prototypes target exactly these before broad build-out.</div>
 
-  <h2>7 · Roadmap</h2>
+  <h2>7 · Implementation Stack (locked)</h2>
+
+  <h3>Runtime &amp; core</h3>
+  <div class="tablewrap"><table>
+    <tr><td>SQLite driver</td><td>Portable: <code>node:sqlite</code> (Node 22+), libsql fallback — npm package runs under both Node and Bun; npx quickstart works for everyone. Resolves the flagged bun:sqlite tension.</td></tr>
+    <tr><td>Monorepo</td><td>Bun workspaces + Turborepo (task graph + caching across cli / web / schemas / docs).</td></tr>
+    <tr><td>Lint / format</td><td>ESLint + Prettier — contributor familiarity and rules ecosystem over Biome's speed.</td></tr>
+    <tr><td>CLI framework</td><td>Commander — boring on purpose; novelty budget stays in the contracts.</td></tr>
+    <tr><td>Validation</td><td>Zod as source of truth → TS types inferred + JSON Schema generated (Zod v4) and checked into <code>schemas/</code>; conversion guarded by golden tests.</td></tr>
+    <tr><td>DB access</td><td>Kysely — type-safe SQL over any driver dialect; migrations remain hand-written numbered SQL.</td></tr>
+    <tr><td>Local server</td><td>Hono — identical on Node + Bun, tiny, typed; ports to Cloudflare Workers for the cloud tier.</td></tr>
+    <tr><td>LLM judges</td><td>TanStack AI SDK behind attest's own thin judge interface. <b>Risk accepted:</b> very new SDK — contained, swappable (Vercel AI SDK fallback) without touching metric contracts.</td></tr>
+  </table></div>
+
+  <h3>Frontend</h3>
+  <div class="tablewrap"><table>
+    <tr><td>Data / routing</td><td>TanStack Router + Query — type-safe routes, polling/cache for live runs; consistent with TanStack Table + AI SDK.</td></tr>
+    <tr><td>Styling</td><td>Tailwind + shadcn/ui — owned components, fast build-out, clean CSS inlining for static reports.</td></tr>
+    <tr><td>Charts</td><td>Tree-shaken Apache ECharts — canvas perf at 10k cases, works inside self-contained report HTML.</td></tr>
+  </table></div>
+
+  <h3>Quality &amp; delivery</h3>
+  <div class="tablewrap"><table>
+    <tr><td>Testing</td><td>Vitest + Playwright; Node path is the required matrix; no live LLMs in required CI.</td></tr>
+    <tr><td>Releases</td><td>Changesets + GitHub Actions matrix: npm publish + Bun-compiled binaries (darwin/linux × arm64/x64) + checksums + Homebrew tap bump.</td></tr>
+    <tr><td>Docs site</td><td>Astro Starlight — Phase 0 contract specs land here as launch content.</td></tr>
+    <tr><td>Telemetry</td><td>Opt-out anonymous with loud disclosure — command counts / version / OS only, never payloads, prompts, or keys; <code>ATTEST_TELEMETRY=0</code>.</td></tr>
+  </table></div>
+
+  <h3>Cloud (directional — built months 5–7)</h3>
+  <div class="tablewrap"><table>
+    <tr><td>Compute</td><td>Cloudflare Workers (Hono ports as-is); heavy run-bundle ingest via Workers Queues.</td></tr>
+    <tr><td>Database</td><td><b>Cloudflare D1</b> (founder call; Neon excluded). SQLite semantics ≈ local schema/migrations reuse — strong symmetry. Accepted constraints: 10GB/db → per-org DB sharding from day one; analytics via scheduled rollups. Revisit trigger: cross-run analytics outgrowing D1.</td></tr>
+    <tr><td>Object storage</td><td>Cloudflare R2 — large immutable payloads (traces, outputs, report bundles); zero-egress shared reports.</td></tr>
+    <tr><td>Auth</td><td>Open — decided at cloud build time (candidates: Better Auth on Workers, Clerk, CF Access for early beta).</td></tr>
+  </table></div>
+
+  <h2>8 · Roadmap</h2>
 
   <div class="phase">
     <div class="when">Weeks 1–2</div><b class="title">Phase 0 — Contracts &amp; Name</b>
@@ -219,7 +256,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
   <p><b>Deferred (pull-based):</b> enterprise SSO/RBAC/audit/self-hosted · managed judge inference · UI-first authoring for PM/QA · trace-schema governance.</p>
 
-  <footer>attest foundation · decisions locked 2026-08-06 · sources: DECISIONS.md, STACK.md, ROADMAP.md, docs/scout-stack-report.md</footer>
+  <footer>attest foundation · strategy + stack + implementation decisions locked 2026-08-06 · sources: DECISIONS.md, STACK.md (incl. implementation layer), ROADMAP.md, docs/scout-stack-report.md</footer>
 </main>
 </body>
 </html>
