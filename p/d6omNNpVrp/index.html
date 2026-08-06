@@ -95,11 +95,8 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input checked="" disabled="" type="checkbox"> <strong>1M.1a</strong> (M) Adversarial review remediation: isolate metric faults, schemas, transport deadlines, judge evidence/cache, and persistence mapping. dep: 0A.4 ✅ 2026-08-06 codex p1-metrics full root lint, typecheck, test, and format validation green; intentionally uncommitted per request</li>
 </ul>
 </li>
-<li><input checked="" disabled="" type="checkbox"> <strong>1M.2</strong> (M) Executable-contract custom metrics: spawn/HTTP call w/ <code>{case, output, trace}</code>, score envelope validation. dep: 0A.4, reuses 1R.1 internals ⏳ codex p1-metrics 2026-08-06 ✅ 2026-08-06 codex executable metric transports and coverage implemented; intentionally uncommitted per request<ul>
-<li><input checked="" disabled="" type="checkbox"> <strong>1M.2a</strong> (M) Review hardening: await CLI process-group termination/reaping, cap HTTP bodies, reject unsafe URL schemes, and split transport internals. dep: 1M.2 ✅ 2026-08-06 codex CLI lifecycle and HTTP stream hardening verified; intentionally uncommitted per request</li>
-</ul>
-</li>
-<li><input checked="" disabled="" type="checkbox"> <strong>1M.3</strong> (M) Judge interface + TanStack AI SDK adapter (Anthropic + OpenAI, BYO keys); rubric prompt templates; recorded request/response for reproducibility. dep: 0A.4. ⚠️ keep SDK behind own interface — swappable. ✅ 2026-08-06 codex judge cache, reproducibility evidence, cancellation, and deterministic adapter-seam tests verified</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1M.2</strong> (M) Executable-contract custom metrics: spawn/HTTP call w/ <code>{case, output, trace}</code>, score envelope validation. dep: 0A.4, reuses 1R.1 internals ⏳ codex p1-metrics 2026-08-06 ✅ 2026-08-06 codex executable metric transports and coverage implemented; intentionally uncommitted per request</li>
+<li><input disabled="" type="checkbox"> <strong>1M.3</strong> (M) Judge interface + TanStack AI SDK adapter (Anthropic + OpenAI, BYO keys); rubric prompt templates; recorded request/response for reproducibility. dep: 0A.4. ⚠️ keep SDK behind own interface — swappable. ⏳ codex p1-metrics 2026-08-06</li>
 <li><input disabled="" type="checkbox"> <strong>1M.4</strong> (S) Metric result model: score, pass/fail, rationale, cost/usage capture. dep: 1M.1</li>
 </ul>
 <h3>Track 1S — Store <code>[codex:terra]</code>, ∥</h3>
@@ -107,7 +104,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input checked="" disabled="" type="checkbox"> <strong>1S.1</strong> (M) Kysely + portable driver layer (<code>node:sqlite</code>, libsql fallback), WAL mode, <code>.attest/runs.db</code>, single-writer discipline. dep: 0B.1 ✅ 2026-08-06 p1-store-orchestrator portable driver and WAL behavior implemented and verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1S.2</strong> (M) Schema v1 + numbered transactional migrations + migration runner; ULIDs, UTC, immutable completed runs. dep: 1S.1. <strong>[HUMAN]</strong> review schema before freeze. ✅ 2026-08-06 p1-store-orchestrator exact supplied schema and transactional migration behavior implemented and verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1S.3</strong> (S) Run writer: normalized runs/cases/results + canonical raw JSON blobs; content hashes; git SHA + config-hash metadata. dep: 1S.2 ✅ 2026-08-06 p1-store-orchestrator run lifecycle, canonical persistence, and summaries implemented and verified</li>
-<li><input checked="" disabled="" type="checkbox"> <strong>1S.4</strong> (S) Versioned run-bundle export (JSON/NDJSON) — the future cloud ingest format. dep: 1S.3 ✅ 2026-08-06 codex canonical NDJSON export, atomic file output, and verified reader implemented</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1S.4</strong> (S) Versioned run-bundle export (JSON/NDJSON) — the future cloud ingest format. dep: 1S.3 ✅ 2026-08-06 codex canonical NDJSON export, atomic file output, and verified reader implemented ⏳ root 2026-08-06 runner-store integration</li>
 </ul>
 <h3>Track 1D — Diff + CI mode <code>[codex:terra]</code></h3>
 <ul>
