@@ -139,9 +139,9 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <ul>
 <li><input checked="" disabled="" type="checkbox"> <strong>2U.1</strong> (M) Web scaffold: Vite + TanStack Router/Query, Tailwind + shadcn/ui, theme (light/dark), embedded-build wiring into CLI artifact. dep: 0B.1 ✅ 2026-08-07 root c0ac84d self-contained dashboard embedded and browser-verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>2U.2</strong> (M) Run list + run detail (cases table, TanStack Table, virtualized). dep: 2U.1, 2V.1 ✅ 2026-08-07 root c0ac84d run list, virtual case table, and evidence drawer browser-verified</li>
-<li><input disabled="" type="checkbox"> <strong>2U.3</strong> (L) Trace waterfall: custom virtualized span tree/timeline component. dep: 2U.2 ⏳ root 2026-08-07</li>
-<li><input disabled="" type="checkbox"> <strong>2U.4</strong> (L) Diff view: A/B run compare, verdict-transition matrix, per-case drill-in. dep: 2U.2, 1D.1 ⏳ root 2026-08-07</li>
-<li><input disabled="" type="checkbox"> <strong>2U.5</strong> (S) Distribution charts (tree-shaken ECharts): score histograms, pass-rate summaries. dep: 2U.2 ⏳ root 2026-08-07</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>2U.3</strong> (L) Trace waterfall: custom virtualized span tree/timeline component. dep: 2U.2 ✅ 2026-08-07 root 9622491 virtualized hierarchy and timeline projection browser-verified in the case drawer</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>2U.4</strong> (L) Diff view: A/B run compare, verdict-transition matrix, per-case drill-in. dep: 2U.2, 1D.1 ✅ 2026-08-07 root 9622491 complete verdict matrix and expandable metric delta evidence browser-verified</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>2U.5</strong> (S) Distribution charts (tree-shaken ECharts): score histograms, pass-rate summaries. dep: 2U.2 ✅ 2026-08-07 root 9622491 modular ECharts score and verdict distributions browser-verified in both themes</li>
 </ul>
 <h3>Track 2E — Static report <code>[codex:sol]</code></h3>
 <ul>
@@ -158,7 +158,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input disabled="" type="checkbox"> <strong>2W.1</strong> (M) YAML CST round-trip engine: comment/format-preserving node patches, atomic rename, stale-file refusal, golden round-trip tests. De-risk prototype #3. <code>[codex:sol]</code> dep: 0A.3</li>
 <li><input disabled="" type="checkbox"> <strong>2W.2</strong> (M) Editor UI: case add/edit forms writing through 2W.1 via server write API. <code>[opus]</code> dep: 2W.1, 2V.1</li>
 </ul>
-<p><strong>Phase 2 gate</strong>: Playwright flows green — view a traced run, diff two runs, export report; editor round-trip if 2W survived.</p>
+<p><strong>Phase 2 gate</strong>: Playwright flows green — view a traced run, diff two runs, export report; editor round-trip if 2W survived. ✅ 2026-08-07 root 9622491 browser-controlled traced-run/diff flows, compiled self-contained report smoke, and canonical 436-test suite green; 2W intentionally below cut line</p>
 <hr>
 <h2>Phase 3 — Simulation, Polish, Launch (weeks 10–14)</h2>
 <h3>Track 3S — Multi-turn simulation <code>[codex:sol]</code> — <strong>cut line: if not solid by wk 12 → v0.2 headline, launch does not slip</strong></h3>
