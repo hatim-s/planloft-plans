@@ -85,9 +85,9 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <ul>
 <li><input checked="" disabled="" type="checkbox"> <strong>1R.1</strong> (L) CLI agent invoker: spawn, stdin/stdout envelope, output caps, deadline, <strong>full process-tree kill</strong> (macOS/Linux). De-risk prototype #2. dep: 0A.1 ✅ 2026-08-06 root adversarial fixes, canonical fixture migration, and process hygiene verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1R.2</strong> (M) HTTP agent invoker: request envelope, timeouts, retry policy, connection reuse. dep: 0A.1 ∥ w/ 1R.1 ✅ 2026-08-06 root canonical transport coverage and cancellation precedence verified</li>
-<li><input disabled="" type="checkbox"> <strong>1R.3</strong> (M) Concurrency pool: bounded parallel case execution, cancellation propagation, progress events. dep: 1R.1 or 1R.2 ⏳ p1-runner-fable 2026-08-06</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1R.3</strong> (M) Concurrency pool: bounded parallel case execution, cancellation propagation, progress events. dep: 1R.1 or 1R.2 ✅ 2026-08-06 root review findings 3 and 5 remediated and verified</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>1R.4</strong> (S) Env-var allowlist forwarding + temp working directory per invocation. dep: 1R.1 ✅ 2026-08-06 p1-runner-fable PR #9</li>
-<li><input disabled="" type="checkbox"> <strong>1R.5</strong> (M) Response/trace ingestion: parse, validate against contracts, preserve unknown fields, reject malformed with actionable errors. dep: 0A.5 ⏳ p1-runner-fable 2026-08-06</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>1R.5</strong> (M) Response/trace ingestion: parse, validate against contracts, preserve unknown fields, reject malformed with actionable errors. dep: 0A.5 ✅ 2026-08-06 root review finding 2 remediated and verified</li>
 </ul>
 <h3>Track 1M — Metrics <code>[codex:sol]</code>, ∥ with 1R</h3>
 <ul>
@@ -185,6 +185,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input disabled="" type="checkbox"> Managed judge inference (cloud upsell)</li>
 <li><input disabled="" type="checkbox"> Cloud beta epic — break down at month 4: Workers + D1 (per-org sharding) + R2, Queues ingest of run bundles, auth decision</li>
 <li><input disabled="" type="checkbox"> Parquet export (only on real analytical demand)</li>
+<li><input disabled="" type="checkbox"> Linear-time regex engine option for assertion checks (v1 ships trusted-config post-hoc stance; RE2/linear engine lifts the event-loop risk)</li>
 </ul>
 <hr>
 <p><em>Rehost after every status change — see Agent protocol step 5.</em></p>
