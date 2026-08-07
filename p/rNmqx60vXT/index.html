@@ -50,59 +50,98 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 <body data-planloft-kind="plan">
 <main class="planloft-plan">
 <article><h1>AI App Builder — Roadmap Close-out</h1>
-<p>Make the shipped D1/D2 platform releasable, finish its promised fast-follow, and leave one current roadmap.</p>
-<h2>What changed since the July 24 roadmap</h2>
+<p><strong>Reconciled:</strong> 8 August 2026<br><strong>Implementation baseline:</strong> <code>1aed19f</code>, <code>bf6af4b</code>, <code>9e19d85</code>, <code>2cb2ced</code>, <code>c971610</code>, and <code>64b7dcb</code><br><strong>Overall status:</strong> source close-out is complete through C5; the live development release gate is not complete.</p>
+<h2>Current project truth</h2>
 <ul>
-<li>D1 core is shipped: six primary work items merged; only optimistic append/update/remove with rollback remains.</li>
-<li>D2 is shipped: all six events-platform work items merged.</li>
-<li>N5 is now release verification and environment parity, not a greenfield cloud build.</li>
-<li>N21 has one performance fix stranded on an already-merged stacked branch.</li>
-<li>There are no open pull requests or issues; the latest main workflow is blocked before execution by GitHub account billing.</li>
+<li><strong>D1 — Data and mutations: shipped.</strong> All six primary lanes and the optimistic append, update, remove, reconciliation, rollback, overlap, and identity fast-follow are complete in source.</li>
+<li><strong>D2 — Events platform: shipped.</strong> All six lanes are complete in source, including lifecycle behavior, loop protection, interactions authoring, event history, and agent guidance.</li>
+<li><strong>N5 — Development release lane: implemented, not green.</strong> A single-revision release workflow now exists, but a GitHub Actions billing/spending hold and incomplete deployment credentials block a current live release. The existing development services remain on an older revision.</li>
+<li><strong>Post-publish undo: shipped.</strong> <code>2042d34</code> and <code>6359b70</code> preserve the correct block and configuration baselines after publish.</li>
 </ul>
-<h2>Shipped work missing from the roadmap</h2>
+<h2>Close-out status</h2>
 <ul>
-<li><strong>Agent quality:</strong> layered design-quality prompt, tool consolidation from 17 to 16, scenario evals, golden prompts, and an LLM judge.</li>
-<li><strong>Multi-provider AI:</strong> registry-backed Google, OpenAI, Anthropic, GLM, and Kimi keys; per-provider validation; per-run provider/model selection.</li>
-<li><strong>Chat provider UX:</strong> redesigned chat shell, scannable tool timeline, composer model selector, and provider key cards.</li>
-<li><strong>DSL observability:</strong> owner-scoped DSL traces, off-critical-path capture, retention, pagination, and monotonic per-run trace counts.</li>
-<li><strong>N24 feedback stack:</strong> compact typography, left-panel tabs, pinned derived Apply, chat agent activity with cumulative restore, and chrome polish.</li>
-<li><strong>Post-publish undo:</strong> fixed by <code>2042d34</code> and <code>6359b70</code>; current regression coverage retains block, handler, query, mutation, derived, and app-level baselines.</li>
+<li><strong>C1 — Blocked live.</strong> Repository automation is implemented, but no green workflow, same-revision deployment, or smoke-test claim is made while billing and credential gates remain.</li>
+<li><strong>C2 — Done.</strong> <code>1aed19f</code> restored the landing bundle boundary and added a 250 KB first-load budget; <code>bf6af4b</code> makes missing measurement fail closed.</li>
+<li><strong>C3 — Done.</strong> <code>c971610</code> implemented optimistic mutation projections and <code>64b7dcb</code> hardened identity and overlapping-write behavior.</li>
+<li><strong>C4 — Done in source; deployment pending.</strong> <code>9e19d85</code> closed the plaintext-key service boundary and initial operation-feed gap detection.</li>
+<li><strong>C5 — Done.</strong> The roadmap is reconciled, reused labels are disambiguated, omitted shipped waves are recorded, and only branches proven merged were removed.</li>
 </ul>
-<h2>Close-out sequence</h2>
+<p>The close-out completion gate remains <strong>unmet</strong> until billing is restored, deployment credentials are complete, one workflow releases the same revision across the development stack, and authenticated plus public smoke tests pass.</p>
+<h2>Omitted shipped waves and stable names</h2>
+<p>N20, N21, and N22 were reused in two historical sequences. Commit and branch names stay unchanged; future status reports should use these stable aliases.</p>
+<table>
+<thead>
+<tr>
+<th>Stable alias</th>
+<th>Historical label</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>AQ</strong></td>
+<td>Agent N20</td>
+<td>Shipped: layered design-quality prompt, tool consolidation, scenario evals, golden prompts, and an LLM judge.</td>
+</tr>
+<tr>
+<td><strong>MP</strong></td>
+<td>Agent N21</td>
+<td>Shipped: multi-provider key registry, validation, per-run model selection, and telemetry.</td>
+</tr>
+<tr>
+<td><strong>CPUX</strong></td>
+<td>Agent/Chat N22</td>
+<td>Shipped: redesigned chat shell, scannable tool timeline, composer model selector, and provider key cards.</td>
+</tr>
+<tr>
+<td><strong>TRACE</strong></td>
+<td>N23</td>
+<td>Shipped: owner-scoped DSL trace capture, retention, pagination, and monotonic per-run trace counts.</td>
+</tr>
+<tr>
+<td><strong>STUDIO20</strong></td>
+<td>Studio N20</td>
+<td>Shipped: Studio token, shell, panel, chat/dashboard, and affordance wave.</td>
+</tr>
+<tr>
+<td><strong>LAND21</strong></td>
+<td>Studio N21</td>
+<td>Shipped: landing replay, motion, marketing sections, waitlist/pricing, copy, and performance work; C2 retains the bundle guard.</td>
+</tr>
+<tr>
+<td><strong>EDIT22</strong></td>
+<td>Studio N22</td>
+<td>Shipped: token controls, binding UI, hover preview, event rows, and drag-to-bind editing ergonomics.</td>
+</tr>
+<tr>
+<td><strong>FB24</strong></td>
+<td>N24</td>
+<td>Shipped: compact typography, panel tabs, pinned derived Apply, agent activity restore, chrome polish, and the gap follow-up.</td>
+</tr>
+<tr>
+<td><strong>UNDO-P1 / UNDO-P2</strong></td>
+<td>Post-publish undo waves</td>
+<td>Shipped in <code>2042d34</code> and <code>6359b70</code>.</td>
+</tr>
+</tbody></table>
+<h2>Branch reconciliation</h2>
+<p>Twelve remote D1/D2 branches were deleted after their tips were proven ancestors of main. Two landing-performance branches were retained because Git still reports <code>609e066</code> as a unique patch; C5 does not discard unmerged evidence.</p>
+<h2>Explicitly deferred and unimplemented by C5</h2>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>C1 — Restore the release lane.</strong> Resolve the GitHub billing gate, rerun main checks, and deploy Studio, Convex development, and the Railway agent from the same main revision.<ul>
-<li>Done when CI and deploy jobs are green; authenticated create/edit, query, mutation, event, publish, and public-view smoke tests pass.</li>
+<li><strong>N6:</strong> publish Bolt as a standalone package.</li>
+<li><strong>Redo:</strong> session undo remains the v1 boundary.</li>
+<li><strong>Additional DNS-rebinding hardening:</strong> work beyond the accepted v1 stance remains deferred.</li>
+<li><strong>List virtualization:</strong> not implemented.</li>
+<li><strong>Remaining N7 quality backlog:</strong> still deferred until a later roadmap accepts individual items.</li>
+<li><strong>Next product slice:</strong> the agent-assisted CRUD authoring loop—connect an API; generate a List or Table plus Form; bind create/edit/delete; attach success/error/refresh flows; publish a working app—remains next and was not implemented during close-out.</li>
 </ul>
-</li>
-<li><input disabled="" type="checkbox"> <strong>C2 — Recover the N21 bundle boundary.</strong> Port the leaf-module dynamic import fix from commit <code>609e066</code> onto current main and add a bundle regression budget.<ul>
-<li>Done when the landing replay still works and first-load JavaScript remains at or below 250 KB under the recorded build measurement.</li>
-</ul>
-</li>
-<li><input disabled="" type="checkbox"> <strong>C3 — Finish the D1 optimistic fast-follow.</strong> Implement append, update, and remove projections with commit reconciliation and automatic rollback.<ul>
-<li>Done when success, server rejection, timeout, overlapping writes, invalidation, and item-identity cases are deterministic in preview and published apps.</li>
-</ul>
-</li>
-<li><input disabled="" type="checkbox"> <strong>C4 — Close production correctness gates.</strong> Decide and enforce the BYOK plaintext-key service boundary; expose the initial op-signal retention watermark.<ul>
-<li>Done when each trust/correctness case has an explicit test and no silent degraded state remains.</li>
-</ul>
-</li>
-<li><input disabled="" type="checkbox"> <strong>C5 — Reconcile project state.</strong> Refresh the roadmap, mark D1/D2 and N5 accurately, close or delete merged remote branches, and record deferred work separately.<ul>
-<li>Record the omitted agent-quality, multi-provider, chat-provider, DSL-trace, and N24 waves; resolve the reused N20/N21/N22 labels.</li>
-<li>Keep N6 Bolt publication, redo, DNS-rebinding hardening beyond the accepted v1 stance, List virtualization, and the rest of N7 out of this close-out.</li>
-</ul>
-</li>
-</ul>
-<h2>Execution order</h2>
-<p><code>C1 ∥ C2 → C3 ∥ C4 → C5</code></p>
-<h2>Completion gate</h2>
-<ul>
-<li>One green main revision is deployed across every development service.</li>
-<li>No promised D1/D2 behavior remains partially implemented.</li>
-<li>The landing performance regression is guarded.</li>
-<li>The published roadmap matches repository and deployment reality.</li>
-</ul>
-<h2>Next product slice after close-out</h2>
-<p>Build one agent-assisted CRUD authoring loop: connect an API, generate a List or Table plus Form, bind create/edit/delete mutations, attach success/error/refresh flows, and publish a working app. Use one golden app, the shipped scenario-eval harness, and DSL traces as acceptance evidence. This converts the D1/D2 and agent-quality primitives into a workflow a builder user can complete without hand-authoring JSON.</p>
+<h2>Release unblock order</h2>
+<ol>
+<li>Clear the GitHub Actions billing/spending hold.</li>
+<li>Complete the deployment credentials.</li>
+<li>Release one reconciled main revision through the single-revision workflow.</li>
+<li>Verify every development surface reports that same revision.</li>
+<li>Run authenticated create/edit, query, mutation, event, publish, and public-view smoke tests before calling N5 or C1 green.</li>
+</ol>
 </article>
 </main>
 </body>

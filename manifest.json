@@ -245,15 +245,6 @@
       "expiresAt": "2026-09-06T15:30:15.284Z"
     },
     {
-      "id": "rNmqx60vXT",
-      "project": "github.com/hatim-s/ai-app-builder",
-      "slug": "roadmap-closeout",
-      "title": "AI App Builder — Roadmap Close-out",
-      "kind": "plan",
-      "createdAt": "2026-08-07T17:18:26.037Z",
-      "expiresAt": "2026-09-06T17:18:26.037Z"
-    },
-    {
       "id": "0CginbqZax",
       "project": "github.com/hatim-s/brain-bloom",
       "slug": "sprig-chat-knowledge-roadmap",
@@ -279,6 +270,15 @@
       "kind": "plan",
       "createdAt": "2026-08-07T19:25:14.550Z",
       "expiresAt": "2026-09-06T19:25:14.550Z"
+    },
+    {
+      "id": "rNmqx60vXT",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "roadmap-closeout",
+      "title": "AI App Builder — Roadmap Close-out",
+      "kind": "plan",
+      "createdAt": "2026-08-07T17:18:26.037Z",
+      "expiresAt": "2026-09-06T20:02:17.217Z"
     }
   ]
 }
