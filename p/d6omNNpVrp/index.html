@@ -196,6 +196,26 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input disabled="" type="checkbox"> Parquet export (only on real analytical demand)</li>
 <li><input disabled="" type="checkbox"> Linear-time regex engine option for assertion checks (v1 ships trusted-config post-hoc stance; RE2/linear engine lifts the event-loop risk)</li>
 </ul>
+<h3>CLI v2 North Star epic</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>CLI2.0</strong> (S) Ratify the breaking CLI v2 North Star design contract in <code>docs/design/cli-north-star.md</code>. dep: — ⏳ root 2026-08-07</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.1</strong> (L) Implement v2 project, agent, test, case, dataset, metric, command-request, and generated JSON Schema contracts. dep: CLI2.0</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.2</strong> (M) Implement stable human/JSON/JSONL CLI result, help, error, and exit-code contracts. dep: CLI2.1</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.3</strong> (M) Implement project-root discovery, manifest/resource loading, aggregate validation, and canonical content hashing. dep: CLI2.1</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.4</strong> (L) Implement the project lock, transactional writer, recovery journal, optimistic hash guard, and semantic <code>--dry-run</code> diff. dep: CLI2.1, CLI2.3</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.5</strong> (M) Implement the project/resource command shell, including init/list/show/validate and interactive/non-interactive parity. dep: CLI2.2, CLI2.3, CLI2.4</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.6</strong> (L) Implement agent authoring plus native foreground/background adapter definitions and contract probes. dep: CLI2.4, CLI2.5</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.7</strong> (L) Implement test, direct-case, dataset-resource, attachment, rename, and removal commands. dep: CLI2.4, CLI2.5</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.8</strong> (L) Implement transactional CSV/JSON/JSONL case and dataset import, stable move-independent case ids, mapping, dedupe, append, and upsert. dep: CLI2.1, CLI2.4, CLI2.7</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.9</strong> (L) Implement metric authoring, stable presets, JSON/cURL import, and offline <code>metric test</code>. dep: CLI2.1, CLI2.4, CLI2.5</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.10</strong> (L) Implement HTTP and cURL agent adapters plus polling with extraction, retry/idempotency, limits, and cancellation. dep: CLI2.6</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.11</strong> (L) Implement run-scoped background CLI, correlated JSONL bridge with in-band cancellation and process fallback, and SSE/server-stream adapters. dep: CLI2.6, CLI2.10</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.12</strong> (L) Implement the required WebSocket adapter after the polling/SSE vertical slice. dep: CLI2.6, CLI2.10, CLI2.11</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.13</strong> (L) Cut execution over to <code>attest eval run</code>, persisted eval runs, cancellation, and structured event output. dep: CLI2.3, CLI2.6, CLI2.7, CLI2.8, CLI2.9, CLI2.10, CLI2.11, CLI2.12</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.14</strong> (M) Remove v1 discovery, authoring, execution, fixtures, docs, and top-level <code>attest run</code>; retain only the <code>attest init</code> convenience alias. dep: CLI2.13</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.15</strong> (L) Publish agent-first docs, JSON help/error/schema reference, <code>llms.txt</code>, and executable human/coding-agent quickstarts. dep: CLI2.2, CLI2.5, CLI2.6, CLI2.7, CLI2.8, CLI2.9, CLI2.10, CLI2.11, CLI2.12, CLI2.13, CLI2.14</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.16</strong> (M) Pass the final clean-environment acceptance gate in under five minutes for both a human and a coding agent. dep: CLI2.13, CLI2.14, CLI2.15</li>
+</ul>
 <hr>
 <p><em>Rehost after every status change — see Agent protocol step 5.</em></p>
 </article>
