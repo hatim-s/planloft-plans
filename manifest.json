@@ -225,6 +225,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T05:03:27.678Z",
       "expiresAt": "2026-09-05T21:10:08.216Z"
+    },
+    {
+      "id": "I0LcLZeFnD",
+      "project": "github.com/hatim-s/attest",
+      "slug": "attest-agent-eval-setup-ux",
+      "title": "Attest agent and eval setup UX",
+      "kind": "report",
+      "createdAt": "2026-08-07T05:27:49.831Z",
+      "expiresAt": "2026-09-06T05:27:49.832Z"
     }
   ]
 }

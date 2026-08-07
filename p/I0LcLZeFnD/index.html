@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Attest agent and eval setup UX</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body data-planloft-kind="report">
+<main class="planloft-plan">
+<article><h1>Attest agent and eval setup UX</h1>
+<blockquote>
+<p>Source-grounded product and interaction proposal for getting from an existing agent to a useful first evaluation in under five minutes.</p>
+</blockquote>
+<p><strong>Audit date:</strong> 7 August 2026<br><strong>Audited commit:</strong> <code>c0f946329af72c0edc6c85f9822778f8ff2a52db</code><br><strong>Recommendation:</strong> keep Attest file-first, add a guided CLI setup layer now, and add a visual editor only after the safe config-mutation foundation exists.</p>
+<h2>Executive answer</h2>
+<p>Attest already has a complete runnable loop, but not yet a complete setup experience.</p>
+<ul>
+<li><code>attest init [directory]</code> creates a fixed sample project. It is not interactive and exposes only <code>--force</code>.</li>
+<li>Users configure their real agent by editing <code>attest.config.yaml</code> or JSON. One config has exactly one agent target: a CLI command or an HTTP URL.</li>
+<li>Users create an “eval” by manually defining a suite, its cases or JSONL dataset, and one or more metrics. The product currently calls this a <strong>suite</strong>, while many users will naturally ask to “add an eval.”</li>
+<li>The generated quickstart and contract specifications document the primitives. There is no root README, dedicated setup guide, <code>agent add</code>, <code>eval add</code>, config validator command, connection tester, or step-by-step wizard.</li>
+<li>A pasted cURL command is <strong>not supported today</strong>. The current HTTP runner always sends <code>POST</code>, <code>Content-Type: application/json</code>, and the Attest request envelope to one URL. It cannot import arbitrary headers, auth, request bodies, or response extraction rules.</li>
+</ul>
+<p>The best UX is a progressive system with four equivalent entry points:</p>
+<ol>
+<li><strong>Guided setup</strong> — <code>attest init</code> for the first project and <code>attest agent add</code> / <code>attest eval add</code> afterward.</li>
+<li><strong>cURL import</strong> — paste an existing request; Attest parses it without executing it, redacts secrets, asks for input/output mappings, then performs an explicit connection test.</li>
+<li><strong>Composable flags</strong> — complete non-interactive commands for automation and AI coding agents.</li>
+<li><strong>Direct config editing</strong> — preserve YAML/JSON plus schema completion as the power-user path.</li>
+</ol>
+<h2>What exists today</h2>
+<h3>Current first-run flow</h3>
+<pre><code class="language-text">Install/build Attest
+        |
+        v
+attest init [directory]
+        |
+        +-- attest.config.yaml (fixed CLI sample)
+        +-- agents/cli-agent.mjs
+        +-- agents/http-agent.mjs
+        +-- agents/traced-agent.mjs
+        +-- ATTEST_QUICKSTART.md
+        |
+        v
+attest run
+        |
+        v
+Copy run ID -&gt; run again / diff / view / report
+</code></pre>
+<p>A cold audit of this path succeeded: initialization created all five files and the default run completed two of two cases successfully. That is a good foundation. The setup path demonstrates Attest, but it does not connect the user’s own system.</p>
+<h3>Current real-agent flow</h3>
+<pre><code class="language-text">Open attest.config.yaml
+        |
+        +-- CLI: replace agent.command; optionally add env / timeout / retries
+        |
+        `-- HTTP: replace agent block with type + URL
+                         (endpoint must speak the Attest envelope)
+        |
+        v
+Manually create suites, cases/datasets, and metrics
+        |
+        v
+attest run -&gt; interpret validation/runtime errors -&gt; edit -&gt; rerun
+</code></pre>
+<h3>Current capabilities and gaps</h3>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Current support</th>
+<th>UX assessment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Start a demo</td>
+<td><code>attest init</code> creates a passing sample</td>
+<td>Good proof of value, but looks like a project generator rather than onboarding</td>
+</tr>
+<tr>
+<td>Configure a CLI agent</td>
+<td><code>agent.type: cli</code>, argv array, env-name allowlist, timeout, retries</td>
+<td>Powerful and safe, but fully manual</td>
+</tr>
+<tr>
+<td>Configure an HTTP agent</td>
+<td>One URL; fixed POST, JSON envelope, exact 200 response</td>
+<td>Good native contract; insufficient for existing APIs</td>
+</tr>
+<tr>
+<td>Paste cURL</td>
+<td>Not accepted</td>
+<td>Major activation gap</td>
+</tr>
+<tr>
+<td>Add an eval</td>
+<td>Manually add a suite, cases/dataset, metric references</td>
+<td>Terminology and authoring burden are both high</td>
+</tr>
+<tr>
+<td>Add scoring</td>
+<td>Assertion, executable, and judge metrics exist</td>
+<td>Strong capability with no guided selection</td>
+</tr>
+<tr>
+<td>Validate before running</td>
+<td>Validation occurs as part of <code>attest run</code></td>
+<td>Users cannot separate config, connectivity, and scoring failures</td>
+</tr>
+<tr>
+<td>Edit visually</td>
+<td>Dashboard is read-only for config; YAML editor was cut from alpha</td>
+<td>Correct alpha cut; do not rush unsafe write-back</td>
+</tr>
+<tr>
+<td>Learn from docs</td>
+<td>Generated quickstart, handoff, and contract specs</td>
+<td>Contract-complete, journey-incomplete; root README/docs site still missing</td>
+</tr>
+</tbody></table>
+<h2>Product language and information architecture</h2>
+<p>Use this user-facing hierarchy:</p>
+<pre><code class="language-text">Project
+├── Agents        How Attest calls the system under test
+├── Evals         A goal-oriented group of test cases and scoring criteria
+│   ├── Cases     Inputs plus optional expected values
+│   └── Scorers   Assertions, judges, or custom code
+└── Runs          Immutable executions, evidence, comparisons, and reports
+</code></pre>
+<p>Keep <strong>suite</strong> as the v1 config/runtime term if necessary, but label it <strong>Eval</strong> in onboarding and explain it once: “An eval is stored as a suite in <code>attest.config</code>.” Do not make a new user learn “suite,” “case,” “metric,” “judge,” and “run” before they see value.</p>
+<h2>Recommended north-star flow</h2>
+<p><strong>Goal:</strong> connect one real agent, create one meaningful case and scorer, and produce a first result without requiring contract knowledge.</p>
+<pre><code class="language-text">Start
+  |
+  v
+1. Name project
+  |
+  v
+2. Connect agent
+  |-- Paste cURL
+  |-- HTTP endpoint
+  |-- Local CLI command
+  |-- Native Attest endpoint
+  `-- Framework template (later)
+  |
+  v
+3. Test connection with one sample input
+  |-- request preview
+  |-- explicit network/process confirmation
+  |-- response preview
+  `-- actionable repair loop
+  |
+  v
+4. Create eval goal
+  |
+  v
+5. Add cases
+  |-- one example now
+  |-- paste table/JSON
+  `-- import JSONL/CSV
+  |
+  v
+6. Choose scoring
+  |-- exact/contains/schema
+  |-- AI judge + rubric
+  `-- custom executable/HTTP
+  |
+  v
+7. Review generated diff
+  |
+  v
+8. Save and run
+  |
+  v
+Result summary -&gt; View evidence -&gt; Add cases -&gt; Establish baseline
+</code></pre>
+<h3>Step 1 — project</h3>
+<p>Ask only for a project name, defaulting to the directory name. If a config exists, switch to additive mode and say exactly which file will change.</p>
+<h3>Step 2 — connect an agent</h3>
+<p>Recommended choice labels:</p>
+<ul>
+<li><strong>Paste a cURL command</strong> — “Import an API request you already know works.”</li>
+<li><strong>HTTP endpoint</strong> — “My endpoint already accepts Attest’s request envelope.”</li>
+<li><strong>Local command</strong> — “Run a script or binary for each case.”</li>
+<li><strong>Start with an example</strong> — “Explore a passing demo before connecting my agent.”</li>
+</ul>
+<p>Ask advanced settings only after the basic target is understood. Timeout, retries, concurrency, environment forwarding, and trace options belong under “Customize reliability and evidence.”</p>
+<h3>Step 3 — prove the connection</h3>
+<p>Do not save an untested setup by default. Show:</p>
+<ol>
+<li>The sample input Attest will use.</li>
+<li>The redacted request or exact CLI argv.</li>
+<li>A clear <strong>Test connection</strong> action.</li>
+<li>The response and extracted output.</li>
+<li>Contract/transport diagnostics separated from agent-reported errors.</li>
+</ol>
+<p>Offer <strong>Save without testing</strong> for offline endpoints and CI-only environments, with a visible “Untested” status.</p>
+<h3>Steps 4–6 — create the first eval</h3>
+<p>Ask for the outcome in plain language before exposing metric types:</p>
+<blockquote>
+<p>What should a good answer do?</p>
+</blockquote>
+<p>Suggested presets:</p>
+<ul>
+<li><strong>Match an expected value</strong> → generates <code>equals</code>, <code>contains</code>, or JSON Schema assertions.</li>
+<li><strong>Follow a rubric</strong> → generates a judge metric, then asks for provider/model and the secret environment variable.</li>
+<li><strong>Use tools correctly</strong> → offers tool-called, order, argument, and failed-tool assertions; explains traces are required.</li>
+<li><strong>Run my own scorer</strong> → generates an executable or HTTP metric target.</li>
+<li><strong>Record outputs only</strong> → valid zero-scorer eval for exploration; prompt the user to add scoring after the first run.</li>
+</ul>
+<h3>Step 7 — review before write</h3>
+<p>Show a unified diff of every generated or changed file. Default actions:</p>
+<ul>
+<li><strong>Save and run eval</strong></li>
+<li><strong>Save only</strong></li>
+<li><strong>Go back</strong></li>
+<li><strong>Cancel without changes</strong></li>
+</ul>
+<p>Never silently replace an existing config, and never hide generated adapters.</p>
+<h2>CLI experience</h2>
+<h3>Interactive first run</h3>
+<pre><code class="language-text">$ attest init
+
+Set up an Attest project
+
+Project name: support-agent
+
+How should Attest call your agent?
+&gt; Paste a cURL command
+  HTTP endpoint that speaks the Attest protocol
+  Local command
+  Start with the example agent
+
+Paste cURL, then press Ctrl-D:
+curl https://api.example.com/chat \
+  -H &#39;Authorization: Bearer sk-••••&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  --data &#39;{&quot;message&quot;:&quot;hello&quot;}&#39;
+
+Found a bearer token. Store the value in which environment variable?
+AGENT_API_TOKEN
+
+Which request value changes for every case?
+&gt; body.message  &lt;- case.input.question
+
+Which response value is the agent output?
+&gt; choices[0].message.content
+
+Test connection now? Yes
+✓ Connected in 284 ms
+✓ Extracted output: &quot;Hello! How can I help?&quot;
+
+Create your first eval
+Eval name: smoke
+What should a good answer do? Answer accurately and concisely
+Add a case now? Yes
+Input question: What is your refund policy?
+Expected answer or key facts (optional): Refunds are available within 30 days
+Scoring: Follow a rubric
+
+Review: 2 files to create, 1 secret to set
+  attest.config.yaml
+  .attest/connectors/support-agent.yaml
+
+✓ Saved configuration
+Next: export AGENT_API_TOKEN=… &amp;&amp; attest run smoke
+</code></pre>
+<p>Secrets must never be echoed after paste. The example above uses bullets only to communicate redaction; logs and telemetry must not retain the original token.</p>
+<h3>Additive commands</h3>
+<pre><code class="language-bash"># Guided
+attest agent add
+attest eval add
+attest case add smoke
+attest scorer add smoke
+
+# Inspect and repair
+attest config validate
+attest agent test support-api --case smoke/refund-policy
+attest doctor
+
+# Automation / AI-agent friendly
+attest agent add support-api --from-curl request.sh --no-test --json
+attest eval add smoke --agent support-api --cases cases.jsonl --scorer correctness --json
+attest config validate --format json
+</code></pre>
+<p>Every interactive operation needs a complete flag/JSON equivalent. <code>--json</code> should return the files changed, warnings, next required environment variables, and the next suggested command.</p>
+<h3>Command behavior principles</h3>
+<ul>
+<li>Interactive only when stdin is a TTY; otherwise fail with the exact missing flags.</li>
+<li><code>--yes</code> accepts safe defaults, but never approves network calls or secret persistence implicitly.</li>
+<li><code>--dry-run</code> prints the proposed file diff and performs no write or request.</li>
+<li>Config writes must be atomic and preserve comments/formatting.</li>
+<li>Existing files changed since load must be rejected with a recovery command.</li>
+<li>Errors should identify the stage: <strong>parse</strong>, <strong>config</strong>, <strong>connection</strong>, <strong>contract</strong>, <strong>scoring</strong>, or <strong>persistence</strong>.</li>
+</ul>
+<h2>cURL import: recommended design</h2>
+<h3>Yes, but import it — never execute it</h3>
+<p>Treat cURL as a familiar interchange format, not as a shell script. Parse a strict subset:</p>
+<ul>
+<li>URL and <code>--url</code></li>
+<li><code>-X</code> / <code>--request</code></li>
+<li><code>-H</code> / <code>--header</code></li>
+<li><code>-d</code>, <code>--data</code>, <code>--data-raw</code>, and <code>--json</code></li>
+<li>basic auth declarations, converted to secret references</li>
+</ul>
+<p>Reject or require explicit manual handling for shell expansions, command substitutions, file uploads, <code>@file</code> bodies, client certificates, proxies, cookies, redirects, and arbitrary cURL config files. Never invoke a shell and never execute copied text.</p>
+<h3>Import sequence</h3>
+<ol>
+<li>Parse locally.</li>
+<li>Detect and redact credentials before any output or persistence.</li>
+<li>Explain unsupported flags with line/column locations.</li>
+<li>Infer content type and parse JSON bodies when possible.</li>
+<li>Ask which body fields come from <code>case.input</code>, <code>case.params</code>, or constants.</li>
+<li>Ask how to extract output and errors from a sample response.</li>
+<li>Show the redacted normalized request and response mapping.</li>
+<li>Ask before making the first request.</li>
+<li>Save only environment variable names, not secret values.</li>
+<li>Add parser and secret-redaction evidence to the config diff, not the secret itself.</li>
+</ol>
+<h3>Durable connector model</h3>
+<p>Do not overload the current native HTTP target. Preserve it as the clean Attest-envelope transport and add an explicit mapped-request connector.</p>
+<pre><code class="language-yaml">config_version: 2
+project: support-agent
+
+agents:
+  support-api:
+    type: http_request
+    request:
+      method: POST
+      url: https://api.example.com/chat
+      headers:
+        content-type: application/json
+        authorization:
+          env: AGENT_API_TOKEN
+          prefix: &#39;Bearer &#39;
+      json:
+        message: &#39;{{ case.input.question }}&#39;
+        locale: &#39;{{ case.params.locale }}&#39;
+    response:
+      output_path: $.choices[0].message.content
+      error_path: $.error.message
+
+evals:
+  smoke:
+    agent: support-api
+    cases:
+      - id: refund-policy
+        input: { question: How do refunds work? }
+    scorers: [answer-quality]
+</code></pre>
+<p>This is a north-star shape, not a request to rewrite v1 immediately. For the first implementation, a cURL importer can generate a visible local adapter that speaks the existing Attest envelope. That delivers user value while the mapped-request contract and migration story are designed deliberately.</p>
+<h2>Four UX options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Strength</th>
+<th>Cost/risk</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Improve docs only</td>
+<td>Fast, no runtime change</td>
+<td>Still makes users translate their system into contracts manually</td>
+<td>Necessary baseline, not sufficient</td>
+</tr>
+<tr>
+<td>Interactive CLI wizard</td>
+<td>Meets developers where they start; easy to version and test</td>
+<td>Needs safe config mutation and careful non-TTY behavior</td>
+<td><strong>Build first</strong></td>
+</tr>
+<tr>
+<td>cURL importer</td>
+<td>Fastest path from a working API to value</td>
+<td>Secret safety, mapping semantics, and unsupported shell syntax require rigor</td>
+<td><strong>Build with the wizard</strong> after parser design</td>
+</tr>
+<tr>
+<td>Dashboard setup wizard</td>
+<td>Best discoverability and response-mapping preview</td>
+<td>Requires authenticated writes, CST round-trip, stale-write protection, and more UI states</td>
+<td>Build after CLI/config foundations</td>
+</tr>
+</tbody></table>
+<p>The CLI wizard and future dashboard should call the same pure setup engine: inputs → diagnostics → proposed patches → optional connection test → atomic commit. This prevents two onboarding products from drifting.</p>
+<h2>Compatibility and migration strategy</h2>
+<h3>Phase A — no schema break</h3>
+<ul>
+<li>Make <code>attest init</code> interactive in TTY mode while retaining today’s sample via <code>attest init --example</code>.</li>
+<li>Add <code>attest config validate</code>, <code>attest agent test</code>, and <code>attest eval add</code> that write the existing single-agent v1 schema.</li>
+<li>Add JSON Schema hints and a focused “Connect your agent” guide.</li>
+<li>Correct contract docs that imply the deferred editor already exists.</li>
+</ul>
+<h3>Phase B — cURL import on v1</h3>
+<ul>
+<li>Parse cURL without execution.</li>
+<li>Generate an inspectable connector/adapter file plus the existing CLI agent target.</li>
+<li>Store only secret environment variable names.</li>
+<li>Provide request/response mapping fixtures and redacted dry-run output.</li>
+</ul>
+<h3>Phase C — named agents and evals</h3>
+<ul>
+<li>Introduce config v2 only when users need multiple named agents or direct mapped HTTP targets.</li>
+<li>Load v1 as an implicit <code>default</code> agent and keep it fully supported.</li>
+<li>Provide <code>attest config migrate --to 2 --dry-run</code>; never auto-rewrite.</li>
+<li>Let <code>attest run &lt;eval&gt; --agent &lt;agent&gt;</code> make comparisons explicit.</li>
+</ul>
+<h3>Phase D — visual setup</h3>
+<ul>
+<li>Reuse the setup engine behind loopback-authenticated write APIs.</li>
+<li>Add agent and eval empty states to <code>attest view</code>.</li>
+<li>Require diff preview, atomic CST patching, and stale-file refusal before enabling writes.</li>
+</ul>
+<h2>Required states and error recovery</h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Message and recovery</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cURL parsed, secret found</td>
+<td>“A bearer token was found. Choose an environment variable name; the token will not be saved.”</td>
+</tr>
+<tr>
+<td>Unsupported cURL option</td>
+<td>Name the flag and offer “Edit request manually” or “Show supported options”</td>
+</tr>
+<tr>
+<td>Endpoint unreachable</td>
+<td>Preserve all entered data; offer retry, edit URL, or save untested</td>
+</tr>
+<tr>
+<td>Response is non-JSON</td>
+<td>Show bounded redacted preview; allow text output or an adapter</td>
+</tr>
+<tr>
+<td>Output path matches nothing</td>
+<td>Show response tree and let the user select a value</td>
+</tr>
+<tr>
+<td>Trace scoring without traces</td>
+<td>Explain which scorer needs trace data and offer output-only scoring</td>
+</tr>
+<tr>
+<td>Existing config conflict</td>
+<td>Show exact paths and a diff; never suggest <code>--force</code> as the first recovery</td>
+</tr>
+<tr>
+<td>Missing secret at run time</td>
+<td>Name the environment variable and platform-appropriate export command without printing a value</td>
+</tr>
+</tbody></table>
+<h2>Accessibility and trust requirements</h2>
+<ul>
+<li>Full keyboard operation; visible focus; no arrow-key-only choice controls.</li>
+<li>Progress announced as text, for example “Step 3 of 7 — Test connection.”</li>
+<li>Visible labels and examples; placeholders are never the only labels.</li>
+<li>Status is expressed by icon/text as well as color.</li>
+<li>Redacted request/response previews work at 200% zoom and can be copied without hidden secrets.</li>
+<li>Every external request and process execution has a plain-language confirmation and target preview.</li>
+<li>Telemetry records at most command/category counts; never cURL text, URLs, headers, bodies, filenames, prompts, outputs, or secrets.</li>
+</ul>
+<h2>Documentation plan</h2>
+<p>Ship docs in the same order users encounter the product:</p>
+<ol>
+<li>Root README: install → connect agent → create eval → first result in under five minutes.</li>
+<li>“Connect your agent” guide with tabs for cURL, native HTTP, CLI, and framework adapters.</li>
+<li>“Create your first eval” guide using goal-oriented scoring presets.</li>
+<li>Config reference generated from the runtime schema.</li>
+<li>Agent and metric protocol specifications for advanced integrations.</li>
+<li>Troubleshooting organized by setup stage and error code.</li>
+</ol>
+<p>The current generated quickstart, handoff, and contract specs should remain, but the contract reference should not be the primary onboarding journey.</p>
+<h2>Delivery slices</h2>
+<table>
+<thead>
+<tr>
+<th>Slice</th>
+<th>Scope</th>
+<th>Exit criteria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Journey baseline</td>
+<td>Fix docs, root README, <code>config validate</code>, <code>agent test</code></td>
+<td>A new user connects a native CLI/HTTP agent without reading source</td>
+</tr>
+<tr>
+<td>2. Guided v1 setup</td>
+<td>Interactive <code>init</code>, <code>agent add</code>, <code>eval add</code>, dry-run diffs, JSON mode</td>
+<td>Existing v1 config is produced safely; non-interactive parity is complete</td>
+</tr>
+<tr>
+<td>3. cURL import</td>
+<td>Safe parser, secret redaction, mapping preview, generated adapter</td>
+<td>Representative JSON API requests import without shell execution or saved secrets</td>
+</tr>
+<tr>
+<td>4. Named config v2</td>
+<td>Multiple agents/evals, migration command, mapped HTTP connector</td>
+<td>Users compare agents without duplicate configs; v1 remains supported</td>
+</tr>
+<tr>
+<td>5. Visual setup</td>
+<td>Dashboard wizard using shared setup engine and CST writes</td>
+<td>Keyboard-accessible end-to-end setup with stale-write protection</td>
+</tr>
+</tbody></table>
+<h2>Success metrics</h2>
+<ul>
+<li>Median time from install to first real-agent result: <strong>under 5 minutes</strong>.</li>
+<li>At least <strong>80%</strong> unassisted completion in five-developer cold testing.</li>
+<li>At least <strong>90%</strong> of supported JSON cURL fixtures import without manual config editing.</li>
+<li><strong>Zero</strong> secret values written to config, logs, telemetry, generated diffs, or error reports.</li>
+<li>Users can identify whether a failure is configuration, connectivity, contract, agent, or scorer-related without source inspection.</li>
+<li>The entire setup flow is keyboard-complete and usable at 200% zoom.</li>
+</ul>
+<h2>Immediate product decisions</h2>
+<ol>
+<li>Adopt <strong>Agent → Eval → Cases + Scorers → Run</strong> as the user-facing model.</li>
+<li>Build the guided CLI before the visual editor.</li>
+<li>Treat cURL as a safe import format and never execute pasted shell text.</li>
+<li>Preserve native Attest HTTP as a simple, explicit contract; model arbitrary APIs separately.</li>
+<li>Delay config v2 until named agents or direct request mapping are implemented, and provide an explicit migration command.</li>
+<li>Cold-test the flow with users who have an existing agent and a working cURL command—not only users willing to write an adapter.</li>
+</ol>
+<h2>Source evidence</h2>
+<ul>
+<li><code>packages/cli/src/run-cli.ts:118–268</code> — current public commands; <code>init</code> is fixed and has only <code>--force</code>.</li>
+<li><code>packages/cli/src/init/templates.ts:6–167</code> — generated sample config, three example agents, and quickstart instructions.</li>
+<li><code>packages/contracts/src/config.ts:9–78</code> — one strict CLI-or-HTTP agent, suites/cases, and run settings.</li>
+<li><code>packages/core/src/runner/http-invoker.ts:186–235</code> — fixed POST, JSON content type, Attest envelope, and exact-200 behavior.</li>
+<li><code>docs/specs/config-format.md</code> — manual YAML/JSON authoring model and metric examples.</li>
+<li><code>docs/specs/agent-contract.md</code> — native request/response envelope and transport semantics.</li>
+<li><code>docs/specs/metric-contract.md</code> — assertion, executable, and judge scoring contracts.</li>
+<li><code>HANDOFF.md:1–78</code> — alpha flow, generated examples, verified runtime, and explicit editor/multi-turn cuts.</li>
+</ul>
+</article>
+</main>
+</body>
+</html>
