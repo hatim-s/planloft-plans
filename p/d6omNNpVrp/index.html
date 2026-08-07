@@ -6,10 +6,33 @@
 <meta name="robots" content="noindex, nofollow" />
 <title>attest — Implementation Plan</title>
 <style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
 :root {
+  color-scheme: light dark;
   --ink: #111;
   --paper: #fff;
   --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
 }
 * { box-sizing: border-box; }
 body {
@@ -29,12 +52,56 @@ h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; lette
 ul { padding-left: 1.1rem; }
 li { margin: 0.15rem 0; }
 a { color: var(--ink); text-underline-offset: 2px; }
-code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
-pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
 hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
 </style>
 </head>
 <body data-planloft-kind="plan">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
 <main class="planloft-plan">
 <article><h1>attest — Implementation Plan</h1>
 <blockquote>
@@ -53,6 +120,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><strong>Scope discipline</strong>: an item = one delegable unit. If you split it, add child items under it rather than silently expanding scope. New discoveries go to the <strong>Backlog</strong> section, never inline into locked phases.</li>
 <li><strong>Delegation hints</strong> per CLAUDE.md: <code>[codex:luna]</code> straightforward implementation, <code>[codex:terra]</code> small logic tasks, <code>[codex:sol]</code> large logic tasks, <code>[opus]</code> UI tasks, <code>[fable]</code> large UI or contract/design work. Orchestrator reviews all output; Opus critiques quality on merged tracks.</li>
 <li>Every item lands as a conventional commit that typechecks, lints, and passes owned tests. HITL for anything touching a real database.</li>
+<li><strong>Mandatory PR review gate for CLI v2 work</strong>: the implementation owner opens a ready PR but may not merge it. First verify one GPT-5.6 Sol/high adversarial-review canary, then run at least one additional independent reviewer. Reviewers publish actionable findings directly on GitHub. The implementation owner addresses every unresolved actionable thread; reviewers re-review the cumulative head and resolve or approve only when clean. Merge only the exact approved head after required CI is green.</li>
 </ol>
 <p><strong>Legend</strong>: <code>dep:</code> blocking dependencies · <code>∥</code> = parallel-safe within its track · sizes S/M/L.</p>
 <hr>
@@ -203,7 +271,7 @@ node /Users/admin/Projects/planloft/dist/cli.js deploy attest-implementation-pla
 <li><input checked="" disabled="" type="checkbox"> <strong>CLI2.2</strong> (M) Implement stable human/JSON/JSONL CLI result, help, error, and exit-code contracts. dep: CLI2.1 ✅ 2026-08-07 codex-cli2-2 merge 3c32457b001f68855b1f443b64d922bc05217d12; strict result/event/help/error schemas, deterministic human/JSON/JSONL output, stable exit codes, 538 tests, and required macOS/Ubuntu CI passed.</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>CLI2.3</strong> (M) Implement project-root discovery, manifest/resource loading, aggregate validation, and canonical content hashing. dep: CLI2.1 ⏳ codex-cli2-3 2026-08-07 ✅ 2026-08-07 codex-cli2-3 b0575a3b3cfb66fc0e827f640f496519240434ba; 13 focused loader tests, full monorepo gates, and required macOS/Linux CI green</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>CLI2.4</strong> (L) Implement the project lock, transactional writer, recovery journal, optimistic hash guard, and semantic <code>--dry-run</code> diff. dep: CLI2.1, CLI2.3 ✅ 2026-08-08 codex-cli2-4 merge 747964bb9b4a97c53bc32e9ad377eb8f1585e2b1; path-safe locks, journaled atomic writes/recovery, optimistic hash conflicts, zero-write semantic dry runs, 15 focused tests, full workspace gates, and required macOS/Ubuntu CI passed.</li>
-<li><input disabled="" type="checkbox"> <strong>CLI2.5</strong> (M) Implement the project/resource command shell, including init/list/show/validate and interactive/non-interactive parity. dep: CLI2.2, CLI2.3, CLI2.4</li>
+<li><input disabled="" type="checkbox"> <strong>CLI2.5</strong> (M) Implement the project/resource command shell, including init/list/show/validate and interactive/non-interactive parity. dep: CLI2.2, CLI2.3, CLI2.4 ⏳ codex-cli2-5 2026-08-08</li>
 <li><input disabled="" type="checkbox"> <strong>CLI2.6</strong> (L) Implement agent authoring plus native foreground/background adapter definitions and contract probes. dep: CLI2.4, CLI2.5</li>
 <li><input disabled="" type="checkbox"> <strong>CLI2.7</strong> (L) Implement test, direct-case, dataset-resource, attachment, rename, and removal commands. dep: CLI2.4, CLI2.5</li>
 <li><input disabled="" type="checkbox"> <strong>CLI2.8</strong> (L) Implement transactional CSV/JSON/JSONL case and dataset import, stable move-independent case ids, mapping, dedupe, append, and upsert. dep: CLI2.1, CLI2.4, CLI2.7</li>
