@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>AI App Builder — Early GTM Readiness and Polish Plan</title>
+<style>/* planloft theme: minimal-dual — the minimal skin, with real dark-mode support.
+   Identical typography and spacing to `minimal`; the only addition is a
+   prefers-color-scheme block so the page follows the reader's browser theme
+   instead of forcing light paper. */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --fill: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e7ebe8;
+    --paper: #0f1210;
+    --rule: #272d29;
+    --fill: #191d1a;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--fill); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--fill); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body data-planloft-kind="plan">
+<main class="planloft-plan">
+<article><h1>AI App Builder — Early GTM Readiness and Polish Plan</h1>
+<p><strong>Prepared:</strong> 2026-08-08<br><strong>Planning horizon:</strong> 4–6 focused weeks to paid early access<br><strong>Product thesis:</strong> an AI-native builder for safe, editable internal tools whose app is a JSON spec, whose agent changes can be inspected and reverted, and whose published apps can read and mutate real APIs without exposing credentials.</p>
+<h2>Executive decision</h2>
+<p>The builder is no longer in a broad “prove the architecture” phase. The core architecture, visual builder, agent editing, data queries, releases, event/lifecycle system, encrypted app secrets, BYOK foundations, and pessimistic mutations are substantially present. CRUD is the current product spine and should remain the integration priority.</p>
+<p>Feature parity is <strong>not yet complete for a credible CRUD/internal-tool launch</strong>, but the missing feature set is narrow. Do not add another large platform layer before GTM. Complete the small internal-tool parity pack, then spend most capacity on activation, reliability, usage control, security, and polish.</p>
+<p>The fastest credible release sequence is:</p>
+<ol>
+<li><strong>Private design-partner alpha:</strong> CRUD golden paths, truthful onboarding, production deployment, recovery/security gates, and funnel instrumentation.</li>
+<li><strong>Paid early access:</strong> authoritative usage limits, billing, legal/support basics, and repeatable launch operations.</li>
+<li><strong>Team beta:</strong> invitations, roles, shared ownership, and durable audit/history.</li>
+</ol>
+<h2>Current progress snapshot</h2>
+<h3>Confirmed shipped on main</h3>
+<ul>
+<li>JSON-spec builder, preview, publish/release rendering, and public app routes.</li>
+<li>Human and agent co-editing with operation history, undo/revert, forked conversations, and guarded revision semantics.</li>
+<li>Query runtime with page/app scope, derived state, lifecycle handlers, event actions, retries, and proxy boundaries.</li>
+<li>Pessimistic mutation contract and execution path for POST, PUT, PATCH, and DELETE, including invalidation and secret-aware proxying.</li>
+<li>Encrypted app-secret vault, origin restrictions, release redaction, and server-only secret resolution.</li>
+<li>Clerk ownership boundaries, user BYOK storage foundations, agent run telemetry, and provider/model selection.</li>
+<li>Builder catalog for Stack, Text, Button, TextInput, Checkbox, RadioGroup, Form, Table, Chart, and List.</li>
+<li>CI-gated Studio deployment topology and a development stack across Vercel, Railway, Convex, and Clerk.</li>
+<li>Event/lifecycle platform, interaction editor, loop protection, event log, and agent grammar from the recent D2 merge series.</li>
+</ul>
+<h3>Current work observed but not counted as shipped</h3>
+<p>The working tree shows active implementation around optimistic mutation projection/rollback, query cache projection, op-signal watermarks, stricter BYOK service-key boundaries, and deployment documentation. These are strong CRUD/trust fast-follows, but remain <strong>work in progress until committed, reviewed, green in CI, and deployed from one verified SHA</strong>.</p>
+<p>Two local commits also add a landing bundle budget and fail-closed measurement. They are ahead of the remote main branch and therefore are not yet part of the deployed product.</p>
+<h3>Repository delivery state</h3>
+<ul>
+<li>Remote main currently ends with the merged D2 event/lifecycle stack.</li>
+<li>No open pull requests or issues were visible during the review.</li>
+<li>No remote CRUD branch was visible; the CRUD/optimistic work currently appears in the local working tree.</li>
+<li>Historical N21 branch refs still exist but their relevant landing performance work has been ported into two local commits.</li>
+<li>CI/deployment is currently vulnerable to an account billing blocker. Treat remote green checks and same-SHA deployment as a release gate, not an assumption.</li>
+</ul>
+<h2>Roadmap reconciliation</h2>
+<p>The older roadmap and GTM notes correctly identified writes, secret handling, deployment, billing, and trust as launch blockers. The first three have moved materially:</p>
+<ul>
+<li><strong>Writes:</strong> pessimistic CRUD exists; optimistic behavior is actively being completed.</li>
+<li><strong>Secrets:</strong> encrypted app secrets and stronger BYOK boundaries exist or are in progress.</li>
+<li><strong>Deployment:</strong> a development topology and CI-gated Studio deployment exist.</li>
+</ul>
+<p>What remains unchanged:</p>
+<ul>
+<li>Usage telemetry is non-authoritative and cannot safely drive billing or quotas.</li>
+<li>There is no complete paid-plan, entitlement, checkout, webhook, or budget-exhaustion experience.</li>
+<li>Onboarding promises persistent CRUD outcomes before explaining where data lives or how an API is connected.</li>
+<li>The current product is single-owner; collaboration and governance remain later differentiators.</li>
+<li>Production recovery, stress, security, accessibility, and launch operations have not yet passed an evidence-based GTM gate.</li>
+</ul>
+<h2>Scope boundary: the last pre-GTM product features</h2>
+<h3>Must add for credible internal-tool CRUD parity</h3>
+<p>Keep this as one deliberately small catalog expansion:</p>
+<ul>
+<li><strong>Select</strong> input with static and query-backed options.</li>
+<li><strong>Date</strong> input; retain TextInput number mode for the first release, adding currency formatting only if a golden template proves it necessary.</li>
+<li><strong>Status/Badge</strong> display primitive for operational tables and lists.</li>
+<li><strong>Confirmation dialog</strong> for destructive actions; a general modal/drawer system is not required yet.</li>
+<li><strong>Search/filter pattern</strong> for Table/List, either as first-class props or a documented TextInput + state + query pattern.</li>
+<li><strong>Form validation and field-level error states</strong>, including server mutation errors.</li>
+</ul>
+<p>Each addition must cover the frozen definition, renderer, inspector, DSL round trip, agent grammar, event/binding behavior, accessibility, and golden examples. Avoid adding tabs, navigation builders, arbitrary JavaScript, database hosting, code export, mobile-native output, CRDT collaboration, or a broad component marketplace before the first paid cohort.</p>
+<h3>Defer until evidence demands it</h3>
+<ul>
+<li>File upload as an app block (chat image attachments already solve a different problem).</li>
+<li>Custom domains, unless a design partner makes it a purchase condition.</li>
+<li>Teams, roles, and approval workflows for the solo/prosumer early-access cohort.</li>
+<li>General modal/drawer/navigation primitives beyond destructive confirmation.</li>
+<li>Hosted database/schema builder; the first GTM can be API-first if onboarding says so clearly.</li>
+</ul>
+<h2>Parallel delivery lanes</h2>
+<p>CRUD remains the spine. The following lanes can run in parallel using isolated branches/worktrees and the existing ownership boundaries. Shared schema/catalog/contracts must land through an integrator wave.</p>
+<h3>Lane A — CRUD completion and golden paths (critical path)</h3>
+<p><strong>Goal:</strong> five operations feel like one coherent feature: list, create, inspect, edit, delete.</p>
+<ul>
+<li>Finish pessimistic and optimistic behavior, deterministic rollback, invalidation, duplicate-submit protection, and visible pending/success/error states.</li>
+<li>Finish structured mutation authoring and agent grammar.</li>
+<li>Build three golden apps: customer requests tracker, expense tracker, and inventory manager.</li>
+<li>Test draft and released runtime parity against the same API fixtures.</li>
+</ul>
+<p><strong>Exit:</strong> each golden app completes create/read/update/delete, survives refresh, handles 4xx/5xx/timeout, and publishes without credential leakage.</p>
+<h3>Lane B — Internal-tool block parity</h3>
+<p><strong>Goal:</strong> close only the UI primitives that block believable CRUD apps.</p>
+<ul>
+<li>Select, Date, Badge/Status, destructive confirmation, search/filter, and validation states.</li>
+<li>Keyboard and screen-reader semantics from the first commit.</li>
+<li>Agent examples and evaluator fixtures for each primitive.</li>
+</ul>
+<p><strong>Exit:</strong> the three golden apps need no fake text fields or custom workarounds.</p>
+<h3>Lane C — Activation, onboarding, and templates</h3>
+<p><strong>Goal:</strong> a new user reaches a successful live data operation without guessing the product model.</p>
+<ul>
+<li>Replace generic CRUD promises with two explicit paths: “connect an API” and “explore with sample data.”</li>
+<li>Add connection test, secret setup, method/endpoint explanation, and recovery copy.</li>
+<li>Turn golden apps into maintained starter templates with preview and duplicate.</li>
+<li>Add an activation checklist: first app, first agent change, first data read, first successful write, first publish.</li>
+<li>Reconcile the landing message: lead with safe editable internal tools, then use selective revert as proof.</li>
+</ul>
+<p><strong>Exit:</strong> median test user reaches first successful published CRUD action in under 15 minutes without operator help.</p>
+<h3>Lane D — Usage control, entitlements, and billing</h3>
+<p><strong>Goal:</strong> prevent uncontrolled spend and make the pricing page true.</p>
+<ul>
+<li>Record usage at a trusted server boundary; never bill from caller-supplied Convex telemetry.</li>
+<li>Enforce per-run step/token/time limits plus monthly account allowances.</li>
+<li>Add free/pro entitlements, Stripe Checkout, Customer Portal, idempotent webhooks, and a small immutable usage ledger.</li>
+<li>Define BYOK behavior separately from platform-funded usage.</li>
+<li>Build warning, exhaustion, failed-payment, cancellation, and restore-access states.</li>
+</ul>
+<p><strong>Exit:</strong> duplicate webhooks cannot double-grant access, every paid capability checks entitlement server-side, and a hard budget cannot be exceeded through retries or concurrent sessions.</p>
+<h3>Lane E — Production release and reliability</h3>
+<p><strong>Goal:</strong> deploy, observe, recover, and roll back one coherent product version.</p>
+<ul>
+<li>Resolve the GitHub billing/CI blocker; push the local bundle-budget commits through review.</li>
+<li>Establish separate production Clerk, Convex, Railway, and Vercel configuration.</li>
+<li>Deploy all services from one recorded commit SHA; add health/version endpoints and a compatibility smoke test.</li>
+<li>Document database backup/restore, secret rotation, rollback, incident response, and ownership.</li>
+<li>Add error aggregation, structured logs, uptime checks, and a public status surface.</li>
+</ul>
+<p><strong>Exit:</strong> a clean checkout reaches production through CI; rollback and restore are rehearsed; operators can identify app, user, run, release, and service version without exposing secrets.</p>
+<h3>Lane F — Trust, security, and recovery</h3>
+<p><strong>Goal:</strong> make “safe co-editing” true under failure and hostile input.</p>
+<ul>
+<li>Persist the minimum operation/checkpoint history required to recover after reload or another device; clearly label session-only history until then.</li>
+<li>Close op-signal pruning/gap recovery and stale-writer cases.</li>
+<li>Threat-model proxy SSRF/DNS rebinding, secret exfiltration, cross-tenant access, stored/published XSS, prompt injection through API data, and release redaction.</li>
+<li>Enforce tenant checks on every read/write/action boundary; automate adversarial tests.</li>
+<li>Add account export/deletion and secret revocation workflows.</li>
+</ul>
+<p><strong>Exit:</strong> critical/high findings are zero; red-team fixtures cannot cross tenant boundaries or leak secrets; a failed agent run and failed mutation both recover deterministically.</p>
+<h3>Lane G — Product analytics and learning loop</h3>
+<p><strong>Goal:</strong> know whether the product activates and retains users before buying traffic.</p>
+<ul>
+<li>Instrument: landing CTA, sign-up, onboarding start/completion, template chosen, first app, first agent success, first data read, first write, first publish, return visit, and error category.</li>
+<li>Keep product analytics separate from operational traces; establish consent and retention rules.</li>
+<li>Add in-product feedback and “report this run” with redacted diagnostics.</li>
+<li>Build a small cohort dashboard for activation, time-to-value, publish success, agent success, CRUD success, and week-one return.</li>
+</ul>
+<p><strong>Exit:</strong> every critical funnel stage has a denominator, failure reason, and owner; a design-partner session can be replayed through events without reading private app data.</p>
+<h3>Lane H — Comprehensive polish and stress pass</h3>
+<p><strong>Goal:</strong> remove the friction that makes a technically complete product feel unfinished.</p>
+<ul>
+<li>Run the iteration matrix below after UI contracts settle; fix severity 0/1 issues immediately and schedule severity 2 issues against activation impact.</li>
+<li>Perform a copy pass across navigation, empty/loading/error/success states, destructive actions, publish, quotas, and authentication.</li>
+<li>Ensure reduced motion and no delayed invisible primary CTA; motion must not obstruct automation, scrolling, or comprehension.</li>
+<li>Validate responsive density for landing, onboarding, dashboard, builder panels, data editor, settings, and released apps.</li>
+</ul>
+<p><strong>Exit:</strong> the launch matrix is signed off with screenshots, recordings, measurements, owners, and accepted residual risks.</p>
+<h3>Lane I — GTM operations, support, and proof</h3>
+<p><strong>Goal:</strong> be able to acquire and support the first 10 paying users.</p>
+<ul>
+<li>Recruit 5–10 design partners with one narrow job: build a governed internal CRUD tool over an existing API.</li>
+<li>Publish a 90-second product demo, three template walkthroughs, concise API/data docs, privacy policy, terms, support SLA, and security overview.</li>
+<li>Create onboarding email, stalled-user rescue, feedback interview, incident, refund, and cancellation playbooks.</li>
+<li>Collect proof around time saved, successful published tools, and recovery from agent mistakes.</li>
+</ul>
+<p><strong>Exit:</strong> every signup has an owner and support route; the landing page has real proof; launch messaging describes what the product reliably does today.</p>
+<h2>Polish and stress-test matrix</h2>
+<h3>End-to-end product journeys</h3>
+<p>Test on Chrome, Safari, and Firefox at desktop and mobile/tablet breakpoints:</p>
+<ol>
+<li>Landing → sign-up → onboarding → template → first agent run.</li>
+<li>Connect API → save secret → test query → bind Table/List.</li>
+<li>Create → optimistic state → server success → invalidated query refresh.</li>
+<li>Update/delete → confirmation → server rejection → rollback and recovery.</li>
+<li>Undo one agent run while retaining later human edits.</li>
+<li>Publish → visit live slug → refresh → pinned release → republish.</li>
+<li>Quota warning → exhaustion → upgrade → entitlement restore.</li>
+<li>Sign out/in, expired auth, deleted account, and revoked provider key.</li>
+</ol>
+<h3>Data and failure matrix</h3>
+<ul>
+<li>Empty, one-row, 1,000-row, deeply nested, malformed, and partially missing data.</li>
+<li>API 400/401/403/404/409/422/429/500, network loss, slow response, invalid JSON, oversized response, and retry storms.</li>
+<li>Double click, back navigation, reload mid-write, concurrent writes, out-of-order responses, and stale revisions.</li>
+<li>Agent unavailable, provider unavailable, rate limited, tool loop, partial stream, browser close, and service-version skew.</li>
+<li>Publish while editing, release read during deploy, proxy timeout, secret rotation, and invalidated credentials.</li>
+</ul>
+<h3>Performance budgets</h3>
+<ul>
+<li>Landing LCP ≤ 2.5 s p75, CLS ≤ 0.1, INP ≤ 200 ms on representative mobile hardware/network.</li>
+<li>Dashboard usable ≤ 3 s p75 after auth; builder interaction remains responsive with 250 blocks and 20 queries/mutations.</li>
+<li>Agent feedback appears immediately, long runs can abort, and streamed updates do not freeze the canvas.</li>
+<li>Published app query/mutation overhead is measured separately from upstream API latency.</li>
+<li>Bundle budgets fail closed in CI and are measured on the artifact actually deployed.</li>
+</ul>
+<h3>Accessibility and usability</h3>
+<ul>
+<li>Complete keyboard path, visible focus, sensible focus return, skip navigation, labels/descriptions, and error associations.</li>
+<li>Screen-reader pass for onboarding, builder controls, Data panel, dialogs, notifications, Table, Form, and released apps.</li>
+<li>Contrast, reduced motion, 200% zoom, reflow, touch targets, and status announcements.</li>
+<li>Destructive actions and irreversible consequences use explicit copy and confirmation.</li>
+</ul>
+<h3>Security and privacy</h3>
+<ul>
+<li>Cross-tenant ID substitution on every query, mutation, action, release, message, attachment, secret, and telemetry endpoint.</li>
+<li>SSRF, redirect chains, DNS rebinding, credential forwarding, request/response size, and egress-rate limits.</li>
+<li>Prompt injection via fetched data and attachments; HTML/style/URL sanitization; release credential redaction.</li>
+<li>Secret values absent from browser state, public releases, logs, analytics, support bundles, and error messages.</li>
+<li>Dependency and supply-chain scan, headers/CSP, cookie policy, session expiry, webhook signature/replay, and deletion retention.</li>
+</ul>
+<h3>Operational resilience</h3>
+<ul>
+<li>Backup and restore rehearsal with measured RPO/RTO.</li>
+<li>Rollback Studio, agent, and backend independently while enforcing compatibility.</li>
+<li>Load test concurrent agent runs, published-app traffic, proxy writes, telemetry, and live subscriptions.</li>
+<li>Alert tests for error rate, latency, budget burn, failed billing webhooks, and deployment mismatch.</li>
+<li>Incident drill with customer communication and post-incident follow-up.</li>
+</ul>
+<h2>Launch gates</h2>
+<h3>Gate 1 — Design-partner alpha</h3>
+<ul>
+<li>Three golden CRUD apps pass the full journey.</li>
+<li>Production environment is isolated, observable, restorable, and same-SHA verified.</li>
+<li>Truthful data onboarding and at least one maintained template are live.</li>
+<li>Critical auth/secret/proxy/release tests are green.</li>
+<li>Funnel analytics and in-product feedback are live.</li>
+<li>No severity 0/1 known issues.</li>
+</ul>
+<h3>Gate 2 — Paid early access</h3>
+<ul>
+<li>Authoritative usage ledger, hard budgets, entitlements, checkout, portal, and webhook replay protection are live.</li>
+<li>Terms, privacy, support, account deletion/export, and incident process are live.</li>
+<li>At least five design partners have completed the golden journey; at least three returned and published again.</li>
+<li>Activation and retention targets are set from observed data rather than invented benchmarks.</li>
+</ul>
+<h3>Gate 3 — Broader/team GTM</h3>
+<ul>
+<li>Invitations, roles, shared ownership, and durable audit/history exist.</li>
+<li>Proven acquisition message and at least two credible customer stories exist.</li>
+<li>Support load, gross margin, reliability, and security evidence support wider distribution.</li>
+</ul>
+<h2>Recommended six-week sequence</h2>
+<h3>Week 0: integration and release hygiene</h3>
+<ul>
+<li>Freeze shared contracts for the CRUD milestone.</li>
+<li>Convert current working-tree changes into narrow conventional commits/PRs.</li>
+<li>Resolve CI billing and deploy the same SHA across the development stack.</li>
+<li>Establish owners and dashboards for each launch gate.</li>
+</ul>
+<h3>Weeks 1–2: alpha critical path</h3>
+<ul>
+<li>Lane A completes CRUD and golden fixtures.</li>
+<li>Lane E establishes production/recovery basics.</li>
+<li>Lane C ships truthful onboarding and one sample-data template.</li>
+<li>Lane G instruments the funnel.</li>
+<li>Lane F closes the highest-risk auth/secret/proxy cases.</li>
+</ul>
+<h3>Weeks 3–4: paid-product path</h3>
+<ul>
+<li>Lane B lands only launch-blocking primitives.</li>
+<li>Lane D ships usage limits and billing-lite.</li>
+<li>Lane H runs cross-browser, accessibility, responsive, performance, and failure iterations.</li>
+<li>Invite the first five design partners; fix activation blockers daily.</li>
+</ul>
+<h3>Weeks 5–6: evidence and launch</h3>
+<ul>
+<li>Complete the full stress matrix and recovery drill.</li>
+<li>Close legal/support/incident materials and publish real proof.</li>
+<li>Invite the next five design partners, verify repeat usage, and open paid early access only when Gate 2 is met.</li>
+</ul>
+<h2>Immediate next slice</h2>
+<p>Run four parallel tracks now:</p>
+<ol>
+<li><strong>CRUD integration</strong> remains the spine and owns shared-contract timing.</li>
+<li><strong>Production + recovery</strong> starts immediately because it is independent of CRUD UI details and is the longest operational lead time.</li>
+<li><strong>Authoritative usage + entitlements</strong> starts at the server boundary before Stripe UI work.</li>
+<li><strong>Onboarding + golden templates + funnel analytics</strong> starts with sample-data mode and becomes live-data aware as CRUD contracts stabilize.</li>
+</ol>
+<p>Start the small block-parity pack after the CRUD contract freeze. Run the broad polish matrix only after those surfaces stabilize; otherwise the team will repeatedly polish moving UI.</p>
+<h2>Definition of “GTM-ready”</h2>
+<p>GTM-ready does not mean every requested feature exists. It means a narrowly defined buyer can reach a valuable, published CRUD outcome quickly; the outcome survives failure; spend and access are bounded; secrets and tenants stay isolated; operators can recover the service; and the team can measure, support, and improve the journey.</p>
+</article>
+</main>
+</body>
+</html>

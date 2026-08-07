@@ -270,6 +270,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T05:03:27.678Z",
       "expiresAt": "2026-09-06T18:51:43.461Z"
+    },
+    {
+      "id": "Eh9PI5QAVB",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "ai-app-builder-gtm-readiness",
+      "title": "AI App Builder — Early GTM Readiness and Polish Plan",
+      "kind": "plan",
+      "createdAt": "2026-08-07T19:25:14.550Z",
+      "expiresAt": "2026-09-06T19:25:14.550Z"
     }
   ]
 }
