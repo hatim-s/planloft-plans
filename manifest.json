@@ -243,6 +243,15 @@
       "kind": "plan",
       "createdAt": "2026-08-07T15:18:16.038Z",
       "expiresAt": "2026-09-06T15:18:16.039Z"
+    },
+    {
+      "id": "hkzxNXyJkW",
+      "project": "github.com/hatim-s/ai-app-builder",
+      "slug": "roadmap-closeout",
+      "title": "AI App Builder — Roadmap Close-out",
+      "kind": "plan",
+      "createdAt": "2026-08-07T15:30:07.097Z",
+      "expiresAt": "2026-09-06T15:30:07.097Z"
     }
   ]
 }
