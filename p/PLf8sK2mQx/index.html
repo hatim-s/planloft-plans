@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Planloft Single-Skill, Contract Repair, API, and Distribution Roadmap</title>
+<style>/* planloft theme: detailed — structured, technical, readable */
+:root {
+  --ink: #1a1d21;
+  --muted: #5a6169;
+  --paper: #fbfbfc;
+  --rule: #e3e6ea;
+  --accent: #2563eb;
+  --code-bg: #f2f4f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.planloft-plan {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 6rem;
+}
+h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
+h2 {
+  font-size: 1.25rem;
+  margin: 2.25rem 0 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; color: var(--muted); }
+a { color: var(--accent); }
+code { background: var(--code-bg); padding: 0.12em 0.35em; border-radius: 4px; font-size: 0.9em; }
+pre { background: var(--code-bg); padding: 1rem 1.15rem; overflow: auto; border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.95em; }
+th, td { border: 1px solid var(--rule); padding: 0.5rem 0.7rem; text-align: left; }
+th { background: #eef1f5; }
+blockquote {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+</style>
+</head>
+<body data-planloft-kind="plan">
+<main class="planloft-plan">
+<article><h1>Planloft Single-Skill, Contract Repair, API, and Distribution Roadmap</h1>
+<h2>Goal</h2>
+<p>Make Planloft an agent-native document compiler with one deep semantic skill, a
+self-teaching CLI, trustworthy contracts, a reusable Node interface, and a verified
+installation experience across npm, pnpm, Bun, Codex, and Claude Code.</p>
+<p>The target product model is intentionally small:</p>
+<ul>
+<li><code>write-plan</code> is the only semantic skill.</li>
+<li>The CLI owns rendering, storage, preview, copy, publication, removal, configuration,
+and discovery.</li>
+<li><code>planloft help</code> teaches agents and humans how every command works.</li>
+<li>Non-plan documents remain supported through <code>planloft hoist</code>; they do not need an
+automatically triggered <code>save-doc</code> skill.</li>
+<li>Installing the CLI, installing the skill, and installing the full plugin are treated
+as distinct products with explicit capability boundaries.</li>
+</ul>
+<h2>Context</h2>
+<p>Planloft currently ships five skills: <code>write-plan</code>, <code>save-doc</code>, <code>planloft-preview</code>,
+<code>planloft-copy</code>, and <code>planloft-deploy</code>. Four are unnecessary as independent semantic
+skills. Preview, copy, and deploy restate single CLI invocations. Save-doc adds capture
+policy, but its actual persistence capability already exists at the <code>hoist</code> seam.</p>
+<p>Planloft also exposes eleven public CLI commands, a canonical document pipeline, three
+built-in themes, a project-keyed global store, a small Node library, and GitHub Pages
+publication. The main architectural problem is not a shortage of commands. It is that
+command knowledge, validation, output formatting, and side effects are spread across
+skills, command prompts, CLI handlers, README prose, configuration code, renderer code,
+and the GitHub adapter.</p>
+<p>The external <code>skills</code> CLI already provides the desired installation mechanism. It can
+discover <code>skills/&lt;name&gt;/SKILL.md</code> from a GitHub repository and install a selected skill
+for Codex, Claude Code, and other agents. The canonical package-runner forms are:</p>
+<pre><code class="language-bash">npx skills add hatim-s/planloft --skill write-plan
+pnpm dlx skills add hatim-s/planloft --skill write-plan
+bunx skills add hatim-s/planloft --skill write-plan
+</code></pre>
+<p>There is no generic <code>npm skills</code>, <code>pnpm skills</code>, or <code>bun skills</code> command. The runner is
+<code>npx</code>, <code>pnpm dlx</code>, or <code>bunx</code>; the executable being run is the separate <code>skills</code> npm
+package.</p>
+<h2>Decisions to ratify</h2>
+<ol>
+<li>Planloft has exactly one semantic skill: <code>write-plan</code>.</li>
+<li>Automatic agent capture applies only to substantial plans.</li>
+<li><code>preview</code>, <code>copy</code>, and <code>deploy</code> remain CLI commands, not skills.</li>
+<li><code>save-doc</code> is removed; non-plan documents use <code>planloft hoist</code>.</li>
+<li><code>planloft help</code> becomes the authoritative command-discovery interface.</li>
+<li>The remaining skill contains only compact references to other commands.</li>
+<li>Deploy and publish remain explicit, user-authorized external writes.</li>
+<li>The canonical document pipeline remains the source of truth:
+<code>document source -&gt; canonical document -&gt; render, hoist, or publish</code>.</li>
+<li>Direct Markdown, JSON, and explicitly trusted HTML remain supported.</li>
+<li>Agent-authored plans should be Markdown sources rendered into HTML; direct trusted
+HTML remains available to explicit callers.</li>
+<li>Installing the skill does not imply that the CLI, hooks, themes, or plugin assets
+were installed.</li>
+<li>GitHub Pages deployment is public. An unguessable URL and <code>noindex</code> do not provide
+access control because the hosting repository and manifest are enumerable.</li>
+</ol>
+<h2>Dependency graph</h2>
+<pre><code class="language-text">                         +-----------------------------+
+                         | P0: Decisions + ADR + tests |
+                         +--------------+--------------+
+                                        |
+             +--------------------------+---------------------------+
+             |                          |                           |
+             v                          v                           v
+ +------------------------+  +------------------------+  +------------------------+
+ | P1: One skill + help   |  | P2: Contract repairs  |  | P3: Installer UX       |
+ | - delete wrappers      |  | - publication lane    |  | - npx                   |
+ | - rewrite write-plan   |  | - configuration lane  |  | - pnpm dlx              |
+ | - deepen CLI help      |  | - document lane       |  | - bunx                  |
+ +-----------+------------+  +-----------+------------+  +-----------+------------+
+             |                           |                           |
+             +---------------------------+---------------------------+
+                                         |
+                                         v
+                         +-------------------------------+
+                         | R1: Surface/contracts release |
+                         +---------------+---------------+
+                                         |
+                 +-----------------------+----------------------+
+                 |                                              |
+                 v                                              v
+ +----------------------------------+            +-----------------------------+
+ | P4: Deep public Node interface   |            | P5: Migration + docs       |
+ | - application module             |            | - stale skill cleanup      |
+ | - configuration module           |            | - install capability map   |
+ | - persistence module             |            | - release-tag recipes      |
+ | - publication module             |            +---------------+-------------+
+ +----------------+-----------------+                            |
+                  +----------------------+-----------------------+
+                                         |
+                                         v
+                            +-------------------------+
+                            | R2: Interface release   |
+                            +------------+------------+
+                                         |
+                                         v
+                            +-------------------------+
+                            | P6: Observe and iterate |
+                            +-------------------------+
+</code></pre>
+<p>After Phase 0, the skill/help, contract-repair, installer, and public-interface
+discovery lanes can proceed in parallel. Skill and help must converge before installer
+testing. Contract semantics must be stable before the public Node interface is frozen.</p>
+<h2>Phase 0 - Freeze the product model</h2>
+<h3>0.1 Capture the existing surface</h3>
+<p>Before changing behavior:</p>
+<ol>
+<li>Record <code>planloft --help</code>.</li>
+<li>Record <code>planloft help &lt;command&gt;</code> for every public command.</li>
+<li>Record all currently discovered skill names.</li>
+<li>Record the Codex and Claude plugin manifests.</li>
+<li>Record hook matchers and hook messages.</li>
+<li>Record the npm pack manifest and exact tarball contents.</li>
+<li>Run existing ingestion, hoisting, and rendering tests.</li>
+<li>Run typecheck and build.</li>
+<li>Add baseline tests for help, configuration, themes, hooks, deploy option parsing,
+copy destination, skill discovery, and package contents.</li>
+</ol>
+<h3>0.2 Add a superseding ADR</h3>
+<p>Add a new ADR that:</p>
+<ul>
+<li>Supersedes ADR-0002 E4, which introduced <code>save-doc</code>.</li>
+<li>Supersedes ADR-0004&#39;s five-skill decision.</li>
+<li>Amends ADR-0001 D1 and D23 to distinguish CLI, skill, and plugin installation.</li>
+<li>Amends ADR-0001 D16 if Claude slash-command aliases are removed.</li>
+<li>Amends ADR-0001 D9 if agent plan authoring becomes Markdown-only.</li>
+<li>Preserves write-direct plan capture, project identity, plan-mode hooks, theme-guided
+authoring, the existing CLI verbs, and ADR-0007&#39;s canonical document pipeline.</li>
+</ul>
+<h3>0.3 Define release boundaries</h3>
+<p>Use two releases:</p>
+<ul>
+<li>Release 1: one skill, deep help, all contract repairs, installer experience, and
+migration documentation.</li>
+<li>Release 2: deep public Node interface after the repaired behavior is stable.</li>
+</ul>
+<p>This prevents the installation and contract work from being blocked by premature
+interface design.</p>
+<h2>Phase 1 - Consolidate to one skill and deepen help</h2>
+<h3>1.1 Remove shallow skills</h3>
+<p>Delete:</p>
+<pre><code class="language-text">skills/planloft-preview/
+skills/planloft-copy/
+skills/planloft-deploy/
+skills/save-doc/
+</code></pre>
+<p>If the intended model is literally CLI-only for preview/copy/deploy, also retire:</p>
+<pre><code class="language-text">commands/planloft-preview.md
+commands/planloft-copy.md
+commands/planloft-deploy.md
+</code></pre>
+<p>Do not remove the corresponding CLI commands, the <code>resolve</code> helper, hooks, themes,
+document kinds, or canonical document operations.</p>
+<h3>1.2 Rewrite <code>write-plan</code></h3>
+<p>The remaining skill should have one deep responsibility: author and persist a
+substantial, renderable Planloft plan.</p>
+<h4>Trigger contract</h4>
+<p>Use for:</p>
+<ul>
+<li>Substantial implementation plans.</li>
+<li>Migration, refactor, architecture, and design plans worth retaining.</li>
+<li>Plan-mode completion with durable content.</li>
+<li>Explicit requests to save a plan with Planloft.</li>
+</ul>
+<p>Skip for:</p>
+<ul>
+<li>Trivial one-step work.</li>
+<li>Conversational or throwaway output.</li>
+<li>Requests that only preview, copy, render, hoist, or deploy an existing source.</li>
+</ul>
+<h4>Resolution contract</h4>
+<p>Run:</p>
+<pre><code class="language-bash">planloft resolve --kind plan --slug &quot;&lt;slug&gt;&quot; --title &quot;&lt;title&gt;&quot;
+</code></pre>
+<p>Never guess the storage path.</p>
+<h4>Authoring contract</h4>
+<ul>
+<li>Author Markdown.</li>
+<li>Include title, slug, kind, and status frontmatter.</li>
+<li>Follow the returned theme guidance.</li>
+<li>Write a standalone plan that can be reviewed without conversation history.</li>
+<li>Let Planloft render the HTML artifact; do not manually author generated HTML.</li>
+</ul>
+<h4>Discovery references</h4>
+<p>The skill should say:</p>
+<pre><code class="language-text">Run `planloft help` to discover all operations.
+
+Common next actions:
+- `planloft render &lt;input&gt;` produces HTML without storing or publishing.
+- `planloft preview [slug]` opens a stored plan locally.
+- `planloft copy [slug]` copies raw source into the repository.
+- `planloft deploy [slug]` explicitly publishes a stored plan.
+- `planloft hoist &lt;input&gt;` stores another Markdown, JSON, or trusted HTML document.
+</code></pre>
+<p>The skill must not reproduce every flag or workflow. It must never deploy unless the
+user explicitly requests publication.</p>
+<h3>1.3 Create a command-knowledge module</h3>
+<p>Concentrate these facts for every command:</p>
+<ul>
+<li>Name and category.</li>
+<li>One-line purpose.</li>
+<li>Whether it consumes a source or stored document.</li>
+<li>Whether it writes locally.</li>
+<li>Whether it performs an external write.</li>
+<li>Whether it is destructive.</li>
+<li>Defaults.</li>
+<li>Examples.</li>
+<li>Trust and privacy notes.</li>
+</ul>
+<p>The command-knowledge module should serve:</p>
+<ul>
+<li>Commander root help.</li>
+<li>Per-command help.</li>
+<li>README verification or generation.</li>
+<li>Tests.</li>
+<li>The compact discovery section in <code>write-plan</code>.</li>
+<li>Plugin default prompts.</li>
+</ul>
+<p>This creates one authoritative interface instead of allowing skills, docs, and CLI
+descriptions to drift independently.</p>
+<h3>1.4 Deepen <code>planloft help</code></h3>
+<p>Group commands by workflow:</p>
+<pre><code class="language-text">Write and transform sources
+  render, hoist, publish
+
+Work with stored documents
+  list, preview, copy, deploy, rm
+
+Agent integration
+  resolve
+
+Configuration
+  config, init
+</code></pre>
+<p>Teach state transitions:</p>
+<pre><code class="language-text">render:  source -&gt; artifact
+hoist:   source -&gt; canonical document -&gt; store
+publish: source -&gt; store -&gt; artifact -&gt; GitHub Pages
+preview: stored document -&gt; temporary local artifact
+copy:    stored document -&gt; repository source
+deploy:  stored document -&gt; public GitHub Pages artifact
+</code></pre>
+<p>Include safety markers:</p>
+<ul>
+<li><code>--trusted-html</code> is an explicit trust decision.</li>
+<li><code>publish</code> and <code>deploy</code> write to GitHub.</li>
+<li>The backing GitHub repository and manifest are public.</li>
+<li><code>rm</code> deletes stored source.</li>
+<li>Comments require valid giscus configuration.</li>
+<li>TTL must be a positive integer.</li>
+</ul>
+<p>Every command should include at least one tested example.</p>
+<h3>1.5 Align integration files</h3>
+<p>Update:</p>
+<ul>
+<li>Codex plugin metadata.</li>
+<li>Claude plugin metadata.</li>
+<li>README.</li>
+<li>Hook wording.</li>
+<li><code>resolve</code> comments.</li>
+<li>Package description and keywords.</li>
+<li>Default prompts.</li>
+<li>ADR index and statuses.</li>
+</ul>
+<h3>Phase 1 gate</h3>
+<ul>
+<li>Exactly one skill is discoverable: <code>write-plan</code>.</li>
+<li>No shipped file advertises the four removed skills.</li>
+<li>Root help lists all public commands.</li>
+<li>The remaining skill refers to help instead of duplicating commands.</li>
+<li>Hooks still nudge only toward <code>write-plan</code>.</li>
+<li>The npm tarball contains one skill directory.</li>
+<li>CLI-only and full-plugin installation both remain coherent.</li>
+</ul>
+<h2>Phase 2 - Repair all ten contract gaps</h2>
+<p>Run the publication, configuration/theme, and document/persistence lanes in parallel.</p>
+<h3>Publication lane</h3>
+<h4>2.1 Implement comments fully</h4>
+<p>Current <code>--comments</code> behavior inserts a placeholder.</p>
+<ol>
+<li>Define required giscus repository and category configuration.</li>
+<li>Decide global versus project override precedence.</li>
+<li>Validate configuration before rendering or Git operations.</li>
+<li>Render the real giscus integration only when requested.</li>
+<li>Escape every inserted attribute.</li>
+<li>Fail early with an actionable message when configuration is incomplete.</li>
+<li>Keep default artifacts comment-free.</li>
+<li>Document GitHub Discussions prerequisites.</li>
+<li>Test comments off, correctly configured, and misconfigured.</li>
+<li>Remove every promise of comments until it works end to end.</li>
+</ol>
+<h4>2.2 Implement the promised GitHub authentication flow</h4>
+<ol>
+<li>Specify credential discovery precedence.</li>
+<li>Preserve authenticated <code>gh</code> as the preferred path.</li>
+<li>Distinguish interactive TTY and noninteractive execution.</li>
+<li>Prompt only in an interactive terminal.</li>
+<li>Provide stable, machine-readable errors in CI.</li>
+<li>Validate credentials before repository mutation.</li>
+<li>Never echo tokens.</li>
+<li>Never persist token-bearing remote URLs.</li>
+<li>Align <code>init</code>, help, README, and runtime behavior.</li>
+<li>Test authenticated gh, configured fallback, missing credentials, invalid
+credentials, and noninteractive execution.</li>
+</ol>
+<h4>2.3 Validate TTL</h4>
+<ol>
+<li>Use one parser for <code>deploy</code> and <code>publish</code>.</li>
+<li>Accept only finite positive integers.</li>
+<li>Reject zero, negative, fractional, mixed, and non-finite values.</li>
+<li>Use the configured default only when TTL is omitted.</li>
+<li>Do not let zero accidentally mean permanent.</li>
+<li>Validate <code>defaultTtlDays</code> in configuration.</li>
+<li>Use an injected clock for expiry tests.</li>
+<li>Print the effective expiry.</li>
+<li>Verify that redeploy keeps the stable URL and moves expiry forward.</li>
+<li>Document the exact rule in help.</li>
+</ol>
+<h4>2.4 Correct privacy language</h4>
+<ol>
+<li>Remove &quot;public-by-link&quot; wording.</li>
+<li>State that the path is hard to guess and marked <code>noindex</code>.</li>
+<li>State that the backing repository is public.</li>
+<li>State that repository visitors can enumerate document folders and manifest
+metadata.</li>
+<li>Show the warning in deploy help and output.</li>
+<li>Document that sensitive plans should remain local.</li>
+<li>Snapshot-test the disclosure text.</li>
+</ol>
+<h3>Configuration and theme lane</h3>
+<h4>2.5 Validate configuration instead of swallowing errors</h4>
+<ol>
+<li>Distinguish absent, malformed, inaccessible, and semantically invalid config.</li>
+<li>Use defaults only when the file is absent.</li>
+<li>Produce stable diagnostics for all other failures.</li>
+<li>Define a versioned configuration contract.</li>
+<li>Ship a JSON Schema if manual editing remains supported.</li>
+<li>Validate before saving.</li>
+<li>Write atomically.</li>
+<li>Preserve unrelated valid settings during targeted updates.</li>
+<li>Validate after the editor closes.</li>
+<li>Test every failure class.</li>
+</ol>
+<h4>2.6 Make unknown themes explicit</h4>
+<ol>
+<li>Require the theme directory to exist.</li>
+<li>Distinguish a missing theme from an optional missing asset.</li>
+<li>List available themes in errors.</li>
+<li>Preserve documented defaults only inside a real theme.</li>
+<li>Validate constrained layouts.</li>
+<li>Test built-in themes, user overrides, invalid names, missing optional layouts, and
+invalid slots.</li>
+<li>Fail resolution before a plan is written with an unusable theme.</li>
+</ol>
+<h3>Document and persistence lane</h3>
+<h4>2.7 Make agent-authored plans Markdown-only</h4>
+<ol>
+<li>Keep direct trusted HTML ingestion for explicit callers.</li>
+<li>Make <code>write-plan</code> author Markdown.</li>
+<li>Remove or deprecate HTML from the agent-capture setting.</li>
+<li>Keep existing stored HTML documents readable and deployable.</li>
+<li>Provide migration diagnostics for old <code>planFormat: html</code> configuration.</li>
+<li>Make <code>resolve</code> return a Markdown path for plans.</li>
+<li>Update theme authoring templates.</li>
+<li>Test legacy HTML documents and new Markdown plans.</li>
+</ol>
+<h4>2.8 Copy to the repository root</h4>
+<ol>
+<li>Resolve the Git root.</li>
+<li>Copy to <code>&lt;git-root&gt;/.planloft/plans/</code>.</li>
+<li>Fall back to the current directory only outside a Git repository.</li>
+<li>Print when fallback occurs.</li>
+<li>Define overwrite behavior explicitly.</li>
+<li>Preserve exact raw source.</li>
+<li>Test root, nested directory, worktree, no-origin repository, and non-Git directory.</li>
+</ol>
+<h4>2.9 Fix schema identity</h4>
+<ol>
+<li>Correct the <code>planlof</code> typo in the schema <code>$id</code>.</li>
+<li>Choose a stable versioned schema URL.</li>
+<li>Assert the exact identity in tests.</li>
+<li>Align README, package, and source references.</li>
+<li>Confirm the schema is in the tarball.</li>
+</ol>
+<h4>2.10 Align runtime and schema validation</h4>
+<ol>
+<li>Reject present-but-empty metadata strings.</li>
+<li>Apply the same rule to title, slug, kind, theme, and status.</li>
+<li>Continue allowing omission.</li>
+<li>Normalize whitespace before validation.</li>
+<li>Define heading-based title inference explicitly.</li>
+<li>Run shared fixtures through runtime and JSON Schema validation.</li>
+<li>Test CLI flags and JSON sources through the same fixtures.</li>
+<li>Keep unknown-field rejection.</li>
+<li>Version the schema when the accepted document language changes.</li>
+</ol>
+<h3>Phase 2 gate</h3>
+<ul>
+<li>Every gap has a regression test.</li>
+<li>Publication inputs are validated before Git or GitHub effects.</li>
+<li>Configuration corruption cannot masquerade as defaults.</li>
+<li>Plan capture cannot lose metadata.</li>
+<li>Runtime and JSON Schema fixtures agree.</li>
+<li>Privacy and security wording matches reality.</li>
+</ul>
+<h2>Phase 3 - Add the skills installation experience</h2>
+<h3>3.1 Define three installation products</h3>
+<h4>CLI-only</h4>
+<p>Provides the executable, themes, schemas, renderer, store, and publication behavior.</p>
+<pre><code class="language-bash">npm install -g planloft
+pnpm add -g planloft
+bun add -g planloft
+</code></pre>
+<h4>Skill-only</h4>
+<p>Provides only <code>write-plan</code> instructions. It does not install the executable, hooks,
+themes, runtime assets, or plugin metadata.</p>
+<pre><code class="language-bash">npx skills add hatim-s/planloft --skill write-plan
+pnpm dlx skills add hatim-s/planloft --skill write-plan
+bunx skills add hatim-s/planloft --skill write-plan
+</code></pre>
+<p>The CLI is a prerequisite for a functioning skill.</p>
+<h4>Full plugin</h4>
+<p>Provides the one skill, plan-mode hook backstop, plugin metadata, and the appropriate
+runtime/package integration.</p>
+<h3>3.2 Publish paired recipes</h3>
+<pre><code class="language-bash"># npm + Codex
+npm install -g planloft
+npx skills add hatim-s/planloft --skill write-plan -g -a codex
+
+# pnpm + Codex
+pnpm add -g planloft
+pnpm dlx skills add hatim-s/planloft --skill write-plan -g -a codex
+
+# Bun + Codex
+bun add -g planloft
+bunx skills add hatim-s/planloft --skill write-plan -g -a codex
+</code></pre>
+<p>Document <code>-a claude-code</code> for Claude Code and omission of <code>-g</code> for project scope.
+Reserve <code>-y</code> for CI/noninteractive examples.</p>
+<h3>3.3 Version skill sources</h3>
+<ul>
+<li>Support the repository shorthand for latest development.</li>
+<li>Verify a release-tagged GitHub URL for reproducible installation.</li>
+<li>Test that each release tag contains exactly the intended skill.</li>
+<li>Never imply that npm package versioning automatically pins a GitHub-sourced skill.</li>
+</ul>
+<h3>3.4 Run the installer matrix</h3>
+<p>Test:</p>
+<ul>
+<li><code>npx</code>, <code>pnpm dlx</code>, and <code>bunx</code>.</li>
+<li>Codex and Claude Code.</li>
+<li>Project and global scope.</li>
+<li>Symlink and <code>--copy</code> installation.</li>
+<li>CLI absent and CLI installed.</li>
+<li>Release-tagged and latest source.</li>
+<li>List, add, update, remove, and reinstall.</li>
+</ul>
+<p>Assertions:</p>
+<ol>
+<li>Exactly one skill is discovered.</li>
+<li>The installed name is <code>write-plan</code>.</li>
+<li>Installed content matches the release tag.</li>
+<li>The target agent discovers it after reload.</li>
+<li><code>planloft resolve</code> works with the CLI installed.</li>
+<li>Missing CLI produces an actionable prerequisite message.</li>
+<li>Skill installation never claims hooks were installed.</li>
+</ol>
+<h3>3.5 Migrate existing skill installations</h3>
+<p>Document removal of stale copies:</p>
+<pre><code class="language-bash">npx skills remove save-doc
+npx skills remove planloft-preview
+npx skills remove planloft-copy
+npx skills remove planloft-deploy
+npx skills add hatim-s/planloft --skill write-plan
+</code></pre>
+<p>Cover global/project scope, Codex/Claude targets, copy/symlink installations, full
+plugin upgrades, and manual cleanup when the installer cannot locate old files.</p>
+<p>Do not retain discoverable deprecated skill stubs.</p>
+<h3>3.6 Consider a first-party setup command later</h3>
+<p>Only after the external installer route is stable, evaluate:</p>
+<pre><code class="language-bash">planloft setup --agent codex
+planloft setup --agent claude-code
+</code></pre>
+<p>Do not build this in the first release if it would duplicate unstable external
+installer internals.</p>
+<h2>Phase 4 - Deepen the public Node interface</h2>
+<p>Do not freeze exact method signatures before interviewing the intended callers and
+settling error semantics.</p>
+<h3>4.1 Command-knowledge module</h3>
+<p>Concentrate command purpose, categories, defaults, examples, effects, and safety notes.
+Let CLI help, documentation, the skill, and tests consume the same interface.</p>
+<h3>4.2 Application module behind the CLI seam</h3>
+<p>Move operation behavior out of Commander handlers. The CLI adapter should only parse
+arguments, call the application module, format returned results, and select an exit
+code.</p>
+<p>Requirements:</p>
+<ul>
+<li>No <code>console.*</code> below the CLI adapter.</li>
+<li>No <code>process.exitCode</code> below the CLI adapter.</li>
+<li>No process-argument parsing below the CLI adapter.</li>
+<li>Operations return structured values.</li>
+<li>Failures use stable categories.</li>
+<li>Validation occurs before effects.</li>
+</ul>
+<h3>4.3 Validated configuration module</h3>
+<p>Concentrate parsing, defaults, validation, project overrides, diagnostics, theme
+resolution, and persistence. Give CLI, library, renderer, publisher, and tests one
+consistent configuration interface.</p>
+<h3>4.4 Document persistence module</h3>
+<p>Unify direct hoisting, agent write-direct capture, canonical source serialization,
+metadata preservation, index mutation, replacement, copy lookup, and removal.</p>
+<h3>4.5 Publication module</h3>
+<p>Concentrate TTL policy, authentication acquisition, privacy disclosure, comment
+configuration, rendering, manifest behavior, and host invocation. Keep GitHub Pages as
+an adapter satisfying the publication interface rather than the owner of every policy.</p>
+<h3>4.6 Interface-design checkpoint</h3>
+<p>Resolve:</p>
+<ol>
+<li>First-class callers: CLI, Node scripts, agents, CI.</li>
+<li>Pure versus local-effect versus external-effect operations.</li>
+<li>Required structured results.</li>
+<li>Stable error categories.</li>
+<li>Async behavior.</li>
+<li><code>cwd</code> and Planloft home injection.</li>
+<li>Deterministic clocks and filesystem testing.</li>
+<li>Real adapter seams versus speculative abstraction.</li>
+<li>Compatibility for existing free-function exports.</li>
+<li>Versioned public types versus implementation details.</li>
+</ol>
+<h3>Phase 4 gate</h3>
+<ul>
+<li>CLI and Node callers use the same implementation.</li>
+<li>Application modules never format terminal output.</li>
+<li>Phase 2 semantics are represented in the public interface.</li>
+<li>Compatibility exports are tested.</li>
+<li>Structured results contain no secrets.</li>
+<li>Publication can be tested without a live GitHub mutation.</li>
+<li>Packed declarations expose only intentional public types.</li>
+</ul>
+<h2>Phase 5 - Documentation and migration</h2>
+<h3>README</h3>
+<p>Separate:</p>
+<ol>
+<li>CLI installation.</li>
+<li>CLI plus one skill.</li>
+<li>Full plugin installation.</li>
+</ol>
+<p>State that skill installation alone does not install the executable.</p>
+<h3>Command documentation</h3>
+<p>Make <code>planloft help</code> authoritative. Verify README examples against help rather than
+maintaining independent prose.</p>
+<h3>Skill documentation</h3>
+<p>Document only <code>write-plan</code>. Do not recreate removed skills as large README sections.</p>
+<h3>Migration guide</h3>
+<p>Cover:</p>
+<ul>
+<li>Removed skill names.</li>
+<li>Removed slash aliases, if applicable.</li>
+<li>Replacement CLI commands.</li>
+<li>Skills CLI cleanup commands.</li>
+<li>Markdown-only plan authoring migration.</li>
+<li>Configuration validation changes.</li>
+<li>TTL validation changes.</li>
+<li>Privacy wording changes.</li>
+<li>Comments prerequisites.</li>
+<li>Public Node interface compatibility.</li>
+</ul>
+<h2>Phase 6 - Verification and release</h2>
+<h3>Release 1: surface, contracts, and installation</h3>
+<p>Required verification:</p>
+<ol>
+<li>Unit tests.</li>
+<li>Typecheck.</li>
+<li>Build.</li>
+<li>Whitespace validation.</li>
+<li>CLI help snapshots.</li>
+<li>Schema/runtime fixture conformance.</li>
+<li>Configuration failure tests.</li>
+<li>Hook tests.</li>
+<li>Theme resolution tests.</li>
+<li>Package dry run with a task-local cache.</li>
+<li>Exact tarball inspection.</li>
+<li>Exactly one packed skill.</li>
+<li>Local and release-tag skill discovery.</li>
+<li><code>npx</code>, <code>pnpm dlx</code>, and <code>bunx</code> installation smokes.</li>
+<li>Codex and Claude project/global installation.</li>
+<li>CLI installation with npm, pnpm, and Bun.</li>
+<li>Migration from all five old skills.</li>
+<li>Disposable GitHub Pages publication.</li>
+<li>Redeploy, expiry, and prune verification.</li>
+<li>Secret-redaction inspection.</li>
+<li>Public-repository warning inspection.</li>
+<li>Live comments integration verification.</li>
+</ol>
+<h3>Release 2: deep public interface</h3>
+<p>Required verification:</p>
+<ol>
+<li>Isolated JavaScript imports.</li>
+<li>Isolated TypeScript compilation.</li>
+<li>ESM declarations.</li>
+<li>Free-function compatibility.</li>
+<li>CLI/library behavioral parity.</li>
+<li>Controlled filesystem tests.</li>
+<li>Host adapter tests.</li>
+<li>No process output below the CLI seam.</li>
+<li>No tokens in returned structures.</li>
+<li>npm, pnpm, and Bun consumer installation.</li>
+<li>Exact packed-artifact inspection.</li>
+</ol>
+<h3>Registry gate</h3>
+<p>Before publishing final install instructions:</p>
+<ol>
+<li>Verify the unscoped <code>planloft</code> package live on npm.</li>
+<li>Confirm the exact version, ownership, and provenance.</li>
+<li>Pack the release commit.</li>
+<li>Inspect package name, entrypoints, declarations, skills, themes, schemas, hooks, and
+commands.</li>
+<li>Publish.</li>
+<li>Install from the registry in clean npm, pnpm, and Bun consumers.</li>
+<li>Confirm <code>command -v planloft</code>, version, help, and resolve behavior.</li>
+<li>Confirm the release-tagged skill calls the installed CLI successfully.</li>
+</ol>
+<h2>Phase 7 - Observe and iterate</h2>
+<p>Without adding Planloft telemetry:</p>
+<ol>
+<li>Track runner-specific installation failures.</li>
+<li>Track Codex versus Claude path problems.</li>
+<li>Track stale removed skills.</li>
+<li>Track confusion between skill-only and full-plugin installation.</li>
+<li>Track GitHub authentication, comments, and public-repository misunderstandings.</li>
+<li>Track configuration migrations.</li>
+<li>Track whether agents use <code>planloft help</code> effectively.</li>
+<li>Consider a first-party setup command only if the two-step installation remains a
+demonstrated source of friction.</li>
+<li>Revisit non-plan semantic skills only if repeated evidence shows that <code>hoist</code> plus
+help is insufficient.</li>
+<li>Do not reintroduce shallow one-command skills merely for discoverability.</li>
+</ol>
+<h2>Parallel work lanes</h2>
+<p>After Phase 0, these lanes can execute simultaneously:</p>
+<ul>
+<li>Skill deletion, <code>write-plan</code>, and manifests.</li>
+<li>Command knowledge and CLI help.</li>
+<li>Publication contracts.</li>
+<li>Configuration and themes.</li>
+<li>Document persistence and schemas.</li>
+<li>External skills installer experiments.</li>
+<li>Public-interface caller discovery.</li>
+</ul>
+<p>Convergence rules:</p>
+<ul>
+<li>Skill and help converge before installer testing.</li>
+<li>Contract lanes converge before the public interface freezes.</li>
+<li>Skill, contract, installer, and migration work converge before Release 1.</li>
+<li>Release 1 semantics stabilize before Release 2 publishes the deeper interface.</li>
+</ul>
+<h2>Risks and mitigations</h2>
+<h3>Existing installations retain removed skills</h3>
+<p>Mitigation: provide explicit removal commands and verify update behavior for project,
+global, copy, symlink, Codex, Claude, and plugin installations.</p>
+<h3>Skill installation is mistaken for full installation</h3>
+<p>Mitigation: publish a capability matrix and require the CLI in every skill-install
+recipe.</p>
+<h3>Help becomes another drifting documentation surface</h3>
+<p>Mitigation: back help, README checks, skill references, and tests with one
+command-knowledge module.</p>
+<h3>Contract repairs accidentally become breaking surprises</h3>
+<p>Mitigation: document TTL, config, Markdown capture, privacy, and schema changes in one
+migration guide and release them before freezing the deeper Node interface.</p>
+<h3>Public interface exposes implementation accidents</h3>
+<p>Mitigation: finalize repaired behavior first, interview callers, and make the
+application interface the shared test surface.</p>
+<h3>GitHub publication leaks sensitive content</h3>
+<p>Mitigation: describe the public repository accurately, retain explicit deploy
+authorization, never log credentials, and advise keeping sensitive plans local.</p>
+<h2>Explicit non-goals</h2>
+<ul>
+<li>Do not create replacement micro-skills.</li>
+<li>Do not duplicate full CLI documentation inside <code>write-plan</code>.</li>
+<li>Do not imply that skill installation installs the CLI or hooks.</li>
+<li>Do not invent <code>npm skills</code>, <code>pnpm skills</code>, or <code>bun skills</code> commands.</li>
+<li>Do not ship placeholder comments behavior.</li>
+<li>Do not let TTL zero accidentally mean permanent.</li>
+<li>Do not silently recover from malformed configuration.</li>
+<li>Do not describe a public GitHub repository as access-controlled.</li>
+<li>Do not expose current CLI handler side effects as the permanent Node interface.</li>
+<li>Do not release based only on source metadata; inspect the packed artifact and fresh
+consumer installs.</li>
+</ul>
+<h2>Completion criteria</h2>
+<p>The roadmap is complete when:</p>
+<ol>
+<li>Planloft ships exactly one semantic skill.</li>
+<li><code>planloft help</code> fully teaches the CLI.</li>
+<li>All ten contract gaps are repaired and tested.</li>
+<li>npm, pnpm, and Bun CLI installation works from the public registry.</li>
+<li><code>npx</code>, <code>pnpm dlx</code>, and <code>bunx</code> install exactly <code>write-plan</code> for Codex and Claude.</li>
+<li>Existing users can remove stale skills safely.</li>
+<li>The CLI and Node library share deep application modules.</li>
+<li>Configuration, persistence, and publication semantics are centralized.</li>
+<li>GitHub Pages publication accurately communicates visibility and expiry.</li>
+<li>Both release artifacts pass isolated consumer, package, plugin, and live publication
+verification.</li>
+</ol>
+</article>
+</main>
+</body>
+</html>
