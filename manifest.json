@@ -234,6 +234,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T05:03:27.678Z",
       "expiresAt": "2026-09-06T15:12:36.542Z"
+    },
+    {
+      "id": "boj0LZJyCw",
+      "project": "github.com/hatim-s/attest",
+      "slug": "attest-local-cli-north-star-roadmap",
+      "title": "Attest Local and CLI North Star Roadmap",
+      "kind": "plan",
+      "createdAt": "2026-08-07T15:18:16.038Z",
+      "expiresAt": "2026-09-06T15:18:16.039Z"
     }
   ]
 }

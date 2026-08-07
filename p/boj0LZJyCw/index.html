@@ -1,0 +1,2159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Attest Local and CLI North Star Roadmap</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body data-planloft-kind="plan">
+<main class="planloft-plan">
+<article><h1>Attest Local and CLI North Star Roadmap</h1>
+<blockquote>
+<p>A source-grounded product, validation, and delivery plan for making Attest the best local experience for humans and agents to create, validate, run, and continuously improve agent evaluations.</p>
+</blockquote>
+<p><strong>Planning date:</strong> 7 August 2026<br><strong>Scope:</strong> local files, local execution, CLI and terminal workflows, packaged artifacts, CI, coding-agent interfaces, live-provider validation, and local human review<br><strong>Explicitly deferred:</strong> hosted control plane, accounts, organizations, cloud execution, cloud persistence, browser-based authoring, and cloud collaboration<br><strong>Authority:</strong> this roadmap builds on the ratified CLI v2 North Star contract. Where an older foundation document describes YAML-first v1 behavior, the ratified v2 contract wins.</p>
+<hr>
+<h2>1. Executive decision</h2>
+<p>Attest should be built as one local evaluation system with several equally capable operators:</p>
+<ol>
+<li>A non-technical domain expert who knows what a good answer looks like.</li>
+<li>A developer who can connect a process or endpoint and customize anything.</li>
+<li>A coding agent that needs deterministic discovery, schemas, structured errors, and atomic writes.</li>
+<li>An unattended agent or CI job that cannot answer prompts and must operate through stable machine contracts.</li>
+</ol>
+<p>Those operators must not receive four different products. They should use different interfaces over the same project model, command-request schemas, transaction engine, evaluation runtime, evidence model, and validation rules.</p>
+<p>The CLI v2 initiative establishes that common authoring and execution substrate. The next product problem is <strong>trust</strong>:</p>
+<ul>
+<li>Does the CLI actually work against real providers, not only scripted test seams?</li>
+<li>Does an LLM judge agree with qualified humans on this rubric and domain?</li>
+<li>Can a human review, correct, and adjudicate results without corrupting immutable run evidence?</li>
+<li>Can Attest measure whether its own onboarding works for humans and coding agents?</li>
+<li>Can a team use the local artifacts reliably in Git and CI before any cloud product exists?</li>
+</ul>
+<p>The North Star is therefore not merely “under five minutes to a passing demo.” It is:</p>
+<blockquote>
+<p>In under five minutes, a human or coding agent can connect a real agent, create a meaningful test, select an appropriate metric, run it, understand every result, and know whether the evidence is deterministic, model-estimated, human-reviewed, or still unvalidated.</p>
+</blockquote>
+<hr>
+<h2>2. Product thesis</h2>
+<h3>2.1 The authored model</h3>
+<p>The ratified v2 hierarchy is normative:</p>
+<pre><code class="language-text">project
+├── agents
+├── tests
+│   ├── direct test cases
+│   └── attached datasets
+│       └── test cases
+├── datasets
+├── metrics
+└── eval runs
+    ├── immutable case attempts
+    ├── immutable metric results
+    └── linked review and calibration evidence
+</code></pre>
+<p>Important language decisions:</p>
+<ul>
+<li><strong>Project</strong> is the local Attest unit rooted by <code>attest.project.json</code>.</li>
+<li><strong>Agent</strong> is a reusable invocation adapter.</li>
+<li><strong>Test</strong> replaces the v1 suite and binds an agent, cases or datasets, metrics, and run defaults.</li>
+<li><strong>Metric</strong> is the stored technical term for assertions, judges, and executable scorers.</li>
+<li><strong>Eval</strong> is the execution namespace. <code>attest eval run</code> creates an immutable eval run; there is no authored “eval” resource.</li>
+<li><strong>Review</strong> is human evidence linked to a run, case, metric, or comparison.</li>
+<li><strong>Calibration</strong> measures whether a judge metric is trustworthy for a specific rubric, model identity, prompt version, and labeled corpus.</li>
+</ul>
+<h3>2.2 The trust hierarchy</h3>
+<p>Attest must never flatten all forms of judgment into an unexplained boolean. Every result should preserve its source and authority:</p>
+<pre><code class="language-text">Deterministic evidence
+    exact checks, schemas, executable outcomes, trace invariants
+          │
+          ├── strongest for facts the system can prove mechanically
+          │
+Human reference evidence
+    blinded labels, pairwise preferences, corrections, adjudication
+          │
+          ├── ground truth for the defined rubric, with disagreement retained
+          │
+Calibrated model estimates
+    LLM judge results measured against human reference evidence
+          │
+          ├── scalable estimates with known limitations and provenance
+          │
+Uncalibrated model estimates
+    useful during exploration, never silently presented as established truth
+</code></pre>
+<p>These evidence sources may disagree. Attest should expose the disagreement rather than overwrite one result with another.</p>
+<h3>2.3 The operator model</h3>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Primary entry point</th>
+<th>What they contribute</th>
+<th>What Attest must hide until requested</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Domain expert</td>
+<td>interactive CLI and import/export review packets</td>
+<td>examples, expected outcomes, rubrics, labels, corrections</td>
+<td>JSON structure, transport envelopes, process semantics</td>
+</tr>
+<tr>
+<td>Developer</td>
+<td>guided commands, flags, request JSON, direct inspection</td>
+<td>transports, traces, custom metrics, CI policy</td>
+<td>repetitive boilerplate and unsafe mutation details</td>
+</tr>
+<tr>
+<td>Coding agent</td>
+<td>JSON help, schemas, <code>--from-json</code>, dry run, project hash</td>
+<td>project inspection, generated resources, repair loops</td>
+<td>prose scraping, TTY prompts, implicit defaults</td>
+</tr>
+<tr>
+<td>CI/unattended agent</td>
+<td>non-interactive commands and JSON/JSONL output</td>
+<td>repeatable execution and gating</td>
+<td>prompts, ambiguous exit codes, mutable hidden state</td>
+</tr>
+</tbody></table>
+<h3>2.4 Non-goals for this roadmap</h3>
+<ul>
+<li>No cloud dependency is required for authoring, execution, review, or calibration.</li>
+<li>No browser editor is required.</li>
+<li>No account, organization, role, or hosted reviewer assignment model is introduced.</li>
+<li>No live LLM call enters required pull-request CI.</li>
+<li>No secret value is stored in authored resources, diffs, run bundles, logs, command results, or telemetry.</li>
+<li>No human label mutates an immutable eval run or destroys an earlier machine verdict.</li>
+<li>No universal claim is made that one judge model, threshold, or agreement score is valid across domains.</li>
+<li>No v1 compatibility runtime is carried forward. The v2 break is intentional.</li>
+</ul>
+<hr>
+<h2>3. Current-state audit</h2>
+<h3>3.1 What already works</h3>
+<p>Attest already has meaningful runtime foundations:</p>
+<ul>
+<li>CLI and HTTP agent invocation.</li>
+<li>Process timeouts, cancellation, retries, evidence caps, and process-tree cleanup.</li>
+<li>Assertion, executable, HTTP, and LLM-judge metric contracts.</li>
+<li>OpenAI and Anthropic judge adapter selection through the TanStack AI seam.</li>
+<li>Structured judge responses, retry handling, recorded attempts, token usage, rationale, raw-response evidence, and content-addressed caching.</li>
+<li>SQLite run persistence, immutable completed runs, run diffing, JSON and JUnit output.</li>
+<li>Trace ingestion, trajectory assertions, local dashboard inspection, and self-contained reports.</li>
+<li>Deterministic conformance, hostile-agent, property, storage, and rendering coverage.</li>
+</ul>
+<h3>3.2 What the current tests prove</h3>
+<p>The existing judge tests prove the deterministic machinery around a provider call:</p>
+<ul>
+<li>Provider-qualified model parsing.</li>
+<li>Adapter selection.</li>
+<li>Prompt rendering.</li>
+<li>Structured-output parsing.</li>
+<li>Retry after malformed structured output.</li>
+<li>Timeout and cancellation classification.</li>
+<li>Provider-error mapping.</li>
+<li>Cache behavior.</li>
+<li>Persistence of judge request, attempts, raw response, rationale, and usage evidence.</li>
+<li>CLI wiring from a judge metric through persistence.</li>
+</ul>
+<p>This is valuable. It means the seam is testable and failures are isolated.</p>
+<h3>3.3 What the current tests do not prove</h3>
+<p>The current required suite does <strong>not</strong> prove:</p>
+<ul>
+<li>That current OpenAI or Anthropic credentials authenticate successfully.</li>
+<li>That installed SDK adapters still match current provider response behavior.</li>
+<li>That configured model aliases exist or support the required structured-output operation.</li>
+<li>That token-usage and provider metadata arrive in the expected form.</li>
+<li>That a real model follows the rubric reliably.</li>
+<li>That repeated judgments are stable.</li>
+<li>That a judge score agrees with qualified human judgment.</li>
+<li>That the default threshold is meaningful for a domain.</li>
+<li>That model aliases have not drifted while the cache key remained unchanged.</li>
+<li>That users can configure a live judge without assistance.</li>
+</ul>
+<p>All current judge tests stop before the network:</p>
+<ul>
+<li>Adapter tests inject a scripted structured-chat executor.</li>
+<li>Metric tests create an explicitly no-network <code>JudgeClient</code>.</li>
+<li>CLI integration injects a hand-authored synthetic judge result.</li>
+<li>The generated quickstart uses deterministic exact assertions, not a live judge.</li>
+</ul>
+<p>This is consistent with the repository rule that required CI must not call a live LLM. The gap is that the separately promised scheduled, budget-capped provider smoke lane does not yet exist.</p>
+<h3>3.4 Human validation status</h3>
+<p>No implemented contract currently represents:</p>
+<ul>
+<li>A human review rubric.</li>
+<li>A review batch or queue.</li>
+<li>A human label or correction.</li>
+<li>Reviewer identity or pseudonym.</li>
+<li>Blinding or randomized candidate order.</li>
+<li>Multiple reviewers.</li>
+<li>Inter-rater agreement.</li>
+<li>Adjudication.</li>
+<li>Judge-versus-human calibration.</li>
+<li>A human-approved baseline or release decision.</li>
+</ul>
+<p>Human review and judge calibration are explicitly deferred in the existing product decisions and remain backlog work.</p>
+<h3>3.5 Usability evidence status</h3>
+<p>Current evidence is functional acceptance, not user research:</p>
+<ul>
+<li>A technical operator successfully ran the generated quickstart.</li>
+<li>Browser-controlled checks verified dashboard behavior.</li>
+<li>The source-grounded setup report identified workflow gaps.</li>
+</ul>
+<p>There has not yet been an observed participant study covering representative developers, domain experts, or coding agents. The planned friendly-developer cold test remains necessary but is not broad enough to validate the full North Star.</p>
+<h3>3.6 Audit conclusion</h3>
+<p>The correct conclusion is:</p>
+<blockquote>
+<p>Attest has a real provider-capable judge implementation and strong deterministic seam tests. It does not yet have live-provider compatibility evidence, semantic judge-quality evidence, human review, judge calibration, or representative onboarding usability evidence.</p>
+</blockquote>
+<hr>
+<h2>4. North Star journeys</h2>
+<h3>4.1 Human connecting an HTTP agent</h3>
+<pre><code class="language-text">attest project init
+    ↓
+Paste or import a cURL request
+    ↓
+Attest parses locally, rejects unsafe shell behavior, and redacts secrets
+    ↓
+Map changing request values to case input
+    ↓
+Explicitly approve one connection probe
+    ↓
+Select extracted output from a bounded redacted response
+    ↓
+Create a test and add one case
+    ↓
+Describe what good behavior means
+    ↓
+Choose deterministic assertion, judge rubric, custom metric, or record-only
+    ↓
+Review semantic diff
+    ↓
+Run test
+    ↓
+See result provenance: deterministic, calibrated judge, uncalibrated judge, or pending review
+    ↓
+Optionally review failures, correct expected output, and establish baseline
+</code></pre>
+<h3>4.2 Developer connecting a local process</h3>
+<pre><code class="language-text">attest project init
+    ↓
+attest agent add support --argv-json &#39;[&quot;node&quot;,&quot;./src/agent.mjs&quot;]&#39;
+    ↓
+attest agent test support --input &#39;{...}&#39;
+    ↓
+attest test add smoke --agent support
+    ↓
+attest test dataset import smoke cases.csv --as regression ...
+    ↓
+attest metric add correctness --preset judge-rubric ...
+    ↓
+attest metric validate correctness --against calibration-set
+    ↓
+attest eval run smoke --baseline approved --output human
+</code></pre>
+<h3>4.3 Coding agent authoring non-interactively</h3>
+<pre><code class="language-text">attest help agent add --output json
+    ↓
+attest schema print attest.command.agent-add/v1
+    ↓
+Construct versioned command request
+    ↓
+attest agent add --from-json request.json --dry-run --output json
+    ↓
+Inspect operations, warnings, required secret references, and project hash
+    ↓
+attest agent add --from-json request.json --if-project-hash &lt;hash&gt; --output json
+    ↓
+Repeat for test, cases, and metrics
+    ↓
+attest project validate --output json
+    ↓
+attest eval run smoke --output jsonl
+    ↓
+React to stable error code, retryability, and repair action without parsing prose
+</code></pre>
+<h3>4.4 Human reviewing a run locally</h3>
+<pre><code class="language-text">attest review rubric add answer-quality
+    ↓
+attest review create --run &lt;run-id&gt; --rubric answer-quality --sample disagreement
+    ↓
+attest review next --batch &lt;batch-id&gt; --blind
+    ↓
+Read input, expected evidence, bounded output, and optional trace summary
+    ↓
+Submit score, label, rationale, confidence, and optional correction
+    ↓
+Second reviewer independently labels the same item
+    ↓
+Attest reports agreement and routes disagreement to adjudication
+    ↓
+Adjudicator resolves or records an accepted disagreement
+    ↓
+Attest recalculates judge calibration without modifying the original run
+    ↓
+Approved correction can be promoted transactionally into a dataset
+</code></pre>
+<h3>4.5 Team using Git and CI without cloud</h3>
+<pre><code class="language-text">Canonical project resources and datasets live in Git
+    ↓
+Developer changes agent/test/metric resources through CLI
+    ↓
+Semantic diff is reviewed in the pull request
+    ↓
+CI installs the packed artifact and runs selected tests
+    ↓
+Deterministic metrics gate every PR
+    ↓
+Calibrated judges may gate within an explicit cost and confidence policy
+    ↓
+Review-required cases produce a pending review artifact, never an unexplained pass
+    ↓
+Static report, JUnit, JSON result, and review bundle are retained as CI artifacts
+</code></pre>
+<hr>
+<h2>5. System contracts required after CLI v2</h2>
+<h3>5.1 Evidence provenance</h3>
+<p>Every metric result must answer:</p>
+<ul>
+<li>What produced this result?</li>
+<li>Which exact metric resource version and content hash were used?</li>
+<li>Was it deterministic, executable, model-generated, or human-generated?</li>
+<li>Which inputs and bounded evidence were visible to the evaluator?</li>
+<li>Which provider, model identity, prompt version, parameters, and attempts were used?</li>
+<li>Was the result served from cache?</li>
+<li>Was the evaluator calibrated? If so, against which corpus and human-label snapshot?</li>
+<li>Has that calibration become stale?</li>
+<li>Did a human later agree, disagree, or adjudicate the result?</li>
+</ul>
+<p>Required provenance additions for judge results:</p>
+<pre><code class="language-text">provider
+requested_model
+resolved_model_or_revision when supplied
+provider_system_fingerprint when supplied
+judge_prompt_version
+metric_resource_hash
+rubric_hash
+request_parameters
+attempt_count
+cache_status
+calibration_id or null
+calibration_status: draft | valid | stale | rejected
+</code></pre>
+<p>Absence of provider revision metadata must be represented as unknown, not inferred.</p>
+<h3>5.2 Human review rubric resource</h3>
+<p>A review rubric is authored and versioned. It is separate from a machine metric because review instructions, label taxonomies, blinding, and reviewer requirements have different semantics.</p>
+<p>Minimum fields:</p>
+<pre><code class="language-text">rubric_id
+schema_version
+name
+instructions
+target: run | case | metric | pairwise_case
+criteria[]
+  id
+  description
+  value_type: binary | categorical | ordinal | continuous | free_text
+  allowed_values or range
+  required
+reviewer_count
+blinding_policy
+adjudication_policy
+</code></pre>
+<h3>5.3 Annotation record</h3>
+<p>Human annotations are append-only evidence records:</p>
+<pre><code class="language-text">annotation_id
+schema_version
+batch_id
+rubric_id
+rubric_hash
+target reference
+reviewer_id or local pseudonym
+presented_candidate_order
+labels and scores
+rationale
+confidence
+optional corrected expected value
+created_at
+supersedes_annotation_id or null
+</code></pre>
+<p>Corrections never edit the original annotation. A new annotation may supersede one with an explicit link.</p>
+<h3>5.4 Review batch</h3>
+<p>A review batch freezes:</p>
+<ul>
+<li>Source run ids and case ids.</li>
+<li>Selection rule and selection seed.</li>
+<li>Rubric id and hash.</li>
+<li>Redaction policy.</li>
+<li>Blinding policy.</li>
+<li>Candidate randomization map.</li>
+<li>Required reviewer count.</li>
+<li>Review state per item.</li>
+</ul>
+<p>Batch states:</p>
+<pre><code class="language-text">draft → open → fully_labeled → needs_adjudication → complete
+                 └──────────────────────────────→ complete_with_disagreement
+</code></pre>
+<h3>5.5 Calibration snapshot</h3>
+<p>A calibration snapshot is immutable and content-addressed. It binds:</p>
+<ul>
+<li>Judge metric resource hash.</li>
+<li>Rubric hash.</li>
+<li>Judge prompt version.</li>
+<li>Provider and requested model.</li>
+<li>Provider-resolved model metadata when available.</li>
+<li>Human-label corpus hash.</li>
+<li>Inclusion and exclusion rules.</li>
+<li>Number of independent reviewers and adjudication state.</li>
+<li>Number of judge trials per item.</li>
+<li>Sampling seed.</li>
+<li>Metrics and confidence intervals.</li>
+<li>Creation timestamp.</li>
+</ul>
+<p>Changing any bound input makes the snapshot stale. Attest does not silently transfer calibration to a different rubric, prompt, model alias, or dataset.</p>
+<h3>5.6 Derived decision policy</h3>
+<p>Machine and human evidence remain immutable. A separate policy produces a current decision:</p>
+<pre><code class="language-text">pass
+fail
+error
+needs_review
+insufficient_evidence
+</code></pre>
+<p>Examples:</p>
+<ul>
+<li>Deterministic assertion failure → <code>fail</code>.</li>
+<li>Provider timeout → <code>error</code>.</li>
+<li>Uncalibrated judge used under strict policy → <code>insufficient_evidence</code>.</li>
+<li>Near-threshold calibrated judge result under human-escalation policy → <code>needs_review</code>.</li>
+<li>Completed adjudicated human review → policy may derive <code>pass</code> or <code>fail</code> while retaining the machine result.</li>
+</ul>
+<hr>
+<h2>6. LLM-judge validation strategy</h2>
+<h3>6.1 Four separate test layers</h3>
+<h4>Layer A — deterministic implementation tests</h4>
+<p>Required on every pull request and fully offline:</p>
+<ul>
+<li>Prompt construction.</li>
+<li>Model identifier parsing.</li>
+<li>Request limits and redaction.</li>
+<li>Structured response parsing.</li>
+<li>Retry classification.</li>
+<li>Timeouts and cancellation.</li>
+<li>Usage accounting.</li>
+<li>Cache keys and invalidation inputs.</li>
+<li>Persistence round trips.</li>
+<li>Error serialization.</li>
+</ul>
+<p>These tests prove implementation correctness, not judge quality.</p>
+<h4>Layer B — recorded provider-shape replay</h4>
+<p>Required on every pull request and fully offline after fixtures are reviewed:</p>
+<ul>
+<li>Sanitized successful OpenAI response shape.</li>
+<li>Sanitized successful Anthropic response shape.</li>
+<li>Usage-bearing response.</li>
+<li>Missing-usage response.</li>
+<li>Malformed structured output.</li>
+<li>Rate limit and retry metadata.</li>
+<li>Authentication error classification.</li>
+<li>Provider-side model-not-found error.</li>
+<li>Streaming or SDK-specific edge events when applicable.</li>
+</ul>
+<p>These tests detect SDK and parser regressions without spending money. They do not prove current provider availability or semantic quality.</p>
+<h4>Layer C — live-provider compatibility smoke</h4>
+<p>Scheduled and manually dispatched; never required PR CI:</p>
+<ul>
+<li>One minimal OpenAI judge case.</li>
+<li>One minimal Anthropic judge case.</li>
+<li>Strict maximum calls, tokens, time, and daily cost.</li>
+<li>Pinned model identifier where the provider offers one.</li>
+<li>No sensitive application data.</li>
+<li>Structured-output success assertion.</li>
+<li>Evidence persistence assertion.</li>
+<li>Cache-hit assertion on identical second evaluation.</li>
+<li>Redaction assertion on stored artifacts.</li>
+<li>Alert on authentication, model availability, SDK compatibility, or schema failure.</li>
+</ul>
+<p>This layer proves that the integration still works today. It should not assert one exact semantic score from a stochastic model.</p>
+<h4>Layer D — semantic calibration</h4>
+<p>Opt-in local or scheduled evaluation against human-labeled data:</p>
+<ul>
+<li>Judge-human agreement.</li>
+<li>False-pass and false-fail rates.</li>
+<li>Confusion matrix for categorical labels.</li>
+<li>Rank correlation for ordinal or continuous outcomes.</li>
+<li>Mean absolute error where numeric scores are meaningful.</li>
+<li>Repeated-call variance.</li>
+<li>Pairwise order consistency.</li>
+<li>Sensitivity to verbosity, style, and candidate position.</li>
+<li>Performance by dataset slice and failure category.</li>
+<li>Bootstrap confidence intervals with a recorded seed.</li>
+</ul>
+<p>This layer determines whether a judge is trustworthy for a specific use.</p>
+<h3>6.2 Adversarial judge-quality cases</h3>
+<p>Every judge calibration project should include, where applicable:</p>
+<ul>
+<li>Correct concise answer versus correct verbose answer.</li>
+<li>Fluent wrong answer versus awkward correct answer.</li>
+<li>Candidate A/B order swapped.</li>
+<li>Exact same answer in both positions.</li>
+<li>Agent output that instructs the judge to award a high score.</li>
+<li>Agent output that imitates rubric or system-prompt syntax.</li>
+<li>Long irrelevant preamble before the answer.</li>
+<li>Missing expected data.</li>
+<li>Contradictory expected data.</li>
+<li>Partial trace and malformed optional trace evidence.</li>
+<li>Same semantic answer with different formatting.</li>
+<li>Safety refusal when refusal is appropriate.</li>
+<li>Safety refusal when refusal is inappropriate.</li>
+<li>Tool result correct but final synthesis wrong.</li>
+<li>Final answer correct but required tool trajectory wrong.</li>
+<li>Candidate produced by the same model family as the judge.</li>
+<li>Inputs with protected or domain-sensitive attributes when the domain requires bias checks.</li>
+</ul>
+<p>Research has repeatedly shown that LLM judges can exhibit position and presentation biases. Attest should therefore measure these properties rather than assume the structured response is objective.</p>
+<h3>6.3 Calibration measures by rubric type</h3>
+<table>
+<thead>
+<tr>
+<th>Rubric type</th>
+<th>Minimum report</th>
+<th>Optional advanced report</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Binary</td>
+<td>accuracy, precision, recall, false-pass rate, false-fail rate, confusion matrix</td>
+<td>Matthews correlation, subgroup slices</td>
+</tr>
+<tr>
+<td>Categorical</td>
+<td>macro/micro accuracy, per-class confusion, agreement</td>
+<td>macro F1, Krippendorff alpha</td>
+</tr>
+<tr>
+<td>Ordinal</td>
+<td>exact agreement, within-one agreement, weighted disagreement</td>
+<td>weighted kappa, rank correlation</td>
+</tr>
+<tr>
+<td>Continuous</td>
+<td>MAE, distribution, threshold sensitivity</td>
+<td>Pearson/Spearman, calibration curve</td>
+</tr>
+<tr>
+<td>Pairwise</td>
+<td>agreement, tie rate, swapped-order consistency</td>
+<td>Bradley-Terry or Elo analysis only when justified</td>
+</tr>
+</tbody></table>
+<p>Attest should report measurements and uncertainty. It should not ship universal “good” thresholds without domain evidence.</p>
+<h3>6.4 Judge lifecycle states</h3>
+<pre><code class="language-text">draft
+  judge exists but has no accepted calibration
+
+valid
+  exact judge inputs match an accepted calibration snapshot
+
+stale
+  rubric, prompt version, model identity, or corpus changed
+
+rejected
+  owner explicitly rejected the calibration for gating use
+</code></pre>
+<p>Default behavior:</p>
+<ul>
+<li>Exploration may run a <code>draft</code> judge with a visible warning.</li>
+<li>Strict CI policy must explicitly allow or reject draft judges.</li>
+<li>A stale judge never inherits the old “valid” label.</li>
+<li>Cached scores retain the calibration status that existed when they were created and may be reinterpreted by a newer decision policy without being rewritten.</li>
+</ul>
+<h3>6.5 Cost and safety controls</h3>
+<p>Live judge validation requires:</p>
+<ul>
+<li>Maximum cases.</li>
+<li>Maximum trials per case.</li>
+<li>Maximum provider calls.</li>
+<li>Maximum input and output tokens where enforceable.</li>
+<li>Whole-run wall-clock deadline.</li>
+<li>Provider and model allowlist.</li>
+<li>Explicit environment-secret references.</li>
+<li><code>--dry-run</code> cost estimate based on configured limits.</li>
+<li>Immediate cancellation.</li>
+<li>No retries for invalid credentials or non-retryable quota errors.</li>
+<li>Artifact redaction scan before publication.</li>
+</ul>
+<hr>
+<h2>7. Local human-in-the-loop design</h2>
+<h3>7.1 Why human review is not another metric type</h3>
+<p>A human label has identity, workflow state, possible disagreement, blinding, and adjudication. Treating it as a synchronous metric call would lose those semantics and tempt the runtime to block indefinitely.</p>
+<p>Human review should therefore be an asynchronous evidence workflow linked to immutable runs.</p>
+<h3>7.2 CLI command model</h3>
+<p>Proposed grammar:</p>
+<pre><code class="language-text">attest review rubric add &lt;rubric-id&gt;
+attest review rubric show &lt;rubric-id&gt;
+attest review create --run &lt;run-id&gt; --rubric &lt;rubric-id&gt; [selection flags]
+attest review list
+attest review show &lt;batch-id&gt;
+attest review next &lt;batch-id&gt; [--reviewer &lt;id&gt;] [--blind]
+attest review submit &lt;batch-id&gt; &lt;item-id&gt; --from-json &lt;path|-&gt;
+attest review status &lt;batch-id&gt;
+attest review adjudicate &lt;batch-id&gt; &lt;item-id&gt;
+attest review export &lt;batch-id&gt; --format jsonl|csv
+attest review import &lt;batch-id&gt; &lt;path&gt; --format jsonl|csv
+attest review promote &lt;annotation-or-item-id&gt; --to-dataset &lt;dataset-id&gt;
+attest review agreement &lt;batch-id&gt;
+</code></pre>
+<p>Every command follows the CLI v2 output, error, dry-run, transaction, and optimistic-concurrency contracts.</p>
+<h3>7.3 Review selection strategies</h3>
+<pre><code class="language-text">all
+random
+stratified
+failed
+regressed
+near-threshold
+judge-disagreement
+judge-variance
+metric-error
+tag-filtered
+manual case list
+</code></pre>
+<p>Selection must record its seed and exact source population so the batch is reproducible.</p>
+<p>Recommended defaults:</p>
+<ul>
+<li>Calibration batch: stratify by expected class and known difficulty.</li>
+<li>Release audit: include all regressions, all metric errors, near-threshold results, plus a random passing sample.</li>
+<li>Judge comparison: prioritize disagreements and high-variance cases without excluding a random control sample.</li>
+</ul>
+<h3>7.4 Blinding</h3>
+<p>For single-output review, optional blind mode hides:</p>
+<ul>
+<li>Machine metric score.</li>
+<li>Judge rationale.</li>
+<li>Earlier reviewer labels.</li>
+<li>Whether the case is baseline or candidate.</li>
+</ul>
+<p>For pairwise review:</p>
+<ul>
+<li>Candidate order is randomized with a recorded seed.</li>
+<li>The stored mapping preserves which run was shown as A or B.</li>
+<li>Reviewers cannot see other reviewer choices until they submit.</li>
+<li>Swapped-order sentinel pairs may be inserted to measure consistency.</li>
+</ul>
+<h3>7.5 Terminal interaction</h3>
+<p>The human terminal flow must be usable without direct JSON editing:</p>
+<ul>
+<li>One item per screen or line-mode block.</li>
+<li>Visible rubric instructions.</li>
+<li>Bounded input, output, expected data, and trace summary.</li>
+<li>Explicit keys for categorical labels.</li>
+<li>Numeric entry with visible ranges for continuous scores.</li>
+<li>Optional rationale and confidence.</li>
+<li>Save-and-next, skip, return, and quit-with-progress-preserved.</li>
+<li>Full keyboard access with alternatives to arrow keys.</li>
+<li>Screen-reader-compatible line mode.</li>
+<li>No color-only status.</li>
+<li>Resume from the next unreviewed item.</li>
+</ul>
+<h3>7.6 Multi-reviewer and local concurrency</h3>
+<p>Without accounts or cloud identity, Attest provides local coordination rather than identity assurance:</p>
+<ul>
+<li>Reviewer id is a user-supplied stable string or local configuration value.</li>
+<li>A batch may require multiple distinct reviewer ids.</li>
+<li>Local claims use bounded leases to avoid duplicate work by concurrent processes.</li>
+<li>Imported annotations from another machine preserve reviewer id and original timestamp.</li>
+<li>Duplicate annotation ids are idempotent.</li>
+<li>Conflicting annotations are retained, not overwritten.</li>
+<li>Attest does not claim that a reviewer id proves a legal identity.</li>
+</ul>
+<h3>7.7 Adjudication</h3>
+<p>Disagreement is data. The system should distinguish:</p>
+<ul>
+<li>Reviewer disagreement.</li>
+<li>Invalid or incomplete annotation.</li>
+<li>Rubric ambiguity.</li>
+<li>Evidence insufficiency.</li>
+<li>Accepted plural outcomes where multiple labels are defensible.</li>
+</ul>
+<p>An adjudication record contains:</p>
+<ul>
+<li>References to all reviewed annotations.</li>
+<li>Adjudicator id.</li>
+<li>Final label or accepted-disagreement state.</li>
+<li>Rationale.</li>
+<li>Optional rubric-improvement note.</li>
+<li>Timestamp and rubric hash.</li>
+</ul>
+<h3>7.8 Promoting human corrections</h3>
+<p>Promotion is a separate transactional operation:</p>
+<ol>
+<li>Select an adjudicated correction.</li>
+<li>Show the target dataset row or proposed new case.</li>
+<li>Show semantic diff.</li>
+<li>Preserve provenance linking the new expected value to review evidence.</li>
+<li>Validate the whole project.</li>
+<li>Apply atomically.</li>
+</ol>
+<p>The original run, output, machine score, and annotation remain unchanged.</p>
+<h3>7.9 Export and offline participation</h3>
+<p>To include non-technical reviewers without a browser product:</p>
+<ul>
+<li>Export a redacted CSV review packet with stable item ids and clear column descriptions.</li>
+<li>Export JSONL for agents and structured tools.</li>
+<li>Include a generated Markdown instruction file.</li>
+<li>Validate every imported row and report all errors at once.</li>
+<li>Reject unknown item ids, rubric mismatches, duplicate annotation ids, and stale batch hashes.</li>
+<li>Never export secrets or unredacted sensitive fields.</li>
+</ul>
+<hr>
+<h2>8. Attest must evaluate Attest</h2>
+<h3>8.1 The dogfood project</h3>
+<p>Create a maintained Attest project that evaluates the Attest CLI onboarding itself.</p>
+<p>Candidate location:</p>
+<pre><code class="language-text">dogfood/cli-onboarding/
+├── attest.project.json
+├── attest/agents/
+├── attest/tests/
+├── attest/datasets/
+├── attest/metrics/
+├── scenarios/
+└── README.md
+</code></pre>
+<h3>8.2 Scenario categories</h3>
+<h4>Human-developer scenarios</h4>
+<ul>
+<li>Connect a native CLI agent.</li>
+<li>Import an HTTP request from cURL.</li>
+<li>Diagnose missing secret.</li>
+<li>Correct an output pointer.</li>
+<li>Import CSV cases with field mapping.</li>
+<li>Add deterministic output assertion.</li>
+<li>Add a judge rubric.</li>
+<li>Diagnose a judge provider error.</li>
+<li>Compare a candidate run to a baseline.</li>
+<li>Recover from a stale project hash.</li>
+<li>Recover an interrupted project transaction.</li>
+</ul>
+<h4>Domain-expert scenarios</h4>
+<ul>
+<li>Add cases from a table without editing JSON.</li>
+<li>Describe good behavior and choose a scoring preset.</li>
+<li>Review a failed output.</li>
+<li>Correct expected behavior.</li>
+<li>Complete a blinded review packet.</li>
+<li>Explain whether a result is deterministic, model-estimated, or human-reviewed.</li>
+</ul>
+<h4>Coding-agent scenarios</h4>
+<ul>
+<li>Discover command grammar using JSON help only.</li>
+<li>Initialize a project non-interactively.</li>
+<li>Inspect schemas.</li>
+<li>Generate valid command request documents.</li>
+<li>Dry-run a mutation and apply with project hash.</li>
+<li>Recover from each stable error stage.</li>
+<li>Run selected tests and consume JSONL progress.</li>
+<li>Produce no unsupported direct edits to canonical resource files.</li>
+</ul>
+<h4>Unattended CI scenarios</h4>
+<ul>
+<li>Run without a TTY.</li>
+<li>Emit only valid structured stdout.</li>
+<li>Cancel and produce exit code 130.</li>
+<li>Distinguish evaluated failure from infrastructure error.</li>
+<li>Generate JUnit and static report atomically.</li>
+<li>Respect cost and live-provider policies.</li>
+</ul>
+<h3>8.3 Deterministic UX metrics</h3>
+<p>Prefer deterministic checks whenever possible:</p>
+<ul>
+<li>Command exit code.</li>
+<li>Time to first real-agent result.</li>
+<li>Number of prompts.</li>
+<li>Number of manual file edits.</li>
+<li>Whether every generated resource validates.</li>
+<li>Whether all changes were previewed.</li>
+<li>Whether an unsafe side effect occurred without approval.</li>
+<li>Whether any secret-like literal appeared in output or files.</li>
+<li>Whether the operator reached the intended run result.</li>
+<li>Whether exact recovery command was shown after a seeded failure.</li>
+<li>Whether machine stdout conforms to the published schema.</li>
+<li>Whether a coding agent used stale project state.</li>
+</ul>
+<h3>8.4 LLM-based UX metrics</h3>
+<p>An LLM may grade qualities that are difficult to encode mechanically:</p>
+<ul>
+<li>Was the next action clear?</li>
+<li>Did the error explanation correctly separate configuration, connection, contract, scoring, and persistence?</li>
+<li>Did the generated test reflect the stated user goal?</li>
+<li>Did the rubric omit important domain requirements?</li>
+<li>Did the coding agent choose an unnecessarily complex integration?</li>
+<li>Did the transcript preserve user agency and disclose side effects?</li>
+</ul>
+<p>These graders must themselves be calibrated against human-rated transcripts before becoming release gates.</p>
+<h3>8.5 Human usability research</h3>
+<p>Run formative studies in waves:</p>
+<h4>Wave 1 — before full CLI v2 cutover</h4>
+<ul>
+<li>Five to eight developers with an existing agent.</li>
+<li>Observe current setup and failure recovery.</li>
+<li>Use findings to adjust vocabulary, command hierarchy, and diagnostics before they freeze.</li>
+</ul>
+<h4>Wave 2 — after guided authoring and cURL import</h4>
+<ul>
+<li>Five to eight developers.</li>
+<li>Five to eight domain or QA participants who do not routinely write code.</li>
+<li>Tasks use the participant&#39;s real or representative agent, not only a sample.</li>
+</ul>
+<h4>Wave 3 — agent benchmark</h4>
+<ul>
+<li>At least two coding-agent families.</li>
+<li>Multiple clean-room repetitions per scenario.</li>
+<li>Same task brief, time limit, command permissions, and success checks.</li>
+<li>Report completion, invalid operations, recovery quality, total tool calls, elapsed time, and token/cost where available.</li>
+</ul>
+<h4>Wave 4 — release confirmation</h4>
+<ul>
+<li>Repeat the fixed benchmark after packaging from the actual release artifact.</li>
+<li>No repository checkout or local source imports.</li>
+<li>No facilitator intervention on the measured run.</li>
+</ul>
+<h3>8.6 Research evidence to retain</h3>
+<ul>
+<li>Consent-safe notes or structured observations.</li>
+<li>Task completion and time.</li>
+<li>Assistance count.</li>
+<li>First failure point.</li>
+<li>Recovery success.</li>
+<li>Comprehension questions.</li>
+<li>Accessibility observations.</li>
+<li>Final participant confidence.</li>
+<li>Coding-agent transcript and exact tool trace.</li>
+<li>Artifact hashes and Attest version.</li>
+</ul>
+<p>No research artifact containing real secrets, private prompts, or customer data is committed or published.</p>
+<hr>
+<h2>9. Directed implementation graph</h2>
+<h3>9.1 High-level DAG</h3>
+<pre><code class="language-mermaid">flowchart TD
+  C0[&quot;CLI v2 design contract ratified&quot;] --&gt; C1[&quot;CLI v2 contracts and project engine&quot;]
+  C1 --&gt; C2[&quot;Transactional resource authoring&quot;]
+  C2 --&gt; C3[&quot;Agents tests datasets metrics&quot;]
+  C3 --&gt; C4[&quot;Transports and imports&quot;]
+  C4 --&gt; C5[&quot;Eval cutover and v1 removal&quot;]
+  C5 --&gt; C6[&quot;CLI docs and under-5-minute gate&quot;]
+
+  C1 --&gt; V1[&quot;Evidence and calibration contracts&quot;]
+  C2 --&gt; H1[&quot;Human review contracts and storage&quot;]
+  V1 --&gt; L1[&quot;Live-provider smoke lane&quot;]
+  C5 --&gt; L1
+  L1 --&gt; L2[&quot;Recorded provider replay corpus&quot;]
+  V1 --&gt; L3[&quot;Judge calibration engine&quot;]
+  H1 --&gt; L3
+
+  H1 --&gt; H2[&quot;Review selection and terminal workflow&quot;]
+  H2 --&gt; H3[&quot;Agreement and adjudication&quot;]
+  H3 --&gt; H4[&quot;Correction promotion&quot;]
+
+  L3 --&gt; Q1[&quot;Judge lifecycle and quality policy&quot;]
+  H3 --&gt; Q1
+  Q1 --&gt; Q2[&quot;Disagreement routing and review-aware CI&quot;]
+
+  C6 --&gt; U1[&quot;Attest dogfood onboarding project&quot;]
+  Q1 --&gt; U2[&quot;Calibrated LLM UX graders&quot;]
+  H2 --&gt; U3[&quot;Human usability studies&quot;]
+  U1 --&gt; U2
+  U1 --&gt; U3
+  U2 --&gt; U4[&quot;Human and agent release benchmark&quot;]
+  U3 --&gt; U4
+
+  C5 --&gt; D1[&quot;Packaged release artifacts&quot;]
+  C6 --&gt; D2[&quot;Agent-first docs and local tool adapters&quot;]
+  D1 --&gt; R1[&quot;Local North Star release gate&quot;]
+  D2 --&gt; R1
+  L2 --&gt; R1
+  Q2 --&gt; R1
+  H4 --&gt; R1
+  U4 --&gt; R1
+</code></pre>
+<h3>9.2 Parallelization summary</h3>
+<table>
+<thead>
+<tr>
+<th>Wave</th>
+<th>Parallel tracks</th>
+<th>Synchronization gate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>CLI protocol contracts; evidence/calibration design; live-smoke security policy</td>
+<td>CLI v2 schema and result contracts frozen</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Transaction writer; project reader; human-review schema prototype</td>
+<td>Atomic project and store migration seams agreed</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Agent authoring; test/dataset commands; metric authoring</td>
+<td>Resource CRUD and cross-reference conformance green</td>
+</tr>
+<tr>
+<td>D</td>
+<td>HTTP/cURL/polling; background/JSONL/SSE; review storage; provider smoke harness</td>
+<td>Shared adapter and evidence contracts frozen</td>
+</tr>
+<tr>
+<td>E</td>
+<td>WebSocket; import engine; review terminal; replay fixtures; calibration statistics</td>
+<td>Eval resolver consumes final resource schemas</td>
+</tr>
+<tr>
+<td>F</td>
+<td>Eval cutover; judge lifecycle policy; agreement/adjudication</td>
+<td>One v2 execution path and immutable review linkage green</td>
+</tr>
+<tr>
+<td>G</td>
+<td>Dogfood harness; packaging; docs; GitHub Action; usability studies</td>
+<td>Packed CLI usable from empty directory</td>
+</tr>
+<tr>
+<td>H</td>
+<td>Final human/agent benchmark; local release candidate audit</td>
+<td>All mandatory gates green</td>
+</tr>
+</tbody></table>
+<h3>9.3 Ownership rule</h3>
+<p>Parallel tracks must own distinct directories or contract seams. Shared dispatchers, public barrels, generated schemas, and the canonical plan are integration-owned files. One integration task lands those changes after child tracks are reviewed; concurrent tasks do not repeatedly rewrite them.</p>
+<hr>
+<h2>10. Detailed roadmap</h2>
+<h2>Phase 0 — Complete the CLI v2 North Star substrate</h2>
+<p><strong>Purpose:</strong> land the attached CLI experience plan. This phase is the foundation, not the work this roadmap is trying to replace.</p>
+<h3>Track 0A — Domain and machine contracts</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0A.1 — Project and resource schemas</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Define <code>attest.project</code>, agent, test, dataset metadata, case, and metric schemas.</li>
+<li><input disabled="" type="checkbox"> Encode stable ids, display names, versions, hashes, and cross-references.</li>
+<li><input disabled="" type="checkbox"> Reject unknown fields.</li>
+<li><input disabled="" type="checkbox"> Aggregate every cross-reference and collision error before mutation or execution.</li>
+<li><input disabled="" type="checkbox"> Generate JSON Schema from the runtime source of truth.</li>
+<li><input disabled="" type="checkbox"> Add valid, invalid, forward-compatible, and adversarial conformance fixtures.</li>
+<li><strong>Depends on:</strong> ratified CLI v2 contract.</li>
+<li><strong>Gate:</strong> Zod/runtime and generated schema validation agree byte-for-byte on golden fixtures.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0A.2 — Command request schemas</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Give every mutation one versioned request object.</li>
+<li><input disabled="" type="checkbox"> Make wizard input, flags, and <code>--from-json</code> normalize into that object.</li>
+<li><input disabled="" type="checkbox"> Publish schema ids through JSON help.</li>
+<li><input disabled="" type="checkbox"> Define conflict, implication, default, and missing-input behavior.</li>
+<li><strong>Depends on:</strong> 0A.1.</li>
+<li><strong>Gate:</strong> every authored resource can be created without TTY interaction or direct file editing.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0A.3 — Result, event, help, and error schemas</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Define <code>attest.cli-result/v1</code>.</li>
+<li><input disabled="" type="checkbox"> Define <code>attest.cli-event/v1</code>.</li>
+<li><input disabled="" type="checkbox"> Define structured help tree.</li>
+<li><input disabled="" type="checkbox"> Define error registry with stage, code, path, hint, retryability, details, and exit code.</li>
+<li><input disabled="" type="checkbox"> Enforce one JSON document on stdout for non-streaming commands.</li>
+<li><input disabled="" type="checkbox"> Enforce one event per line and terminal result event for JSONL.</li>
+<li><strong>Depends on:</strong> 0A.1.</li>
+<li><strong>Gate:</strong> coding agents can discover and recover without parsing human prose.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 0B — Project discovery and transactional mutation</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0B.1 — Project discovery and load</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Discover <code>attest.project.json</code> through parents.</li>
+<li><input disabled="" type="checkbox"> Honor explicit <code>--project</code>.</li>
+<li><input disabled="" type="checkbox"> Stop at mount and Git worktree boundaries unless explicit.</li>
+<li><input disabled="" type="checkbox"> Load and hash all indexed resources.</li>
+<li><input disabled="" type="checkbox"> Detect missing, extra, duplicate, or hash-mismatched files.</li>
+<li><input disabled="" type="checkbox"> Reject v1 config discovery with an explicit v2 message.</li>
+<li><strong>Depends on:</strong> 0A.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0B.2 — Semantic diff</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Model add, update, remove, rename, attach, and detach operations.</li>
+<li><input disabled="" type="checkbox"> Include JSON Pointer field changes.</li>
+<li><input disabled="" type="checkbox"> Include import counts and dedupe decisions.</li>
+<li><input disabled="" type="checkbox"> Redact sensitive literals before rendering.</li>
+<li><input disabled="" type="checkbox"> Provide stable human and JSON renderers.</li>
+<li><strong>Depends on:</strong> 0A.1, 0B.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0B.3 — Lock, transaction, rollback, and recovery</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Create identity-aware project locks.</li>
+<li><input disabled="" type="checkbox"> Refuse live lock theft.</li>
+<li><input disabled="" type="checkbox"> Add explicit stale-lock recovery.</li>
+<li><input disabled="" type="checkbox"> Stage complete candidate files and backups.</li>
+<li><input disabled="" type="checkbox"> Journal every publish step.</li>
+<li><input disabled="" type="checkbox"> Rename manifest last as commit point.</li>
+<li><input disabled="" type="checkbox"> Restore after injected failure at each publish boundary.</li>
+<li><input disabled="" type="checkbox"> Recover incomplete transactions before future reads.</li>
+<li><input disabled="" type="checkbox"> Implement <code>--if-project-hash</code> optimistic concurrency.</li>
+<li><strong>Depends on:</strong> 0B.1, 0B.2.</li>
+<li><strong>Gate:</strong> fault injection proves old-or-new visibility for all cooperating CLI readers.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 0C — Resource authoring</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0C.1 — Project/list/show/validate commands</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Initialize canonical project structure.</li>
+<li><input disabled="" type="checkbox"> Implement generic list/show.</li>
+<li><input disabled="" type="checkbox"> Implement complete project validation.</li>
+<li><input disabled="" type="checkbox"> Preserve <code>attest init</code> only as alias for <code>attest project init</code>.</li>
+<li><strong>Depends on:</strong> 0A.2, 0A.3, 0B.3.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0C.2 — Agent commands and native adapters</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Add, import, test, rename, remove.</li>
+<li><input disabled="" type="checkbox"> Preserve safe argv arrays and no shell execution.</li>
+<li><input disabled="" type="checkbox"> Support per-case native CLI and external native HTTP.</li>
+<li><input disabled="" type="checkbox"> Test trace, errors, redaction, timeout, and cancellation.</li>
+<li><strong>Depends on:</strong> 0C.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0C.3 — Test, case, and dataset commands</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Add tests bound to one agent.</li>
+<li><input disabled="" type="checkbox"> Add direct cases.</li>
+<li><input disabled="" type="checkbox"> Create, import, attach, detach, rename, and remove datasets.</li>
+<li><input disabled="" type="checkbox"> Keep generated case ids stable across dataset moves.</li>
+<li><input disabled="" type="checkbox"> Aggregate collisions across direct and attached cases.</li>
+<li><strong>Depends on:</strong> 0C.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0C.4 — Metric commands and presets</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Author every existing assertion.</li>
+<li><input disabled="" type="checkbox"> Author judge, executable, and HTTP metrics.</li>
+<li><input disabled="" type="checkbox"> Expose versioned, inspectable presets.</li>
+<li><input disabled="" type="checkbox"> Test metrics against fixtures without creating runs.</li>
+<li><strong>Depends on:</strong> 0C.1.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Parallelization:</strong> 0C.2, 0C.3, and 0C.4 are parallel after 0C.1 and the writer land.</p>
+<h3>Track 0D — Import and transport breadth</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0D.1 — CSV/JSON/JSONL import</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Parse complete input before writing.</li>
+<li><input disabled="" type="checkbox"> Support explicit mappings and previews.</li>
+<li><input disabled="" type="checkbox"> Validate all rows and report all diagnostics.</li>
+<li><input disabled="" type="checkbox"> Implement deterministic stable ids.</li>
+<li><input disabled="" type="checkbox"> Implement explicit dedupe and append/upsert policies.</li>
+<li><input disabled="" type="checkbox"> Preserve provenance without leaking absolute private paths.</li>
+<li><strong>Depends on:</strong> 0C.3.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0D.2 — Safe cURL and mapped HTTP</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Parse cURL as data.</li>
+<li><input disabled="" type="checkbox"> Reject command substitution, unsafe auth capture, multipart, proxy, and unsupported flags.</li>
+<li><input disabled="" type="checkbox"> Convert secrets to references.</li>
+<li><input disabled="" type="checkbox"> Map request inputs and response/error/trace pointers.</li>
+<li><input disabled="" type="checkbox"> Add bounded probe and extraction preview.</li>
+<li><strong>Depends on:</strong> 0C.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0D.3 — Polling and server streams</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Implement same-origin polling with terminal extraction.</li>
+<li><input disabled="" type="checkbox"> Honor bounded <code>Retry-After</code>.</li>
+<li><input disabled="" type="checkbox"> Separate submission and poll retry rules.</li>
+<li><input disabled="" type="checkbox"> Implement SSE and generic JSONL response streams.</li>
+<li><input disabled="" type="checkbox"> Enforce connect, idle, application-idle, and total deadlines.</li>
+<li><input disabled="" type="checkbox"> Enforce event and aggregate caps.</li>
+<li><strong>Depends on:</strong> 0C.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0D.4 — Background and JSONL process adapters</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Limit background lifecycle to one eval run.</li>
+<li><input disabled="" type="checkbox"> Implement readiness checks and owned shutdown.</li>
+<li><input disabled="" type="checkbox"> Support serial and multiplexed correlated JSONL.</li>
+<li><input disabled="" type="checkbox"> Add required per-request in-band cancellation.</li>
+<li><input disabled="" type="checkbox"> Retain process-termination fallback.</li>
+<li><input disabled="" type="checkbox"> Fail all outstanding requests on EOF with distinct evidence.</li>
+<li><strong>Depends on:</strong> 0C.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0D.5 — WebSocket adapter</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Land after the first polling/SSE vertical slice.</li>
+<li><input disabled="" type="checkbox"> Support text JSON only.</li>
+<li><input disabled="" type="checkbox"> Support per-run multiplexing and per-case fallback.</li>
+<li><input disabled="" type="checkbox"> Correlate request ids.</li>
+<li><input disabled="" type="checkbox"> Enforce open, idle, ping, attempt, and close deadlines.</li>
+<li><input disabled="" type="checkbox"> Avoid post-ack reconnect that risks duplicate side effects.</li>
+<li><strong>Depends on:</strong> 0D.3, shared correlation fixtures from 0D.4.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Parallelization:</strong> 0D.1, 0D.2, and 0D.4 are parallel. 0D.3 may proceed beside them. 0D.5 starts only after the polling/SSE contract is proven.</p>
+<h3>Track 0E — Execution cutover</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0E.1 — v2 resolver and <code>attest eval run</code></strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Resolve selected tests, direct cases, datasets, and metrics.</li>
+<li><input disabled="" type="checkbox"> Snapshot resource hashes into the immutable run.</li>
+<li><input disabled="" type="checkbox"> Support exact test, case, and tag selection.</li>
+<li><input disabled="" type="checkbox"> Stream JSONL progress with stable sequencing metadata.</li>
+<li><input disabled="" type="checkbox"> Preserve existing store, diff, report, view, trace, and JUnit behavior.</li>
+<li><input disabled="" type="checkbox"> Implement run cancellation.</li>
+<li><strong>Depends on:</strong> 0C.2–0C.4, 0D.1–0D.5.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0E.2 — Remove v1 execution</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Delete v1 discovery and authoring paths.</li>
+<li><input disabled="" type="checkbox"> Delete v1-only fixtures and docs.</li>
+<li><input disabled="" type="checkbox"> Remove <code>attest run</code>; canonical execution is <code>attest eval run</code>.</li>
+<li><input disabled="" type="checkbox"> Do not build a v1 importer now.</li>
+<li><input disabled="" type="checkbox"> Emit an explicit breaking-v2 diagnostic for v1 files.</li>
+<li><strong>Depends on:</strong> 0E.1.</li>
+<li><strong>Gate:</strong> repository contains one execution path.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 0F — Agent-first documentation and acceptance</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0F.1 — Documentation information architecture</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Quickstarts for native CLI, cURL/HTTP, CSV, judge, trace, and CI.</li>
+<li><input disabled="" type="checkbox"> JSON help and schema discovery guide.</li>
+<li><input disabled="" type="checkbox"> Stable error catalog.</li>
+<li><input disabled="" type="checkbox"> <code>llms.txt</code> routing file.</li>
+<li><input disabled="" type="checkbox"> Executable examples with no ellipses in the only happy path.</li>
+<li><strong>Depends on:</strong> grammar stable after 0E.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>0F.2 — Under-five-minute CLI gate</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Human HTTP/cURL path.</li>
+<li><input disabled="" type="checkbox"> Human local-process/CSV path.</li>
+<li><input disabled="" type="checkbox"> Coding-agent non-interactive path.</li>
+<li><input disabled="" type="checkbox"> Actual packed CLI from empty directories.</li>
+<li><input disabled="" type="checkbox"> No source checkout assumptions.</li>
+<li><strong>Depends on:</strong> 0E.2, 0F.1.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Phase 0 exit:</strong> CLI v2 is the only authoring and execution path; human and coding-agent happy paths are executable and under five minutes in controlled acceptance.</p>
+<hr>
+<h2>Phase 1 — Define the evaluation trust plane</h2>
+<p><strong>Purpose:</strong> freeze evidence, review, calibration, and policy semantics before adding workflows that could corrupt or overstate trust.</p>
+<h3>Track 1A — Evidence provenance contracts</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>1A.1 — Judge identity and prompt provenance</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Extend evidence with provider, requested model, resolved metadata, prompt version, metric hash, and rubric hash.</li>
+<li><input disabled="" type="checkbox"> Represent unknown provider metadata explicitly.</li>
+<li><input disabled="" type="checkbox"> Decide which new fields are persisted in normalized columns versus canonical JSON.</li>
+<li><input disabled="" type="checkbox"> Version the evidence contract.</li>
+<li><input disabled="" type="checkbox"> Add backward-compatible store reading.</li>
+<li><strong>Depends on:</strong> 0A.1; can start before full CLI cutover.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>1A.2 — Cache validity model</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Include all semantic inputs in cache identity.</li>
+<li><input disabled="" type="checkbox"> Record provider/model alias risk.</li>
+<li><input disabled="" type="checkbox"> Provide explicit cache bypass for validation trials.</li>
+<li><input disabled="" type="checkbox"> Prevent a stale calibration label from being inferred on an old cached result.</li>
+<li><strong>Depends on:</strong> 1A.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 1B — Human review contracts</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>1B.1 — Rubric schema</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Define criteria and supported value types.</li>
+<li><input disabled="" type="checkbox"> Define reviewer count, blinding, and adjudication policy.</li>
+<li><input disabled="" type="checkbox"> Generate JSON Schema and fixtures.</li>
+<li><strong>Depends on:</strong> 0A.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>1B.2 — Batch and annotation schemas</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Define selection provenance and seed.</li>
+<li><input disabled="" type="checkbox"> Define append-only annotation identity.</li>
+<li><input disabled="" type="checkbox"> Define supersession without mutation.</li>
+<li><input disabled="" type="checkbox"> Define pairwise randomized order evidence.</li>
+<li><input disabled="" type="checkbox"> Define import idempotency and conflict handling.</li>
+<li><strong>Depends on:</strong> 1B.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>1B.3 — Adjudication and derived-decision schema</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Define resolved and accepted-disagreement outcomes.</li>
+<li><input disabled="" type="checkbox"> Define policy statuses: pass, fail, error, needs review, insufficient evidence.</li>
+<li><input disabled="" type="checkbox"> Keep policy output distinct from raw metric and review evidence.</li>
+<li><strong>Depends on:</strong> 1B.2.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 1C — Calibration contract and statistics specification</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>1C.1 — Calibration snapshot schema</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Bind every validity input.</li>
+<li><input disabled="" type="checkbox"> Define <code>draft</code>, <code>valid</code>, <code>stale</code>, <code>rejected</code>.</li>
+<li><input disabled="" type="checkbox"> Define invalidation rules.</li>
+<li><input disabled="" type="checkbox"> Define content hash and export form.</li>
+<li><strong>Depends on:</strong> 1A.1, 1B.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>1C.2 — Measurement specification</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Select measures by rubric type.</li>
+<li><input disabled="" type="checkbox"> Define deterministic seeded bootstrap intervals.</li>
+<li><input disabled="" type="checkbox"> Define slice reporting.</li>
+<li><input disabled="" type="checkbox"> Define minimum-data warnings without pretending they are universal validity thresholds.</li>
+<li><input disabled="" type="checkbox"> Define handling of missing labels and unresolved disagreements.</li>
+<li><strong>Depends on:</strong> 1C.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 1D — Live-lane security and budget specification</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>1D.1 — Live test policy</strong><ul>
+<li><input disabled="" type="checkbox"> Manual and scheduled triggers only.</li>
+<li><input disabled="" type="checkbox"> Provider/model allowlist.</li>
+<li><input disabled="" type="checkbox"> Secret scope.</li>
+<li><input disabled="" type="checkbox"> Cost, calls, tokens, and time ceilings.</li>
+<li><input disabled="" type="checkbox"> Synthetic non-sensitive fixtures only.</li>
+<li><input disabled="" type="checkbox"> Artifact retention and redaction scan.</li>
+<li><input disabled="" type="checkbox"> Non-blocking status semantics.</li>
+<li><strong>Depends on:</strong> current judge adapter, independent of CLI v2 writer.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Parallelization:</strong> 1A, 1B, and 1D can run in parallel. 1C waits for the evidence and annotation shapes.</p>
+<p><strong>Phase 1 exit:</strong> schemas, invariants, migrations, security policy, and statistical definitions are human-reviewed before implementation broadens.</p>
+<hr>
+<h2>Phase 2 — Prove real-provider compatibility and judge quality</h2>
+<h3>Track 2A — Live-provider smoke lane</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2A.1 — Manual smoke command</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> One OpenAI fixture.</li>
+<li><input disabled="" type="checkbox"> One Anthropic fixture.</li>
+<li><input disabled="" type="checkbox"> Explicit opt-in environment flag.</li>
+<li><input disabled="" type="checkbox"> Hard budget and deadline.</li>
+<li><input disabled="" type="checkbox"> Persist and inspect judge evidence.</li>
+<li><input disabled="" type="checkbox"> Run identical second case to assert cache behavior.</li>
+<li><strong>Depends on:</strong> 1A.1, 1D.1, v2 eval cutover 0E.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2A.2 — Scheduled workflow</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Add scheduled and manual workflow dispatch.</li>
+<li><input disabled="" type="checkbox"> Use scoped provider secrets.</li>
+<li><input disabled="" type="checkbox"> Upload redacted evidence artifact.</li>
+<li><input disabled="" type="checkbox"> Publish non-blocking status.</li>
+<li><input disabled="" type="checkbox"> Alert on provider contract failure.</li>
+<li><input disabled="" type="checkbox"> Enforce daily and per-run budgets.</li>
+<li><strong>Depends on:</strong> 2A.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 2B — Provider replay corpus</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2B.1 — Sanitization pipeline</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Identify all secret and request-content surfaces.</li>
+<li><input disabled="" type="checkbox"> Replace sensitive values deterministically.</li>
+<li><input disabled="" type="checkbox"> Verify fixtures retain provider shape.</li>
+<li><input disabled="" type="checkbox"> Scan resulting artifacts for secret patterns.</li>
+<li><input disabled="" type="checkbox"> Require human review before commit.</li>
+<li><strong>Depends on:</strong> first successful 2A.1 runs.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2B.2 — Offline replay fixtures</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Success and usage.</li>
+<li><input disabled="" type="checkbox"> Missing usage.</li>
+<li><input disabled="" type="checkbox"> Malformed structured output.</li>
+<li><input disabled="" type="checkbox"> Authentication error.</li>
+<li><input disabled="" type="checkbox"> Rate limit.</li>
+<li><input disabled="" type="checkbox"> Model not found.</li>
+<li><input disabled="" type="checkbox"> Provider timeout or interrupted response where observable.</li>
+<li><strong>Depends on:</strong> 2B.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2B.3 — Required-CI integration</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Replay through the same parser and persistence seams used at runtime.</li>
+<li><input disabled="" type="checkbox"> Fail required CI on fixture incompatibility.</li>
+<li><input disabled="" type="checkbox"> Keep network disabled.</li>
+<li><strong>Depends on:</strong> 2B.2.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 2C — Human-labeled calibration corpus</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2C.1 — Seed rubric and domain</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Choose one representative, bounded rubric.</li>
+<li><input disabled="" type="checkbox"> Write clear inclusion, exclusion, and scoring instructions.</li>
+<li><input disabled="" type="checkbox"> Create balanced easy, hard, ambiguous, and adversarial cases.</li>
+<li><input disabled="" type="checkbox"> Exclude private production data.</li>
+<li><strong>Depends on:</strong> 1B.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2C.2 — Independent labeling</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> At least two blinded reviewers per item.</li>
+<li><input disabled="" type="checkbox"> Record rationale and confidence.</li>
+<li><input disabled="" type="checkbox"> Hide judge results.</li>
+<li><input disabled="" type="checkbox"> Measure disagreement.</li>
+<li><strong>Depends on:</strong> 2C.1 and minimal annotation capture from Phase 3, or a schema-valid temporary capture tool.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2C.3 — Adjudication</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Review disagreements.</li>
+<li><input disabled="" type="checkbox"> Distinguish reviewer error from rubric ambiguity.</li>
+<li><input disabled="" type="checkbox"> Revise rubric only through a new version.</li>
+<li><input disabled="" type="checkbox"> Freeze corpus hash.</li>
+<li><strong>Depends on:</strong> 2C.2.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 2D — Calibration engine</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2D.1 — Trial runner</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Bypass result cache intentionally.</li>
+<li><input disabled="" type="checkbox"> Execute configurable repeated trials.</li>
+<li><input disabled="" type="checkbox"> Record trial seed and provider metadata.</li>
+<li><input disabled="" type="checkbox"> Enforce cost controls.</li>
+<li><input disabled="" type="checkbox"> Support multiple judge configurations without conflating results.</li>
+<li><strong>Depends on:</strong> 1C.1, 2A.1, 2C.3.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2D.2 — Statistics and slices</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Produce measures from 1C.2.</li>
+<li><input disabled="" type="checkbox"> Add confidence intervals.</li>
+<li><input disabled="" type="checkbox"> Add per-tag and adversarial-slice results.</li>
+<li><input disabled="" type="checkbox"> Report unsupported/insufficient data explicitly.</li>
+<li><strong>Depends on:</strong> 2D.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>2D.3 — Calibration report and acceptance</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Human-readable summary.</li>
+<li><input disabled="" type="checkbox"> JSON result schema.</li>
+<li><input disabled="" type="checkbox"> Static self-contained report if existing report components can be reused without expanding web authoring.</li>
+<li><input disabled="" type="checkbox"> Explicit owner acceptance or rejection.</li>
+<li><input disabled="" type="checkbox"> Persist immutable calibration snapshot.</li>
+<li><strong>Depends on:</strong> 2D.2.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Parallelization:</strong> 2A and 2C begin in parallel after Phase 1. 2B follows first live calls. 2D waits for both live execution and adjudicated labels.</p>
+<p><strong>Phase 2 exit:</strong> Attest can demonstrate current provider compatibility and quantify judge-human agreement for at least one real rubric without putting live calls in required CI.</p>
+<hr>
+<h2>Phase 3 — Build the local human review loop</h2>
+<h3>Track 3A — Storage and export</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3A.1 — Store migration</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Add rubric version, batch, item, annotation, claim/lease, and adjudication tables or equivalent records.</li>
+<li><input disabled="" type="checkbox"> Keep completed eval runs immutable.</li>
+<li><input disabled="" type="checkbox"> Use foreign keys or validated references without cascade deletion of evidence.</li>
+<li><input disabled="" type="checkbox"> Add crash/reopen and migration rollback tests.</li>
+<li><input disabled="" type="checkbox"> Obtain required human schema review before freeze.</li>
+<li><strong>Depends on:</strong> 1B.1–1B.3.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3A.2 — Review bundle export/import</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Versioned JSONL canonical exchange format.</li>
+<li><input disabled="" type="checkbox"> Friendly CSV packet with generated instructions.</li>
+<li><input disabled="" type="checkbox"> Full preflight validation.</li>
+<li><input disabled="" type="checkbox"> Idempotent imports.</li>
+<li><input disabled="" type="checkbox"> Redaction and field allowlist.</li>
+<li><strong>Depends on:</strong> 3A.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 3B — Rubric and batch commands</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3B.1 — Rubric CRUD</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Add/show/list/rename/remove with reference protection.</li>
+<li><input disabled="" type="checkbox"> Interactive and JSON parity.</li>
+<li><input disabled="" type="checkbox"> Dry-run semantic diff.</li>
+<li><input disabled="" type="checkbox"> Example rubrics are visible versioned templates.</li>
+<li><strong>Depends on:</strong> CLI writer 0B.3, schema 1B.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3B.2 — Batch creation and selection</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Implement all selection strategies.</li>
+<li><input disabled="" type="checkbox"> Record source population, filter, seed, and sampled ids.</li>
+<li><input disabled="" type="checkbox"> Implement blind and pairwise randomization.</li>
+<li><input disabled="" type="checkbox"> Preview redacted batch before commit.</li>
+<li><strong>Depends on:</strong> 3A.1, 3B.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 3C — Terminal review</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3C.1 — Single-run review mode</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Render rubric and bounded evidence.</li>
+<li><input disabled="" type="checkbox"> Capture labels, rationale, confidence, and correction.</li>
+<li><input disabled="" type="checkbox"> Resume safely.</li>
+<li><input disabled="" type="checkbox"> Support line mode and non-color status.</li>
+<li><input disabled="" type="checkbox"> Add keyboard and screen-reader acceptance.</li>
+<li><strong>Depends on:</strong> 3B.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3C.2 — Pairwise review mode</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Present randomized A/B order.</li>
+<li><input disabled="" type="checkbox"> Capture A, B, equal, or insufficient evidence.</li>
+<li><input disabled="" type="checkbox"> Preserve mapping and sentinel pairs.</li>
+<li><input disabled="" type="checkbox"> Hide previous labels until submission.</li>
+<li><strong>Depends on:</strong> 3B.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3C.3 — Machine submission mode</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Versioned <code>--from-json</code> annotation request.</li>
+<li><input disabled="" type="checkbox"> Idempotency key.</li>
+<li><input disabled="" type="checkbox"> Stale batch/rubric rejection.</li>
+<li><input disabled="" type="checkbox"> Stable structured errors.</li>
+<li><strong>Depends on:</strong> 3A.1, CLI protocol 0A.3.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 3D — Agreement and adjudication</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3D.1 — Agreement report</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Raw agreement.</li>
+<li><input disabled="" type="checkbox"> Per-criterion disagreement.</li>
+<li><input disabled="" type="checkbox"> Appropriate type-specific agreement measure.</li>
+<li><input disabled="" type="checkbox"> Missing-label handling.</li>
+<li><input disabled="" type="checkbox"> Reviewer-pair matrix without ranking people as “good” or “bad” from inadequate data.</li>
+<li><strong>Depends on:</strong> 3C.1 or 3C.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3D.2 — Adjudication workflow</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Queue disagreements.</li>
+<li><input disabled="" type="checkbox"> Show original blinded evidence and reviewer rationales.</li>
+<li><input disabled="" type="checkbox"> Capture final label, accepted disagreement, or rubric defect.</li>
+<li><input disabled="" type="checkbox"> Preserve all original annotations.</li>
+<li><strong>Depends on:</strong> 3D.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 3E — Feedback promotion</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3E.1 — Correct expected output</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Generate candidate dataset update.</li>
+<li><input disabled="" type="checkbox"> Preserve review provenance.</li>
+<li><input disabled="" type="checkbox"> Apply through project transaction engine.</li>
+<li><input disabled="" type="checkbox"> Reject stale dataset hash.</li>
+<li><strong>Depends on:</strong> 3D.2, CLI writer 0B.3.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>3E.2 — Promote failure to regression case</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Create or upsert stable case.</li>
+<li><input disabled="" type="checkbox"> Preserve tags and source run reference.</li>
+<li><input disabled="" type="checkbox"> Avoid copying secrets or unredacted traces.</li>
+<li><input disabled="" type="checkbox"> Show semantic diff.</li>
+<li><strong>Depends on:</strong> 3E.1.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Parallelization:</strong> 3A and 3B can overlap after schemas freeze. 3C follows batch creation. Single and pairwise review can be separate parallel tasks. 3D follows collected annotations. 3E follows adjudication.</p>
+<p><strong>Phase 3 exit:</strong> a local team can create a reproducible review batch, collect independent human labels through terminal or offline packets, measure disagreement, adjudicate, and promote corrections without mutating original runs.</p>
+<hr>
+<h2>Phase 4 — Close the judge–human loop</h2>
+<h3>Track 4A — Judge lifecycle in authoring and runs</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4A.1 — Surface calibration status</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Show draft/valid/stale/rejected on metric inspection.</li>
+<li><input disabled="" type="checkbox"> Show why a calibration is stale.</li>
+<li><input disabled="" type="checkbox"> Link to exact calibration report.</li>
+<li><input disabled="" type="checkbox"> Include status in run evidence.</li>
+<li><strong>Depends on:</strong> 2D.3.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4A.2 — Validation commands</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> <code>attest metric calibrate</code> or equivalent.</li>
+<li><input disabled="" type="checkbox"> <code>attest metric validation show</code>.</li>
+<li><input disabled="" type="checkbox"> <code>attest metric validation compare</code>.</li>
+<li><input disabled="" type="checkbox"> Cost preview and explicit live-call consent.</li>
+<li><strong>Depends on:</strong> 2D.3, CLI protocol.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 4B — Disagreement routing</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4B.1 — Judge-human disagreement queue</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Select false-pass, false-fail, near-threshold, and high-variance cases.</li>
+<li><input disabled="" type="checkbox"> Include random controls.</li>
+<li><input disabled="" type="checkbox"> Preserve blinded review option.</li>
+<li><strong>Depends on:</strong> 3B.2, 2D.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4B.2 — Rubric revision workflow</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Summarize disagreement clusters without exposing sensitive data.</li>
+<li><input disabled="" type="checkbox"> Require a new rubric version for changes.</li>
+<li><input disabled="" type="checkbox"> Mark prior calibration stale.</li>
+<li><input disabled="" type="checkbox"> Rerun against the same frozen corpus before acceptance.</li>
+<li><strong>Depends on:</strong> 4B.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 4C — Review-aware decision policy</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4C.1 — Local quality policy resource</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Define allowed evidence types.</li>
+<li><input disabled="" type="checkbox"> Define whether draft or stale judges may gate.</li>
+<li><input disabled="" type="checkbox"> Define human-escalation conditions.</li>
+<li><input disabled="" type="checkbox"> Define provider error and pending-review behavior.</li>
+<li><input disabled="" type="checkbox"> Define cost ceilings.</li>
+<li><input disabled="" type="checkbox"> Keep policy deterministic and versioned.</li>
+<li><strong>Depends on:</strong> 1B.3, 4A.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4C.2 — Derived decision engine</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Combine evidence without rewriting it.</li>
+<li><input disabled="" type="checkbox"> Explain every decision path.</li>
+<li><input disabled="" type="checkbox"> Preserve <code>needs_review</code> and <code>insufficient_evidence</code>.</li>
+<li><input disabled="" type="checkbox"> Add unit/property tests for policy composition.</li>
+<li><strong>Depends on:</strong> 4C.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 4D — Baseline and CI semantics</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4D.1 — Named local baselines</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set, show, update, and remove named run references.</li>
+<li><input disabled="" type="checkbox"> Optionally require completed review or accepted policy decision.</li>
+<li><input disabled="" type="checkbox"> Record approver label without claiming authenticated identity.</li>
+<li><input disabled="" type="checkbox"> Avoid copying run data.</li>
+<li><strong>Depends on:</strong> v2 runs, 4C.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>4D.2 — CI exit and artifact policy</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Map fail, error, needs-review, and insufficient-evidence explicitly.</li>
+<li><input disabled="" type="checkbox"> Preserve stable CLI exit codes.</li>
+<li><input disabled="" type="checkbox"> Emit review bundle when configured.</li>
+<li><input disabled="" type="checkbox"> Produce JUnit representation without collapsing infrastructure errors into failures.</li>
+<li><strong>Depends on:</strong> 4C.2.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Phase 4 exit:</strong> judge metrics have visible validity status; disagreements flow into human review; policy and CI can distinguish failure, error, pending review, and insufficient evidence.</p>
+<hr>
+<h2>Phase 5 — Validate the human and agent experience</h2>
+<h3>Track 5A — Dogfood scenario contract</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5A.1 — Scenario schema</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Preconditions.</li>
+<li><input disabled="" type="checkbox"> Operator type.</li>
+<li><input disabled="" type="checkbox"> Allowed tools and side effects.</li>
+<li><input disabled="" type="checkbox"> Seeded failures.</li>
+<li><input disabled="" type="checkbox"> Success artifacts.</li>
+<li><input disabled="" type="checkbox"> Time and cost limits.</li>
+<li><input disabled="" type="checkbox"> Cleanup.</li>
+<li><strong>Depends on:</strong> stable CLI grammar 0E.1.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5A.2 — Initial scenario corpus</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> At least five developer paths.</li>
+<li><input disabled="" type="checkbox"> At least five domain-expert paths.</li>
+<li><input disabled="" type="checkbox"> At least ten coding-agent paths, including recovery.</li>
+<li><input disabled="" type="checkbox"> At least five CI/non-TTY paths.</li>
+<li><strong>Depends on:</strong> 5A.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 5B — Harness and deterministic scoring</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5B.1 — Isolated scenario runner</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Clean temporary directory.</li>
+<li><input disabled="" type="checkbox"> Packed CLI artifact.</li>
+<li><input disabled="" type="checkbox"> Bounded command execution.</li>
+<li><input disabled="" type="checkbox"> Captured stdout, stderr, file diff, and timing.</li>
+<li><input disabled="" type="checkbox"> Safe cleanup.</li>
+<li><input disabled="" type="checkbox"> No production credentials.</li>
+<li><strong>Depends on:</strong> 5A.1, packaged artifact candidate.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5B.2 — Deterministic validators</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Resource validity.</li>
+<li><input disabled="" type="checkbox"> Expected run result.</li>
+<li><input disabled="" type="checkbox"> Secret leak scan.</li>
+<li><input disabled="" type="checkbox"> Side-effect approval trace.</li>
+<li><input disabled="" type="checkbox"> Structured output conformance.</li>
+<li><input disabled="" type="checkbox"> Stale-write safety.</li>
+<li><input disabled="" type="checkbox"> Recovery completion.</li>
+<li><strong>Depends on:</strong> 5B.1.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 5C — Calibrated LLM UX graders</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5C.1 — UX rubric</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Clarity.</li>
+<li><input disabled="" type="checkbox"> Correct next action.</li>
+<li><input disabled="" type="checkbox"> Error-stage accuracy.</li>
+<li><input disabled="" type="checkbox"> Minimal necessary complexity.</li>
+<li><input disabled="" type="checkbox"> Side-effect disclosure.</li>
+<li><input disabled="" type="checkbox"> Preservation of user intent.</li>
+<li><strong>Depends on:</strong> human research input, not only implementation authors.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5C.2 — Human-labeled transcript set</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Independent labels.</li>
+<li><input disabled="" type="checkbox"> Adjudication.</li>
+<li><input disabled="" type="checkbox"> Include good, poor, and ambiguous transcripts.</li>
+<li><input disabled="" type="checkbox"> Include coding-agent and human wizard transcripts.</li>
+<li><strong>Depends on:</strong> 5C.1, Phase 3 review workflow.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5C.3 — Grader calibration</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Apply Phase 2 calibration engine.</li>
+<li><input disabled="" type="checkbox"> Measure by scenario type.</li>
+<li><input disabled="" type="checkbox"> Reject grader as a gate if agreement is inadequate.</li>
+<li><strong>Depends on:</strong> 5C.2, 2D.3.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 5D — Human studies</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5D.1 — Formative developer study</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Recruit five to eight users with existing agents.</li>
+<li><input disabled="" type="checkbox"> Observe without leading.</li>
+<li><input disabled="" type="checkbox"> Record task success, time, assistance, and recovery.</li>
+<li><input disabled="" type="checkbox"> Fix every repeated blocker.</li>
+<li><strong>Depends on:</strong> usable CLI slice after 0C/0D.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5D.2 — Domain-expert study</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Recruit five to eight product/QA/domain participants.</li>
+<li><input disabled="" type="checkbox"> Use table import, scorer selection, and review packet tasks.</li>
+<li><input disabled="" type="checkbox"> Measure vocabulary comprehension and confidence.</li>
+<li><input disabled="" type="checkbox"> Check keyboard and zoom/screen-reader compatibility where applicable.</li>
+<li><strong>Depends on:</strong> Phase 3 terminal/export path.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5D.3 — Coding-agent benchmark</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Use at least two agent families.</li>
+<li><input disabled="" type="checkbox"> Run repeated clean-room trials.</li>
+<li><input disabled="" type="checkbox"> Require JSON help/schema discovery path.</li>
+<li><input disabled="" type="checkbox"> Measure invalid commands, direct file edits, recovery, time, and cost.</li>
+<li><strong>Depends on:</strong> 5A, 5B.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 5E — Release benchmark</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5E.1 — Freeze acceptance tasks</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Version scenarios and expected artifacts.</li>
+<li><input disabled="" type="checkbox"> Prevent tuning only to one sample agent.</li>
+<li><input disabled="" type="checkbox"> Include at least one real HTTP API shape and one local process shape.</li>
+<li><strong>Depends on:</strong> findings from 5D.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5E.2 — Run from release artifacts</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> npm/npx artifact.</li>
+<li><input disabled="" type="checkbox"> compiled macOS arm64/x64.</li>
+<li><input disabled="" type="checkbox"> compiled Linux x64/arm64 where runner available.</li>
+<li><input disabled="" type="checkbox"> Homebrew or installer path.</li>
+<li><strong>Depends on:</strong> Phase 6 packaging.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>5E.3 — Publish benchmark report</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Human completion results.</li>
+<li><input disabled="" type="checkbox"> Coding-agent completion results.</li>
+<li><input disabled="" type="checkbox"> Failure taxonomy.</li>
+<li><input disabled="" type="checkbox"> Known limitations.</li>
+<li><input disabled="" type="checkbox"> Exact Attest and scenario versions.</li>
+<li><input disabled="" type="checkbox"> No private participant or secret data.</li>
+<li><strong>Depends on:</strong> 5E.2.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Phase 5 exit:</strong> claims about human and agent onboarding are backed by observed users, repeatable agent tasks, deterministic success checks, and calibrated qualitative grading.</p>
+<hr>
+<h2>Phase 6 — Make local adoption operationally excellent</h2>
+<h3>Track 6A — Packaging and installation</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>6A.1 — Packed npm artifact</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Inspect exact tarball manifest.</li>
+<li><input disabled="" type="checkbox"> Verify Node and Bun consumers.</li>
+<li><input disabled="" type="checkbox"> Verify no workspace-only paths.</li>
+<li><input disabled="" type="checkbox"> Verify schemas, examples, and required assets ship.</li>
+<li><strong>Depends on:</strong> CLI v2 cutover.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>6A.2 — Compiled binaries</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> macOS arm64/x64.</li>
+<li><input disabled="" type="checkbox"> Linux arm64/x64.</li>
+<li><input disabled="" type="checkbox"> Startup and SQLite smoke.</li>
+<li><input disabled="" type="checkbox"> Checksums, signatures when practical, SBOM.</li>
+<li><strong>Depends on:</strong> 6A.1 contract freeze, may run in parallel implementation.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>6A.3 — Installer and Homebrew</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Safe versioned download.</li>
+<li><input disabled="" type="checkbox"> Checksum verification.</li>
+<li><input disabled="" type="checkbox"> PATH guidance.</li>
+<li><input disabled="" type="checkbox"> Uninstall instructions.</li>
+<li><input disabled="" type="checkbox"> Clean-machine smoke.</li>
+<li><strong>Depends on:</strong> 6A.2.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 6B — CI distribution</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>6B.1 — GitHub Action wrapper</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Pin exact Attest version.</li>
+<li><input disabled="" type="checkbox"> Cache installation, not judge results unless explicitly configured.</li>
+<li><input disabled="" type="checkbox"> Upload JSON, JUnit, static report, and optional review bundle.</li>
+<li><input disabled="" type="checkbox"> Never expose provider secrets.</li>
+<li><input disabled="" type="checkbox"> Document fork-PR secret behavior.</li>
+<li><strong>Depends on:</strong> 6A.1 or 6A.2, 4D.2.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>6B.2 — Example CI policies</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Deterministic-only PR gate.</li>
+<li><input disabled="" type="checkbox"> Scheduled calibrated-judge gate.</li>
+<li><input disabled="" type="checkbox"> Review-required release gate.</li>
+<li><input disabled="" type="checkbox"> Budget-capped provider smoke.</li>
+<li><strong>Depends on:</strong> 4C/4D.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 6C — Local agent interfaces</h3>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+<strong>6C.1 — Coding-agent skill</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Teach project discovery, schema help, dry run, optimistic hash, and repair loops.</li>
+<li><input disabled="" type="checkbox"> Never duplicate the full reference docs.</li>
+<li><input disabled="" type="checkbox"> Test the skill through Phase 5 scenarios.</li>
+<li><strong>Depends on:</strong> JSON help and stable docs.</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<strong>6C.2 — Optional local MCP adapter</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Thin wrapper over structured CLI or shared command engine.</li>
+<li><input disabled="" type="checkbox"> Read operations by default.</li>
+<li><input disabled="" type="checkbox"> Explicit approval boundary for mutation, process launch, network probe, and live judge calls.</li>
+<li><input disabled="" type="checkbox"> No secret-reading tool.</li>
+<li><input disabled="" type="checkbox"> No separate business logic.</li>
+<li><strong>Depends on:</strong> stable command request/result contracts and coding-agent benchmark.</li>
+</ul>
+</li>
+</ul>
+<h3>Track 6D — Framework recipes</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>6D.1 — OpenAI Agents SDK recipe</strong></li>
+<li><input disabled="" type="checkbox"> <strong>6D.2 — LangGraph recipe</strong></li>
+<li><input disabled="" type="checkbox"> <strong>6D.3 — Vercel AI SDK recipe</strong></li>
+<li><input disabled="" type="checkbox"> <strong>6D.4 — CrewAI recipe</strong></li>
+</ul>
+<p>Each recipe must:</p>
+<ul>
+<li>Use the generic Attest contract rather than a privileged runtime path.</li>
+<li>Include a real trace fixture.</li>
+<li>Include a copy-paste quickstart.</li>
+<li>Include one deterministic metric, one trajectory metric, and optional judge metric.</li>
+<li>Run in required offline tests without live model calls.</li>
+<li>Have an opt-in live smoke where credentials are required.</li>
+</ul>
+<p><strong>Parallelization:</strong> packaging, CI wrapper, agent skill, and framework recipes can proceed largely in parallel after the CLI contract freezes.</p>
+<p><strong>Phase 6 exit:</strong> users install a real release artifact, CI consumes it safely, coding agents have a tested discovery path, and common frameworks have generic-contract examples.</p>
+<hr>
+<h2>Phase 7 — Local North Star release gate</h2>
+<p>All mandatory gates must be true:</p>
+<h3>CLI and project integrity</h3>
+<ul>
+<li><input disabled="" type="checkbox"> One v2 execution path; no v1 fallback.</li>
+<li><input disabled="" type="checkbox"> Every mutation is dry-runnable, atomic, recoverable, and optimistic-concurrency safe.</li>
+<li><input disabled="" type="checkbox"> Human and JSON output parity is contract-tested.</li>
+<li><input disabled="" type="checkbox"> No structured command prompts unexpectedly.</li>
+<li><input disabled="" type="checkbox"> Every error has stage, stable code, retryability, and repair guidance.</li>
+</ul>
+<h3>Agent integration</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Native CLI and HTTP pass hostile conformance.</li>
+<li><input disabled="" type="checkbox"> cURL import never executes shell text and never persists literal credentials.</li>
+<li><input disabled="" type="checkbox"> Polling and SSE vertical slice passes before WebSocket is accepted.</li>
+<li><input disabled="" type="checkbox"> Background agents remain run-scoped.</li>
+<li><input disabled="" type="checkbox"> JSONL has in-band per-request cancellation and termination fallback.</li>
+</ul>
+<h3>Evaluation validity</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Required CI remains deterministic and network-free.</li>
+<li><input disabled="" type="checkbox"> Scheduled OpenAI and Anthropic smoke lanes pass within budget.</li>
+<li><input disabled="" type="checkbox"> Sanitized provider replay fixtures run in required CI.</li>
+<li><input disabled="" type="checkbox"> At least one judge rubric has an accepted human calibration snapshot.</li>
+<li><input disabled="" type="checkbox"> Judge status is visible and invalidates correctly.</li>
+<li><input disabled="" type="checkbox"> Uncalibrated or stale judge policy is explicit.</li>
+</ul>
+<h3>Human review</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Review rubrics, batches, annotations, and adjudication are versioned.</li>
+<li><input disabled="" type="checkbox"> Original runs and metric results remain immutable.</li>
+<li><input disabled="" type="checkbox"> Blind and pairwise review preserve order provenance.</li>
+<li><input disabled="" type="checkbox"> Agreement report and adjudication work.</li>
+<li><input disabled="" type="checkbox"> Corrections promote through semantic diff and atomic transaction.</li>
+<li><input disabled="" type="checkbox"> CSV/JSONL review exchange is validated and redacted.</li>
+</ul>
+<h3>Human and agent experience</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Median time to first real-agent result is under five minutes in the target studies.</li>
+<li><input disabled="" type="checkbox"> First meaningful scored test is under ten minutes for the majority of observed participants.</li>
+<li><input disabled="" type="checkbox"> At least 90% of frozen coding-agent scenarios complete without prose scraping or direct canonical-file edits.</li>
+<li><input disabled="" type="checkbox"> Representative users can correctly identify deterministic, judge, and human-reviewed evidence.</li>
+<li><input disabled="" type="checkbox"> Seeded failures are correctly categorized and recovered without source inspection.</li>
+<li><input disabled="" type="checkbox"> Keyboard and line-mode review paths pass accessibility acceptance.</li>
+</ul>
+<h3>Distribution</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Packed npm and compiled artifacts pass clean-machine smoke.</li>
+<li><input disabled="" type="checkbox"> Checksums and SBOM are published.</li>
+<li><input disabled="" type="checkbox"> GitHub Action examples pass.</li>
+<li><input disabled="" type="checkbox"> Documentation commands match the packed artifact exactly.</li>
+</ul>
+<h3>Security and privacy</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Zero known secret values in authored files, diffs, outputs, run bundles, replay fixtures, review exports, telemetry, or published reports.</li>
+<li><input disabled="" type="checkbox"> Every process launch, network probe, live judge call, and mutation has an explicit authority path.</li>
+<li><input disabled="" type="checkbox"> Review exports are redacted by allowlist.</li>
+<li><input disabled="" type="checkbox"> No private study data is published.</li>
+</ul>
+<hr>
+<h2>11. Immediate next actions</h2>
+<p>These are the next steps to take while the CLI v2 work proceeds:</p>
+<ol>
+<li><strong>Ratify this roadmap&#39;s trust model.</strong> Confirm that human evidence is append-only and separate from machine verdicts.</li>
+<li><strong>Add the evaluation-validity epic to the canonical <code>PLAN.md</code> backlog</strong> after the CLI v2 epic lands, using the repository&#39;s status and Planloft protocol.</li>
+<li><strong>Start Phase 1A, 1B, and 1D in parallel</strong> because they do not require full CLI v2 execution.</li>
+<li><strong>Write the live-provider smoke policy before the workflow.</strong> Cost, secrets, artifact retention, and non-blocking semantics should not be improvised in CI YAML.</li>
+<li><strong>Select one seed rubric and safe calibration domain.</strong> Keep it representative but non-sensitive.</li>
+<li><strong>Draft the human review schemas before building terminal interaction.</strong> This prevents UI-shaped data models.</li>
+<li><strong>Add missing provider provenance fields to the judge evidence design.</strong> Model alias drift and cache validity depend on them.</li>
+<li><strong>Create an explicit calibration cache-bypass path.</strong> Repeated trials cannot reuse ordinary judge cache entries.</li>
+<li><strong>Design the Attest-on-Attest scenario schema while command JSON contracts are being finalized.</strong> It will expose missing machine affordances early.</li>
+<li><strong>Upgrade cold testing from “five friendly developers” to a multi-operator research program.</strong> Keep the developer test, then add domain experts and coding-agent benchmarks.</li>
+<li><strong>Make packaged-artifact acceptance mandatory.</strong> Source-tree success is not onboarding success.</li>
+<li><strong>Do not make LLM-based UX grading a release gate until it is calibrated against human-rated transcripts.</strong></li>
+</ol>
+<hr>
+<h2>12. Cut lines</h2>
+<p>If schedule pressure appears, cut in this order:</p>
+<ol>
+<li>Additional framework recipes beyond one representative integration.</li>
+<li>Local MCP adapter; structured CLI remains authoritative.</li>
+<li>Advanced agreement measures beyond the minimum type-appropriate report.</li>
+<li>Pairwise human review after single-output review, if necessary.</li>
+<li>WebSocket only after its contract remains documented; do not cut polling/SSE first.</li>
+<li>Multiple judge panels or ensemble voting.</li>
+</ol>
+<p>Do <strong>not</strong> cut:</p>
+<ul>
+<li>Atomic mutation and stale-write protection.</li>
+<li>Structured machine contracts.</li>
+<li>Secret redaction.</li>
+<li>Live-provider smoke separation from required CI.</li>
+<li>Human-label and calibration contracts.</li>
+<li>Immutable run and annotation evidence.</li>
+<li>At least one real human-calibrated judge example.</li>
+<li>Representative human and coding-agent acceptance.</li>
+<li>Packed-artifact install tests.</li>
+</ul>
+<hr>
+<h2>13. Principal risks and mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Consequence</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CLI v2 scope expands indefinitely</td>
+<td>Trust work and release never begin</td>
+<td>Keep locked CLI task graph; use explicit cut lines; integrate once per shared seam</td>
+</tr>
+<tr>
+<td>Live provider drift</td>
+<td>Green offline tests but broken real use</td>
+<td>Scheduled budget-capped smoke plus sanitized replay corpus</td>
+</tr>
+<tr>
+<td>Judge score presented as truth</td>
+<td>False confidence and bad CI gates</td>
+<td>Calibration status, human reference labels, explicit insufficient-evidence policy</td>
+</tr>
+<tr>
+<td>Position/style bias</td>
+<td>Pairwise or rubric results favor presentation</td>
+<td>Swapped-order sentinels, adversarial slices, human comparison</td>
+</tr>
+<tr>
+<td>Cache masks drift</td>
+<td>Old score survives changed provider behavior</td>
+<td>Record model metadata, explicit validation cache bypass, stale calibration rules</td>
+</tr>
+<tr>
+<td>Human labels overwrite machine evidence</td>
+<td>Lost reproducibility and auditability</td>
+<td>Append-only annotations and derived decisions</td>
+</tr>
+<tr>
+<td>Reviewer disagreement hidden</td>
+<td>False ground truth</td>
+<td>Agreement reports, adjudication, accepted-disagreement state</td>
+</tr>
+<tr>
+<td>Terminal review excludes users</td>
+<td>Domain experts cannot participate</td>
+<td>Plain-language prompts, line mode, CSV packets, keyboard accessibility</td>
+</tr>
+<tr>
+<td>Coding agents scrape prose</td>
+<td>Brittle automation</td>
+<td>JSON help, schemas, one result envelope, stable error registry</td>
+</tr>
+<tr>
+<td>Direct file mutation races CLI</td>
+<td>Corrupted project state</td>
+<td>CLI as mutation API, locks, transactions, project hash</td>
+</tr>
+<tr>
+<td>Secret leakage in imported cURL or review artifact</td>
+<td>Security incident</td>
+<td>Parse as data, immediate redaction, allowlisted exports, automated scans</td>
+</tr>
+<tr>
+<td>Usability claims based on authors</td>
+<td>Misleading launch story</td>
+<td>Observed participant studies and repeatable clean-room agent benchmark</td>
+</tr>
+<tr>
+<td>Source checkout hides packaging defects</td>
+<td>Public quickstart fails</td>
+<td>Actual tarball/binary install acceptance from empty directories</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>14. Research and design principles</h2>
+<p>The roadmap follows these evidence-backed principles:</p>
+<ul>
+<li>LLM judges can align with humans on some tasks, but model judgment is not automatically objective.</li>
+<li>Pairwise evaluation can exhibit position bias; order swapping and consistency measurement belong in the product.</li>
+<li>Human review systems need explicit rubrics, multiple reviewers, progress, disagreement, and adjudication—not an unstructured comment box.</li>
+<li>Judge improvement should be measured against human-labeled examples, with disagreements inspected rather than hidden.</li>
+<li>Deterministic checks should remain preferred where behavior can be verified mechanically.</li>
+</ul>
+<p>Primary and official references:</p>
+<ul>
+<li>Zheng et al., <a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</a>.</li>
+<li>Shi et al., <a href="https://arxiv.org/abs/2406.07791">Judging the Judges: A Systematic Study of Position Bias in LLM-as-a-Judge</a>.</li>
+<li>Liu et al., <a href="https://arxiv.org/abs/2303.16634">G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment</a>.</li>
+<li>LangSmith, <a href="https://docs.langchain.com/langsmith/annotation-queues">Annotation queues</a> and <a href="https://docs.langchain.com/langsmith/improve-judge-evaluator-feedback">improving judges using human feedback</a>.</li>
+<li>Braintrust, <a href="https://www.braintrust.dev/docs/annotate/human-review">Human review</a>.</li>
+</ul>
+<hr>
+<h2>15. Source evidence in the Attest repository</h2>
+<ul>
+<li><code>docs/design/cli-north-star.md</code> — ratified CLI v2 resource, command, transaction, adapter, import, and acceptance contract once its parallel integration lands.</li>
+<li><code>packages/core/src/metrics/judge/tanstack-judge-client.ts</code> — real OpenAI/Anthropic provider-capable implementation.</li>
+<li><code>packages/core/src/metrics/judge/tanstack-judge-client.test.ts</code> — scripted adapter tests that deliberately avoid provider calls.</li>
+<li><code>packages/core/src/metrics/judge/judge-metric.test.ts</code> — deterministic no-network judge metric tests.</li>
+<li><code>packages/cli/src/run/run-configuration.ts</code> — normal judge metrics construct the real client.</li>
+<li><code>packages/cli/src/run/run-configuration.test.ts</code> — CLI judge integration uses an injected synthetic client.</li>
+<li><code>packages/core/src/store/internal/case-recording.ts</code> — durable judge evidence persistence.</li>
+<li><code>docs/TESTING.md</code> — required CI forbids network and live LLM calls.</li>
+<li><code>STACK.md</code> — provider smoke tests are intended to be scheduled, budget-capped, and non-blocking.</li>
+<li><code>.github/workflows/ci.yml</code> and <code>.github/workflows/fuzz.yml</code> — current workflows do not implement that provider smoke lane.</li>
+<li><code>DECISIONS.md</code> and <code>PLAN.md</code> — human review and judge calibration are deferred backlog work.</li>
+<li><code>docs/agent-eval-setup-ux-report.md</code> — source-grounded setup proposal and under-five-minute activation goal.</li>
+<li><code>HANDOFF.md</code> — current functional acceptance evidence and uncompleted friendly-developer testing.</li>
+</ul>
+<hr>
+<h2>16. Final definition of success</h2>
+<p>Attest reaches the local and CLI North Star when all of the following are simultaneously true:</p>
+<ol>
+<li>A human can configure and run a real agent without learning Attest&#39;s file representation.</li>
+<li>A developer can customize every transport, test, dataset, metric, trace, and CI policy without framework lock-in.</li>
+<li>A coding agent can discover, preview, apply, verify, and repair the same operations through versioned structured contracts.</li>
+<li>An unattended process never encounters an unexpected prompt or ambiguous exit state.</li>
+<li>Every mutation is reviewable, atomic, recoverable, and concurrency-safe.</li>
+<li>Every result explains its evidence source and limitations.</li>
+<li>Live provider compatibility is checked outside required CI with strict budgets and redaction.</li>
+<li>Judge quality is measured against human labels, not inferred from a successful API response.</li>
+<li>Human disagreement is retained and adjudicated rather than erased.</li>
+<li>Corrections improve canonical datasets through explicit transactional promotion.</li>
+<li>Attest&#39;s onboarding is itself evaluated with deterministic checks, calibrated LLM grading, and observed humans.</li>
+<li>The complete experience works from the actual distributed artifact with no cloud or browser-authoring dependency.</li>
+</ol>
+<p>That is the local product worth placing underneath a future web and cloud experience.</p>
+</article>
+</main>
+</body>
+</html>
