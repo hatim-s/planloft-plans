@@ -261,6 +261,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T05:03:27.678Z",
       "expiresAt": "2026-09-06T18:39:06.364Z"
+    },
+    {
+      "id": "0CginbqZax",
+      "project": "github.com/hatim-s/brain-bloom",
+      "slug": "sprig-chat-knowledge-roadmap",
+      "title": "Sprig — Subscription Chat and Knowledge RAG Roadmap",
+      "kind": "plan",
+      "createdAt": "2026-08-07T18:42:12.178Z",
+      "expiresAt": "2026-11-05T18:42:12.178Z"
     }
   ]
 }
