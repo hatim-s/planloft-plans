@@ -254,15 +254,6 @@
       "expiresAt": "2026-11-05T18:42:12.178Z"
     },
     {
-      "id": "d6omNNpVrp",
-      "project": "github.com/hatim-s/attest",
-      "slug": "attest-implementation-plan",
-      "title": "attest — Implementation Plan",
-      "kind": "plan",
-      "createdAt": "2026-08-06T05:03:27.678Z",
-      "expiresAt": "2026-09-06T18:51:43.461Z"
-    },
-    {
       "id": "Eh9PI5QAVB",
       "project": "github.com/hatim-s/ai-app-builder",
       "slug": "ai-app-builder-gtm-readiness",
@@ -279,6 +270,15 @@
       "kind": "plan",
       "createdAt": "2026-08-07T17:18:26.037Z",
       "expiresAt": "2026-09-06T20:02:17.217Z"
+    },
+    {
+      "id": "d6omNNpVrp",
+      "project": "github.com/hatim-s/attest",
+      "slug": "attest-implementation-plan",
+      "title": "attest — Implementation Plan",
+      "kind": "plan",
+      "createdAt": "2026-08-06T05:03:27.678Z",
+      "expiresAt": "2026-09-07T14:20:54.020Z"
     }
   ]
 }
