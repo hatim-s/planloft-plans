@@ -57,46 +57,76 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
 
 :root { color-scheme: light dark; }
-.planloft-theme-toggle {
+.planloft-theme-selector {
   position: fixed;
   z-index: 1000;
   top: 0.75rem;
   right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
   border: 1px solid ButtonBorder;
   border-radius: 999px;
-  padding: 0.4rem 0.7rem;
+  padding: 0.2rem;
   background: Canvas;
   color: CanvasText;
-  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
   cursor: pointer;
 }
-.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
 </style>
 
 <meta name="robots" content="noindex, nofollow" />
 </head>
 <body data-planloft-kind="plan">
-<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
 <script>
 (() => {
   const root = document.documentElement;
-  const button = document.querySelector(".planloft-theme-toggle");
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
   const media = window.matchMedia("(prefers-color-scheme: dark)");
   const key = "planloft-color-scheme";
   let saved = null;
   try { saved = localStorage.getItem(key); } catch {}
-  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
   const update = () => {
-    const selected = root.dataset.planloftColorScheme;
-    const effective = selected || (media.matches ? "dark" : "light");
-    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
-    button.setAttribute("aria-pressed", selected ? "true" : "false");
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
   };
-  button.addEventListener("click", () => {
-    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
-    root.dataset.planloftColorScheme = next;
-    try { localStorage.setItem(key, next); } catch {}
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
     update();
   });
   media.addEventListener?.("change", update);

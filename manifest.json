@@ -281,15 +281,6 @@
       "expiresAt": "2026-09-08T06:59:38.224Z"
     },
     {
-      "id": "d6omNNpVrp",
-      "project": "github.com/hatim-s/attest",
-      "slug": "attest-implementation-plan",
-      "title": "attest — Implementation Plan",
-      "kind": "plan",
-      "createdAt": "2026-08-06T05:03:27.678Z",
-      "expiresAt": "2026-09-08T08:01:21.244Z"
-    },
-    {
       "id": "FSYRVOlQla",
       "project": "path-85a8bc",
       "slug": "provet-v1-implementation-plan",
@@ -297,6 +288,15 @@
       "kind": "plan",
       "createdAt": "2026-08-09T08:57:42.273Z",
       "expiresAt": "2026-09-08T09:05:12.224Z"
+    },
+    {
+      "id": "d6omNNpVrp",
+      "project": "github.com/hatim-s/attest",
+      "slug": "attest-implementation-plan",
+      "title": "attest — Implementation Plan",
+      "kind": "plan",
+      "createdAt": "2026-08-06T05:03:27.678Z",
+      "expiresAt": "2026-09-08T09:09:05.310Z"
     }
   ]
 }
