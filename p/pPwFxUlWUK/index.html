@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Provet — Product Plan (v1)</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Provet — Product Plan (v1)</h1>
+<p><strong>CLI: <code>vet</code> · Local-first agentic evals · Status: spec settled, pre-build</strong></p>
+<hr>
+<h2>What is it</h2>
+<p>Provet is a local-first CLI tool for evaluating AI agents. You define eval cases and graders in files (or via the CLI), point Provet at the agent under test — Claude Code, Codex CLI, or any HTTP endpoint — and it runs the suite on your machine, grades the results, and tells you whether your latest change made the agent better or worse.</p>
+<p>It is a ground-up rebuild of an earlier project (<em>attest</em>, an all-in-one eval platform spanning configuration, local runs, cloud, and CI). Provet deliberately narrows scope: <strong>v1 is local machine + CLI only</strong>. No web UI, no cloud execution, no CI integration. The thesis is that the core loop — <em>define → run → grade → compare</em> — has to be excellent before anything else matters.</p>
+<h2>The core loop</h2>
+<pre><code>vet init      # scaffold config + a working example eval
+vet run       # run the suite, live progress in the terminal
+vet report    # inspect the last run (or any run by id)
+vet diff      # compare two runs — did my change help?
+</code></pre>
+<p>Everything in v1 exists to feed this loop. <code>vet diff</code> is the daily-driver command: change a prompt or agent config, re-run, and see per-case regressions and improvements with cost deltas.</p>
+<p><strong>North-star metric: zero to first green run in under 5 minutes.</strong></p>
+<hr>
+<h2>Philosophy</h2>
+<ol>
+<li><strong>Local-first.</strong> Your evals, transcripts, and results live in your repo and filesystem. Plain files in v1 — greppable, diffable, no database, no server.</li>
+<li><strong>Agentic evals are not unit tests.</strong> Agents are nondeterministic and take trajectories, not single outputs. First-class support for repeated trials (<code>--repeat N</code> with pass@k-style aggregation), trajectory assertions (&quot;called tool X&quot;, &quot;never touched these files&quot;, &quot;≤ N steps&quot;), and per-case cost and latency tracking.</li>
+<li><strong>Agents are users too.</strong> The <code>vet</code> CLI is designed so coding agents can author and run evals without a human: structured JSON output on every command (including errors), no interactive prompts, schema dumps, and a validation loop. A repo&#39;s agent should be able to add an eval case as easily as its developer.</li>
+<li><strong>One adapter layer, two consumers.</strong> Invoking the agent under test and invoking an LLM judge are the same problem. Both go through the same adapter system (claude-code / codex / http / command), so a judge can itself be a CLI agent.</li>
+<li><strong>Boring formats, sharp tools.</strong> YAML for structure, Markdown for prose-heavy cases, TypeScript for escape hatches. A single eval can mix all three.</li>
+<li><strong>Cut ruthlessly, design for the sequel.</strong> v1 stores runs as JSON designed so the v1.1 SQLite migration is a single import. The HTML report&#39;s view-model is the same object the v1.1 dashboard will consume.</li>
+</ol>
+<hr>
+<h2>Feature set (v1)</h2>
+<h3>Targets — the agent under test</h3>
+<p>Three first-class adapters plus a generic escape hatch:</p>
+<table>
+<thead>
+<tr>
+<th>Adapter</th>
+<th>Invocation</th>
+<th>Trajectory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>claude-code</code></td>
+<td>Spawns <code>claude -p … --output-format stream-json</code></td>
+<td>Full (native stream parsed)</td>
+</tr>
+<tr>
+<td><code>codex</code></td>
+<td>Spawns <code>codex exec --json …</code></td>
+<td>Full (native stream parsed)</td>
+</tr>
+<tr>
+<td><code>http</code></td>
+<td>POSTs case to a URL</td>
+<td>Optional (response contract)</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>Any shell command, <code>{{input}}</code> templating</td>
+<td><code>raw</code> or vet-events JSONL</td>
+</tr>
+</tbody></table>
+<p>The <code>claude-code</code> and <code>codex</code> presets know their spawn arguments, event formats, and cost extraction. Both normalize to the same internal trajectory model, so trajectory assertions work identically across them.</p>
+<h3>Eval authoring — three ways, freely mixed</h3>
+<p>An eval is a <strong>directory</strong> with a manifest; case files can be any mix of YAML and Markdown:</p>
+<pre><code>evals/
+  refunds/
+    eval.yaml            # manifest: defaults, target overrides
+    cases.yaml           # N structured cases
+    tricky-customer.md   # 1 prose-heavy case (frontmatter = asserts, body = input)
+graders/
+  check-ledger.ts        # custom code grader
+</code></pre>
+<ul>
+<li><strong>YAML cases</strong> for structured, matrix-style inputs.</li>
+<li><strong>Markdown cases</strong> for long, prose-heavy task prompts — frontmatter carries the asserts, the body is the input.</li>
+<li><strong>Single-file shorthand</strong> (<code>evals/smoke.eval.yaml</code>) for simple suites.</li>
+<li><strong>CLI authoring</strong> for everything: <code>vet new eval</code>, <code>vet add case</code>, <code>vet add grader</code>. No editor required.</li>
+</ul>
+<h3>Graders</h3>
+<p>Configured <strong>per case</strong> in v1 (eval-level shared graders arrive in v1.1). Three tiers:</p>
+<ol>
+<li><strong>Deterministic</strong> — <code>equals</code>, <code>contains</code>, <code>regex</code>, <code>json-schema</code>, custom TypeScript (<code>type: code</code>).</li>
+<li><strong>Trajectory</strong> — <code>called_tool</code>, <code>never_called</code>, <code>max_steps</code>, <code>min_steps</code>, <code>files_untouched</code> (computed by workspace diff). This tier is the agentic differentiator.</li>
+<li><strong>LLM-as-judge</strong> — first-class, and the judge is itself an invokable agent.</li>
+</ol>
+<p>An <code>expect:</code> sugar block on cases maps to deterministic and trajectory graders for the common path.</p>
+<h3>LLM-as-judge — judges are agents</h3>
+<p>Named judges are defined in <code>provet.yaml</code> using the <strong>same adapter schema as targets</strong> — a judge can be Claude Code, Codex, or an HTTP service:</p>
+<pre><code class="language-yaml">judges:
+  strict:
+    type: claude-code
+    model: claude-opus-5
+  cheap:
+    type: http
+    url: http://localhost:8080/judge
+</code></pre>
+<p>Graders reference judges by name (<code>use: strict</code>). The judge receives the case input, the <strong>full trajectory</strong> (not just the final answer), and the rubric, and must reply with a structured verdict — <code>{pass, score, reasoning}</code>. Parse failure triggers one retry with error feedback, then the case is marked <code>grader-error</code> (distinct from <code>fail</code>). Judge cost and latency are tracked separately from agent cost in every run.</p>
+<h3>Workspace fixtures</h3>
+<p>A case can declare <code>workspace: ./fixtures/shop</code> — a directory copied to a temp cwd for the agent to work in. Essential for coding-agent evals, and it powers <code>files_untouched</code> via post-run diff. The post-run workspace copy is also handed to code graders.</p>
+<h3>Runs</h3>
+<ul>
+<li><code>vet run [--filter x] [--repeat N] [--concurrency C]</code></li>
+<li>Repeated trials aggregate via <code>pass_if: all | any | ratio:0.66</code> (project, eval, or case level).</li>
+<li>Per-case cost, latency, and token counts always recorded.</li>
+<li>Storage: <code>.provet/runs/&lt;id&gt;/</code> — <code>run.json</code> summary + per-case JSONL event logs + <code>latest</code> symlink. Run snapshots include git commit and dirty flag.</li>
+</ul>
+<h3>Reporting</h3>
+<ul>
+<li><strong>CLI</strong>: summary tables, per-case drill-down (transcript, tool calls, grader reasoning), <code>--json</code> on every command.</li>
+<li><strong>HTML</strong>: <code>vet report --html</code> renders a self-contained static file through a <strong>templating system</strong> (built-in default theme; project <code>templates/</code> dir overrides partials). A document, not an app — no server.</li>
+<li><strong><code>vet diff &lt;a&gt; &lt;b&gt;</code></strong>: per-case regressions/improvements plus cost delta.</li>
+<li>Templates receive the same JSON view-model as <code>--json</code> output — humans, agents, and templates all see one data shape.</li>
+</ul>
+<h3>Agent-ready CLI (design rules, not a feature)</h3>
+<ul>
+<li>No interactive prompts, ever, in v1. Destructive ops require <code>--force</code>.</li>
+<li><code>--json</code> on every command, <strong>including errors</strong> (structured error codes, not prose).</li>
+<li><code>vet run --reporter jsonl</code> streams per-case events for an agent to watch.</li>
+<li><code>vet schema [config|eval-case|grader|run]</code> dumps JSON Schemas; <code>vet validate</code> lints config and all eval files. Together they form the agent authoring loop: <em>generate → validate → fix from structured errors</em>.</li>
+<li>Meaningful, documented exit codes (0 pass, 1 failures, 2 config error, …).</li>
+<li><code>vet init</code> can write an AGENTS.md/skill snippet so agents on the repo self-serve.</li>
+</ul>
+<p>A side effect: these constraints (no prompts, structured IO, exit codes) make v1 CI-ready for free when CI integration lands in a later version.</p>
+<h3>Full CLI surface (v1)</h3>
+<pre><code>vet init                                  # scaffold project + example
+vet new eval &lt;name&gt; [--format dir|file]   # scaffold eval
+vet add case &lt;eval&gt; --input &quot;…&quot; …         # or --from-json / stdin; --format md|yaml
+vet add grader &lt;eval&gt; --type judge --use strict --rubric &quot;…&quot;
+vet validate                              # lint config + all eval files
+vet schema [config|eval-case|grader|run]  # dump JSON schemas
+vet run [--filter] [--repeat] [--concurrency] [--reporter jsonl] [--json]
+vet report [run] [--case id] [--html] [--open] [--json]
+vet diff &lt;a&gt; &lt;b&gt; [--json]
+</code></pre>
+<hr>
+<h2>Key schemas (abridged)</h2>
+<h3><code>provet.yaml</code></h3>
+<pre><code class="language-yaml">version: 1
+target:
+  type: claude-code          # claude-code | codex | http | command
+  model: claude-sonnet-5
+  args: [&quot;--allowedTools&quot;, &quot;Bash,Edit&quot;]
+  timeout: 300
+judges:
+  default: {type: claude-code, model: claude-opus-5}
+defaults:
+  concurrency: 4
+  repeat: 1
+  pass_if: all
+report:
+  templates: ./templates
+</code></pre>
+<p><code>${VAR}</code> interpolates environment variables in config; API keys never live in files.</p>
+<h3>Case (YAML)</h3>
+<pre><code class="language-yaml">- id: full-refund-window
+  input: &quot;Customer bought item 10 days ago, wants refund…&quot;
+  workspace: ./fixtures/shop
+  repeat: 5
+  expect:
+    contains: &quot;refund approved&quot;
+    trajectory:
+      called_tool: stripe_refund
+      never_called: delete_order
+      max_steps: 12
+      files_untouched: [&quot;src/**&quot;]
+  graders:
+    - {type: code, file: ../../graders/check-ledger.ts}
+    - {type: judge, use: default, rubric: &quot;Policy followed?&quot;}
+</code></pre>
+<h3>Case (Markdown)</h3>
+<pre><code class="language-markdown">---
+id: tricky-customer
+repeat: 5
+workspace: ./fixtures/shop
+graders:
+  - type: judge
+    rubric: Stayed polite under abuse?
+---
+Customer writes:
+
+&gt; I bought this 45 days ago and it broke. Refund me now or I chargeback.
+</code></pre>
+<h3>Vet event protocol (normalized trajectory)</h3>
+<pre><code class="language-jsonl">{&quot;type&quot;: &quot;step&quot;, &quot;n&quot;: 1}
+{&quot;type&quot;: &quot;message&quot;, &quot;role&quot;: &quot;assistant&quot;, &quot;text&quot;: &quot;…&quot;}
+{&quot;type&quot;: &quot;tool_call&quot;, &quot;name&quot;: &quot;stripe_refund&quot;, &quot;input&quot;: {}, &quot;result&quot;: &quot;…&quot;, &quot;durationMs&quot;: 812}
+{&quot;type&quot;: &quot;result&quot;, &quot;output&quot;: &quot;final answer&quot;, &quot;cost&quot;: 0.042, &quot;tokens&quot;: {&quot;in&quot;: 1200, &quot;out&quot;: 900}}
+</code></pre>
+<h3>Judge verdict protocol</h3>
+<pre><code class="language-json">{&quot;pass&quot;: true, &quot;score&quot;: 0.9, &quot;reasoning&quot;: &quot;Policy followed; no over-promise.&quot;}
+</code></pre>
+<h3><code>run.json</code> (summary)</h3>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;20260809-123000-a1b2&quot;,
+  &quot;git&quot;: {&quot;commit&quot;: &quot;abc123&quot;, &quot;dirty&quot;: true},
+  &quot;summary&quot;: {
+    &quot;cases&quot;: 12, &quot;passed&quot;: 10, &quot;failed&quot;: 1, &quot;graderErrors&quot;: 1,
+    &quot;passRate&quot;: 0.833,
+    &quot;cost&quot;: {&quot;agent&quot;: 1.23, &quot;judge&quot;: 0.31},
+    &quot;durationMs&quot;: 84000
+  },
+  &quot;cases&quot;: [
+    {&quot;id&quot;: &quot;refunds/tricky-customer&quot;, &quot;status&quot;: &quot;fail&quot;,
+     &quot;trials&quot;: 5, &quot;passedTrials&quot;: 2, &quot;passIf&quot;: &quot;ratio:0.66&quot;,
+     &quot;graders&quot;: [{&quot;type&quot;: &quot;judge&quot;, &quot;pass&quot;: false, &quot;score&quot;: 0.3, &quot;reasoning&quot;: &quot;…&quot;}]}
+  ]
+}
+</code></pre>
+<p>Case status values: <code>pass | fail | grader-error | skipped</code>. Grader errors are never silently counted as failures.</p>
+<hr>
+<h2>Tech stack</h2>
+<ul>
+<li><strong>Runtime</strong>: TypeScript on <strong>Bun</strong>. Fast startup, native TS, easy npm distribution (<code>bunx vet</code> / global install). <code>bun build --compile</code> single-binary distribution is an option later.</li>
+<li><strong>Custom graders</strong>: TypeScript modules imported natively (a default-export <code>grade(ctx)</code> function).</li>
+<li><strong>HTML templating</strong>: a tiny TS-native engine (Eta or similar) with overridable partials.</li>
+<li><strong>Storage</strong>: plain JSON/JSONL files under <code>.provet/</code> in v1; SQLite in v1.1 (run JSON is designed as the import source).</li>
+<li><strong>Adapters as the core module</strong>: <code>claude-code</code>, <code>codex</code>, <code>http</code>, <code>command</code> — each exposing <code>invoke(case|prompt) → {output, trajectory, cost, latency}</code>, consumed by both target execution and judging.</li>
+</ul>
+<hr>
+<h2>Explicitly cut from v1</h2>
+<p>Web UI · cloud execution · CI integration · dataset management / synthetic case generation · prompt registry &amp; versioning · tracing/observability platform ambitions · human annotation queues · multi-project dashboards.</p>
+<h2>Roadmap</h2>
+<h3>v1 (now)</h3>
+<p>The full feature set above: four adapters (Claude Code, Codex, HTTP, generic command), mixed-format eval authoring + CLI authoring, three grader tiers with per-case configuration, agent-as-judge, workspace fixtures, repeated trials with <code>pass_if</code> aggregation, file-based run storage, CLI + templated static HTML reporting, <code>vet diff</code>, agent-ready CLI surface.</p>
+<h3>v1.1</h3>
+<ul>
+<li><strong>SQLite storage</strong> (one-command import from v1 run files)</li>
+<li><strong>Interactive dashboard</strong> (consumes the existing report view-model) and/or terminal TUI</li>
+<li><strong>Eval-level shared graders</strong> — graders declared once in the manifest, run for all cases, with per-case override (v1 keeps graders per-case)</li>
+<li><strong>Multi-turn / conversational evals</strong> — scripted or simulated multi-turn interactions with the agent under test</li>
+<li><strong>Majority-vote judging</strong> — repeat judge invocations with vote aggregation (no design change needed; judges already ride the adapter layer)</li>
+</ul>
+<h3>Later (unscheduled)</h3>
+<p>Cloud execution · CI integration (largely free given agent-ready CLI constraints) · web UI · dataset tooling.</p>
+<hr>
+<p><em>Plan of record as of 2026-08-09. Naming note: &quot;provet&quot; (prove + vet) is the working name; the binary is <code>vet</code>.</em></p>
+</article>
+</main>
+</body>
+</html>

@@ -279,6 +279,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T05:03:27.678Z",
       "expiresAt": "2026-09-08T06:13:14.819Z"
+    },
+    {
+      "id": "pPwFxUlWUK",
+      "project": "path-55e9f0",
+      "slug": "provet-plan",
+      "title": "Provet — Product Plan (v1)",
+      "kind": "plan",
+      "createdAt": "2026-08-09T06:59:38.224Z",
+      "expiresAt": "2026-09-08T06:59:38.224Z"
     }
   ]
 }
