@@ -1,0 +1,2554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Provet v1 — Consolidated Implementation Plan</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Provet v1 — Consolidated Implementation Plan</h1>
+<p>Build the smallest safe, reproducible, local coding-agent regression harness around the <code>define → run → grade → compare</code> loop.</p>
+<p><strong>Status:</strong> spec settled, pre-build<br><strong>CLI:</strong> <code>vet</code><br><strong>Scope:</strong> local machine and CLI only<br><strong>North star:</strong> zero to first green run in under five minutes<br><strong>Product source:</strong> <a href="https://hatim-s.github.io/planloft-plans/p/pPwFxUlWUK/">https://hatim-s.github.io/planloft-plans/p/pPwFxUlWUK/</a></p>
+<h2>Read this first</h2>
+<p>This is the standalone plan of record for implementation. It consolidates the product baseline, current competitive research, the 38-node dependency DAG, and normative repository, CLI, and agent UX standards. Repository source documents remain reviewable evidence; this artifact is the execution handoff.</p>
+<p>Rules of interpretation:</p>
+<ul>
+<li>Product facts remain authoritative until explicitly amended.</li>
+<li>Research recommendations do not silently change v1.</li>
+<li>Normative <strong>MUST</strong>, <strong>SHOULD</strong>, and <strong>MAY</strong> language governs implementation.</li>
+<li>Start a task only when every DAG dependency and incoming contract is complete.</li>
+<li>Keep deterministic, live-provider, security, human-calibration, and usability evidence separate.</li>
+<li>Do not add cloud execution, web UI, hosted persistence, CI-vendor integration, SQLite, annotation queues, prompt registry, dataset generation, multi-turn evaluation, or majority-vote judging to v1.</li>
+</ul>
+<h2>Consolidation map</h2>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Source</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Product baseline</td>
+<td>Published Provet v1 product plan</td>
+<td>Settled product scope and feature contract</td>
+</tr>
+<tr>
+<td>Competitive landscape</td>
+<td><code>docs/product/competitive-landscape.md</code></td>
+<td>Market parity, gaps, risks, and proposed decisions</td>
+</tr>
+<tr>
+<td>Implementation DAG</td>
+<td><code>docs/roadmap/v1-implementation-dag.md</code></td>
+<td>Ordered delivery plan, parallel waves, gates, and cut lines</td>
+</tr>
+<tr>
+<td>Repository standard</td>
+<td><code>docs/standards/repository.md</code></td>
+<td>Architecture, quality, security, and compatibility rules</td>
+</tr>
+<tr>
+<td>CLI UX standard</td>
+<td><code>docs/standards/cli-ux.md</code></td>
+<td>Human and machine command contract</td>
+</tr>
+<tr>
+<td>Agent UX standard</td>
+<td><code>docs/standards/agent-ux.md</code></td>
+<td>Autonomous authoring and execution contract</td>
+</tr>
+</tbody></table>
+<h2>Implementation contract at a glance</h2>
+<ul>
+<li><strong>38 task nodes</strong>, <strong>6 phases</strong>, <strong>6 concurrency lanes</strong>, <strong>4 release cuts</strong>.</li>
+<li>Critical path: foundation → contracts → authoring normalization → validation → run planning → scheduling/events/storage → reporting/diff → conformance → dogfood → release.</li>
+<li>First release priority: execution trust boundary, run durability, honest trial aggregation, raw-event provenance, and comparable diffs.</li>
+<li>First implementation action: <code>FND-01</code> only. Do not fan out code before <code>FND-02</code> and the three evidence spikes stabilize public contracts and trust boundaries.</li>
+</ul>
+<h2>Product baseline</h2>
+<p><strong>Source role:</strong> Public product specification.</p>
+<p><strong>CLI: <code>vet</code> · Local-first agentic evals · Status: spec settled, pre-build</strong></p>
+<hr>
+<h3>What is it</h3>
+<p>Provet is a local-first CLI tool for evaluating AI agents. You define eval cases and graders in files (or via the CLI), point Provet at the agent under test — Claude Code, Codex CLI, or any HTTP endpoint — and it runs the suite on your machine, grades the results, and tells you whether your latest change made the agent better or worse.</p>
+<p>It is a ground-up rebuild of an earlier project (<em>attest</em>, an all-in-one eval platform spanning configuration, local runs, cloud, and CI). Provet deliberately narrows scope: <strong>v1 is local machine + CLI only</strong>. No web UI, no cloud execution, no CI integration. The thesis is that the core loop — <em>define → run → grade → compare</em> — has to be excellent before anything else matters.</p>
+<h3>The core loop</h3>
+<pre><code>vet init      # scaffold config + a working example eval
+vet run       # run the suite, live progress in the terminal
+vet report    # inspect the last run (or any run by id)
+vet diff      # compare two runs — did my change help?
+</code></pre>
+<p>Everything in v1 exists to feed this loop. <code>vet diff</code> is the daily-driver command: change a prompt or agent config, re-run, and see per-case regressions and improvements with cost deltas.</p>
+<p><strong>North-star metric: zero to first green run in under 5 minutes.</strong></p>
+<hr>
+<h3>Philosophy</h3>
+<ol>
+<li><strong>Local-first.</strong> Your evals, transcripts, and results live in your repo and filesystem. Plain files in v1 — greppable, diffable, no database, no server.</li>
+<li><strong>Agentic evals are not unit tests.</strong> Agents are nondeterministic and take trajectories, not single outputs. First-class support for repeated trials (<code>--repeat N</code> with pass@k-style aggregation), trajectory assertions (&quot;called tool X&quot;, &quot;never touched these files&quot;, &quot;≤ N steps&quot;), and per-case cost and latency tracking.</li>
+<li><strong>Agents are users too.</strong> The <code>vet</code> CLI is designed so coding agents can author and run evals without a human: structured JSON output on every command (including errors), no interactive prompts, schema dumps, and a validation loop. A repo&#39;s agent should be able to add an eval case as easily as its developer.</li>
+<li><strong>One adapter layer, two consumers.</strong> Invoking the agent under test and invoking an LLM judge are the same problem. Both go through the same adapter system (claude-code / codex / http / command), so a judge can itself be a CLI agent.</li>
+<li><strong>Boring formats, sharp tools.</strong> YAML for structure, Markdown for prose-heavy cases, TypeScript for escape hatches. A single eval can mix all three.</li>
+<li><strong>Cut ruthlessly, design for the sequel.</strong> v1 stores runs as JSON designed so the v1.1 SQLite migration is a single import. The HTML report&#39;s view-model is the same object the v1.1 dashboard will consume.</li>
+</ol>
+<hr>
+<h3>Feature set (v1)</h3>
+<h4>Targets — the agent under test</h4>
+<p>Three first-class adapters plus a generic escape hatch:</p>
+<table>
+<thead>
+<tr>
+<th>Adapter</th>
+<th>Invocation</th>
+<th>Trajectory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>claude-code</code></td>
+<td>Spawns <code>claude -p … --output-format stream-json</code></td>
+<td>Full (native stream parsed)</td>
+</tr>
+<tr>
+<td><code>codex</code></td>
+<td>Spawns <code>codex exec --json …</code></td>
+<td>Full (native stream parsed)</td>
+</tr>
+<tr>
+<td><code>http</code></td>
+<td>POSTs case to a URL</td>
+<td>Optional (response contract)</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>Any shell command, <code>{{input}}</code> templating</td>
+<td><code>raw</code> or vet-events JSONL</td>
+</tr>
+</tbody></table>
+<p>The <code>claude-code</code> and <code>codex</code> presets know their spawn arguments, event formats, and cost extraction. Both normalize to the same internal trajectory model, so trajectory assertions work identically across them.</p>
+<h4>Eval authoring — three ways, freely mixed</h4>
+<p>An eval is a <strong>directory</strong> with a manifest; case files can be any mix of YAML and Markdown:</p>
+<pre><code>evals/
+  refunds/
+    eval.yaml            # manifest: defaults, target overrides
+    cases.yaml           # N structured cases
+    tricky-customer.md   # 1 prose-heavy case (frontmatter = asserts, body = input)
+graders/
+  check-ledger.ts        # custom code grader
+</code></pre>
+<ul>
+<li><strong>YAML cases</strong> for structured, matrix-style inputs.</li>
+<li><strong>Markdown cases</strong> for long, prose-heavy task prompts — frontmatter carries the asserts, the body is the input.</li>
+<li><strong>Single-file shorthand</strong> (<code>evals/smoke.eval.yaml</code>) for simple suites.</li>
+<li><strong>CLI authoring</strong> for everything: <code>vet new eval</code>, <code>vet add case</code>, <code>vet add grader</code>. No editor required.</li>
+</ul>
+<h4>Graders</h4>
+<p>Configured <strong>per case</strong> in v1 (eval-level shared graders arrive in v1.1). Three tiers:</p>
+<ol>
+<li><strong>Deterministic</strong> — <code>equals</code>, <code>contains</code>, <code>regex</code>, <code>json-schema</code>, custom TypeScript (<code>type: code</code>).</li>
+<li><strong>Trajectory</strong> — <code>called_tool</code>, <code>never_called</code>, <code>max_steps</code>, <code>min_steps</code>, <code>files_untouched</code> (computed by workspace diff). This tier is the agentic differentiator.</li>
+<li><strong>LLM-as-judge</strong> — first-class, and the judge is itself an invokable agent.</li>
+</ol>
+<p>An <code>expect:</code> sugar block on cases maps to deterministic and trajectory graders for the common path.</p>
+<h4>LLM-as-judge — judges are agents</h4>
+<p>Named judges are defined in <code>provet.yaml</code> using the <strong>same adapter schema as targets</strong> — a judge can be Claude Code, Codex, or an HTTP service:</p>
+<pre><code class="language-yaml">judges:
+  strict:
+    type: claude-code
+    model: claude-opus-5
+  cheap:
+    type: http
+    url: http://localhost:8080/judge
+</code></pre>
+<p>Graders reference judges by name (<code>use: strict</code>). The judge receives the case input, the <strong>full trajectory</strong> (not just the final answer), and the rubric, and must reply with a structured verdict — <code>{pass, score, reasoning}</code>. Parse failure triggers one retry with error feedback, then the case is marked <code>grader-error</code> (distinct from <code>fail</code>). Judge cost and latency are tracked separately from agent cost in every run.</p>
+<h4>Workspace fixtures</h4>
+<p>A case can declare <code>workspace: ./fixtures/shop</code> — a directory copied to a temp cwd for the agent to work in. Essential for coding-agent evals, and it powers <code>files_untouched</code> via post-run diff. The post-run workspace copy is also handed to code graders.</p>
+<h4>Runs</h4>
+<ul>
+<li><code>vet run [--filter x] [--repeat N] [--concurrency C]</code></li>
+<li>Repeated trials aggregate via <code>pass_if: all | any | ratio:0.66</code> (project, eval, or case level).</li>
+<li>Per-case cost, latency, and token counts always recorded.</li>
+<li>Storage: <code>.provet/runs/&lt;id&gt;/</code> — <code>run.json</code> summary + per-case JSONL event logs + <code>latest</code> symlink. Run snapshots include git commit and dirty flag.</li>
+</ul>
+<h4>Reporting</h4>
+<ul>
+<li><strong>CLI</strong>: summary tables, per-case drill-down (transcript, tool calls, grader reasoning), <code>--json</code> on every command.</li>
+<li><strong>HTML</strong>: <code>vet report --html</code> renders a self-contained static file through a <strong>templating system</strong> (built-in default theme; project <code>templates/</code> dir overrides partials). A document, not an app — no server.</li>
+<li><strong><code>vet diff &lt;a&gt; &lt;b&gt;</code></strong>: per-case regressions/improvements plus cost delta.</li>
+<li>Templates receive the same JSON view-model as <code>--json</code> output — humans, agents, and templates all see one data shape.</li>
+</ul>
+<h4>Agent-ready CLI (design rules, not a feature)</h4>
+<ul>
+<li>No interactive prompts, ever, in v1. Destructive ops require <code>--force</code>.</li>
+<li><code>--json</code> on every command, <strong>including errors</strong> (structured error codes, not prose).</li>
+<li><code>vet run --reporter jsonl</code> streams per-case events for an agent to watch.</li>
+<li><code>vet schema [config|eval-case|grader|run]</code> dumps JSON Schemas; <code>vet validate</code> lints config and all eval files. Together they form the agent authoring loop: <em>generate → validate → fix from structured errors</em>.</li>
+<li>Meaningful, documented exit codes (0 pass, 1 failures, 2 config error, …).</li>
+<li><code>vet init</code> can write an AGENTS.md/skill snippet so agents on the repo self-serve.</li>
+</ul>
+<p>A side effect: these constraints (no prompts, structured IO, exit codes) make v1 CI-ready for free when CI integration lands in a later version.</p>
+<h4>Full CLI surface (v1)</h4>
+<pre><code>vet init                                  # scaffold project + example
+vet new eval &lt;name&gt; [--format dir|file]   # scaffold eval
+vet add case &lt;eval&gt; --input &quot;…&quot; …         # or --from-json / stdin; --format md|yaml
+vet add grader &lt;eval&gt; --type judge --use strict --rubric &quot;…&quot;
+vet validate                              # lint config + all eval files
+vet schema [config|eval-case|grader|run]  # dump JSON schemas
+vet run [--filter] [--repeat] [--concurrency] [--reporter jsonl] [--json]
+vet report [run] [--case id] [--html] [--open] [--json]
+vet diff &lt;a&gt; &lt;b&gt; [--json]
+</code></pre>
+<hr>
+<h3>Key schemas (abridged)</h3>
+<h4><code>provet.yaml</code></h4>
+<pre><code class="language-yaml">version: 1
+target:
+  type: claude-code          # claude-code | codex | http | command
+  model: claude-sonnet-5
+  args: [&quot;--allowedTools&quot;, &quot;Bash,Edit&quot;]
+  timeout: 300
+judges:
+  default: {type: claude-code, model: claude-opus-5}
+defaults:
+  concurrency: 4
+  repeat: 1
+  pass_if: all
+report:
+  templates: ./templates
+</code></pre>
+<p><code>${VAR}</code> interpolates environment variables in config; API keys never live in files.</p>
+<h4>Case (YAML)</h4>
+<pre><code class="language-yaml">- id: full-refund-window
+  input: &quot;Customer bought item 10 days ago, wants refund…&quot;
+  workspace: ./fixtures/shop
+  repeat: 5
+  expect:
+    contains: &quot;refund approved&quot;
+    trajectory:
+      called_tool: stripe_refund
+      never_called: delete_order
+      max_steps: 12
+      files_untouched: [&quot;src/**&quot;]
+  graders:
+    - {type: code, file: ../../graders/check-ledger.ts}
+    - {type: judge, use: default, rubric: &quot;Policy followed?&quot;}
+</code></pre>
+<h4>Case (Markdown)</h4>
+<pre><code class="language-markdown">---
+id: tricky-customer
+repeat: 5
+workspace: ./fixtures/shop
+graders:
+  - type: judge
+    rubric: Stayed polite under abuse?
+---
+Customer writes:
+
+&gt; I bought this 45 days ago and it broke. Refund me now or I chargeback.
+</code></pre>
+<h4>Vet event protocol (normalized trajectory)</h4>
+<pre><code class="language-jsonl">{&quot;type&quot;: &quot;step&quot;, &quot;n&quot;: 1}
+{&quot;type&quot;: &quot;message&quot;, &quot;role&quot;: &quot;assistant&quot;, &quot;text&quot;: &quot;…&quot;}
+{&quot;type&quot;: &quot;tool_call&quot;, &quot;name&quot;: &quot;stripe_refund&quot;, &quot;input&quot;: {}, &quot;result&quot;: &quot;…&quot;, &quot;durationMs&quot;: 812}
+{&quot;type&quot;: &quot;result&quot;, &quot;output&quot;: &quot;final answer&quot;, &quot;cost&quot;: 0.042, &quot;tokens&quot;: {&quot;in&quot;: 1200, &quot;out&quot;: 900}}
+</code></pre>
+<h4>Judge verdict protocol</h4>
+<pre><code class="language-json">{&quot;pass&quot;: true, &quot;score&quot;: 0.9, &quot;reasoning&quot;: &quot;Policy followed; no over-promise.&quot;}
+</code></pre>
+<h4><code>run.json</code> (summary)</h4>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;20260809-123000-a1b2&quot;,
+  &quot;git&quot;: {&quot;commit&quot;: &quot;abc123&quot;, &quot;dirty&quot;: true},
+  &quot;summary&quot;: {
+    &quot;cases&quot;: 12, &quot;passed&quot;: 10, &quot;failed&quot;: 1, &quot;graderErrors&quot;: 1,
+    &quot;passRate&quot;: 0.833,
+    &quot;cost&quot;: {&quot;agent&quot;: 1.23, &quot;judge&quot;: 0.31},
+    &quot;durationMs&quot;: 84000
+  },
+  &quot;cases&quot;: [
+    {&quot;id&quot;: &quot;refunds/tricky-customer&quot;, &quot;status&quot;: &quot;fail&quot;,
+     &quot;trials&quot;: 5, &quot;passedTrials&quot;: 2, &quot;passIf&quot;: &quot;ratio:0.66&quot;,
+     &quot;graders&quot;: [{&quot;type&quot;: &quot;judge&quot;, &quot;pass&quot;: false, &quot;score&quot;: 0.3, &quot;reasoning&quot;: &quot;…&quot;}]}
+  ]
+}
+</code></pre>
+<p>Case status values: <code>pass | fail | grader-error | skipped</code>. Grader errors are never silently counted as failures.</p>
+<hr>
+<h3>Tech stack</h3>
+<ul>
+<li><strong>Runtime</strong>: TypeScript on <strong>Bun</strong>. Fast startup, native TS, easy npm distribution (<code>bunx vet</code> / global install). <code>bun build --compile</code> single-binary distribution is an option later.</li>
+<li><strong>Custom graders</strong>: TypeScript modules imported natively (a default-export <code>grade(ctx)</code> function).</li>
+<li><strong>HTML templating</strong>: a tiny TS-native engine (Eta or similar) with overridable partials.</li>
+<li><strong>Storage</strong>: plain JSON/JSONL files under <code>.provet/</code> in v1; SQLite in v1.1 (run JSON is designed as the import source).</li>
+<li><strong>Adapters as the core module</strong>: <code>claude-code</code>, <code>codex</code>, <code>http</code>, <code>command</code> — each exposing <code>invoke(case|prompt) → {output, trajectory, cost, latency}</code>, consumed by both target execution and judging.</li>
+</ul>
+<hr>
+<h3>Explicitly cut from v1</h3>
+<p>Web UI · cloud execution · CI integration · dataset management / synthetic case generation · prompt registry &amp; versioning · tracing/observability platform ambitions · human annotation queues · multi-project dashboards.</p>
+<h3>Roadmap</h3>
+<h4>v1 (now)</h4>
+<p>The full feature set above: four adapters (Claude Code, Codex, HTTP, generic command), mixed-format eval authoring + CLI authoring, three grader tiers with per-case configuration, agent-as-judge, workspace fixtures, repeated trials with <code>pass_if</code> aggregation, file-based run storage, CLI + templated static HTML reporting, <code>vet diff</code>, agent-ready CLI surface.</p>
+<h4>v1.1</h4>
+<ul>
+<li><strong>SQLite storage</strong> (one-command import from v1 run files)</li>
+<li><strong>Interactive dashboard</strong> (consumes the existing report view-model) and/or terminal TUI</li>
+<li><strong>Eval-level shared graders</strong> — graders declared once in the manifest, run for all cases, with per-case override (v1 keeps graders per-case)</li>
+<li><strong>Multi-turn / conversational evals</strong> — scripted or simulated multi-turn interactions with the agent under test</li>
+<li><strong>Majority-vote judging</strong> — repeat judge invocations with vote aggregation (no design change needed; judges already ride the adapter layer)</li>
+</ul>
+<h4>Later (unscheduled)</h4>
+<p>Cloud execution · CI integration (largely free given agent-ready CLI constraints) · web UI · dataset tooling.</p>
+<hr>
+<p><em>Plan of record as of 2026-08-09. Naming note: &quot;provet&quot; (prove + vet) is the working name; the binary is <code>vet</code>.</em></p>
+<hr>
+<h2>Competitive landscape and parity review</h2>
+<p><strong>Source role:</strong> Competitors, gaps, anti-goals, and decision proposals.</p>
+<p>Status: research baseline<br>Research date: 2026-08-09<br>Authoritative product plan: <a href="https://hatim-s.github.io/planloft-plans/p/pPwFxUlWUK/">Provet Product Plan (v1)</a></p>
+<h3>Purpose</h3>
+<p>This document tests the settled Provet v1 product plan against current agent-evaluation tools. It separates:</p>
+<ul>
+<li><strong>source fact</strong>: stated in the Provet plan or linked first-party documentation;</li>
+<li><strong>inference</strong>: a conclusion drawn by comparing those facts; and</li>
+<li><strong>recommendation</strong>: a proposed decision that must be accepted before it changes the product plan.</li>
+</ul>
+<p>It is not an implementation-status document. Provet is pre-build, and every Provet capability below is planned rather than delivered.</p>
+<h3>Executive assessment</h3>
+<h4>Product wedge</h4>
+<p>The defensible Provet wedge is the combination of:</p>
+<ol>
+<li>repository-native, inspectable files with no account or service dependency;</li>
+<li>first-class black-box invocation of Claude Code and Codex CLI;</li>
+<li>one normalized trajectory contract across CLI, HTTP, and command targets;</li>
+<li>deterministic and model-based assertions over both output and trajectory;</li>
+<li>an agent-operable, noninteractive CLI with stable structured I/O; and</li>
+<li>trustworthy local comparison of two immutable run snapshots.</li>
+</ol>
+<p><strong>Inference:</strong> Provet is not entering an empty category. Inspect AI and Harbor already evaluate coding agents in isolated task environments. promptfoo already combines local YAML, broad assertions, coding-agent integrations, machine-oriented tooling, and red-team support. DeepEval supplies mature local test-runner ergonomics. Hosted platforms are much stronger at collaborative experiments, observability, and production feedback loops.</p>
+<p><strong>Recommendation:</strong> position v1 as <em>the smallest safe, reproducible, local coding-agent regression harness</em>, not as a general evaluation or observability platform.</p>
+<h4>Roadmap pressure</h4>
+<p>The product plan says to cut ruthlessly, but v1 includes four adapters, three authoring formats, CLI authoring commands, three grader tiers, agent-as-judge, workspace fixtures, repeated trials, concurrency, durable file storage, terminal and HTML reporting, diffing, schemas, validation, and agent bootstrap guidance.</p>
+<p><strong>Inference:</strong> this is a broad first release for a new runtime. Safety, durability, statistical semantics, and comparison correctness are more important to the daily loop than theme customization or complete authoring CRUD.</p>
+<p><strong>Recommendation:</strong> preserve the settled v1 scope until explicit product review, but use the implementation roadmap&#39;s release cut lines to put execution safety, run integrity, repeat semantics, and <code>vet diff</code> ahead of optional authoring and HTML customization work.</p>
+<h3>Market categories</h3>
+<p>Comparing every product as if it served the same job would produce misleading parity requirements.</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Representative tools</th>
+<th>Primary job</th>
+<th>Relevance to Provet</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Local evaluation frameworks</td>
+<td>promptfoo, DeepEval, Ragas</td>
+<td>Define datasets/assertions and run repeatable local evaluations</td>
+<td>Direct CLI, authoring, grader, and reporting benchmarks</td>
+</tr>
+<tr>
+<td>Coding-agent harnesses</td>
+<td>Inspect AI, Harbor</td>
+<td>Run agents against tasks inside controlled environments and retain trajectories</td>
+<td>Direct adapter, trajectory, sandbox, trial, and artifact benchmarks</td>
+</tr>
+<tr>
+<td>Experiment and observability platforms</td>
+<td>Braintrust, LangSmith, Langfuse, Arize Phoenix</td>
+<td>Compare experiments, inspect traces, collaborate, and monitor production</td>
+<td>Strong comparison/evaluator references; intentionally broader than v1</td>
+</tr>
+<tr>
+<td>Provider eval services</td>
+<td>OpenAI Evals API</td>
+<td>Execute provider-managed eval definitions and graders</td>
+<td>Grader/schema reference; not a local external-agent harness</td>
+</tr>
+<tr>
+<td>Research benchmarks</td>
+<td>SWE-bench, AgentBench</td>
+<td>Produce comparable benchmark scores in fixed task environments</td>
+<td>Environment/verifier reference; not a developer regression UX</td>
+</tr>
+</tbody></table>
+<h3>Capability comparison</h3>
+<p>Legend: <strong>Yes</strong> means first-class in current official documentation, <strong>Partial</strong> means possible through user code or an adjacent subsystem, and <strong>Not established</strong> means it was not found in the reviewed first-party material.</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Local CLI and machine UX</th>
+<th>Coding-agent invocation and trajectory</th>
+<th>Repeats and aggregation</th>
+<th>Workspace isolation</th>
+<th>Graders</th>
+<th>Persistence, report, and comparison</th>
+<th>Cost and latency</th>
+<th>Automation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Provet v1, planned</strong></td>
+<td>Yes: no prompts, JSON errors, schemas, JSONL events</td>
+<td>Yes: Claude Code, Codex, HTTP, command; normalized events</td>
+<td>Yes: repeated trials with all/any/ratio policy</td>
+<td>Partial: copied temporary cwd; no security boundary specified</td>
+<td>Deterministic, trajectory, TypeScript, agent judge</td>
+<td>JSON/JSONL, static HTML, explicit run diff</td>
+<td>Separate target and judge accounting</td>
+<td>Vendor CI integration deferred</td>
+</tr>
+<tr>
+<td><a href="https://www.braintrust.dev/docs/reference/cli/eval">Braintrust</a></td>
+<td>Yes: <code>bt eval</code>, watch, JSON/JSONL, local <code>--no-send-logs</code></td>
+<td>Partial: arbitrary tasks and tracing, but no standard CLI-agent workspace contract</td>
+<td>Yes: experiment trials and per-case overrides</td>
+<td>Not established for the target</td>
+<td>Built-in, model-based, and custom evaluators</td>
+<td>Immutable experiments and comparison over scores, output, cost, latency, and errors</td>
+<td>Yes when instrumented</td>
+<td><a href="https://www.braintrust.dev/docs/evaluate/compare-experiments">Reporters and comparison gates</a></td>
+</tr>
+<tr>
+<td><a href="https://docs.langchain.com/langsmith/evaluation">LangSmith</a></td>
+<td>Partial: SDK and test-framework workflows</td>
+<td>Yes: traced agent trajectories and <a href="https://docs.langchain.com/langsmith/trajectory-evals">trajectory evaluators</a></td>
+<td><a href="https://docs.langchain.com/langsmith/repetition">Yes: repetitions and distribution views</a></td>
+<td>Not established as a harness feature</td>
+<td>Code, LLM, pairwise, and human</td>
+<td>Hosted/hybrid experiment comparison</td>
+<td>Trace metrics and caching</td>
+<td><a href="https://docs.langchain.com/langsmith/pytest">pytest integration</a></td>
+</tr>
+<tr>
+<td><a href="https://langfuse.com/docs/evaluation/core-concepts">Langfuse</a></td>
+<td>Partial: local SDK execution normally records to cloud or self-hosted Langfuse</td>
+<td>Partial: traced applications, not a CLI-agent invocation harness</td>
+<td>Not established</td>
+<td>Not established</td>
+<td>Item/run, code, LLM, and human evaluation</td>
+<td>Rich hosted comparison; <a href="https://langfuse.com/docs/evaluation/experiments/data-model">local datasets have reduced experiment semantics</a></td>
+<td>Trace cost and latency</td>
+<td>SDK-driven</td>
+</tr>
+<tr>
+<td><a href="https://arize.com/docs/phoenix">Arize Phoenix</a></td>
+<td>Partial: SDK plus local or hosted server and UI</td>
+<td>Partial: OpenTelemetry trajectories without Claude/Codex presets</td>
+<td>Not established</td>
+<td>Not established</td>
+<td>Deterministic, LLM, human, and external libraries</td>
+<td>Datasets, experiments, trace replay, and UI comparison</td>
+<td>Trace timing and usage</td>
+<td>Scriptable rather than a turnkey local gate</td>
+</tr>
+<tr>
+<td><a href="https://inspect.aisi.org.uk/">Inspect AI</a></td>
+<td>Yes: mature CLI, JSON control output, log and schema APIs</td>
+<td><a href="https://inspect.aisi.org.uk/agent-bridge.html">Yes: Claude Code and Codex agent bridge</a></td>
+<td><a href="https://inspect.aisi.org.uk/metrics.html">Yes: epochs, reducers, <code>pass_at(k)</code>, and <code>pass_k(k)</code></a></td>
+<td><a href="https://inspect.aisi.org.uk/sandboxing.html">Yes: per-sample Docker and extensible sandboxes</a></td>
+<td>Deterministic, model-based, and majority-vote patterns</td>
+<td>Versioned local logs, viewer, retry/resume, and data APIs</td>
+<td>Tokens, model costs, and resource limits</td>
+<td>Automation-ready</td>
+</tr>
+<tr>
+<td><a href="https://developers.openai.com/api/reference/resources/evals">OpenAI Evals API</a></td>
+<td>No local harness CLI</td>
+<td>No generic external CLI-agent runner</td>
+<td>Not established</td>
+<td>Provider-managed execution for supported graders</td>
+<td><a href="https://developers.openai.com/api/reference/resources/graders">String, similarity, score/label model, multi, and Python graders</a></td>
+<td>Hosted eval runs and reports</td>
+<td>Provider run usage</td>
+<td>API orchestration</td>
+</tr>
+<tr>
+<td><a href="https://www.promptfoo.dev/docs/faq/">promptfoo</a></td>
+<td>Yes: local CLI, YAML/schema, reports, and <a href="https://www.promptfoo.dev/docs/integrations/mcp-server/">agent-facing MCP</a></td>
+<td><a href="https://www.promptfoo.dev/docs/guides/evaluate-coding-agents/">Yes: coding-agent providers and trajectory evidence</a></td>
+<td>Yes: repeat execution; true pass@k estimators not established</td>
+<td>Partial: provider-dependent rather than one universal sandbox</td>
+<td>Broad deterministic, script, model, and red-team assertions</td>
+<td>Local data, JSON/HTML/JUnit, browser view, resume and failed-case filters</td>
+<td>Native cost and latency assertions</td>
+<td><a href="https://www.promptfoo.dev/docs/integrations/ci-cd/">First-class CI guidance and gates</a></td>
+</tr>
+<tr>
+<td><a href="https://deepeval.com/docs/introduction">DeepEval</a></td>
+<td><a href="https://deepeval.com/docs/command-line-interface">Yes: local pytest CLI and terminal trace viewer</a></td>
+<td>Partial: instrumented spans and tool metrics, without Claude/Codex process presets</td>
+<td>Yes: CLI repeat; pass@k not established</td>
+<td>Not established</td>
+<td>Large output, agent, tool, conversation, and retrieval metric catalog</td>
+<td>Local trace artifacts; richer comparison through hosted Confident AI</td>
+<td>Partial</td>
+<td>pytest gates</td>
+</tr>
+<tr>
+<td><a href="https://docs.ragas.io/en/latest/howtos/cli/">Ragas</a></td>
+<td>Yes: Python CLI and experiment templates</td>
+<td>Partial: user-written integrations</td>
+<td>Not established</td>
+<td>Not established</td>
+<td>Goal, tool sequence, tool argument, and retrieval metrics</td>
+<td>Local experiment outputs and baseline option</td>
+<td>Evaluation cost utilities</td>
+<td>Ordinary scripts</td>
+</tr>
+<tr>
+<td><a href="https://www.harborframework.com/docs">Harbor</a></td>
+<td>Yes: local CLI and agent-oriented task skills</td>
+<td><a href="https://www.harborframework.com/docs/agents">Yes: Claude Code, Codex, and other agents with ATIF trajectories</a></td>
+<td>Yes: jobs contain trials and attempts</td>
+<td>Yes: container-per-task with local and cloud sandbox providers</td>
+<td>Executable verifiers, custom metrics, optional LLM grading</td>
+<td><a href="https://www.harborframework.com/docs/run-jobs/run-evals">Local jobs, artifacts, trajectory viewer, and job comparison</a></td>
+<td>Token, timing, and reported cost</td>
+<td>Scriptable; less turnkey than promptfoo</td>
+</tr>
+<tr>
+<td><a href="https://github.com/princeton-nlp/SWE-bench">SWE-bench</a> and <a href="https://github.com/THUDM/AgentBench">AgentBench</a></td>
+<td>Benchmark-specific</td>
+<td>Benchmark-specific</td>
+<td>External reruns</td>
+<td>Container/environment oriented</td>
+<td>Mostly deterministic benchmark verifiers</td>
+<td>Benchmark result logs</td>
+<td>Limited</td>
+<td>Limited</td>
+</tr>
+</tbody></table>
+<h3>Provet parity decisions</h3>
+<h4>Must be trustworthy in v1</h4>
+<p>These are not requests to broaden v1. They are completeness conditions for capabilities already promised by the plan.</p>
+<ol>
+<li><p><strong>Execution trust boundary</strong></p>
+<ul>
+<li>A copied cwd is not a sandbox.</li>
+<li>Either provide an actual isolation mode or name host execution <code>unsafe-local</code>, make the risk explicit, minimize the inherited environment, and require deliberate consent where appropriate.</li>
+<li>Every run must record the isolation mode and effective capabilities.</li>
+</ul>
+</li>
+<li><p><strong>Repeat semantics</strong></p>
+<ul>
+<li><code>all</code>, <code>any</code>, and a minimum ratio are empirical reducers, not statistical pass@k estimators.</li>
+<li>Use unambiguous names such as <code>all_trials</code>, <code>any_trial</code>, and <code>min_pass_rate</code> in internal contracts even if config compatibility retains settled syntax.</li>
+<li>Specify ratio rounding, error/skipped-trial treatment, unique workspaces per trial, and distribution output.</li>
+</ul>
+</li>
+<li><p><strong>Atomic and resumable runs</strong></p>
+<ul>
+<li>Define staging versus finalized run states, atomic summary publication, crash recovery, cleanup, and concurrent-writer behavior.</li>
+<li>A retry must never double-count a completed trial.</li>
+<li>Only infrastructure, target, or grader-error trials should be selectively retryable; semantic failures are immutable evidence.</li>
+</ul>
+</li>
+<li><p><strong>Budget and cancellation controls</strong></p>
+<ul>
+<li>Bound per-case and suite duration, steps, tokens, and cost where adapters expose them.</li>
+<li>Propagate cancellation to child process groups and record whether termination was graceful or forced.</li>
+<li>Concurrency must respect adapter/provider limits without corrupting event ordering.</li>
+</ul>
+</li>
+<li><p><strong>Comparable run snapshots</strong></p>
+<ul>
+<li>Persist target and judge configuration, adapter/normalizer version, grader and rubric hashes, config hash, git state, platform, isolation mode, and raw-event provenance.</li>
+<li>Missing trajectory or cost information must remain explicit, never silently default to zero or empty.</li>
+</ul>
+</li>
+<li><p><strong>Precise diff semantics</strong></p>
+<ul>
+<li>Define added, removed, renamed, skipped, errored, and incompatible cases.</li>
+<li>Compare trial distributions and scores, not only aggregate pass/fail.</li>
+<li>Separate agent and judge cost/latency deltas.</li>
+<li>Return a machine-readable incompatibility outcome when schema, grader, or case identity prevents a fair comparison.</li>
+</ul>
+</li>
+<li><p><strong>Judge hardening</strong></p>
+<ul>
+<li>Treat all target output and trajectory content as untrusted prompt input.</li>
+<li>Use explicit delimiters, schema-constrained results, least privilege, disclosed truncation, bounded retry, and immutable raw evidence.</li>
+<li>A judge must not inherit target workspace or tool privileges merely because both use adapter transport code.</li>
+</ul>
+</li>
+<li><p><strong>Stable machine I/O</strong></p>
+<ul>
+<li>Keep structured results on stdout and human diagnostics/progress on stderr.</li>
+<li>Version JSON and JSONL envelopes, schemas, errors, and event types.</li>
+<li>Preserve <code>fail</code>, target error, grader error, configuration error, cancellation, and internal error as distinct outcomes.</li>
+</ul>
+</li>
+<li><p><strong>Privacy and artifact safety</strong></p>
+<ul>
+<li>Redact configured and common secret shapes before persistence and reporting.</li>
+<li>Record that redaction occurred without retaining the removed value.</li>
+<li>Escape report content, bound embedded artifact size, and define retention and cleanup.</li>
+</ul>
+</li>
+<li><p><strong>Adapter drift visibility</strong></p>
+<ul>
+<li>Preserve raw stdout, stderr, and native events separately from normalized events.</li>
+<li>Record detected CLI versions and normalizer versions.</li>
+<li>Surface incomplete trajectories as explicit capability degradation so trajectory graders cannot produce false confidence.</li>
+</ul>
+</li>
+</ol>
+<h4>Differentiation to preserve</h4>
+<ul>
+<li>Zero-account, repository-native operation.</li>
+<li>Claude Code and Codex as first-class black-box targets rather than only SDK callbacks.</li>
+<li>A normalized trajectory assertion language across adapters.</li>
+<li>Agent-ready authoring through schemas, validation, structured diagnostics, and noninteractive commands.</li>
+<li>Post-run workspace evidence for deterministic graders.</li>
+<li>A compact, safe, self-contained local report.</li>
+<li>Explicit run diffing as the daily developer loop.</li>
+<li>Separate target and judge cost accounting.</li>
+<li>Error taxonomies that never turn unavailable evidence into an ordinary failure.</li>
+</ul>
+<h4>Reasonable post-v1 parity</h4>
+<ul>
+<li>Multi-turn or simulated-user evaluation.</li>
+<li>Majority-vote or judge-panel evaluation.</li>
+<li>Human annotation, adjudication, judge calibration, and agreement analysis.</li>
+<li>SQLite, terminal UI, and interactive dashboard after file-run contracts stabilize.</li>
+<li>Dataset generation, curation, and benchmark registries.</li>
+<li>Cloud sandboxes, distributed execution, and hosted collaboration.</li>
+<li>Prompt registry and production observability loops.</li>
+<li>Red-team generation and maintained security benchmark packs.</li>
+<li>Statistical confidence and significance tooling beyond correctly named v1 reducers.</li>
+</ul>
+<h4>Anti-goals</h4>
+<ul>
+<li>Do not become a tracing or observability SaaS in v1.</li>
+<li>Do not compete on the number of retrieval, safety, or domain-specific metrics.</li>
+<li>Do not add cloud execution, RBAC, annotation queues, prompt management, or production monitoring to v1.</li>
+<li>Do not build a benchmark registry or reinforcement-learning rollout platform.</li>
+<li>Do not claim secure execution when only cwd copying exists.</li>
+<li>Do not call raw trial reducers pass@k.</li>
+<li>Do not hide adapter drift, partial trajectories, unknown prices, or missing usage data behind defaults.</li>
+</ul>
+<h3>Product-plan contradictions and decision proposals</h3>
+<p>These proposals require explicit product acceptance. Until accepted, the published plan remains authoritative.</p>
+<h4>P-001: Target and judge abstraction</h4>
+<p><strong>Source fact:</strong> the plan uses the same adapter system for targets and judges.</p>
+<p><strong>Risk:</strong> sharing a full invocation contract can accidentally give judges target privileges, even though a target needs workspace/tool access and a judge should consume immutable evidence and emit one constrained verdict.</p>
+<p><strong>Recommendation:</strong> share process/HTTP transport primitives and normalized usage accounting, but expose separate capability-limited <code>TargetInvoker</code> and <code>JudgeInvoker</code> contracts.</p>
+<h4>P-002: Trial-policy naming</h4>
+<p><strong>Source fact:</strong> the plan describes <code>all | any | ratio:0.66</code> as pass@k-style aggregation.</p>
+<p><strong>Risk:</strong> Inspect AI correctly distinguishes empirical epoch reducers from combinatorial pass@k estimators.</p>
+<p><strong>Recommendation:</strong> retain the user-facing v1 syntax only if compatibility matters, but document it as trial-policy aggregation and reserve <code>pass_at_k</code>/<code>pass_k</code> for mathematically correct estimators.</p>
+<h4>P-003: Shared graders</h4>
+<p><strong>Source fact:</strong> eval-level shared graders are deferred to v1.1.</p>
+<p><strong>Risk:</strong> repeating graders on every case undermines the under-five-minute onboarding target and increases drift.</p>
+<p><strong>Recommendation:</strong> consider manifest-level grader defaults in v1 and defer lower-value CLI authoring commands instead. This is the one suggested feature move from v1.1 into v1.</p>
+<h4>P-004: Custom grader export</h4>
+<p><strong>Source fact:</strong> the product plan specifies a default-export <code>grade(ctx)</code> function. Repository instructions require named exports and one export statement.</p>
+<p><strong>Recommendation:</strong> change the grader module contract to a named <code>grade</code> export before implementation, or document a narrow exception in the repository standard. Do not let the conflict be resolved accidentally by the first implementation.</p>
+<h4>P-005: HTML customization</h4>
+<p><strong>Source fact:</strong> v1 promises project-overridable report templates.</p>
+<p><strong>Risk:</strong> transcripts and tool output can contain secrets, adversarial markup, very large content, malicious links, or data URIs.</p>
+<p><strong>Recommendation:</strong> make the fixed escaped report the first release cut. Enable template overrides only after the safe-rendering contract and adversarial tests pass.</p>
+<h4>P-006: CI-ready language</h4>
+<p><strong>Source fact:</strong> the plan says agent-ready CLI constraints make v1 CI-ready for free, while CI integration is explicitly out of scope.</p>
+<p><strong>Inference:</strong> stable I/O and exit codes are necessary but not sufficient. CI also requires deterministic baseline lookup, budgets, cancellation, resumability, artifacts, secret hygiene, and flaky-versus-infrastructure error handling.</p>
+<p><strong>Recommendation:</strong> say “automation-compatible” in v1. Document a generic shell invocation and artifact contract without adding vendor-specific CI integration.</p>
+<h3>Required technical spikes</h3>
+<table>
+<thead>
+<tr>
+<th>Spike</th>
+<th>Questions that must be answered</th>
+<th>Exit evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Native CLI streams</td>
+<td>How do current Claude Code and Codex JSON streams represent tools, parallel calls, retries, usage, compaction, errors, and cancellation?</td>
+<td>Sanitized raw fixtures, detected-version matrix, normalization contract, and failure policy</td>
+</tr>
+<tr>
+<td>Isolation</td>
+<td>Can authenticated CLI agents run in Docker without broad host credential exposure? What are the macOS, Linux, and Windows tradeoffs?</td>
+<td>Threat model, capability matrix, minimal credential mount design, and explicit unsafe fallback</td>
+</tr>
+<tr>
+<td>Workspace copies</td>
+<td>How are symlinks, hardlinks, permissions, executable bits, ignored files, nested repos, binary changes, and crash cleanup handled?</td>
+<td>Adversarial fixture suite and deterministic workspace manifest/diff contract</td>
+</tr>
+<tr>
+<td>Trajectory fidelity</td>
+<td>What counts as a step? How are nested agents, parallel tools, retries, hidden reasoning, and incomplete native events represented?</td>
+<td>Versioned event schema, conformance fixtures, and lossiness annotations</td>
+</tr>
+<tr>
+<td>Cost normalization</td>
+<td>Which source wins: vendor-reported cost or token-derived estimates? How are cached/reasoning tokens and unknown models handled?</td>
+<td>Versioned pricing/source policy and explicit unknown-cost behavior</td>
+</tr>
+<tr>
+<td>Trial and diff correctness</td>
+<td>How are trials paired, ratios rounded, errors handled, and grader/case drift detected?</td>
+<td>Contract examples, property tests, and incompatible-diff fixtures</td>
+</tr>
+<tr>
+<td>Judge security</td>
+<td>Can transcript injection break framing? What is truncated? Can a CLI judge mutate state?</td>
+<td>Red-team corpus, least-privilege design, schema retry bounds, and safe defaults</td>
+</tr>
+<tr>
+<td>Run durability</td>
+<td>How do concurrent runs, crashes, partial JSONL, resume, and <code>latest</code> behave across filesystems?</td>
+<td>State machine, fault-injection tests, atomicity evidence, and portability decision</td>
+</tr>
+<tr>
+<td>Custom TypeScript graders</td>
+<td>What trust, dependency, cache, timeout, cancellation, and post-workspace access semantics apply?</td>
+<td>Loader contract, threat model, isolation decision, and deterministic fixtures</td>
+</tr>
+<tr>
+<td>HTML safety</td>
+<td>How are markup, links, binary artifacts, secret-like content, and huge transcripts handled?</td>
+<td>Escaping/CSP policy, redaction tests, size limits, and reproducible render snapshots</td>
+</tr>
+<tr>
+<td>Machine CLI contract</td>
+<td>Can every command and failure preserve stdout purity across JSON, JSONL, TTY, signals, and child stderr?</td>
+<td>Cross-command conformance suite and golden streams</td>
+</tr>
+<tr>
+<td>Five-minute onboarding</td>
+<td>What happens on a clean machine without Bun or an agent login, and with invalid config or a generic command target?</td>
+<td>Timed usability sessions and a measured median/p90, not scaffold-only timing</td>
+</tr>
+</tbody></table>
+<h3>Review gates for future competitor refreshes</h3>
+<p>A refresh should:</p>
+<ol>
+<li>use current first-party documentation;</li>
+<li>preserve the market-category distinction;</li>
+<li>distinguish shipped competitor capabilities from adjacent or hosted products;</li>
+<li>distinguish planned Provet features from implementation evidence;</li>
+<li>record research date and links near claims;</li>
+<li>turn recommendations into explicit product decisions rather than silently editing the plan; and</li>
+<li>re-check Inspect AI, Harbor, promptfoo, and DeepEval first because they are the closest moving references.</li>
+</ol>
+<hr>
+<h2>Implementation DAG</h2>
+<p><strong>Source role:</strong> 38 tasks, dependencies, phase gates, and release cuts.</p>
+<p>Status: implementation-ready plan; no task is implemented<br>Product source: <a href="https://hatim-s.github.io/planloft-plans/p/pPwFxUlWUK/">Provet Product Plan (v1)</a><br>Research input: <a href="#competitive-landscape-and-parity-review">competitive landscape</a><br>Normative contracts: <a href="#repository-standard">repository</a>, <a href="#cli-ux-standard">CLI UX</a>, <a href="#agent-ux-standard">agent UX</a></p>
+<h3>How to execute this plan</h3>
+<p>This plan contains 38 stable task nodes in six phases. A phase is a product gate, not a requirement to serialize every task inside it. Start a node when every listed dependency is complete and its incoming contracts are ratified. Tasks with satisfied dependencies may run in parallel in isolated branches or worktrees.</p>
+<p>Each implementation increment MUST:</p>
+<ol>
+<li>own only the paths named by the task or an explicitly reviewed adjustment;</li>
+<li>compile with <code>pnpm typecheck</code> and pass owned deterministic tests;</li>
+<li>update <code>docs/SCRIPTS.md</code> with any package-script change and <code>docs/ENV.md</code> with any environment-variable change;</li>
+<li>preserve unrelated checkout changes and public schema compatibility;</li>
+<li>distinguish deterministic evidence, live-provider evidence, human-calibration evidence, and usability evidence; and</li>
+<li>use a Conventional Commit that leaves the repository buildable.</li>
+</ol>
+<p>The first engineer to bootstrap the repository MUST replace provisional paths below only through an ADR and update every affected task reference. No task may silently add cloud execution, a web application, CI-vendor integration, SQLite, dataset generation, annotation queues, prompt registry, multi-turn evaluation, or majority-vote judging to v1.</p>
+<h3>Product decisions required before implementation</h3>
+<p>The published plan remains authoritative. Phase 0 must explicitly accept or reject these research proposals:</p>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Question</th>
+<th>Recommended answer</th>
+<th>Blocking nodes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DEC-001</td>
+<td>Do targets and judges share one privileged invocation contract?</td>
+<td>Share transport primitives, expose capability-limited target and judge ports.</td>
+<td><code>RUN-01</code>, <code>GRD-02</code></td>
+</tr>
+<tr>
+<td>DEC-002</td>
+<td>Is <code>all/any/ratio</code> described as pass@k?</td>
+<td>Call it trial-policy aggregation; reserve pass@k names for correct estimators.</td>
+<td><code>EXE-03</code>, <code>DIF-01</code></td>
+</tr>
+<tr>
+<td>DEC-003</td>
+<td>Is copied-cwd execution a sandbox?</td>
+<td>No. Name host execution <code>unsafe-local</code>; decide whether Docker is a v1 release gate.</td>
+<td><code>SPI-03</code>, <code>RUN-06</code>, <code>REL-05</code></td>
+</tr>
+<tr>
+<td>DEC-004</td>
+<td>Do shared eval-level graders move into v1?</td>
+<td>Keep published v1 unless onboarding tests prove duplication breaks the five-minute goal.</td>
+<td><code>AUT-04</code>, <code>GRD-02</code>, <code>REL-04</code></td>
+</tr>
+<tr>
+<td>DEC-005</td>
+<td>Does external grader loading require default export?</td>
+<td>Support the published default export only at the plugin boundary; keep internal named exports.</td>
+<td><code>GRD-02</code></td>
+</tr>
+<tr>
+<td>DEC-006</td>
+<td>Are project HTML template overrides in the first release cut?</td>
+<td>Gate them behind fixed-report escaping, CSP, redaction, and adversarial tests.</td>
+<td><code>REP-03</code>, <code>REL-05</code></td>
+</tr>
+</tbody></table>
+<h3>Tracks and concurrency lanes</h3>
+<table>
+<thead>
+<tr>
+<th>Lane</th>
+<th>Primary ownership</th>
+<th>Parallelism rule</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A — contracts and authoring</td>
+<td>schemas, config, eval formats, validation, mutation commands</td>
+<td>Parser and transaction work may parallelize after contract ownership is fixed.</td>
+</tr>
+<tr>
+<td>B — invocation and workspace</td>
+<td>process supervisor, adapters, workspace fixture lifecycle</td>
+<td>Adapter implementations may parallelize after the supervisor and adapter port are stable.</td>
+</tr>
+<tr>
+<td>C — execution and evidence</td>
+<td>run planning, scheduling, aggregation, events, persistence</td>
+<td>Pure planning/aggregation may parallelize with storage; final orchestration waits for both.</td>
+</tr>
+<tr>
+<td>D — grading</td>
+<td>deterministic, trajectory, code, and judge graders</td>
+<td>Deterministic/trajectory and code/judge work may parallelize after grader contracts exist.</td>
+</tr>
+<tr>
+<td>E — reporting</td>
+<td>report model, terminal, HTML, diff</td>
+<td>Terminal and fixed HTML may parallelize after the view-model; diff also needs run comparability.</td>
+</tr>
+<tr>
+<td>F — validation and release</td>
+<td>conformance, live smokes, dogfood, usability, packaging</td>
+<td>Evidence lanes run independently; release waits for every required gate.</td>
+</tr>
+</tbody></table>
+<p>No more than one task may change an owned public contract at a time. Parallel implementers consume a pinned contract commit and rebase normally; they do not copy or locally widen DTOs.</p>
+<h3>DAG</h3>
+<pre><code class="language-mermaid">flowchart LR
+  FND01[&quot;FND-01 Repository bootstrap&quot;] --&gt; FND02[&quot;FND-02 Contract ownership and ADRs&quot;]
+  FND01 --&gt; SPI01[&quot;SPI-01 Claude stream spike&quot;]
+  FND01 --&gt; SPI02[&quot;SPI-02 Codex stream spike&quot;]
+  FND01 --&gt; SPI03[&quot;SPI-03 Process and isolation spike&quot;]
+  FND02 --&gt; SPI04[&quot;SPI-04 Run and diff semantics&quot;]
+  FND02 --&gt; SPI05[&quot;SPI-05 CLI machine contract&quot;]
+
+  FND02 --&gt; AUT01[&quot;AUT-01 Config contract&quot;]
+  AUT01 --&gt; AUT02[&quot;AUT-02 Environment interpolation&quot;]
+  FND02 --&gt; AUT03[&quot;AUT-03 Eval discovery&quot;]
+  AUT01 --&gt; AUT04[&quot;AUT-04 YAML and Markdown parsing&quot;]
+  AUT03 --&gt; AUT04
+  AUT04 --&gt; AUT05[&quot;AUT-05 Normalization and identity&quot;]
+  AUT02 --&gt; AUT06[&quot;AUT-06 Schema and validation commands&quot;]
+  AUT05 --&gt; AUT06
+  AUT05 --&gt; AUT07[&quot;AUT-07 Mutation transaction engine&quot;]
+  SPI05 --&gt; AUT07
+  AUT06 --&gt; AUT08[&quot;AUT-08 Init/new/add commands&quot;]
+  AUT07 --&gt; AUT08
+
+  FND02 --&gt; RUN01[&quot;RUN-01 Invocation ports&quot;]
+  SPI03 --&gt; RUN02[&quot;RUN-02 Process supervisor&quot;]
+  RUN01 --&gt; RUN02
+  RUN02 --&gt; RUN03[&quot;RUN-03 Command and HTTP adapters&quot;]
+  SPI01 --&gt; RUN04[&quot;RUN-04 Claude adapter&quot;]
+  RUN02 --&gt; RUN04
+  SPI02 --&gt; RUN05[&quot;RUN-05 Codex adapter&quot;]
+  RUN02 --&gt; RUN05
+  SPI03 --&gt; RUN06[&quot;RUN-06 Workspace lifecycle&quot;]
+  AUT05 --&gt; GRD01[&quot;GRD-01 Deterministic and trajectory graders&quot;]
+  RUN01 --&gt; GRD01
+  GRD01 --&gt; GRD02[&quot;GRD-02 Code and judge graders&quot;]
+  RUN03 --&gt; GRD02
+
+  AUT06 --&gt; EXE01[&quot;EXE-01 Immutable run planning&quot;]
+  RUN01 --&gt; EXE01
+  RUN06 --&gt; EXE01
+  EXE01 --&gt; EXE02[&quot;EXE-02 Bounded scheduling&quot;]
+  RUN02 --&gt; EXE02
+  EXE01 --&gt; EXE03[&quot;EXE-03 Trial aggregation&quot;]
+  SPI04 --&gt; EXE03
+  SPI05 --&gt; EXE04[&quot;EXE-04 Events and reporters&quot;]
+  EXE02 --&gt; EXE04
+  SPI04 --&gt; STO01[&quot;STO-01 Atomic run persistence&quot;]
+  EXE04 --&gt; STO01
+  EXE02 --&gt; EXE05[&quot;EXE-05 Cancellation and failure orchestration&quot;]
+  EXE03 --&gt; EXE05
+  GRD02 --&gt; EXE05
+  STO01 --&gt; EXE05
+
+  STO01 --&gt; REP01[&quot;REP-01 Report view-model&quot;]
+  EXE03 --&gt; REP01
+  REP01 --&gt; REP02[&quot;REP-02 Terminal and JSON report&quot;]
+  REP01 --&gt; REP03[&quot;REP-03 Safe static HTML&quot;]
+  SPI04 --&gt; DIF01[&quot;DIF-01 Comparable run diff&quot;]
+  REP01 --&gt; DIF01
+
+  AUT08 --&gt; REL01[&quot;REL-01 CLI conformance suite&quot;]
+  EXE05 --&gt; REL01
+  REP02 --&gt; REL01
+  REP03 --&gt; REL01
+  DIF01 --&gt; REL01
+  RUN03 --&gt; REL02[&quot;REL-02 Live adapter evidence&quot;]
+  RUN04 --&gt; REL02
+  RUN05 --&gt; REL02
+  REL01 --&gt; REL03[&quot;REL-03 Dogfood corpus&quot;]
+  REL02 --&gt; REL03
+  REL01 --&gt; REL04[&quot;REL-04 Usability evidence&quot;]
+  REL03 --&gt; REL05[&quot;REL-05 Packaging and v1 release&quot;]
+  REL04 --&gt; REL05
+</code></pre>
+<h3>Critical path and release cut lines</h3>
+<p>The structural critical path is <code>FND-01 → FND-02 → AUT-01/AUT-03 → AUT-04 → AUT-05 → AUT-06 → EXE-01 → EXE-02 → EXE-04 → STO-01 → EXE-05 → REP-01 → DIF-01 → REL-01 → REL-03 → REL-05</code>. <code>RUN-01/RUN-02</code> and grader work join before a meaningful end-to-end run; manage them as near-critical lanes.</p>
+<ul>
+<li><strong>Cut A — deterministic vertical slice:</strong> one command target, one YAML case, deterministic output grader, one trial, atomic run artifact, terminal summary. Requires <code>FND-01..02</code>, <code>SPI-03..05</code>, <code>AUT-01..06</code>, <code>RUN-01..03</code>, <code>RUN-06</code>, <code>GRD-01</code>, <code>EXE-01..05</code>, <code>STO-01</code>, and <code>REP-01..02</code> in their minimum contract-complete form.</li>
+<li><strong>Cut B — agentic alpha:</strong> Claude and Codex adapters, workspace diffs, trajectory graders, repeats/concurrency, code/judge graders, JSONL, report drill-down, and diff. Requires all implementation nodes through phase 4 except optional template overrides.</li>
+<li><strong>Cut C — local beta:</strong> every v1 command, Markdown authoring, fixed safe HTML, machine conformance, live adapter smokes, dogfood corpus, documented unsafe-local boundary, and packaging candidates.</li>
+<li><strong>Cut D — v1:</strong> all required evidence gates green, measured onboarding target, support matrix published, zero unresolved severity-1 security or data-integrity defects, and every product decision above ratified.</li>
+</ul>
+<h3>Phase 0 — foundation and risk retirement</h3>
+<h4>FND-01 — Bootstrap the repository and deterministic toolchain</h4>
+<ul>
+<li><strong>Objective:</strong> create the smallest Bun/TypeScript workspace that can compile, test, lint/format, and execute a placeholder named-export <code>vet</code> composition root.</li>
+<li><strong>Dependencies:</strong> none.</li>
+<li><strong>Steps:</strong><ol>
+<li>Ratify package manager, minimum Bun/Node compatibility, module mode, TypeScript strictness, and supported operating systems.</li>
+<li>Create deep source/test directory roots without feature stubs; keep <code>index.ts</code> files export-only.</li>
+<li>Add one script at a time for typecheck, unit tests, formatting/linting, contract tests, and e2e tests; document every script concurrently.</li>
+<li>Inject clock, ID, filesystem, process, Git, and terminal ports in the initial composition design so tests never normalize nondeterminism after the fact.</li>
+</ol>
+</li>
+<li><strong>Artifacts:</strong> <code>package.json</code>, lockfile, <code>tsconfig.json</code>, formatter/linter config, <code>src/cli/vet-command.ts</code>, <code>tests/unit/</code>, <code>tests/contracts/</code>, <code>tests/integration/</code>, <code>tests/e2e/</code>, <code>docs/SCRIPTS.md</code>, <code>docs/ENV.md</code>.</li>
+<li><strong>Tests/evidence:</strong> clean install; <code>pnpm typecheck</code>; empty test lanes; built CLI returns version/help without reading config; package-manager and Bun versions recorded.</li>
+<li><strong>Acceptance:</strong> every script is documented, source has no catch-all files, a clean checkout produces identical generated bytes, and the first commit compiles.</li>
+<li><strong>Risks:</strong> premature monorepo complexity and Bun-only APIs that block packaging; resolve through an ADR, not incidental imports.</li>
+</ul>
+<h4>FND-02 — Ratify domain boundaries, public contracts, and decision ADRs</h4>
+<ul>
+<li><strong>Objective:</strong> make contract ownership and trust boundaries explicit before parallel implementation.</li>
+<li><strong>Dependencies:</strong> <code>FND-01</code>.</li>
+<li><strong>Steps:</strong><ol>
+<li>Translate the repository standard&#39;s module map into actual directories and dependency rules.</li>
+<li>Draft minimal ports for configuration, eval normalization, invocation, grading, run planning, events, persistence, report view-model, and CLI envelopes.</li>
+<li>Resolve <code>DEC-001..006</code>; record units, nullability, version fields, enum extension policy, and capability limits.</li>
+<li>Add compile-time dependency-boundary tests and a public-contract inventory; prohibit duplicate DTO declarations.</li>
+</ol>
+</li>
+<li><strong>Artifacts:</strong> <code>docs/adr/</code>, purpose-specific files under <code>src/contracts/</code>, dependency-rule configuration, <code>tests/contracts/public-contract-inventory.test.ts</code>.</li>
+<li><strong>Tests/evidence:</strong> architecture import tests, TypeScript exhaustiveness checks, schema/DTO ownership review, ADR approval record.</li>
+<li><strong>Acceptance:</strong> every public data shape has one owner and version; every decision has an accepted answer; parallel lanes can consume pinned contracts without local widening.</li>
+<li><strong>Risks:</strong> designing abstract ports without evidence; keep stream and storage details provisional until spikes finish.</li>
+</ul>
+<h4>SPI-01 — Capture and characterize Claude Code stream behavior</h4>
+<ul>
+<li><strong>Objective:</strong> replace assumptions about <code>claude -p --output-format stream-json</code> with sanitized compatibility evidence.</li>
+<li><strong>Dependencies:</strong> <code>FND-01</code>.</li>
+<li><strong>Steps:</strong><ol>
+<li>Record current CLI/version/auth prerequisites without copying credentials.</li>
+<li>Capture raw stdout/stderr/exit/signal behavior for text, tools, parallel tools, errors, limits, cancellation, malformed output, and workspace edits.</li>
+<li>Map native events to proposed normalized events; mark unavailable, lossy, and version-dependent fields.</li>
+<li>Sanitize captures, preserve ordering, and define unsupported-version and partial-trajectory behavior.</li>
+</ol>
+</li>
+<li><strong>Artifacts:</strong> <code>docs/research/claude-code-adapter.md</code>, sanitized fixtures under <code>tests/fixtures/adapters/claude-code/</code>, proposed compatibility matrix.</li>
+<li><strong>Tests/evidence:</strong> fixture provenance manifest, secret scan, replay parser spike, negative fixtures.</li>
+<li><strong>Acceptance:</strong> <code>RUN-04</code> can implement without guessing event types, cancellation, cost provenance, or degradation policy.</li>
+<li><strong>Risks:</strong> live CLI access may be unavailable; report that gate separately and do not call synthetic replay live compatibility.</li>
+</ul>
+<h4>SPI-02 — Capture and characterize Codex CLI stream behavior</h4>
+<ul>
+<li><strong>Objective:</strong> establish the same evidence for <code>codex exec --json</code>.</li>
+<li><strong>Dependencies:</strong> <code>FND-01</code>.</li>
+<li><strong>Steps:</strong> repeat <code>SPI-01</code> for messages, commands/tools, nested agent work, approvals, usage, errors, cancellation, compaction, and workspace effects; document differences rather than forcing false symmetry.</li>
+<li><strong>Artifacts:</strong> <code>docs/research/codex-adapter.md</code>, sanitized fixtures under <code>tests/fixtures/adapters/codex/</code>, compatibility matrix.</li>
+<li><strong>Tests/evidence:</strong> provenance, secret scan, replay parser spike, malformed/partial fixtures.</li>
+<li><strong>Acceptance:</strong> <code>RUN-05</code> has a documented lossless/lossy mapping and supported-version policy.</li>
+<li><strong>Risks:</strong> Codex event contracts may drift; raw events and detected CLI version remain mandatory provenance.</li>
+</ul>
+<h4>SPI-03 — Threat-model subprocesses, credentials, and workspace isolation</h4>
+<ul>
+<li><strong>Objective:</strong> decide what Provet can safely claim and how processes are bounded.</li>
+<li><strong>Dependencies:</strong> <code>FND-01</code>.</li>
+<li><strong>Steps:</strong><ol>
+<li>Enumerate host filesystem, environment, network, process-tree, symlink, terminal-injection, and credential threats.</li>
+<li>Prototype explicit argv spawning, minimal environment construction, bounded capture, process groups, graceful/forced termination, and temp permissions.</li>
+<li>Test Docker credential/auth feasibility and platform support; compare with clearly labelled <code>unsafe-local</code> execution.</li>
+<li>Define retained-workspace, redaction, network, and custom-grader trust disclosures.</li>
+</ol>
+</li>
+<li><strong>Artifacts:</strong> <code>docs/security/threat-model.md</code>, <code>docs/adr/execution-isolation.md</code>, adversarial fixtures, supervisor/workspace prototypes confined to spike paths.</li>
+<li><strong>Tests/evidence:</strong> symlink/traversal, secret inheritance, process escape, forked child, timeout, signal, huge-output, and terminal-control probes.</li>
+<li><strong>Acceptance:</strong> a human approves the v1 isolation claim and release gate; downstream tasks have explicit capabilities and fail-closed rules.</li>
+<li><strong>Risks:</strong> local agent authentication inside containers may be impractical; never describe cwd copying as sandboxing.</li>
+</ul>
+<h4>SPI-04 — Define run durability, trial aggregation, and comparison semantics</h4>
+<ul>
+<li><strong>Objective:</strong> specify trustworthy artifacts and <code>vet diff</code> before storage/report code freezes weak semantics.</li>
+<li><strong>Dependencies:</strong> <code>FND-02</code>.</li>
+<li><strong>Steps:</strong><ol>
+<li>Define run/trial state machines, staging/finalization, atomic rename/fsync assumptions, concurrent writers, <code>latest</code>, cleanup, and interrupted artifacts.</li>
+<li>Define <code>all</code>, <code>any</code>, and ratio denominators/rounding for pass, fail, grader error, target error, timeout, cancellation, and skip.</li>
+<li>Define case identity, snapshot/config/grader/adapter fingerprints, comparable/incompatible rules, added/removed cases, unknown measures, and candidate-minus-baseline deltas.</li>
+<li>Produce worked truth tables and future SQLite import invariants.</li>
+</ol>
+</li>
+<li><strong>Artifacts:</strong> <code>docs/contracts/run-lifecycle.md</code>, <code>docs/contracts/trial-policy.md</code>, <code>docs/contracts/run-diff.md</code>, schema examples.</li>
+<li><strong>Tests/evidence:</strong> model-based state-machine tests, truth-table fixtures, property-test plan, crash/fault matrix.</li>
+<li><strong>Acceptance:</strong> no report/diff rule depends on prose interpretation; all non-happy states have storage and exit semantics.</li>
+<li><strong>Risks:</strong> overselling repeat ratios as pass@k and comparing runs with changed graders; incompatibility must be explicit.</li>
+</ul>
+<h4>SPI-05 — Freeze CLI streams, envelopes, diagnostics, and exit precedence</h4>
+<ul>
+<li><strong>Objective:</strong> turn the CLI and agent UX standards into byte-level contracts.</li>
+<li><strong>Dependencies:</strong> <code>FND-02</code>.</li>
+<li><strong>Steps:</strong> define parser grammar, global-flag position, TTY and non-TTY streams, JSON/JSONL schemas, terminal events, error envelopes, diagnostic pointers/ranges/remediation, exit precedence, cancellation, and truncation metadata; create cross-command golden examples.</li>
+<li><strong>Artifacts:</strong> CLI envelope/event/error schemas, <code>docs/contracts/cli-protocol.md</code>, golden stdout/stderr fixtures.</li>
+<li><strong>Tests/evidence:</strong> schema validation, balanced terminal sequences, closed-stdin probe, handled-error stdout purity, noninteractive timeout.</li>
+<li><strong>Acceptance:</strong> every v1 command can be snapshot-tested in human, JSON, and applicable JSONL modes with no ambiguous stream ownership.</li>
+<li><strong>Risks:</strong> bootstrap failures before JSON creation and mixed reporter modes; limit exceptions to the documented internal-failure boundary.</li>
+</ul>
+<h3>Phase 1 — definition, discovery, validation, and authoring</h3>
+<h4>AUT-01 — Implement <code>provet.yaml</code> schema, loading, and defaults</h4>
+<ul>
+<li><strong>Objective:</strong> load one versioned configuration into an immutable normalized project configuration.</li>
+<li><strong>Dependencies:</strong> <code>FND-02</code>.</li>
+<li><strong>Steps:</strong> define strict schema for target, judges, defaults, report, timeouts, concurrency, repeats, and pass policy; parse YAML safely; discover upward; apply defaults in one pure normalizer; reject unknown/broken major versions with pointers.</li>
+<li><strong>Artifacts:</strong> <code>src/config/config-schema.ts</code>, <code>config-loader.ts</code>, <code>config-normalizer.ts</code>, fixtures and contract tests under dedicated test trees.</li>
+<li><strong>Tests/evidence:</strong> valid/minimal/full configs, duplicate keys, anchors, excessive depth/size, unknown fields, discovery precedence, future version, stable normalized snapshot.</li>
+<li><strong>Acceptance:</strong> no adapter or command reinterprets raw config; resolved config path and schema version are provenance.</li>
+<li><strong>Risks:</strong> YAML ambiguity and hidden defaults; normalized JSON must expose every effective value.</li>
+</ul>
+<h4>AUT-02 — Implement bounded environment interpolation and redaction registration</h4>
+<ul>
+<li><strong>Objective:</strong> resolve <code>${VAR}</code> only where the schema permits without persisting secret values.</li>
+<li><strong>Dependencies:</strong> <code>AUT-01</code>.</li>
+<li><strong>Steps:</strong> parse interpolation without shell semantics; distinguish unset, empty, escaped, and malformed references; register resolved secrets with the redactor before diagnostics/storage; retain variable-name provenance; prohibit magic behavioral environment switches.</li>
+<li><strong>Artifacts:</strong> <code>src/config/environment-interpolator.ts</code>, <code>src/security/secret-redactor.ts</code>, focused tests and <code>docs/ENV.md</code> updates.</li>
+<li><strong>Tests/evidence:</strong> multiple variables, literals, unset/empty values, secret in errors/events/HTML, overlapping secrets, large values, Unicode.</li>
+<li><strong>Acceptance:</strong> secret values never enter normalized printable config or any golden; failures name variable and pointer only.</li>
+<li><strong>Risks:</strong> short/common secrets causing over-redaction; define minimum matching and structured-field policies.</li>
+</ul>
+<h4>AUT-03 — Implement deterministic eval discovery</h4>
+<ul>
+<li><strong>Objective:</strong> find directory manifests and single-file shorthand with stable ordering and containment.</li>
+<li><strong>Dependencies:</strong> <code>FND-02</code>.</li>
+<li><strong>Steps:</strong> define roots and ignore rules; canonicalize paths after symlink resolution; detect duplicate/ambiguous names; sort independent of filesystem order; return discovery diagnostics rather than partial silent success.</li>
+<li><strong>Artifacts:</strong> <code>src/evals/eval-discovery.ts</code>, path-containment module, discovery fixtures.</li>
+<li><strong>Tests/evidence:</strong> mixed formats, symlink escape, case-sensitive collisions, nested roots, unreadable files, deterministic order.</li>
+<li><strong>Acceptance:</strong> identical trees yield identical eval lists across supported platforms; unsafe paths fail before file content is trusted.</li>
+<li><strong>Risks:</strong> platform path/case differences; publish the support policy and keep IDs slash-normalized.</li>
+</ul>
+<h4>AUT-04 — Parse YAML and Markdown cases into one source-aware syntax model</h4>
+<ul>
+<li><strong>Objective:</strong> support directory cases, Markdown frontmatter/body, and single-file shorthand without losing diagnostic locations.</li>
+<li><strong>Dependencies:</strong> <code>AUT-01</code>, <code>AUT-03</code>.</li>
+<li><strong>Steps:</strong> parse bounded YAML and frontmatter; retain source path, document index, ranges, and raw body; validate format-local structure; keep semantic normalization out of parsers; resolve <code>DEC-004</code> without hidden shared-grader syntax.</li>
+<li><strong>Artifacts:</strong> purpose-specific parsers under <code>src/evals/formats/</code>, syntax DTOs, fixtures for prose, multiline YAML, frontmatter, and malformed documents.</li>
+<li><strong>Tests/evidence:</strong> round-trip source locations, duplicate IDs/keys, empty body/input, delimiter edge cases, injection strings, large files.</li>
+<li><strong>Acceptance:</strong> equivalent YAML and Markdown inputs feed the same later normalizer while errors point to original source.</li>
+<li><strong>Risks:</strong> Markdown/YAML parser behavior drift; pin dependencies and add adversarial fixture contracts.</li>
+</ul>
+<h4>AUT-05 — Normalize cases, identities, overrides, and grader references</h4>
+<ul>
+<li><strong>Objective:</strong> produce one immutable <code>NormalizedEvalCase</code> with globally stable identity.</li>
+<li><strong>Dependencies:</strong> <code>AUT-04</code>.</li>
+<li><strong>Steps:</strong> build <code>&lt;eval&gt;/&lt;case&gt;</code> IDs; apply project/eval/case precedence for target, repeat, pass policy, timeout, and workspace; resolve grader paths and named judges relative to owning documents; preserve source references and calculate semantic fingerprints.</li>
+<li><strong>Artifacts:</strong> <code>src/evals/eval-normalizer.ts</code>, <code>case-identity.ts</code>, <code>override-resolution.ts</code>, contract tests.</li>
+<li><strong>Tests/evidence:</strong> precedence matrix, duplicate IDs, path bases, renamed/moved cases, unknown judge, stable hashes, field-order independence.</li>
+<li><strong>Acceptance:</strong> run planning consumes only normalized cases; identity/fingerprints are sufficient for diff compatibility decisions.</li>
+<li><strong>Risks:</strong> hashes polluted by timestamps/absolute paths; define canonical serialization explicitly.</li>
+</ul>
+<h4>AUT-06 — Implement complete validation and schema discovery</h4>
+<ul>
+<li><strong>Objective:</strong> make <code>vet validate</code> and <code>vet schema</code> the authoritative agent authoring loop.</li>
+<li><strong>Dependencies:</strong> <code>AUT-02</code>, <code>AUT-05</code>.</li>
+<li><strong>Steps:</strong> aggregate syntax, schema, reference, containment, and cross-file diagnostics; sort/coalesce deterministically; emit human/JSON contracts; publish exact config/eval-case/grader/run schemas; guarantee zero target/judge calls and zero writes.</li>
+<li><strong>Artifacts:</strong> validator orchestration, schema registry, validate/schema commands, JSON pointer/range mapper, golden tests.</li>
+<li><strong>Tests/evidence:</strong> multiple simultaneous errors, warning behavior, no-project schema/help, closed stdin, network/process spies, stable ordering.</li>
+<li><strong>Acceptance:</strong> a structurally valid project cannot hit an avoidable parse/schema/reference error during run; machine errors validate against the envelope schema.</li>
+<li><strong>Risks:</strong> validation that imports arbitrary grader code; validate paths/module shape without executing repository code.</li>
+</ul>
+<h4>AUT-07 — Build preview-hash-bound atomic mutation transactions</h4>
+<ul>
+<li><strong>Objective:</strong> provide one safe engine for all authoring writes.</li>
+<li><strong>Dependencies:</strong> <code>AUT-05</code>, <code>SPI-05</code>.</li>
+<li><strong>Steps:</strong> model create/update/unchanged/conflict plans; compute before/after content hashes; make dry-run strictly zero-write/zero-lock; re-read and revalidate hashes under the real writer; stage all bytes before atomic multi-file commit; preserve unrelated content and recover from partial filesystem failures.</li>
+<li><strong>Artifacts:</strong> <code>src/evals/authoring/mutation-plan.ts</code>, <code>atomic-project-writer.ts</code>, lock/rollback ports, fault-injection tests.</li>
+<li><strong>Tests/evidence:</strong> idempotent replay, stale preview, force boundaries, symlinks, permission failure at each write, no timestamp changes in dry-run, byte preservation.</li>
+<li><strong>Acceptance:</strong> a failed mutation leaves every original file byte-identical; <code>--force</code> never bypasses validation, containment, or preview drift.</li>
+<li><strong>Risks:</strong> portable multi-file atomicity; document the exact lock/staging protocol and recoverable journal if needed.</li>
+</ul>
+<h4>AUT-08 — Implement <code>init</code>, <code>new eval</code>, <code>add case</code>, and <code>add grader</code></h4>
+<ul>
+<li><strong>Objective:</strong> expose all v1 authoring operations through the transaction engine.</li>
+<li><strong>Dependencies:</strong> <code>AUT-06</code>, <code>AUT-07</code>.</li>
+<li><strong>Steps:</strong> define typed command inputs; scaffold a runnable generic-command example; implement directory/file and YAML/Markdown variants; accept exactly one case input source; add per-case graders; optionally insert versioned Provet agent guidance only when requested; return ordered file operations in JSON.</li>
+<li><strong>Artifacts:</strong> one command module per command under <code>src/cli/commands/</code>, templates under purpose-specific authoring directories, e2e goldens.</li>
+<li><strong>Tests/evidence:</strong> every example in CLI standard, identical rerun, conflicts, stdin EOF/size, unmarked/marked <code>AGENTS.md</code>, force and dry-run matrices.</li>
+<li><strong>Acceptance:</strong> a clean user can initialize and author without an editor or prompt; all mutations validate and use one writer.</li>
+<li><strong>Risks:</strong> generated example depending on installed agent credentials; the default must run locally and deterministically.</li>
+</ul>
+<h3>Phase 2 — invocation, workspaces, and graders</h3>
+<h4>RUN-01 — Implement capability-limited invocation contracts</h4>
+<ul>
+<li><strong>Objective:</strong> define normalized request, event, result, usage, and cancellation seams for targets and judges.</li>
+<li><strong>Dependencies:</strong> <code>FND-02</code>, <code>DEC-001</code>.</li>
+<li><strong>Steps:</strong> define transport-neutral events and raw-event references; model capability availability and trajectory completeness; separate target workspace privileges from judge evidence-only input; normalize <code>null</code> usage/cost; version every event/result.</li>
+<li><strong>Artifacts:</strong> purpose-specific contracts under <code>src/adapters/contracts/</code>, compile-time fixtures, schema definitions.</li>
+<li><strong>Tests/evidence:</strong> exhaustive event/result construction, unknown/additive fields, incomplete trajectory, unknown cost, capability denial.</li>
+<li><strong>Acceptance:</strong> all adapters can conform without widening contracts and a judge cannot acquire target privileges through shared plumbing.</li>
+<li><strong>Risks:</strong> lowest-common-denominator normalization; preserve raw evidence and explicit lossiness.</li>
+</ul>
+<h4>RUN-02 — Implement the bounded process supervisor</h4>
+<ul>
+<li><strong>Objective:</strong> provide one correct subprocess primitive for command, Claude, Codex, and CLI judges.</li>
+<li><strong>Dependencies:</strong> <code>RUN-01</code>, <code>SPI-03</code>.</li>
+<li><strong>Steps:</strong> spawn explicit executable/argv without shell by default; build minimal environment; stream bounded stdout/stderr with backpressure; manage process groups, timeout, abort, grace, kill, and reap; expose ordered chunks and terminal status; redact before sinks.</li>
+<li><strong>Artifacts:</strong> <code>src/adapters/process/process-supervisor.ts</code>, environment builder, output limiter, signal controller, integration helper executable.</li>
+<li><strong>Tests/evidence:</strong> spaces/metacharacters, forked descendants, huge output, partial UTF-8/JSONL, timeout races, first/second SIGINT, nonzero exit, missing executable.</li>
+<li><strong>Acceptance:</strong> no child survives cancellation tests; semantic events remain ordered; overflow and truncation are explicit.</li>
+<li><strong>Risks:</strong> cross-platform signal behavior; declare supported guarantees and test each release platform.</li>
+</ul>
+<h4>RUN-03 — Implement generic command and HTTP adapters</h4>
+<ul>
+<li><strong>Objective:</strong> deliver the escape hatches and the deterministic vertical-slice target.</li>
+<li><strong>Dependencies:</strong> <code>RUN-01</code>, <code>RUN-02</code>.</li>
+<li><strong>Steps:</strong> implement literal <code>{{input}}</code> substitution without implicit shell; support raw or versioned vet-events JSONL; implement bounded POST with explicit headers/body contract, abort, timeout, response-size and optional trajectory validation; redact URLs/headers; preserve raw evidence.</li>
+<li><strong>Artifacts:</strong> <code>src/adapters/command/command-adapter.ts</code>, <code>src/adapters/http/http-adapter.ts</code>, parsers, fake HTTP/process integration fixtures.</li>
+<li><strong>Tests/evidence:</strong> malformed JSONL, output-only command, HTTP errors/status/content types, abort, SSRF policy decision, secret headers, unknown usage.</li>
+<li><strong>Acceptance:</strong> both adapters pass one shared conformance suite and report capability differences explicitly.</li>
+<li><strong>Risks:</strong> shell injection and arbitrary network destinations; execution is explicit user authority but never hidden.</li>
+</ul>
+<h4>RUN-04 — Implement Claude Code adapter from captured evidence</h4>
+<ul>
+<li><strong>Objective:</strong> normalize supported Claude Code streams without inventing events.</li>
+<li><strong>Dependencies:</strong> <code>RUN-02</code>, <code>SPI-01</code>.</li>
+<li><strong>Steps:</strong> construct versioned argv; detect supported CLI version; parse incrementally; map messages/tools/results/usage; retain raw streams; surface partial trajectory and protocol drift; integrate cancellation and workspace cwd.</li>
+<li><strong>Artifacts:</strong> <code>src/adapters/claude-code/</code>, replay tests, opt-in live smoke definition.</li>
+<li><strong>Tests/evidence:</strong> every sanitized fixture, malformed/partial line, unknown event, nonzero exit, tool error, concurrency, cancellation, missing CLI/auth.</li>
+<li><strong>Acceptance:</strong> replay is deterministic and live evidence is reported separately; unsupported drift cannot silently pass trajectory graders.</li>
+<li><strong>Risks:</strong> hidden/provider-specific cost fields and auth behavior; unknown stays <code>null</code> with provenance.</li>
+</ul>
+<h4>RUN-05 — Implement Codex CLI adapter from captured evidence</h4>
+<ul>
+<li><strong>Objective:</strong> normalize supported Codex streams with the same guarantees as <code>RUN-04</code>.</li>
+<li><strong>Dependencies:</strong> <code>RUN-02</code>, <code>SPI-02</code>.</li>
+<li><strong>Steps/artifacts/tests:</strong> mirror the Claude adapter workflow in <code>src/adapters/codex/</code> while retaining Codex-specific nested-agent, approval, tool, usage, and error semantics; do not copy-modify the parser where a shared framed-JSONL primitive is sufficient.</li>
+<li><strong>Acceptance:</strong> shared adapter conformance and all Codex replay fixtures pass; incomplete or unsupported streams remain explicit.</li>
+<li><strong>Risks:</strong> assuming Claude/Codex symmetry; share transport mechanics only.</li>
+</ul>
+<h4>RUN-06 — Implement fixture workspace lifecycle and diff evidence</h4>
+<ul>
+<li><strong>Objective:</strong> give every trial an independent, contained, inspectable workspace.</li>
+<li><strong>Dependencies:</strong> <code>SPI-03</code>.</li>
+<li><strong>Steps:</strong> canonicalize and validate fixture root; copy files/permissions/symlinks under policy; create permission-restricted unique trial cwd; snapshot pre/post manifests and hashes; calculate additions/deletions/modifications/mode/symlink changes; retain or clean by documented outcome; record isolation mode.</li>
+<li><strong>Artifacts:</strong> purpose-specific modules under <code>src/workspaces/</code>, manifest/diff contracts, adversarial fixture trees.</li>
+<li><strong>Tests/evidence:</strong> symlink/hardlink escape, nested Git, ignored/untracked files, binary/large files, executable modes, cleanup fault, concurrent trials.</li>
+<li><strong>Acceptance:</strong> source fixture/repository bytes never change and <code>files_untouched</code> consumes trustworthy manifest evidence.</li>
+<li><strong>Risks:</strong> this is not host isolation; diagnostics and provenance must say <code>unsafe-local</code> unless an accepted sandbox is active.</li>
+</ul>
+<h4>GRD-01 — Implement deterministic and trajectory grading</h4>
+<ul>
+<li><strong>Objective:</strong> provide equals, contains, regex, JSON Schema, called/never-called tool, min/max steps, and files-untouched grading as pure functions.</li>
+<li><strong>Dependencies:</strong> <code>AUT-05</code>, <code>RUN-01</code>, <code>RUN-06</code>.</li>
+<li><strong>Steps:</strong> define grader input/verdict/reason codes; compile expectations into explicit graders; handle Unicode/JSON/regex bounds; evaluate normalized trajectory capabilities before assertions; use workspace manifest evidence; return error distinct from fail when evidence is incomplete.</li>
+<li><strong>Artifacts:</strong> purpose-specific files under <code>src/graders/deterministic/</code> and <code>trajectory/</code>, shared verdict contracts, property and fixture tests.</li>
+<li><strong>Tests/evidence:</strong> edge/boundary cases, catastrophic-regex protection, missing result/tool input, parallel tools, incomplete trajectory, symlink/file patterns.</li>
+<li><strong>Acceptance:</strong> pure deterministic output, stable reasoning codes, no adapter/storage imports, and no unavailable evidence treated as ordinary failure.</li>
+<li><strong>Risks:</strong> tool-name normalization and step definition; freeze them in contracts and fixtures.</li>
+</ul>
+<h4>GRD-02 — Implement trusted code graders and least-privilege agent judges</h4>
+<ul>
+<li><strong>Objective:</strong> support the two extensible grader tiers without conflating errors with semantic failures.</li>
+<li><strong>Dependencies:</strong> <code>GRD-01</code>, <code>RUN-03</code>, <code>DEC-001</code>, <code>DEC-005</code>.</li>
+<li><strong>Steps:</strong> validate and load trusted TypeScript <code>grade(ctx)</code> modules with bounded execution/cancellation policy; expose immutable case/output/trajectory/post-workspace inputs; frame untrusted judge evidence and rubric; invoke configured judge without target workspace/tools; validate <code>{pass, score, reasoning}</code>; retry once with bounded parse feedback; track judge usage separately.</li>
+<li><strong>Artifacts:</strong> <code>src/graders/code/</code>, <code>src/graders/judge/</code>, loader and verdict schemas, injection/parse/timeout fixtures.</li>
+<li><strong>Tests/evidence:</strong> default-export compatibility, module error/cache, mutation attempts, prompt-injection corpus, oversized trajectory/truncation, invalid score/schema, retry, judge target failure.</li>
+<li><strong>Acceptance:</strong> every failure stage yields typed <code>grader-error</code>; judge cannot mutate target state; raw evidence, truncation, rubric/config hash, and judge provenance persist.</li>
+<li><strong>Risks:</strong> custom code is trusted in v1 and judge input may leak secrets; disclose the former and redact/frame the latter before invocation.</li>
+</ul>
+<h3>Phase 3 — execution, events, and durable run artifacts</h3>
+<h4>EXE-01 — Build immutable run planning</h4>
+<ul>
+<li><strong>Objective:</strong> resolve one complete run snapshot before starting any target.</li>
+<li><strong>Dependencies:</strong> <code>AUT-06</code>, <code>RUN-01</code>, <code>RUN-06</code>.</li>
+<li><strong>Steps:</strong><ol>
+<li>Select normalized cases with shell-independent full-ID filters; reject empty selection.</li>
+<li>Resolve CLI overrides and case/eval/project defaults, then expand deterministic trial IDs.</li>
+<li>Fingerprint config, cases, graders, adapters, Git commit/dirty state, platform, CLI versions, and isolation mode.</li>
+<li>Freeze budgets, ordering keys, workspace plans, and expected capabilities; later file edits cannot affect the plan.</li>
+</ol>
+</li>
+<li><strong>Artifacts:</strong> <code>src/execution/run-planner.ts</code>, <code>trial-plan.ts</code>, <code>selection-filter.ts</code>, snapshot schema and property tests.</li>
+<li><strong>Tests/evidence:</strong> precedence/filters, stable order/hash, dirty Git, changed files after plan, empty selection, unknown judge/adapter capability.</li>
+<li><strong>Acceptance:</strong> the plan is serializable, contains no secret values, and fully explains what will run before effects begin.</li>
+<li><strong>Risks:</strong> absolute paths and volatile metadata destabilizing fingerprints; canonicalize platform-independent semantic content.</li>
+</ul>
+<h4>EXE-02 — Implement bounded, deterministic scheduling</h4>
+<ul>
+<li><strong>Objective:</strong> execute trial plans concurrently without sharing mutable state or changing semantic output order.</li>
+<li><strong>Dependencies:</strong> <code>EXE-01</code>, <code>RUN-02</code>.</li>
+<li><strong>Steps:</strong> implement a bounded worker scheduler over trials; acquire unique workspace and adapter resources; propagate suite/trial abort signals; apply rate/budget admission; emit completion into an ordered reducer rather than filesystem completion order; stop scheduling after terminal cancellation or fatal storage/security error.</li>
+<li><strong>Artifacts:</strong> <code>src/execution/trial-scheduler.ts</code>, <code>resource-budget.ts</code>, fake task harness, concurrency integration tests.</li>
+<li><strong>Tests/evidence:</strong> concurrency 1/N, out-of-order finish, starvation, synchronous throw, abort races, rate-limit feedback, workspace uniqueness, no unhandled promises.</li>
+<li><strong>Acceptance:</strong> active trials never exceed the bound, persisted semantic order is stable, and cancellation leaves no newly scheduled work.</li>
+<li><strong>Risks:</strong> provider throttling and head-of-line blocking; keep policy injected and observable rather than hidden retries.</li>
+</ul>
+<h4>EXE-03 — Aggregate trials and case outcomes</h4>
+<ul>
+<li><strong>Objective:</strong> reduce trials into honest case/run results under the ratified policy.</li>
+<li><strong>Dependencies:</strong> <code>EXE-01</code>, <code>SPI-04</code>, <code>DEC-002</code>.</li>
+<li><strong>Steps:</strong> implement <code>all</code>, <code>any</code>, and ratio truth tables; preserve counts by pass/fail/grader-error/target-error/timeout/cancelled/skipped; compute pass rate and score distribution only over specified denominators; sum known usage while keeping unknown components explicit; produce stable run totals.</li>
+<li><strong>Artifacts:</strong> <code>src/execution/trial-aggregator.ts</code>, <code>case-aggregator.ts</code>, <code>run-aggregator.ts</code>, property tests from truth tables.</li>
+<li><strong>Tests/evidence:</strong> zero/one/many trials, ratio boundaries and floating-point representation, mixed errors, unequal repeats, partial run, unknown cost, order independence.</li>
+<li><strong>Acceptance:</strong> no grader/infrastructure error is silently counted as semantic failure; every aggregate can be recomputed from persisted trials.</li>
+<li><strong>Risks:</strong> ratio rounding and incomplete-run presentation; store numerator/denominator and raw outcome counts.</li>
+</ul>
+<h4>EXE-04 — Implement normalized events and human/JSONL reporters</h4>
+<ul>
+<li><strong>Objective:</strong> make long runs observable without contaminating machine output or stored trajectories.</li>
+<li><strong>Dependencies:</strong> <code>EXE-02</code>, <code>SPI-05</code>.</li>
+<li><strong>Steps:</strong> assign monotonically increasing emission sequences; emit run/case/trial/grader lifecycle and exactly one terminal event; keep concise references to detailed artifacts; render TTY in-place progress and append-only non-TTY stderr; emit schema-valid JSONL stdout; redact/control-character escape before any sink.</li>
+<li><strong>Artifacts:</strong> <code>src/execution/run-event-bus.ts</code>, <code>src/cli/reporters/human-run-reporter.ts</code>, <code>jsonl-run-reporter.ts</code>, event schemas and byte goldens.</li>
+<li><strong>Tests/evidence:</strong> parallel completions, handled/fatal error after stream start, narrow/non-TTY terminals, backpressure, ANSI rules, newline restoration, secret/control input.</li>
+<li><strong>Acceptance:</strong> event sequence is total and schema-valid; stdout contains only JSONL in that mode; terminal event matches exit outcome.</li>
+<li><strong>Risks:</strong> event bus becoming persistence; keep semantic event construction separate from delivery sinks.</li>
+</ul>
+<h4>STO-01 — Persist atomic, immutable run directories</h4>
+<ul>
+<li><strong>Objective:</strong> store crash-explainable JSON/JSONL artifacts under <code>.provet/runs/&lt;id&gt;/</code> and publish <code>latest</code> safely.</li>
+<li><strong>Dependencies:</strong> <code>EXE-04</code>, <code>SPI-04</code>.</li>
+<li><strong>Steps:</strong> reserve collision-safe run ID; create staging directory with restrictive permissions; append framed per-trial raw/normalized events and status checkpoints; fsync/close as platform policy requires; materialize summary from authoritative events; validate artifact schema/integrity; atomically finalize; update portable latest pointer only after success; mark/retain interrupted state under policy.</li>
+<li><strong>Artifacts:</strong> <code>src/runs/run-writer.ts</code>, <code>run-reader.ts</code>, <code>run-finalizer.ts</code>, <code>latest-run-pointer.ts</code>, integrity manifest and fault-injection fixtures.</li>
+<li><strong>Tests/evidence:</strong> crash/failure at every boundary, concurrent writers, partial JSONL, corrupt/tampered artifact, pointer failure, read-only disk, Windows symlink alternative, redaction before write.</li>
+<li><strong>Acceptance:</strong> completed runs never mutate, readers distinguish staged/interrupted/corrupt/future versions, and no failed run becomes <code>latest</code> successful evidence.</li>
+<li><strong>Risks:</strong> false atomicity across filesystems; document exact guarantees and use a manifest/state marker readers verify.</li>
+</ul>
+<h4>EXE-05 — Compose full run lifecycle, cancellation, and exit mapping</h4>
+<ul>
+<li><strong>Objective:</strong> wire planning, workspace, target, grading, aggregation, events, and storage into <code>vet run</code> with typed failure boundaries.</li>
+<li><strong>Dependencies:</strong> <code>EXE-02</code>, <code>EXE-03</code>, <code>GRD-02</code>, <code>STO-01</code>.</li>
+<li><strong>Steps:</strong> create composition root and per-trial state machine; invoke target then graders under budgets; persist evidence at each transition; stop/continue according to typed severity; implement first/second SIGINT behavior; finalize partial/failed/completed runs; map all accumulated outcomes through stable exit precedence; return final JSON envelope when requested.</li>
+<li><strong>Artifacts:</strong> <code>src/execution/execute-run.ts</code>, <code>execute-trial.ts</code>, <code>src/cli/commands/run-command.ts</code>, lifecycle integration tests.</li>
+<li><strong>Tests/evidence:</strong> pass/fail/grader error/target error/timeout/security/storage/internal error, multiple simultaneous outcomes, SIGINT, JSON vs JSONL conflict, zero matches, changed source mid-run.</li>
+<li><strong>Acceptance:</strong> the deterministic vertical slice works end to end and every terminal path either finalizes a truthful artifact or reports why durable evidence could not be written.</li>
+<li><strong>Risks:</strong> catch-all orchestration and swallowed causes; keep typed stage errors and narrow collaborators.</li>
+</ul>
+<h4>Phase 3 exit gate</h4>
+<p>Cut A is green only when a clean temp project can run a deterministic command target twice, produce schema-valid immutable artifacts, report stable bytes, survive injected write/process faults, and leave no child or temp workspace behind. Passing fake adapters is deterministic correctness, not Claude/Codex compatibility.</p>
+<h3>Phase 4 — reporting and comparison</h3>
+<h4>REP-01 — Materialize one versioned report view-model</h4>
+<ul>
+<li><strong>Objective:</strong> expose the same facts to terminal, JSON, HTML, and future dashboard consumers.</li>
+<li><strong>Dependencies:</strong> <code>STO-01</code>, <code>EXE-03</code>.</li>
+<li><strong>Steps:</strong> read and validate supported run artifacts; project run/case/trial/grader/trajectory/workspace evidence into one immutable DTO; separate target and judge measurements; preserve <code>null</code>, truncation, redaction, integrity, partial, and compatibility metadata; add case selector without losing run context.</li>
+<li><strong>Artifacts:</strong> <code>src/reporting/report-view-model.ts</code>, <code>src/runs/run-artifact-validator.ts</code>, JSON schema and golden fixtures.</li>
+<li><strong>Tests/evidence:</strong> all statuses, corrupt/future/partial run, requested/missing case, unknown usage, truncated trajectory, redacted fields, stable ordering.</li>
+<li><strong>Acceptance:</strong> renderers contain no business aggregation logic and all report JSON validates against one schema.</li>
+<li><strong>Risks:</strong> hiding raw evidence behind a lossy view; include stable artifact references and explicit omissions.</li>
+</ul>
+<h4>REP-02 — Implement terminal and JSON report drill-down</h4>
+<ul>
+<li><strong>Objective:</strong> make <code>vet report [run] [--case] [--json]</code> useful to humans and agents.</li>
+<li><strong>Dependencies:</strong> <code>REP-01</code>.</li>
+<li><strong>Steps:</strong> resolve exact/path/latest selectors; render accessible summary and labelled narrow-width fallback; show transcript/tool calls, grader reasoning, and measurements for drill-down; enforce stdout/stderr and color rules; preserve completed failing results with nonzero exit.</li>
+<li><strong>Artifacts:</strong> <code>src/cli/commands/report-command.ts</code>, <code>src/reporting/terminal-report-renderer.ts</code>, snapshots for every width/mode/status.</li>
+<li><strong>Tests/evidence:</strong> missing/ambiguous/corrupt selector, partial run, case filter, control characters, TTY/non-TTY, JSON schema, target/judge cost separation.</li>
+<li><strong>Acceptance:</strong> human meaning never depends on color/columns and machine output is exactly one envelope.</li>
+<li><strong>Risks:</strong> huge trajectories flooding terminal/context; disclose truncation and point to stored artifact or narrower selection.</li>
+</ul>
+<h4>REP-03 — Implement safe self-contained HTML and gate template overrides</h4>
+<ul>
+<li><strong>Objective:</strong> render a static document from the report view-model without creating an application or unsafe sink.</li>
+<li><strong>Dependencies:</strong> <code>REP-01</code>, <code>DEC-006</code>.</li>
+<li><strong>Steps:</strong> choose/pin a small templating engine or justify a purpose-built renderer; escape every untrusted value by default; apply CSP/no remote resources; bound embedded transcript/artifact sizes; make output deterministic after injected provenance normalization; write atomically; implement <code>--open</code> only after success and only under allowed TTY/mode; add project partial overrides only after fixed-report adversarial tests pass.</li>
+<li><strong>Artifacts:</strong> <code>src/reporting/html/</code>, built-in templates/partials, <code>src/cli/commands/report-html.ts</code>, security and render snapshots.</li>
+<li><strong>Tests/evidence:</strong> script/style/link/data-URI injection, malformed Unicode, secrets, huge/binary content, custom-partial validation, no-network render, atomic failure, <code>--open</code> restrictions.</li>
+<li><strong>Acceptance:</strong> one fixed report passes security review; optional overrides cannot bypass escaping/redaction/CSP; output is a document with no server.</li>
+<li><strong>Risks:</strong> templates execute arbitrary logic or expose raw DTOs; keep helpers allowlisted and view-model immutable.</li>
+</ul>
+<h4>DIF-01 — Implement compatibility-aware <code>vet diff</code></h4>
+<ul>
+<li><strong>Objective:</strong> make candidate-minus-baseline comparison the trustworthy daily-driver command.</li>
+<li><strong>Dependencies:</strong> <code>REP-01</code>, <code>SPI-04</code>.</li>
+<li><strong>Steps:</strong> resolve and validate two run selectors; compare schema/config/case/grader/adapter/normalizer fingerprints; match full case IDs; classify improved/regressed/unchanged/added/removed/incompatible; compare pass numerator/denominator, score distributions, trial counts, statuses, and known target/judge cost/token/latency deltas; surface dirty Git and partial evidence; render human/JSON and exit <code>1</code> only for defined regression while incompatible comparisons use typed error semantics.</li>
+<li><strong>Artifacts:</strong> <code>src/reporting/diff/run-comparator.ts</code>, <code>diff-view-model.ts</code>, <code>src/cli/commands/diff-command.ts</code>, truth-table and property tests.</li>
+<li><strong>Tests/evidence:</strong> added/removed, pass↔fail/error, unequal repeats, unknown measures, changed rubric/target/config/schema, dirty commits, partial/corrupt run, antisymmetry of numeric deltas, stable order.</li>
+<li><strong>Acceptance:</strong> no materially incompatible run is shown as a fair regression result and every delta states direction and denominator.</li>
+<li><strong>Risks:</strong> users wanting a diff despite drift; report diagnostic detail but do not guess unless a future explicit override contract is approved.</li>
+</ul>
+<h4>Phase 4 exit gate</h4>
+<p>Cut B is green when one fixture suite runs through command, HTTP, Claude replay, and Codex replay adapters; deterministic/trajectory/code/judge graders; repeats and concurrency; report drill-down; safe fixed HTML; and a baseline/candidate diff with correct errors, fingerprints, and cost separation. Live CLIs remain a separate gate.</p>
+<h3>Phase 5 — evidence, dogfood, usability, packaging, and release</h3>
+<h4>REL-01 — Build the cross-command conformance and adversarial suite</h4>
+<ul>
+<li><strong>Objective:</strong> prove the normative repository, CLI, and agent UX contracts across every v1 command.</li>
+<li><strong>Dependencies:</strong> <code>AUT-08</code>, <code>EXE-05</code>, <code>REP-02</code>, <code>REP-03</code>, <code>DIF-01</code>.</li>
+<li><strong>Steps:</strong> invoke the built binary in TTY-like/non-TTY human, JSON, and applicable JSONL modes; validate stdout/stderr bytes, schemas, exits, writes, signals, closed stdin, and platform paths; execute agent golden journey; add security, corruption, concurrency, cancellation, and atomic-write matrices; ensure scripts/docs are synchronized.</li>
+<li><strong>Artifacts:</strong> dedicated <code>tests/e2e/</code> and <code>tests/security/</code> suites, cross-platform fixture runner, conformance coverage matrix, <code>docs/TESTING.md</code>.</li>
+<li><strong>Tests/evidence:</strong> all standard conformance rows plus unsupported flags, future schemas, multiple errors, secret/control injection, path escapes, child escape, disk faults, huge content, package install smoke.</li>
+<li><strong>Acceptance:</strong> required deterministic suite is hermetic and green on supported platforms; no test calls a live provider or depends on user credentials.</li>
+<li><strong>Risks:</strong> snapshots masking semantics; normalize through injected providers and require human inspection of golden changes.</li>
+</ul>
+<h4>REL-02 — Establish opt-in live adapter compatibility evidence</h4>
+<ul>
+<li><strong>Objective:</strong> verify current Claude Code, Codex, HTTP, and command behavior without contaminating required offline CI.</li>
+<li><strong>Dependencies:</strong> <code>RUN-03</code>, <code>RUN-04</code>, <code>RUN-05</code>.</li>
+<li><strong>Steps:</strong> define secret-safe opt-in smoke manifests and budgets; run minimal message/tool/workspace/cancel cases; record CLI/provider versions and timestamps; compare native raw streams with replay fixtures; sanitize new captures; publish capability matrix and degradation results separately.</li>
+<li><strong>Artifacts:</strong> opt-in smoke harness, <code>docs/compatibility/adapters.md</code>, sanitized replay update process, evidence report template.</li>
+<li><strong>Tests/evidence:</strong> actual live invocations where authorized, with cost and secret scan; explicit unavailable/skipped report otherwise.</li>
+<li><strong>Acceptance:</strong> supported-version claims are backed by current live evidence; a deterministic green suite is never labelled compatibility proof.</li>
+<li><strong>Risks:</strong> auth, cost, rate limits, network, and provider drift; cap spend and never store/forward local CLI credentials.</li>
+</ul>
+<h4>REL-03 — Dogfood Provet on representative coding-agent regressions</h4>
+<ul>
+<li><strong>Objective:</strong> prove the product loop on realistic tasks and make Provet evaluate Provet.</li>
+<li><strong>Dependencies:</strong> <code>REL-01</code>, <code>REL-02</code>.</li>
+<li><strong>Steps:</strong> curate small deterministic-first cases for config authoring, safe file edits, tool use, forbidden paths, cancellation, judge injection, and regression diff; include Claude/Codex cases only in opt-in lane; create known good/bad candidate changes; record expected trajectory capabilities and cost budgets; triage every mismatch as product, adapter, grader, or corpus defect.</li>
+<li><strong>Artifacts:</strong> <code>evals/</code> dogfood suites, synthetic fixtures, rubrics/graders, baseline artifacts excluded or sanitized by policy, <code>docs/testing/dogfood.md</code>.</li>
+<li><strong>Tests/evidence:</strong> repeat distributions, regressions/improvements, false-positive/negative review, target/judge cost, run integrity.</li>
+<li><strong>Acceptance:</strong> Cut B workflow finds intentional regressions and explains failures without manual artifact surgery; no case requires cloud services.</li>
+<li><strong>Risks:</strong> self-confirming tests and brittle exact trajectories; mix invariant assertions with reviewed judge rubrics and preserve raw evidence.</li>
+</ul>
+<h4>REL-04 — Validate five-minute onboarding and agent usability</h4>
+<ul>
+<li><strong>Objective:</strong> measure the north-star metric with humans and autonomous agents, not infer it from passing e2e tests.</li>
+<li><strong>Dependencies:</strong> <code>REL-01</code>.</li>
+<li><strong>Steps:</strong> define representative novice/expert/agent participant profiles and clean-machine scenarios; measure install→init→validate→first green run, error recovery, case authoring, report, and diff; include no Bun, no CLI login, invalid config, generic command target, narrow terminal, and machine-mode paths; log friction and severity; re-run after fixes.</li>
+<li><strong>Artifacts:</strong> usability protocol, anonymized notes/metrics, issue list, <code>docs/research/v1-usability-results.md</code>.</li>
+<li><strong>Tests/evidence:</strong> median/p90 task time, success rate, help/schema use, diagnostic repair rate, agent token/command counts, qualitative blockers.</li>
+<li><strong>Acceptance:</strong> zero-to-first-green is under five minutes for the ratified target cohort and agents complete the golden journey without prose parsing or human prompts.</li>
+<li><strong>Risks:</strong> testing only maintainers or preconfigured machines; require clean environments and disclose sample limits.</li>
+</ul>
+<h4>REL-05 — Package, verify, and release v1</h4>
+<ul>
+<li><strong>Objective:</strong> publish a reproducible local CLI only after product, security, compatibility, and usability gates pass.</li>
+<li><strong>Dependencies:</strong> <code>REL-03</code>, <code>REL-04</code>.</li>
+<li><strong>Steps:</strong> finalize package/bin name availability and <code>vet</code> invocation; lock supported Bun/platform matrix; verify npm pack contents, install/global/bunx paths, executable behavior, licenses, source maps, size/startup; generate changelog and public contract docs; run clean tarball smoke and the full deterministic suite; review live evidence, security findings, decisions, migrations (none), and v1 scope; tag/publish only with human approval.</li>
+<li><strong>Artifacts:</strong> package metadata, release checklist, changelog, compatibility/security/known-limit docs, reproducible tarball evidence.</li>
+<li><strong>Tests/evidence:</strong> <code>npm pack --dry-run</code>, tarball inventory/secret scan, install in empty temp directories, <code>vet --version --json</code>, full conformance, opt-in current provider smokes, dogfood and usability reports.</li>
+<li><strong>Acceptance:</strong> Cut D conditions hold; <code>vet</code> performs no telemetry/upload; run files remain v1.1-importable; zero unresolved severity-1 security/data-integrity bugs; publication has explicit human authorization.</li>
+<li><strong>Risks:</strong> npm/binary name collision, single-platform success, accidental secret/fixture packaging, and calling beta evidence production-ready.</li>
+</ul>
+<h3>Phase gates and evidence ledger</h3>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Required evidence</th>
+<th>Does not prove</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G0 — contracts ratified</td>
+<td>ADRs, spike fixtures, threat model, state/diff truth tables, CLI goldens</td>
+<td>Any runtime works</td>
+</tr>
+<tr>
+<td>G1 — authoring</td>
+<td>schema/validator contracts, zero-write validation, mutation fault tests, agent authoring journey through validate</td>
+<td>Targets or graders work</td>
+</tr>
+<tr>
+<td>G2 — deterministic runtime</td>
+<td>command/HTTP conformance, workspace adversarial tests, grader unit/property tests, atomic run artifacts</td>
+<td>Claude/Codex live compatibility or judge quality</td>
+</tr>
+<tr>
+<td>G3 — full local feature set</td>
+<td>all commands, replay adapters, repeats, JSONL, HTML, diff, cross-command e2e</td>
+<td>Current provider compatibility or usability</td>
+</tr>
+<tr>
+<td>G4 — provider compatibility</td>
+<td>opt-in current live adapter smokes with versions and sanitized provenance</td>
+<td>Semantic judge quality or human usability</td>
+</tr>
+<tr>
+<td>G5 — trust/usability</td>
+<td>dogfood regressions, judge injection review, human/agent onboarding study, security review</td>
+<td>Hosted/cloud/CI product readiness</td>
+</tr>
+<tr>
+<td>G6 — release</td>
+<td>package/tarball/install checks plus G0..G5 and explicit human approval</td>
+<td>Post-v1 features</td>
+</tr>
+</tbody></table>
+<p>Human evaluation evidence is append-only: reviewer labels, calibration notes, and adjudication MUST NOT overwrite raw machine outcomes. V1 has no annotation queue; evidence may live in reviewed research documents and sanitized fixtures. Required CI stays deterministic/offline. Live-provider lanes are opt-in and budgeted. Usability results are observed participant evidence, not e2e-test inference.</p>
+<h3>Parallel execution waves</h3>
+<ol>
+<li><strong>Wave 0:</strong> <code>FND-01</code>; then <code>FND-02</code>, <code>SPI-01</code>, <code>SPI-02</code>, <code>SPI-03</code> in parallel; then <code>SPI-04</code> and <code>SPI-05</code>.</li>
+<li><strong>Wave 1:</strong> <code>AUT-01</code>, <code>AUT-03</code>, <code>RUN-01</code>, and <code>RUN-06</code> start in parallel. After <code>AUT-01</code>, run <code>AUT-02</code>; after parser prerequisites, run <code>AUT-04</code> then <code>AUT-05</code>.</li>
+<li><strong>Wave 2:</strong> <code>AUT-06</code>, <code>AUT-07</code>, <code>RUN-02</code>, and eligible grader-contract work. Then adapters <code>RUN-03</code>, <code>RUN-04</code>, <code>RUN-05</code> run in parallel; <code>GRD-01</code> proceeds after normalized cases/events/workspace evidence.</li>
+<li><strong>Wave 3:</strong> <code>AUT-08</code>, <code>GRD-02</code>, <code>EXE-01</code>; then <code>EXE-02</code> and <code>EXE-03</code> in parallel. <code>EXE-04</code> and <code>STO-01</code> follow their edges; <code>EXE-05</code> integrates only after all joins.</li>
+<li><strong>Wave 4:</strong> <code>REP-01</code>; then <code>REP-02</code>, <code>REP-03</code>, and <code>DIF-01</code> in parallel.</li>
+<li><strong>Wave 5:</strong> <code>REL-01</code> and <code>REL-02</code> run independently; <code>REL-04</code> starts after deterministic conformance while <code>REL-03</code> waits for both conformance and live evidence; <code>REL-05</code> is the final join.</li>
+</ol>
+<h3>Structural validation checklist</h3>
+<p>Before this plan is treated as executable, automation or review MUST verify:</p>
+<ul>
+<li>exactly 38 unique task headings matching <code>[A-Z]{3}-[0-9]{2}</code>;</li>
+<li>every dependency reference resolves to one task and introduces no self-edge;</li>
+<li>the graph is acyclic;</li>
+<li>every Mermaid task node resolves to a task heading and every task appears in the Mermaid graph;</li>
+<li>every task contains objective, dependencies, steps, artifacts, tests/evidence, acceptance, and risks (compressed combined labels remain semantically complete);</li>
+<li>all local Markdown links resolve;</li>
+<li>all phase gates preserve v1 scope and the four evidence categories;</li>
+<li>release cut lines do not claim live-provider, human-calibration, usability, security, or deployment evidence before their gates; and</li>
+<li><code>git diff --check</code> and the repository Markdown formatter pass.</li>
+</ul>
+<h3>First implementation action</h3>
+<p>Begin with <code>FND-01</code> only. Do not fan out implementation until <code>FND-02</code> and the three evidence spikes have stable outputs. The maximum-parallelism DAG is safe only after public contracts and trust boundaries are pinned; earlier fan-out would create incompatible schemas and duplicated abstractions.</p>
+<hr>
+<h2>Repository standard</h2>
+<p><strong>Source role:</strong> Architecture, evidence, security, compatibility, and review rules.</p>
+<p>Status: normative for Provet v1. The keywords <strong>MUST</strong>, <strong>MUST NOT</strong>, <strong>SHOULD</strong>,
+<strong>SHOULD NOT</strong>, and <strong>MAY</strong> express requirement levels. A section labelled
+<strong>Post-v1</strong> is reserved design space, not a v1 implementation requirement.</p>
+<p>This standard governs the TypeScript/Bun implementation of the local-first
+<code>vet</code> CLI described by the
+<a href="https://hatim-s.github.io/planloft-plans/p/pPwFxUlWUK/">Provet v1 product plan</a>.
+It is complemented by the <a href="#cli-ux-standard">CLI UX standard</a> and the
+<a href="#agent-ux-standard">agent UX standard</a>.</p>
+<h3>V1 architecture</h3>
+<p>The architecture <strong>MUST</strong> preserve the product&#39;s <code>define -&gt; run -&gt; grade -&gt; compare</code> loop while keeping policy separate from effects. The core model is a
+plain-data domain with ports around filesystem, process, clock, Git, network,
+and terminal effects.</p>
+<p>The implementation <strong>MUST</strong> use deep, purpose-specific modules with these
+logical boundaries (exact folder names may evolve through an ADR):</p>
+<ul>
+<li><code>cli/</code>: command parsing, command composition, reporters, and exit mapping.</li>
+<li><code>config/</code>: <code>provet.yaml</code> loading, environment interpolation, defaults,
+schema-version dispatch, and validation.</li>
+<li><code>evals/</code>: YAML/Markdown discovery, normalization, selection, and authoring.</li>
+<li><code>adapters/</code>: shared transport and event primitives plus <code>claude-code</code>,
+<code>codex</code>, <code>http</code>, and <code>command</code> implementations. Targets and judges <strong>MUST</strong>
+use the same adapter families and configuration discriminators, while
+capability-limited target and judge request ports prevent privilege leakage.</li>
+<li><code>execution/</code>: run planning, repeat expansion, bounded scheduling,
+cancellation, timeouts, and aggregation.</li>
+<li><code>graders/</code>: deterministic, trajectory, code, and judge grading.</li>
+<li><code>workspaces/</code>: fixture copying, temporary working directories, snapshots,
+and diffs.</li>
+<li><code>runs/</code>: run IDs, immutable event persistence, summary materialization,
+selectors, and the <code>latest</code> pointer.</li>
+<li><code>reporting/</code>: the shared report view-model, terminal rendering, static HTML
+templating, and run comparison.</li>
+<li><code>contracts/</code>: versioned schemas and stable public DTOs only.</li>
+</ul>
+<p>Command modules <strong>MUST NOT</strong> contain domain decisions. Adapter modules <strong>MUST
+NOT</strong> grade, persist runs, or format UI. Reporters <strong>MUST NOT</strong> reconstruct
+domain facts from prose. Storage modules <strong>MUST NOT</strong> import CLI modules.</p>
+<h3>Dependency direction and contract ownership</h3>
+<p>Dependencies <strong>MUST</strong> point inward:</p>
+<pre><code class="language-text">CLI / reporters / adapters / storage / workspace effects
+                         |
+                         v
+              application orchestration
+                         |
+                         v
+                 domain contracts
+</code></pre>
+<p>The domain and application layers <strong>MUST NOT</strong> import Bun process globals,
+concrete adapters, filesystem implementations, terminal renderers, or HTML
+templates. Effectful implementations <strong>MUST</strong> satisfy narrow ports injected by
+the command composition root.</p>
+<p>Every public data shape <strong>MUST</strong> have one owner:</p>
+<table>
+<thead>
+<tr>
+<th>Contract</th>
+<th>Owner</th>
+<th>Consumers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Config and eval schemas</td>
+<td><code>config/</code> and <code>evals/</code></td>
+<td>validator, authoring, schema command</td>
+</tr>
+<tr>
+<td>Normalized trajectory and adapter result</td>
+<td><code>adapters/</code> contract module</td>
+<td>execution, trajectory graders, judges</td>
+</tr>
+<tr>
+<td>Grader input and verdict</td>
+<td><code>graders/</code> contract module</td>
+<td>graders, execution, run persistence</td>
+</tr>
+<tr>
+<td>Run/event storage schemas</td>
+<td><code>runs/</code> contract module</td>
+<td>persistence, report, diff, future import</td>
+</tr>
+<tr>
+<td>Report view-model</td>
+<td><code>reporting/</code> contract module</td>
+<td>terminal, JSON, HTML templates</td>
+</tr>
+<tr>
+<td>CLI success/error envelopes</td>
+<td><code>cli/</code> contract module</td>
+<td>every command and machine consumer</td>
+</tr>
+</tbody></table>
+<p>Consumers <strong>MUST</strong> import an owner&#39;s contract rather than redeclare or widen it.
+Schema generation, runtime validation, TypeScript types, examples, and fixtures
+<strong>MUST</strong> derive from or be checked against the same owner.</p>
+<p>Sharing the adapter layer <strong>MUST NOT</strong> imply sharing privileges. A target request
+may carry a trial workspace and tool capabilities; a judge request receives
+redacted immutable evidence and a constrained verdict schema. Both use common
+transport, event, usage, cancellation, and adapter-configuration primitives,
+but neither consumer may widen the other&#39;s capability-limited port.</p>
+<h3>Files, names, exports, and comments</h3>
+<ul>
+<li>Each file <strong>MUST</strong> have one purpose and live beside the closest sibling by
+responsibility. New flat catch-all modules are prohibited.</li>
+<li>Source file names <strong>MUST</strong> be kebab-case and describe their main export.
+Names such as <code>utils.ts</code>, <code>helpers.ts</code>, <code>common.ts</code>, numbered names, and
+unexplained abbreviations are prohibited.</li>
+<li>Variables <strong>MUST</strong> be descriptive nouns, functions <strong>MUST</strong> start with a verb,
+and booleans <strong>MUST</strong> read as yes/no questions.</li>
+<li>Repository modules <strong>MUST</strong> use named exports collected in one export
+statement. <code>index.ts</code> and <code>index.js</code> <strong>MUST</strong> contain exports only.</li>
+<li>Major functions, classes, and methods <strong>MUST</strong> have doc comments. Non-obvious
+invariants, security boundaries, and algorithms <strong>MUST</strong> have concise inline
+comments; comments that merely restate syntax <strong>SHOULD NOT</strong> be added.</li>
+<li>Tests <strong>MUST</strong> live under dedicated <code>tests/</code> or <code>e2e/</code> trees, not beside source.</li>
+<li>Dead code, commented-out blocks, and copy-modify duplicates are prohibited.</li>
+</ul>
+<p>The v1 product contract describes user code graders as default-exporting
+<code>grade(ctx)</code>. The code-grader loader <strong>MUST</strong> contain that compatibility at the
+external plugin boundary. Repository-owned implementation modules remain named
+exports; the default export <strong>MUST NOT</strong> leak into internal contracts.</p>
+<h3>Public and internal APIs</h3>
+<p>The v1 public surface consists only of documented CLI commands and flags,
+published JSON/JSONL schemas, config/eval file schemas, the normalized
+<code>vet-events</code> protocol, the code-grader boundary, stored run formats, and the
+HTML template view-model. Anything else <strong>MUST</strong> be treated as internal.</p>
+<p>Public symbols <strong>MUST</strong> be exported through a deliberate package boundary and
+documented with stability and version information. Internal modules <strong>MUST NOT</strong>
+be exported for convenience. A new public symbol or field requires contract
+tests and compatibility review. Internal refactors <strong>MAY</strong> be breaking only when
+they leave every public contract unchanged.</p>
+<h3>Testing taxonomy and evidence gates</h3>
+<p>Tests <strong>MUST</strong> be layered:</p>
+<ol>
+<li><strong>Unit tests</strong> cover pure parsing, normalization, selection, aggregation,
+grading, redaction, comparison, and exit mapping.</li>
+<li><strong>Contract tests</strong> exercise every adapter, grader, schema, JSON envelope,
+JSONL event, run file, and template view-model against the owned contract.</li>
+<li><strong>Integration tests</strong> use real temporary filesystems and controlled fake
+subprocess/HTTP boundaries to cover orchestration and failure paths.</li>
+<li><strong>End-to-end tests</strong> invoke the built <code>vet</code> binary and assert bytes on
+stdout/stderr, exit status, file effects, signals, and TTY/non-TTY behavior.</li>
+<li><strong>Compatibility tests</strong> read every supported persisted/config schema version
+and prove either migration or a stable actionable rejection.</li>
+<li><strong>Live adapter smoke tests</strong> <strong>MAY</strong> exercise installed providers, but <strong>MUST</strong>
+be opt-in, secret-safe, and reported separately from deterministic tests.</li>
+</ol>
+<p>A change is mergeable only when type checking, formatting/linting, owned unit
+and contract tests, relevant integration/end-to-end tests, and documentation
+checks pass. Adapter changes <strong>MUST</strong> include captured provider-contract evidence
+or clearly identify that live evidence was unavailable. A deterministic green
+suite <strong>MUST NOT</strong> be presented as proof of live-provider compatibility.</p>
+<h3>Fixtures and goldens</h3>
+<p>Fixtures <strong>MUST</strong> be minimal, synthetic, deterministic, free of credentials and
+personal data, and owned by the test family that uses them. Fixture paths
+<strong>MUST NOT</strong> escape their fixture root through symlinks or traversal.</p>
+<p>Golden files are appropriate for stable serialized contracts, terminal output,
+JSONL streams, HTML view-models, and reports. They <strong>MUST</strong> exclude unstable
+timestamps, temporary paths, random IDs, durations, and unordered maps through
+explicit normalization. Goldens <strong>MUST NOT</strong> hide semantic fields merely to make
+tests pass. Updates <strong>MUST</strong> be reviewed as product-contract changes, never
+accepted wholesale without inspecting the diff.</p>
+<p>Real provider transcripts <strong>MUST</strong> be sanitized before becoming fixtures.
+Binary or large fixtures <strong>SHOULD</strong> be generated from a documented small source
+or justified in the fixture README.</p>
+<h3>Security and privacy</h3>
+<ul>
+<li>Secrets <strong>MUST</strong> come from environment interpolation at execution time and
+<strong>MUST NOT</strong> be written to config, run artifacts, events, HTML, snapshots,
+diagnostics, fixtures, or logs.</li>
+<li>Redaction <strong>MUST</strong> happen before persistence and before any reporter receives
+data. Redaction failure <strong>MUST</strong> fail closed for affected output.</li>
+<li>YAML and JSON parsing <strong>MUST</strong> reject unsafe object construction and excessive
+depth/size. Paths <strong>MUST</strong> be normalized, constrained to allowed roots, and
+checked after symlink resolution.</li>
+<li>HTML reports <strong>MUST</strong> escape untrusted case, output, trajectory, and grader
+content and <strong>MUST NOT</strong> load remote resources by default.</li>
+<li>HTTP adapters <strong>MUST</strong> make the destination explicit and <strong>MUST NOT</strong> forward
+unrelated environment values. Command arguments <strong>MUST</strong> be passed without a
+shell unless the command adapter contract explicitly selects a shell.</li>
+<li>Custom graders execute trusted repository code in v1. The CLI <strong>MUST</strong> say so
+in documentation and diagnostics; it <strong>MUST NOT</strong> imply sandboxing.</li>
+<li>Telemetry, upload, cloud execution, and remote storage are outside v1. The CLI
+<strong>MUST NOT</strong> transmit run data except to explicitly configured adapters.</li>
+</ul>
+<h3>Subprocess and workspace isolation</h3>
+<p>Each trial <strong>MUST</strong> receive a unique temporary working directory copied from its
+declared fixture. Parallel trials <strong>MUST NOT</strong> share a mutable workspace. The
+source fixture and repository <strong>MUST NOT</strong> be mutated by target execution.</p>
+<p>Subprocesses <strong>MUST</strong> use explicit executable/argument arrays, a minimal
+documented environment, bounded stdout/stderr capture, a timeout, and a process
+group that can be terminated as a unit. On cancellation or timeout, <code>vet</code>
+<strong>MUST</strong> request graceful termination, wait a bounded grace period, then kill
+the process tree. It <strong>MUST</strong> reap children and finish or mark interrupted event
+records before returning.</p>
+<p>Temporary directories <strong>MUST</strong> be permission-restricted and cleaned on normal
+completion. Failed/interrupted workspace retention <strong>MAY</strong> be offered through an
+explicit documented option; retained paths <strong>MUST</strong> be reported and redacted.
+Workspace diffs <strong>MUST</strong> account for additions, deletions, modifications,
+permissions, and symlinks without following links outside the workspace.</p>
+<h3>Logging, provenance, and reproducibility</h3>
+<p>Every run <strong>MUST</strong> persist its run ID, schema version, <code>vet</code> version, start/end
+time, resolved configuration without secrets, selected cases, repeat and
+concurrency settings, pass policy, adapter identities, Git commit and dirty
+flag, per-trial events, token/cost/latency measures, grader outcomes, and
+interruption state when applicable. Unknown cost or tokens <strong>MUST</strong> be <code>null</code>,
+not zero.</p>
+<p>Machine events <strong>MUST</strong> use deterministic ordering keys and explicit timestamps.
+Human diagnostic verbosity <strong>MAY</strong> vary; persisted semantic results <strong>MUST NOT</strong>
+depend on TTY, color, locale, or concurrency completion order. Provenance <strong>MUST</strong>
+distinguish target cost/latency from judge cost/latency.</p>
+<h3>Error taxonomy</h3>
+<p>Typed errors <strong>MUST</strong> preserve cause and stage. At minimum, the domain taxonomy
+is <code>usage</code>, <code>configuration</code>, <code>validation</code>, <code>selection</code>, <code>adapter</code>, <code>target</code>,
+<code>timeout</code>, <code>cancelled</code>, <code>grader</code>, <code>workspace</code>, <code>storage</code>, <code>report</code>, <code>security</code>,
+and <code>internal</code>. Expected user errors <strong>MUST NOT</strong> be collapsed into <code>internal</code>.</p>
+<p>Case assertion failure, grader execution/parse failure, target failure, and run
+infrastructure failure are distinct states. In particular, <code>grader-error</code>
+<strong>MUST NOT</strong> be counted as <code>fail</code>. The CLI maps domain errors to the stable
+codes defined in the <a href="#cli-ux-standard">CLI UX standard</a>; internal modules <strong>MUST NOT</strong>
+call <code>process.exit</code>.</p>
+<h3>Compatibility and schema versioning</h3>
+<p>Every persisted and machine-readable top-level object <strong>MUST</strong> include an
+integer schema version. <code>provet.yaml</code> v1 uses <code>version: 1</code>; JSON/JSONL contracts
+use an explicit <code>schemaVersion</code> field. Readers <strong>MUST</strong> reject unsupported future
+major versions with an actionable error and <strong>SHOULD</strong> ignore documented unknown
+additive fields within a supported version.</p>
+<p>Within v1, additive optional fields and new error codes <strong>MAY</strong> be introduced;
+removing/renaming fields, changing meaning or units, changing default behavior,
+or reusing an error/exit code is breaking and prohibited. Persisted v1 runs
+<strong>MUST</strong> remain importable for the planned v1.1 SQLite migration. Run artifacts
+<strong>MUST</strong> be immutable after completion except for an atomic <code>latest</code> pointer.</p>
+<p>The following are <strong>Post-v1 reserved</strong> and <strong>MUST NOT</strong> shape v1 behavior beyond
+stable import/view-model seams: SQLite, dashboard/TUI, eval-level shared graders,
+multi-turn evals, majority-vote judging, CI integration, cloud execution, web
+UI, dataset tooling, and prompt registries.</p>
+<h3>Documentation synchronization</h3>
+<ul>
+<li>Any package script added, removed, renamed, or changed <strong>MUST</strong> update
+<code>docs/SCRIPTS.md</code> in the same change.</li>
+<li>Any environment variable, secret, or Cloudflare binding added, removed, or
+renamed <strong>MUST</strong> update <code>docs/ENV.md</code> in the same change.</li>
+<li>Any CLI flag, exit/error code, schema, stored format, template field, or public
+API change <strong>MUST</strong> update its reference documentation and examples together.</li>
+<li>Generated <code>--help</code>, schema output, and checked-in examples <strong>MUST</strong> be tested
+against the same command/contract definitions to prevent drift.</li>
+</ul>
+<h3>Incremental delivery and commits</h3>
+<p>Changes <strong>MUST</strong> be small enough to review and <strong>MUST</strong> leave the repository
+type-correct with owned tests passing. Commits <strong>MUST</strong> use Conventional Commits
+and represent one coherent increment. Unrelated edits <strong>MUST NOT</strong> be bundled.
+Database or migration work requires explicit human approval and is not part of
+v1.</p>
+<h3>Review checklist</h3>
+<p>Every review <strong>MUST</strong> answer:</p>
+<ul>
+<li>Does the change preserve v1 scope and the public CLI/data contracts?</li>
+<li>Is each file purpose-specific, correctly placed, clearly named, documented,
+and exported through a minimal boundary?</li>
+<li>Does dependency direction remain inward with one owner per contract?</li>
+<li>Are user failure, assertion failure, grader error, provider error, timeout,
+cancellation, and internal error still distinguishable?</li>
+<li>Are secrets redacted before reporters/storage, paths constrained, HTML
+escaped, and subprocesses/workspaces bounded and isolated?</li>
+<li>Are concurrency, nondeterminism, cancellation, dirty Git state, and partial
+writes covered?</li>
+<li>Are tests at the right layer, goldens normalized and inspected, and live
+evidence separated from deterministic evidence?</li>
+<li>Are compatibility, docs, scripts, environment references, and schema versions
+synchronized?</li>
+<li>Is a new abstraction necessary, narrow, and reusable rather than copied?</li>
+<li>Does the diff contain only the intended increment and satisfy the relevant
+ADR rules?</li>
+</ul>
+<h3>ADR triggers</h3>
+<p>An ADR <strong>MUST</strong> precede a change that does any of the following:</p>
+<ul>
+<li>changes a public command, schema, event, run format, grader API, adapter port,
+template view-model, default, exit code, or compatibility policy;</li>
+<li>crosses or reverses a module dependency boundary;</li>
+<li>adds a runtime dependency that owns serialization, execution, templating,
+validation, persistence, networking, or security behavior;</li>
+<li>changes secret handling, path trust, process isolation, workspace retention,
+or redaction;</li>
+<li>introduces nondeterministic ordering, caching, migrations, background state,
+a database, network service, telemetry, or remote execution;</li>
+<li>adopts a post-v1 capability early or changes the versioning strategy.</li>
+</ul>
+<p>Routine bug fixes, tests, documentation corrections, and internal refactors that
+do not change these decisions <strong>SHOULD NOT</strong> require an ADR. If reviewers cannot
+agree whether a public invariant changed, the change <strong>MUST</strong> use an ADR.</p>
+<hr>
+<h2>CLI UX standard</h2>
+<p><strong>Source role:</strong> Commands, streams, errors, reports, and diff semantics.</p>
+<p>Status: normative for Provet v1. <strong>MUST</strong>, <strong>MUST NOT</strong>, <strong>SHOULD</strong>, <strong>SHOULD
+NOT</strong>, and <strong>MAY</strong> express requirement levels. <strong>Post-v1</strong> labels reserved
+extensions that are not v1 requirements.</p>
+<p>This document defines the human-facing and process-facing behavior of the
+TypeScript/Bun <code>vet</code> binary. It relies on the
+<a href="#repository-standard">repository standard</a> for implementation boundaries and the
+<a href="#agent-ux-standard">agent UX standard</a> for autonomous use.</p>
+<h3>Command grammar</h3>
+<p>The v1 grammar is:</p>
+<pre><code class="language-text">vet [global-options] &lt;command&gt; [command-options] [arguments]
+
+command := init
+         | new eval &lt;name&gt;
+         | add case &lt;eval&gt;
+         | add grader &lt;eval&gt;
+         | validate
+         | schema [config|eval-case|grader|run]
+         | run
+         | report [run]
+         | diff &lt;baseline&gt; &lt;candidate&gt;
+</code></pre>
+<p>Command and option names <strong>MUST</strong> be lower-case kebab-case. Long options <strong>MUST</strong>
+use <code>--name value</code> or, for booleans, <code>--name</code>; <code>--name=value</code> <strong>SHOULD</strong> also be
+accepted. Short aliases <strong>MAY</strong> exist only when documented and unambiguous.
+Options <strong>MUST NOT</strong> silently accept misspellings. Repeated scalar options,
+unknown options, missing values, and extra positional arguments <strong>MUST</strong> be
+usage errors.</p>
+<p>The parser <strong>MUST</strong> accept global options before or after the command, except
+after <code>--</code>, and <strong>MUST</strong> render the same semantics independent of position.
+<code>--</code> ends option parsing where a command accepts arbitrary command arguments.
+Help <strong>MUST</strong> show defaults, units, allowed values, file effects, exit behavior,
+and whether an option is repeatable.</p>
+<h3>Global options</h3>
+<p>These options are v1 requirements:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--help</code></td>
+<td>Print contextual help to stdout and exit <code>0</code>; no config load or writes.</td>
+</tr>
+<tr>
+<td><code>--version</code></td>
+<td>Print only the <code>vet</code> semantic version to stdout and exit <code>0</code>; with <code>--json</code>, return capability metadata.</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Emit exactly one versioned JSON envelope on stdout for success or error.</td>
+</tr>
+<tr>
+<td><code>--no-color</code></td>
+<td>Disable ANSI color and styling. Machine modes imply it.</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td>Add bounded human diagnostics to stderr; <strong>MUST NOT</strong> change semantic output.</td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td>Suppress human progress and nonessential diagnostics; final results remain.</td>
+</tr>
+</tbody></table>
+<p><code>--json</code> and the <code>run --reporter jsonl</code> stream are mutually exclusive.
+<code>--quiet</code> and <code>--verbose</code> are mutually exclusive. Conflicts <strong>MUST</strong> produce a
+structured usage error. V1 behavior <strong>MUST NOT</strong> depend on undeclared
+<code>PROVET_*</code> environment switches. Standard terminal conventions such as
+<code>NO_COLOR</code> <strong>MAY</strong> disable color but <strong>MUST NOT</strong> change data or control flow.</p>
+<h3>Streams and rendering modes</h3>
+<h4>Human mode</h4>
+<p>Final command results <strong>MUST</strong> go to stdout. Progress, warnings, and verbose
+diagnostics <strong>MUST</strong> go to stderr. Error explanations <strong>MUST</strong> go to stderr;
+stdout <strong>MUST</strong> remain empty on a human-mode error unless a complete result was
+already intentionally emitted.</p>
+<p>When stderr is a TTY, <code>vet</code> <strong>MAY</strong> update bounded progress in place. It <strong>MUST</strong>
+restore the cursor, clear incomplete progress, and finish with a newline on
+success, error, timeout, or cancellation. When stderr is not a TTY, progress
+<strong>MUST</strong> be append-only, line-oriented, rate-limited, and free of control
+sequences. Piped stdout <strong>MUST NOT</strong> change result semantics.</p>
+<h4>JSON mode</h4>
+<p><code>--json</code> <strong>MUST</strong> write one UTF-8 JSON object plus a trailing newline to stdout.
+Stdout <strong>MUST NOT</strong> contain headings, progress, ANSI sequences, or prose outside
+that object. Stderr <strong>MUST</strong> be empty for handled outcomes, including handled
+errors; bootstrap failures that prevent envelope creation <strong>MAY</strong> use stderr and
+exit <code>70</code>.</p>
+<p>Success envelope:</p>
+<pre><code class="language-json">{
+  &quot;schemaVersion&quot;: 1,
+  &quot;ok&quot;: true,
+  &quot;command&quot;: &quot;validate&quot;,
+  &quot;data&quot;: {&quot;valid&quot;: true, &quot;diagnostics&quot;: []},
+  &quot;meta&quot;: {&quot;vetVersion&quot;: &quot;1.0.0&quot;}
+}
+</code></pre>
+<p>Error envelope:</p>
+<pre><code class="language-json">{
+  &quot;schemaVersion&quot;: 1,
+  &quot;ok&quot;: false,
+  &quot;command&quot;: &quot;validate&quot;,
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;VALIDATION_FAILED&quot;,
+    &quot;message&quot;: &quot;2 validation errors&quot;,
+    &quot;details&quot;: {&quot;diagnostics&quot;: []},
+    &quot;remediation&quot;: &quot;Fix the listed files and run `vet validate` again.&quot;
+  },
+  &quot;meta&quot;: {&quot;vetVersion&quot;: &quot;1.0.0&quot;}
+}
+</code></pre>
+<p><code>ok</code>, <code>command</code>, <code>schemaVersion</code>, and <code>meta.vetVersion</code> <strong>MUST</strong> always exist.
+Exactly one of <code>data</code> or <code>error</code> <strong>MUST</strong> exist. Monetary amounts <strong>MUST</strong> carry
+an explicit currency or use the contract&#39;s documented currency; durations
+<strong>MUST</strong> end in <code>Ms</code>; unavailable measurements <strong>MUST</strong> be <code>null</code>.</p>
+<h4>JSONL reporter</h4>
+<p><code>vet run --reporter jsonl</code> <strong>MUST</strong> emit one complete, versioned JSON object per
+line on stdout and nothing else. The first event <strong>MUST</strong> be <code>run_started</code>; case
+and trial events follow; the last event <strong>MUST</strong> be exactly one of
+<code>run_completed</code>, <code>run_failed</code>, or <code>run_cancelled</code>. Every event <strong>MUST</strong> contain
+<code>schemaVersion</code>, <code>type</code>, <code>runId</code>, <code>sequence</code>, and <code>timestamp</code>. Sequences <strong>MUST</strong>
+be strictly increasing in emission order.</p>
+<pre><code class="language-jsonl">{&quot;schemaVersion&quot;:1,&quot;type&quot;:&quot;run_started&quot;,&quot;runId&quot;:&quot;20260809-123000-a1b2&quot;,&quot;sequence&quot;:1,&quot;timestamp&quot;:&quot;2026-08-09T07:00:00.000Z&quot;,&quot;data&quot;:{&quot;caseCount&quot;:2}}
+{&quot;schemaVersion&quot;:1,&quot;type&quot;:&quot;case_completed&quot;,&quot;runId&quot;:&quot;20260809-123000-a1b2&quot;,&quot;sequence&quot;:8,&quot;timestamp&quot;:&quot;2026-08-09T07:00:03.000Z&quot;,&quot;data&quot;:{&quot;caseId&quot;:&quot;refunds/smoke&quot;,&quot;status&quot;:&quot;pass&quot;}}
+{&quot;schemaVersion&quot;:1,&quot;type&quot;:&quot;run_completed&quot;,&quot;runId&quot;:&quot;20260809-123000-a1b2&quot;,&quot;sequence&quot;:9,&quot;timestamp&quot;:&quot;2026-08-09T07:00:03.010Z&quot;,&quot;data&quot;:{&quot;status&quot;:&quot;pass&quot;}}
+</code></pre>
+<p>Progress events <strong>MUST NOT</strong> replace the normalized per-case trajectory logs in
+run storage. A failure after streaming begins <strong>MUST</strong> end with a structured
+terminal event and the matching non-zero exit status.</p>
+<h3>Stable exit and error codes</h3>
+<p>Exit codes are v1 public API and <strong>MUST NOT</strong> be reused:</p>
+<table>
+<thead>
+<tr>
+<th align="right">Exit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right"><code>0</code></td>
+<td>Command succeeded; a run/report has no non-passing case; a diff has no regression.</td>
+</tr>
+<tr>
+<td align="right"><code>1</code></td>
+<td>Completed semantic outcome contains an eval failure or diff regression.</td>
+</tr>
+<tr>
+<td align="right"><code>2</code></td>
+<td>Usage, configuration, validation, or selection error.</td>
+</tr>
+<tr>
+<td align="right"><code>3</code></td>
+<td>One or more grader errors made the result incomplete.</td>
+</tr>
+<tr>
+<td align="right"><code>4</code></td>
+<td>Target/adapter invocation or protocol error.</td>
+</tr>
+<tr>
+<td align="right"><code>5</code></td>
+<td>Timeout occurred.</td>
+</tr>
+<tr>
+<td align="right"><code>6</code></td>
+<td>Workspace, storage, report generation, or security boundary error.</td>
+</tr>
+<tr>
+<td align="right"><code>70</code></td>
+<td>Unexpected internal error.</td>
+</tr>
+<tr>
+<td align="right"><code>130</code></td>
+<td>Cancelled by SIGINT or an explicit cancellation signal.</td>
+</tr>
+</tbody></table>
+<p>When multiple outcomes occur, precedence is <code>130</code>, <code>70</code>, <code>6</code>, <code>5</code>, <code>4</code>, <code>3</code>,
+<code>2</code>, <code>1</code>, <code>0</code>. The summary <strong>MUST</strong> retain all underlying statuses even when
+one exit code wins.</p>
+<p>Stable v1 error codes <strong>MUST</strong> be upper snake case and include at least:
+<code>USAGE_ERROR</code>, <code>CONFIG_NOT_FOUND</code>, <code>CONFIG_INVALID</code>, <code>VALIDATION_FAILED</code>,
+<code>SELECTION_EMPTY</code>, <code>RUN_NOT_FOUND</code>, <code>ALREADY_EXISTS</code>, <code>WRITE_CONFLICT</code>,
+<code>TARGET_FAILED</code>, <code>ADAPTER_PROTOCOL_ERROR</code>, <code>GRADER_ERROR</code>, <code>JUDGE_PARSE_ERROR</code>,
+<code>TIMEOUT</code>, <code>CANCELLED</code>, <code>WORKSPACE_ERROR</code>, <code>STORAGE_ERROR</code>, <code>REPORT_ERROR</code>,
+<code>SECURITY_ERROR</code>, and <code>INTERNAL_ERROR</code>. New codes <strong>MAY</strong> be added within v1;
+existing meanings <strong>MUST NOT</strong> change.</p>
+<h3>Paths and selectors</h3>
+<p><code>vet</code> <strong>MUST</strong> discover <code>provet.yaml</code> from the current directory upward to the
+filesystem root, stopping at the first match. It <strong>MUST</strong> report the resolved
+config path in verbose and machine output. Paths inside configuration and eval
+documents <strong>MUST</strong> resolve relative to the containing document, not the caller&#39;s
+current directory. Displayed paths <strong>SHOULD</strong> be repository-relative when safe.</p>
+<p>Eval arguments identify the exact normalized eval name. Case IDs <strong>MUST</strong> be
+globally represented as <code>&lt;eval&gt;/&lt;case&gt;</code>. <code>--filter &lt;pattern&gt;</code> <strong>MUST</strong> apply a
+documented, shell-independent glob syntax to that full ID; it <strong>MAY</strong> be repeated
+and repeated filters use OR semantics. Zero matches is <code>SELECTION_EMPTY</code>, not a
+green run. Shell expansion <strong>MUST NOT</strong> be required; examples quote patterns.</p>
+<p>A run selector is an exact run ID, an explicit path to a run directory, or the
+reserved selector <code>latest</code>. <code>vet report</code> without a selector is equivalent to
+<code>vet report latest</code>. <code>vet diff</code> <strong>MUST</strong> receive both selectors. Run paths <strong>MUST</strong>
+contain a valid supported run manifest. Ambiguous prefixes and undocumented
+selectors such as <code>previous</code> <strong>MUST</strong> be rejected in v1.</p>
+<h3>Authoring writes, idempotency, and force</h3>
+<p><code>init</code>, <code>new eval</code>, <code>add case</code>, and <code>add grader</code> are the only v1 mutating
+commands. They <strong>MUST</strong> validate all inputs, construct the complete proposed
+change in memory, and then write atomically. Failure <strong>MUST</strong> leave original
+files byte-for-byte unchanged. Repeating a command that would create the same
+semantic artifact <strong>SHOULD</strong> succeed without duplicate content and report
+<code>changed: false</code>; conflicting content <strong>MUST</strong> return <code>WRITE_CONFLICT</code>.</p>
+<p>Each mutating command <strong>MUST</strong> support <code>--dry-run</code>, which performs discovery,
+validation, conflict checks, and renders the proposed file operations without
+writing. <code>--force</code> <strong>MUST</strong> be required for an explicitly supported overwrite or
+destructive replacement. <code>--force</code> <strong>MUST NOT</strong> bypass schema validation, path
+containment, or secret protections. In machine output, file operations <strong>MUST</strong>
+list normalized <code>create</code>, <code>update</code>, <code>unchanged</code>, and <code>conflict</code> actions.</p>
+<h3>Run selection, repeats, concurrency, and timeouts</h3>
+<ul>
+<li><code>--repeat &lt;N&gt;</code> <strong>MUST</strong> accept a positive integer and override case, eval, and
+project repeat defaults for the selected run.</li>
+<li><code>--concurrency &lt;C&gt;</code> <strong>MUST</strong> accept a positive bounded integer and control the
+maximum simultaneously active trials, not cases. Results <strong>MUST</strong> serialize
+in stable eval/case/trial order regardless of completion order.</li>
+<li><code>--filter &lt;pattern&gt;</code> <strong>MAY</strong> repeat as described above. Filtering happens
+before repeat expansion.</li>
+<li>Per-case <code>pass_if</code> <strong>MUST</strong> resolve through case, eval, then project defaults
+and support <code>all</code>, <code>any</code>, and <code>ratio:&lt;0..1&gt;</code>. A ratio compares passed trials
+divided by completed trials and <strong>MUST NOT</strong> count grader errors as failures.</li>
+<li>Adapter/configured timeouts <strong>MUST</strong> be positive seconds at the config boundary
+and normalized to milliseconds internally. A timeout <strong>MUST</strong> identify scope
+and elapsed limit in output.</li>
+</ul>
+<p>The run planner <strong>MUST</strong> snapshot the resolved selection and configuration before
+execution. Subsequent file edits <strong>MUST NOT</strong> change an in-flight plan.</p>
+<h3>Progress, cancellation, and partial runs</h3>
+<p>Human progress <strong>SHOULD</strong> show completed/total trials, pass/fail/error counts,
+elapsed time, and known cost without printing prompt or secret content. It
+<strong>MUST</strong> be usable at narrow terminal widths and without color.</p>
+<p>On the first SIGINT, <code>vet</code> <strong>MUST</strong> stop scheduling new trials, cancel active
+work, persist a terminal interruption state, and exit <code>130</code>. A second SIGINT
+<strong>MAY</strong> force immediate termination but <strong>MUST NOT</strong> report a completed run.
+Timeout and cancellation <strong>MUST</strong> remain distinct. A partial run <strong>MAY</strong> be
+reported but <strong>MUST NOT</strong> be eligible as a successful diff baseline without an
+explicit future contract.</p>
+<p>V1 does not resume execution of an interrupted run. <strong>Post-v1 reserved:</strong> a
+resume command or checkpoint protocol. V1 artifacts <strong>SHOULD</strong> retain enough
+terminal state for a future implementation to diagnose, not silently resume.</p>
+<h3>Report semantics</h3>
+<p><code>vet report [run]</code> <strong>MUST</strong> derive terminal, JSON, and HTML output from the same
+versioned report view-model. Summary totals <strong>MUST</strong> partition cases into
+<code>pass</code>, <code>fail</code>, <code>grader-error</code>, and <code>skipped</code>. Drill-down by <code>--case &lt;id&gt;</code> <strong>MUST</strong>
+show each trial&#39;s final output, trajectory/tool calls, grader outcomes and
+reasoning, target and judge cost, tokens, and latency, subject to redaction.</p>
+<p><code>--html</code> <strong>MUST</strong> write a self-contained static document atomically and return
+its path. Project <code>templates/</code> overrides <strong>MUST</strong> consume the same view-model and
+must be validated. <code>--open</code> <strong>MUST</strong> require <code>--html</code>, <strong>MUST</strong> be rejected in
+non-TTY or machine mode, and <strong>MUST</strong> open only after a successful write.
+<code>--html</code> and <code>--json</code> are mutually exclusive in v1.</p>
+<h3>Diff semantics</h3>
+<p><code>vet diff &lt;baseline&gt; &lt;candidate&gt;</code> always computes <code>candidate - baseline</code>.
+Cases <strong>MUST</strong> match by fully qualified case ID. Output <strong>MUST</strong> classify:</p>
+<ul>
+<li><code>improved</code>: non-pass to pass;</li>
+<li><code>regressed</code>: pass to non-pass, or a newly introduced grader/target error;</li>
+<li><code>unchanged</code>: same semantic status;</li>
+<li><code>added</code> and <code>removed</code>: present in only one run.</li>
+</ul>
+<p>Added/removed cases <strong>MUST</strong> be reported separately and <strong>MUST NOT</strong> silently
+count as improvements/regressions. For matched cases the diff <strong>MUST</strong> include
+trial/pass-rate change, status change, target-cost delta, judge-cost delta,
+token delta, and latency delta when both values are known. Deltas are candidate
+minus baseline; unknown values remain <code>null</code>. Different repeat counts <strong>MUST</strong>
+compare rates and retain raw numerators/denominators. A regression exits <code>1</code>.</p>
+<p>Dirty Git state, differing commits, config fingerprints, and incompatible
+schema versions <strong>MUST</strong> be visible. An unsupported schema comparison <strong>MUST</strong>
+fail rather than guess.</p>
+<h3>Accessibility and terminal behavior</h3>
+<ul>
+<li>Meaning <strong>MUST NOT</strong> depend on color, Unicode glyphs, animation, or column
+position. Status words and signs <strong>MUST</strong> accompany visual styling.</li>
+<li>Color <strong>MUST</strong> respect <code>--no-color</code>, non-TTY output, and <code>NO_COLOR</code>.</li>
+<li>Tables <strong>MUST</strong> degrade to labelled records when the available width cannot
+preserve content; essential values <strong>MUST NOT</strong> be truncated silently.</li>
+<li>Output <strong>MUST</strong> use locale-independent numbers and ISO 8601 timestamps in
+machine formats. Human output <strong>SHOULD</strong> include units.</li>
+<li>Interactive prompts, pagers, spinners without text alternatives, desktop
+notifications, and sound are prohibited in v1.</li>
+<li>All emitted text <strong>MUST</strong> be valid UTF-8 and end with a newline. User content
+<strong>MUST</strong> be escaped so control characters cannot manipulate the terminal.</li>
+</ul>
+<h3>Command examples</h3>
+<p>Every example below is v1 and noninteractive.</p>
+<h4><code>vet init</code></h4>
+<p>Scaffold <code>provet.yaml</code>, a working example eval, and optionally the documented
+agent guidance. <code>--agent-guidance &lt;none|agents|skill&gt;</code> <strong>MUST</strong> default to
+<code>none</code>; <code>agents</code> updates the marked section in <code>AGENTS.md</code>, while <code>skill</code> writes
+<code>.agents/skills/provet/SKILL.md</code>. Existing conflicting files require <code>--force</code>.</p>
+<pre><code class="language-sh">vet init --dry-run
+vet init --agent-guidance agents --json
+</code></pre>
+<h4><code>vet new eval</code></h4>
+<p>Create a directory-form eval by default, or the single-file shorthand.</p>
+<pre><code class="language-sh">vet new eval refunds --format dir
+vet new eval smoke --format file --json
+</code></pre>
+<p><code>--format</code> <strong>MUST</strong> accept only <code>dir</code> or <code>file</code>.</p>
+<h4><code>vet add case</code></h4>
+<p>Add a YAML or Markdown case. Exactly one input source <strong>MUST</strong> be supplied:
+<code>--input</code>, <code>--from-json &lt;path&gt;</code>, or stdin (<code>--from-json -</code>).</p>
+<pre><code class="language-sh">vet add case refunds --input &quot;Approve an in-window refund&quot; --format yaml
+printf &#39;%s\n&#39; &#39;{&quot;id&quot;:&quot;late-refund&quot;,&quot;input&quot;:&quot;Decline a late refund&quot;}&#39; \
+  | vet add case refunds --from-json - --format md --json
+</code></pre>
+<h4><code>vet add grader</code></h4>
+<p>Add a per-case grader definition; v1 does not create eval-level shared graders.
+The target case selector <strong>MUST</strong> be explicit through the command&#39;s documented
+case option.</p>
+<pre><code class="language-sh">vet add grader refunds --case late-refund --type judge \
+  --use strict --rubric &quot;Was the refund policy followed?&quot;
+vet add grader refunds --case smoke --type contains \
+  --value &quot;refund approved&quot; --dry-run --json
+</code></pre>
+<h4><code>vet validate</code></h4>
+<p>Validate config and every discovered eval file without invoking targets or
+judges and without writing files.</p>
+<pre><code class="language-sh">vet validate
+vet validate --json
+</code></pre>
+<h4><code>vet schema</code></h4>
+<p>Dump JSON Schema for one contract. With no argument, list available schema
+names and versions; it <strong>MUST NOT</strong> concatenate multiple schemas ambiguously.</p>
+<pre><code class="language-sh">vet schema config
+vet schema eval-case --json
+</code></pre>
+<h4><code>vet run</code></h4>
+<p>Run the selected trials with bounded concurrency. JSONL is the streaming mode;
+<code>--json</code> emits one final envelope after completion.</p>
+<pre><code class="language-sh">vet run --filter &#39;refunds/*&#39; --repeat 5 --concurrency 2
+vet run --reporter jsonl &gt; run-events.jsonl
+vet run --json &gt; run-result.json
+</code></pre>
+<h4><code>vet report</code></h4>
+<p>Inspect the latest or selected run, optionally a single case, or render static
+HTML.</p>
+<pre><code class="language-sh">vet report latest --case refunds/tricky-customer
+vet report 20260809-123000-a1b2 --json
+vet report latest --html
+</code></pre>
+<h4><code>vet diff</code></h4>
+<p>Compare candidate against baseline; cost and latency deltas use the same order.</p>
+<pre><code class="language-sh">vet diff 20260809-120000-9f8e 20260809-123000-a1b2
+vet diff ./saved/baseline .provet/runs/20260809-123000-a1b2 --json
+</code></pre>
+<h3>Snapshot and conformance testing</h3>
+<p>The built binary <strong>MUST</strong> be snapshot-tested across success and error for every
+v1 command in TTY-like human, non-TTY human, <code>--json</code>, and applicable JSONL
+modes. Tests <strong>MUST</strong> assert stdout bytes, stderr bytes, exit code, file effects,
+ANSI absence/presence, and terminal newline restoration. Dynamic values <strong>MUST</strong>
+be normalized through injected clock/ID/path providers, not broad regex removal.</p>
+<p>Machine snapshots <strong>MUST</strong> also validate against published schemas. At minimum,
+tests cover unknown/repeated options, empty selections, invalid schemas,
+conflicting writes, <code>--dry-run</code>, <code>--force</code>, partial JSONL failure, SIGINT,
+timeout, narrow terminal width, Unicode/control-character input, differing
+repeat counts, missing runs, grader errors distinct from failures, and redacted
+secrets.</p>
+<h3>Post-v1 reserved extensions</h3>
+<p>The following <strong>MAY</strong> be designed later but <strong>MUST NOT</strong> be accepted as hidden v1
+syntax: resume/checkpoint commands, TUI/dashboard, CI-specific reporters,
+remote/cloud run selectors, SQLite query selectors, multi-turn controls,
+majority-vote judge controls, eval-level shared grader flags, and interactive
+prompts. Adding any requires the compatibility and ADR process in the
+<a href="#repository-standard">repository standard</a>.</p>
+<hr>
+<h2>Agent UX standard</h2>
+<p><strong>Source role:</strong> Noninteractive authoring, diagnostics, safe writes, and conformance.</p>
+<p>Status: normative for Provet v1. <strong>MUST</strong>, <strong>MUST NOT</strong>, <strong>SHOULD</strong>, <strong>SHOULD
+NOT</strong>, and <strong>MAY</strong> express requirement levels. Capabilities labelled
+<strong>Post-v1</strong> are reserved and are not v1 commitments.</p>
+<p>Coding agents are first-class <code>vet</code> users. This standard builds on the
+<a href="#cli-ux-standard">CLI UX standard</a> and the implementation and security boundaries
+in the <a href="#repository-standard">repository standard</a>.</p>
+<h3>Noninteractive contract</h3>
+<p>Every v1 operation <strong>MUST</strong> be completable without prompts, cursor interaction,
+a pager, a browser, or a TTY. The same arguments and files <strong>MUST</strong> produce the
+same semantic operation in human and machine environments. Missing required
+choices <strong>MUST</strong> fail with structured diagnostics; <code>vet</code> <strong>MUST NOT</strong> guess,
+prompt, or wait for keystrokes.</p>
+<p>An agent <strong>MUST</strong> be able to:</p>
+<ol>
+<li>query tool/protocol capabilities;</li>
+<li>obtain the exact schema it needs;</li>
+<li>author or propose a change;</li>
+<li>validate without invoking a target or judge;</li>
+<li>fix deterministic diagnostics;</li>
+<li>run selected cases while watching structured events;</li>
+<li>inspect or compare stored results.</li>
+</ol>
+<p>Network use <strong>MUST</strong> occur only when a configured target or judge requires it.
+Discovery, schema output, authoring dry-runs, and validation <strong>MUST</strong> work
+offline.</p>
+<h3>Capability and version negotiation</h3>
+<p>Before automation, an agent <strong>SHOULD</strong> run <code>vet --version --json</code>. Its <code>data</code>
+object <strong>MUST</strong> include this stable v1 shape:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;vet&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;protocolVersion&quot;: 1,
+  &quot;schemaVersions&quot;: {
+    &quot;config&quot;: [1],
+    &quot;eval-case&quot;: [1],
+    &quot;grader&quot;: [1],
+    &quot;run&quot;: [1],
+    &quot;cli-envelope&quot;: [1],
+    &quot;vet-events&quot;: [1]
+  },
+  &quot;capabilities&quot;: {
+    &quot;json&quot;: true,
+    &quot;jsonlReporter&quot;: true,
+    &quot;dryRunWrites&quot;: true,
+    &quot;resumableRuns&quot;: false,
+    &quot;interactivePrompts&quot;: false
+  }
+}
+</code></pre>
+<p>Capability keys <strong>MUST</strong> be lower camel case, boolean, additive within protocol
+v1, and documented. An agent <strong>MUST</strong> test required values rather than infer
+support from the version string. <code>protocolVersion</code> covers command envelopes and
+event negotiation; individual file/schema versions remain independently
+declared. Unsupported required versions <strong>MUST</strong> fail before any write or run.</p>
+<p><strong>Post-v1 reserved:</strong> a capability may advertise SQLite, resumable runs,
+dashboard/TUI, remote execution, multi-turn cases, shared eval graders, or
+majority-vote judging. V1 <strong>MUST</strong> report these as absent/false, not accept
+partial hidden implementations.</p>
+<h3>Discoverability and the authoring loop</h3>
+<p><code>vet --help</code>, <code>vet &lt;command&gt; --help</code>, <code>vet --version --json</code>, and <code>vet schema</code>
+<strong>MUST</strong> succeed without a project. Help is for humans; version metadata and
+schemas are the machine discovery sources.</p>
+<p><code>vet schema [config|eval-case|grader|run]</code> <strong>MUST</strong> return the authoritative JSON
+Schema and stable <code>$id</code> for that contract. <code>vet schema &lt;name&gt; --json</code> <strong>MUST</strong>
+place the schema in <code>data.schema</code>; it <strong>MUST NOT</strong> return a prose rendering.
+Schemas <strong>MUST</strong> define required fields, enums, defaults, numeric bounds,
+formats, and whether unknown properties are accepted.</p>
+<p>The v1 agent authoring loop is normative:</p>
+<pre><code class="language-text">negotiate -&gt; request one schema -&gt; generate/dry-run -&gt; validate -&gt; repair -&gt; run
+</code></pre>
+<p>Agents <strong>SHOULD</strong> request only the schema they need and <strong>MUST</strong> run
+<code>vet validate --json</code> after changing configuration, eval cases, graders, or
+templates. Validation <strong>MUST</strong> be complete enough that a structurally valid
+project does not encounter a later avoidable parser/schema error during <code>run</code>.
+It <strong>MUST NOT</strong> invoke targets or judges or mutate project/run files.</p>
+<h3>Standard input, output, and process discipline</h3>
+<p>An agent <strong>MUST</strong> select machine mode explicitly. <code>--json</code> is a single final
+document; <code>run --reporter jsonl</code> is a stream. They are mutually exclusive.
+Machine stdout <strong>MUST</strong> contain only the selected format and a trailing newline.
+Handled machine-mode errors <strong>MUST</strong> use the same stdout format and leave stderr
+empty, as specified by the <a href="#cli-ux-standard">CLI UX standard</a>.</p>
+<p><code>vet</code> <strong>MUST NOT</strong> read stdin unless the command explicitly receives <code>-</code> as its
+input source. This prevents hangs in autonomous environments. <code>add case --from-json -</code> <strong>MUST</strong> read exactly one UTF-8 JSON value, reject trailing
+non-whitespace bytes, enforce a documented maximum size, and stop at EOF.
+Malformed input <strong>MUST</strong> produce a JSON diagnostic and no writes. Prompts,
+password reads, implicit editor launches, and implicit browser launches are
+prohibited.</p>
+<p>Agents <strong>SHOULD</strong> capture stdout and exit status separately. They <strong>MUST NOT</strong>
+parse human tables, color, progress text, or error prose. Producers <strong>MUST</strong>
+preserve useful output even with a non-zero exit status: a completed failing run
+still returns its structured run summary.</p>
+<h3>Deterministic diagnostics</h3>
+<p>Validation and write-conflict diagnostics <strong>MUST</strong> use this shape:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: &quot;REQUIRED_PROPERTY_MISSING&quot;,
+  &quot;severity&quot;: &quot;error&quot;,
+  &quot;message&quot;: &quot;Required property `id` is missing.&quot;,
+  &quot;path&quot;: &quot;evals/refunds/cases.yaml&quot;,
+  &quot;pointer&quot;: &quot;/0/id&quot;,
+  &quot;range&quot;: {&quot;start&quot;:{&quot;line&quot;:1,&quot;column&quot;:1},&quot;end&quot;:{&quot;line&quot;:1,&quot;column&quot;:1}},
+  &quot;remediation&quot;: {
+    &quot;action&quot;: &quot;add-property&quot;,
+    &quot;description&quot;: &quot;Add a unique non-empty case id.&quot;,
+    &quot;expected&quot;: {&quot;type&quot;:&quot;string&quot;,&quot;minLength&quot;:1}
+  }
+}
+</code></pre>
+<ul>
+<li><code>code</code>, <code>severity</code>, <code>message</code>, and <code>remediation</code> <strong>MUST</strong> exist.</li>
+<li><code>path</code> <strong>MUST</strong> be normalized repository-relative when the error belongs to a
+file; <code>pointer</code> <strong>MUST</strong> be an RFC 6901 JSON Pointer into the normalized
+document. Root errors use the empty pointer <code>&quot;&quot;</code>.</li>
+<li><code>range</code> <strong>SHOULD</strong> identify the original YAML, Markdown/frontmatter, JSON, or
+TypeScript reference when available, using one-based line and column values.</li>
+<li>Remediation <strong>MUST</strong> state a bounded next action. It <strong>MUST NOT</strong> suggest
+<code>--force</code> for invalid syntax, schema, secrets, or unsafe paths.</li>
+<li>Diagnostics <strong>MUST</strong> be sorted by normalized path, pointer, severity, then
+code. Concurrency and filesystem enumeration <strong>MUST NOT</strong> affect ordering.</li>
+<li>Duplicate root causes <strong>SHOULD</strong> be coalesced while retaining affected paths.</li>
+<li>Messages <strong>MUST</strong> redact secrets and <strong>MUST NOT</strong> include stacks unless an
+explicit human debug mode is introduced. Machine contracts use codes.</li>
+</ul>
+<p>Warnings do not make <code>ok</code> false unless a documented strict mode exists;
+<strong>Post-v1 reserved:</strong> strict-warning policy. Errors make validation exit <code>2</code>.</p>
+<h3>Safe agent-authored file changes</h3>
+<p>For <code>init</code>, <code>new eval</code>, <code>add case</code>, and <code>add grader</code>, an agent <strong>SHOULD</strong> call
+<code>--dry-run --json</code> first. The response <strong>MUST</strong> include a complete ordered edit
+plan with paths, action (<code>create</code>, <code>update</code>, <code>unchanged</code>, or <code>conflict</code>), and
+content hashes before/after where applicable. Dry-run <strong>MUST</strong> take no locks,
+write no temporary files, update no timestamps, and create no <code>.provet</code> state.</p>
+<p>The real write <strong>MUST</strong> revalidate the observed before-hashes immediately before
+an atomic commit. Drift <strong>MUST</strong> return <code>WRITE_CONFLICT</code>; it <strong>MUST NOT</strong> apply a
+stale preview. Partial multi-file edits are prohibited. Existing unrelated
+content in <code>AGENTS.md</code>, eval manifests, or case files <strong>MUST</strong> be preserved.</p>
+<p><code>--force</code> is explicit human/agent authority to perform only the command&#39;s
+documented conflicting replacement. It <strong>MUST NOT</strong> mean “ignore errors,” bypass
+hash checks against post-preview drift, follow unsafe symlinks, widen the edit
+set, overwrite secrets, or delete unmentioned artifacts. A forced dry-run
+<strong>MUST</strong> show the exact replacement before any real forced write.</p>
+<h3>Watching runs and resumability boundaries</h3>
+<p>Agents <strong>SHOULD</strong> use <code>vet run --reporter jsonl</code> for long-running work. They
+<strong>MUST</strong> process events by <code>sequence</code>, tolerate additive unknown event fields,
+and wait for a terminal event plus process exit. Event timestamps are
+provenance, not ordering keys.</p>
+<p>The stream <strong>MUST</strong> expose run start, selection, trial/case progress, grader
+outcomes, and one terminal run event without exposing secrets or unredacted
+prompts configured as sensitive. Events <strong>SHOULD</strong> be concise references to
+persisted artifacts rather than duplicate entire trajectories. The terminal
+event <strong>MUST</strong> include the run ID, aggregate status, artifact location, and
+summary necessary to decide the next command.</p>
+<p>V1 supports observation, not reconnection or execution resume. If the consumer
+disconnects, the <code>vet</code> process follows ordinary pipe/process semantics; a later
+agent <strong>MAY</strong> inspect a finalized or interrupted artifact with <code>vet report</code>, but
+<strong>MUST NOT</strong> assume work continues in a daemon. An interrupted/partial run
+<strong>MUST</strong> be visibly marked and is not a valid successful baseline.</p>
+<p><strong>Post-v1 reserved:</strong> cursor-based replay, detach/reattach, checkpoints, and a
+<code>resume</code> command. Future fields such as <code>cursor</code> <strong>MUST NOT</strong> imply v1 support.</p>
+<h3><code>AGENTS.md</code> and skill snippet contract</h3>
+<p><code>vet init</code> <strong>MAY</strong> add agent guidance only through
+<code>--agent-guidance &lt;none|agents|skill&gt;</code>, which <strong>MUST</strong> default to <code>none</code>.
+<code>agents</code> updates a marked section in <code>AGENTS.md</code>; <code>skill</code> writes
+<code>.agents/skills/provet/SKILL.md</code>. The default <strong>MUST NOT</strong> modify an existing
+agent instruction file. The payload <strong>MUST</strong> be usable either as that marked
+section or as the body of the repository skill. It <strong>MUST</strong> be idempotent and
+delimited exactly once with versioned markers:</p>
+<pre><code class="language-markdown">&lt;!-- provet:agent-guidance:start version=1 --&gt;
+## Provet eval workflow
+
+- Run `vet --version --json` and verify protocol version 1.
+- Read only the needed schema with `vet schema &lt;name&gt; --json`.
+- Preview authoring writes with `--dry-run --json`; never use `--force` without
+  reviewing the reported conflicts.
+- After edits, run `vet validate --json` and repair diagnostics by `path` and
+  `pointer` before running evals.
+- Watch long runs with `vet run --reporter jsonl`; treat the terminal event and
+  exit code together as authoritative.
+- Compare candidate against baseline with `vet diff &lt;baseline&gt; &lt;candidate&gt;
+  --json` and report regressions, grader errors, target/judge cost, and latency
+  separately.
+&lt;!-- provet:agent-guidance:end --&gt;
+</code></pre>
+<p>The generated section <strong>MUST NOT</strong> contain provider credentials, project-specific
+secret names/values, unverified command options, absolute user paths, or claims
+that <code>vet</code> can use cloud/CI/UI/resume features in v1. Updating an existing marked
+v1 section <strong>MUST</strong> use the safe preview/hash/write flow. An unmarked similar
+section is user content and <strong>MUST NOT</strong> be replaced automatically.</p>
+<p>The skill form <strong>MUST</strong> add YAML frontmatter with <code>name: provet-eval-workflow</code>
+and a concise <code>description</code> that activates for authoring, validating, running,
+reporting, or diffing Provet evals. It <strong>MUST</strong> otherwise use the same marked
+body; the workflow <strong>MUST NOT</strong> fork into a contradictory contract. The snippet
+<strong>MUST</strong> point to local <code>vet &lt;command&gt; --help</code> and schema discovery rather than
+embedding large schemas that will drift.</p>
+<h3>Security, privacy, and redaction</h3>
+<ul>
+<li>Agents <strong>MUST</strong> pass secret values through explicitly configured environment
+interpolation, never case text, command arguments, generated files, or stdin
+JSON that will be persisted.</li>
+<li>All command, adapter, judge, grader, event, diagnostic, report, and HTML paths
+<strong>MUST</strong> share pre-persistence redaction. Machine mode is not a trusted sink.</li>
+<li>Redaction <strong>MUST</strong> cover configured secret values, authorization headers,
+common credential formats, and provider payload fields declared sensitive.
+It <strong>MUST</strong> preserve field presence with a stable marker such as
+<code>&quot;[REDACTED]&quot;</code> so agents can distinguish absence from concealment.</li>
+<li>Diagnostics <strong>MUST NOT</strong> echo an invalid environment value. They <strong>SHOULD</strong>
+identify only the variable name and affected config pointer.</li>
+<li>Agent-supplied paths <strong>MUST</strong> be contained after canonicalization. Symlink
+escape, traversal, device files, and writes outside the planned project files
+<strong>MUST</strong> be rejected even with <code>--force</code>.</li>
+<li>Custom TypeScript graders are trusted repository code in v1. Capability and
+help output <strong>MUST</strong> disclose that they are not sandboxed. Agents <strong>SHOULD</strong>
+inspect new grader code before invocation.</li>
+<li>The tool <strong>MUST NOT</strong> upload telemetry, transcripts, or results. Explicit HTTP
+target/judge calls are the only v1 network exception and <strong>MUST</strong> identify the
+configured destination in redacted provenance.</li>
+</ul>
+<h3>Context and token efficiency</h3>
+<p>Machine interfaces <strong>SHOULD</strong> minimize context without dropping decisions:</p>
+<ul>
+<li>capability output is a compact manifest, not help text;</li>
+<li>schema retrieval returns one requested schema, not the entire schema catalog;</li>
+<li>successful validation returns an empty diagnostics array, not restated input;</li>
+<li>JSON errors provide one summary plus structured diagnostics, without duplicate
+prose on stderr;</li>
+<li>JSONL progress references case/trial IDs and stored artifacts rather than
+repeating full prompts or trajectories;</li>
+<li>report case selection returns only the requested case plus run-level context;</li>
+<li>diff returns changed cases first and <strong>MAY</strong> omit unchanged detail only when it
+still reports the unchanged count and the omission explicitly.</li>
+</ul>
+<p>Output <strong>MUST NOT</strong> become lossy solely to save tokens. Truncation <strong>MUST</strong> be
+explicit with <code>truncated: true</code>, original byte/item counts, and a stable artifact
+reference or narrower command. Silent truncation and repeated embedded base64 or
+full schema blobs are prohibited.</p>
+<h3>Agent authoring golden journey</h3>
+<p>The following v1 journey <strong>MUST</strong> pass end to end in a clean temporary project
+without a TTY:</p>
+<ol>
+<li>Negotiate: <code>vet --version --json</code>; assert protocol <code>1</code>, JSON, JSONL, and
+dry-run support, and no resumability.</li>
+<li>Initialize safely: <code>vet init --agent-guidance agents --dry-run --json</code>;
+inspect the proposed config, example, and marked guidance, then repeat without
+<code>--dry-run</code> and verify only declared files changed.</li>
+<li>Discover: <code>vet schema eval-case --json</code>; validate the returned schema <code>$id</code>
+and version.</li>
+<li>Author: pipe one case object to
+<code>vet add case example --from-json - --format yaml --dry-run --json</code>; inspect
+paths/hashes, then repeat without <code>--dry-run</code>.</li>
+<li>Validate: run <code>vet validate --json</code>; deliberately test one malformed case,
+repair it using <code>path</code>, <code>pointer</code>, and remediation, and return to <code>ok: true</code>.</li>
+<li>Execute: run a deterministic local target with
+<code>vet run --filter &#39;example/*&#39; --repeat 2 --concurrency 1 --reporter jsonl</code>;
+verify ordered events, terminal status, exit code, and run artifacts.</li>
+<li>Inspect: <code>vet report &lt;run-id&gt; --json</code>; verify separate target/judge measures
+and case/grader statuses.</li>
+<li>Compare: make an intentional candidate improvement, run again, then call
+<code>vet diff &lt;baseline&gt; &lt;candidate&gt; --json</code>; verify candidate-minus-baseline
+semantics and no hidden changes.</li>
+<li>Conflict safety: modify a previewed file before applying and verify
+<code>WRITE_CONFLICT</code> with zero partial writes and no secret leakage.</li>
+</ol>
+<p>The golden journey <strong>MUST</strong> use injected deterministic adapters and clock/ID
+providers. A separate opt-in live smoke test <strong>MAY</strong> establish provider
+compatibility but <strong>MUST NOT</strong> replace it.</p>
+<h3>Conformance matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Required scenario</th>
+<th>Required evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Negotiation</td>
+<td>Supported and unsupported protocol/schema versions</td>
+<td>Version envelope, no writes on mismatch</td>
+</tr>
+<tr>
+<td>Discovery</td>
+<td>Help outside a project; each named schema</td>
+<td>Exit/stdout snapshots plus schema validation</td>
+</tr>
+<tr>
+<td>Noninteractive</td>
+<td>Closed stdin, non-TTY, no editor/browser</td>
+<td>Bounded completion and no prompts</td>
+</tr>
+<tr>
+<td>Stream discipline</td>
+<td>Human, JSON, JSONL success and error</td>
+<td>Exact stdout/stderr bytes and exit status</td>
+</tr>
+<tr>
+<td>Diagnostics</td>
+<td>YAML, Markdown frontmatter, JSON, config, cross-file errors</td>
+<td>Stable sort, pointers/ranges, actionable remediation</td>
+</tr>
+<tr>
+<td>Authoring</td>
+<td>Create, identical repeat, conflict, dry-run, force, preview drift</td>
+<td>File tree and before/after hashes; atomicity</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Valid project and multiple simultaneous errors</td>
+<td>Complete deterministic diagnostic set; no target calls</td>
+</tr>
+<tr>
+<td>Execution watch</td>
+<td>Parallel completion, failure, grader error, timeout, SIGINT</td>
+<td>Ordered sequences and exactly one terminal event</td>
+</tr>
+<tr>
+<td>Resume boundary</td>
+<td>Consumer disconnect and interrupted artifact</td>
+<td>No daemon/resume claim; partial state visible</td>
+</tr>
+<tr>
+<td>Report/diff</td>
+<td>Pass, fail, grader-error, missing case, unequal repeats, unknown cost</td>
+<td>Schema-valid view-model and correct exit/deltas</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Secrets in env, headers, prompts, errors; path/symlink escape</td>
+<td>Redacted all sinks; unsafe actions rejected</td>
+</tr>
+<tr>
+<td>Context size</td>
+<td>Large trajectory and diagnostics</td>
+<td>Explicit truncation metadata and artifact references</td>
+</tr>
+<tr>
+<td>Guidance</td>
+<td>New/existing <code>AGENTS.md</code>, marked and unmarked content</td>
+<td>Idempotency, preserved user text, versioned markers</td>
+</tr>
+</tbody></table>
+<p>Every row <strong>MUST</strong> have deterministic automated coverage. Security, cancellation,
+and atomic-write rows <strong>MUST</strong> also receive adversarial review. Live-provider
+tests <strong>SHOULD</strong> be reported as a separate evidence gate.</p>
+<h3>Anti-patterns</h3>
+<p>The following are prohibited in v1:</p>
+<ul>
+<li>prompting to resolve missing input, overwrite files, select a run, or approve
+a destructive operation;</li>
+<li>inferring success from exit <code>0</code> while ignoring case status, or treating every
+non-zero exit as the same failure;</li>
+<li>parsing human tables or stderr prose when JSON/JSONL is available;</li>
+<li>returning prose or ANSI before/after JSON, or mixing JSON and JSONL;</li>
+<li>reading stdin opportunistically or waiting forever for EOF;</li>
+<li>emitting nondeterministically ordered diagnostics or completion-order results;</li>
+<li>reporting <code>grader-error</code> as an ordinary failed assertion;</li>
+<li>using <code>--force</code> to bypass validation, containment, preview drift, or redaction;</li>
+<li>mutating <code>AGENTS.md</code> by fuzzy replacement or adding guidance without request;</li>
+<li>embedding full schemas, trajectories, or repeated prompts in every event;</li>
+<li>silently truncating output or substituting zero for unknown cost/tokens;</li>
+<li>leaking secrets into run artifacts, errors, goldens, HTML, or verbose logs;</li>
+<li>claiming custom graders are sandboxed, a partial run is resumable, or a v1
+local run is CI/cloud execution;</li>
+<li>relying on undocumented environment variables, TTY state, locale, or current
+directory to change semantics.</li>
+</ul>
+<p>Changes that weaken these guarantees or introduce a post-v1 capability require
+the ADR and compatibility process in the
+<a href="#repository-standard">repository standard</a>.</p>
+</article>
+</main>
+</body>
+</html>
