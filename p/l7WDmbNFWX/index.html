@@ -411,18 +411,19 @@ a { overflow-wrap: anywhere; }
   <text class="t" x="490" y="33" text-anchor="middle">User</text>
 
   <!-- ai fde -->
-  <rect class="bx-key" x="330" y="86" width="320" height="104" rx="8"/>
+  <rect class="bx-key" x="330" y="86" width="320" height="118" rx="8"/>
   <text class="t" x="350" y="112">AI FDE — front door</text>
   <text class="s" x="350" y="134">conversation · relay · clarification surface</text>
   <text class="s" x="350" y="152">platform knowledge retrieval</text>
-  <text class="s" x="350" y="170">never mutates, tests, or deploys a workflow</text>
+  <text class="s" x="350" y="170">owns every workflow-adjacent asset request</text>
+  <text class="s" x="350" y="188">never mutates, tests, or deploys a workflow</text>
 
   <!-- planner -->
   <rect class="bx-key" x="330" y="298" width="320" height="104" rx="8"/>
   <text class="t" x="350" y="324">Workflow Planner</text>
-  <text class="s" x="350" y="346">scout · resolve · propose</text>
-  <text class="s" x="350" y="364">build · edit · debug · test · run · deploy</text>
-  <text class="s" x="350" y="382">authors all user-facing workflow prose</text>
+  <text class="s" x="350" y="346">build · edit · debug · test · run · deploy</text>
+  <text class="s" x="350" y="364">reads adjacent assets to resolve its brief</text>
+  <text class="s" x="350" y="382">writes nothing outside the workflow</text>
 
   <!-- builder / editor -->
   <rect class="bx" x="330" y="500" width="150" height="52" rx="6"/>
@@ -444,45 +445,46 @@ a { overflow-wrap: anywhere; }
   <text class="s" x="716" y="346">schema truth — wins on conflict</text>
 
   <!-- fde-owned assets -->
-  <rect class="bx" x="700" y="76" width="250" height="140" rx="6"/>
-  <text class="t" x="716" y="100" font-size="12.5">FDE-owned assets</text>
+  <rect class="bx" x="700" y="76" width="250" height="158" rx="6"/>
+  <text class="t" x="716" y="100" font-size="12.5">Workflow-adjacent assets</text>
   <text class="s" x="716" y="122">API Manager — groups, endpoints, auth</text>
-  <text class="s" x="716" y="140">Connections</text>
+  <text class="s" x="716" y="140">Connections — create · repair · share</text>
   <text class="s" x="716" y="158">Object &amp; record writes</text>
   <text class="s" x="716" y="176">Sharing · exports · activity</text>
   <text class="s" x="716" y="194">Read-only workflow metadata</text>
+  <text class="s" x="716" y="216" font-style="italic">FDE writes · planner only reads</text>
 
   <!-- user <-> fde -->
   <line class="ln" x1="490" y1="48" x2="490" y2="82" marker-start="url(#a-accent)" marker-end="url(#a-accent)"/>
 
   <!-- fde -> planner -->
-  <line class="ln" x1="430" y1="190" x2="430" y2="294" marker-end="url(#a-accent)"/>
-  <text class="lb" x="420" y="222" text-anchor="end">envelope ↓</text>
-  <text class="lb-m" x="420" y="240" text-anchor="end">intent · mode · query</text>
-  <text class="lb-m" x="420" y="256" text-anchor="end">context · resolved</text>
-  <text class="lb-m" x="420" y="272" text-anchor="end">knowledge[]</text>
+  <line class="ln" x1="430" y1="204" x2="430" y2="294" marker-end="url(#a-accent)"/>
+  <text class="lb" x="420" y="224" text-anchor="end">envelope ↓</text>
+  <text class="lb-m" x="420" y="242" text-anchor="end">intent · mode · query</text>
+  <text class="lb-m" x="420" y="258" text-anchor="end">context · resolved · knowledge[]</text>
+  <text class="lb-m" x="420" y="274" text-anchor="end">resume { outcome, resolved }</text>
 
   <!-- planner -> fde -->
-  <line class="ln" x1="550" y1="298" x2="550" y2="194" marker-end="url(#a-accent)"/>
-  <text class="lb" x="562" y="222">↑ status · userMessage</text>
-  <text class="lb-m" x="562" y="240">clarification { options[] }</text>
-  <text class="lb-m" x="562" y="256">followUps: create_api_endpoint,</text>
-  <text class="lb-m" x="562" y="272">create_object, fix_connection</text>
+  <line class="ln" x1="550" y1="298" x2="550" y2="208" marker-end="url(#a-accent)"/>
+  <text class="lb" x="562" y="224">↑ status · userMessage</text>
+  <text class="lb-m" x="562" y="242">clarification { options[] }</text>
+  <text class="lb-m" x="562" y="258">blockedOn: create_object { spec }</text>
+  <text class="lb-m" x="562" y="274">followUps — only once done</text>
 
   <!-- knowledge -> fde -->
   <line class="ln-m" x1="260" y1="112" x2="326" y2="112" marker-end="url(#a-muted)"/>
 
   <!-- knowledge -> planner (copied tool) -->
   <path class="ln-d" d="M 145 140 L 145 336 L 326 336" marker-end="url(#a-muted)"/>
-  <text class="lb-m" x="158" y="238">copied tool —</text>
-  <text class="lb-m" x="158" y="254">connector · node scope,</text>
-  <text class="lb-m" x="158" y="270">2 searches per decision</text>
+  <text class="lb-m" x="158" y="176">copied tool —</text>
+  <text class="lb-m" x="158" y="192">connector · node scope,</text>
+  <text class="lb-m" x="158" y="208">2 searches per decision</text>
 
   <!-- packages -> planner -->
   <line class="ln-m" x1="700" y1="332" x2="654" y2="332" marker-end="url(#a-muted)"/>
 
   <!-- fde <-> assets -->
-  <line class="ln-m" x1="654" y1="130" x2="696" y2="130" marker-start="url(#a-muted)" marker-end="url(#a-muted)"/>
+  <line class="ln-m" x1="654" y1="140" x2="696" y2="140" marker-start="url(#a-muted)" marker-end="url(#a-muted)"/>
 
   <!-- planner -> builder / editor -->
   <path class="ln" d="M 490 402 L 490 460 L 405 460 L 405 496" marker-end="url(#a-accent)"/>
@@ -497,7 +499,7 @@ a { overflow-wrap: anywhere; }
   <line class="ln-m" x1="640" y1="586" x2="676" y2="586"/>
   <text class="lb-m" x="686" y="590">reads</text>
 </svg>
-<figcaption>Every user turn enters through the AI FDE. Workflow mutation, execution, and deploy leave it as one structured envelope and come back as one structured response — the planner's <code>userMessage</code> is relayed verbatim, never re-summarised. Endpoint and object creation return as <code>followUps</code> the FDE executes against its own assets. The planner reads docs for capability and <code>packages/</code> for schema; on conflict, <code>packages/</code> wins.</figcaption>
+<figcaption>Every user turn enters through the AI FDE. Workflow mutation, execution, and deploy leave it as one structured envelope and come back as one structured response — the planner's <code>userMessage</code> is relayed verbatim, never re-summarised. Workflow-adjacent asks never reach the planner at all. When the planner needs an adjacent asset it does not own, it <strong>returns</strong> <code>blockedOn</code> to the same FDE turn; the FDE provisions it and re-invokes the planner with <code>resume</code>, and the planner picks up where it stopped. The planner reads docs for capability and <code>packages/</code> for schema; on conflict, <code>packages/</code> wins.</figcaption>
 </figure>
 
 <table>
@@ -507,13 +509,13 @@ a { overflow-wrap: anywhere; }
   <tbody>
     <tr>
       <td>AI FDE</td>
-      <td>Conversation, URL/entity resolution, platform knowledge retrieval, non-workflow assets (connections, API Manager, object writes, sharing, exports, activity, dependencies), read-only workflow metadata (summary, run list, counts)</td>
+      <td>Conversation, URL/entity resolution, platform knowledge retrieval, <strong>every workflow-adjacent asset</strong> — connections, API Manager, object and record writes, sharing, exports, activity, dependencies — and read-only workflow metadata (summary, run list, counts)</td>
       <td>Never plans, edits, tests, or deploys a workflow. Never rewrites planner's user-facing text.</td>
     </tr>
     <tr>
       <td>Workflow Planner</td>
-      <td>Full workflow lifecycle — build, edit, debug, test, run, deploy, test-cases. Scouting and resolution (connections, objects, called automations, SQL targets). Authors all user-facing workflow prose.</td>
-      <td>Never creates API endpoints. Never creates or mutates Storage objects. Never talks to the user directly — its text is relayed.</td>
+      <td>Full workflow lifecycle — build, edit, debug, test, run, deploy, test-cases. Reads adjacent assets to resolve its brief (connection ids, object schemas, called automations, SQL targets). Authors all user-facing workflow prose.</td>
+      <td>Writes nothing outside the workflow definition. No endpoints, no objects, no connections, no shares or exports. Never talks to the user directly — its text is relayed.</td>
     </tr>
     <tr>
       <td>Builder / Editor</td>
@@ -525,7 +527,31 @@ a { overflow-wrap: anywhere; }
 
 <p><strong>Keep read-only workflow questions out of the planner hop.</strong> "What does this automation do", "how many runs failed yesterday", "who changed this" — FDE answers directly. Routing those through an agent hop costs a full turn and buys nothing.</p>
 
-<p>Tighten the routing rule to: <em>anything that reads a run's internals, mutates, executes, or deploys → planner; anything that reads asset metadata → FDE.</em></p>
+<h3>The adjacency rule</h3>
+
+<blockquote>
+  <p>Does the request change anything outside the workflow definition? Then it is <strong>adjacent</strong>, and the FDE handles it — no matter that the conversation is about a workflow.</p>
+</blockquote>
+
+<p>Adjacency is about the asset touched, not the topic discussed. "Create a Salesforce connection", "add a field to this object", "publish this as an API", "share this automation", "export the run history" are all adjacent even when the user is sitting on the workflow canvas and phrases them as part of a build. They go to the FDE's own skills and never enter the planner.</p>
+
+<p>Deploy is <em>not</em> adjacent — it promotes the workflow definition itself and stays with the planner, which owns the surrounding build and test loop.</p>
+
+<table>
+  <thead>
+    <tr><th>Request</th><th>Handled by</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Build, edit, debug, test, run, deploy a workflow; anything that reads a run's internals</td><td>Planner</td></tr>
+    <tr><td>Create / repair / share a connection</td><td>FDE — Connection Manager</td></tr>
+    <tr><td>Create or change an object, its fields, indexes, or records</td><td>FDE — Get Object Helpers</td></tr>
+    <tr><td>Publish an API, manage groups, clients, access profiles, policies</td><td>FDE — API Manager Helper</td></tr>
+    <tr><td>Share an asset, export runs, read activity or dependencies</td><td>FDE — Get Asset Context / Get Workflow Helper</td></tr>
+    <tr><td>Asset metadata: what an automation does, run counts, who changed it</td><td>FDE — read-only tools</td></tr>
+  </tbody>
+</table>
+
+<p>The planner keeps <strong>read</strong> access to adjacent assets, because it is the only party that knows which connection, object, or column its flow needs. Steps 2 / 2.5 / 2.6 / 2.7 of its resolution stay exactly as they are. What it loses is the ability to <em>write</em> any of them.</p>
 
 <h2>3. Invocation envelope</h2>
 
@@ -540,6 +566,8 @@ a { overflow-wrap: anywhere; }
              selectedNodeIds, selectedEdgeIds, attachments },
   resolved: { objects?, connections?, calledAutomations? },
   knowledge: [ { question, summary, module } ],
+  resume?:   { blockedOnId, outcome: "done" | "failed", reason?,
+               resolved: { objects?, connections?, … } },
   caseId, answerTo?
 }</code></pre>
 
@@ -549,13 +577,15 @@ a { overflow-wrap: anywhere; }
   userMessage: "&lt;relay verbatim&gt;",
   clarification?: { id, question, options[] },
   result?: { workflowId, version, deployed, runId, diagnosis },
-  followUps?: [ { action: "create_api_endpoint" | "create_object" | "fix_connection", payload } ]
+  blockedOn?: { id, action: "create_object" | "create_connection" | "create_api_endpoint",
+                spec, userConfirmed: true },
+  followUps?: [ { action, payload } ]
 }</code></pre>
 
 <p>Why each field earns its place:</p>
 <ul>
   <li><code>clarification.options[]</code> — <code>requestClarification</code> renders option chips. Flattened into a relayed string they become prose and every confirmation in the system degrades.</li>
-  <li><code>followUps</code> — how API-endpoint creation and object creation leave the planner without dead-ending the user.</li>
+  <li><code>blockedOn</code> + <code>resume</code> — the return-and-resume pair in §7. <code>blockedOn</code> means the planner stopped mid-work and expects to be re-invoked; <code>followUps</code> means it finished and there is optional adjacent work left. Two different states, two different fields — collapsing them loses the distinction between "waiting" and "done".</li>
   <li><code>mode: "direct"</code> — lets FDE call the planner for a mechanical deploy inside its own uninterrupted API build, per <code>api-manager-helper.md</code>'s "propose once, then build" contract.</li>
   <li><code>answerTo</code> — binds a user answer to the clarification that asked for it.</li>
 </ul>
@@ -601,7 +631,7 @@ a { overflow-wrap: anywhere; }
 
 <p>Remove <code>apiConfig</code> from the Deploy Automation shape in <code>callables.md</code> §7 and the endpoint promise at line 159. Revoke <code>API Manager Helper</code> from the planner.</p>
 
-<p>Planner instead reports the gap and emits <code>followUps: [{action: "create_api_endpoint", payload: {workflowId, suggestedPath}}]</code>. FDE picks it up and runs <code>API Manager Helper</code>, which does reuse-first lookup, method consolidation, and client + access profile + auth enum validation.</p>
+<p>Planner instead reports the gap — as <code>blockedOn: {action: "create_api_endpoint"}</code> when it cannot continue without the endpoint, or as a <code>followUp</code> when the build is already complete. FDE runs <code>API Manager Helper</code>, which does reuse-first lookup, method consolidation, and client + access profile + auth enum validation. A user who simply asks for an API never reaches the planner at all — that request is adjacent.</p>
 
 <p><strong>This is a bug fix, not just a refactor.</strong> The planner's <code>apiConfig</code> path created a bare endpoint with no access profile — and per <code>api-manager-helper.md</code>, an endpoint without an access profile returns 401. The backpatch has been producing unreachable endpoints.</p>
 
@@ -623,23 +653,36 @@ a { overflow-wrap: anywhere; }
 
 <p>Deploy fails on validation violations, so a failure at step 3 is a real workflow defect — and the planner is the agent that can diagnose it. That is the argument for the placement.</p>
 
-<h2>7. Object Manager — planner reads, FDE writes</h2>
+<h2>7. Object Manager — return and resume</h2>
 
-<p>Split on durability, not on who discovers the need.</p>
+<p>Planner reads objects; the FDE writes them. When the planner discovers mid-scout that a needed object does not exist — and the user has stated or confirmed it should — it does not create it and does not end the build. It <strong>returns</strong> to the FDE turn that called it, and is re-invoked once the object exists.</p>
 
-<ul>
-  <li><strong>Resolution / read</strong> — planner, unchanged. Step 2.5 already does this and needs no rewrite.</li>
-  <li><strong>Create / mutate / delete</strong> — FDE, via <code>Get Object Helpers</code>. When the planner finds an object missing it returns <code>status: "blocked"</code> plus <code>followUps: [{action: "create_object", payload: {proposedName, proposedFields, whyNeeded}}]</code>. FDE runs the object conversation, creates it, then re-invokes the planner with the resolved id in <code>resolved.objects</code>.</li>
-</ul>
+<h3>The loop</h3>
+
+<ol>
+  <li><strong>Planner confirms the spec with the user</strong> through its normal relayed clarification: object name, the fields the flow needs and their types, which field labels a record. The design decision is the planner's, because the planner is the one that knows what the flow will read and write.</li>
+  <li><strong>Planner returns</strong> <code>status: "blocked"</code> with <code>blockedOn: { id, action: "create_object", spec, userConfirmed: true }</code>. The <code>spec</code> is complete — name, fields with JSON-Schema types, required set, name field, proposed primary key and indexes. Its <code>userMessage</code> says what is about to be created.</li>
+  <li><strong>FDE provisions it</strong> in that same turn via <code>Get Object Helpers</code> — no new planner session, no re-entrancy. It executes the spec rather than re-opening the design question, but its own guards still apply: Standard objects are refused, a name collision is surfaced, the primary-key choice is called out, indexes are built and their real status reported.</li>
+  <li><strong>FDE re-invokes the planner</strong> with the same context and <code>resume: { blockedOnId, outcome: "done", resolved: { objects: { … } } }</code> carrying the real entity id and the verified column list read back from the object.</li>
+  <li><strong>Planner resumes</strong> at the step it stopped on. It is stateful across the session, so it must continue — not re-propose the workflow, not re-ask what it already asked.</li>
+</ol>
+
+<p>On failure — the target turned out to be a Standard object, the name was taken, the user backed out — the FDE returns <code>outcome: "failed"</code> with a reason. The planner then either adapts the plan or reports the blocker; it never retries the same <code>blockedOn</code> twice.</p>
+
+<p>The same shape covers <code>create_connection</code> and <code>create_api_endpoint</code>. One protocol, three actions.</p>
+
+<h3>Why the callback returns rather than calls</h3>
+
+<p>The FDE is already blocked awaiting the planner's response. A planner-initiated call <em>into</em> that same FDE session would be re-entrant and would deadlock. Returning instead — planner up, FDE acts, FDE back down with <code>resume</code> — uses the call path that already exists, needs no nested-session support, and keeps a single owner of the user conversation at every instant.</p>
 
 <h3>Why not let the planner create it</h3>
 <ol>
   <li><strong>Single writer per asset class.</strong> An object is durable and cross-module — apps bind to it, other automations read it. Two agents defining tables with different conventions (naming, primary key, indexes, store type) diverges fast. There is already a third writer in the app path (<code>object-builder</code> via the Create Interface pipeline). Do not make it four.</li>
-  <li><strong>Object creation is a user conversation, not a resolution step.</strong> <code>get-object-helpers.md</code> requires duplicate-name checks with a user decision, an explicit primary-key call-out, index design with a go-ahead, Standard-object refusal, explicit consent before data loss, and post-write verification by re-read. Each is a user round-trip; through a relay each costs double.</li>
+  <li><strong>The write path carries guards the planner would have to duplicate.</strong> <code>get-object-helpers.md</code> refuses Standard objects outright, checks for a name collision before creating, verifies uniqueness before setting a primary or unique key on existing data, requires explicit consent before any data loss, and re-reads after every write because a success response is not evidence. Those live with the writer, not the caller.</li>
   <li><strong>Otherwise the planner inherits the JSON-Schema contract</strong> — <code>{"type":"integer","format":"date","dateFormat":"epoch"}</code>, <code>nameField</code>, <code>format: secure</code>, the full-replacement semantics of <code>update_schema</code>. That is ~80 lines duplicated into the workflow domain for a rare case.</li>
 </ol>
 
-<p>Fair counter: the round-trip costs latency, and the planner has the richest picture of the fields needed. Mitigation — the <code>create_object</code> followUp carries a complete proposed schema. Planner does the thinking; FDE does the writing and the confirming.</p>
+<p>Fair counter: the resume loop costs a round-trip, and the planner has the richest picture of the fields needed. That is exactly why the split lands where it does — the planner designs the object and confirms it with the user, the FDE writes and verifies it. Thinking stays with the agent that has the context; the write stays with the agent that owns the asset.</p>
 
 <h2>8. Granular capability grants — where this goes</h2>
 
@@ -675,9 +718,12 @@ a { overflow-wrap: anywhere; }
   </thead>
   <tbody>
     <tr><td><code>Ask from knowledge</code></td><td>yes — product-screen scope</td><td><strong>copy</strong> — connector / node / behavior scope</td></tr>
-    <tr><td><code>Read Object</code>, <code>Read Records</code></td><td>yes</td><td><strong>copy</strong></td></tr>
+    <tr><td><code>Read Object</code>, <code>Read Records</code></td><td>yes</td><td><strong>copy</strong> — read-only</td></tr>
     <tr><td>Object and record writes, <code>Delete *</code></td><td>yes</td><td>no</td></tr>
+    <tr><td><code>Get Connections</code> (read), <code>Fetch available entities</code>, <code>Fetch Automations</code>, SQL <code>list_tables</code> / <code>Describe_Table</code></td><td>yes</td><td>yes — brief resolution</td></tr>
+    <tr><td><code>Connection Manager</code> skill (create · update · clone · disable · share)</td><td>yes</td><td><strong>never</strong></td></tr>
     <tr><td><code>API Manager Helper</code> skill</td><td>yes</td><td><strong>revoke</strong></td></tr>
+    <tr><td><code>Share Asset</code>, run export, activity, dependencies</td><td>yes</td><td><strong>revoke</strong></td></tr>
     <tr><td><code>Deploy Automations</code></td><td><strong>remove</strong></td><td>yes — its own <code>Deploy Automation</code></td></tr>
     <tr><td>Read-only workflow metadata (summary, activity, dependencies, list, export)</td><td>yes</td><td>—</td></tr>
     <tr><td>Build / edit / debug / test / run / deploy / test-cases</td><td>no</td><td>yes</td></tr>
@@ -697,7 +743,9 @@ a { overflow-wrap: anywhere; }
     <tr><td>"FDE already calls planner for debugging"</td><td>Yes — and the relay carries a <code>KNOWLEDGE NEEDED:</code> sentinel today. This feature makes the sentinel redundant. Delete it; do not layer on top.</td></tr>
     <tr><td>Planner is "the only agent that talks to the user"</td><td><strong>Now false.</strong> <code>workflow-planner.md:9</code> and the Output section must be rewritten: planner authors user-facing text, the caller relays it verbatim. If FDE re-summarises you get double summaries and dropped clarification options.</td></tr>
     <tr><td>FDE "grounds every claim in docs, every turn" (<code>ai-fde.md:37</code>)</td><td>Fires on pure dispatch and relay turns, burning a retrieval per hop. Carve out: no knowledge call on a turn whose only action is invoking or relaying the planner.</td></tr>
-    <tr><td>Object creation ownership was unclear</td><td>Resolved: planner proposes the schema, FDE creates it. Do not add a fourth object writer.</td></tr>
+    <tr><td>Object creation ownership was unclear</td><td>Resolved: planner designs and confirms the schema, returns <code>blockedOn</code>, FDE creates it, FDE resumes the planner. Do not add a fourth object writer.</td></tr>
+    <tr><td>"Adjacent work leaves the planner as a <code>followUp</code> after it finishes"</td><td>Only half true. Adjacent work discovered <em>mid-build</em> blocks the planner, so it needs a resume path, not a trailing suggestion. <code>blockedOn</code> = stopped and waiting; <code>followUps</code> = done, optional extras. Both exist; they are not interchangeable.</td></tr>
+    <tr><td>A planner callback could just invoke the FDE</td><td>It cannot — the FDE is already blocked awaiting that same planner call, so an inward call is re-entrant. The planner returns instead, and the FDE re-invokes it. Same session, same context, no nested-session support required.</td></tr>
     <tr><td>Tool descriptions match prompts</td><td>They do not. <code>Invoke Workflow Planner</code> advertises test-case and scheduling ownership the planner prompt never documents, and <code>workflow-debugging.md:40</code> still marks the run-tool contract pending. Fix both or the planner gets dispatched to work it has no instructions for.</td></tr>
   </tbody>
 </table>
@@ -717,14 +765,15 @@ a { overflow-wrap: anywhere; }
     <tr><th>File</th><th>Change</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>.claude/agents/ai-fde.md</code></td><td>Routing table — mutate/execute/deploy → planner, metadata reads → FDE tools. Add the envelope contract and verbatim-relay rule. Add the knowledge-push rule. Carve dispatch turns out of the every-turn knowledge rule. Add <code>followUps</code> handling.</td></tr>
-    <tr><td><code>prompts/skills/get-workflow-helper.md</code></td><td>Widen the planner route to deploy and test-cases. Remove <code>Deploy Automations</code>. Rewrite the "Its API endpoint" flow so the deploy step calls the planner.</td></tr>
-    <tr><td><code>.claude/agents/workflow/workflow-planner.md</code></td><td>Kill the "only agent that talks to the user" invariant → relay contract. Add a <code>&lt;knowledge&gt;</code> section (precedence, budget, reconciliation, <code>[doc: …]</code> annotation). Add a DEPLOY flow. Add <code>mode: direct</code>. Add the object-write boundary and <code>create_object</code> followUp. Add the missing test-case section, or strip the claim from the tool description. Add the stateful-session scope-reset rule.</td></tr>
+    <tr><td><code>.claude/agents/ai-fde.md</code></td><td>Routing table — the adjacency rule first, then mutate/execute/deploy → planner and metadata reads → FDE tools. Add the envelope contract and verbatim-relay rule. Add the knowledge-push rule. Carve dispatch turns out of the every-turn knowledge rule. Add <code>blockedOn</code> handling: provision, then re-invoke with <code>resume</code>.</td></tr>
+    <tr><td><code>prompts/skills/get-workflow-helper.md</code></td><td>Add the adjacency carve-out so connection, object, API, share and export asks stop routing to the planner. Widen the planner route to deploy and test-cases. Remove <code>Deploy Automations</code>. Rewrite the "Its API endpoint" flow so the deploy step calls the planner.</td></tr>
+    <tr><td><code>.claude/agents/workflow/workflow-planner.md</code></td><td>Kill the "only agent that talks to the user" invariant → relay contract. Add a <code>&lt;knowledge&gt;</code> section (precedence, budget, reconciliation, <code>[doc: …]</code> annotation). Add a DEPLOY flow. Add <code>mode: direct</code>. Add the writes-nothing-outside-the-workflow boundary and the <code>blockedOn</code> / <code>resume</code> protocol, including the no-re-propose-on-resume and no-retry-the-same-block rules. Add the missing test-case section, or strip the claim from the tool description. Add the stateful-session scope-reset rule.</td></tr>
+    <tr><td><code>prompts/skills/connection-manager.md</code></td><td>Note that it is FDE-only, and that a planner <code>blockedOn: create_connection</code> arrives with the connector already resolved.</td></tr>
     <tr><td><code>prompts/skills/callables.md</code></td><td>Strip <code>apiConfig</code> from §7 and the endpoint promise at line 159 → "report it; the caller creates the endpoint".</td></tr>
     <tr><td><code>prompts/skills/workflow-debugging.md</code></td><td>Fill the pending test-run tool contract at line 40.</td></tr>
     <tr><td><code>prompts/skills/api-manager-helper.md</code></td><td>Resolve deploy state via the planner, not a local deploy tool.</td></tr>
     <tr><td>Platform tool descriptions</td><td>Rewrite <code>Invoke Workflow Planner</code> for the structured envelope. Delete the <code>KNOWLEDGE NEEDED</code> sentinel.</td></tr>
-    <tr><td>Grant changes</td><td>Copy <code>Ask from knowledge</code>, <code>Read Object</code>, <code>Read Records</code> → planner. Revoke <code>API Manager Helper</code> → planner. Remove <code>Deploy Automations</code> → FDE.</td></tr>
+    <tr><td>Grant changes</td><td>Copy <code>Ask from knowledge</code>, <code>Read Object</code>, <code>Read Records</code> → planner. Revoke <code>API Manager Helper</code>, <code>Share Asset</code> and every adjacent write tool → planner. Remove <code>Deploy Automations</code> → FDE.</td></tr>
   </tbody>
 </table>
 
@@ -739,6 +788,9 @@ a { overflow-wrap: anywhere; }
   <li><strong>Trace shape.</strong> <code>workflow-trace-analyzer</code> — both the <code>.py</code> and <code>.js</code>, which are sync-locked — assumes a planner-rooted trace. An FDE root changes it.</li>
   <li><strong>Knowledge cost.</strong> Two retrieval surfaces on the same case. Cache per <code>caseId</code> and hold the 2-search budget, or retrieval becomes the dominant token line.</li>
   <li><strong>Copy drift.</strong> Already present in production (three create-connection tools, two divergent knowledge tools). Without a canonical source and a diffing fetcher, granular grants accelerate it.</li>
+  <li><strong>Resume loops.</strong> A planner that re-blocks on the same <code>blockedOn</code> after a failed provision spins the FDE forever. Cap it: one resume per <code>blockedOn.id</code>, and on <code>outcome: "failed"</code> the planner must adapt or report — never re-issue the same block.</li>
+  <li><strong>Stale plan across a resume.</strong> Provisioning takes a user round-trip, during which the user may change the subject. On resume the planner must verify the plan it is resuming still matches the current <code>workflowId</code> and ask, rather than silently continuing into a request the user has moved past.</li>
+  <li><strong>Adjacency misrouting.</strong> The FDE now decides adjacency before dispatching. Judge it by the asset the request touches, not the screen the user is on — "add a status field" from the workflow canvas is still an object write. Getting this wrong sends object edits into a planner that no longer has the tools to make them.</li>
 </ul>
 </article>
 </main>
