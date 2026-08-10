@@ -5,33 +5,317 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
 <title>AI FDE → Workflow Planner Handoff Architecture</title>
-<style>/* planloft theme: minimal — mono, black & white, tight */
+<style>/* planloft theme: ua-engineering — engineering memo, warm paper, rust accent, dense tables */
+/* planloft-color-schemes: light dark */
+
 :root {
-  --ink: #111;
-  --paper: #fff;
-  --rule: #e5e5e5;
+  color-scheme: light dark;
+  --ink: #17181c;
+  --ink-soft: #3c414a;
+  --muted: #6b7280;
+  --paper: #fbfaf7;
+  --surface: #f2efe8;
+  --surface-2: #e9e5db;
+  --rule: #ddd8cd;
+  --rule-soft: #e8e4da;
+  --accent: #a8471a;
+  --accent-soft: #f0e2d8;
+  --code-ink: #7a3d18;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #eceae4;
+    --ink-soft: #c6c3bb;
+    --muted: #8e93a0;
+    --paper: #101215;
+    --surface: #181b20;
+    --surface-2: #1f232a;
+    --rule: #2b3038;
+    --rule-soft: #23272e;
+    --accent: #e6905b;
+    --accent-soft: #2a211b;
+    --code-ink: #f0b184;
+  }
+}
+
+:root[data-planloft-color-scheme="light"] {
+  --ink: #17181c;
+  --ink-soft: #3c414a;
+  --muted: #6b7280;
+  --paper: #fbfaf7;
+  --surface: #f2efe8;
+  --surface-2: #e9e5db;
+  --rule: #ddd8cd;
+  --rule-soft: #e8e4da;
+  --accent: #a8471a;
+  --accent-soft: #f0e2d8;
+  --code-ink: #7a3d18;
+}
+
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #eceae4;
+  --ink-soft: #c6c3bb;
+  --muted: #8e93a0;
+  --paper: #101215;
+  --surface: #181b20;
+  --surface-2: #1f232a;
+  --rule: #2b3038;
+  --rule-soft: #23272e;
+  --accent: #e6905b;
+  --accent-soft: #2a211b;
+  --code-ink: #f0b184;
+}
+
 * { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
   background: var(--paper);
-  color: var(--ink);
-  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  color: var(--ink-soft);
+  font: 400 16.5px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
 }
+
+::selection { background: var(--accent-soft); color: var(--ink); }
+
 .planloft-plan {
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: 3rem 1.25rem 6rem;
+  width: min(100% - 2.5rem, 62rem);
+  margin-inline: auto;
+  padding-block: 3.5rem 7rem;
 }
-h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
-h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
-h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
-ul { padding-left: 1.1rem; }
-li { margin: 0.15rem 0; }
-a { color: var(--ink); text-underline-offset: 2px; }
-code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
-pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
-hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+/* ---------- headings ---------- */
+
+h1, h2, h3, h4 {
+  color: var(--ink);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  font-weight: 650;
+  text-wrap: balance;
+}
+
+h1 {
+  margin: 0 0 1.75rem;
+  padding-bottom: 1.25rem;
+  font-size: clamp(1.9rem, 1.2rem + 2.2vw, 2.9rem);
+  letter-spacing: -0.028em;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+
+h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 4.5rem;
+  height: 3px;
+  background: var(--accent);
+}
+
+h2 {
+  margin: 3.5rem 0 1.1rem;
+  padding-top: 1.4rem;
+  font-size: 1.42rem;
+  border-top: 1px solid var(--rule);
+  position: relative;
+}
+
+h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 2.25rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+h3 {
+  margin: 2.25rem 0 0.7rem;
+  font-size: 1.06rem;
+  font-weight: 650;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+}
+
+h4 {
+  margin: 1.6rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 600;
+}
+
+/* ---------- text ---------- */
+
+p { margin: 0 0 1.05rem; }
+
+strong { color: var(--ink); font-weight: 640; }
+
+em { color: var(--ink); }
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover { text-decoration-thickness: 2px; }
+
+a:focus-visible,
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* ---------- lists ---------- */
+
+ul, ol { margin: 0 0 1.15rem; padding-left: 1.4rem; }
+
+li { margin-bottom: 0.42rem; }
+
+li > ul, li > ol { margin-top: 0.42rem; margin-bottom: 0.2rem; }
+
+ul li::marker { color: var(--accent); }
+
+ol li::marker {
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+}
+
+/* ---------- code ---------- */
+
+code, kbd, samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, "Cascadia Mono", monospace;
+  font-size: 0.86em;
+}
+
+:not(pre) > code {
+  padding: 0.12em 0.36em;
+  border-radius: 4px;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  color: var(--code-ink);
+  overflow-wrap: anywhere;
+}
+
+pre {
+  margin: 0 0 1.3rem;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  white-space: pre;
+  font-size: 0.83rem;
+}
+
+/* ---------- blockquote ---------- */
+
+blockquote {
+  margin: 0 0 1.3rem;
+  padding: 0.9rem 1.2rem;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  color: var(--ink);
+}
+
+blockquote > :last-child { margin-bottom: 0; }
+
+/* ---------- tables ---------- */
+
+table {
+  display: block;
+  width: fit-content;
+  min-width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 0 1.5rem;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.085em;
+  text-align: left;
+  padding: 0.5rem 0.85rem 0.55rem;
+  border-bottom: 2px solid var(--rule);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 0.62rem 0.85rem;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) { background: var(--surface); }
+
+tbody td:first-child {
+  color: var(--ink);
+  font-weight: 550;
+  min-width: 11rem;
+}
+
+tbody tr:last-child td { border-bottom: 1px solid var(--rule); }
+
+/* ---------- overflow safety ---------- */
+
+p, li, td, th, h1, h2, h3, h4 { overflow-wrap: break-word; }
+
+a { overflow-wrap: anywhere; }
+
+/* ---------- narrow screens ---------- */
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .planloft-plan { padding-block: 2.5rem 4.5rem; }
+  h2 { margin-top: 2.6rem; font-size: 1.25rem; }
+  tbody td:first-child { min-width: 8rem; }
+  thead th { position: static; }
+}
+
+/* ---------- print ---------- */
+
+@media print {
+  body { background: #fff; color: #000; }
+  .planloft-plan { width: 100%; padding: 0; }
+  h2 { break-after: avoid; }
+  table, pre, blockquote { break-inside: avoid; }
+}
 </style>
 </head>
 <body data-planloft-kind="report">
