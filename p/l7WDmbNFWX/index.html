@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>AI FDE → Workflow Planner Handoff Architecture</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f4f4f4; padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+</style>
+</head>
+<body data-planloft-kind="report">
+<main class="planloft-plan">
+<article><h1>AI FDE → Workflow Planner Handoff Architecture</h1>
+
+<p><strong>Goal:</strong> AI FDE becomes the single user-facing front door; Workflow Planner owns the whole workflow lifecycle behind it, with platform knowledge flowing FDE → planner → builder/editor.</p>
+
+<h2>1. Ground truth (verified, not assumed)</h2>
+
+<table>
+  <thead>
+    <tr><th>Fact</th><th>Source</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>FDE has exactly one own tool: <code>Ask from knowledge</code>. Everything else arrives via skills.</td><td>live tool inventory</td></tr>
+    <tr><td>Skills carry <code>accessibleTo</code>. <code>API Manager Helper</code> and <code>Get Object Helpers</code> are already granted to <code>workflow-planner</code>. Per-agent grants are existing infra.</td><td>live tool inventory</td></tr>
+    <tr><td>Test / run / verify / debug / fix / edit / build / test-cases / run questions already route to <code>Invoke Workflow Planner</code>. Read-only tools stay FDE-side.</td><td><code>get-workflow-helper.md:14-18</code></td></tr>
+    <tr><td>Knowledge handoff already exists as a string sentinel: FDE appends "reply <code>KNOWLEDGE NEEDED: &lt;q&gt;</code>", intercepts, calls <code>ReferFromKnowledgeTool</code>, re-invokes with <code>KNOWLEDGE ANSWER:</code>.</td><td><code>Invoke Workflow Planner</code> tool description</td></tr>
+    <tr><td>Planner → builder/editor is a callable automation (<code>callables_call_interface</code> → <code>InvokeAgent Tool</code>) carrying a <code>caseId</code> session variable. Session identity exists at the hop.</td><td><code>agent-config/workflow/.../69e9d1a1…</code></td></tr>
+    <tr><td>The API-publish backpatch is <code>apiConfig</code> inside the Deploy Automation payload — collectionPath / endpointPath / method, returns <code>endpointUrl</code>.</td><td><code>callables.md:227-243</code></td></tr>
+    <tr><td>Planner prompt asserts "You are the ONLY agent that talks to the user."</td><td><code>workflow-planner.md:9</code></td></tr>
+    <tr><td>FDE is told "never read source code or the filesystem yourself"; planner does the opposite (Shell over <code>packages/workflow-nodes/</code>).</td><td><code>ai-fde.md:35</code>, <code>workflow-planner.md:99</code></td></tr>
+  </tbody>
+</table>
+
+<h3>Two live defects found while reading</h3>
+<ul>
+  <li><code>workflow-debugging.md:40</code> — <code>&lt;!-- TOOL CONTRACT PENDING --&gt;</code>. The test-run tool has no documented contract in-repo.</li>
+  <li>The <code>Invoke Workflow Planner</code> description advertises test-case / suite / nightly-schedule ownership. <code>workflow-planner.md</code> contains zero test-case content. The tool promises capability the prompt cannot deliver.</li>
+</ul>
+
+<p>Net: build / edit / debug / test routing already exists. The real delta is <strong>deploy ownership, object-write ownership, API-publish removal, the knowledge mechanism, and a structured invocation envelope</strong>.</p>
+
+<h2>2. Layer contract</h2>
+
+<table>
+  <thead>
+    <tr><th>Layer</th><th>Owns</th><th>Never does</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AI FDE</td>
+      <td>Conversation, URL/entity resolution, platform knowledge retrieval, non-workflow assets (connections, API Manager, object writes, sharing, exports, activity, dependencies), read-only workflow metadata (summary, run list, counts)</td>
+      <td>Never plans, edits, tests, or deploys a workflow. Never rewrites planner's user-facing text.</td>
+    </tr>
+    <tr>
+      <td>Workflow Planner</td>
+      <td>Full workflow lifecycle — build, edit, debug, test, run, deploy, test-cases. Scouting and resolution (connections, objects, called automations, SQL targets). Authors all user-facing workflow prose.</td>
+      <td>Never creates API endpoints. Never creates or mutates Storage objects. Never talks to the user directly — its text is relayed.</td>
+    </tr>
+    <tr>
+      <td>Builder / Editor</td>
+      <td>JSON emission</td>
+      <td>unchanged</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Keep read-only workflow questions out of the planner hop.</strong> "What does this automation do", "how many runs failed yesterday", "who changed this" — FDE answers directly. Routing those through an agent hop costs a full turn and buys nothing.</p>
+
+<p>Tighten the routing rule to: <em>anything that reads a run's internals, mutates, executes, or deploys → planner; anything that reads asset metadata → FDE.</em></p>
+
+<h2>3. Invocation envelope</h2>
+
+<p>Replace the freeform <code>query</code> string. A string in / string out contract with a sentinel escape hatch will not survive the added scope.</p>
+
+<p><strong>Request:</strong></p>
+<pre><code>{
+  intent: "build" | "edit" | "debug" | "test" | "deploy" | "testcase",
+  mode: "conversational" | "direct",      // direct = no clarifications, fail instead
+  query: "&lt;user's ask, verbatim — do not paraphrase&gt;",
+  context: { host, workflowId, workflowName, runId, startTime, endTime,
+             selectedNodeIds, selectedEdgeIds, attachments },
+  resolved: { objects?, connections?, calledAutomations? },
+  knowledge: [ { question, summary, module } ],
+  caseId, answerTo?
+}</code></pre>
+
+<p><strong>Response:</strong></p>
+<pre><code>{
+  status: "done" | "needs_input" | "blocked" | "failed",
+  userMessage: "&lt;relay verbatim&gt;",
+  clarification?: { id, question, options[] },
+  result?: { workflowId, version, deployed, runId, diagnosis },
+  followUps?: [ { action: "create_api_endpoint" | "create_object" | "fix_connection", payload } ]
+}</code></pre>
+
+<p>Why each field earns its place:</p>
+<ul>
+  <li><code>clarification.options[]</code> — <code>requestClarification</code> renders option chips. Flattened into a relayed string they become prose and every confirmation in the system degrades.</li>
+  <li><code>followUps</code> — how API-endpoint creation and object creation leave the planner without dead-ending the user.</li>
+  <li><code>mode: "direct"</code> — lets FDE call the planner for a mechanical deploy inside its own uninterrupted API build, per <code>api-manager-helper.md</code>'s "propose once, then build" contract.</li>
+  <li><code>answerTo</code> — binds a user answer to the clarification that asked for it.</li>
+</ul>
+
+<h2>4. Platform knowledge — the core of the change</h2>
+
+<p><strong>Push-with-summarisation alone is insufficient. Use push + direct tool grant; delete the sentinel.</strong></p>
+
+<p>Push-only fails because knowledge needs are discovered <em>during</em> scouting, not before it. FDE cannot know the planner will need "does the Slack connector's <code>post_message</code> accept a channel name" until the planner is mid-resolution. Summarisation also destroys exactly the payload that matters — exact enum literals, exact limits, exact field names. "Configure auth on the access profile" is worthless; <code>JWT_TOKEN</code> plus <code>rsaPublicKey</code>-if-RS256 is the whole value.</p>
+
+<p>The sentinel fails because it burns a full agent round-trip per question, hijacks the response channel (planner must emit that line and nothing else, abandoning its turn mid-scout), and is a bare string protocol with no failure mode.</p>
+
+<h3>Design</h3>
+<ol>
+  <li><strong>Push a knowledge envelope</strong> — FDE passes what it retrieved this turn as <code>knowledge[]</code>. Purpose is deduplication and framing, not completeness: it stops the planner re-asking what the user was already told, and carries constraints that surfaced in the doc conversation.</li>
+  <li><strong>Copy <code>Ask from knowledge</code> onto the planner</strong> — retrieval at point of need, no round-trip, planner writes its own query.</li>
+  <li><strong>Delete the <code>KNOWLEDGE NEEDED</code> sentinel</strong> once (2) lands. Two mechanisms for one job is how drift starts.</li>
+  <li><strong>Budget it</strong> — mirror FDE's existing rule (<code>ai-fde.md:39</code>): at most 2 searches per decision point, no looping.</li>
+</ol>
+
+<h3>Precedence rule — write this into the planner prompt</h3>
+
+<blockquote>
+  <p>Docs describe capability and semantics. <code>packages/</code> describes schema. When they disagree, <code>packages/</code> wins.</p>
+</blockquote>
+
+<ul>
+  <li>Feasibility, business meaning, limits, gotchas, "which connector even does this" → knowledge.</li>
+  <li><code>resourceName</code>, input keys, enum values, required fields, output paths → <code>packages/workflow-nodes/</code> and the live fetch tools. Never from a doc summary.</li>
+</ul>
+
+<p>Without this rule, a doc paraphrase produces an invented <code>resourceName</code> and the builder emits an unsavable node.</p>
+
+<h3>Handoff into the brief</h3>
+
+<p>A knowledge-derived fact may enter the brief <strong>only after reconciliation with live state</strong> — the connector folder exists, the object field exists, the action exists. Survivors become flow-step annotations in the existing style used for <code>[cache: …]</code> and <code>[sql: …]</code>:</p>
+
+<pre><code>4. Send Slack message to #new-leads [doc: channel must be the ID, not the name]</code></pre>
+
+<p>Unreconciled doc facts get dropped, not forwarded. Otherwise you ship hallucination risk one layer deeper, where nobody can see it.</p>
+
+<h2>5. Removing the API-publish backpatch</h2>
+
+<p>Remove <code>apiConfig</code> from the Deploy Automation shape in <code>callables.md</code> §7 and the endpoint promise at line 159. Revoke <code>API Manager Helper</code> from the planner.</p>
+
+<p>Planner instead reports the gap and emits <code>followUps: [{action: "create_api_endpoint", payload: {workflowId, suggestedPath}}]</code>. FDE picks it up and runs <code>API Manager Helper</code>, which does reuse-first lookup, method consolidation, and client + access profile + auth enum validation.</p>
+
+<p><strong>This is a bug fix, not just a refactor.</strong> The planner's <code>apiConfig</code> path created a bare endpoint with no access profile — and per <code>api-manager-helper.md</code>, an endpoint without an access profile returns 401. The backpatch has been producing unreachable endpoints.</p>
+
+<h2>6. Deploy ownership — decided: planner only</h2>
+
+<p>Deploy existed in both agents: <code>Deploy Automations</code> (FDE, <code>get-workflow-helper.md:32</code>) and <code>Deploy Automation</code> (planner, <code>callables.md</code> §7). Two tools, two consent flows, two failure-reporting styles.</p>
+
+<p>Planner keeps it: deploy is inseparable from the build/test loop (undeployed called-automation check in Step 2.6, deploy-before-callable in <code>callables.md</code>), and planner already owns the consent semantics — deploying promotes someone's draft, never silently.</p>
+
+<p>Remove the FDE copy. Its per-item failure-list warning goes with it, since that caveat exists only because FDE held the tool.</p>
+
+<h3>Rewritten API-endpoint flow</h3>
+<ol>
+  <li>FDE confirms the trigger is <code>callables_from_api</code> — the START node's <code>resourceName</code> from <code>Get Workflow Summary</code>, which it already has.</li>
+  <li>FDE builds the full chain via <code>API Manager Helper</code>: group, endpoint, client, access profile.</li>
+  <li>FDE calls the planner with <code>{intent: "deploy", mode: "direct"}</code> and relays the result.</li>
+  <li>FDE returns the invocation URL + curl.</li>
+</ol>
+
+<p>Deploy fails on validation violations, so a failure at step 3 is a real workflow defect — and the planner is the agent that can diagnose it. That is the argument for the placement.</p>
+
+<h2>7. Object Manager — planner reads, FDE writes</h2>
+
+<p>Split on durability, not on who discovers the need.</p>
+
+<ul>
+  <li><strong>Resolution / read</strong> — planner, unchanged. Step 2.5 already does this and needs no rewrite.</li>
+  <li><strong>Create / mutate / delete</strong> — FDE, via <code>Get Object Helpers</code>. When the planner finds an object missing it returns <code>status: "blocked"</code> plus <code>followUps: [{action: "create_object", payload: {proposedName, proposedFields, whyNeeded}}]</code>. FDE runs the object conversation, creates it, then re-invokes the planner with the resolved id in <code>resolved.objects</code>.</li>
+</ul>
+
+<h3>Why not let the planner create it</h3>
+<ol>
+  <li><strong>Single writer per asset class.</strong> An object is durable and cross-module — apps bind to it, other automations read it. Two agents defining tables with different conventions (naming, primary key, indexes, store type) diverges fast. There is already a third writer in the app path (<code>object-builder</code> via the Create Interface pipeline). Do not make it four.</li>
+  <li><strong>Object creation is a user conversation, not a resolution step.</strong> <code>get-object-helpers.md</code> requires duplicate-name checks with a user decision, an explicit primary-key call-out, index design with a go-ahead, Standard-object refusal, explicit consent before data loss, and post-write verification by re-read. Each is a user round-trip; through a relay each costs double.</li>
+  <li><strong>Otherwise the planner inherits the JSON-Schema contract</strong> — <code>{"type":"integer","format":"date","dateFormat":"epoch"}</code>, <code>nameField</code>, <code>format: secure</code>, the full-replacement semantics of <code>update_schema</code>. That is ~80 lines duplicated into the workflow domain for a rare case.</li>
+</ol>
+
+<p>Fair counter: the round-trip costs latency, and the planner has the richest picture of the fields needed. Mitigation — the <code>create_object</code> followUp carries a complete proposed schema. Planner does the thinking; FDE does the writing and the confirming.</p>
+
+<h2>8. Granular capability grants — where this goes</h2>
+
+<p>Tools and skills can be copied to an agent independently. That moves the system from <em>"agent owns skills"</em> to <em>"capability registry + per-agent grant matrix"</em>. Agent = prompt + grant list. Two compromises dissolve:</p>
+
+<ul>
+  <li><strong>The object read/write split becomes clean.</strong> Copy only <code>Read Object</code> + <code>Read Records</code> to the planner; leave the write and delete tools FDE-only. The boundary is enforced by absence, not by prompt discipline. Prompt-enforced boundaries leak; missing tools do not.</li>
+  <li><strong>Knowledge needs no skill wrapper.</strong> Copy the <code>Ask from knowledge</code> tool directly. The usage discipline — search budget, docs-vs-<code>packages/</code> precedence, reconcile-before-brief, <code>[doc: …]</code> annotation — lives in the planner prompt, because those rules are planner-specific and a skill would be a file with one consumer.</li>
+</ul>
+
+<h3>The cost: copy drift</h3>
+
+<p>Copies fork silently, and it is already happening in the live inventory:</p>
+<ul>
+  <li><code>Connection Manager</code> carries three create-connection tools — <code>create a new connection</code>, <code>create a new connection</code>, <code>Create A New Connection</code>.</li>
+  <li>Two <code>Ask from knowledge</code> copies exist with materially different descriptions. The agent-level one reads "Helps to fetch knowledge about the platform." The API-Manager-scoped copy reads "Pass a natural-language question… call it before you settle on a plan… build from it, not from memory." Same capability, different behavior depending on which copy the model reaches.</li>
+</ul>
+
+<p>A tool description <em>is</em> prompt surface, so drifted copies are drifted prompts nobody reviews. Three guards:</p>
+<ol>
+  <li><strong>One canonical body per capability in the repo</strong> — <code>prompts/skills/*.md</code> for skills, a tools manifest for tool descriptions. Platform copies are outputs, never sources.</li>
+  <li><strong>Grant matrix checked in</strong> — agent × capability, with an explicit <code>scopeOverride</code> field when a copy legitimately differs (e.g. planner's <code>Ask from knowledge</code> scoped to connector and node behavior rather than product screens). A copy that differs without a declared override is a drift bug.</li>
+  <li><strong><code>tools/workflow-agent-fetch</code> diffs copies against canonical</strong> and fails on undeclared divergence. The fetch path already exists from the AI FDE import (<code>--include-content</code>). Without this the registry rots the way <code>agent-config/</code> did.</li>
+</ol>
+
+<p>Long term this is what lets you add more front doors — an app FDE, a data FDE — composing the same capability set without re-authoring skills. That only holds if the registry stays single-sourced.</p>
+
+<h2>9. Final grant matrix</h2>
+
+<table>
+  <thead>
+    <tr><th>Capability</th><th>AI FDE</th><th>Workflow Planner</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>Ask from knowledge</code></td><td>yes — product-screen scope</td><td><strong>copy</strong> — connector / node / behavior scope</td></tr>
+    <tr><td><code>Read Object</code>, <code>Read Records</code></td><td>yes</td><td><strong>copy</strong></td></tr>
+    <tr><td>Object and record writes, <code>Delete *</code></td><td>yes</td><td>no</td></tr>
+    <tr><td><code>API Manager Helper</code> skill</td><td>yes</td><td><strong>revoke</strong></td></tr>
+    <tr><td><code>Deploy Automations</code></td><td><strong>remove</strong></td><td>yes — its own <code>Deploy Automation</code></td></tr>
+    <tr><td>Read-only workflow metadata (summary, activity, dependencies, list, export)</td><td>yes</td><td>—</td></tr>
+    <tr><td>Build / edit / debug / test / run / deploy / test-cases</td><td>no</td><td>yes</td></tr>
+  </tbody>
+</table>
+
+<h2>10. Assumptions that need to change</h2>
+
+<table>
+  <thead>
+    <tr><th>Assumption</th><th>Correction</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>"Hand off platform knowledge with summarisation"</td><td>Necessary but insufficient — needs are discovered during scouting. Add a direct scoped tool grant, keep the push for dedup and framing, and add the docs-vs-<code>packages/</code> precedence rule or you ship invented <code>resourceName</code>s.</td></tr>
+    <tr><td>"Planner does almost everything workflow-related"</td><td>Mutation, execution, deploy — yes. Read-only metadata should stay FDE-side; an agent hop for "what does this do" is pure cost.</td></tr>
+    <tr><td>"Remove the API backpatch from planner"</td><td>Correct, and stronger than expected: that path created endpoints with no access profile, i.e. 401s. But it is welded to deploy, so deploy ownership had to be decided in the same change.</td></tr>
+    <tr><td>"FDE already calls planner for debugging"</td><td>Yes — and the relay carries a <code>KNOWLEDGE NEEDED:</code> sentinel today. This feature makes the sentinel redundant. Delete it; do not layer on top.</td></tr>
+    <tr><td>Planner is "the only agent that talks to the user"</td><td><strong>Now false.</strong> <code>workflow-planner.md:9</code> and the Output section must be rewritten: planner authors user-facing text, the caller relays it verbatim. If FDE re-summarises you get double summaries and dropped clarification options.</td></tr>
+    <tr><td>FDE "grounds every claim in docs, every turn" (<code>ai-fde.md:37</code>)</td><td>Fires on pure dispatch and relay turns, burning a retrieval per hop. Carve out: no knowledge call on a turn whose only action is invoking or relaying the planner.</td></tr>
+    <tr><td>Object creation ownership was unclear</td><td>Resolved: planner proposes the schema, FDE creates it. Do not add a fourth object writer.</td></tr>
+    <tr><td>Tool descriptions match prompts</td><td>They do not. <code>Invoke Workflow Planner</code> advertises test-case and scheduling ownership the planner prompt never documents, and <code>workflow-debugging.md:40</code> still marks the run-tool contract pending. Fix both or the planner gets dispatched to work it has no instructions for.</td></tr>
+  </tbody>
+</table>
+
+<h2>11. Consequences of a stateful planner</h2>
+
+<p>The planner stays stateful across the session. Two prompt changes that are easy to miss:</p>
+<ul>
+  <li>FDE sends <strong>deltas plus <code>answerTo</code></strong>, never a re-sent <code>priorPlan</code>. Re-sending state to a stateful agent is worse than not sending it — it double-anchors the proposal.</li>
+  <li>The planner must be told its state persists. Today it reads <code>Context</code> as if every invocation is fresh. Add a <strong>scope-reset rule</strong>: when <code>workflowId</code> changes mid-session, or the user starts an unrelated build, drop the prior plan rather than editing it. Stateful agents drift into merging unrelated requests.</li>
+</ul>
+
+<h2>12. Change list by file</h2>
+
+<table>
+  <thead>
+    <tr><th>File</th><th>Change</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.claude/agents/ai-fde.md</code></td><td>Routing table — mutate/execute/deploy → planner, metadata reads → FDE tools. Add the envelope contract and verbatim-relay rule. Add the knowledge-push rule. Carve dispatch turns out of the every-turn knowledge rule. Add <code>followUps</code> handling.</td></tr>
+    <tr><td><code>prompts/skills/get-workflow-helper.md</code></td><td>Widen the planner route to deploy and test-cases. Remove <code>Deploy Automations</code>. Rewrite the "Its API endpoint" flow so the deploy step calls the planner.</td></tr>
+    <tr><td><code>.claude/agents/workflow/workflow-planner.md</code></td><td>Kill the "only agent that talks to the user" invariant → relay contract. Add a <code>&lt;knowledge&gt;</code> section (precedence, budget, reconciliation, <code>[doc: …]</code> annotation). Add a DEPLOY flow. Add <code>mode: direct</code>. Add the object-write boundary and <code>create_object</code> followUp. Add the missing test-case section, or strip the claim from the tool description. Add the stateful-session scope-reset rule.</td></tr>
+    <tr><td><code>prompts/skills/callables.md</code></td><td>Strip <code>apiConfig</code> from §7 and the endpoint promise at line 159 → "report it; the caller creates the endpoint".</td></tr>
+    <tr><td><code>prompts/skills/workflow-debugging.md</code></td><td>Fill the pending test-run tool contract at line 40.</td></tr>
+    <tr><td><code>prompts/skills/api-manager-helper.md</code></td><td>Resolve deploy state via the planner, not a local deploy tool.</td></tr>
+    <tr><td>Platform tool descriptions</td><td>Rewrite <code>Invoke Workflow Planner</code> for the structured envelope. Delete the <code>KNOWLEDGE NEEDED</code> sentinel.</td></tr>
+    <tr><td>Grant changes</td><td>Copy <code>Ask from knowledge</code>, <code>Read Object</code>, <code>Read Records</code> → planner. Revoke <code>API Manager Helper</code> → planner. Remove <code>Deploy Automations</code> → FDE.</td></tr>
+  </tbody>
+</table>
+
+<p><code>agent-config/</code> is a stale export. The <code>Invoke Workflow Planner</code> wrapper-automation change goes back as a workflow-definition edit, not applied in-repo.</p>
+
+<h2>13. Risks</h2>
+
+<ul>
+  <li><strong>Double interrogation.</strong> If FDE pre-resolves workflow details before dispatching, the user is asked twice. Rule: FDE forwards the ask verbatim and resolves nothing in the workflow domain.</li>
+  <li><strong>Three-hop latency.</strong> user → FDE → planner → builder. Every clarification is a full round-trip through two agents. The structured envelope and <code>mode: direct</code> are the mitigations; there is no way to make it free.</li>
+  <li><strong>Failure attribution.</strong> A builder error now surfaces two layers up. <code>status</code> and <code>result</code> must survive both relays intact.</li>
+  <li><strong>Trace shape.</strong> <code>workflow-trace-analyzer</code> — both the <code>.py</code> and <code>.js</code>, which are sync-locked — assumes a planner-rooted trace. An FDE root changes it.</li>
+  <li><strong>Knowledge cost.</strong> Two retrieval surfaces on the same case. Cache per <code>caseId</code> and hold the 2-search budget, or retrieval becomes the dominant token line.</li>
+  <li><strong>Copy drift.</strong> Already present in production (three create-connection tools, two divergent knowledge tools). Without a canonical source and a diffing fetcher, granular grants accelerate it.</li>
+</ul>
+</article>
+</main>
+</body>
+</html>

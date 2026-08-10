@@ -297,6 +297,15 @@
       "kind": "plan",
       "createdAt": "2026-08-06T05:03:27.678Z",
       "expiresAt": "2026-09-08T16:15:11.699Z"
+    },
+    {
+      "id": "l7WDmbNFWX",
+      "project": "github.com/unify-apps/ua-builder-no-prompt",
+      "slug": "ai-fde-workflow-planner-handoff",
+      "title": "AI FDE → Workflow Planner Handoff Architecture",
+      "kind": "report",
+      "createdAt": "2026-08-10T04:34:20.194Z",
+      "expiresAt": "2026-09-09T04:34:20.194Z"
     }
   ]
 }
