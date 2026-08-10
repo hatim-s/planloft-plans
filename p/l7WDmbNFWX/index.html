@@ -292,6 +292,32 @@ tbody td:first-child {
 
 tbody tr:last-child td { border-bottom: 1px solid var(--rule); }
 
+/* ---------- figures ---------- */
+
+figure {
+  margin: 0 0 1.7rem;
+  padding: 1.4rem 1.2rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: 8px;
+}
+
+figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: inherit;
+}
+
+figcaption {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
 /* ---------- overflow safety ---------- */
 
 p, li, td, th, h1, h2, h3, h4 { overflow-wrap: break-word; }
@@ -304,6 +330,8 @@ a { overflow-wrap: anywhere; }
   body { font-size: 16px; }
   .planloft-plan { padding-block: 2.5rem 4.5rem; }
   h2 { margin-top: 2.6rem; font-size: 1.25rem; }
+  figure { overflow-x: auto; padding-inline: 0.9rem; }
+  figure svg { min-width: 34rem; }
   tbody td:first-child { min-width: 8rem; }
   thead th { position: static; }
 }
@@ -351,6 +379,126 @@ a { overflow-wrap: anywhere; }
 <p>Net: build / edit / debug / test routing already exists. The real delta is <strong>deploy ownership, object-write ownership, API-publish removal, the knowledge mechanism, and a structured invocation envelope</strong>.</p>
 
 <h2>2. Layer contract</h2>
+
+<figure>
+<svg viewBox="0 0 980 616" role="img" aria-labelledby="arch-title arch-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="arch-title">Target architecture: AI FDE front door over the Workflow Planner</title>
+  <desc id="arch-desc">The user talks only to the AI FDE. The FDE retrieves platform knowledge, owns non-workflow assets, and dispatches every workflow mutation to the Workflow Planner through a structured envelope. The planner scouts, resolves, and dispatches to the Workflow Builder and Workflow Editor, reading schema truth from the packages tree, and returns status, user-facing text, clarifications, and follow-up actions.</desc>
+
+  <defs>
+    <marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+    </marker>
+    <marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+    </marker>
+  </defs>
+
+  <style>
+    .bx { fill: var(--paper); stroke: var(--rule); stroke-width: 1; }
+    .bx-key { fill: var(--surface-2); stroke: var(--accent); stroke-width: 1.5; }
+    .t { fill: var(--ink); font-size: 14px; font-weight: 600; }
+    .s { fill: var(--muted); font-size: 10.5px; }
+    .lb { fill: var(--ink); font-size: 10.5px; }
+    .lb-m { fill: var(--muted); font-size: 10.5px; }
+    .ln { stroke: var(--accent); stroke-width: 1.5; fill: none; }
+    .ln-m { stroke: var(--muted); stroke-width: 1; fill: none; }
+    .ln-d { stroke: var(--muted); stroke-width: 1; fill: none; stroke-dasharray: 4 4; }
+  </style>
+
+  <!-- user -->
+  <rect class="bx" x="390" y="8" width="200" height="40" rx="20"/>
+  <text class="t" x="490" y="33" text-anchor="middle">User</text>
+
+  <!-- ai fde -->
+  <rect class="bx-key" x="330" y="86" width="320" height="104" rx="8"/>
+  <text class="t" x="350" y="112">AI FDE — front door</text>
+  <text class="s" x="350" y="134">conversation · relay · clarification surface</text>
+  <text class="s" x="350" y="152">platform knowledge retrieval</text>
+  <text class="s" x="350" y="170">never mutates, tests, or deploys a workflow</text>
+
+  <!-- planner -->
+  <rect class="bx-key" x="330" y="298" width="320" height="104" rx="8"/>
+  <text class="t" x="350" y="324">Workflow Planner</text>
+  <text class="s" x="350" y="346">scout · resolve · propose</text>
+  <text class="s" x="350" y="364">build · edit · debug · test · run · deploy</text>
+  <text class="s" x="350" y="382">authors all user-facing workflow prose</text>
+
+  <!-- builder / editor -->
+  <rect class="bx" x="330" y="500" width="150" height="52" rx="6"/>
+  <text class="t" x="405" y="522" text-anchor="middle" font-size="12.5">Workflow Builder</text>
+  <text class="s" x="405" y="540" text-anchor="middle">JSON emission</text>
+
+  <rect class="bx" x="500" y="500" width="150" height="52" rx="6"/>
+  <text class="t" x="575" y="522" text-anchor="middle" font-size="12.5">Workflow Editor</text>
+  <text class="s" x="575" y="540" text-anchor="middle">surgical edits</text>
+
+  <!-- knowledge -->
+  <rect class="bx" x="30" y="76" width="230" height="64" rx="6"/>
+  <text class="t" x="46" y="102" font-size="12.5">Platform knowledge</text>
+  <text class="s" x="46" y="122">Ask from knowledge · indexed docs</text>
+
+  <!-- packages -->
+  <rect class="bx" x="700" y="300" width="250" height="64" rx="6"/>
+  <text class="t" x="716" y="326" font-size="12.5">packages/workflow-nodes</text>
+  <text class="s" x="716" y="346">schema truth — wins on conflict</text>
+
+  <!-- fde-owned assets -->
+  <rect class="bx" x="700" y="76" width="250" height="140" rx="6"/>
+  <text class="t" x="716" y="100" font-size="12.5">FDE-owned assets</text>
+  <text class="s" x="716" y="122">API Manager — groups, endpoints, auth</text>
+  <text class="s" x="716" y="140">Connections</text>
+  <text class="s" x="716" y="158">Object &amp; record writes</text>
+  <text class="s" x="716" y="176">Sharing · exports · activity</text>
+  <text class="s" x="716" y="194">Read-only workflow metadata</text>
+
+  <!-- user <-> fde -->
+  <line class="ln" x1="490" y1="48" x2="490" y2="82" marker-start="url(#a-accent)" marker-end="url(#a-accent)"/>
+
+  <!-- fde -> planner -->
+  <line class="ln" x1="430" y1="190" x2="430" y2="294" marker-end="url(#a-accent)"/>
+  <text class="lb" x="420" y="222" text-anchor="end">envelope ↓</text>
+  <text class="lb-m" x="420" y="240" text-anchor="end">intent · mode · query</text>
+  <text class="lb-m" x="420" y="256" text-anchor="end">context · resolved</text>
+  <text class="lb-m" x="420" y="272" text-anchor="end">knowledge[]</text>
+
+  <!-- planner -> fde -->
+  <line class="ln" x1="550" y1="298" x2="550" y2="194" marker-end="url(#a-accent)"/>
+  <text class="lb" x="562" y="222">↑ status · userMessage</text>
+  <text class="lb-m" x="562" y="240">clarification { options[] }</text>
+  <text class="lb-m" x="562" y="256">followUps: create_api_endpoint,</text>
+  <text class="lb-m" x="562" y="272">create_object, fix_connection</text>
+
+  <!-- knowledge -> fde -->
+  <line class="ln-m" x1="260" y1="112" x2="326" y2="112" marker-end="url(#a-muted)"/>
+
+  <!-- knowledge -> planner (copied tool) -->
+  <path class="ln-d" d="M 145 140 L 145 336 L 326 336" marker-end="url(#a-muted)"/>
+  <text class="lb-m" x="158" y="238">copied tool —</text>
+  <text class="lb-m" x="158" y="254">connector · node scope,</text>
+  <text class="lb-m" x="158" y="270">2 searches per decision</text>
+
+  <!-- packages -> planner -->
+  <line class="ln-m" x1="700" y1="332" x2="654" y2="332" marker-end="url(#a-muted)"/>
+
+  <!-- fde <-> assets -->
+  <line class="ln-m" x1="654" y1="130" x2="696" y2="130" marker-start="url(#a-muted)" marker-end="url(#a-muted)"/>
+
+  <!-- planner -> builder / editor -->
+  <path class="ln" d="M 490 402 L 490 460 L 405 460 L 405 496" marker-end="url(#a-accent)"/>
+  <path class="ln" d="M 490 460 L 575 460 L 575 496" marker-end="url(#a-accent)"/>
+  <text class="lb-m" x="502" y="436">brief / edit instruction, with reconciled [doc: …] annotations</text>
+
+  <!-- legend -->
+  <line class="ln" x1="330" y1="586" x2="366" y2="586"/>
+  <text class="lb-m" x="376" y="590">call &amp; return</text>
+  <line class="ln-d" x1="470" y1="586" x2="506" y2="586"/>
+  <text class="lb-m" x="516" y="590">copied capability</text>
+  <line class="ln-m" x1="640" y1="586" x2="676" y2="586"/>
+  <text class="lb-m" x="686" y="590">reads</text>
+</svg>
+<figcaption>Every user turn enters through the AI FDE. Workflow mutation, execution, and deploy leave it as one structured envelope and come back as one structured response — the planner's <code>userMessage</code> is relayed verbatim, never re-summarised. Endpoint and object creation return as <code>followUps</code> the FDE executes against its own assets. The planner reads docs for capability and <code>packages/</code> for schema; on conflict, <code>packages/</code> wins.</figcaption>
+</figure>
 
 <table>
   <thead>
