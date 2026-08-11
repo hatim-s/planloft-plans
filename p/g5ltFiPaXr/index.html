@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Visual plan UX — text-to-workflow</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><title>Visual plan UX — text-to-workflow</title>
+<style>
+  :root {
+    --paper: #F8F8F4;
+    --panel: #FFFFFF;
+    --ink: #20261F;
+    --muted: #6B7265;
+    --line: #E3E4DC;
+    --accent: #38622F;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E9F0E4;
+    --ghost: #8FA88A;
+    --ghost-fill: #F1F5EE;
+    --add: #3E7B44;
+    --add-soft: #E4F0E3;
+    --mod: #A97A1F;
+    --mod-soft: #F5EDDA;
+    --del: #B24E37;
+    --del-soft: #F6E5E0;
+    --dot: #D9DBD1;
+    --chip: #EFEFEA;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 8px 24px rgba(32,38,31,.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #161914; --panel: #1E221C; --ink: #E7EAE2; --muted: #99A092;
+      --line: #32372F; --accent: #8FBE7E; --accent-ink: #161914; --accent-soft: #2A3424;
+      --ghost: #6E8168; --ghost-fill: #232A20;
+      --add: #7DBB80; --add-soft: #24331F; --mod: #D2A34E; --mod-soft: #35301E;
+      --del: #D07A5F; --del-soft: #38251F;
+      --dot: #2C312A; --chip: #282D25;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #161914; --panel: #1E221C; --ink: #E7EAE2; --muted: #99A092;
+    --line: #32372F; --accent: #8FBE7E; --accent-ink: #161914; --accent-soft: #2A3424;
+    --ghost: #6E8168; --ghost-fill: #232A20;
+    --add: #7DBB80; --add-soft: #24331F; --mod: #D2A34E; --mod-soft: #35301E;
+    --del: #D07A5F; --del-soft: #38251F;
+    --dot: #2C312A; --chip: #282D25;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55; margin: 0; padding: 48px 20px 96px;
+  }
+  main { max-width: 880px; margin: 0 auto; }
+  .mono { font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace; }
+
+  header.top { margin-bottom: 40px; }
+  .eyebrow {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px;
+  }
+  h1 { font-size: 30px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -.015em; text-wrap: balance; }
+  .lede { color: var(--muted); font-size: 16px; max-width: 62ch; margin: 0; }
+
+  h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -.01em; }
+  .option { margin-top: 56px; }
+  .opt-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .opt-tag {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; letter-spacing: .12em; color: var(--muted);
+  }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .opt-sub { color: var(--muted); margin: 4px 0 18px; max-width: 68ch; }
+
+  /* ---------- mock builder frame ---------- */
+  .frame {
+    border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+    background: var(--panel); box-shadow: var(--shadow); margin: 18px 0;
+  }
+  .frame-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-bottom: 1px solid var(--line);
+    font-size: 12px; color: var(--muted);
+  }
+  .frame-bar .dots { display: flex; gap: 5px; }
+  .frame-bar .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); display: block; }
+  .frame-body { display: flex; min-height: 340px; }
+  .chat-rail {
+    width: 250px; flex: none; border-right: 1px solid var(--line);
+    padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 12px;
+  }
+  .canvas {
+    flex: 1; position: relative; padding: 24px;
+    background-image: radial-gradient(var(--dot) 1.15px, transparent 1.15px);
+    background-size: 18px 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @media (max-width: 640px) {
+    .frame-body { flex-direction: column; }
+    .chat-rail { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+
+  .bubble {
+    background: var(--chip); border-radius: 10px; padding: 8px 10px;
+    color: var(--ink); font-size: 12px; line-height: 1.45;
+  }
+  .bubble.agent { background: transparent; border: 1px solid var(--line); }
+  .rail-note { color: var(--muted); font-size: 11px; }
+
+  /* ---------- workflow nodes ---------- */
+  .chain { display: flex; flex-direction: column; align-items: center; }
+  .node {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px 12px; min-width: 210px; font-size: 12.5px; box-shadow: var(--shadow);
+    position: relative;
+  }
+  .node .ic {
+    width: 26px; height: 26px; border-radius: 7px; flex: none;
+    display: grid; place-items: center; font-size: 13px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .node .nl { display: flex; flex-direction: column; }
+  .node .nl b { font-weight: 600; font-size: 12.5px; }
+  .node .nl span { color: var(--muted); font-size: 11px; }
+  .node.ghost {
+    border: 1.5px dashed var(--ghost); background: var(--ghost-fill);
+    box-shadow: none; opacity: .92;
+  }
+  .node.ghost .ic { background: transparent; border: 1px dashed var(--ghost); color: var(--ghost); }
+  .edge { width: 1.5px; height: 20px; background: var(--ghost); opacity: .7; }
+  .edge.solid { background: var(--line); opacity: 1; }
+  .diffdot {
+    position: absolute; top: -7px; right: -7px; font-size: 10px; font-weight: 700;
+    border-radius: 999px; padding: 1px 6px; border: 1px solid var(--panel);
+  }
+  .diffdot.add { background: var(--add-soft); color: var(--add); }
+  .diffdot.mod { background: var(--mod-soft); color: var(--mod); }
+  .diffdot.del { background: var(--del-soft); color: var(--del); }
+  .node.removed { border-style: dashed; border-color: var(--del); opacity: .55; }
+  .node.removed .nl b { text-decoration: line-through; }
+
+  /* ---------- plan card (option B) ---------- */
+  .plan-card {
+    border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
+    overflow: hidden; font-size: 12px;
+  }
+  .plan-card .pc-head {
+    padding: 10px 12px; border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .plan-card .pc-head b { font-size: 12.5px; }
+  .steps { list-style: none; margin: 0; padding: 4px 0; }
+  .steps li {
+    display: flex; gap: 10px; align-items: flex-start; padding: 8px 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .steps li:last-child { border-bottom: 0; }
+  .steps .ic {
+    width: 24px; height: 24px; border-radius: 6px; flex: none; display: grid;
+    place-items: center; font-size: 12px; background: var(--accent-soft); color: var(--accent);
+  }
+  .steps .st b { display: block; font-weight: 600; }
+  .steps .st span { color: var(--muted); font-size: 11px; }
+  .pc-actions { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
+  .btn {
+    font-size: 12px; font-weight: 600; border-radius: 8px; padding: 6px 12px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer;
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+  /* ---------- overlay sheet (option C) ---------- */
+  .sheet-wrap { position: relative; }
+  .scrim { position: absolute; inset: 0; background: rgba(32,38,31,.28); }
+  :root[data-theme="dark"] .scrim { background: rgba(0,0,0,.45); }
+  .sheet {
+    position: relative; margin: 26px auto; width: min(520px, 92%);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); padding: 16px; z-index: 1;
+  }
+  .sheet h4 { margin: 0 0 2px; font-size: 13.5px; }
+  .sheet .sub { color: var(--muted); font-size: 11.5px; margin-bottom: 12px; }
+  .sheet-flow { display: flex; align-items: center; gap: 0; overflow-x: auto; padding: 6px 2px 10px; }
+  .mini-node {
+    flex: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px;
+    font-size: 11px; background: var(--panel); display: flex; gap: 6px; align-items: center;
+  }
+  .mini-node .ic { width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+  .mini-node.sel { border-color: var(--accent); box-shadow: 0 0 0 2.5px var(--accent-soft); }
+  .mini-edge { flex: none; width: 18px; height: 1.5px; background: var(--line); }
+  .detail {
+    border-top: 1px solid var(--line); padding-top: 10px; font-size: 11.5px; color: var(--muted);
+  }
+  .detail b { color: var(--ink); }
+
+  /* ---------- interactive sync (option D) ---------- */
+  .sync-step { border-radius: 8px; cursor: pointer; transition: background .15s, box-shadow .15s; }
+  .sync-step:hover, .sync-step:focus-visible { background: var(--accent-soft); outline: none; }
+  .node.spot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); opacity: 1; }
+
+  /* ---------- confirm animation (option A) ---------- */
+  #ghost-chain .node, #ghost-chain .edge { transition: all .5s ease; }
+  #ghost-chain.built .node.ghost {
+    border-style: solid; border-color: var(--line); background: var(--panel);
+    box-shadow: var(--shadow); opacity: 1;
+  }
+  #ghost-chain.built .node.ghost .ic { border: 0; background: var(--accent-soft); color: var(--accent); }
+  #ghost-chain.built .edge { background: var(--line); opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { #ghost-chain .node, #ghost-chain .edge { transition: none; } }
+
+  /* ---------- prose & table ---------- */
+  .pros { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  @media (max-width: 640px) { .pros { grid-template-columns: 1fr; } }
+  .pros > div { font-size: 13.5px; }
+  .pros h5 {
+    margin: 0 0 6px; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  .pros ul { margin: 0; padding-left: 18px; }
+  .pros li { margin-bottom: 4px; }
+
+  .callout {
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0; background: var(--panel);
+    padding: 14px 18px; margin: 28px 0; font-size: 14px;
+  }
+  .callout b { color: var(--accent); }
+
+  .tbl-wrap { overflow-x: auto; margin-top: 18px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 640px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 10.5px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600;
+  }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .pill { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+  .pill.lo { background: var(--add-soft); color: var(--add); }
+  .pill.md { background: var(--mod-soft); color: var(--mod); }
+  .pill.hi { background: var(--del-soft); color: var(--del); }
+
+  .phases { counter-reset: ph; margin-top: 16px; padding: 0; list-style: none; }
+  .phases li {
+    position: relative; padding: 0 0 18px 44px; font-size: 14px;
+  }
+  .phases li::before {
+    counter-increment: ph; content: counter(ph);
+    position: absolute; left: 0; top: 0; width: 28px; height: 28px;
+    border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center; font-weight: 700; font-size: 13px;
+  }
+  .phases li::after {
+    content: ""; position: absolute; left: 13.5px; top: 32px; bottom: 2px;
+    width: 1.5px; background: var(--line);
+  }
+  .phases li:last-child::after { display: none; }
+  .phases b { display: block; }
+  .phases span { color: var(--muted); font-size: 13px; }
+
+  .ctx { display: flex; gap: 10px; align-items: stretch; margin: 20px 0 8px; flex-wrap: wrap; }
+  .ctx .stage {
+    flex: 1 1 180px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
+    padding: 12px; font-size: 12.5px;
+  }
+  .ctx .stage b { display: block; margin-bottom: 3px; }
+  .ctx .stage span { color: var(--muted); font-size: 12px; }
+  .ctx .stage .k {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 10px;
+    letter-spacing: .12em; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 6px;
+  }
+</style>
+
+<main>
+  <header class="top">
+    <div class="eyebrow">Text-to-workflow · UX exploration</div>
+    <h1>Seeing the plan, not reading it</h1>
+    <p class="lede">Five directions for turning the AI build plan from a wall of markdown into something the user can see, poke, and confirm — plus how they compose and what to ship first.</p>
+  </header>
+
+  <section>
+    <h2>Where the flow stands today</h2>
+    <div class="ctx">
+      <div class="stage"><span class="k">State 1</span><b>Prompt + loader</b><span>User asks; canvas shows the floating icon-cluster loader. Canvas is otherwise idle.</span></div>
+      <div class="stage"><span class="k">State 2</span><b>Clarifying questions</b><span>Structured question cards (1 of 2…) — already a good interactive pattern.</span></div>
+      <div class="stage"><span class="k">State 3</span><b>Plan as markdown</b><span>Trigger + Steps 1–4 as a bulleted list in chat. "Shall I go ahead and build this?"</span></div>
+    </div>
+    <div class="callout"><b>The core observation:</b> while the plan sits in chat as text, the canvas — the exact surface where the workflow will exist — is empty. The plan describes nodes and edges; the product already knows how to draw nodes and edges. The plan should be rendered in the workflow's own language.</div>
+  </section>
+
+  <!-- ================= OPTION A ================= -->
+  <section class="option">
+    <div class="opt-head">
+      <span class="opt-tag mono">OPTION A</span>
+      <h2>Ghost blueprint on the real canvas</h2>
+      <span class="badge">north star</span>
+    </div>
+    <p class="opt-sub">The plan renders directly on the canvas as ghost nodes — dashed, translucent, laid out exactly where the real nodes will land. Chat keeps a one-line summary + confirm. On confirm, ghosts materialize into real nodes one by one as the agent builds. Try it: hit <b>Confirm plan</b> below.</p>
+
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Untitled workflow — Build</div>
+      <div class="frame-body">
+        <div class="chat-rail">
+          <div class="bubble">Make an automation that fetches run insights for the last 3 months…</div>
+          <div class="bubble agent">Plan is ready — I've sketched it on the canvas. Review the ghost steps, click any to adjust.</div>
+          <button class="btn primary" id="confirm-btn" type="button">Confirm plan</button>
+          <span class="rail-note" id="confirm-note">Ghosts become real nodes as each step is built.</span>
+        </div>
+        <div class="canvas">
+          <div class="chain" id="ghost-chain">
+            <div class="node ghost"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>Invoked on-demand, no input</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">📊</span><div class="nl"><b>Query WORKFLOW_EXECUTION</b><span>Aggregate runs, last 3 months</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">✉️</span><div class="nl"><b>Format email body</b><span>Readable metrics summary</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span>Mail | K1 → hatim.shakir@…</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span>Counts, avg duration, breakdowns</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros">
+      <div><h5>Why it wins</h5><ul>
+        <li>"What will be made" is answered literally — you see it, where it will live, before it exists.</li>
+        <li>Reuses the existing canvas node renderer and auto-layout; ghost is a style variant, not a new surface.</li>
+        <li>Loader continuity: the floating icon-cluster can morph into the first ghost node as the plan streams.</li>
+        <li>Click a ghost node → inline "change this step" that prefills the chat input, scoped to that step.</li>
+      </ul></div>
+      <div><h5>Watch out for</h5><ul>
+        <li>Plan steps must map to concrete node types early — the planner has to emit structured steps (it already emits Trigger/Step 1..N, so the data is close).</li>
+        <li>Ghosts need a distinct visual grammar so nobody mistakes them for a built-but-broken workflow.</li>
+        <li>Edit flows on a populated canvas need diff treatment (see the edit-mode section).</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ================= OPTION B ================= -->
+  <section class="option">
+    <div class="opt-head"><span class="opt-tag mono">OPTION B</span><h2>Structured plan card in chat</h2><span class="badge">lowest lift</span></div>
+    <p class="opt-sub">Keep the plan in the chat panel, but replace markdown with a typed card: trigger chip, step rows with app icons and connection badges, expandable detail, and explicit actions. Same pattern family as the existing clarifying-question cards, so it feels native immediately.</p>
+
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Chat panel</div>
+      <div class="frame-body">
+        <div class="chat-rail" style="width:100%; border-right:0; max-width:340px; margin:0 auto;">
+          <div class="plan-card">
+            <div class="pc-head"><b>Workflow Runs Insights Report</b><span class="pill lo">5 steps</span></div>
+            <ul class="steps">
+              <li><span class="ic">⚡</span><div class="st"><b>Callable trigger</b><span>On-demand from another workflow/app</span></div></li>
+              <li><span class="ic">📊</span><div class="st"><b>Query analytics</b><span>WORKFLOW_EXECUTION · last 3 months · grouped by workflow &amp; status</span></div></li>
+              <li><span class="ic">✉️</span><div class="st"><b>Format email body</b><span>Totals, failure counts, avg duration</span></div></li>
+              <li><span class="ic">M</span><div class="st"><b>Send via Gmail</b><span>Connection: Mail | K1</span></div></li>
+              <li><span class="ic">↩</span><div class="st"><b>Return structured output</b><span>Counts, avg duration, breakdowns</span></div></li>
+            </ul>
+            <div class="pc-actions"><button class="btn primary" type="button">Build it</button><button class="btn" type="button">Adjust…</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros">
+      <div><h5>Why it wins</h5><ul>
+        <li>Cheapest path to structure: no canvas involvement, ships as a chat message type.</li>
+        <li>Forces the planner output into a schema — the prerequisite for every other option here.</li>
+        <li>Step rows can carry real affordances: connection picker inline, per-step "change this".</li>
+      </ul></div>
+      <div><h5>Watch out for</h5><ul>
+        <li>Still a list — flow shape (branches, parallel paths) doesn't read. Fine for linear plans, weak beyond.</li>
+        <li>The canvas stays empty; the "see where it lands" magic never happens.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ================= OPTION C ================= -->
+  <section class="option">
+    <div class="opt-head"><span class="opt-tag mono">OPTION C</span><h2>Flowchart review sheet</h2></div>
+    <p class="opt-sub">A focused overlay above the canvas: auto-laid-out mini flowchart, pan/zoom, click a node for its detail. A dedicated "review mode" moment — the product visibly shifts from chatting to deciding.</p>
+
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Review the plan</div>
+      <div class="frame-body sheet-wrap" style="display:block;">
+        <div class="canvas" style="min-height:340px; align-items:flex-start;">
+          <div class="scrim"></div>
+          <div class="sheet">
+            <h4>Workflow Runs Insights Report</h4>
+            <div class="sub">Callable · 4 steps · 1 connection (Mail | K1)</div>
+            <div class="sheet-flow">
+              <div class="mini-node"><span class="ic">⚡</span>Trigger</div><span class="mini-edge"></span>
+              <div class="mini-node sel"><span class="ic">📊</span>Query analytics</div><span class="mini-edge"></span>
+              <div class="mini-node"><span class="ic">✉️</span>Format</div><span class="mini-edge"></span>
+              <div class="mini-node"><span class="ic">M</span>Gmail</div><span class="mini-edge"></span>
+              <div class="mini-node"><span class="ic">↩</span>Return</div>
+            </div>
+            <div class="detail"><b>Query analytics</b> — reads <span class="mono">WORKFLOW_EXECUTION</span> for the last 3 months; aggregates total / successful / failed runs and average duration from <span class="mono">START_TIME</span>/<span class="mono">END_TIME</span>; grouped by workflow and status.</div>
+            <div class="pc-actions" style="border-top:0; padding:12px 0 0;"><button class="btn primary" type="button">Looks right — build</button><button class="btn" type="button">Edit step…</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros">
+      <div><h5>Why it wins</h5><ul>
+        <li>Undivided attention — a deliberate approval gate, useful when the plan is consequential (deploy rights, external sends).</li>
+        <li>Best fit for <b>edits to large existing workflows</b>: the overlay can show only the delta subgraph without the noise of the full canvas.</li>
+        <li>Independent of canvas internals — could ship from the chat/copilot layer alone.</li>
+      </ul></div>
+      <div><h5>Watch out for</h5><ul>
+        <li>A second flowchart renderer to maintain unless it reuses the canvas engine in a read-only mode.</li>
+        <li>Modal fatigue if it appears for every trivial plan; gate it by plan size/impact.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ================= OPTION D ================= -->
+  <section class="option">
+    <div class="opt-head"><span class="opt-tag mono">OPTION D</span><h2>Synced hybrid: chat stepper ↔ canvas ghosts</h2><span class="badge">A + B combined</span></div>
+    <p class="opt-sub">The plan card lives in chat (B) and the ghosts live on canvas (A), linked two-way: hover or focus a step and its ghost node spotlights; click a ghost and chat scrolls to that step. Reading and seeing stop being separate activities. <b>Hover the steps below.</b></p>
+
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Untitled workflow — Build</div>
+      <div class="frame-body">
+        <div class="chat-rail">
+          <div class="plan-card">
+            <div class="pc-head"><b>Plan · 5 steps</b></div>
+            <ul class="steps" id="sync-list">
+              <li class="sync-step" data-node="0" tabindex="0"><span class="ic">⚡</span><div class="st"><b>Callable trigger</b></div></li>
+              <li class="sync-step" data-node="1" tabindex="0"><span class="ic">📊</span><div class="st"><b>Query analytics</b></div></li>
+              <li class="sync-step" data-node="2" tabindex="0"><span class="ic">✉️</span><div class="st"><b>Format email</b></div></li>
+              <li class="sync-step" data-node="3" tabindex="0"><span class="ic">M</span><div class="st"><b>Send via Gmail</b></div></li>
+              <li class="sync-step" data-node="4" tabindex="0"><span class="ic">↩</span><div class="st"><b>Return output</b></div></li>
+            </ul>
+          </div>
+          <span class="rail-note">Hover a step → its ghost lights up.</span>
+        </div>
+        <div class="canvas">
+          <div class="chain" id="sync-chain">
+            <div class="node ghost"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">📊</span><div class="nl"><b>Query analytics</b></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">✉️</span><div class="nl"><b>Format email</b></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">↩</span><div class="nl"><b>Return output</b></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros">
+      <div><h5>Why it wins</h5><ul>
+        <li>Chat remains the narrative + approval surface; canvas becomes the truth surface. Each does its job.</li>
+        <li>Spotlight-on-hover teaches the chat↔canvas mapping — users learn the builder while approving the plan.</li>
+        <li>Naturally incremental: ship B, then A, then wire the sync — no throwaway work.</li>
+      </ul></div>
+      <div><h5>Watch out for</h5><ul>
+        <li>Needs stable step IDs shared between planner output, chat card, and ghost nodes.</li>
+        <li>Two synced surfaces double the states to test (streaming, partial failure, user edits mid-plan).</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ================= OPTION E ================= -->
+  <section class="option">
+    <div class="opt-head"><span class="opt-tag mono">OPTION E</span><h2>Build-along reveal (the confirm → build transition)</h2></div>
+    <p class="opt-sub">Less an alternative, more the third act for A/D: after confirm, the agent narrates each step in chat while its ghost materializes on canvas — border solidifies, icon fills, a subtle settle animation. Errors land on the exact node that failed, with a "fix this step" affordance. The build stops being a black box with a spinner and becomes watching the thing get made.</p>
+    <div class="pros" style="margin-top:0;">
+      <div><h5>Why it matters</h5><ul>
+        <li>Progress becomes spatial: 3 of 5 nodes solid = 60% done, no progress bar needed.</li>
+        <li>Failure has an address — the broken node, not a paragraph in chat.</li>
+        <li>Streaming-friendly: ghosts can appear one-by-one <i>during planning</i> too, so the plan feels alive as it's being thought.</li>
+      </ul></div>
+      <div><h5>Watch out for</h5><ul>
+        <li>Build order must be honest — don't animate steps that haven't actually been created server-side.</li>
+        <li>Respect reduced-motion; keep the settle subtle or it gets circus-y on 20-step plans.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ================= EDIT MODE ================= -->
+  <section class="option">
+    <div class="opt-head"><span class="opt-tag mono">EDIT FLOWS</span><h2>When the workflow already exists: plan as a diff</h2></div>
+    <p class="opt-sub">"What will be edited" needs different grammar from "what will be made". On an existing canvas, the plan renders as a diff over the real nodes: untouched nodes dim, added steps appear as ghosts with an <b>add</b> badge, changed nodes get a <b>mod</b> badge with a before/after popover, removed nodes get struck and clay-tinted. Same palette works in the chat card and the review sheet.</p>
+
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Edit plan preview — "also post failures to Slack, drop the return step"</div>
+      <div class="frame-body">
+        <div class="canvas" style="min-height:300px;">
+          <div class="chain">
+            <div class="node" style="opacity:.55;"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>unchanged</span></div></div>
+            <div class="edge solid"></div>
+            <div class="node"><span class="diffdot mod">±</span><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span>window: 3 mo → 6 mo</span></div></div>
+            <div class="edge solid"></div>
+            <div class="node ghost"><span class="diffdot add">+</span><span class="ic">💬</span><div class="nl"><b>Post failures to Slack</b><span>#ops-alerts · new step</span></div></div>
+            <div class="edge solid"></div>
+            <div class="node removed"><span class="diffdot del">−</span><span class="ic">↩</span><div class="nl"><b>Return output</b><span>will be removed</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMPARISON ================= -->
+  <section class="option">
+    <h2>Side by side</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Direction</th><th>Effort</th><th>Reuses</th><th>"See it" factor</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td>B · Plan card</td><td><span class="pill lo">Low</span></td><td>Question-card pattern, chat renderer</td><td>Medium — structure, not shape</td><td>First ship; forces plan schema</td></tr>
+          <tr><td>A · Ghost canvas</td><td><span class="pill md">Medium</span></td><td>Canvas nodes, auto-layout, loader</td><td>High — the actual thing, in place</td><td>Creation flows on empty canvas</td></tr>
+          <tr><td>D · Synced hybrid</td><td><span class="pill md">Medium+</span></td><td>A + B, shared step IDs</td><td>High — read and see, linked</td><td>The end-state default UX</td></tr>
+          <tr><td>C · Review sheet</td><td><span class="pill md">Medium</span></td><td>Modal/sheet primitives</td><td>High, but in a detour surface</td><td>Big edits, high-impact approvals</td></tr>
+          <tr><td>E · Build-along</td><td><span class="pill lo">Low on top of A</span></td><td>Ghost grammar from A</td><td>High — progress is spatial</td><td>Post-confirm; error localization</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= RECOMMENDATION ================= -->
+  <section class="option">
+    <h2>Recommended path</h2>
+    <ol class="phases">
+      <li><b>Structured plan schema + chat card (B)</b><span>Planner emits typed steps (id, kind, app, connection, summary, detail). Card replaces markdown. Everything after depends on this schema.</span></li>
+      <li><b>Ghost blueprint (A) for creation flows</b><span>Ghost style variant on existing node renderer; loader morphs into first ghost as plan streams. Confirm stays in chat.</span></li>
+      <li><b>Sync + build-along (D + E)</b><span>Shared step IDs wire hover-spotlight both ways; confirm triggers progressive materialization; errors land on nodes.</span></li>
+      <li><b>Diff grammar for edits, review sheet (C) where stakes are high</b><span>Add/mod/del badges over existing canvas; sheet reserved for large-delta or high-impact plans.</span></li>
+    </ol>
+    <div class="callout">The ghost grammar is the keystone: one visual idea (dashed = proposed, solid = real, badge = delta) covers planning, building, and editing — and every phase above ships value on its own.</div>
+  </section>
+</main>
+
+<script>
+  (function () {
+    var chain = document.getElementById('ghost-chain');
+    var btn = document.getElementById('confirm-btn');
+    var note = document.getElementById('confirm-note');
+    var building = false;
+    btn.addEventListener('click', function () {
+      if (building) return;
+      if (chain.classList.contains('built')) {
+        chain.classList.remove('built');
+        chain.querySelectorAll('.node').forEach(function (node) { node.style.transitionDelay = ''; });
+        btn.textContent = 'Confirm plan';
+        note.textContent = 'Ghosts become real nodes as each step is built.';
+        return;
+      }
+      building = true;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      chain.querySelectorAll('.node').forEach(function (node, index) {
+        node.style.transitionDelay = reduce ? '0s' : (index * 0.35) + 's';
+      });
+      chain.classList.add('built');
+      btn.textContent = 'Building…';
+      var total = reduce ? 100 : chain.querySelectorAll('.node').length * 350 + 500;
+      setTimeout(function () {
+        building = false;
+        btn.textContent = 'Reset demo';
+        note.textContent = 'Built. Each node solidified as its step landed.';
+      }, total);
+    });
+
+    var syncNodes = document.querySelectorAll('#sync-chain .node');
+    document.querySelectorAll('#sync-list .sync-step').forEach(function (step) {
+      var target = syncNodes[Number(step.dataset.node)];
+      function on() { target.classList.add('spot'); }
+      function off() { target.classList.remove('spot'); }
+      step.addEventListener('mouseenter', on);
+      step.addEventListener('mouseleave', off);
+      step.addEventListener('focus', on);
+      step.addEventListener('blur', off);
+    });
+  })();
+</script>
+</article>
+</main>
+</body>
+</html>
