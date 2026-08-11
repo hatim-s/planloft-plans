@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Visual plan UX — text-to-workflow</title>
+<title>Visual plan UX — pass 2: review &amp; edit, one-shot build</title>
 <style>/* planloft theme: minimal — mono, black & white, tight */
 /* planloft-color-schemes: light dark */
 :root {
@@ -134,7 +134,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 })();
 </script>
 <main class="planloft-plan">
-<article><title>Visual plan UX — text-to-workflow</title>
+<article><title>Visual plan UX — pass 2: review &amp; edit with a one-shot build</title>
 <style>
   :root {
     --paper: #F8F8F4;
@@ -155,6 +155,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     --del-soft: #F6E5E0;
     --dot: #D9DBD1;
     --chip: #EFEFEA;
+    --sweep: rgba(56, 98, 47, .14);
     --shadow: 0 1px 2px rgba(32,38,31,.06), 0 8px 24px rgba(32,38,31,.07);
   }
   @media (prefers-color-scheme: dark) {
@@ -165,6 +166,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       --add: #7DBB80; --add-soft: #24331F; --mod: #D2A34E; --mod-soft: #35301E;
       --del: #D07A5F; --del-soft: #38251F;
       --dot: #2C312A; --chip: #282D25;
+      --sweep: rgba(143, 190, 126, .16);
       --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
     }
   }
@@ -175,6 +177,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     --add: #7DBB80; --add-soft: #24331F; --mod: #D2A34E; --mod-soft: #35301E;
     --del: #D07A5F; --del-soft: #38251F;
     --dot: #2C312A; --chip: #282D25;
+    --sweep: rgba(143, 190, 126, .16);
     --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
   }
 
@@ -194,20 +197,37 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     color: var(--accent); margin-bottom: 10px;
   }
   h1 { font-size: 30px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -.015em; text-wrap: balance; }
-  .lede { color: var(--muted); font-size: 16px; max-width: 62ch; margin: 0; }
-
-  h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -.01em; }
-  .option { margin-top: 56px; }
-  .opt-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .opt-tag {
+  .lede { color: var(--muted); font-size: 16px; max-width: 64ch; margin: 0; }
+  h2 { font-size: 21px; margin: 0 0 4px; letter-spacing: -.01em; }
+  h3 { font-size: 15.5px; margin: 28px 0 6px; }
+  section.block { margin-top: 56px; }
+  .sect-tag {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: 11px; letter-spacing: .12em; color: var(--muted);
   }
-  .badge {
-    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
-    background: var(--accent-soft); color: var(--accent);
+  .sub { color: var(--muted); margin: 4px 0 18px; max-width: 70ch; font-size: 14.5px; }
+
+  .callout {
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0; background: var(--panel);
+    padding: 14px 18px; margin: 26px 0; font-size: 14px;
   }
-  .opt-sub { color: var(--muted); margin: 4px 0 18px; max-width: 68ch; }
+  .callout b { color: var(--accent); }
+  .callout.warn { border-left-color: var(--mod); }
+  .callout.warn b { color: var(--mod); }
+
+  /* ---------- state strip ---------- */
+  .states { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 6px; }
+  .state-card {
+    flex: 1 1 190px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--panel); padding: 12px; font-size: 12.5px;
+  }
+  .state-card .k {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 10px;
+    letter-spacing: .12em; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 6px;
+  }
+  .state-card b { display: block; margin-bottom: 3px; }
+  .state-card span { color: var(--muted); font-size: 12px; }
 
   /* ---------- mock builder frame ---------- */
   .frame {
@@ -221,9 +241,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   }
   .frame-bar .dots { display: flex; gap: 5px; }
   .frame-bar .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); display: block; }
-  .frame-body { display: flex; min-height: 340px; }
+  .frame-body { display: flex; min-height: 360px; }
   .chat-rail {
-    width: 250px; flex: none; border-right: 1px solid var(--line);
+    width: 258px; flex: none; border-right: 1px solid var(--line);
     padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 12px;
   }
   .canvas {
@@ -232,7 +252,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     background-size: 18px 18px;
     display: flex; align-items: center; justify-content: center;
   }
-  @media (max-width: 640px) {
+  @media (max-width: 680px) {
     .frame-body { flex-direction: column; }
     .chat-rail { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
   }
@@ -244,12 +264,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .bubble.agent { background: transparent; border: 1px solid var(--line); }
   .rail-note { color: var(--muted); font-size: 11px; }
 
-  /* ---------- workflow nodes ---------- */
-  .chain { display: flex; flex-direction: column; align-items: center; }
+  /* ---------- nodes & edges ---------- */
+  .chain { display: flex; flex-direction: column; align-items: center; position: relative; }
   .node {
     display: flex; align-items: center; gap: 10px;
     background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
-    padding: 8px 12px; min-width: 210px; font-size: 12.5px; box-shadow: var(--shadow);
+    padding: 8px 12px; min-width: 216px; font-size: 12.5px; box-shadow: var(--shadow);
     position: relative;
   }
   .node .ic {
@@ -262,22 +282,62 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .node .nl span { color: var(--muted); font-size: 11px; }
   .node.ghost {
     border: 1.5px dashed var(--ghost); background: var(--ghost-fill);
-    box-shadow: none; opacity: .92;
+    box-shadow: none; opacity: .92; overflow: hidden;
   }
   .node.ghost .ic { background: transparent; border: 1px dashed var(--ghost); color: var(--ghost); }
   .edge { width: 1.5px; height: 20px; background: var(--ghost); opacity: .7; }
   .edge.solid { background: var(--line); opacity: 1; }
+
   .diffdot {
     position: absolute; top: -7px; right: -7px; font-size: 10px; font-weight: 700;
-    border-radius: 999px; padding: 1px 6px; border: 1px solid var(--panel);
+    border-radius: 999px; padding: 1px 6px; border: 1px solid var(--panel); z-index: 2;
   }
   .diffdot.add { background: var(--add-soft); color: var(--add); }
   .diffdot.mod { background: var(--mod-soft); color: var(--mod); }
   .diffdot.del { background: var(--del-soft); color: var(--del); }
+  .diffdot.err { background: var(--del-soft); color: var(--del); }
   .node.removed { border-style: dashed; border-color: var(--del); opacity: .55; }
   .node.removed .nl b { text-decoration: line-through; }
+  .node.dim { opacity: .5; box-shadow: none; }
+  .node.spot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); opacity: 1; }
+  .node.error { border-color: var(--del); }
 
-  /* ---------- plan card (option B) ---------- */
+  /* building shimmer (in-flight one-shot request) */
+  .chain.building .node.ghost::after, .chain.building .node.wash::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(105deg, transparent 32%, var(--sweep) 50%, transparent 68%);
+    transform: translateX(-100%); animation: sweep 1.15s linear infinite;
+  }
+  .node.wash { overflow: hidden; }
+  @keyframes sweep { to { transform: translateX(100%); } }
+
+  /* materialize cascade */
+  .demo .node, .demo .edge { transition: border-color .45s, background .45s, box-shadow .45s, opacity .45s; }
+  .chain.built .node.ghost {
+    border: 1px solid var(--line); background: var(--panel);
+    box-shadow: var(--shadow); opacity: 1;
+  }
+  .chain.built .node.ghost::after { display: none; }
+  .chain.built .node.ghost .ic { border: 0; background: var(--accent-soft); color: var(--accent); }
+  .chain.built .edge { background: var(--line); opacity: 1; }
+  .chain.built .node.ghost.error { border-color: var(--del); }
+
+  /* edit-apply animations */
+  .modpulse { animation: modpulse 1s ease-out 2; }
+  @keyframes modpulse {
+    0% { box-shadow: 0 0 0 0 var(--mod-soft); }
+    70% { box-shadow: 0 0 0 8px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+  .rm-wrap { display: flex; flex-direction: column; align-items: center; max-height: 120px; transition: max-height .5s ease, opacity .5s ease; overflow: hidden; }
+  .rm-wrap.gone { max-height: 0; opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .demo .node, .demo .edge, .rm-wrap { transition: none; }
+    .chain.building .node.ghost::after { animation: none; }
+    .modpulse { animation: none; }
+  }
+
+  /* ---------- plan card / steps ---------- */
   .plan-card {
     border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
     overflow: hidden; font-size: 12px;
@@ -297,419 +357,446 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     width: 24px; height: 24px; border-radius: 6px; flex: none; display: grid;
     place-items: center; font-size: 12px; background: var(--accent-soft); color: var(--accent);
   }
+  .steps .st { min-width: 0; }
   .steps .st b { display: block; font-weight: 600; }
   .steps .st span { color: var(--muted); font-size: 11px; }
-  .pc-actions { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
+  .sync-step { border-radius: 8px; cursor: pointer; transition: background .15s; }
+  .sync-step:hover, .sync-step:focus-visible { background: var(--accent-soft); outline: none; }
+  .stepchip {
+    margin-left: auto; align-self: center; font-size: 10px; font-weight: 700;
+    border-radius: 999px; padding: 1px 7px; flex: none;
+  }
+  .stepchip.add { background: var(--add-soft); color: var(--add); }
+  .stepchip.mod { background: var(--mod-soft); color: var(--mod); }
+  .stepchip.del { background: var(--del-soft); color: var(--del); }
+  .stepchip.upd { background: var(--accent-soft); color: var(--accent); }
+
   .btn {
     font-size: 12px; font-weight: 600; border-radius: 8px; padding: 6px 12px;
     border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer;
   }
   .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn[disabled] { opacity: .55; cursor: default; }
+  .pc-actions { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
 
-  /* ---------- overlay sheet (option C) ---------- */
-  .sheet-wrap { position: relative; }
-  .scrim { position: absolute; inset: 0; background: rgba(32,38,31,.28); }
-  :root[data-theme="dark"] .scrim { background: rgba(0,0,0,.45); }
-  .sheet {
-    position: relative; margin: 26px auto; width: min(520px, 92%);
-    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
-    box-shadow: var(--shadow); padding: 16px; z-index: 1;
+  /* ---------- popover ---------- */
+  .popover {
+    position: absolute; left: calc(50% + 132px); top: 50%; width: 218px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: var(--shadow); padding: 12px; font-size: 11.5px; z-index: 3;
   }
-  .sheet h4 { margin: 0 0 2px; font-size: 13.5px; }
-  .sheet .sub { color: var(--muted); font-size: 11.5px; margin-bottom: 12px; }
-  .sheet-flow { display: flex; align-items: center; gap: 0; overflow-x: auto; padding: 6px 2px 10px; }
-  .mini-node {
-    flex: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px;
-    font-size: 11px; background: var(--panel); display: flex; gap: 6px; align-items: center;
+  .popover::before {
+    content: ""; position: absolute; left: -6px; top: 24px; width: 10px; height: 10px;
+    background: var(--panel); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    transform: rotate(45deg);
   }
-  .mini-node .ic { width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
-  .mini-node.sel { border-color: var(--accent); box-shadow: 0 0 0 2.5px var(--accent-soft); }
-  .mini-edge { flex: none; width: 18px; height: 1.5px; background: var(--line); }
-  .detail {
-    border-top: 1px solid var(--line); padding-top: 10px; font-size: 11.5px; color: var(--muted);
+  .popover h5 { margin: 0 0 6px; font-size: 12px; }
+  .popover .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; color: var(--muted); }
+  .popover .row b { color: var(--ink); font-weight: 600; }
+  .popover .row a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .popover .prompt {
+    margin-top: 8px; border: 1px solid var(--line); border-radius: 8px;
+    padding: 6px 9px; color: var(--muted); background: var(--paper);
   }
-  .detail b { color: var(--ink); }
+  @media (max-width: 900px) { .popover { position: static; width: auto; margin-top: 14px; } .popover::before { display: none; } }
 
-  /* ---------- interactive sync (option D) ---------- */
-  .sync-step { border-radius: 8px; cursor: pointer; transition: background .15s, box-shadow .15s; }
-  .sync-step:hover, .sync-step:focus-visible { background: var(--accent-soft); outline: none; }
-  .node.spot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); opacity: 1; }
-
-  /* ---------- confirm animation (option A) ---------- */
-  #ghost-chain .node, #ghost-chain .edge { transition: all .5s ease; }
-  #ghost-chain.built .node.ghost {
-    border-style: solid; border-color: var(--line); background: var(--panel);
-    box-shadow: var(--shadow); opacity: 1;
+  /* ---------- snackbar ---------- */
+  .snackbar {
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--paper); font-size: 12px; border-radius: 999px;
+    padding: 7px 14px; display: flex; gap: 12px; align-items: center;
+    opacity: 0; pointer-events: none; transition: opacity .3s; white-space: nowrap; z-index: 4;
   }
-  #ghost-chain.built .node.ghost .ic { border: 0; background: var(--accent-soft); color: var(--accent); }
-  #ghost-chain.built .edge { background: var(--line); opacity: 1; }
-  @media (prefers-reduced-motion: reduce) { #ghost-chain .node, #ghost-chain .edge { transition: none; } }
+  .snackbar.show { opacity: 1; pointer-events: auto; }
+  .snackbar a { color: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
 
-  /* ---------- prose & table ---------- */
-  .pros { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
-  @media (max-width: 640px) { .pros { grid-template-columns: 1fr; } }
-  .pros > div { font-size: 13.5px; }
-  .pros h5 {
-    margin: 0 0 6px; font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-  }
-  .pros ul { margin: 0; padding-left: 18px; }
-  .pros li { margin-bottom: 4px; }
-
-  .callout {
-    border: 1px solid var(--line); border-left: 3px solid var(--accent);
-    border-radius: 0 10px 10px 0; background: var(--panel);
-    padding: 14px 18px; margin: 28px 0; font-size: 14px;
-  }
-  .callout b { color: var(--accent); }
-
+  /* ---------- spec table ---------- */
   .tbl-wrap { overflow-x: auto; margin-top: 18px; }
-  table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 640px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 680px; }
   th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
   th {
     font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 10.5px;
     letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600;
   }
-  td:first-child { font-weight: 600; white-space: nowrap; }
-  .pill { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
-  .pill.lo { background: var(--add-soft); color: var(--add); }
-  .pill.md { background: var(--mod-soft); color: var(--mod); }
-  .pill.hi { background: var(--del-soft); color: var(--del); }
+  td:first-child { font-weight: 600; }
+  tr.group td {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 10.5px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+    background: var(--panel); font-weight: 600; border-bottom: 1px solid var(--line);
+  }
 
-  .phases { counter-reset: ph; margin-top: 16px; padding: 0; list-style: none; }
-  .phases li {
-    position: relative; padding: 0 0 18px 44px; font-size: 14px;
+  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  @media (max-width: 640px) { .notes { grid-template-columns: 1fr; } }
+  .note-card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 14px; font-size: 13.5px; }
+  .note-card h5 {
+    margin: 0 0 6px; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
   }
-  .phases li::before {
-    counter-increment: ph; content: counter(ph);
-    position: absolute; left: 0; top: 0; width: 28px; height: 28px;
-    border-radius: 50%; background: var(--accent-soft); color: var(--accent);
-    display: grid; place-items: center; font-weight: 700; font-size: 13px;
-  }
-  .phases li::after {
-    content: ""; position: absolute; left: 13.5px; top: 32px; bottom: 2px;
-    width: 1.5px; background: var(--line);
-  }
-  .phases li:last-child::after { display: none; }
-  .phases b { display: block; }
-  .phases span { color: var(--muted); font-size: 13px; }
-
-  .ctx { display: flex; gap: 10px; align-items: stretch; margin: 20px 0 8px; flex-wrap: wrap; }
-  .ctx .stage {
-    flex: 1 1 180px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
-    padding: 12px; font-size: 12.5px;
-  }
-  .ctx .stage b { display: block; margin-bottom: 3px; }
-  .ctx .stage span { color: var(--muted); font-size: 12px; }
-  .ctx .stage .k {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 10px;
-    letter-spacing: .12em; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 6px;
-  }
+  .note-card ul { margin: 0; padding-left: 18px; }
+  .note-card li { margin-bottom: 5px; }
+  .note-card code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; background: var(--chip); border-radius: 4px; padding: 1px 5px; }
 </style>
 
 <main>
   <header class="top">
-    <div class="eyebrow">Text-to-workflow · UX exploration</div>
-    <h1>Seeing the plan, not reading it</h1>
-    <p class="lede">Five directions for turning the AI build plan from a wall of markdown into something the user can see, poke, and confirm — plus how they compose and what to ship first.</p>
+    <div class="eyebrow">Text-to-workflow · UX pass 2 of n</div>
+    <h1>Review &amp; edit with a one-shot build</h1>
+    <p class="lede">Ghost blueprint (A) + chat↔canvas sync (D) + reveal (E), redesigned around the real build model: the agent generates the whole workflow in a single shot. No per-node build progress exists — so the reveal becomes choreography that plays <em>after</em> the response lands, and all the interesting interaction moves into review.</p>
   </header>
 
-  <section>
-    <h2>Where the flow stands today</h2>
-    <div class="ctx">
-      <div class="stage"><span class="k">State 1</span><b>Prompt + loader</b><span>User asks; canvas shows the floating icon-cluster loader. Canvas is otherwise idle.</span></div>
-      <div class="stage"><span class="k">State 2</span><b>Clarifying questions</b><span>Structured question cards (1 of 2…) — already a good interactive pattern.</span></div>
-      <div class="stage"><span class="k">State 3</span><b>Plan as markdown</b><span>Trigger + Steps 1–4 as a bulleted list in chat. "Shall I go ahead and build this?"</span></div>
-    </div>
-    <div class="callout"><b>The core observation:</b> while the plan sits in chat as text, the canvas — the exact surface where the workflow will exist — is empty. The plan describes nodes and edges; the product already knows how to draw nodes and edges. The plan should be rendered in the workflow's own language.</div>
+  <section class="block">
+    <h2>What one-shot changes — and what it doesn't</h2>
+    <div class="callout warn"><b>The honesty rule:</b> nothing on the canvas may claim build progress that hasn't happened. One-shot means there is exactly one moment when the workflow becomes real. Everything before it is <em>plan</em> (ghosts — honest, because the plan genuinely exists step by step). Everything after it is <em>presentation</em> (a staged cascade — honest, because by the time it plays, every node is already built). The only forbidden thing is a fake "building step 2 of 5…" ticker.</div>
+    <p class="sub">Consequence: review is where the experience lives. The plan phase streams and is interactive; the build phase is a short, owned transition (~2s of shimmer → cascade); the arrival moment carries the delight. This is arguably <em>better</em> than live per-node building — the reveal is controllable, consistent, and never stalls halfway.</p>
   </section>
 
-  <!-- ================= OPTION A ================= -->
-  <section class="option">
-    <div class="opt-head">
-      <span class="opt-tag mono">OPTION A</span>
-      <h2>Ghost blueprint on the real canvas</h2>
-      <span class="badge">north star</span>
+  <!-- ============ CREATE JOURNEY ============ -->
+  <section class="block">
+    <div class="sect-tag mono">JOURNEY 1 · CREATE</div>
+    <h2>Review → confirm → reveal</h2>
+
+    <div class="states">
+      <div class="state-card"><span class="k">C1 · Planning</span><b>Ghosts stream in</b><span>As the planner streams typed steps, ghost nodes appear one by one. The floating loader morphs into the first ghost. Honest: this is plan streaming, not build progress.</span></div>
+      <div class="state-card"><span class="k">C2 · Review</span><b>Interactive blueprint</b><span>Full ghost chain + synced chat card. Hover syncs, click opens a step popover, scoped revisions morph individual ghosts.</span></div>
+      <div class="state-card"><span class="k">C3 · In flight</span><b>Shimmer, locked</b><span>Confirm fires the single build request. Ghosts hold with an indeterminate shimmer sweep. Canvas is read-only. No fake progress.</span></div>
+      <div class="state-card"><span class="k">C4 · Arrival</span><b>Cascade reveal</b><span>Response lands → ghosts solidify top-to-bottom (~300ms stagger). Validation issues land as badges on the exact nodes.</span></div>
     </div>
-    <p class="opt-sub">The plan renders directly on the canvas as ghost nodes — dashed, translucent, laid out exactly where the real nodes will land. Chat keeps a one-line summary + confirm. On confirm, ghosts materialize into real nodes one by one as the agent builds. Try it: hit <b>Confirm plan</b> below.</p>
+
+    <h3>C2 — the review state, in detail</h3>
+    <p class="sub">Chat card and ghost chain are two views of one plan object, joined by stable step IDs. The popover is the per-step workbench: key facts (connection, recipient, window) with one-tap changers, plus a scoped prompt that sends a revision request <em>for that step only</em>. The planner replies with a revised plan; only changed ghosts morph, marked with an "updated" chip — no full re-render, no lost reading position.</p>
 
     <div class="frame">
-      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Untitled workflow — Build</div>
-      <div class="frame-body">
-        <div class="chat-rail">
-          <div class="bubble">Make an automation that fetches run insights for the last 3 months…</div>
-          <div class="bubble agent">Plan is ready — I've sketched it on the canvas. Review the ghost steps, click any to adjust.</div>
-          <button class="btn primary" id="confirm-btn" type="button">Confirm plan</button>
-          <span class="rail-note" id="confirm-note">Ghosts become real nodes as each step is built.</span>
-        </div>
-        <div class="canvas">
-          <div class="chain" id="ghost-chain">
-            <div class="node ghost"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>Invoked on-demand, no input</span></div></div>
-            <div class="edge"></div>
-            <div class="node ghost"><span class="ic">📊</span><div class="nl"><b>Query WORKFLOW_EXECUTION</b><span>Aggregate runs, last 3 months</span></div></div>
-            <div class="edge"></div>
-            <div class="node ghost"><span class="ic">✉️</span><div class="nl"><b>Format email body</b><span>Readable metrics summary</span></div></div>
-            <div class="edge"></div>
-            <div class="node ghost"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span>Mail | K1 → hatim.shakir@…</span></div></div>
-            <div class="edge"></div>
-            <div class="node ghost"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span>Counts, avg duration, breakdowns</span></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="pros">
-      <div><h5>Why it wins</h5><ul>
-        <li>"What will be made" is answered literally — you see it, where it will live, before it exists.</li>
-        <li>Reuses the existing canvas node renderer and auto-layout; ghost is a style variant, not a new surface.</li>
-        <li>Loader continuity: the floating icon-cluster can morph into the first ghost node as the plan streams.</li>
-        <li>Click a ghost node → inline "change this step" that prefills the chat input, scoped to that step.</li>
-      </ul></div>
-      <div><h5>Watch out for</h5><ul>
-        <li>Plan steps must map to concrete node types early — the planner has to emit structured steps (it already emits Trigger/Step 1..N, so the data is close).</li>
-        <li>Ghosts need a distinct visual grammar so nobody mistakes them for a built-but-broken workflow.</li>
-        <li>Edit flows on a populated canvas need diff treatment (see the edit-mode section).</li>
-      </ul></div>
-    </div>
-  </section>
-
-  <!-- ================= OPTION B ================= -->
-  <section class="option">
-    <div class="opt-head"><span class="opt-tag mono">OPTION B</span><h2>Structured plan card in chat</h2><span class="badge">lowest lift</span></div>
-    <p class="opt-sub">Keep the plan in the chat panel, but replace markdown with a typed card: trigger chip, step rows with app icons and connection badges, expandable detail, and explicit actions. Same pattern family as the existing clarifying-question cards, so it feels native immediately.</p>
-
-    <div class="frame">
-      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Chat panel</div>
-      <div class="frame-body">
-        <div class="chat-rail" style="width:100%; border-right:0; max-width:340px; margin:0 auto;">
-          <div class="plan-card">
-            <div class="pc-head"><b>Workflow Runs Insights Report</b><span class="pill lo">5 steps</span></div>
-            <ul class="steps">
-              <li><span class="ic">⚡</span><div class="st"><b>Callable trigger</b><span>On-demand from another workflow/app</span></div></li>
-              <li><span class="ic">📊</span><div class="st"><b>Query analytics</b><span>WORKFLOW_EXECUTION · last 3 months · grouped by workflow &amp; status</span></div></li>
-              <li><span class="ic">✉️</span><div class="st"><b>Format email body</b><span>Totals, failure counts, avg duration</span></div></li>
-              <li><span class="ic">M</span><div class="st"><b>Send via Gmail</b><span>Connection: Mail | K1</span></div></li>
-              <li><span class="ic">↩</span><div class="st"><b>Return structured output</b><span>Counts, avg duration, breakdowns</span></div></li>
-            </ul>
-            <div class="pc-actions"><button class="btn primary" type="button">Build it</button><button class="btn" type="button">Adjust…</button></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="pros">
-      <div><h5>Why it wins</h5><ul>
-        <li>Cheapest path to structure: no canvas involvement, ships as a chat message type.</li>
-        <li>Forces the planner output into a schema — the prerequisite for every other option here.</li>
-        <li>Step rows can carry real affordances: connection picker inline, per-step "change this".</li>
-      </ul></div>
-      <div><h5>Watch out for</h5><ul>
-        <li>Still a list — flow shape (branches, parallel paths) doesn't read. Fine for linear plans, weak beyond.</li>
-        <li>The canvas stays empty; the "see where it lands" magic never happens.</li>
-      </ul></div>
-    </div>
-  </section>
-
-  <!-- ================= OPTION C ================= -->
-  <section class="option">
-    <div class="opt-head"><span class="opt-tag mono">OPTION C</span><h2>Flowchart review sheet</h2></div>
-    <p class="opt-sub">A focused overlay above the canvas: auto-laid-out mini flowchart, pan/zoom, click a node for its detail. A dedicated "review mode" moment — the product visibly shifts from chatting to deciding.</p>
-
-    <div class="frame">
-      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Review the plan</div>
-      <div class="frame-body sheet-wrap" style="display:block;">
-        <div class="canvas" style="min-height:340px; align-items:flex-start;">
-          <div class="scrim"></div>
-          <div class="sheet">
-            <h4>Workflow Runs Insights Report</h4>
-            <div class="sub">Callable · 4 steps · 1 connection (Mail | K1)</div>
-            <div class="sheet-flow">
-              <div class="mini-node"><span class="ic">⚡</span>Trigger</div><span class="mini-edge"></span>
-              <div class="mini-node sel"><span class="ic">📊</span>Query analytics</div><span class="mini-edge"></span>
-              <div class="mini-node"><span class="ic">✉️</span>Format</div><span class="mini-edge"></span>
-              <div class="mini-node"><span class="ic">M</span>Gmail</div><span class="mini-edge"></span>
-              <div class="mini-node"><span class="ic">↩</span>Return</div>
-            </div>
-            <div class="detail"><b>Query analytics</b> — reads <span class="mono">WORKFLOW_EXECUTION</span> for the last 3 months; aggregates total / successful / failed runs and average duration from <span class="mono">START_TIME</span>/<span class="mono">END_TIME</span>; grouped by workflow and status.</div>
-            <div class="pc-actions" style="border-top:0; padding:12px 0 0;"><button class="btn primary" type="button">Looks right — build</button><button class="btn" type="button">Edit step…</button></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="pros">
-      <div><h5>Why it wins</h5><ul>
-        <li>Undivided attention — a deliberate approval gate, useful when the plan is consequential (deploy rights, external sends).</li>
-        <li>Best fit for <b>edits to large existing workflows</b>: the overlay can show only the delta subgraph without the noise of the full canvas.</li>
-        <li>Independent of canvas internals — could ship from the chat/copilot layer alone.</li>
-      </ul></div>
-      <div><h5>Watch out for</h5><ul>
-        <li>A second flowchart renderer to maintain unless it reuses the canvas engine in a read-only mode.</li>
-        <li>Modal fatigue if it appears for every trivial plan; gate it by plan size/impact.</li>
-      </ul></div>
-    </div>
-  </section>
-
-  <!-- ================= OPTION D ================= -->
-  <section class="option">
-    <div class="opt-head"><span class="opt-tag mono">OPTION D</span><h2>Synced hybrid: chat stepper ↔ canvas ghosts</h2><span class="badge">A + B combined</span></div>
-    <p class="opt-sub">The plan card lives in chat (B) and the ghosts live on canvas (A), linked two-way: hover or focus a step and its ghost node spotlights; click a ghost and chat scrolls to that step. Reading and seeing stop being separate activities. <b>Hover the steps below.</b></p>
-
-    <div class="frame">
-      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Untitled workflow — Build</div>
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> C2 · Review — hover the steps; popover shown for "Send via Gmail"</div>
       <div class="frame-body">
         <div class="chat-rail">
           <div class="plan-card">
             <div class="pc-head"><b>Plan · 5 steps</b></div>
-            <ul class="steps" id="sync-list">
+            <ul class="steps" id="rev-list">
               <li class="sync-step" data-node="0" tabindex="0"><span class="ic">⚡</span><div class="st"><b>Callable trigger</b></div></li>
               <li class="sync-step" data-node="1" tabindex="0"><span class="ic">📊</span><div class="st"><b>Query analytics</b></div></li>
               <li class="sync-step" data-node="2" tabindex="0"><span class="ic">✉️</span><div class="st"><b>Format email</b></div></li>
-              <li class="sync-step" data-node="3" tabindex="0"><span class="ic">M</span><div class="st"><b>Send via Gmail</b></div></li>
+              <li class="sync-step" data-node="3" tabindex="0"><span class="ic">M</span><div class="st"><b>Send via Gmail</b></div><span class="stepchip upd">updated</span></li>
               <li class="sync-step" data-node="4" tabindex="0"><span class="ic">↩</span><div class="st"><b>Return output</b></div></li>
             </ul>
+            <div class="pc-actions"><button class="btn primary" type="button">Build it</button><button class="btn" type="button">Revise…</button></div>
           </div>
-          <span class="rail-note">Hover a step → its ghost lights up.</span>
+          <span class="rail-note">Scoped revision just changed step 4 — only its ghost morphed, chip marks the delta vs the previous plan version.</span>
         </div>
         <div class="canvas">
-          <div class="chain" id="sync-chain">
-            <div class="node ghost"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b></div></div>
+          <div class="chain" id="rev-chain">
+            <div class="node ghost"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>On-demand, no input</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost"><span class="ic">📊</span><div class="nl"><b>Query analytics</b></div></div>
+            <div class="node ghost"><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span>WORKFLOW_EXECUTION · 3 mo</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost"><span class="ic">✉️</span><div class="nl"><b>Format email</b></div></div>
+            <div class="node ghost"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span>Metrics summary</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b></div></div>
+            <div class="node ghost spot"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span>Mail | K1 → hatim.shakir@…</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost"><span class="ic">↩</span><div class="nl"><b>Return output</b></div></div>
+            <div class="node ghost"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span>Counts, durations</span></div></div>
+          </div>
+          <div class="popover" aria-label="Step details">
+            <h5>Send via Gmail</h5>
+            <div class="row"><span>Connection</span><b>Mail | K1</b></div>
+            <div class="row"><span>To</span><b>hatim.shakir@…</b></div>
+            <div class="row"><span>Subject</span><a>Set…</a></div>
+            <div class="prompt">Change this step…</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="pros">
-      <div><h5>Why it wins</h5><ul>
-        <li>Chat remains the narrative + approval surface; canvas becomes the truth surface. Each does its job.</li>
-        <li>Spotlight-on-hover teaches the chat↔canvas mapping — users learn the builder while approving the plan.</li>
-        <li>Naturally incremental: ship B, then A, then wire the sync — no throwaway work.</li>
-      </ul></div>
-      <div><h5>Watch out for</h5><ul>
-        <li>Needs stable step IDs shared between planner output, chat card, and ghost nodes.</li>
-        <li>Two synced surfaces double the states to test (streaming, partial failure, user edits mid-plan).</li>
-      </ul></div>
-    </div>
-  </section>
+    <h3>C3 → C4 — confirm, shimmer, cascade</h3>
+    <p class="sub">Press <b>Confirm &amp; build</b> to run the whole transition: in-flight shimmer while the one-shot request runs, then the cascade when it "returns". The second button simulates a response with one per-node validation issue — the workflow still materializes, and the problem lands on the node that owns it, with a scoped fix affordance in chat.</p>
 
-  <!-- ================= OPTION E ================= -->
-  <section class="option">
-    <div class="opt-head"><span class="opt-tag mono">OPTION E</span><h2>Build-along reveal (the confirm → build transition)</h2></div>
-    <p class="opt-sub">Less an alternative, more the third act for A/D: after confirm, the agent narrates each step in chat while its ghost materializes on canvas — border solidifies, icon fills, a subtle settle animation. Errors land on the exact node that failed, with a "fix this step" affordance. The build stops being a black box with a spinner and becomes watching the thing get made.</p>
-    <div class="pros" style="margin-top:0;">
-      <div><h5>Why it matters</h5><ul>
-        <li>Progress becomes spatial: 3 of 5 nodes solid = 60% done, no progress bar needed.</li>
-        <li>Failure has an address — the broken node, not a paragraph in chat.</li>
-        <li>Streaming-friendly: ghosts can appear one-by-one <i>during planning</i> too, so the plan feels alive as it's being thought.</li>
-      </ul></div>
-      <div><h5>Watch out for</h5><ul>
-        <li>Build order must be honest — don't animate steps that haven't actually been created server-side.</li>
-        <li>Respect reduced-motion; keep the settle subtle or it gets circus-y on 20-step plans.</li>
-      </ul></div>
-    </div>
-  </section>
-
-  <!-- ================= EDIT MODE ================= -->
-  <section class="option">
-    <div class="opt-head"><span class="opt-tag mono">EDIT FLOWS</span><h2>When the workflow already exists: plan as a diff</h2></div>
-    <p class="opt-sub">"What will be edited" needs different grammar from "what will be made". On an existing canvas, the plan renders as a diff over the real nodes: untouched nodes dim, added steps appear as ghosts with an <b>add</b> badge, changed nodes get a <b>mod</b> badge with a before/after popover, removed nodes get struck and clay-tinted. Same palette works in the chat card and the review sheet.</p>
-
-    <div class="frame">
-      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> Edit plan preview — "also post failures to Slack, drop the return step"</div>
+    <div class="frame demo">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> C3/C4 · Build transition — interactive</div>
       <div class="frame-body">
-        <div class="canvas" style="min-height:300px;">
-          <div class="chain">
-            <div class="node" style="opacity:.55;"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>unchanged</span></div></div>
-            <div class="edge solid"></div>
-            <div class="node"><span class="diffdot mod">±</span><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span>window: 3 mo → 6 mo</span></div></div>
-            <div class="edge solid"></div>
-            <div class="node ghost"><span class="diffdot add">+</span><span class="ic">💬</span><div class="nl"><b>Post failures to Slack</b><span>#ops-alerts · new step</span></div></div>
-            <div class="edge solid"></div>
-            <div class="node removed"><span class="diffdot del">−</span><span class="ic">↩</span><div class="nl"><b>Return output</b><span>will be removed</span></div></div>
+        <div class="chat-rail">
+          <div class="bubble agent" id="build-msg">Plan confirmed? I'll build the whole workflow in one go.</div>
+          <button class="btn primary" id="build-ok" type="button">Confirm &amp; build</button>
+          <button class="btn" id="build-err" type="button">Build with a validation issue</button>
+          <span class="rail-note" id="build-note">Shimmer = request in flight (honest: indeterminate). Cascade plays only after the response.</span>
+        </div>
+        <div class="canvas">
+          <div class="chain" id="build-chain">
+            <div class="node ghost"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>On-demand, no input</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span>WORKFLOW_EXECUTION · 3 mo</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span>Metrics summary</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost" id="build-gmail"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span>Mail | K1</span></div></div>
+            <div class="edge"></div>
+            <div class="node ghost"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span>Counts, durations</span></div></div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="notes">
+      <div class="note-card"><h5>If the one-shot fails wholesale</h5><ul>
+        <li>Ghosts stay exactly as they were — the plan is never lost.</li>
+        <li>Chat carries the error + a retry CTA; canvas shows no half-built wreckage because nothing was built.</li>
+        <li>This is a hidden strength of one-shot: the failure state is clean by construction.</li>
+      </ul></div>
+      <div class="note-card"><h5>If the response has per-node issues</h5><ul>
+        <li>Everything materializes; offending nodes keep an <b>!</b> badge.</li>
+        <li>Clicking the badge (or "Fix this" in chat) opens the scoped prompt for that node — same loop as review revisions.</li>
+        <li>Needs the plan-step → built-node ID mapping returned by the build response.</li>
+      </ul></div>
+    </div>
   </section>
 
-  <!-- ================= COMPARISON ================= -->
-  <section class="option">
-    <h2>Side by side</h2>
+  <!-- ============ EDIT JOURNEY ============ -->
+  <section class="block">
+    <div class="sect-tag mono">JOURNEY 2 · EDIT</div>
+    <h2>Diff review → confirm → apply reveal</h2>
+
+    <div class="states">
+      <div class="state-card"><span class="k">E1 · Proposal</span><b>Diff overlay</b><span>Edit plan renders over the live workflow: untouched nodes dim, adds are ghosts with <b>+</b>, changes get <b>±</b> with before→after, removals struck with <b>−</b>.</span></div>
+      <div class="state-card"><span class="k">E2 · Review</span><b>Delta-only card</b><span>Chat card lists only the changes, grouped add / modify / remove. Hover-sync works on the diff exactly as in create.</span></div>
+      <div class="state-card"><span class="k">E3 · Apply</span><b>One-shot apply</b><span>Confirm sends one apply request. Changed regions shimmer; untouched nodes stay inert — the sweep itself communicates blast radius.</span></div>
+      <div class="state-card"><span class="k">E4 · Settle</span><b>Delta reveal + revert</b><span>Adds materialize, mods pulse and settle, removals collapse. Snackbar offers one-click revert to the pre-edit version.</span></div>
+    </div>
+
+    <h3>Interactive: the full edit pass</h3>
+    <p class="sub">Request: <i>"also post failures to Slack, widen the window to 6 months, and drop the return step."</i> Hover the delta card to see sync on a diff. <b>Apply changes</b> runs E3→E4: shimmer on the affected region, then add-materialize / mod-pulse / remove-collapse, then the revert snackbar. Untouched nodes never move — spatial stability is what makes the diff readable.</p>
+
+    <div class="frame demo">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> E1–E4 · Edit — interactive</div>
+      <div class="frame-body">
+        <div class="chat-rail">
+          <div class="plan-card">
+            <div class="pc-head"><b>Proposed changes · 3</b></div>
+            <ul class="steps" id="edit-list">
+              <li class="sync-step" data-node="q" tabindex="0"><span class="ic">📊</span><div class="st"><b>Query analytics</b><span>window: 3 mo → 6 mo</span></div><span class="stepchip mod">±</span></li>
+              <li class="sync-step" data-node="s" tabindex="0"><span class="ic">💬</span><div class="st"><b>Post failures to Slack</b><span>#ops-alerts · new step</span></div><span class="stepchip add">+</span></li>
+              <li class="sync-step" data-node="r" tabindex="0"><span class="ic">↩</span><div class="st"><b>Return output</b><span>will be removed</span></div><span class="stepchip del">−</span></li>
+            </ul>
+            <div class="pc-actions"><button class="btn primary" id="apply-btn" type="button">Apply changes</button><button class="btn" type="button">Revise…</button></div>
+          </div>
+          <span class="rail-note" id="apply-note">Only the delta is listed — untouched steps stay out of the card and dimmed on canvas.</span>
+        </div>
+        <div class="canvas">
+          <div class="chain" id="edit-chain">
+            <div class="node dim"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>unchanged</span></div></div>
+            <div class="edge solid"></div>
+            <div class="node wash" data-id="q"><span class="diffdot mod" data-badge>±</span><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span data-mod-label>window: 3 mo → 6 mo</span></div></div>
+            <div class="edge solid"></div>
+            <div class="node dim"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span>unchanged</span></div></div>
+            <div class="edge solid"></div>
+            <div class="node ghost" data-id="s"><span class="diffdot add" data-badge>+</span><span class="ic">💬</span><div class="nl"><b>Post failures to Slack</b><span>#ops-alerts</span></div></div>
+            <div class="rm-wrap" id="rm-wrap">
+              <div class="edge solid"></div>
+              <div class="node removed" data-id="r"><span class="diffdot del" data-badge>−</span><span class="ic">↩</span><div class="nl"><b>Return output</b><span>will be removed</span></div></div>
+            </div>
+          </div>
+          <div class="snackbar" id="revert-bar">Changes applied · <a id="revert-link">Revert</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <div class="note-card"><h5>Why removals must animate a collapse</h5><ul>
+        <li>A node vanishing instantly reads as a glitch; a struck node collapsing reads as a decision executing.</li>
+        <li>The collapse also closes the layout gap, so the final graph is the real post-edit graph, not a diagram with holes.</li>
+      </ul></div>
+      <div class="note-card"><h5>Revert as a first-class citizen</h5><ul>
+        <li>One-shot apply = whole-graph replace, so keeping the prior version is nearly free — snapshot before apply.</li>
+        <li>Revert replays the reveal in reverse (adds fade to ghost, removed step re-grows) — the grammar teaches itself.</li>
+        <li>Snackbar times out into version history; nothing is ever lost.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ============ INTERACTION SPEC ============ -->
+  <section class="block">
+    <div class="sect-tag mono">SPEC</div>
+    <h2>Interaction contract: chat ↔ canvas</h2>
+    <p class="sub">Every event has a defined behavior on both surfaces. Stable step IDs (shared by planner output, chat card rows, ghost nodes, and the build response's node mapping) are what make each row possible.</p>
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>Direction</th><th>Effort</th><th>Reuses</th><th>"See it" factor</th><th>Best for</th></tr></thead>
+        <thead><tr><th>Event</th><th>Chat panel</th><th>Canvas</th><th>Honesty / notes</th></tr></thead>
         <tbody>
-          <tr><td>B · Plan card</td><td><span class="pill lo">Low</span></td><td>Question-card pattern, chat renderer</td><td>Medium — structure, not shape</td><td>First ship; forces plan schema</td></tr>
-          <tr><td>A · Ghost canvas</td><td><span class="pill md">Medium</span></td><td>Canvas nodes, auto-layout, loader</td><td>High — the actual thing, in place</td><td>Creation flows on empty canvas</td></tr>
-          <tr><td>D · Synced hybrid</td><td><span class="pill md">Medium+</span></td><td>A + B, shared step IDs</td><td>High — read and see, linked</td><td>The end-state default UX</td></tr>
-          <tr><td>C · Review sheet</td><td><span class="pill md">Medium</span></td><td>Modal/sheet primitives</td><td>High, but in a detour surface</td><td>Big edits, high-impact approvals</td></tr>
-          <tr><td>E · Build-along</td><td><span class="pill lo">Low on top of A</span></td><td>Ghost grammar from A</td><td>High — progress is spatial</td><td>Post-confirm; error localization</td></tr>
+          <tr class="group"><td colspan="4">Create · plan &amp; review</td></tr>
+          <tr><td>Plan streams</td><td>Card rows appear one by one</td><td>Ghosts appear one by one; loader morphs into ghost #1</td><td>Honest — plan genuinely streams; build hasn't started</td></tr>
+          <tr><td>Hover / focus step row</td><td>Row highlights</td><td>Ghost spotlights (and reverse: hover ghost → row highlights)</td><td>Teaches the chat↔canvas mapping</td></tr>
+          <tr><td>Click ghost node</td><td>Card scrolls to step</td><td>Popover: key facts + one-tap changers + scoped prompt</td><td>Popover is the per-step workbench</td></tr>
+          <tr><td>Scoped revision sent</td><td>Row gets "updated" chip</td><td>Only affected ghost morphs, brief accent pulse</td><td>Diff vs previous plan version; reading position preserved</td></tr>
+          <tr class="group"><td colspan="4">Create · build (one-shot)</td></tr>
+          <tr><td>Confirm</td><td>CTA → "Building…"</td><td>Shimmer sweep on all ghosts; canvas read-only</td><td>Indeterminate only — never a fake step counter</td></tr>
+          <tr><td>Response OK</td><td>Success summary</td><td>Cascade materialize, ~300ms stagger top-to-bottom</td><td>Pure presentation; everything already built</td></tr>
+          <tr><td>Response with node issues</td><td>Issue list, each links to its node</td><td>All materialize; offenders keep <b>!</b> badge + fix affordance</td><td>Needs step→node ID map in build response</td></tr>
+          <tr><td>Request fails</td><td>Error + retry CTA</td><td>Ghosts remain untouched</td><td>Plan preserved; clean failure by construction</td></tr>
+          <tr class="group"><td colspan="4">Edit</td></tr>
+          <tr><td>Edit plan arrives</td><td>Delta-only card (+/±/−)</td><td>Diff overlay; untouched nodes dim, no reflow</td><td>Spatial stability = readable diff</td></tr>
+          <tr><td>Hover delta row</td><td>Row highlights</td><td>Corresponding diff node spotlights</td><td>Same sync loop as create</td></tr>
+          <tr><td>Click ± node</td><td>—</td><td>Popover shows before → after per field</td><td>Field-level diff, not just a badge</td></tr>
+          <tr><td>Apply</td><td>CTA → "Applying…"</td><td>Shimmer on affected region only</td><td>Sweep area = blast radius</td></tr>
+          <tr><td>Apply lands</td><td>Summary + revert link</td><td>Adds materialize, mods pulse, removals collapse; snackbar</td><td>Revert replays reveal in reverse</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- ================= RECOMMENDATION ================= -->
-  <section class="option">
-    <h2>Recommended path</h2>
-    <ol class="phases">
-      <li><b>Structured plan schema + chat card (B)</b><span>Planner emits typed steps (id, kind, app, connection, summary, detail). Card replaces markdown. Everything after depends on this schema.</span></li>
-      <li><b>Ghost blueprint (A) for creation flows</b><span>Ghost style variant on existing node renderer; loader morphs into first ghost as plan streams. Confirm stays in chat.</span></li>
-      <li><b>Sync + build-along (D + E)</b><span>Shared step IDs wire hover-spotlight both ways; confirm triggers progressive materialization; errors land on nodes.</span></li>
-      <li><b>Diff grammar for edits, review sheet (C) where stakes are high</b><span>Add/mod/del badges over existing canvas; sheet reserved for large-delta or high-impact plans.</span></li>
-    </ol>
-    <div class="callout">The ghost grammar is the keystone: one visual idea (dashed = proposed, solid = real, badge = delta) covers planning, building, and editing — and every phase above ships value on its own.</div>
+  <!-- ============ IMPLEMENTATION ============ -->
+  <section class="block">
+    <div class="sect-tag mono">BUILD NOTES</div>
+    <h2>What this needs from the system</h2>
+    <div class="notes">
+      <div class="note-card"><h5>Planner contract</h5><ul>
+        <li>Typed steps: <code>{id, kind, appId, connectionId?, title, summary, fields, dependsOn[]}</code>.</li>
+        <li>IDs stable across revisions — a revised plan is a patch, so ghosts morph instead of re-rendering.</li>
+        <li>Edit plans emit ops: <code>{op: add|modify|remove, targetNodeId?, step}</code> with field-level before/after for modify.</li>
+      </ul></div>
+      <div class="note-card"><h5>Build response contract</h5><ul>
+        <li>Returns <code>planStepId → builtNodeId</code> mapping — powers the cascade order, error landing, and post-build popovers.</li>
+        <li>Per-node validation issues ride the same mapping.</li>
+      </ul></div>
+      <div class="note-card"><h5>Canvas layer</h5><ul>
+        <li>Ghost = style variant of the existing node renderer; diff badges = decorator layer. No second renderer.</li>
+        <li>Ghost layout must use the same auto-layout as real nodes, so materialization is a style change, not a position change.</li>
+        <li>Reveal respects <code>prefers-reduced-motion</code>: instant solidify, no cascade.</li>
+      </ul></div>
+      <div class="note-card"><h5>Versioning</h5><ul>
+        <li>Snapshot workflow before every one-shot apply → snackbar revert + version history for free.</li>
+        <li>Plan revisions keep their own lineage so "updated" chips can diff against the previous plan iteration.</li>
+      </ul></div>
+    </div>
+    <div class="callout"><b>One grammar, three moments:</b> dashed = proposed, shimmer = in flight, solid = real, badge = delta. Create and edit are the same experience — edit is just a plan whose baseline isn't empty.</div>
   </section>
 </main>
 
 <script>
   (function () {
-    var chain = document.getElementById('ghost-chain');
-    var btn = document.getElementById('confirm-btn');
-    var note = document.getElementById('confirm-note');
-    var building = false;
-    btn.addEventListener('click', function () {
-      if (building) return;
-      if (chain.classList.contains('built')) {
-        chain.classList.remove('built');
-        chain.querySelectorAll('.node').forEach(function (node) { node.style.transitionDelay = ''; });
-        btn.textContent = 'Confirm plan';
-        note.textContent = 'Ghosts become real nodes as each step is built.';
-        return;
-      }
-      building = true;
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      chain.querySelectorAll('.node').forEach(function (node, index) {
-        node.style.transitionDelay = reduce ? '0s' : (index * 0.35) + 's';
-      });
-      chain.classList.add('built');
-      btn.textContent = 'Building…';
-      var total = reduce ? 100 : chain.querySelectorAll('.node').length * 350 + 500;
-      setTimeout(function () {
-        building = false;
-        btn.textContent = 'Reset demo';
-        note.textContent = 'Built. Each node solidified as its step landed.';
-      }, total);
-    });
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    var syncNodes = document.querySelectorAll('#sync-chain .node');
-    document.querySelectorAll('#sync-list .sync-step').forEach(function (step) {
-      var target = syncNodes[Number(step.dataset.node)];
-      function on() { target.classList.add('spot'); }
-      function off() { target.classList.remove('spot'); }
-      step.addEventListener('mouseenter', on);
-      step.addEventListener('mouseleave', off);
-      step.addEventListener('focus', on);
-      step.addEventListener('blur', off);
+    function wireSync(listSelector, chainSelector, byIndex) {
+      var chain = document.querySelector(chainSelector);
+      if (!chain) return;
+      var nodes = chain.querySelectorAll('.node');
+      document.querySelectorAll(listSelector + ' .sync-step').forEach(function (step) {
+        var target = byIndex
+          ? nodes[Number(step.dataset.node)]
+          : chain.querySelector('.node[data-id="' + step.dataset.node + '"]');
+        if (!target) return;
+        function on() { target.classList.add('spot'); }
+        function off() { target.classList.remove('spot'); }
+        step.addEventListener('mouseenter', on);
+        step.addEventListener('mouseleave', off);
+        step.addEventListener('focus', on);
+        step.addEventListener('blur', off);
+      });
+    }
+    wireSync('#rev-list', '#rev-chain', true);
+    wireSync('#edit-list', '#edit-chain', false);
+
+    /* ---- create: build transition demo ---- */
+    var buildChain = document.getElementById('build-chain');
+    var buildOk = document.getElementById('build-ok');
+    var buildErr = document.getElementById('build-err');
+    var buildNote = document.getElementById('build-note');
+    var buildMsg = document.getElementById('build-msg');
+    var gmailNode = document.getElementById('build-gmail');
+    var busy = false;
+
+    function resetBuild() {
+      buildChain.classList.remove('built', 'building');
+      buildChain.querySelectorAll('.node').forEach(function (node) { node.style.transitionDelay = ''; });
+      gmailNode.classList.remove('error');
+      var badge = gmailNode.querySelector('.diffdot');
+      if (badge) badge.remove();
+      buildOk.textContent = 'Confirm & build';
+      buildErr.hidden = false;
+      buildMsg.textContent = "Plan confirmed? I'll build the whole workflow in one go.";
+      buildNote.textContent = 'Shimmer = request in flight (honest: indeterminate). Cascade plays only after the response.';
+    }
+
+    function runBuild(withIssue) {
+      if (busy) return;
+      if (buildChain.classList.contains('built')) { resetBuild(); return; }
+      busy = true;
+      buildOk.textContent = 'Building…';
+      buildErr.hidden = true;
+      buildMsg.textContent = 'Building the workflow… (single request, no per-step progress to report — and none faked)';
+      buildChain.classList.add('building');
+      var flight = reduce ? 200 : 1900;
+      setTimeout(function () {
+        buildChain.classList.remove('building');
+        buildChain.querySelectorAll('.node').forEach(function (node, index) {
+          node.style.transitionDelay = reduce ? '0s' : (index * 0.3) + 's';
+        });
+        buildChain.classList.add('built');
+        var settle = reduce ? 100 : buildChain.querySelectorAll('.node').length * 300 + 450;
+        setTimeout(function () {
+          if (withIssue) {
+            gmailNode.classList.add('error');
+            var badge = document.createElement('span');
+            badge.className = 'diffdot err';
+            badge.textContent = '!';
+            gmailNode.appendChild(badge);
+            buildMsg.textContent = 'Built — but the Gmail step has an issue: no subject configured. Fix this step?';
+            buildNote.textContent = 'The issue lands on the node that owns it, not in a paragraph.';
+          } else {
+            buildMsg.textContent = 'Done — 5 nodes created. Want a test run?';
+            buildNote.textContent = 'Cascade = presentation of an already-complete build. Click again to reset.';
+          }
+          buildOk.textContent = 'Reset demo';
+          busy = false;
+        }, settle);
+      }, flight);
+    }
+    buildOk.addEventListener('click', function () { runBuild(false); });
+    buildErr.addEventListener('click', function () { runBuild(true); });
+
+    /* ---- edit: apply demo ---- */
+    var editChain = document.getElementById('edit-chain');
+    var applyBtn = document.getElementById('apply-btn');
+    var applyNote = document.getElementById('apply-note');
+    var rmWrap = document.getElementById('rm-wrap');
+    var revertBar = document.getElementById('revert-bar');
+    var revertLink = document.getElementById('revert-link');
+    var addNode = editChain.querySelector('.node[data-id="s"]');
+    var modNode = editChain.querySelector('.node[data-id="q"]');
+    var applying = false;
+
+    function resetEdit() {
+      addNode.classList.add('ghost');
+      addNode.style.borderStyle = '';
+      modNode.classList.remove('modpulse');
+      modNode.querySelector('[data-mod-label]').textContent = 'window: 3 mo → 6 mo';
+      editChain.querySelectorAll('[data-badge]').forEach(function (badge) { badge.style.display = ''; });
+      rmWrap.classList.remove('gone');
+      revertBar.classList.remove('show');
+      applyBtn.textContent = 'Apply changes';
+      applyNote.textContent = 'Only the delta is listed — untouched steps stay out of the card and dimmed on canvas.';
+      applying = false;
+    }
+
+    applyBtn.addEventListener('click', function () {
+      if (applying) return;
+      if (applyBtn.textContent === 'Reset demo') { resetEdit(); return; }
+      applying = true;
+      applyBtn.textContent = 'Applying…';
+      applyNote.textContent = 'One-shot apply in flight — only the affected region is animated.';
+      var flight = reduce ? 150 : 1100;
+      editChain.classList.add('building');
+      setTimeout(function () {
+        editChain.classList.remove('building');
+        addNode.classList.remove('ghost');
+        modNode.classList.add('modpulse');
+        modNode.querySelector('[data-mod-label]').textContent = 'window: 6 months';
+        rmWrap.classList.add('gone');
+        editChain.querySelectorAll('[data-badge]').forEach(function (badge) { badge.style.display = 'none'; });
+        setTimeout(function () {
+          revertBar.classList.add('show');
+          applyBtn.textContent = 'Reset demo';
+          applyNote.textContent = 'Adds materialized, mod pulsed and settled, removal collapsed. Revert is one click.';
+          applying = false;
+        }, reduce ? 100 : 700);
+      }, flight);
     });
+    revertLink.addEventListener('click', resetEdit);
   })();
 </script>
 </article>
