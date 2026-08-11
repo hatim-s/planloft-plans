@@ -299,8 +299,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .node.removed { border-style: dashed; border-color: var(--del); opacity: .55; }
   .node.removed .nl b { text-decoration: line-through; }
   .node.dim { opacity: .5; box-shadow: none; }
-  .node.spot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); opacity: 1; }
+  .node.spot, .node.sel { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); opacity: 1; }
   .node.error { border-color: var(--del); }
+  .node.clicky { cursor: pointer; }
 
   /* building shimmer (in-flight one-shot request) */
   .chain.building .node.ghost::after, .chain.building .node.wash::after {
@@ -312,7 +313,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   @keyframes sweep { to { transform: translateX(100%); } }
 
   /* materialize cascade */
-  .demo .node, .demo .edge { transition: border-color .45s, background .45s, box-shadow .45s, opacity .45s; }
+  .demo .node, .demo .edge { transition: border-color .45s, background .45s, box-shadow .45s, opacity .45s, transform .45s; }
   .chain.built .node.ghost {
     border: 1px solid var(--line); background: var(--panel);
     box-shadow: var(--shadow); opacity: 1;
@@ -329,12 +330,35 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     70% { box-shadow: 0 0 0 8px transparent; }
     100% { box-shadow: 0 0 0 0 transparent; }
   }
+  .accpulse { animation: accpulse .9s ease-out 2; }
+  @keyframes accpulse {
+    0% { box-shadow: 0 0 0 0 var(--accent-soft); }
+    70% { box-shadow: 0 0 0 8px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
   .rm-wrap { display: flex; flex-direction: column; align-items: center; max-height: 120px; transition: max-height .5s ease, opacity .5s ease; overflow: hidden; }
   .rm-wrap.gone { max-height: 0; opacity: 0; }
+
+  /* C1 stream-in */
+  #stream-chain .node, #stream-chain .edge, #stream-list li { transition: opacity .45s ease, transform .45s ease; }
+  #stream-chain .pre, #stream-list .pre { opacity: 0; transform: translateY(8px); }
+  .loader {
+    position: absolute; left: 50%; top: 50%; width: 96px; height: 96px;
+    margin: -48px 0 0 -48px; transition: opacity .5s, transform .5s; z-index: 2;
+  }
+  .loader i {
+    position: absolute; left: 50%; top: 50%; width: 15px; height: 15px; margin: -8px;
+    border-radius: 50%; background: var(--accent-soft); border: 1.5px solid var(--ghost);
+    transform: rotate(var(--a)) translate(34px); animation: ldr 1.3s infinite; animation-delay: var(--d);
+  }
+  @keyframes ldr { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+  .loader.gone { opacity: 0; transform: scale(.55); pointer-events: none; }
+
   @media (prefers-reduced-motion: reduce) {
-    .demo .node, .demo .edge, .rm-wrap { transition: none; }
-    .chain.building .node.ghost::after { animation: none; }
-    .modpulse { animation: none; }
+    .demo .node, .demo .edge, .rm-wrap,
+    #stream-chain .node, #stream-chain .edge, #stream-list li { transition: none; }
+    .chain.building .node.ghost::after, .chain.building .node.wash::after { animation: none; }
+    .modpulse, .accpulse, .loader i { animation: none; }
   }
 
   /* ---------- plan card / steps ---------- */
@@ -361,7 +385,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .steps .st b { display: block; font-weight: 600; }
   .steps .st span { color: var(--muted); font-size: 11px; }
   .sync-step { border-radius: 8px; cursor: pointer; transition: background .15s; }
-  .sync-step:hover, .sync-step:focus-visible { background: var(--accent-soft); outline: none; }
+  .sync-step:hover, .sync-step:focus-visible, .sync-step.rowspot { background: var(--accent-soft); outline: none; }
   .stepchip {
     margin-left: auto; align-self: center; font-size: 10px; font-weight: 700;
     border-radius: 999px; padding: 1px 7px; flex: none;
@@ -381,23 +405,25 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
   /* ---------- popover ---------- */
   .popover {
-    position: absolute; left: calc(50% + 132px); top: 50%; width: 218px;
+    position: absolute; left: calc(50% + 124px); top: 38%; width: 220px;
     background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
     box-shadow: var(--shadow); padding: 12px; font-size: 11.5px; z-index: 3;
   }
   .popover::before {
-    content: ""; position: absolute; left: -6px; top: 24px; width: 10px; height: 10px;
+    content: ""; position: absolute; left: -6px; top: 20px; width: 10px; height: 10px;
     background: var(--panel); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line);
     transform: rotate(45deg);
   }
   .popover h5 { margin: 0 0 6px; font-size: 12px; }
   .popover .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; color: var(--muted); }
-  .popover .row b { color: var(--ink); font-weight: 600; }
-  .popover .row a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .popover .row b { color: var(--ink); font-weight: 600; text-align: right; }
+  .popover .row b.was { color: var(--muted); text-decoration: line-through; font-weight: 500; }
   .popover .prompt {
     margin-top: 8px; border: 1px solid var(--line); border-radius: 8px;
-    padding: 6px 9px; color: var(--muted); background: var(--paper);
+    padding: 6px 9px; color: var(--muted); background: var(--paper); font-style: italic;
   }
+  .popover .btn { width: 100%; margin-top: 8px; }
+  .popover.hidden { display: none; }
   @media (max-width: 900px) { .popover { position: static; width: auto; margin-top: 14px; } .popover::before { display: none; } }
 
   /* ---------- snackbar ---------- */
@@ -441,7 +467,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   <header class="top">
     <div class="eyebrow">Text-to-workflow · UX pass 2 of n</div>
     <h1>Review &amp; edit with a one-shot build</h1>
-    <p class="lede">Ghost blueprint (A) + chat↔canvas sync (D) + reveal (E), redesigned around the real build model: the agent generates the whole workflow in a single shot. No per-node build progress exists — so the reveal becomes choreography that plays <em>after</em> the response lands, and all the interesting interaction moves into review.</p>
+    <p class="lede">Ghost blueprint (A) + chat↔canvas sync (D) + reveal (E), redesigned around the real build model: the agent generates the whole workflow in a single shot. No per-node build progress exists — so the reveal becomes choreography that plays <em>after</em> the response lands, and all the interesting interaction moves into review. Every state below is a working demo.</p>
   </header>
 
   <section class="block">
@@ -462,11 +488,52 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       <div class="state-card"><span class="k">C4 · Arrival</span><b>Cascade reveal</b><span>Response lands → ghosts solidify top-to-bottom (~300ms stagger). Validation issues land as badges on the exact nodes.</span></div>
     </div>
 
-    <h3>C2 — the review state, in detail</h3>
-    <p class="sub">Chat card and ghost chain are two views of one plan object, joined by stable step IDs. The popover is the per-step workbench: key facts (connection, recipient, window) with one-tap changers, plus a scoped prompt that sends a revision request <em>for that step only</em>. The planner replies with a revised plan; only changed ghosts morph, marked with an "updated" chip — no full re-render, no lost reading position.</p>
+    <h3>C1 — planning: the loader becomes the plan</h3>
+    <p class="sub">The floating icon-cluster loader already owns the canvas during thinking. As the first typed step streams in, the loader collapses into the first ghost node; each further step lands as a ghost while its row appears in the chat card at the same beat. Press <b>Play the planning stream</b>.</p>
 
-    <div class="frame">
-      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> C2 · Review — hover the steps; popover shown for "Send via Gmail"</div>
+    <div class="frame demo">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> C1 · Planning — interactive</div>
+      <div class="frame-body">
+        <div class="chat-rail">
+          <div class="bubble">Make an automation that fetches run insights for the last 3 months…</div>
+          <div class="plan-card">
+            <div class="pc-head"><b>Plan</b><span class="rail-note" id="stream-count">thinking…</span></div>
+            <ul class="steps" id="stream-list">
+              <li class="pre"><span class="ic">⚡</span><div class="st"><b>Callable trigger</b></div></li>
+              <li class="pre"><span class="ic">📊</span><div class="st"><b>Query analytics</b></div></li>
+              <li class="pre"><span class="ic">✉️</span><div class="st"><b>Format email</b></div></li>
+              <li class="pre"><span class="ic">M</span><div class="st"><b>Send via Gmail</b></div></li>
+              <li class="pre"><span class="ic">↩</span><div class="st"><b>Return output</b></div></li>
+            </ul>
+          </div>
+          <button class="btn primary" id="stream-btn" type="button">Play the planning stream</button>
+          <span class="rail-note" id="stream-note">Card row and ghost land on the same beat — one plan object, two views.</span>
+        </div>
+        <div class="canvas">
+          <div class="loader" id="loader">
+            <i style="--a:0deg; --d:0s"></i><i style="--a:60deg; --d:.15s"></i><i style="--a:120deg; --d:.3s"></i>
+            <i style="--a:180deg; --d:.45s"></i><i style="--a:240deg; --d:.6s"></i><i style="--a:300deg; --d:.75s"></i>
+          </div>
+          <div class="chain" id="stream-chain">
+            <div class="node ghost pre"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>On-demand, no input</span></div></div>
+            <div class="edge pre"></div>
+            <div class="node ghost pre"><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span>WORKFLOW_EXECUTION · 3 mo</span></div></div>
+            <div class="edge pre"></div>
+            <div class="node ghost pre"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span>Metrics summary</span></div></div>
+            <div class="edge pre"></div>
+            <div class="node ghost pre"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span>Mail | K1</span></div></div>
+            <div class="edge pre"></div>
+            <div class="node ghost pre"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span>Counts, durations</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>C2 — review: the per-step workbench</h3>
+    <p class="sub">Chat card and ghost chain are two views of one plan object, joined by stable step IDs. Hover syncs both ways. <b>Click any ghost</b> — the popover follows with that step's key facts. <b>Apply the scoped change</b> to watch a revision morph only its own ghost: accent pulse on the node, "updated" chip on the row, reading position untouched.</p>
+
+    <div class="frame demo">
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> C2 · Review — interactive: hover rows, click ghosts, apply a scoped change</div>
       <div class="frame-body">
         <div class="chat-rail">
           <div class="plan-card">
@@ -475,31 +542,31 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
               <li class="sync-step" data-node="0" tabindex="0"><span class="ic">⚡</span><div class="st"><b>Callable trigger</b></div></li>
               <li class="sync-step" data-node="1" tabindex="0"><span class="ic">📊</span><div class="st"><b>Query analytics</b></div></li>
               <li class="sync-step" data-node="2" tabindex="0"><span class="ic">✉️</span><div class="st"><b>Format email</b></div></li>
-              <li class="sync-step" data-node="3" tabindex="0"><span class="ic">M</span><div class="st"><b>Send via Gmail</b></div><span class="stepchip upd">updated</span></li>
+              <li class="sync-step" data-node="3" tabindex="0"><span class="ic">M</span><div class="st"><b>Send via Gmail</b></div></li>
               <li class="sync-step" data-node="4" tabindex="0"><span class="ic">↩</span><div class="st"><b>Return output</b></div></li>
             </ul>
             <div class="pc-actions"><button class="btn primary" type="button">Build it</button><button class="btn" type="button">Revise…</button></div>
           </div>
-          <span class="rail-note">Scoped revision just changed step 4 — only its ghost morphed, chip marks the delta vs the previous plan version.</span>
+          <span class="rail-note" id="rev-note">Selected step: Send via Gmail. Scoped changes touch one ghost, never the whole plan.</span>
         </div>
-        <div class="canvas">
+        <div class="canvas" id="rev-canvas">
           <div class="chain" id="rev-chain">
-            <div class="node ghost"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>On-demand, no input</span></div></div>
+            <div class="node ghost clicky"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span data-sub>On-demand, no input</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost"><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span>WORKFLOW_EXECUTION · 3 mo</span></div></div>
+            <div class="node ghost clicky"><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span data-sub>WORKFLOW_EXECUTION · 3 mo</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span>Metrics summary</span></div></div>
+            <div class="node ghost clicky"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span data-sub>Metrics summary</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost spot"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span>Mail | K1 → hatim.shakir@…</span></div></div>
+            <div class="node ghost clicky"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span data-sub>Mail | K1 → hatim.shakir@…</span></div></div>
             <div class="edge"></div>
-            <div class="node ghost"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span>Counts, durations</span></div></div>
+            <div class="node ghost clicky"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span data-sub>Counts, durations</span></div></div>
           </div>
-          <div class="popover" aria-label="Step details">
-            <h5>Send via Gmail</h5>
-            <div class="row"><span>Connection</span><b>Mail | K1</b></div>
-            <div class="row"><span>To</span><b>hatim.shakir@…</b></div>
-            <div class="row"><span>Subject</span><a>Set…</a></div>
-            <div class="prompt">Change this step…</div>
+          <div class="popover" id="rev-pop" aria-label="Step details">
+            <h5 id="pop-title">Send via Gmail</h5>
+            <div class="row"><span id="pop-k1">Connection</span><b id="pop-v1">Mail | K1</b></div>
+            <div class="row"><span id="pop-k2">To</span><b id="pop-v2">hatim.shakir@…</b></div>
+            <div class="prompt" id="pop-prompt">"also cc ops@unifyapps.com"</div>
+            <button class="btn" id="pop-apply" type="button">Apply scoped change</button>
           </div>
         </div>
       </div>
@@ -560,10 +627,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     </div>
 
     <h3>Interactive: the full edit pass</h3>
-    <p class="sub">Request: <i>"also post failures to Slack, widen the window to 6 months, and drop the return step."</i> Hover the delta card to see sync on a diff. <b>Apply changes</b> runs E3→E4: shimmer on the affected region, then add-materialize / mod-pulse / remove-collapse, then the revert snackbar. Untouched nodes never move — spatial stability is what makes the diff readable.</p>
+    <p class="sub">Request: <i>"also post failures to Slack, widen the window to 6 months, and drop the return step."</i> Hover the delta card for sync on a diff. <b>Click the ± node</b> for its field-level before→after popover. <b>Apply changes</b> runs E3→E4: shimmer on the affected region, then add-materialize / mod-pulse / remove-collapse, then the revert snackbar — and <b>Revert</b> plays the whole reveal in reverse. Untouched nodes never move — spatial stability is what makes the diff readable.</p>
 
     <div class="frame demo">
-      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> E1–E4 · Edit — interactive</div>
+      <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> E1–E4 · Edit — interactive: hover rows, click the ± node, apply, revert</div>
       <div class="frame-body">
         <div class="chat-rail">
           <div class="plan-card">
@@ -577,11 +644,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
           </div>
           <span class="rail-note" id="apply-note">Only the delta is listed — untouched steps stay out of the card and dimmed on canvas.</span>
         </div>
-        <div class="canvas">
+        <div class="canvas" id="edit-canvas">
           <div class="chain" id="edit-chain">
             <div class="node dim"><span class="ic">⚡</span><div class="nl"><b>Callable trigger</b><span>unchanged</span></div></div>
             <div class="edge solid"></div>
-            <div class="node wash" data-id="q"><span class="diffdot mod" data-badge>±</span><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span data-mod-label>window: 3 mo → 6 mo</span></div></div>
+            <div class="node wash clicky" data-id="q"><span class="diffdot mod" data-badge>±</span><span class="ic">📊</span><div class="nl"><b>Query analytics</b><span data-mod-label>window: 3 mo → 6 mo</span></div></div>
             <div class="edge solid"></div>
             <div class="node dim"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span>unchanged</span></div></div>
             <div class="edge solid"></div>
@@ -590,6 +657,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
               <div class="edge solid"></div>
               <div class="node removed" data-id="r"><span class="diffdot del" data-badge>−</span><span class="ic">↩</span><div class="nl"><b>Return output</b><span>will be removed</span></div></div>
             </div>
+          </div>
+          <div class="popover hidden" id="edit-pop" aria-label="Field diff">
+            <h5>Query analytics · change</h5>
+            <div class="row"><span>window</span><b class="was">3 months</b></div>
+            <div class="row"><span></span><b>6 months</b></div>
+            <div class="row"><span>grouping</span><b>unchanged</b></div>
           </div>
           <div class="snackbar" id="revert-bar">Changes applied · <a id="revert-link">Revert</a></div>
         </div>
@@ -603,7 +676,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       </ul></div>
       <div class="note-card"><h5>Revert as a first-class citizen</h5><ul>
         <li>One-shot apply = whole-graph replace, so keeping the prior version is nearly free — snapshot before apply.</li>
-        <li>Revert replays the reveal in reverse (adds fade to ghost, removed step re-grows) — the grammar teaches itself.</li>
+        <li>Revert replays the reveal in reverse (adds fade to ghost, removed step re-grows) — the grammar teaches itself. Try it in the demo.</li>
         <li>Snackbar times out into version history; nothing is ever lost.</li>
       </ul></div>
     </div>
@@ -671,6 +744,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    function placePop(pop, node, canvas) {
+      if (getComputedStyle(pop).position !== 'absolute') return;
+      var canvasRect = canvas.getBoundingClientRect();
+      var nodeRect = node.getBoundingClientRect();
+      pop.style.top = (nodeRect.top - canvasRect.top - 4) + 'px';
+    }
+
+    /* two-way hover sync: card row <-> canvas node */
     function wireSync(listSelector, chainSelector, byIndex) {
       var chain = document.querySelector(chainSelector);
       if (!chain) return;
@@ -680,18 +761,121 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
           ? nodes[Number(step.dataset.node)]
           : chain.querySelector('.node[data-id="' + step.dataset.node + '"]');
         if (!target) return;
-        function on() { target.classList.add('spot'); }
-        function off() { target.classList.remove('spot'); }
-        step.addEventListener('mouseenter', on);
-        step.addEventListener('mouseleave', off);
-        step.addEventListener('focus', on);
-        step.addEventListener('blur', off);
+        function rowOn() { target.classList.add('spot'); }
+        function rowOff() { target.classList.remove('spot'); }
+        step.addEventListener('mouseenter', rowOn);
+        step.addEventListener('mouseleave', rowOff);
+        step.addEventListener('focus', rowOn);
+        step.addEventListener('blur', rowOff);
+        target.addEventListener('mouseenter', function () { step.classList.add('rowspot'); });
+        target.addEventListener('mouseleave', function () { step.classList.remove('rowspot'); });
       });
     }
     wireSync('#rev-list', '#rev-chain', true);
     wireSync('#edit-list', '#edit-chain', false);
 
-    /* ---- create: build transition demo ---- */
+    /* ---- C1: planning stream demo ---- */
+    var streamBtn = document.getElementById('stream-btn');
+    var streamNote = document.getElementById('stream-note');
+    var streamCount = document.getElementById('stream-count');
+    var loader = document.getElementById('loader');
+    var streamItems = Array.prototype.slice.call(document.querySelectorAll('#stream-chain > *'));
+    var streamRows = Array.prototype.slice.call(document.querySelectorAll('#stream-list li'));
+    var streaming = false;
+
+    function resetStream() {
+      streamItems.forEach(function (item) { item.classList.add('pre'); });
+      streamRows.forEach(function (row) { row.classList.add('pre'); });
+      loader.classList.remove('gone');
+      streamCount.textContent = 'thinking…';
+      streamBtn.textContent = 'Play the planning stream';
+      streamNote.textContent = 'Card row and ghost land on the same beat — one plan object, two views.';
+    }
+
+    streamBtn.addEventListener('click', function () {
+      if (streaming) return;
+      if (streamBtn.textContent === 'Replay') { resetStream(); return; }
+      streaming = true;
+      streamBtn.textContent = 'Planning…';
+      var beat = reduce ? 0 : 420;
+      loader.classList.add('gone');
+      streamItems.forEach(function (item, index) {
+        setTimeout(function () {
+          item.classList.remove('pre');
+          if (item.classList.contains('node')) {
+            var rowIndex = Math.floor(index / 2);
+            streamRows[rowIndex].classList.remove('pre');
+            streamCount.textContent = (rowIndex + 1) + ' of 5 steps';
+          }
+        }, reduce ? 0 : 500 + index * beat);
+      });
+      setTimeout(function () {
+        streamCount.textContent = '5 steps · ready to review';
+        streamBtn.textContent = 'Replay';
+        streamNote.textContent = 'The loader collapsed into ghost #1 — planning and canvas were never separate surfaces.';
+        streaming = false;
+      }, reduce ? 150 : 500 + streamItems.length * beat + 300);
+    });
+
+    /* ---- C2: review workbench demo ---- */
+    var revCanvas = document.getElementById('rev-canvas');
+    var revPop = document.getElementById('rev-pop');
+    var revNote = document.getElementById('rev-note');
+    var revNodes = Array.prototype.slice.call(document.querySelectorAll('#rev-chain .node'));
+    var revRows = Array.prototype.slice.call(document.querySelectorAll('#rev-list .sync-step'));
+    var stepFacts = [
+      { title: 'Callable trigger', k1: 'Kind', v1: 'Callable', k2: 'Input', v2: 'None', prompt: '"also run weekly on Mondays"', revised: 'On-demand + weekly (Mon)' },
+      { title: 'Query analytics', k1: 'Report', v1: 'WORKFLOW_EXECUTION', k2: 'Window', v2: '3 months', prompt: '"widen to 6 months"', revised: 'WORKFLOW_EXECUTION · 6 mo' },
+      { title: 'Format email', k1: 'Format', v1: 'HTML summary', k2: 'Sections', v2: 'Totals, failures', prompt: '"add a failure-rate table"', revised: 'Adds failure-rate table' },
+      { title: 'Send via Gmail', k1: 'Connection', v1: 'Mail | K1', k2: 'To', v2: 'hatim.shakir@…', prompt: '"also cc ops@unifyapps.com"', revised: 'Mail | K1 · cc ops@unifyapps.com' },
+      { title: 'Return insights', k1: 'Output', v1: 'Structured JSON', k2: 'Fields', v2: 'Counts, durations', prompt: '"include p95 duration"', revised: 'Counts, durations, p95' }
+    ];
+    var selectedStep = 3;
+
+    function selectStep(index) {
+      selectedStep = index;
+      revNodes.forEach(function (node, nodeIndex) { node.classList.toggle('sel', nodeIndex === index); });
+      var facts = stepFacts[index];
+      document.getElementById('pop-title').textContent = facts.title;
+      document.getElementById('pop-k1').textContent = facts.k1;
+      document.getElementById('pop-v1').textContent = facts.v1;
+      document.getElementById('pop-k2').textContent = facts.k2;
+      document.getElementById('pop-v2').textContent = facts.v2;
+      document.getElementById('pop-prompt').textContent = facts.prompt;
+      document.getElementById('pop-apply').textContent = 'Apply scoped change';
+      placePop(revPop, revNodes[index], revCanvas);
+      revNote.textContent = 'Selected step: ' + facts.title + '. Scoped changes touch one ghost, never the whole plan.';
+    }
+
+    revNodes.forEach(function (node, index) {
+      node.addEventListener('click', function () { selectStep(index); });
+    });
+
+    document.getElementById('pop-apply').addEventListener('click', function () {
+      var facts = stepFacts[selectedStep];
+      var node = revNodes[selectedStep];
+      node.querySelector('[data-sub]').textContent = facts.revised;
+      node.classList.remove('accpulse');
+      void node.offsetWidth;
+      node.classList.add('accpulse');
+      var row = revRows[selectedStep];
+      if (!row.querySelector('.stepchip')) {
+        var chip = document.createElement('span');
+        chip.className = 'stepchip upd';
+        chip.textContent = 'updated';
+        row.appendChild(chip);
+      }
+      this.textContent = 'Applied ✓';
+      revNote.textContent = facts.title + ' revised — one ghost morphed, four ghosts never re-rendered.';
+    });
+
+    function layoutPops() {
+      selectStep(selectedStep);
+      if (!editPop.classList.contains('hidden')) placePop(editPop, modNode, editCanvas);
+    }
+    window.addEventListener('resize', layoutPops);
+
+    /* ---- C3/C4: build transition demo ---- */
     var buildChain = document.getElementById('build-chain');
     var buildOk = document.getElementById('build-ok');
     var buildErr = document.getElementById('build-err');
@@ -718,7 +902,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       busy = true;
       buildOk.textContent = 'Building…';
       buildErr.hidden = true;
-      buildMsg.textContent = 'Building the workflow… (single request, no per-step progress to report — and none faked)';
+      buildMsg.textContent = 'Building the workflow… (single request — no per-step progress to report, and none faked)';
       buildChain.classList.add('building');
       var flight = reduce ? 200 : 1900;
       setTimeout(function () {
@@ -749,8 +933,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     buildOk.addEventListener('click', function () { runBuild(false); });
     buildErr.addEventListener('click', function () { runBuild(true); });
 
-    /* ---- edit: apply demo ---- */
+    /* ---- Edit: diff review + apply demo ---- */
+    var editCanvas = document.getElementById('edit-canvas');
     var editChain = document.getElementById('edit-chain');
+    var editPop = document.getElementById('edit-pop');
     var applyBtn = document.getElementById('apply-btn');
     var applyNote = document.getElementById('apply-note');
     var rmWrap = document.getElementById('rm-wrap');
@@ -760,16 +946,20 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     var modNode = editChain.querySelector('.node[data-id="q"]');
     var applying = false;
 
+    modNode.addEventListener('click', function () {
+      var hidden = editPop.classList.toggle('hidden');
+      if (!hidden) placePop(editPop, modNode, editCanvas);
+    });
+
     function resetEdit() {
       addNode.classList.add('ghost');
-      addNode.style.borderStyle = '';
       modNode.classList.remove('modpulse');
       modNode.querySelector('[data-mod-label]').textContent = 'window: 3 mo → 6 mo';
       editChain.querySelectorAll('[data-badge]').forEach(function (badge) { badge.style.display = ''; });
       rmWrap.classList.remove('gone');
       revertBar.classList.remove('show');
       applyBtn.textContent = 'Apply changes';
-      applyNote.textContent = 'Only the delta is listed — untouched steps stay out of the card and dimmed on canvas.';
+      applyNote.textContent = 'Reverted — adds faded back to ghosts, the removed step re-grew. Same grammar, reversed.';
       applying = false;
     }
 
@@ -777,10 +967,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       if (applying) return;
       if (applyBtn.textContent === 'Reset demo') { resetEdit(); return; }
       applying = true;
+      editPop.classList.add('hidden');
       applyBtn.textContent = 'Applying…';
       applyNote.textContent = 'One-shot apply in flight — only the affected region is animated.';
-      var flight = reduce ? 150 : 1100;
       editChain.classList.add('building');
+      var flight = reduce ? 150 : 1100;
       setTimeout(function () {
         editChain.classList.remove('building');
         addNode.classList.remove('ghost');
@@ -797,6 +988,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       }, flight);
     });
     revertLink.addEventListener('click', resetEdit);
+
+    /* initial layout after paint */
+    requestAnimationFrame(function () { selectStep(3); });
+    window.addEventListener('load', function () { selectStep(selectedStep); });
   })();
 </script>
 </article>
