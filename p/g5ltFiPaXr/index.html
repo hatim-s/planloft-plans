@@ -403,28 +403,30 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .btn[disabled] { opacity: .55; cursor: default; }
   .pc-actions { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
 
-  /* ---------- popover ---------- */
-  .popover {
-    position: absolute; left: calc(50% + 124px); top: 38%; width: 220px;
-    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
-    box-shadow: var(--shadow); padding: 12px; font-size: 11.5px; z-index: 3;
+  /* ---------- inspector rail (third column — never clips) ---------- */
+  .inspect-rail {
+    width: 208px; flex: none; border-left: 1px solid var(--line);
+    padding: 14px; font-size: 11.5px; display: flex; flex-direction: column; gap: 2px;
+    background: var(--panel);
   }
-  .popover::before {
-    content: ""; position: absolute; left: -6px; top: 20px; width: 10px; height: 10px;
-    background: var(--panel); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    transform: rotate(45deg);
+  .inspect-rail .rail-k {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 9.5px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
   }
-  .popover h5 { margin: 0 0 6px; font-size: 12px; }
-  .popover .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; color: var(--muted); }
-  .popover .row b { color: var(--ink); font-weight: 600; text-align: right; }
-  .popover .row b.was { color: var(--muted); text-decoration: line-through; font-weight: 500; }
-  .popover .prompt {
+  .inspect-rail h5 { margin: 0 0 6px; font-size: 12px; }
+  .inspect-rail .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; color: var(--muted); }
+  .inspect-rail .row b { color: var(--ink); font-weight: 600; text-align: right; }
+  .inspect-rail .row b.was { color: var(--muted); text-decoration: line-through; font-weight: 500; }
+  .inspect-rail .prompt {
     margin-top: 8px; border: 1px solid var(--line); border-radius: 8px;
     padding: 6px 9px; color: var(--muted); background: var(--paper); font-style: italic;
   }
-  .popover .btn { width: 100%; margin-top: 8px; }
-  .popover.hidden { display: none; }
-  @media (max-width: 900px) { .popover { position: static; width: auto; margin-top: 14px; } .popover::before { display: none; } }
+  .inspect-rail .btn { width: 100%; margin-top: 8px; }
+  .inspect-rail .hint { color: var(--muted); }
+  .inspect-rail .hidden { display: none; }
+  @media (max-width: 680px) {
+    .inspect-rail { width: 100%; border-left: 0; border-top: 1px solid var(--line); }
+  }
 
   /* ---------- snackbar ---------- */
   .snackbar {
@@ -530,7 +532,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     </div>
 
     <h3>C2 — review: the per-step workbench</h3>
-    <p class="sub">Chat card and ghost chain are two views of one plan object, joined by stable step IDs. Hover syncs both ways. <b>Click any ghost</b> — the popover follows with that step's key facts. <b>Apply the scoped change</b> to watch a revision morph only its own ghost: accent pulse on the node, "updated" chip on the row, reading position untouched.</p>
+    <p class="sub">Chat card and ghost chain are two views of one plan object, joined by stable step IDs. Hover syncs both ways. <b>Click any ghost</b> — the step inspector on the right follows with that step's key facts. <b>Apply the scoped change</b> to watch a revision morph only its own ghost: accent pulse on the node, "updated" chip on the row, reading position untouched.</p>
 
     <div class="frame demo">
       <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> C2 · Review — interactive: hover rows, click ghosts, apply a scoped change</div>
@@ -561,13 +563,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
             <div class="edge"></div>
             <div class="node ghost clicky"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span data-sub>Counts, durations</span></div></div>
           </div>
-          <div class="popover" id="rev-pop" aria-label="Step details">
-            <h5 id="pop-title">Send via Gmail</h5>
-            <div class="row"><span id="pop-k1">Connection</span><b id="pop-v1">Mail | K1</b></div>
-            <div class="row"><span id="pop-k2">To</span><b id="pop-v2">hatim.shakir@…</b></div>
-            <div class="prompt" id="pop-prompt">"also cc ops@unifyapps.com"</div>
-            <button class="btn" id="pop-apply" type="button">Apply scoped change</button>
-          </div>
+        </div>
+        <div class="inspect-rail" aria-label="Step details">
+          <span class="rail-k">Step inspector</span>
+          <h5 id="pop-title">Send via Gmail</h5>
+          <div class="row"><span id="pop-k1">Connection</span><b id="pop-v1">Mail | K1</b></div>
+          <div class="row"><span id="pop-k2">To</span><b id="pop-v2">hatim.shakir@…</b></div>
+          <div class="prompt" id="pop-prompt">"also cc ops@unifyapps.com"</div>
+          <button class="btn" id="pop-apply" type="button">Apply scoped change</button>
         </div>
       </div>
     </div>
@@ -627,7 +630,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     </div>
 
     <h3>Interactive: the full edit pass</h3>
-    <p class="sub">Request: <i>"also post failures to Slack, widen the window to 6 months, and drop the return step."</i> Hover the delta card for sync on a diff. <b>Click the ± node</b> for its field-level before→after popover. <b>Apply changes</b> runs E3→E4: shimmer on the affected region, then add-materialize / mod-pulse / remove-collapse, then the revert snackbar — and <b>Revert</b> plays the whole reveal in reverse. Untouched nodes never move — spatial stability is what makes the diff readable.</p>
+    <p class="sub">Request: <i>"also post failures to Slack, widen the window to 6 months, and drop the return step."</i> Hover the delta card for sync on a diff. <b>Click the ± node</b> for its field-level before→after diff in the change inspector. <b>Apply changes</b> runs E3→E4: shimmer on the affected region, then add-materialize / mod-pulse / remove-collapse, then the revert snackbar — and <b>Revert</b> plays the whole reveal in reverse. Untouched nodes never move — spatial stability is what makes the diff readable.</p>
 
     <div class="frame demo">
       <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> E1–E4 · Edit — interactive: hover rows, click the ± node, apply, revert</div>
@@ -658,13 +661,17 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
               <div class="node removed" data-id="r"><span class="diffdot del" data-badge>−</span><span class="ic">↩</span><div class="nl"><b>Return output</b><span>will be removed</span></div></div>
             </div>
           </div>
-          <div class="popover hidden" id="edit-pop" aria-label="Field diff">
+          <div class="snackbar" id="revert-bar">Changes applied · <a id="revert-link">Revert</a></div>
+        </div>
+        <div class="inspect-rail" aria-label="Field diff">
+          <span class="rail-k">Change inspector</span>
+          <span class="hint" id="edit-hint">Click the ± node to see its field-level diff.</span>
+          <div class="hidden" id="edit-pop">
             <h5>Query analytics · change</h5>
             <div class="row"><span>window</span><b class="was">3 months</b></div>
             <div class="row"><span></span><b>6 months</b></div>
             <div class="row"><span>grouping</span><b>unchanged</b></div>
           </div>
-          <div class="snackbar" id="revert-bar">Changes applied · <a id="revert-link">Revert</a></div>
         </div>
       </div>
     </div>
@@ -694,7 +701,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
           <tr class="group"><td colspan="4">Create · plan &amp; review</td></tr>
           <tr><td>Plan streams</td><td>Card rows appear one by one</td><td>Ghosts appear one by one; loader morphs into ghost #1</td><td>Honest — plan genuinely streams; build hasn't started</td></tr>
           <tr><td>Hover / focus step row</td><td>Row highlights</td><td>Ghost spotlights (and reverse: hover ghost → row highlights)</td><td>Teaches the chat↔canvas mapping</td></tr>
-          <tr><td>Click ghost node</td><td>Card scrolls to step</td><td>Popover: key facts + one-tap changers + scoped prompt</td><td>Popover is the per-step workbench</td></tr>
+          <tr><td>Click ghost node</td><td>Card scrolls to step</td><td>Inspector: key facts + one-tap changers + scoped prompt</td><td>Inspector is the per-step workbench</td></tr>
           <tr><td>Scoped revision sent</td><td>Row gets "updated" chip</td><td>Only affected ghost morphs, brief accent pulse</td><td>Diff vs previous plan version; reading position preserved</td></tr>
           <tr class="group"><td colspan="4">Create · build (one-shot)</td></tr>
           <tr><td>Confirm</td><td>CTA → "Building…"</td><td>Shimmer sweep on all ghosts; canvas read-only</td><td>Indeterminate only — never a fake step counter</td></tr>
@@ -704,7 +711,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
           <tr class="group"><td colspan="4">Edit</td></tr>
           <tr><td>Edit plan arrives</td><td>Delta-only card (+/±/−)</td><td>Diff overlay; untouched nodes dim, no reflow</td><td>Spatial stability = readable diff</td></tr>
           <tr><td>Hover delta row</td><td>Row highlights</td><td>Corresponding diff node spotlights</td><td>Same sync loop as create</td></tr>
-          <tr><td>Click ± node</td><td>—</td><td>Popover shows before → after per field</td><td>Field-level diff, not just a badge</td></tr>
+          <tr><td>Click ± node</td><td>—</td><td>Inspector shows before → after per field</td><td>Field-level diff, not just a badge</td></tr>
           <tr><td>Apply</td><td>CTA → "Applying…"</td><td>Shimmer on affected region only</td><td>Sweep area = blast radius</td></tr>
           <tr><td>Apply lands</td><td>Summary + revert link</td><td>Adds materialize, mods pulse, removals collapse; snackbar</td><td>Revert replays reveal in reverse</td></tr>
         </tbody>
@@ -743,13 +750,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 <script>
   (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function placePop(pop, node, canvas) {
-      if (getComputedStyle(pop).position !== 'absolute') return;
-      var canvasRect = canvas.getBoundingClientRect();
-      var nodeRect = node.getBoundingClientRect();
-      pop.style.top = (nodeRect.top - canvasRect.top - 4) + 'px';
-    }
 
     /* two-way hover sync: card row <-> canvas node */
     function wireSync(listSelector, chainSelector, byIndex) {
@@ -818,8 +818,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     });
 
     /* ---- C2: review workbench demo ---- */
-    var revCanvas = document.getElementById('rev-canvas');
-    var revPop = document.getElementById('rev-pop');
     var revNote = document.getElementById('rev-note');
     var revNodes = Array.prototype.slice.call(document.querySelectorAll('#rev-chain .node'));
     var revRows = Array.prototype.slice.call(document.querySelectorAll('#rev-list .sync-step'));
@@ -843,7 +841,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       document.getElementById('pop-v2').textContent = facts.v2;
       document.getElementById('pop-prompt').textContent = facts.prompt;
       document.getElementById('pop-apply').textContent = 'Apply scoped change';
-      placePop(revPop, revNodes[index], revCanvas);
       revNote.textContent = 'Selected step: ' + facts.title + '. Scoped changes touch one ghost, never the whole plan.';
     }
 
@@ -868,12 +865,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       this.textContent = 'Applied ✓';
       revNote.textContent = facts.title + ' revised — one ghost morphed, four ghosts never re-rendered.';
     });
-
-    function layoutPops() {
-      selectStep(selectedStep);
-      if (!editPop.classList.contains('hidden')) placePop(editPop, modNode, editCanvas);
-    }
-    window.addEventListener('resize', layoutPops);
 
     /* ---- C3/C4: build transition demo ---- */
     var buildChain = document.getElementById('build-chain');
@@ -934,9 +925,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     buildErr.addEventListener('click', function () { runBuild(true); });
 
     /* ---- Edit: diff review + apply demo ---- */
-    var editCanvas = document.getElementById('edit-canvas');
     var editChain = document.getElementById('edit-chain');
     var editPop = document.getElementById('edit-pop');
+    var editHint = document.getElementById('edit-hint');
     var applyBtn = document.getElementById('apply-btn');
     var applyNote = document.getElementById('apply-note');
     var rmWrap = document.getElementById('rm-wrap');
@@ -948,7 +939,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
 
     modNode.addEventListener('click', function () {
       var hidden = editPop.classList.toggle('hidden');
-      if (!hidden) placePop(editPop, modNode, editCanvas);
+      editHint.classList.toggle('hidden', !hidden);
     });
 
     function resetEdit() {
@@ -968,6 +959,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       if (applyBtn.textContent === 'Reset demo') { resetEdit(); return; }
       applying = true;
       editPop.classList.add('hidden');
+      editHint.classList.remove('hidden');
       applyBtn.textContent = 'Applying…';
       applyNote.textContent = 'One-shot apply in flight — only the affected region is animated.';
       editChain.classList.add('building');
@@ -989,9 +981,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     });
     revertLink.addEventListener('click', resetEdit);
 
-    /* initial layout after paint */
-    requestAnimationFrame(function () { selectStep(3); });
-    window.addEventListener('load', function () { selectStep(selectedStep); });
+    selectStep(3);
   })();
 </script>
 </article>
