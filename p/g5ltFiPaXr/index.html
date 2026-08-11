@@ -402,6 +402,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
   .stepchip.mod { background: var(--mod-soft); color: var(--mod); }
   .stepchip.del { background: var(--del-soft); color: var(--del); }
   .stepchip.upd { background: var(--accent-soft); color: var(--accent); }
+  .row-gone { display: none; }
 
   .btn {
     font-size: 12px; font-weight: 600; border-radius: 8px; padding: 6px 12px;
@@ -540,22 +541,23 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
     </div>
 
     <h3>C2 — review: the per-step workbench</h3>
-    <p class="sub">Chat card and ghost chain are two views of one plan object, joined by stable step IDs. Hover syncs both ways. <b>Click any ghost</b> — the step inspector on the right follows with that step's key facts. <b>Apply the scoped change</b> to watch a revision morph only its own ghost: accent pulse on the node, "updated" chip on the row, reading position untouched.</p>
+    <p class="sub">Chat card and ghost chain are two views of one plan object, joined by stable step IDs. Hover syncs both ways. <b>Click any ghost</b> — the step inspector on the right follows with that step's key facts. <b>Apply the scoped change</b> to watch a revision morph only its own ghost: accent pulse on the node, "updated" chip on the row, reading position untouched. <b>Revise…</b> is the other revision scope — a free-form, whole-plan ask through chat: the planner returns a new plan iteration and the canvas plays the diff against the previous one (here: one step modified, one step added).</p>
 
     <div class="frame demo">
       <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span> C2 · Review — interactive: hover rows, click ghosts, apply a scoped change</div>
       <div class="frame-body">
-        <div class="chat-rail">
+        <div class="chat-rail" id="rev-rail">
           <div class="plan-card">
-            <div class="pc-head"><b>Plan · 5 steps</b></div>
+            <div class="pc-head"><b id="rev-count">Plan · 5 steps</b></div>
             <ul class="steps" id="rev-list">
               <li class="sync-step" data-node="0" tabindex="0"><span class="ic">⚡</span><div class="st"><b>Callable trigger</b></div></li>
               <li class="sync-step" data-node="1" tabindex="0"><span class="ic">📊</span><div class="st"><b>Query analytics</b></div></li>
               <li class="sync-step" data-node="2" tabindex="0"><span class="ic">✉️</span><div class="st"><b>Format email</b></div></li>
               <li class="sync-step" data-node="3" tabindex="0"><span class="ic">M</span><div class="st"><b>Send via Gmail</b></div></li>
-              <li class="sync-step" data-node="4" tabindex="0"><span class="ic">↩</span><div class="st"><b>Return output</b></div></li>
+              <li class="sync-step row-gone" data-node="4" tabindex="0" id="rev-slack-row"><span class="ic">💬</span><div class="st"><b>Post summary to Slack</b></div><span class="stepchip add">new</span></li>
+              <li class="sync-step" data-node="5" tabindex="0"><span class="ic">↩</span><div class="st"><b>Return output</b></div></li>
             </ul>
-            <div class="pc-actions"><button class="btn primary" type="button">Build it</button><button class="btn" type="button">Revise…</button></div>
+            <div class="pc-actions"><button class="btn primary" type="button">Build it</button><button class="btn" id="revise-btn" type="button">Revise…</button></div>
           </div>
           <span class="rail-note" id="rev-note">Selected step: Send via Gmail. Scoped changes touch one ghost, never the whole plan.</span>
         </div>
@@ -568,6 +570,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
             <div class="node ghost clicky"><span class="ic">✉️</span><div class="nl"><b>Format email</b><span data-sub>Metrics summary</span></div></div>
             <div class="edge"></div>
             <div class="node ghost clicky"><span class="ic">M</span><div class="nl"><b>Send via Gmail</b><span data-sub>Mail | K1 → hatim.shakir@…</span></div></div>
+            <div class="rm-wrap gone" id="rev-add-wrap">
+              <div class="edge"></div>
+              <div class="node ghost clicky"><span class="diffdot add">+</span><span class="ic">💬</span><div class="nl"><b>Post summary to Slack</b><span data-sub>#eng-updates · Slack | UA</span></div></div>
+            </div>
             <div class="edge"></div>
             <div class="node ghost clicky"><span class="ic">↩</span><div class="nl"><b>Return insights</b><span data-sub>Counts, durations</span></div></div>
           </div>
@@ -711,6 +717,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
           <tr><td>Hover / focus step row</td><td>Row highlights</td><td>Ghost spotlights (and reverse: hover ghost → row highlights)</td><td>Teaches the chat↔canvas mapping</td></tr>
           <tr><td>Click ghost node</td><td>Card scrolls to step</td><td>Inspector: key facts + one-tap changers + scoped prompt</td><td>Inspector is the per-step workbench</td></tr>
           <tr><td>Scoped revision sent</td><td>Row gets "updated" chip</td><td>Only affected ghost morphs, brief accent pulse</td><td>Diff vs previous plan version; reading position preserved</td></tr>
+          <tr><td>Whole-plan revise</td><td>Free-form ask; card gains/loses rows with +/±/− chips</td><td>Diff vs previous iteration: morphs pulse, new ghosts grow in, dropped ghosts collapse</td><td>Same delta grammar as edit, applied to plan iterations</td></tr>
           <tr class="group"><td colspan="4">Create · build (one-shot)</td></tr>
           <tr><td>Confirm</td><td>CTA → "Building…"</td><td>Shimmer sweep on all ghosts; canvas read-only</td><td>Indeterminate only — never a fake step counter</td></tr>
           <tr><td>Response OK</td><td>Success summary</td><td>Cascade materialize, ~300ms stagger top-to-bottom</td><td>Pure presentation; everything already built</td></tr>
@@ -834,6 +841,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
       { title: 'Query analytics', k1: 'Report', v1: 'WORKFLOW_EXECUTION', k2: 'Window', v2: '3 months', prompt: '"widen to 6 months"', revised: 'WORKFLOW_EXECUTION · 6 mo' },
       { title: 'Format email', k1: 'Format', v1: 'HTML summary', k2: 'Sections', v2: 'Totals, failures', prompt: '"add a failure-rate table"', revised: 'Adds failure-rate table' },
       { title: 'Send via Gmail', k1: 'Connection', v1: 'Mail | K1', k2: 'To', v2: 'hatim.shakir@…', prompt: '"also cc ops@unifyapps.com"', revised: 'Mail | K1 · cc ops@unifyapps.com' },
+      { title: 'Post summary to Slack', k1: 'Channel', v1: '#eng-updates', k2: 'Connection', v2: 'Slack | UA', prompt: '"use #ops-alerts instead"', revised: '#ops-alerts · Slack | UA' },
       { title: 'Return insights', k1: 'Output', v1: 'Structured JSON', k2: 'Fields', v2: 'Counts, durations', prompt: '"include p95 duration"', revised: 'Counts, durations, p95' }
     ];
     var selectedStep = 3;
@@ -871,7 +879,70 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
         row.appendChild(chip);
       }
       this.textContent = 'Applied ✓';
-      revNote.textContent = facts.title + ' revised — one ghost morphed, four ghosts never re-rendered.';
+      revNote.textContent = facts.title + ' revised — one ghost morphed, the rest never re-rendered.';
+    });
+
+    /* whole-plan revise: free-form ask -> new plan iteration -> diff vs previous */
+    var reviseBtn = document.getElementById('revise-btn');
+    var revRail = document.getElementById('rev-rail');
+    var revChainEl = document.getElementById('rev-chain');
+    var revAddWrap = document.getElementById('rev-add-wrap');
+    var revSlackRow = document.getElementById('rev-slack-row');
+    var revCount = document.getElementById('rev-count');
+    var reviseBubble = null;
+    var reviseGmailPrevSub = null;
+    var reviseAddedChip = false;
+    var revising = false;
+
+    reviseBtn.addEventListener('click', function () {
+      if (revising) return;
+      var gmailGhost = revNodes[3];
+      var gmailRow = revRows[3];
+      if (reviseBtn.textContent === 'Reset revision') {
+        if (reviseBubble) { reviseBubble.remove(); reviseBubble = null; }
+        gmailGhost.querySelector('[data-sub]').textContent = reviseGmailPrevSub;
+        gmailGhost.classList.remove('accpulse');
+        if (reviseAddedChip) {
+          var oldChip = gmailRow.querySelector('.stepchip');
+          if (oldChip) oldChip.remove();
+          reviseAddedChip = false;
+        }
+        revAddWrap.classList.add('gone');
+        revSlackRow.classList.add('row-gone');
+        revCount.textContent = 'Plan · 5 steps';
+        reviseBtn.textContent = 'Revise…';
+        revNote.textContent = 'Revision reset — back to the previous plan iteration.';
+        return;
+      }
+      revising = true;
+      reviseBubble = document.createElement('div');
+      reviseBubble.className = 'bubble';
+      reviseBubble.textContent = '"email the whole team instead, and post the summary to Slack too"';
+      revRail.insertBefore(reviseBubble, revRail.querySelector('.plan-card'));
+      reviseBtn.textContent = 'Revising…';
+      revNote.textContent = 'Planner is revising the whole plan — same in-flight grammar, nothing claimed yet.';
+      revChainEl.classList.add('building');
+      setTimeout(function () {
+        revChainEl.classList.remove('building');
+        reviseGmailPrevSub = gmailGhost.querySelector('[data-sub]').textContent;
+        gmailGhost.querySelector('[data-sub]').textContent = 'Mail | K1 → team@unifyapps.com';
+        gmailGhost.classList.remove('accpulse');
+        void gmailGhost.offsetWidth;
+        gmailGhost.classList.add('accpulse');
+        if (!gmailRow.querySelector('.stepchip')) {
+          var chip = document.createElement('span');
+          chip.className = 'stepchip upd';
+          chip.textContent = 'updated';
+          gmailRow.appendChild(chip);
+          reviseAddedChip = true;
+        }
+        revAddWrap.classList.remove('gone');
+        revSlackRow.classList.remove('row-gone');
+        revCount.textContent = 'Plan · 6 steps';
+        reviseBtn.textContent = 'Reset revision';
+        revNote.textContent = 'New plan iteration: Gmail step modified, Slack step added. Diff played against the previous version — nothing else re-rendered.';
+        revising = false;
+      }, reduce ? 150 : 1300);
     });
 
     /* ---- C3/C4: build transition demo ---- */
