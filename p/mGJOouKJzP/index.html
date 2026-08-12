@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Text-to-Workflow Report — Group 5</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="report">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Plain-language audit chapter — Group 5</h1>
+<h2>Email Thread Summarizer — automation 6a7b571b48f1e9788069c643</h2>
+<h3>What was requested</h3>
+<p>The request was for a Gmail workflow that receives a new email, reads the complete thread, and summarizes the latest message, decisions, open questions, action items, owners, deadlines, important dates, and email count. For example, an incoming event containing <code>threadId: &quot;t-123&quot;</code> should produce a structured summary for that thread. The original assignment was Sheet row 16; the stable automation ID currently appears in Sheet rows 15 and 16.</p>
+<h3>What broke</h3>
+<p><strong>The reported wrong automation display is not proven. The two most likely reasons are that the page showed a different saved version or the editor displayed the wrong automation.</strong></p>
+<ol>
+<li>The planner received the Gmail workflow request and loaded a skill.</li>
+<li>It tried to find Gmail workflow nodes at <code>/workspace/skills/packages/workflow-nodes/</code>, but that directory did not exist. It then found Gmail connections and asked the user to choose one.</li>
+<li>The trace does not show the completed clarification, the exact saved definition produced from it, or a screenshot of the allegedly wrong page.</li>
+<li>The current saved automation is populated and deployed, but it is version 5 while the deployed version is 2, so the displayed page could have represented a different saved state.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li><strong>The Sheet reports “Wrong Automation visual” for original row 16; it is not independently proven.</strong> Automation <code>6a7b571b48f1e9788069c643</code> appears in current rows 15 and 16. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A15:K15">Current tracker row 15</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A16:K16">Current tracker row 16</a></li>
+<li><strong>The current definition is a real Gmail workflow, not an empty placeholder.</strong> It is named “Email Thread Summarizer,” is version 5, and has deployed version 2 with status <code>DEPLOYED</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b571b48f1e9788069c643-inspect.json:2">Current inspect JSON</a></li>
+<li><strong>The saved Gmail steps are wired to a thread ID.</strong> The Gmail trigger feeds <code>n_St4Rt.outputs.batch[0].threadId</code> into <code>gmail_get_thread</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b571b48f1e9788069c643-inspect.json:160">Current inspect JSON</a></li>
+<li><strong>The original trace completed at the trace level and had a successful root Query.</strong> This does not prove that the workflow was visually correct. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b571b1686181e280509ec.json:1">Original trace JSON</a></li>
+<li><strong>The Gmail catalog lookup failed, but the planner continued.</strong> The attempted directory listing returned exit code 1 because the directory did not exist; connection discovery and clarification followed. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b571b1686181e280509ec.json:2165">Original trace JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b571b1686181e280509ec.json:425">Original trace JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b571b1686181e280509ec.json:592">Original trace JSON</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The page showed a different saved version.</strong></p>
+<ul>
+<li>Evidence for it: the current definition is version 5, while deployment is version 2; the trace does not identify the final saved version. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b571b48f1e9788069c643-inspect.json:2">Current inspect JSON</a></li>
+<li>Evidence against it or missing: there is no revision history, generation record, or screenshot connecting the complaint to version 2 or version 5.</li>
+<li>Exact check: compare the trace timestamp, saved revision ID, deployed revision ID, and the definition shown in a browser capture.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The editor loaded or displayed the wrong automation.</strong></p>
+<ul>
+<li>Evidence for it: the only recorded user-facing symptom is “Wrong Automation visual,” while the current saved workflow matches the Gmail request at a basic level. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A16:K16">Current tracker row 16</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b571b48f1e9788069c643-inspect.json:160">Current inspect JSON</a></li>
+<li>Evidence against it or missing: there is no screenshot, browser network log, or displayed automation ID.</li>
+<li>Exact check: open automation <code>6a7b571b48f1e9788069c643</code> in a clean session and compare the URL ID, page title, loaded definition ID, and visible node list.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The missing workflow-node catalog affected planning.</strong></p>
+<ul>
+<li>Evidence for it: the historical Shell lookup used a nonexistent path, and the current rule says that native actions should be checked through the workflow-node catalog. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b571b1686181e280509ec.json:2165">Original trace JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/code-node-selection.md:8">Current source, not proven generation-time source</a></li>
+<li>Evidence against it or missing: the planner continued to connection discovery and clarification, and the current workflow uses native Gmail nodes.</li>
+<li>Exact check: repeat the same request once with a valid catalog and once without it, then compare the selected Gmail resources and saved definition.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Platform persistence/versioning:</strong> Save the trace ID, generated revision ID, deployed revision ID, and definition hash together. <strong>Example:</strong> <code>trace e_6a7b571b1686181e280509ec -&gt; draft version 5 -&gt; deployed version 2</code>. <strong>Test:</strong> create a draft, change it, deploy the older version, and inspect both states. <strong>Done when:</strong> a browser capture and trace each point to an unambiguous revision. <strong>Risk:</strong> storing more revision metadata increases storage and migration work.</p>
+</li>
+<li><p><strong>Fix B — Editor/canvas:</strong> Before rendering, require the URL automation ID, fetched definition ID, and canvas store ID to equal <code>6a7b571b48f1e9788069c643</code>; clear cached workflow data when the revision changes. <strong>Example:</strong> reject rendering if URL ID <code>6a7b571b48f1e9788069c643</code> is paired with any other definition ID. <strong>Test:</strong> switch between two workflows, reload, and verify title, ID, and nodes remain aligned. <strong>Done when:</strong> the browser network log and screenshot show the same automation ID and revision. <strong>Risk:</strong> cache clearing may cause more fetches and loading time.</p>
+</li>
+<li><p><strong>Fix C — Skill runtime:</strong> Replace the hard-coded catalog path with a checked catalog resource; if it is unavailable, return <code>catalog_unavailable</code> instead of silently continuing. <strong>Example:</strong> the missing directory must produce a visible terminal error, not a hanging planner. <strong>Test:</strong> run once with the catalog present and once absent. <strong>Done when:</strong> each run ends either with the correct Gmail resource or a recorded user-visible catalog error. <strong>Risk:</strong> strict failure may block some requests that previously continued.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The Gmail planner did reach connection selection, and the current saved workflow is populated, but the reported wrong visual is not proven. The main unknown is whether the user saw the current draft, the older deployed version, or another automation in the editor.</p>
+<h2>Travel-agency quote request — automation 6a7b1c2548f1e9788066c5db</h2>
+<h3>What was requested</h3>
+<p>The request was to build an automation that accepts several travel destinations and trip details, then emails three travel agencies. The email should be HTML with a polished layout rather than plain text. For example, an input could contain destinations, dates, traveler information, and three recipient addresses; the output should be three formatted email sends or a clear send result. This was originally assigned to Sheet row 17, but the stable automation ID is no longer present in the current populated tracker rows.</p>
+<h3>What broke</h3>
+<p><strong>No builder result or save response is recorded, and the saved automation remains a version-0 placeholder. The trace does not prove whether orchestration, catalog lookup, editor state, or persistence caused that outcome.</strong></p>
+<ol>
+<li>The planner received the travel-email request and attempted to find mail workflow nodes.</li>
+<li>The Shell command failed because <code>/workspace/skills/packages/workflow-nodes/</code> did not exist. The trace later reached Get Connections.</li>
+<li>The trace then ended with a <code>Miscellaneous</code> node that had no input or output; there is no captured builder dispatch or save response.</li>
+<li>The current automation contains only version-0 placeholders—“Select a trigger event” and “Select an app and action”—so no email steps were saved.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li><strong>The historical Sheet assignment was original row 17, and the Sheet report is not independently proven.</strong> It identified automation <code>6a7b1c2548f1e9788066c5db</code> and reported continued loading and no created automation; that ID is absent from current populated rows. The durable evidence is the captured trace and inspect.</li>
+<li><strong>The current inspect is an empty workflow.</strong> It has a null input schema and placeholder trigger/action titles. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b1c2548f1e9788066c5db-inspect.json:1">Current inspect JSON</a></li>
+<li><strong>The saved definition is version 0 and has no selected app or resource.</strong> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b1c2548f1e9788066c5db-inspect.json:54">Current inspect JSON</a></li>
+<li><strong>The original trace ended after connection discovery.</strong> It contains Get Connections, followed by a <code>Miscellaneous</code> node with no input/output; no builder/editor dispatch is shown afterward. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b1c250fb59c2149e1abcc.json:519">Original trace JSON</a></li>
+<li><strong>The mail catalog lookup failed with exit code 1.</strong> The error says <code>/workspace/skills/packages/workflow-nodes/</code> did not exist. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b1c250fb59c2149e1abcc.json:2413">Original trace JSON</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The planner failed to dispatch or save the builder result.</strong></p>
+<ul>
+<li>Evidence for it: the saved workflow remains version 0 with placeholders, and no builder dispatch or save response appears before the trace ends. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b1c2548f1e9788066c5db-inspect.json:54">Current inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b1c250fb59c2149e1abcc.json:519">Original trace JSON</a></li>
+<li>Evidence against it or missing: the trace does not contain an explicit dispatch error or save response.</li>
+<li>Exact check: search server events for this stable automation ID and trace ID; confirm whether a builder request and save response occurred.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The missing mail-node catalog caused an unhandled wait.</strong></p>
+<ul>
+<li>Evidence for it: the catalog command failed before the trace ended. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/trace-e_6a7b1c250fb59c2149e1abcc.json:2413">Original trace JSON</a></li>
+<li>Evidence against it or missing: the planner still reached Get Connections, and row 16 had a similar catalog failure but continued to clarification.</li>
+<li>Exact check: repeat the request with a valid catalog and with the catalog deliberately unavailable; both runs must end with either a saved workflow or a visible catalog error.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The editor showed stale session state.</strong></p>
+<ul>
+<li>Evidence for it: the user reported endless loading, while the saved workflow remained a placeholder. The Sheet reports this, not independently proven.</li>
+<li>Evidence against it or missing: no browser network log, console log, screenshot, or successful save response exists.</li>
+<li>Exact check: capture browser requests and UI state while creating this workflow; determine whether a save succeeds and is followed by a stale fetch, or whether no save request is sent.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: Mail authentication blocked a later step.</strong></p>
+<ul>
+<li>Evidence for it: the request requires sending mail and the planner was resolving connections.</li>
+<li>Evidence against it or missing: no mail action ran, no provider error exists, and the saved workflow has no mail node.</li>
+<li>Exact check: validate an active UAT mail connection and record the connector response before attempting a send.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Planner/save service:</strong> Track creation as <code>planned -&gt; dispatched -&gt; persisted -&gt; finished</code>, keyed by the trace ID; never leave the UI waiting without a terminal state. <strong>Example:</strong> if the builder request for this stable ID times out, persist <code>builder_timeout</code> and stop loading. <strong>Test:</strong> simulate builder success, builder timeout, and save failure. <strong>Done when:</strong> each case has a trace-linked terminal status and the UI stops loading. <strong>Risk:</strong> retries can create duplicates unless the trace ID is used as an idempotency key.</p>
+</li>
+<li><p><strong>Fix B — Skill runtime:</strong> Replace the failing mail catalog shell lookup with a checked catalog resource; return a visible <code>catalog_unavailable</code> error when absent. <strong>Example:</strong> the failed <code>/workspace/skills/packages/workflow-nodes/</code> lookup must not lead to a silent <code>Miscellaneous</code> ending. <strong>Test:</strong> run with a mounted catalog and with no catalog. <strong>Done when:</strong> the row-17-shaped request either saves an email workflow or reports the catalog error. <strong>Risk:</strong> some requests will stop earlier instead of continuing with guesses.</p>
+</li>
+<li><p><strong>Fix C — Editor/session:</strong> Tie the loading indicator to explicit save states and reject fetched data whose automation ID does not match the active page. <strong>Example:</strong> a response for another automation must not replace the active row-17 page. <strong>Test:</strong> delay save, navigate away, return, and force an out-of-order fetch. <strong>Done when:</strong> the page shows success or an error and the displayed ID matches the saved definition. <strong>Risk:</strong> stricter matching may expose existing stale-cache behavior.</p>
+</li>
+<li><p><strong>Fix D — Connector/auth:</strong> Validate the selected mail connection before builder dispatch and show inactive or unauthorized status as a terminal error. <strong>Example:</strong> an inactive connection must produce <code>connection_inactive</code>, not an indefinite wait. <strong>Test:</strong> active, inactive, and permission-denied UAT connections. <strong>Done when:</strong> the trace contains the connection status and the user receives a bounded result. <strong>Risk:</strong> connection checks may delay creation slightly.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The saved automation is definitely still an empty version-0 placeholder, and the captured trace ends without showing a builder save. The exact reason for the endless loading—save failure, catalog failure, or stale editor state—remains unknown.</p>
+<h2>Similar company web search / OpenAI-to-Simple-call replacement — automation 6a7b3923eaed5b30693f5b5e</h2>
+<h3>What was requested</h3>
+<p>The request was to replace the workflow’s OpenAI nodes with Simple-call LLM callables. The workflow’s current input definition includes <code>companyName</code>, <code>unansweredQuestions</code>, and <code>companyIndustry</code>; for example, a valid meaningful input could name a company, industry, and one unanswered research question. The expected output is the same company-analysis classification result, but produced through the replacement callable rather than the OpenAI nodes.</p>
+<h3>What broke</h3>
+<p><strong>The fresh run stopped because the OpenAI provider reported no remaining credits, and the requested replacement is not present in the inspected workflow.</strong></p>
+<ol>
+<li>The fresh run entered the callable START node with <code>{}</code>.</li>
+<li>It then called OpenAI node <code>n_V2Pd6</code>, still using <code>openai_send_message</code> and model <code>gpt-5.2</code>.</li>
+<li>The provider returned HTTP 429 with <code>insufficient_quota</code> and <code>credit_balance_exhausted</code>.</li>
+<li>All later search, parsing, branching, and response steps therefore did not run. The historical Sheet report of a 401 missing <code>fromCustomerUserIdentityId</code> is a separate claim and is not independently proven because no original trace is available.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li><strong>The Sheet reports the replacement request and a historical 401; it is not independently proven.</strong> The original assignment was row 25, while stable automation <code>6a7b3923eaed5b30693f5b5e</code> currently appears in rows 14 and 23. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A14:K14">Current tracker row 14</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A23:K23">Current tracker row 23</a></li>
+<li><strong>The current inspect still shows an OpenAI action.</strong> Node <code>n_V2Pd6</code> is <code>openai_send_message</code>; the inspect has no captured Simple-call replacement node. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b3923eaed5b30693f5b5e-inspect.json:44">Current inspect JSON</a></li>
+<li><strong>The fresh run used an empty object and failed at <code>n_V2Pd6</code>.</strong> Run ID <code>6a7c4f2e4492993a9a549def</code> ended <code>FAILED</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b3923eaed5b30693f5b5e-run-6a7c4f2e4492993a9a549def.json:23">Fresh run JSON</a></li>
+<li><strong>The first OpenAI action returned a provider quota error.</strong> The response was HTTP 429 with <code>insufficient_quota</code> and <code>credit_balance_exhausted</code>; no later node ran. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b3923eaed5b30693f5b5e-run-6a7c4f2e4492993a9a549def.json:192">Fresh run JSON</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The OpenAI account or connection had no quota.</strong></p>
+<ul>
+<li>Evidence for it: the provider itself returned HTTP 429, <code>insufficient_quota</code>, and <code>credit_balance_exhausted</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b3923eaed5b30693f5b5e-run-6a7c4f2e4492993a9a549def.json:192">Fresh run JSON</a></li>
+<li>Evidence against it or missing: this explains the fresh run but not the historical 401 or the fact that OpenAI nodes remain.</li>
+<li>Exact check: make a minimal call through the same UAT connection after quota is restored and confirm a provider response before running the full workflow.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The requested replacement was never saved to this automation revision.</strong></p>
+<ul>
+<li>Evidence for it: the current inspect still contains <code>n_V2Pd6</code> as <code>openai_send_message</code>; the Sheet reports the replacement request, not independently proven. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b3923eaed5b30693f5b5e-inspect.json:44">Current inspect JSON</a></li>
+<li>Evidence against it or missing: the Sheet says “Fixed in UAT,” which could refer to a different revision.</li>
+<li>Exact check: compare the inspected revision ID with the revision called “Fixed in UAT,” then count OpenAI and Simple-call resources in that exact revision.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The historical 401 was a missing session identity field.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet reports missing <code>fromCustomerUserIdentityId</code>.</li>
+<li>Evidence against it or missing: there is no original trace, request body, or 401 response; the captured fresh error is 429 quota exhaustion instead.</li>
+<li>Exact check: retrieve the original 401 request/response and verify whether <code>fromCustomerUserIdentityId</code> was absent at the callable boundary.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: The test input was technically allowed but not meaningful.</strong></p>
+<ul>
+<li>Evidence for it: the run input was <code>{}</code>, while the workflow’s fields are optional in the captured schema.</li>
+<li>Evidence against it or missing: the run failed at provider quota before any input-dependent logic, so <code>{}</code> did not cause this 429.</li>
+<li>Exact check: after provider access is available, run with a company name, industry, and one unanswered question, and compare the first node’s received values.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Provider/connection owner:</strong> Restore quota or use an authorized funded UAT connection. <strong>Example:</strong> the response from <code>n_V2Pd6</code> must change from <code>429 / credit_balance_exhausted</code> to a successful provider response. <strong>Test:</strong> run a single OpenAI action, then the workflow. <strong>Done when:</strong> the first action has a successful output and the run proceeds to the next node. <strong>Risk:</strong> provider costs and rate limits apply.</p>
+</li>
+<li><p><strong>Fix B — Workflow editor:</strong> Replace every intended <code>openai_send_message</code> node with the target Simple-call resource, preserving edges and downstream fields; verify that no OpenAI node remains. <strong>Example:</strong> <code>n_V2Pd6: openai_send_message -&gt; Simple-call LLM resource</code>, with its input and output names mapped to the callable’s real schema. <strong>Test:</strong> inspect the saved definition and run through the first replacement node. <strong>Done when:</strong> the inspect contains zero unintended OpenAI nodes and the run captures Simple-call input/output. <strong>Risk:</strong> changing callable fields can break downstream mappings.</p>
+</li>
+<li><p><strong>Fix C — Platform authorization:</strong> At the callable boundary, pass the required <code>fromCustomerUserIdentityId</code> and return a structured validation error when it is missing. <strong>Example:</strong> an authenticated request must show the identity field before provider invocation; an anonymous request must fail clearly if identity is required. <strong>Test:</strong> authenticated, anonymous, and wrong-tenant requests. <strong>Done when:</strong> the original-shaped request either succeeds or produces a precise identity error, not an unexplained 401. <strong>Risk:</strong> stricter checks may reject legacy callers.</p>
+</li>
+<li><p><strong>Fix D — Evaluation harness:</strong> Build a meaningful payload from the optional fields instead of silently running <code>{}</code>. <strong>Example:</strong> <code>{ &quot;companyName&quot;: &quot;Acme&quot;, &quot;companyIndustry&quot;: &quot;software&quot;, &quot;unansweredQuestions&quot;: &quot;Who are its main competitors?&quot; }</code>. <strong>Test:</strong> assert that optional-but-meaningful cases are populated or explicitly skipped. <strong>Done when:</strong> the evidence file records the schema, payload, and reason for any skipped run. <strong>Risk:</strong> some empty-input checks will be skipped rather than executed.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The captured fresh run definitely failed on provider quota before doing useful workflow work, and the inspected revision still contains OpenAI rather than proving the requested replacement. The historical 401 and any later “fixed” revision remain unverified.</p>
+<h2>Dubai Customs Calculation — automation 6a7b27c448f1e97880677ce7</h2>
+<h3>What was requested</h3>
+<p>The request was for a callable that accepts a Case Id and optional goods value, finds the matching Dubai Customs declaration, calculates 5% duty, VAT, a 90 AED service fee, and the total, updates the declaration, sends an MQTT refresh event, and returns the result with status <code>Pending Payment</code>. For example, a Case Id plus goods value <code>1000</code> should lead to a calculation result and an update for that same Case Id. The original assignment was Sheet row 27; the stable automation ID is now in current row 25.</p>
+<h3>What broke</h3>
+<p><strong>The saved workflow contains input and Case Id mismatches that can break the calculation, while the reported 401 was not captured.</strong></p>
+<ol>
+<li>The session-variable node defines a Case Id field and stores it under <code>caseIdVar</code>; the fetch step reads <code>n_SsVr2.outputs.caseId</code>.</li>
+<li>The Groovy node declares and binds only <code>goods_value_from_record</code>, but its code also checks for <code>goods_value_from_trigger</code>, which is not declared or bound.</li>
+<li>The update and MQTT steps use <code>n_SsVr2.outputs.caseIdVar</code>, not the fetch step’s <code>outputs.caseId</code>. The current JSON therefore contains a real mapping risk, but no run proves which path fails.</li>
+<li>No original trace or fresh run is available, so the reported 401 could not be placed at a specific node and no storage update, MQTT event, or response was observed.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li><strong>The Sheet reports a partial result and a Node 4/editor/session error; it is not independently proven.</strong> The original assignment was row 27, and automation <code>6a7b27c448f1e97880677ce7</code> is currently row 25. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A25:K25">Current tracker row 25</a></li>
+<li><strong>The current definition has the requested seven stages.</strong> Version 10 contains trigger, session variables, fetch, Groovy, update, MQTT, and response nodes. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:1">Current inspect JSON</a></li>
+<li><strong>The fetch and later steps use different Case Id paths.</strong> Fetch uses <code>n_SsVr2.outputs.caseId</code>; update and MQTT use <code>n_SsVr2.outputs.caseIdVar</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:234">Current inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:379">Current inspect JSON</a></li>
+<li><strong>The Groovy input is incomplete.</strong> Its declared input is only <code>goods_value_from_record</code>, but the code also reads <code>goods_value_from_trigger</code>, and only the record value has a parameter mapping. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:310">Current inspect JSON</a></li>
+<li><strong>The response step is wired to return calculated fields and <code>Pending Payment</code>.</strong> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:444">Current inspect JSON</a></li>
+<li><strong>No run or original trace proves the reported 401.</strong> The only direct evidence for that error is the Sheet report, not an execution artifact. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A25:K25">Current tracker row 25</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: Node 4 is missing a real input mapping.</strong></p>
+<ul>
+<li>Evidence for it: the code reads <code>goods_value_from_trigger</code>, but the input definition and parameters include only <code>goods_value_from_record</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:310">Current inspect JSON</a></li>
+<li>Evidence against it or missing: if a record value is always present, the missing fallback may not be used; no run shows Node 4 inputs.</li>
+<li>Exact check: run one case with a record value, one with only trigger goods value, and one with neither; inspect Node 4 input values and output.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The Case Id field name changes between steps.</strong></p>
+<ul>
+<li>Evidence for it: fetch uses <code>caseId</code> while update and MQTT use <code>caseIdVar</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:234">Current inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-5/automation-6a7b27c448f1e97880677ce7-inspect.json:379">Current inspect JSON</a></li>
+<li>Evidence against it or missing: the actual Get Session Variables output schema is not captured, so one of these names could be valid in the runtime.</li>
+<li>Exact check: inspect the action’s authoritative output schema and confirm that the same Case Id value reaches fetch, update, and MQTT.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The reported 401 came from session authorization before workflow execution.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet reports missing <code>fromCustomerUserIdentityId</code>.</li>
+<li>Evidence against it or missing: there is no 401 response, request payload, session metadata, or run artifact.</li>
+<li>Exact check: replay the original callable request with authenticated and anonymous sessions while recording the request and response boundary.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: The test lacked a usable Case Id or storage fixture.</strong></p>
+<ul>
+<li>Evidence for it: no run input, storage record, storage schema response, or MQTT fixture is captured.</li>
+<li>Evidence against it or missing: missing fixture evidence cannot by itself explain a pre-workflow 401.</li>
+<li>Exact check: use a known UAT declaration record and a schema-valid Case Id, then capture every node input and output.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow JSON/editor:</strong> Either remove the unused trigger fallback from the Groovy code or add <code>goods_value_from_trigger</code> to the input definition and bind it from the callable START node. <strong>Example:</strong> <code>input.properties.goods_value_from_trigger</code> plus <code>parameters.goods_value_from_trigger: {{ n_Tr1gR.outputs.goods_value_aed }}</code>; otherwise remove the <code>rawTrigger</code> branch. <strong>Test:</strong> record-present, trigger-only, and neither-value cases. <strong>Done when:</strong> Node 4 input/output evidence shows the intended branch for each case. <strong>Risk:</strong> changing fallback behavior can change calculated totals.</p>
+</li>
+<li><p><strong>Fix B — Workflow JSON/editor:</strong> Resolve the actual session-variable output name and use one Case Id path in fetch, update, and MQTT. <strong>Example:</strong> if the authoritative output is <code>caseId</code>, change update and MQTT from <code>{{ n_SsVr2.outputs.caseIdVar }}</code> to <code>{{ n_SsVr2.outputs.caseId }}</code>; use the opposite only if the schema proves <code>caseIdVar</code> is correct. <strong>Test:</strong> confirm the fetch filter and update filter select the same declaration. <strong>Done when:</strong> captured inputs show the identical Case Id at all three steps and exactly one intended record is updated. <strong>Risk:</strong> a wrong change could update no record or the wrong record.</p>
+</li>
+<li><p><strong>Fix C — Platform auth:</strong> Pass <code>fromCustomerUserIdentityId</code> at the callable invocation boundary when required and return a clear validation error when absent. <strong>Example:</strong> the authenticated request must include the identity before the workflow starts. <strong>Test:</strong> authenticated, anonymous, and wrong-tenant invocations. <strong>Done when:</strong> the original-shaped request either reaches the START node or returns a precise identity error. <strong>Risk:</strong> stricter identity checks may reject old callers.</p>
+</li>
+<li><p><strong>Fix D — Evaluation harness:</strong> Require a known UAT Case Id and record fixture before running this case, and save the exact input with node evidence. <strong>Example:</strong> a run should record <code>{ &quot;caseId&quot;: &quot;known-uat-case&quot; }</code> and the fetched declaration before attempting the update. <strong>Test:</strong> valid record, invalid Case Id, and missing fixture. <strong>Done when:</strong> the evidence contains input, fetch result, Node 4 input/output, update filter, MQTT request, and response. <strong>Risk:</strong> unavailable fixtures should produce a skipped run instead of a misleading failure.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current JSON has two concrete mapping risks: an unbound Groovy fallback input and inconsistent Case Id names. The reported 401 and the claimed UAT fix remain unknown because there is no original trace or fresh execution.</p>
+</article>
+</main>
+</body>
+</html>
