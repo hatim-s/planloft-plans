@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Text-to-Workflow Report — Group 4</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="report">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h2>OpenAI classifier and deserializer — automation 6a7b4ef41686181e2804c115</h2>
+<h3>What was requested</h3>
+<p>The workflow was meant to classify a set of questions with OpenAI, turn the returned JSON into usable fields, and select the hardest question. For example, a valid result should contain strict JSON for the classification and a final hardest-question value. The assigned tracker entry was original row 19 and remains current row 19; automation ID is the stable identity.</p>
+<h3>What broke</h3>
+<p><strong>The classifier workflow broke because its OpenAI prompt was put into a formula string that exceeded the platform’s 255-character limit.</strong></p>
+<ol>
+<li>The trigger supplied <code>hardestQuestionsId</code>, and the run payload also contained <code>classifiedQuestions_raw</code> as an empty string. The run did not supply a usable list of classified questions.</li>
+<li>The <code>openai_create_response</code> node received a long <code>=CONCAT(...)</code> formula as its prompt. The saved JavaScript node later reads <code>classifiedQuestions_raw</code>, but its declared input parameters contain only <code>hardestQuestionsId</code>, so that later input is not visibly wired in the saved definition.</li>
+<li>The OpenAI node failed before it could return classification JSON. The captured error says: <code>String literals in formulas can&#39;t be bigger than 255 characters ASCII</code>.</li>
+<li>Because the OpenAI step failed, the deserializer and hardest-question selection could not produce a reliable result. No later useful output was captured.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The current tracker entry is row 19, automation <code>6a7b4ef41686181e2804c115</code>; the Sheet reports a wrong action and strict-JSON problem, but that tracker description is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A19:K19">Sheet1 row 19, A19:K19</a></li>
+<li>The saved definition is version 1 and contains the long <code>=CONCAT(...)</code> formula used for the OpenAI input. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b4ef41686181e2804c115-inspect.json:663">inspect JSON</a></li>
+<li>The fresh run supplied the trigger payload and then failed at <code>openai_create_response</code>; the recorded error names the 255-character formula limit. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b4ef41686181e2804c115-run-6a7c4f897ce6a92d54506b86.json:22">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b4ef41686181e2804c115-run-6a7c4f897ce6a92d54506b86.json:142">run error</a></li>
+<li>The saved JavaScript reads <code>classifiedQuestions_raw</code>, while the visible parameters list only <code>hardestQuestionsId</code>; this is a saved-definition fact, not proof of when or why the mapping was generated. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b4ef41686181e2804c115-inspect.json:1366">inspect JSON</a></li>
+<li>The current workflow-builder text explains formula and <code>CONCAT</code> usage but does not state the 255-character limit; it is current source, not proven generation-time source. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/.claude/agents/workflow/workflow-builder.md:370">workflow-builder.md</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The workflow was generated with an oversized formula.</strong></p>
+<ul>
+<li>Evidence for it: the saved node contains the long <code>CONCAT</code> formula, and the fresh run failed with the exact formula-length error.</li>
+<li>Evidence against it or missing: the tracker’s separate “wrong action” and strict-JSON claims were not reproduced by this run.</li>
+<li>Exact check: inspect the deployed node input and confirm that every long prompt is stored as a supported template/code value rather than one formula string; rerun with the same payload and verify that the OpenAI node completes.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The code node’s input mapping was incomplete.</strong></p>
+<ul>
+<li>Evidence for it: the code reads <code>classifiedQuestions_raw</code>, but the saved parameter list shows only <code>hardestQuestionsId</code>.</li>
+<li>Evidence against it or missing: the OpenAI failure happened first, so this missing input was not reached in the captured run.</li>
+<li>Exact check: inspect the code node’s deployed input schema and mapping and confirm that <code>classifiedQuestions_raw</code> is mapped to the OpenAI response field before running the deserializer.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The saved version may differ from the version that produced the tracker report.</strong></p>
+<ul>
+<li>Evidence for it: the tracker describes other behavior, while the current saved run shows a formula-limit failure.</li>
+<li>Evidence against it or missing: no generation-time prompt/skill manifest or older workflow JSON is available here.</li>
+<li>Exact check: compare the tracker’s original run ID and deployed revision with the current version-1 inspect result and the original Orbit trace, if one can be resolved.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — workflow JSON/editor owner:</strong> Change the OpenAI input on the node containing the long <code>=CONCAT(...)</code> value so the prompt is passed through a supported template or code output, not one oversized formula string.</p>
+<ul>
+<li><strong>Example:</strong> <code>n_OpAI1.inputs.input[0].content = =CONCAT(&lt;long literal&gt;)</code> -&gt; <code>n_OpAI1.inputs.input[0].content = &lt;short mapped field or supported multiline template&gt;</code>.</li>
+<li><strong>Test:</strong> with the captured row-19 payload, <code>openai_create_response</code> returns classification JSON and the run proceeds past that node.</li>
+<li><strong>Done when:</strong> the run artifact shows no formula-length error and contains the OpenAI output plus the downstream selected hardest question.</li>
+<li><strong>Risk:</strong> Changing the prompt representation can alter formatting if the template is not checked for equivalent text.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — workflow-builder/code-mapping owner:</strong> Add <code>classifiedQuestions_raw</code> to the code node’s declared parameters and map it to the actual OpenAI response field; keep <code>hardestQuestionsId</code> mapped as required.</p>
+<ul>
+<li><strong>Example:</strong> <code>parameters = [{ name: &quot;hardestQuestionsId&quot; }]</code> -&gt; <code>parameters = [{ name: &quot;hardestQuestionsId&quot; }, { name: &quot;classifiedQuestions_raw&quot; }]</code>, with the second value mapped from the OpenAI response.</li>
+<li><strong>Test:</strong> pass a small strict-JSON classification response and verify the code returns the expected hardest-question record instead of an empty or undefined value.</li>
+<li><strong>Done when:</strong> inspect output shows both mappings and a run captures the code node input containing the OpenAI response.</li>
+<li><strong>Risk:</strong> A wrong response-field name can replace the missing value with a different empty value, so the mapping must be checked against the actual node output.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — release/evidence owner:</strong> Match the saved definition, deployed revision, and original tracker run before assigning the remaining complaint to the generator.</p>
+<ul>
+<li><strong>Example:</strong> record <code>automationId</code>, saved version, deployed version, original <code>traceId</code>, and fresh <code>runId</code> together in the case artifact.</li>
+<li><strong>Test:</strong> compare those identifiers and confirm the inspected JSON is the version actually used by the original run.</li>
+<li><strong>Done when:</strong> the historical and current definitions are either identical or their differences are listed.</li>
+<li><strong>Risk:</strong> Older trace data may be unavailable, leaving the historical comparison incomplete.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The captured run definitely broke at the OpenAI prompt because of the formula-length limit, and the saved definition also shows a later missing code input mapping. The tracker’s separate wrong-action claim and the exact historical generation path remain unproven.</p>
+<h2>Morning Brief — automation 6a7b36f813a9131516543738</h2>
+<h3>What was requested</h3>
+<p>The workflow was meant to read the five latest Gmail messages and today’s calendar events, make a PDF morning brief, and email that PDF. A successful example would produce one PDF containing five email summaries and today’s schedule, then send the PDF as an attachment. The assigned tracker entry was original row 44, but the stable automation is now current row 40; current physical row 44 is an unrelated hotel case and is not analyzed here.</p>
+<h3>What broke</h3>
+<p><strong>Morning Brief broke. The two most likely reasons are workflow-generation/mapping mistakes or connector/resource/runtime problems.</strong></p>
+<ol>
+<li>The requested inputs were Gmail messages and today’s calendar events, but no current inspect or run artifact is available for this automation in the evidence set.</li>
+<li>The tracker describes several reported construction problems: a formula limit, a raw storage key used for an attachment, epoch-millisecond dates, a missing Gmail Get Message step and loop, missing <code>headers[]</code>, and overwrite instead of append behavior.</li>
+<li>There is therefore no captured node input/output showing which of those reported problems occurred first or whether the final PDF was generated and emailed.</li>
+<li>The available access check could not find the required host cookie, so a fresh inspect/run could not establish the current saved workflow state. This prevents a reliable statement about which later steps ran.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The stable automation is current row 40 and was assigned as original row 44; the Sheet reports the Morning Brief iterations and fixes listed above, but those tracker claims are not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A40:K40">current Sheet1 row 40, A40:K40</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A44:K44">original assigned row 44</a></li>
+<li>No inspect, run, or Orbit trace JSON for automation <code>6a7b36f813a9131516543738</code> is present in the Group 4 evidence set; the absence of an artifact is an evidence limitation, not proof that the workflow was empty.</li>
+<li>The access result records no <code>_at</code> cookie for <code>tool.prod-aps1.unifyapps.com</code>, so the current automation could not be inspected through that host. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/production-access-6a7b36f813a9131516543738.json:1">Access result</a></li>
+<li>Current physical row 44 contains a different case, so it cannot be used as evidence for Morning Brief; the stable automation ID and current row 40 identify the intended case. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A40:K40">current row 40</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The workflow was built with the wrong nodes or mappings.</strong></p>
+<ul>
+<li>Evidence for it: The Sheet reports missing Get Message/loop behavior, missing headers, overwrite instead of append, and incorrect attachment/date values; this is not independently proven.</li>
+<li>Evidence against it or missing: no saved definition, node-level capture, or generation-time prompt manifest is available.</li>
+<li>Exact check: inspect automation <code>6a7b36f813a9131516543738</code> and verify Gmail List -&gt; Get Message inside a loop, <code>headers[]</code> extraction, append behavior, date conversion, PDF output, and attachment mapping.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: A connector or resource value was unusable at runtime.</strong></p>
+<ul>
+<li>Evidence for it: the available access check lacked the host cookie, and the tracker mentions raw storage keys and connector-specific fields.</li>
+<li>Evidence against it or missing: the missing cookie proves only that this audit could not access the host; it does not prove the original workflow had an auth failure.</li>
+<li>Exact check: use valid host-specific UAT access and inspect the saved node schemas and captured connector responses for Gmail, Calendar, storage, PDF, and email attachment fields.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The evaluation marked build-only progress as success.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet reports “build-only success” while also listing unresolved behavior.</li>
+<li>Evidence against it or missing: no build result or run artifact is available to independently confirm that classification.</li>
+<li>Exact check: require a run with five messages, today’s events, a fetchable PDF, and a sent email before marking the case successful.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — workflow JSON/editor owner:</strong> Build the data path explicitly: Gmail List Emails -&gt; Gmail Get Message inside a loop; read <code>headers[]</code>; append each email to the brief; convert calendar epoch milliseconds before formatting; generate a PDF; map the PDF’s fetchable URL or binary to the email attachment.</p>
+<ul>
+<li><strong>Example:</strong> <code>attachment = raw storage key</code> -&gt; <code>attachment = PDF URL/binary accepted by the Gmail send action</code>; <code>brief = current item</code> -&gt; <code>brief = brief + current item</code>.</li>
+<li><strong>Test:</strong> use five messages and one event; verify the PDF contains five message entries and the event date is human-readable, then verify the send action receives a fetchable attachment.</li>
+<li><strong>Done when:</strong> inspect and run artifacts show all five message bodies, <code>headers[]</code> values where requested, the formatted date, the PDF output, and a successful send.</li>
+<li><strong>Risk:</strong> Adding Get Message calls can increase API usage and expose rate limits.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — workflow-builder skill owner:</strong> Add exact build rules for this workflow family: fetch full Gmail messages before summarizing, read <code>headers[]</code> for header fields, append loop results, convert epoch milliseconds before date formatting, and pass a fetchable file URL or binary to email attachments.</p>
+<ul>
+<li><strong>Example:</strong> a generated workflow with Gmail List only must fail validation when the prompt asks for message bodies or headers; a workflow with a loop that overwrites the accumulator must fail validation.</li>
+<li><strong>Test:</strong> generate a small Morning Brief from the same prompt and inspect that each required rule appears in the node graph and mappings.</li>
+<li><strong>Done when:</strong> the first generated definition passes these checks before any build-only success is reported.</li>
+<li><strong>Risk:</strong> Strict checks may reject older workflows that intentionally use a different but valid connector path.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — connector/auth owner:</strong> Restore valid host-specific UAT access and confirm each connector resource is available before diagnosing the workflow.</p>
+<ul>
+<li><strong>Example:</strong> the missing <code>_at</code> cookie for <code>tool.prod-aps1.unifyapps.com</code> -&gt; a valid cookie selected for that exact host, without printing or copying its value.</li>
+<li><strong>Test:</strong> inspect the stable automation ID and read the Gmail, Calendar, storage, PDF, and email schemas without an authentication error.</li>
+<li><strong>Done when:</strong> the inspect artifact is captured and the connector calls return resource/schema data for the same host.</li>
+<li><strong>Risk:</strong> Access repair can expose a different saved version than the one used in the original report.</li>
+</ul>
+</li>
+<li><p><strong>Fix D — evaluation-tool owner:</strong> Treat build-only output as incomplete and require captured execution evidence for the PDF and send nodes.</p>
+<ul>
+<li><strong>Example:</strong> “workflow saved” -&gt; “workflow run completed with five emails, today’s calendar data, a fetchable PDF, and a successful send.”</li>
+<li><strong>Test:</strong> reject a run whose PDF or email node has no captured input/output even if the run status is completed.</li>
+<li><strong>Done when:</strong> the evidence file contains the run ID and node-level outputs for the final two steps.</li>
+<li><strong>Risk:</strong> A stricter gate may lower apparent pass rates while missing evidence is repaired.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The tracker reports many Morning Brief problems, but there is no node-level artifact proving which one caused the original failure. The missing host access and missing historical definition leave both the workflow and connector owners possible.</p>
+<h2>Gong churn email workflow — automation 6a7c317c0fb59c2149edb4cc</h2>
+<h3>What was requested</h3>
+<p>The workflow was meant to process accounts on a schedule, fetch their storage data and Gong records, ask OpenAI to assess churn risk, and email a result for each account. For example, one account should produce a bounded account summary, an OpenAI classification, and a Gmail message. The assigned tracker entry was original row 59, but the stable automation is now current row 50; current physical row 59 is blank.</p>
+<h3>What broke</h3>
+<p><strong>The Gong churn workflow broke because the OpenAI step failed before the Gmail step could run; the exact reason for the OpenAI failure is not proven.</strong></p>
+<ol>
+<li>The run entered the scheduled account path and supplied a real account filter to the Gong-related nodes.</li>
+<li>The saved workflow uses <code>openai_create_completion</code> at node <code>n_AiAnl</code>, followed by Gmail mappings intended to send the result.</li>
+<li>The fresh run failed at <code>n_AiAnl</code>. The captured failure details do not identify enough of the raw connector error to distinguish an unsupported/incorrect action, an oversized prompt, a token problem, or another runtime issue.</li>
+<li>Because OpenAI failed, the Gmail send step was not reached in the captured run, so the email mapping was not tested.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The stable automation is current row 50 and was assigned as original row 59; the Sheet reports invalid CONCAT formulas, a chat-completion choice instead of a send-message path, token trouble, and repeated timeout explanations, but those claims are not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A50:K50">current Sheet1 row 50, A50:K50</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A59:K59">original assigned row 59</a></li>
+<li>The saved definition contains <code>openai_create_completion</code> at <code>n_AiAnl</code>, and its version is 4. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7c317c0fb59c2149edb4cc-inspect.json:80">inspect JSON</a></li>
+<li>The fresh run is <code>6a7c4fe96ad12641e89be4c4</code> and failed at the OpenAI node after receiving the account/Gong path input. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7c317c0fb59c2149edb4cc-run-6a7c4fe96ad12641e89be4c4.json:1">run status</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7c317c0fb59c2149edb4cc-run-6a7c4fe96ad12641e89be4c4.json:330">Gong input</a></li>
+<li>The failure details are captured near the OpenAI output area, while no later Gmail send output is shown. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7c317c0fb59c2149edb4cc-run-6a7c4fe96ad12641e89be4c4.json:5762">OpenAI failure details</a></li>
+<li>The current OpenAI operation files show separate <code>openai_send_message</code> and <code>openai_create_response</code> operations; these are current source files, not proof of the historical runtime registry or generation-time choice. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/packages/workflow-nodes/openai/openai_send_message.json:1">openai_send_message.json</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/packages/workflow-nodes/openai/openai_create_response.json:1">openai_create_response.json</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The workflow selected an old or wrong OpenAI action.</strong></p>
+<ul>
+<li>Evidence for it: the saved node is <code>openai_create_completion</code>, and the tracker reports a different action choice; current operation files show multiple OpenAI operations.</li>
+<li>Evidence against it or missing: the captured failure does not say that this operation is unsupported or wrong for the deployed runtime.</li>
+<li>Exact check: inspect the deployed node schema and runtime registry for <code>n_AiAnl</code>, then run a minimal valid prompt through the selected operation and compare it with the intended operation.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The account/Gong prompt was too large or exceeded a token/resource limit.</strong></p>
+<ul>
+<li>Evidence for it: the workflow aggregates Gong records and sends them to OpenAI; the Sheet reports token trouble and timeouts.</li>
+<li>Evidence against it or missing: the run artifact does not expose the complete prompt size or a clear token-limit error.</li>
+<li>Exact check: record prompt size, token counts, model, and raw connector error for a small and a large account payload; see whether only the large payload fails.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The generation instructions did not make the OpenAI action choice precise enough.</strong></p>
+<ul>
+<li>Evidence for it: the tracker reports repeated action-selection and timeout explanations, and the saved definition uses a different operation than the reported intended path.</li>
+<li>Evidence against it or missing: no generation-time prompt/skill manifest proves what instructions were loaded for this automation.</li>
+<li>Exact check: generate the same workflow with the action schema and operation files made explicit, then compare the selected node type and mappings before running.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: The failure was an auth, connector, or environment problem.</strong></p>
+<ul>
+<li>Evidence for it: OpenAI connector failures can arise from credentials or runtime resources, and the current artifact does not expose the full raw error.</li>
+<li>Evidence against it or missing: upstream account/Gong input was captured, but that does not prove OpenAI authentication was valid.</li>
+<li>Exact check: inspect the raw OpenAI response, HTTP/status details, model/resource identifier, and host-specific auth state for this exact run.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — workflow JSON/runtime owner:</strong> Confirm the supported OpenAI operation for <code>n_AiAnl</code>; if <code>openai_create_completion</code> is not the intended deployed operation, replace it with the verified operation and remap its output into the existing Gmail fields.</p>
+<ul>
+<li><strong>Example:</strong> <code>n_AiAnl.action = openai_create_completion</code> -&gt; <code>n_AiAnl.action = &lt;operation confirmed by deployed schema&gt;</code>, with the response field mapped to the Gmail body.</li>
+<li><strong>Test:</strong> run one small account with a short Gong record set and verify OpenAI returns the expected classification and Gmail receives that value.</li>
+<li><strong>Done when:</strong> inspect shows the verified action/schema and the run captures both OpenAI output and Gmail input.</li>
+<li><strong>Risk:</strong> Changing operations can change response field names and require explicit remapping.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — workflow JSON/data-shaping owner:</strong> Bound the Gong input before OpenAI: summarize or limit records per account and keep the prompt under a measured token budget.</p>
+<ul>
+<li><strong>Example:</strong> <code>prompt = all Gong records for account</code> -&gt; <code>prompt = account facts + bounded recent Gong summary</code>.</li>
+<li><strong>Test:</strong> run small and large account fixtures and record prompt size, token count, and OpenAI result; both must complete or the large case must fail with a clear size message.</li>
+<li><strong>Done when:</strong> the run artifact records bounded input and a successful OpenAI output for the target account sizes.</li>
+<li><strong>Risk:</strong> Truncation can omit an important Gong event if the summary policy is too aggressive.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — workflow-builder skill owner:</strong> Add an exact rule that OpenAI action selection must be based on the deployed connector schema and operation definition, and that the chosen response field must be mapped into the next node.</p>
+<ul>
+<li><strong>Example:</strong> a build that chooses <code>openai_create_completion</code> without checking its current schema must fail a preflight check; a build with a verified operation and response mapping may pass.</li>
+<li><strong>Test:</strong> generate the Gong workflow from a fixture containing both candidate operations and confirm the selected action and output mapping match the deployed schema.</li>
+<li><strong>Done when:</strong> the generated inspect artifact records the operation, schema, and downstream response mapping.</li>
+<li><strong>Risk:</strong> A strict operation check can block builds during connector version transitions until both schemas are supported.</li>
+</ul>
+</li>
+<li><p><strong>Fix D — platform/runtime/connector owner:</strong> Capture the complete OpenAI error, including status, model/resource, prompt size, revision, and auth result, and repair the exact failing resource if the error is not a workflow-shape problem.</p>
+<ul>
+<li><strong>Example:</strong> <code>OpenAI failed</code> -&gt; <code>OpenAI failed: status ..., resource ..., prompt tokens ..., deployment revision ..., auth check ...</code>.</li>
+<li><strong>Test:</strong> repeat the same small input after the resource/auth correction and verify the raw response is successful.</li>
+<li><strong>Done when:</strong> the run evidence distinguishes action, token, auth, timeout, and connector errors without inference from a generic message.</li>
+<li><strong>Risk:</strong> More diagnostics may expose sensitive request metadata and must be redacted appropriately.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The OpenAI step definitely failed and prevented Gmail from running, but the available evidence cannot choose between action selection, prompt size, generation instructions, and runtime/resource causes. The email mapping remains untested.</p>
+<h2>Automation search — automation 6a7b599b0fb59c2149e27a11</h2>
+<h3>What was requested</h3>
+<p>The workflow was meant to search for automations by node or action and return all matching results with usable links. A successful example would return every matching automation across pages, including a link that opens the correct deployed environment. The assigned tracker entry was original row 62, but the stable automation is now current row 53; current physical row 62 is blank.</p>
+<h3>What broke</h3>
+<p><strong>The current definition has no evidenced continuation after the first result page says <code>hasMore: true</code>, and it builds links from a fixed UAT host. The final returned list and links were not captured.</strong></p>
+<ol>
+<li>The trigger entered the standard-entity search path and called <code>standard_entities_fetch_entities</code> with a page limit of 500.</li>
+<li>The captured response reported <code>hasMore: true</code>, while the saved workflow shows one fetch node and no captured continuation request. The saved result-building logic also uses a fixed source/link path rather than proving that each result gets its own environment-correct link.</li>
+<li>The fresh run completed, but completion only shows that the nodes returned; it does not prove that all matching automations or valid response links were returned.</li>
+<li>The response node’s final output was not captured in the fresh run, so the user-visible returned list and link values cannot be checked directly.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The stable automation is current row 53 and was assigned as original row 62; the Sheet reports first-cut Groovy and standard-entity discovery issues and asks for more standard-entity context, but those tracker claims are not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A53:K53">current Sheet1 row 53, A53:K53</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A62:K62">original assigned row 62</a></li>
+<li>The saved definition uses <code>standard_entities_fetch_entities</code>, page limit 500, and a list source for the returned values. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b599b0fb59c2149e27a11-inspect.json:43">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b599b0fb59c2149e27a11-inspect.json:368">pagination setting</a></li>
+<li>The fresh run completed, but its captured entity response has <code>hasMore: true</code>. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b599b0fb59c2149e27a11-run-6a7c4f201d617d376dd86c1f.json:27">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b599b0fb59c2149e27a11-run-6a7c4f201d617d376dd86c1f.json:60326">hasMore response</a></li>
+<li>A candidate automation ID appears in the captured result, but the final response node output is not present, so the returned link and completeness cannot be verified. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b599b0fb59c2149e27a11-run-6a7c4f201d617d376dd86c1f.json:57845">candidate result</a></li>
+<li>The deployment artifact records deployed version 1 and workflow version 13; this is deployment evidence, not proof that version 13 was the version used when the original tracker complaint was generated. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/automation-6a7b599b0fb59c2149e27a11-fetch.json:1">Deployment fetch</a></li>
+<li>The historical trace shows the platform skill being loaded and a fetch-automations plan, but it does not prove that the saved version 13 was generated from that exact skill text. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-4/trace-e_6a7b599c0fb59c2149e27a12.json:247">historical trace</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The workflow did not follow pagination.</strong></p>
+<ul>
+<li>Evidence for it: the fetch response says <code>hasMore: true</code>, and no continuation request or second page is captured.</li>
+<li>Evidence against it or missing: the final response is not captured, so it is possible that a hidden later step handled pagination.</li>
+<li>Exact check: inspect the complete saved graph for a loop using the returned cursor/page token, then run a fixture with more than 500 matches and count the final results.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The workflow built links from a fixed UAT environment.</strong></p>
+<ul>
+<li>Evidence for it: the deployment artifact and saved output-building path show a fixed UAT-style link context rather than a verified per-result environment link.</li>
+<li>Evidence against it or missing: the final response is missing, so the exact links shown to the user cannot be inspected.</li>
+<li>Exact check: run the workflow against two known environments and verify that each returned link uses the result’s actual host and automation ID.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: Standard-entity knowledge or skill instructions were incomplete when the workflow was generated.</strong></p>
+<ul>
+<li>Evidence for it: the historical trace shows the platform skill being loaded, while the tracker asks for more standard-entity context; current skill text describes fetch entities and output projections.</li>
+<li>Evidence against it or missing: the current skill text is not proof of the text loaded at generation time, and the saved workflow may have been edited later.</li>
+<li>Exact check: compare the generation-time skill manifest and saved workflow with the current skill rule for pagination, entity projections, and environment-safe links.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: The deployed and inspected versions differed.</strong></p>
+<ul>
+<li>Evidence for it: the deployment artifact reports deployed version 1 and workflow version 13, while the original historical trace is separate and the response output is missing.</li>
+<li>Evidence against it or missing: there is no complete original trace tying the user-visible result to a specific saved revision.</li>
+<li>Exact check: fetch the original run’s revision metadata and compare its workflow JSON byte-for-byte or field-by-field with the inspected deployed version.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — workflow JSON/editor owner:</strong> Add a continuation loop after <code>standard_entities_fetch_entities</code> that follows the returned page token/cursor until <code>hasMore</code> is false, then deduplicate by stable automation ID.</p>
+<ul>
+<li><strong>Example:</strong> <code>fetch once with limit 500</code> -&gt; <code>fetch page; if hasMore, request next page; append; repeat; deduplicate by automation ID</code>.</li>
+<li><strong>Test:</strong> use more than 500 matching automations and verify the final list contains every unique stable ID exactly once.</li>
+<li><strong>Done when:</strong> the run artifact captures every page request, the final <code>hasMore: false</code>, and the final count.</li>
+<li><strong>Risk:</strong> A pagination loop can run for a long time if the cursor does not advance, so it needs a maximum-page guard.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — workflow JSON/link-builder owner:</strong> Build each result link from the result’s stable automation ID and environment/host field, not from a fixed UAT URL.</p>
+<ul>
+<li><strong>Example:</strong> <code>https://&lt;fixed-UAT-host&gt;/.../automation/&lt;id&gt;</code> -&gt; <code>https://&lt;result-host&gt;/.../automation/&lt;result-automation-id&gt;</code>.</li>
+<li><strong>Test:</strong> supply results from UAT and another supported environment and verify that each link opens the matching automation on its own host.</li>
+<li><strong>Done when:</strong> the response artifact contains one checked link per result and no hardcoded UAT host where the result provides a host.</li>
+<li><strong>Risk:</strong> Some results may not contain a safe host field and must be returned with an explicit “link unavailable” value.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — workflow-builder skill owner:</strong> Add exact standard-entity rules for reading <code>hasMore</code>/cursor fields, continuing pages, projecting stable IDs, and constructing environment-safe links.</p>
+<ul>
+<li><strong>Example:</strong> a generated search that ignores <code>hasMore: true</code> must fail preflight; a generated search with a cursor loop and stable-ID deduplication may pass.</li>
+<li><strong>Test:</strong> generate from a fixture whose first page has <code>hasMore: true</code> and confirm the graph includes the continuation path before build success is reported.</li>
+<li><strong>Done when:</strong> inspect output shows the pagination condition, cursor mapping, deduplication key, and link mapping.</li>
+<li><strong>Risk:</strong> Different standard entities may expose different paging fields and need separate schema rules.</li>
+</ul>
+</li>
+<li><p><strong>Fix D — deployment/evidence owner:</strong> Tie the original run, deployed revision, saved version, and final response to one artifact before claiming a historical cause.</p>
+<ul>
+<li><strong>Example:</strong> <code>automationId + deployedVersion + workflowVersion + runId + response output</code> recorded together instead of only a completed status.</li>
+<li><strong>Test:</strong> compare the original run revision with the current inspect JSON and capture the response node output for the same revision.</li>
+<li><strong>Done when:</strong> the artifact proves which version returned the incomplete list or fixed link.</li>
+<li><strong>Risk:</strong> Old run metadata may have expired, so historical proof may remain unavailable.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current run proves that the search saw another page, while the final returned list and links were not captured. Pagination and fixed-link problems are strong current explanations, but the original generation instructions and exact historical version are still unknown.</p>
+</article>
+</main>
+</body>
+</html>
