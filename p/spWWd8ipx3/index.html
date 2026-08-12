@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Text-to-Workflow Report — Group 3</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="report">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Text-to-Workflow Audit — Plain-Language Chapter</h1>
+<h2>Import RE Cases — automation 6a7b4fa00fb59c2149e2663b</h2>
+<h3>What was requested</h3>
+<p>The current Sheet row is 27; the original assigned row was 30. The request was for a callable workflow named Import RE Cases that accepts one required uploaded file, reads every row from an XLSX file, and creates one RE Cases record per row. For example, one Excel row containing the six requested case fields should become one Storage record with matching caseId, customerName, customerEmail, customerMobile, caseThread, and caseType values. The Sheet marks the case No, but that tracker judgment is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A27:K27">Current Sheet1 row 27, A:K; original assigned row 30</a></p>
+<h3>What broke</h3>
+<p><strong>The Import RE Cases workflow broke because the saved automation is an event placeholder, not the requested callable workflow.</strong></p>
+<ol>
+<li>No file value can enter the workflow: the current inspect result has no input schema, so the required file input is absent. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:2">Current inspect JSON</a></li>
+<li>The first node is an EVENT trigger named Select a trigger event; the next node is an unconfigured action named Select an app and action. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:15">Current inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:65">Current trigger</a></li>
+<li>Because the trigger is not callable and no app/resource is configured, there is no Excel reader, row iteration, Storage create, field mapping, or response. The saved definition is version 0 with only one edge between the two placeholders. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:39">Current graph</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:93">Current version</a></li>
+<li>There is no later Excel or Storage step whose result can be checked. No original Orbit trace or fresh run is available for this read-only review.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>Stable automation ID 6a7b4fa00fb59c2149e2663b is shown in the current inspect artifact, which names the workflow Untitled workflow and has no input schema. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:2">Inspect JSON</a></li>
+<li>The current definition has exactly two placeholder nodes and null connector/resource metadata. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:15">Inspect JSON</a></li>
+<li>The embedded trigger is EVENT, not callable, and the definition version is 0. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:65">Inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b4fa00fb59c2149e2663b-inspect.json:93">Inspect JSON</a></li>
+<li>The current Sheet is row 27; the original assigned row was 30. The Sheet reports the requested callable/file/Excel/Storage behavior and marks the case No; that report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A27:K27">Current Sheet1 row 27, A:K; original assigned row 30</a></li>
+<li>The current builder rules require node type and connector/resource metadata, but those rules are current source, not proven generation-time source. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/.claude/agents/workflow/workflow-builder.md:252">Current builder rule; current source, not proven generation-time source</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The builder produced an incomplete workflow.</strong></p>
+<ul>
+<li>Evidence for it: the saved result contains only two placeholders and no callable, file, or connector setup.</li>
+<li>Evidence against it or missing: there is no generation-time manifest, so a complete earlier version cannot be ruled out.</li>
+<li>Exact check: compare the builder’s emitted JSON with the first saved version. A two-placeholder response supports this reason; a complete response followed by a placeholder save disproves it as the main reason.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: An edit or regeneration replaced the workflow with placeholders.</strong></p>
+<ul>
+<li>Evidence for it: the current low-fidelity version is inconsistent with the detailed request, and the saved version is 0.</li>
+<li>Evidence against it or missing: no edit log or save history shows a delete, retry, or replacement.</li>
+<li>Exact check: inspect immutable save history for a complete graph immediately before the current placeholder graph.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The callable and file instructions were not loaded or followed.</strong></p>
+<ul>
+<li>Evidence for it: current skills assign callable schema handling and file-object handling to dedicated rules, while the saved result has neither. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:24">Callable skill; current source, not proven generation-time source</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/files-and-attachments.md:2">File skill; current source, not proven generation-time source</a></li>
+<li>Evidence against it or missing: current source files do not prove what was loaded during the original generation.</li>
+<li>Exact check: retrieve the generation-time skill manifest and confirm whether the callable and file skills were loaded before the builder response.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — workflow builder:</strong> Change the saved EVENT trigger _5tHqg to a resolved callable trigger with required file input. Replace placeholder _j1d7a with the resolved Excel action, built-in row iteration, Storage create action, and callable response.</p>
+<ul>
+<li><strong>Example:</strong> EVENT trigger → callable trigger with inputs.setup.file required; Select an app and action → resolved Excel action → Storage create → callable response. Resource names and connection IDs must come from schema lookup.</li>
+<li><strong>Test:</strong> A two-row UAT XLSX must produce two Storage records, each with the six requested mappings, followed by a success response.</li>
+<li><strong>Done when:</strong> Inspect shows the callable schema, Excel iterator, Storage mapping, response node, and no placeholders; run evidence shows two creates for two rows.</li>
+<li><strong>Risk:</strong> This test writes Storage records and requires an authorized UAT file.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — editor/persistence owner:</strong> Do not save a placeholder replacement when an edit or regeneration fails. Keep the last valid graph until the replacement passes graph validation and saves successfully.</p>
+<ul>
+<li><strong>Example:</strong> valid graph → failed connection edit → same valid graph retained, not START _5tHqg → ACTION _j1d7a.</li>
+<li><strong>Test:</strong> Force a connection-resolution error and a save error against a valid fixture; node and edge counts must remain unchanged.</li>
+<li><strong>Done when:</strong> Save history shows the failed edit separately and inspect still returns the prior graph hash.</li>
+<li><strong>Risk:</strong> Concurrent edits may need explicit conflict handling.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — prompt/skill loader:</strong> Make callable, file, uploaded XLSX, and file-processing language load the callable and file skills before generation, then fail the build if the requested trigger or file contract is unresolved.</p>
+<ul>
+<li><strong>Example:</strong> exact row-30 prompt → callable skill + file skill loaded → validator rejects EVENT plus placeholders.</li>
+<li><strong>Test:</strong> Run the exact prompt and a paraphrase; both must load the required skills and reject an incomplete manifest.</li>
+<li><strong>Done when:</strong> The generation record contains skill IDs/versions and a passing graph-check result.</li>
+<li><strong>Risk:</strong> Skill loading may add latency.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current saved automation is confirmed incomplete: it is an EVENT placeholder workflow rather than the requested callable Excel importer. It remains unknown whether the builder generated this state or a later edit/regeneration replaced a complete workflow.</p>
+<h2>Sales Order Processing from Scanned PO PDFs — automation 6a7b16f6cd1f411c5b1d6afb</h2>
+<h3>What was requested</h3>
+<p>The current Sheet row is 30; the original assigned row was 33. The request was for a Google Drive folder trigger that OCRs new scanned purchase-order PDFs, converts the text to PO data, loops over every line item, checks SKUs, calculates totals, routes risky orders for review, and otherwise creates a Sales Order and sends a confirmation email. For example, a PO with two line items should produce either a NEEDS_REVIEW result with unmatched SKUs or an AUTO_APPROVED result with a created order and email. The Sheet reports an 18-node build followed by whole-workflow deletion during later changes, but that report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A30:K30">Current Sheet1 row 30, A:K; original assigned row 33</a></p>
+<h3>What broke</h3>
+<p><strong>The current saved workflow contains only an API trigger and no processing steps. The historical reason for that state is unknown.</strong></p>
+<ol>
+<li>The fresh run entered {} because the current API request schema has no required fields. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-inspect.json:60">Current inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-run-6a7c4f0f7ce6a92d54505b5c.json:5">Fresh run JSON</a></li>
+<li>The only saved node is _nsSr8, Trigger via API; the definition has no edges and no OCR, parser, loop, SKU lookup, Storage, Gmail, or response action node. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-inspect.json:39">Current graph</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-inspect.json:48">Only node</a></li>
+<li>The trigger completed and returned {}. The run status was COMPLETED with no failed node IDs, but this only proves that the empty trigger path ran. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-run-6a7c4f0f7ce6a92d54505b5c.json:7">Fresh run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-run-6a7c4f0f7ce6a92d54505b5c.json:24">Fresh run output</a></li>
+<li>All later sales-order steps therefore did not run in this captured execution. The saved definition also reports current version 59 and deployed version 2, so the run’s exact definition version still needs checking. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-inspect.json:30">Current deployment fields</a></li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>Stable automation ID 6a7b16f6cd1f411c5b1d6afb is named Sales Order Processing from PO PDFs, but its current inspect result has no input schema and only one node. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-inspect.json:2">Inspect JSON</a></li>
+<li>The saved description mentions Drive, OCR, Groovy, SKU validation, totals, record creation, and Gmail, while the saved graph has zero edges and only _nsSr8. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-inspect.json:39">Inspect JSON</a></li>
+<li>The current Sheet is row 30; the original assigned row was 33. The Sheet reports an 18-node build and later deletion, but that report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A30:K30">Current Sheet1 row 30, A:K; original assigned row 33</a></li>
+<li>The fresh run ID is 6a7c4f0f7ce6a92d54505b5c; it used {}, completed only _nsSr8, and returned {}. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-run-6a7c4f0f7ce6a92d54505b5c.json:11">Fresh run JSON</a></li>
+<li>Current callable guidance says every reachable API path needs a matching response resource, but this is current source, not proven generation-time source. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:86">Current callable rule; current source, not proven generation-time source</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: An edit or regeneration deleted the processing graph.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet reports whole-workflow deletion after later changes, while the current graph is only a trigger.</li>
+<li>Evidence against it or missing: no editor event or prior 18-node JSON is available.</li>
+<li>Exact check: compare save history for a complete graph immediately before the current one-node save.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The builder saved an incomplete graph.</strong></p>
+<ul>
+<li>Evidence for it: the current saved graph itself contains no body or edges.</li>
+<li>Evidence against it or missing: the Sheet reports an earlier 18-node build, but that report is not independently proven.</li>
+<li>Exact check: compare the builder response with the first saved definition. A one-node response supports this reason; a complete response followed by a one-node save disproves it as the main reason.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The deployed version and saved version are different.</strong></p>
+<ul>
+<li>Evidence for it: current version 59, workflow version 57, and deployed version 2 are all reported together. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7b16f6cd1f411c5b1d6afb-inspect.json:30">Current inspect JSON</a></li>
+<li>Evidence against it or missing: the run artifact does not show whether it resolved the draft or deployed definition.</li>
+<li>Exact check: fetch deployed definition 6a7c37cb64eca703c693a5bc and compare its node count and graph hash with the run target.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: The test input and reporting were too weak to test behavior.</strong></p>
+<ul>
+<li>Evidence for it: the run used {} and reached only the trigger.</li>
+<li>Evidence against it: an empty test cannot explain the absence of nodes and edges in the saved definition.</li>
+<li>Exact check: after recovering a non-empty workflow schema, run a minimal PDF payload and report every reached node; classify trigger-only completion as non-coverage.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — editor/persistence owner:</strong> Preserve the last valid graph when connection lookup, editing, or regeneration fails; do not replace it with the one-node trigger.</p>
+<ul>
+<li><strong>Example:</strong> complete 18-node graph → failed connection edit → same 18-node graph retained, not edges: [] with _nsSr8 only.</li>
+<li><strong>Test:</strong> force a connection error and verify that node count, edge count, and graph hash remain unchanged.</li>
+<li><strong>Done when:</strong> save history shows the failed attempt separately and inspect still returns the prior complete graph.</li>
+<li><strong>Risk:</strong> Concurrent edits may require conflict handling.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — workflow builder:</strong> Reject a manifest that has the description of this workflow but lacks the required Drive trigger, OCR, parser, loop, SKU branch, approval branch, Storage create, email, and response steps.</p>
+<ul>
+<li><strong>Example:</strong> description-only one-node graph → validation failure; complete requested graph → validation pass.</li>
+<li><strong>Test:</strong> generate from the exact row-33 prompt and assert the required steps and loopback are present, with no Slack node.</li>
+<li><strong>Done when:</strong> the returned manifest and inspect artifact both show the full graph and its edge wiring.</li>
+<li><strong>Risk:</strong> Existing intentionally incomplete drafts may need an explicit draft mode.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — deployment owner:</strong> Expose the exact definition ID/hash used by each run and warn when current version 59 is being compared with deployed version 2.</p>
+<ul>
+<li><strong>Example:</strong> run record with automation ID, deployed definition ID, and definition hash → inspect record with the same resolved ID/hash.</li>
+<li><strong>Test:</strong> save a change after deployment and verify that draft and deployed test results identify different versions.</li>
+<li><strong>Done when:</strong> the run artifact identifies the exact graph that executed.</li>
+<li><strong>Risk:</strong> Clearer mismatch reporting may stop tests that previously ran silently against stale versions.</li>
+</ul>
+</li>
+<li><p><strong>Fix D — evaluation harness:</strong> Mark a completed run with zero body nodes as non-discriminating completed, not as proof that the workflow works.</p>
+<ul>
+<li><strong>Example:</strong> current run {} plus reached nodes [_nsSr8] → structural non-coverage.</li>
+<li><strong>Test:</strong> replay this one-node run through the reporting tool and assert it is not scored as behavioral success.</li>
+<li><strong>Done when:</strong> every run artifact includes input, resolved definition ID, reached nodes, and node outputs.</li>
+<li><strong>Risk:</strong> This changes scoring/reporting, not workflow execution.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current automation is broken because it contains only a trigger, and the fresh run confirmed only that empty trigger path. It remains unknown whether the full workflow was deleted later, never saved, or exists only in another deployed version.</p>
+<h2>ServiceNow Catalog Item Configuration Extractor — automation 6a1f61287529013ce0696ba9</h2>
+<h3>What was requested</h3>
+<p>The current Sheet row is 37; the original assigned row was 40. The request was for a callable ServiceNow extractor that reads a catalog item, its variables and choices, UI policies and actions, and client scripts, then returns them as catalog_data. For example, a catalog ID should produce a JSON object containing the item name, variables, choices, policy conditions/actions, and client scripts. The Sheet reports that the automation was built as expected but needed formula corrections through reprompting; that historical report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A37:K37">Current Sheet1 row 37, A:K; original assigned row 40</a></p>
+<h3>What broke</h3>
+<p><strong>No current runtime failure is proven. The Sheet reports past Code-node formula fixes; the current 23-node graph is populated but untested.</strong></p>
+<ol>
+<li>The workflow expects catalog_sys_id, but no case-specific catalog ID was supplied for a safe fresh run. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:2">Current inspect JSON</a></li>
+<li>The current saved workflow itself contains a callable trigger, ServiceNow queries, Code nodes, list creation, two loops, IF/ELSE logic, and a callable response. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:27">Current node inventory</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:296">Current loop wiring</a></li>
+<li>The current ServiceNow actions use the expected object IDs and connection ID 6a09f70cbe5d2c70145f0e81; the final Code node assembles catalog_data and the response returns it. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:498">Current ServiceNow nodes</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:1772">Final assembly</a></li>
+<li>No node error or output is available to show which formula or ServiceNow query failed, and no later step can be confirmed as successful. The Sheet’s formula-error report is not independently proven.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>Stable automation ID 6a1f61287529013ce0696ba9 requires catalog_sys_id and returns catalog_data. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:2">Inspect JSON</a></li>
+<li>The saved definition has 23 nodes and reports deployed version 6 with saved/workflow version 26. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:242">Deployment</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:1898">Saved version</a></li>
+<li>The graph has variable and UI-policy loops, IF/ELSE branches, and named loopback edges. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:296">Current edge wiring</a></li>
+<li>The current graph queries sc_cat_item, item_option_new, question_choice, catalog_ui_policy, catalog_ui_policy_action, and catalog_script_client. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:498">Current query nodes</a></li>
+<li>The current Sheet is row 37; the original assigned row was 40. The Sheet reports minor Code-node formula errors resolved by reprompting, but that report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A37:K37">Current Sheet1 row 37, A:K; original assigned row 40</a></li>
+<li>The final Code node receives catalog metadata, variables, policies, and client scripts, then returns catalog_data. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:1772">Final assembly</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a1f61287529013ce0696ba9-inspect.json:1870">Response mapping</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: A Code-node formula was wrong during the original build.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet specifically reports formula-related Code-node errors and says reprompting resolved them.</li>
+<li>Evidence against it or missing: no original node input, error, or output identifies the formula.</li>
+<li>Exact check: run with a valid catalog ID and inspect n_ExCat, n_MpVar, n_BdFnl, and every list append input. The first failing node and its input shape would prove the issue.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The ServiceNow connection or object fields were unavailable.</strong></p>
+<ul>
+<li>Evidence for it: the workflow depends on connection 6a09f70cbe5d2c70145f0e81 and six tenant-defined ServiceNow objects.</li>
+<li>Evidence against it or missing: no ServiceNow error output is captured, and the Sheet attributes the reported issue to formulas.</li>
+<li>Exact check: run with a real catalog ID and record each ServiceNow query’s connection, object ID, input, and output.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: There is not enough test input to prove the result.</strong></p>
+<ul>
+<li>Evidence for it: catalog_sys_id is required, but no case-specific value was supplied.</li>
+<li>Evidence against it or missing: missing input explains the lack of a fresh run, not the historical formula report.</li>
+<li>Exact check: obtain an authorized UAT catalog ID and run the workflow with it; classify the case as skipped, not failed, until then.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Code-node owner:</strong> Add type checks around the known list and output mappings, especially n_MpVar.outputs.result.variables, n_FtPlc.outputs.result, the list append sources, and n_BdFnl’s catalog_data inputs.</p>
+<ul>
+<li><strong>Example:</strong> unresolved n_MpVar.outputs.result.variables → rejected before save; valid array → accepted and passed into n_VarLp.</li>
+<li><strong>Test:</strong> use catalogs with zero, one, and multiple variables/policies/scripts; every Code node must receive its declared input shape and produce required outputs.</li>
+<li><strong>Done when:</strong> captured node inputs and outputs show no formula error and the response contains catalog_data for all fixtures.</li>
+<li><strong>Risk:</strong> Existing ServiceNow fields may be more dynamic than the static checks expect.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — ServiceNow owner:</strong> Verify connection 6a09f70cbe5d2c70145f0e81 and the schemas for sc_cat_item, item_option_new, question_choice, catalog_ui_policy, catalog_ui_policy_action, and catalog_script_client before running Code nodes.</p>
+<ul>
+<li><strong>Example:</strong> missing object field → explicit ServiceNow schema error; valid query rows → passed to the mapped Code node.</li>
+<li><strong>Test:</strong> run one known catalog with empty and non-empty choices, policies, and scripts.</li>
+<li><strong>Done when:</strong> every query returns the expected row shape and the final response is produced.</li>
+<li><strong>Risk:</strong> Results depend on UAT permissions and tenant data.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — evaluation owner:</strong> Require an authorized catalog_sys_id fixture and mark the case fresh_run=skipped_insufficient_input when it is absent.</p>
+<ul>
+<li><strong>Example:</strong> missing catalog ID → explicit skip; supplied catalog ID → run artifact with the exact input.</li>
+<li><strong>Test:</strong> verify missing-ID cases skip and supplied-ID cases capture every node input/output.</li>
+<li><strong>Done when:</strong> the run or skip artifact records input provenance and coverage status.</li>
+<li><strong>Risk:</strong> This improves evidence but does not repair a real formula or connector failure.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current saved structure looks substantially built, but the historical formula problem is not independently proven and the workflow has not been run with a real catalog ID. The main unknown is whether the reported problem was a Code mapping error, a ServiceNow resource issue, or simply an unverified test state.</p>
+<h2>Invoice Validator — automation 6a7c2eeb48f1e978809bcd6f</h2>
+<h3>What was requested</h3>
+<p>The current Sheet row is 47; the original assigned row was 54. The request was for a workflow that accepts an invoice PDF, extracts invoice fields, compares them with purchase-order data, detects duplicates and mismatches, assigns Valid, Invalid, or Requires Review, saves the result, and returns a detailed summary. For example, an invoice PDF plus one PO should return the invoice number, vendor, line items, totals, status, discrepancies, and recommended action. The Sheet marks this case Partial; that tracker result is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A47:K47">Current Sheet1 row 47, A:K; original assigned row 54</a></p>
+<h3>What broke</h3>
+<p><strong>The invoice workflow broke because it sends the PDF URL as text to OpenAI instead of first extracting the PDF, and its response omits requested fields.</strong></p>
+<ol>
+<li>The current trigger accepts invoicePdfUrl and purchaseOrders. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:318">Current inspect JSON</a></li>
+<li>n_BldPr builds a text prompt containing the URL, and n_OAIsm sends that prompt to OpenAI model gpt-4o; the captured definition does not show an Azure Document Intelligence extraction node even though its description claims one. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:474">Prompt builder</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:516">OpenAI node</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:199">Current apps and description</a></li>
+<li>The response maps invoice number, vendor, dates, amount, currency, and PO number, but does not map lineItems, subtotal, tax, or paymentTerms, which the Sheet expects. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:1253">Current response</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A47:K47">Current Sheet1 row 47, A:K; original assigned row 54</a></li>
+<li>Downstream duplicate lookup, PO comparison, status calculation, Storage creation, and response nodes are present in the saved JSON, but no fresh run shows whether they received correct extracted values. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:902">Current validation/storage nodes</a></li>
+<li>The original trace also recorded two failed Fetch_objects_by_query_or_id calls with Cannot get property &#39;schema&#39; on null object, then asked which Azure connection, PO source, and Storage choice to use. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:2945">Original trace error 1</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:3765">Original trace error 2</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:6590">Original trace clarification</a></li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>Stable automation ID 6a7c2eeb48f1e978809bcd6f has a complete captured original trace e_6a7c2eeb48f1e978809bcd74. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:2">Trace JSON</a></li>
+<li>The current trigger requires invoicePdfUrl and purchaseOrders; the current definition is saved at version 23 and reports deployed version 1. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:199">Current inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:318">Current schemas</a></li>
+<li>The current appsUsed list contains only openai, while the description says Azure Document Intelligence. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/automation-6a7c2eeb48f1e978809bcd6f-inspect.json:199">Current inspect JSON</a></li>
+<li>The current Sheet is row 47; the original assigned row was 54. The Sheet reports the partial result and expected fields, but that report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A47:K47">Current Sheet1 row 47, A:K; original assigned row 54</a></li>
+<li>The current file-handling rule says file-to-LLM workflows must use the correct file shape, but this is current source, not proven generation-time source. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/files-and-attachments.md:2">Current file rule; current source, not proven generation-time source</a></li>
+<li>The original trace is complete but contains the two null-schema object-fetch failures. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:3">Trace status</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:2945">Error 1</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:3765">Error 2</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The workflow JSON was generated with the wrong extraction path and incomplete response fields.</strong></p>
+<ul>
+<li>Evidence for it: n_BldPr sends the URL as prompt text to n_OAIsm; no Azure extraction node is shown; requested output fields are absent.</li>
+<li>Evidence against it or missing: the description claims Azure extraction, so the current saved version might differ from the version originally generated.</li>
+<li>Exact check: inspect the deployed definition and generation manifest for an Azure extraction node and confirm the exact response schema.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The file-handling instructions were not loaded or followed.</strong></p>
+<ul>
+<li>Evidence for it: current file guidance says file workflows require the right file object/URL/text handling, while the saved workflow treats the URL as ordinary prompt text. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/files-and-attachments.md:43">Current file-shape rule; current source, not proven generation-time source</a></li>
+<li>Evidence against it or missing: the original trace did ask the user to select an Azure connection, which shows at least some intended resource discovery.</li>
+<li>Exact check: retrieve the generation-time skill manifest and confirm whether the file skill was loaded before the extraction nodes were produced.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The historical object-fetch tool failed because a schema or resource was missing.</strong></p>
+<ul>
+<li>Evidence for it: two trace calls failed with the same null-schema error but different error IDs. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:2945">Trace error 1</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-3/trace-e_6a7c2eeb48f1e978809bcd74.json:3765">Trace error 2</a></li>
+<li>Evidence against it or missing: a connector/tool error alone does not explain the current missing Azure node or missing response fields.</li>
+<li>Exact check: replay the exact object-fetch calls with explicit schema/resource IDs and compare the result with the current and deployed workflow definitions.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: There is no valid invoice/PO test input in this review.</strong></p>
+<ul>
+<li>Evidence for it: the current trigger requires both invoicePdfUrl and purchaseOrders, but no fresh run was executed.</li>
+<li>Evidence against it: missing test input cannot explain the saved URL-as-prompt mapping.</li>
+<li>Exact check: run only with an authorized UAT PDF URL/file object and minimal PO JSON, then inspect every node input/output.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — workflow builder:</strong> Replace n_BldPr → n_OAIsm as the extraction path with the resolved Azure Document Intelligence action, using the exact file input shape returned by schema lookup. Add lineItems, subtotal, tax, and paymentTerms to the trigger result schema and response mapping.</p>
+<ul>
+<li><strong>Example:</strong> n_OAIsm.message = {{ n_BldPr.outputs.result.prompt }} → Azure extraction output → parser → response fields including lineItems and totals.</li>
+<li><strong>Test:</strong> a UAT invoice PDF plus one PO must return extracted line items, totals, status, discrepancies, and recommended action.</li>
+<li><strong>Done when:</strong> inspect shows the extraction node and complete response schema, and run evidence shows extracted values reaching validation and Storage.</li>
+<li><strong>Risk:</strong> The workflow creates Storage records and uses external OCR/AI services.</li>
+</ul>
+</li>
+<li><p><strong>Fix B — file-skill owner:</strong> Make invoice PDF, OCR, extraction, document, and file-URL language load the file skill and require an explicit decision between file descriptor, URL, and text.</p>
+<ul>
+<li><strong>Example:</strong> URL embedded in a prompt → resolved file-extraction action; plain URL-only OpenAI extraction must fail the pre-save check.</li>
+<li><strong>Test:</strong> the exact row-54 prompt and a paraphrase must both select a file-aware extraction path.</li>
+<li><strong>Done when:</strong> the generation trace records the skill load and the validator confirms file input reaches extraction before parsing.</li>
+<li><strong>Risk:</strong> More prompts may require connection clarification.</li>
+</ul>
+</li>
+<li><p><strong>Fix C — platform/tool owner:</strong> Validate schema/resource inputs before Fetch_objects_by_query_or_id can dereference them, and record the deployed definition hash.</p>
+<ul>
+<li><strong>Example:</strong> missing schema → typed missing schema/resource error; valid schema/resource → successful object fetch.</li>
+<li><strong>Test:</strong> replay both historical calls with invalid and valid schema/resource inputs, then compare current and deployed graph hashes.</li>
+<li><strong>Done when:</strong> valid calls no longer produce the null-schema error and the executed definition is identifiable.</li>
+<li><strong>Risk:</strong> This affects a shared object-fetch operation and deployment reporting.</li>
+</ul>
+</li>
+<li><p><strong>Fix D — evaluation owner:</strong> Require a schema-valid invoice URL/file object and purchaseOrders array; classify runs that never reach extraction as non-coverage.</p>
+<ul>
+<li><strong>Example:</strong> invoicePdfUrl plus one PO → extraction and validation nodes reached; missing PDF → explicit skipped/invalid-input result.</li>
+<li><strong>Test:</strong> use matching, mismatched, duplicate, and missing-field invoice fixtures and capture every node output.</li>
+<li><strong>Done when:</strong> each run includes the input, reached nodes, extracted fields, validation result, and Storage record ID.</li>
+<li><strong>Risk:</strong> Tests may create real records and call external services.</li>
+</ul>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current workflow is broken because it sends a URL string to OpenAI instead of showing a PDF extraction step, and it omits requested response fields. The historical trace also has a real null-schema tool error, but the available evidence does not prove whether that error caused the current saved-definition mismatch.</p>
+</article>
+</main>
+</body>
+</html>
