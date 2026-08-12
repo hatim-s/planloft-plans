@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Text-to-Workflow Report — Group 2</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="report">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h2>OCR Document Classifier — automation 6a7b1adb1686181e280426bc</h2>
+<h3>What was requested</h3>
+<p>This stable case is in current Sheet rows 7–9 and was originally assigned as rows 8–9. The requested automation accepts a PDF, image, or scanned document, extracts its text, identifies its document type, and returns both values. For example, an uploaded receipt should produce the receipt text and a result such as documentType: receipt.</p>
+<h3>What broke</h3>
+<p><strong>The saved workflow has a fixed file path instead of a visible caller-file mapping and may have a response-name mismatch. The reported test failures are not independently tied to those defects.</strong></p>
+<ol>
+<li>The caller was expected to provide a file through the API trigger. The Sheet reports that row 8 used an IRS PDF URL and row 9 used an inline base64 receipt; these reports are not independently proven.</li>
+<li>The saved Get File node n_ibIQp uses the fixed path user-uploads/147/1786519573704/Screenshot_2026-08-11_at_4.44.59_PM.png. The Unstructured OCR node then reads n_ibIQp.outputs.file with strategy ocr_only.</li>
+<li>The Sheet reports that the URL attempt failed in 565 ms with a ConnectException and that the base64 attempt timed out after about 35 seconds. Those two runtime descriptions are not complete node captures.</li>
+<li>Because the OCR input is wrong or unavailable, document classification and the final API response cannot be trusted. The later response node also selects success while the saved API response is named success with status 200; the current callable rule says the selected name should be 200_success.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The stable ID is in current rows 7–9; row 7 reports a successful six-node build, while rows 8–9 report later failed tests. The Sheet reports these outcomes, and they are not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A7:K7">current Sheet row 7</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A8:K8">current Sheet row 8</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A9:K9">current Sheet row 9</a></li>
+<li>The saved automation is OCR Document Classifier, version 1, and DEPLOYED. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:2">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:87">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:92">inspect JSON</a></li>
+<li>Get File node n_ibIQp has a fixed localFilePath rather than a visible caller-file mapping. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:231">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:235">inspect JSON</a></li>
+<li>The OCR node reads n_ibIQp.outputs.file and uses ocr_only. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:253">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:256">inspect JSON</a></li>
+<li>The saved API response is named success with status 200, while the response node uses responseName success. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:184">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:187">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:434">inspect JSON</a></li>
+<li>The current callable instructions say a 200 response named success is selected with 200_success. This is current source text, not proof of what was loaded when the workflow was generated. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:140">callables.md</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:147">callables.md</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><strong>Reason A: The workflow used the wrong file.</strong><ul>
+<li>Evidence for it: Get File node n_ibIQp contains a literal historical path, and OCR reads that node’s output. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:235">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:256">inspect JSON</a></li>
+<li>Evidence against or missing: The Sheet reports that row 9 showed trigger.file in Build view, but no historical request or node capture proves what reached OCR. The Sheet reports this, and it is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A9:K9">current Sheet row 9</a></li>
+<li>Exact check: Capture one run showing the trigger file, n_ibIQp input/output, and the OCR request bytes; the file identity must match from trigger to OCR.</li>
+</ul>
+</li>
+<li><strong>Reason B: The API response was selected with the wrong name.</strong><ul>
+<li>Evidence for it: The saved response entry is status 200/name success, but the response node selects success instead of 200_success. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:187">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1adb1686181e280426bc-inspect.json:434">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:140">callables.md</a></li>
+<li>Evidence against or missing: No captured run shows a response-selection error; the Sheet reports failures at OCR or timeout stages, and those reports are not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A8:K8">current Sheet row 8</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A9:K9">current Sheet row 9</a></li>
+<li>Exact check: Run a known-good file and inspect the response node; if success is accepted and both declared fields are returned, this reason is not the runtime cause.</li>
+</ul>
+</li>
+<li><strong>Reason C: The test form or UAT environment changed the file input or blocked the external URL.</strong><ul>
+<li>Evidence for it: The Sheet reports a public IRS URL, ConnectException, a long base64 timeout, and a missing Test History entry. These reports are not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A8:K8">current Sheet row 8</a> <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A9:K9">current Sheet row 9</a></li>
+<li>Evidence against or missing: There is no captured submitted input, network log, connector request ID, or history API response.</li>
+<li>Exact check: Replay the recorded input shape in UAT and compare trigger values, OCR input, connector status/timing, and the history record.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow builder/JSON owner:</strong> Remove n_ibIQp.inputs.localFilePath and bind the API trigger file to a file-capable OCR input, or first materialize the trigger file and pass that returned durable file.</p>
+</li>
+<li><p><strong>Example:</strong> Before: n_ibIQp.inputs.localFilePath -&gt; user-uploads/147/1786519573704/Screenshot_2026-08-11_at_4.44.59_PM.png. After: trigger.file -&gt; file materialization -&gt; n_ibIQp.outputs.file -&gt; OCR node.</p>
+</li>
+<li><p><strong>Test:</strong> A fixed PDF fixture must show the same file identity at the trigger, materialization, and OCR input.</p>
+</li>
+<li><p><strong>Done when:</strong> Inspect JSON contains no literal per-user file path and a run capture shows the caller’s file reaching OCR.</p>
+</li>
+<li><p><strong>Risk:</strong> Changing file materialization can change storage retention, MIME handling, and file-size behavior.</p>
+</li>
+<li><p><strong>Fix B — Callable contract owner:</strong> Change the response node’s responseName from success to 200_success and check every API response node against its declared response entry.</p>
+</li>
+<li><p><strong>Example:</strong> Before: responseName success, status 200. After: responseName 200_success, status 200.</p>
+</li>
+<li><p><strong>Test:</strong> Static checking must reject bare success for this API definition, and a good file must return OCR text and document type.</p>
+</li>
+<li><p><strong>Done when:</strong> Inspect JSON, validator output, and a successful response all show 200_success and the two declared fields.</p>
+</li>
+<li><p><strong>Risk:</strong> Clients or examples that rely on the bare name may need to be regenerated.</p>
+</li>
+<li><p><strong>Fix C — Test harness/UAT owner:</strong> Show the actual file schema in the test form and capture redacted input shape, external URL policy, connector timing, and history persistence separately.</p>
+</li>
+<li><p><strong>Example:</strong> Before: free-text source fields with no captured file shape. After: a recorded FILE input, its trigger value, OCR input, connector result, and history record linked to one run ID.</p>
+</li>
+<li><p><strong>Test:</strong> Run one approved URL fixture and one durable FILE fixture and compare each recorded stage.</p>
+</li>
+<li><p><strong>Done when:</strong> The evidence contains a schema-valid redacted input, per-node results, connector status, and a matching history record.</p>
+</li>
+<li><p><strong>Risk:</strong> Changing upload handling may change how existing UAT tests submit files.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The saved workflow definitely contains a fixed-file mapping problem and probably has a response-name problem; the Sheet’s two runtime failures are not fully proven by captured runs. The exact historical inputs, original generation trace, and whether UAT or OCR service behavior contributed remain unknown.</p>
+<h2>Sarvam Document OCR — automation 6a7b1f650fb59c2149e1b346</h2>
+<h3>What was requested</h3>
+<p>This is current Sheet row 11. The workflow should accept a PDF or image, upload it to Sarvam Document Intelligence, create and monitor an OCR job, fetch the result, and return text, status, and any error. For example, a PDF plus an API key should produce extracted English text and a processing status.</p>
+<h3>What broke</h3>
+<p><strong>The fresh run broke because the Sarvam API rejected the authentication credentials.</strong></p>
+<ol>
+<li>The trigger received the run and completed.</li>
+<li>The Create OCR Job node n_CrJob then called the Sarvam HTTP endpoint.</li>
+<li>The endpoint returned HTTP 403 with Invalid or missing authentication credentials and invalid_api_key_error.</li>
+<li>The later upload, polling, result retrieval, and response steps therefore did not run in this captured failure. The saved success response is also empty, so it may be incomplete even after authentication is fixed.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The Sheet asks for a six-API Sarvam OCR flow and reports that manual cURL commands were supplied but binary upload remained unresolved. The Sheet reports this, and it is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A11:K11">current Sheet row 11</a></li>
+<li>The saved automation is Sarvam Document OCR, uses a trigger-owned input schema, and is deployed version 1. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:2">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:4">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:177">inspect JSON</a></li>
+<li>The file path is read from n_NwStr.outputs.file.source, and the upload node sends n_GtFl.outputs.file with a Content-Type from the trigger file metadata. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:619">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:643">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:657">inspect JSON</a></li>
+<li>Run 6a7c4fe26ad12641e89be3ec failed at n_CrJob after the trigger completed. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:18">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:22">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:34">run JSON</a></li>
+<li>The failed HTTP response was 403 with Invalid or missing authentication credentials and invalid_api_key_error. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:191">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:194">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:195">run JSON</a></li>
+<li>The saved success response node has empty inputs. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:956">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:958">inspect JSON</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><strong>Reason A: The API key or authentication header is wrong.</strong><ul>
+<li>Evidence for it: The first failing node returned 403 and invalid_api_key_error after the trigger completed. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:81">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:191">same run, error details</a></li>
+<li>Evidence against or missing: The secret value, expiry, endpoint, and effective outbound header are not in the evidence.</li>
+<li>Exact check: Send a redacted request capture to the exact Sarvam endpoint and verify the required header is present and accepted.</li>
+</ul>
+</li>
+<li><strong>Reason B: The binary file mapping may be wrong after authentication is fixed.</strong><ul>
+<li>Evidence for it: The Sheet reports a binary upload gap, and the current file rules warn that file values are not type-checked. The Sheet report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A11:K11">current Sheet row 11</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/files-and-attachments.md:32">files-and-attachments.md</a></li>
+<li>Evidence against or missing: The saved graph does map a file output into a PUT body, and the captured run fails before the upload result is shown. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:643">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-run-6a7c4fe26ad12641e89be3ec.json:81">run JSON</a></li>
+<li>Exact check: With valid authentication and a known PDF, inspect the upload body length, MIME type, and Sarvam response.</li>
+</ul>
+</li>
+<li><strong>Reason C: The response is empty even if OCR succeeds.</strong><ul>
+<li>Evidence for it: The saved success response node has no inputs. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:956">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f650fb59c2149e1b346-inspect.json:958">inspect JSON</a></li>
+<li>Evidence against or missing: No successful run reaches that node, so actual response behavior is unknown.</li>
+<li>Exact check: Compare the trigger result fields with every success/error response input and run both a success and failure case.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Sarvam connector/auth owner:</strong> Verify the UAT key, expiry, endpoint, header name, and mapping into n_CrJob without recording secret bytes.</p>
+</li>
+<li><p><strong>Example:</strong> Before: n_CrJob -&gt; HTTP 403 invalid_api_key_error. After: n_CrJob -&gt; authenticated Sarvam response with a job ID.</p>
+</li>
+<li><p><strong>Test:</strong> A redacted UAT run must return a non-403 response from Create OCR Job.</p>
+</li>
+<li><p><strong>Done when:</strong> Redacted endpoint/header evidence and a successful n_CrJob output are tied to one run ID.</p>
+</li>
+<li><p><strong>Risk:</strong> Rotating a shared credential can affect other UAT automations.</p>
+</li>
+<li><p><strong>Fix B — Workflow JSON/file owner:</strong> Materialize the trigger FILE into a durable file and pass only the file object/bytes accepted by the upload schema, with explicit MIME and filename.</p>
+</li>
+<li><p><strong>Example:</strong> Before: n_UpFl.body -&gt; n_GtFl.outputs.file without a proven accepted body mode. After: trigger.file -&gt; durable file -&gt; n_GtFl.outputs.file -&gt; binary PUT body with explicit Content-Type.</p>
+</li>
+<li><p><strong>Test:</strong> A fixed PDF must produce the expected byte length and an accepted Sarvam OCR job.</p>
+</li>
+<li><p><strong>Done when:</strong> Inspect JSON and upload-node evidence show the expected binary payload and Sarvam accepts it.</p>
+</li>
+<li><p><strong>Risk:</strong> Materialization can change retention and duplicate-upload behavior.</p>
+</li>
+<li><p><strong>Fix C — Callable response owner:</strong> Fill every declared result, status, and error field in the success and error response nodes and reject empty response nodes when fields are declared.</p>
+</li>
+<li><p><strong>Example:</strong> Before: success response inputs {}. After: success response inputs include OCR text and processing status; error response includes error message.</p>
+</li>
+<li><p><strong>Test:</strong> Static field comparison plus one success and one error run must return all declared fields.</p>
+</li>
+<li><p><strong>Done when:</strong> Inspect JSON and paired run captures show matching response fields.</p>
+</li>
+<li><p><strong>Risk:</strong> Adding response fields may require callers to update their expected output.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The captured run definitely failed on Sarvam authentication with HTTP 403; it did not reach enough later steps to judge binary upload. The saved response is also empty, and the original generation trace and exact key configuration remain unavailable.</p>
+<h2>Aircraft Component Repair Details PDF Generator — automation 6a7c22ef0fb59c2149ed5e64</h2>
+<h3>What was requested</h3>
+<p>This stable case is original Sheet row 46 and current Sheet row 42. It should generate a professional aircraft-component repair HTML document from order and repair fields, convert it to PDF, create a file path, and email the PDF. For example, repair-part details and an order ID should appear in the generated PDF and be attached to the email.</p>
+<h3>What broke</h3>
+<p><strong>The PDF workflow broke because the OpenAI node contains a formula string longer than the platform allows.</strong></p>
+<ol>
+<li>The input values entered the OpenAI node through a large CONCAT formula containing a long instruction and dynamic repair-order fields.</li>
+<li>The actual node n_OpnAI used the OpenAI create-response resource with that formula as input.</li>
+<li>The run returned String literals in formulas can&#39;t be bigger than 255 characters ASCII and failed with n_OpnAI.</li>
+<li>HTML-to-PDF, file-path creation, upload, and email were later steps, so the failed run does not show that they executed.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>Current Sheet row 42 is the moved location for original row 46 and contains automation 6a7c22ef0fb59c2149ed5e64, the original trace URL, and the report that the wrong OpenAI action/formula instructions were used. The Sheet reports this, and it is not independently proven until compared with the artifacts. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A42:K42">current Sheet row 42</a></li>
+<li>The saved automation is Aircraft Component Repair Details PDF Generator and is deployed version 1. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:2">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:143">inspect JSON</a></li>
+<li>The original trace is trace e_6a7c22ef0fb59c2149ed5e65 and is marked complete; it contains the repair-PDF prompt, a clarification event, and skill-loader metadata. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/trace-e_6a7c22ef0fb59c2149ed5e65.json:2">trace JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/trace-e_6a7c22ef0fb59c2149ed5e65.json:3">trace JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/trace-e_6a7c22ef0fb59c2149ed5e65.json:1265">prompt and event details</a></li>
+<li>The OpenAI node n_OpnAI contains a long CONCAT formula. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:317">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:323">inspect JSON</a></li>
+<li>Fresh run 6a7c50046ad12641e89be8ad failed at n_OpnAI with the exact 255-character error. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-run-6a7c50046ad12641e89be8ad.json:62">run JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-run-6a7c50046ad12641e89be8ad.json:179">run JSON</a></li>
+<li>The saved graph has later HTML-to-PDF and Create file path nodes, but the failed run does not prove they ran. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:341">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:371">inspect JSON</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><strong>Reason A: The OpenAI node or formula was generated incorrectly.</strong><ul>
+<li>Evidence for it: The Sheet reports an incorrect OpenAI action/formula, the saved node contains a long CONCAT, and the run fails at that node. The Sheet portion is not independently proven; the node and run are captured evidence. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A42:K42">current Sheet row 42</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:323">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-run-6a7c50046ad12641e89be8ad.json:179">run JSON</a></li>
+<li>Evidence against or missing: The evidence does not independently show which alternative OpenAI action the prompt required; it does show that the formula itself exceeded the limit.</li>
+<li>Exact check: Compare n_OpnAI resourceName and formula structure with the OpenAI input schema, then run a short formula and a long formula.</li>
+</ul>
+</li>
+<li><strong>Reason B: No check stopped an oversized formula before the run.</strong><ul>
+<li>Evidence for it: The saved formula reached runtime and failed on a fixed 255-character rule. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-inspect.json:323">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7c22ef0fb59c2149ed5e64-run-6a7c50046ad12641e89be8ad.json:179">run JSON</a></li>
+<li>Evidence against or missing: No validator report shows whether a check existed but was bypassed.</li>
+<li>Exact check: Run static validation on the saved definition; it must reject the long literal before deployment.</li>
+</ul>
+</li>
+<li><strong>Reason C: The formula rule was not available or followed when the workflow was generated.</strong><ul>
+<li>Evidence for it: The Sheet reports that formula instructions were not followed, and the trace contains skill-loader metadata. The Sheet report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A42:K42">current Sheet row 42</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/trace-e_6a7c22ef0fb59c2149ed5e65.json:1778">trace JSON</a></li>
+<li>Evidence against or missing: The cited trace does not prove the full historical rule text or that the 255-character rule was loaded.</li>
+<li>Exact check: Inspect the original trace’s loaded-rule manifest and compare it with the formula-generation step.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow builder/OpenAI node owner:</strong> Use the intended OpenAI action and replace the oversized CONCAT literal with a short instruction plus structured dynamic fields, or build the HTML in a supported code/template step.</p>
+</li>
+<li><p><strong>Example:</strong> Before: n_OpnAI input -&gt; one long CONCAT literal. After: n_OpnAI input -&gt; short instruction plus separate airlineName, orderId, part details, and repair details fields.</p>
+</li>
+<li><p><strong>Test:</strong> Short and long repair details must both produce valid OpenAI output without a formula-length error.</p>
+</li>
+<li><p><strong>Done when:</strong> Inspect JSON has the correct resource/schema, no oversized literal, and a run reaches HTML generation.</p>
+</li>
+<li><p><strong>Risk:</strong> Moving text out of the formula can change the OpenAI prompt and output formatting.</p>
+</li>
+<li><p><strong>Fix B — Formula checker owner:</strong> Parse formula string literals and reject or rewrite any literal longer than 255 ASCII characters before save/deploy.</p>
+</li>
+<li><p><strong>Example:</strong> Before: a 256-plus-character literal is saved. After: the save is blocked with the exact node n_OpnAI and field path, or the text is moved into supported dynamic input.</p>
+</li>
+<li><p><strong>Test:</strong> 255-character input passes; 256-character input fails before deployment; Unicode cases are tested separately.</p>
+</li>
+<li><p><strong>Done when:</strong> The invalid workflow is stopped before a run and the error identifies n_OpnAI.</p>
+</li>
+<li><p><strong>Risk:</strong> Existing workflows with long valid-looking formulas may need migration.</p>
+</li>
+<li><p><strong>Fix C — Workflow rule owner:</strong> Put the 255-character formula limit in the OpenAI/formula generation rule and record that rule in the generation trace.</p>
+</li>
+<li><p><strong>Example:</strong> Before: the trace shows skill-loading metadata but no proven formula-limit rule. After: the trace shows the rule loaded, the length check, and the corrected node.</p>
+</li>
+<li><p><strong>Test:</strong> The same repair-PDF request must show the rule, check, and corrected formula structure.</p>
+</li>
+<li><p><strong>Done when:</strong> A generation trace and validator result are tied to the saved automation ID.</p>
+</li>
+<li><p><strong>Risk:</strong> Generation may take slightly longer because it performs an extra check.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The OpenAI node definitely failed before PDF creation because its formula literal exceeded 255 ASCII characters, and the tracker report is supported by the captured run. Whether the wrong OpenAI action was also selected and whether the historical rule was loaded remain partly unknown.</p>
+<h2>OCR File Text Extraction Scaffold — automation 6a7b1f131686181e2804314b</h2>
+<h3>What was requested</h3>
+<p>This stable case is original Sheet row 49 and current Sheet row 45. It should accept a PDF file through a callable input, extract its contents, and return the extracted text. For example, a PDF should enter as a file, pass through a read/extract step, and produce the document text as the output.</p>
+<h3>What broke</h3>
+<p><strong>The requested OCR flow broke because the saved automation is still an empty version-0 scaffold.</strong></p>
+<ol>
+<li>The requested file and any input values had no usable trigger schema to enter.</li>
+<li>The saved START trigger has no appName or resourceName, and the definition has no input schema.</li>
+<li>The saved definition is named Untitled workflow and remains version 0.</li>
+<li>No matched run is available, so no text-extraction or response step is proven to have run.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>Current Sheet row 45 is the moved location for original row 49. The Sheet reports a callable PDF input, text extraction, and extracted-content output, and asks for Read File and Retrieve Text guidance. The Sheet reports this, and it is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A45:K45">current Sheet row 45</a></li>
+<li>The saved automation is Untitled workflow and has no input schema. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:2">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:4">inspect JSON</a></li>
+<li>Its START trigger has null appName and null resourceName. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:6">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:11">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:12">inspect JSON</a></li>
+<li>The definition is named Untitled workflow and records version 0. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:54">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:93">inspect JSON</a></li>
+<li>Current file guidance lists specific file-to-text actions and outputs, but it is current source text, not proof of what was loaded during generation. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/files-and-attachments.md:95">files-and-attachments.md</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/files-and-attachments.md:107">files-and-attachments.md</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><strong>Reason A: The agent stopped before configuring the workflow.</strong><ul>
+<li>Evidence for it: The saved graph has no usable trigger or input schema and remains version 0. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:4">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:11">inspect JSON</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:93">inspect JSON</a></li>
+<li>Evidence against or missing: No original trace shows whether the agent stalled, asked for clarification, or called a save tool.</li>
+<li>Exact check: Inspect the original trace or chat’s final generation event and confirm whether a valid graph was ever produced.</li>
+</ul>
+</li>
+<li><strong>Reason B: The editor or save process dropped a valid graph.</strong><ul>
+<li>Evidence for it: The Sheet describes a concrete OCR request, but the saved definition is still an empty version-0 workflow. The Sheet report is not independently proven as a pre-save graph. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A45:K45">current Sheet row 45</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-2/automation-6a7b1f131686181e2804314b-inspect.json:93">inspect JSON</a></li>
+<li>Evidence against or missing: No pre-save definition, save response, or editor log exists.</li>
+<li>Exact check: Compare the final graph sent to save with the persisted definition; a valid pre-save graph followed by an empty saved graph proves a persistence failure.</li>
+</ul>
+</li>
+<li><strong>Reason C: The file and text-extraction rules were not available or were not used.</strong><ul>
+<li>Evidence for it: The Sheet specifically asks for Read File and Retrieve Text knowledge, while the saved definition has no file trigger or extraction node. The Sheet report is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A45:K45">current Sheet row 45</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/files-and-attachments.md:95">files-and-attachments.md</a></li>
+<li>Evidence against or missing: No generation trace proves which rules loaded or whether action selection began.</li>
+<li>Exact check: Inspect the generation-time rule manifest and tool calls; confirm whether file input and text extraction were selected.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow builder/agent owner:</strong> Require the flow to configure a callable file input, choose a file-to-text action, map extracted text, and inspect the saved definition before reporting completion.</p>
+</li>
+<li><p><strong>Example:</strong> Before: START appName null, resourceName null, input schema null. After: callable START with FILE input -&gt; read/extract node -&gt; declared text field -&gt; response node.</p>
+</li>
+<li><p><strong>Test:</strong> A PDF prompt must produce a saved definition with a non-null trigger resource, FILE input schema, extraction node, text output, and response node.</p>
+</li>
+<li><p><strong>Done when:</strong> A matched inspect artifact shows version greater than 0 and all four parts.</p>
+</li>
+<li><p><strong>Risk:</strong> The extra inspect step adds a small amount of generation time.</p>
+</li>
+<li><p><strong>Fix B — Editor/persistence owner:</strong> Refuse or flag a save that leaves the intended workflow with null trigger/resource, null input schema, or version 0, and retain pre-save and post-save definitions.</p>
+</li>
+<li><p><strong>Example:</strong> Before: valid graph submitted -&gt; Untitled workflow version 0. After: either the valid graph persists or the save returns an explicit error naming the lost fields.</p>
+</li>
+<li><p><strong>Test:</strong> Simulate a dropped save and verify the agent receives a save failure instead of a success message.</p>
+</li>
+<li><p><strong>Done when:</strong> Pre-save and post-save definitions match, or the mismatch is reported with a save error.</p>
+</li>
+<li><p><strong>Risk:</strong> Existing placeholder workflows may start appearing as invalid.</p>
+</li>
+<li><p><strong>Fix C — File/text rule owner:</strong> Add an exact decision rule for PDF input, Read File/materialization, Retrieve Text or Unstructured extraction, output field mapping, and callable response.</p>
+</li>
+<li><p><strong>Example:</strong> Before: the request mentions a file but the saved graph has no file action. After: FILE input -&gt; file read -&gt; text extraction -&gt; response text.</p>
+</li>
+<li><p><strong>Test:</strong> PDF, image, and scanned-document prompts must each select a valid file-to-text path.</p>
+</li>
+<li><p><strong>Done when:</strong> The generation trace shows the rule load and the inspect artifact shows the expected nodes and output mapping.</p>
+</li>
+<li><p><strong>Risk:</strong> More explicit rules can make generation slower but should reduce empty workflows.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The saved automation definitely cannot run the requested OCR flow because it is an empty version-0 scaffold with no trigger or input schema. Whether the agent stopped, the editor lost a valid graph, or the file rules were missing cannot be determined without the original trace or pre-save evidence.</p>
+</article>
+</main>
+</body>
+</html>

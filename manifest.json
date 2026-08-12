@@ -324,6 +324,15 @@
       "kind": "report",
       "createdAt": "2026-08-12T15:47:07.825Z",
       "expiresAt": "2026-09-11T15:47:07.825Z"
+    },
+    {
+      "id": "ANGXnWfYV3",
+      "project": "github.com/unify-apps/ua-builder-no-prompt",
+      "slug": "text-to-workflow-group-2",
+      "title": "Text-to-Workflow Report — Group 2",
+      "kind": "report",
+      "createdAt": "2026-08-12T15:47:20.022Z",
+      "expiresAt": "2026-09-11T15:47:20.022Z"
     }
   ]
 }
