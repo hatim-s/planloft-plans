@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Text-to-Workflow Report — Group 1</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="report">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Text-to-Workflow Audit — Plain-Language Engineering Chapter</h1>
+<h2>Order tier response workflow — automation 6a7b5adb700a2b1b77af4ecd</h2>
+<h3>What was requested</h3>
+<p>The request was to classify an order by orderAmount. An orderAmount greater than 1000 should return tier PREMIUM; otherwise it should return STANDARD. For example, an input such as {orderAmount: 1500} should produce {tier: &quot;PREMIUM&quot;}. The prompt called this a webhook, but it also asked for an immediate response, which requires a callable/API-style workflow.</p>
+<h3>What broke</h3>
+<p><strong>The current saved definition has two confirmed defects: request <code>orderAmount</code> is a number while response <code>orderAmount</code> is text, and the response node flows to a generic STOP. This does not prove the historical run used this draft.</strong></p>
+<ol>
+<li>The request entering the callable has orderId as text and orderAmount as a number.</li>
+<li>The saved response definition declares orderAmount as text, and the response node is n_MUPbb.</li>
+<li>The graph connects n_MUPbb to generic STOP node n_StoFn instead of ending at the callable response.</li>
+<li>No fresh run was made because the available evidence did not provide all required request values, so later runtime behavior was not observed.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The current Sheet row 2 marks the case Partial. The Sheet reports that the agent built the workflow but could not fix the triggered-by-API callable, and that a manual canvas correction made it run; this is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A2:K2">Tracker, current row 2, original row 2, columns F, H, I, J, K</a></li>
+<li>The saved inspect identifies stable automation 6a7b5adb700a2b1b77af4ecd and shows response node n_MUPbb and generic STOP node n_StoFn. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b5adb700a2b1b77af4ecd-inspect.json:2">Inspect lines 2–14 and 62–76</a></li>
+<li>The saved graph connects n_MUPbb to n_StoFn. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b5adb700a2b1b77af4ecd-inspect.json:136">Inspect lines 136–140</a></li>
+<li>The request schema has orderAmount as a number, while the response schema has orderAmount as a string. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b5adb700a2b1b77af4ecd-inspect.json:163">Inspect lines 163–211</a></li>
+<li>Current source says callable response fields must have the same names and types as the trigger result, and reachable callable paths must end at a response rather than generic STOP. This is current source, not proof that the rule was present when this workflow was generated. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:65">Callable rules, lines 65–69 and 86–100</a></li>
+<li>The inspect artifact records saved version 16, while current source says the deployed version, not necessarily the newest saved draft, is what runs. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b5adb700a2b1b77af4ecd-inspect.json:414">Inspect lines 414–416</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:215">Current deployment rule, lines 215–225</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The workflow was assembled with the wrong response fields and final node.</strong></p>
+<ul>
+<li>Evidence for it: the saved JSON directly shows the number/string mismatch and the n_MUPbb-to-n_StoFn edge.</li>
+<li>Evidence against it or missing: there is no historical trace proving that this exact saved version was the one that failed.</li>
+<li>Exact check: inspect the historical workflow version or trace-linked definition and verify whether orderAmount had matching types and whether n_MUPbb was terminal.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The request wording selected a webhook pattern instead of a callable pattern.</strong></p>
+<ul>
+<li>Evidence for it: the prompt says webhook while also asking for a same-call response; the saved graph violates the current callable response rules.</li>
+<li>Evidence against it or missing: the current rules may not have been loaded at generation time.</li>
+<li>Exact check: capture the generation manifest and verify which trigger/skill was selected for the words “webhook response”; repeat with “Respond to API request.”</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The correction did not persist or the wrong version ran.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet reports a fromCustomerUserIdentityId save error and says edits did not persist; saved-version and deployed-version behavior can differ.</li>
+<li>Evidence against it or missing: no save request, server response, deployment record, or original trace is captured.</li>
+<li>Exact check: make the smallest response-node correction in UAT, capture the save response, re-inspect the definition, and compare its version/hash with the submitted correction.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow builder / workflow JSON:</strong> Set the response orderAmount type to number, or remove that field when only tier is required. Remove the edge from n_MUPbb to n_StoFn so the response node is terminal for the success path.</p>
+</li>
+<li><p><strong>Example:</strong> request orderAmount number → response orderAmount number; n_MUPbb → terminal response, not n_MUPbb → n_StoFn.</p>
+</li>
+<li><p><strong>Test:</strong> inspect the generated workflow and require matching request/response types, no generic STOP after n_MUPbb, and a response on every reachable branch.</p>
+</li>
+<li><p><strong>Done when:</strong> the corrected inspect artifact shows the exact schema and edges, and a valid callable run returns the expected tier.</p>
+</li>
+<li><p><strong>Risk:</strong> Changing the response schema may affect callers that relied on the old string field.</p>
+</li>
+<li><p><strong>Fix B — Workflow prompt/skill routing:</strong> Add the exact rule that “webhook response,” “Respond to API request,” and “same-call result” select the callable/API trigger and load the callable response rules before generation.</p>
+</li>
+<li><p><strong>Example:</strong> “Return a webhook response containing tier” → callable/API trigger, not a one-way webhook.</p>
+</li>
+<li><p><strong>Test:</strong> run the routing check with the row-2 wording and “Respond to API request”; both must select the callable path and reject response-to-STOP.</p>
+</li>
+<li><p><strong>Done when:</strong> generation telemetry records the loaded callable rule and inspect shows the correct trigger, types, and terminal response.</p>
+</li>
+<li><p><strong>Risk:</strong> Some genuinely one-way webhook requests may need clearer wording to avoid being reclassified.</p>
+</li>
+<li><p><strong>Fix C — Editor/platform persistence:</strong> Capture the fromCustomerUserIdentityId validation failure, return a field-level save error, and verify the saved version/hash after every correction.</p>
+</li>
+<li><p><strong>Example:</strong> submitted corrected n_MUPbb configuration → successful save response → re-inspected definition contains the same correction.</p>
+</li>
+<li><p><strong>Test:</strong> apply the minimal correction in UAT and compare the submitted and re-fetched definition hashes.</p>
+</li>
+<li><p><strong>Done when:</strong> the save response, post-save inspect, and version/hash comparison prove that the correction persisted.</p>
+</li>
+<li><p><strong>Risk:</strong> Broadly weakening identity validation could create unrelated save or ownership problems.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current saved workflow contains a confirmed response-schema and graph problem. The historical failure could also involve prompt classification or a save/deployment problem, but those causes are not proven.</p>
+<h2>Order tier callable workflow — automation 6a7b7317ed89aa47aca5f2c7</h2>
+<h3>What was requested</h3>
+<p>The request was for a callable API workflow that receives orderId and orderAmount, applies an If/Else condition, creates a variable, and returns orderId, orderAmount, and tier. For example, orderAmount 1200 should return tier PREMIUM, while 500 should return STANDARD. The workflow needed a concrete callable trigger and configured actions, not empty selection fields.</p>
+<h3>What broke</h3>
+<p><strong>The current saved workflow is incomplete: its trigger and app/action selections remain placeholders. The historical cause—builder, rule loading, editor, or deployment—is unknown.</strong></p>
+<ol>
+<li>No usable input schema entered execution because the saved workflow did not contain a concrete trigger.</li>
+<li>The saved definition still contained “Select a trigger event” and “Select an app and action.”</li>
+<li>There was therefore no confirmed business output or response payload.</li>
+<li>No later business or response steps could run from this saved definition, and no fresh run was possible.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The current Sheet row 4 marks the case No. The Sheet reports that no nodes were built after three trials and cites a platform validation error; it also reports “Fixed in UAT,” but neither statement is independently proven here. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A4:K4">Tracker, current row 4, original row 4, columns F, H, I, J, K</a></li>
+<li>The saved inspect identifies stable automation 6a7b7317ed89aa47aca5f2c7 and shows placeholder nodes. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b7317ed89aa47aca5f2c7-inspect.json:2">Inspect lines 2–39</a></li>
+<li>The saved definition contains “Select a trigger event,” “Select an app and action,” and version 0. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b7317ed89aa47aca5f2c7-inspect.json:54">Inspect lines 54–93</a></li>
+<li>Current source defines the callable trigger/resource mapping and requires callable response paths. This is current source, not proof that it was loaded when the workflow was generated. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/callables.md:14">Callable rules, lines 14–20 and 86–100</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The builder saved an incomplete plan instead of a concrete workflow.</strong></p>
+<ul>
+<li>Evidence for it: the saved version is 0 and still contains both selection placeholders.</li>
+<li>Evidence against it or missing: no generation transcript shows whether the agent emitted placeholders or the editor replaced a valid workflow.</li>
+<li>Exact check: compare the generation tool payload with the saved JSON; if the payload already contains placeholders, the builder created the incomplete plan.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The callable rules were not loaded or were not applied.</strong></p>
+<ul>
+<li>Evidence for it: current source contains concrete callable rules, but the saved workflow has no concrete callable trigger or response.</li>
+<li>Evidence against it or missing: current source is not generation-time proof, and the Sheet reports platform validation.</li>
+<li>Exact check: capture the generation manifest and verify that the callable skill was loaded before the trigger was selected.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The editor or deployment system rejected or discarded a concrete workflow.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet reports platform validation and deployment problems.</li>
+<li>Evidence against it or missing: no validation response, save payload, deployment log, or version transition is available.</li>
+<li>Exact check: save and deploy a minimal callable skeleton, then compare the submitted JSON with the re-inspected saved and deployed definitions.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow builder:</strong> Require a concrete trigger and app/action resource ID before saving. If either is unavailable, return a structured missing-resource result instead of saving “Select a trigger event” or “Select an app and action.”</p>
+</li>
+<li><p><strong>Example:</strong> placeholder trigger/action → concrete callables_from_api trigger, configured condition, variable, and response node.</p>
+</li>
+<li><p><strong>Test:</strong> generate from the row-4 prompt and fail if any placeholder label remains.</p>
+</li>
+<li><p><strong>Done when:</strong> inspect shows the concrete callable trigger, configured actions, response fields, and no selection placeholders.</p>
+</li>
+<li><p><strong>Risk:</strong> Incomplete drafts will fail explicitly instead of being saved as partial workflows.</p>
+</li>
+<li><p><strong>Fix B — Prompt/skill loader:</strong> Load the callable rules when the prompt contains callables_from_api or Respond to API request, then require a final check for placeholder nodes.</p>
+</li>
+<li><p><strong>Example:</strong> “Respond to API request” → callable rules loaded before planning.</p>
+</li>
+<li><p><strong>Test:</strong> the loader must record the callable rule, and generation must fail if that rule is absent or a placeholder remains.</p>
+</li>
+<li><p><strong>Done when:</strong> the generation manifest and inspect artifact both show the concrete callable setup.</p>
+</li>
+<li><p><strong>Risk:</strong> Ambiguous prompts may need clearer trigger wording.</p>
+</li>
+<li><p><strong>Fix C — Editor/platform:</strong> Return the exact field-level validation error for unresolved trigger/action fields and include definition ID and version in save/deploy responses.</p>
+</li>
+<li><p><strong>Example:</strong> incomplete trigger → named validation error; concrete skeleton → saved and deployed version visible.</p>
+</li>
+<li><p><strong>Test:</strong> save, deploy, inspect, and invoke a minimal callable skeleton in UAT.</p>
+</li>
+<li><p><strong>Done when:</strong> save/deploy responses, deployed ID/version, and a valid run are all captured.</p>
+</li>
+<li><p><strong>Risk:</strong> Changes to shared validation can affect unrelated workflow types.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The current saved automation is confirmed incomplete because its trigger and action are placeholders. The historical reason—builder failure, missing rule loading, or editor/platform rejection—remains unknown.</p>
+<h2>Dubai Customs OCR Declaration Data — automation 6a7b6c171686181e280557e2</h2>
+<h3>What was requested</h3>
+<p>Current Sheet row 26 was originally assigned as row 28. The request was for an 11-step callable that retrieves session variables, works with storage and duties, performs update/create operations, loops through line items, and returns a response. A complete concrete input example cannot be supplied without inventing the required IDs or records; the fresh test deliberately used {}.</p>
+<h3>What broke</h3>
+<p><strong>The fresh run broke because ConnectionService had no configuration for resource get_session_variables in variable_by_unifyapps.</strong></p>
+<ol>
+<li>The fresh run entered with input {}.</li>
+<li>The first failing node was n_GetSv, configured with resourceName get_session_variables.</li>
+<li>The run returned “No config found for resource get_session_variables in app variable_by_unifyapps” and a ConnectionService failure.</li>
+<li>Storage, duties, update/create steps, loop processing, and the response did not run.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The current Sheet row 26, originally assigned row 28, marks the case Partial. The Sheet reports that the outline and nodes were proper but values or mappings were missing; this is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A26:K26">Tracker, current row 26/original row 28, columns F, H, I, J, K</a></li>
+<li>The saved inspect identifies stable automation 6a7b6c171686181e280557e2 and shows n_GetSv using get_session_variables. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b6c171686181e280557e2-inspect.json:136">Inspect lines 2–8 and 136–166</a></li>
+<li>The fresh run used {}, returned FAILED, and stopped at n_GetSv. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b6c171686181e280557e2-run-6a7c4f4a4492993a9a54a77f.json:129">Run lines 129–137</a></li>
+<li>The captured error says no configuration was found for get_session_variables in variable_by_unifyapps and names ConnectionService. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b6c171686181e280557e2-run-6a7c4f4a4492993a9a54a77f.json:313">Run lines 313–352</a></li>
+<li>The current inspect records saved version 4 but deployed version 1. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7b6c171686181e280557e2-inspect.json:253">Inspect lines 253–263 and 1056</a></li>
+<li>The current package names the operation variable_by_unifyapps_get_session_variables, while current builder rules say resource names must be read from the connector schema rather than guessed. This is current source/artifact evidence, not proof of generation-time state. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/packages/workflow-nodes/variable_by_unifyapps/variable_by_unifyapps_get_session_variables.json:1">Current operation file lines 1–6</a> <a href="/Users/admin/unifyapps/ua-builder-no-prompt/.claude/agents/workflow/workflow-builder.md:95">Current builder rule lines 95–106</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: The node used the wrong resource name.</strong></p>
+<ul>
+<li>Evidence for it: the saved node uses get_session_variables, while the current operation file is named variable_by_unifyapps_get_session_variables, and the runtime says the shorter name has no configuration.</li>
+<li>Evidence against it or missing: the run may have used deployed version 1 rather than saved version 4, and the deployed definition was not captured.</li>
+<li>Exact check: inspect deployed definition 6a7b7276e4df4240c7c94621 and compare its n_GetSv resourceName with the connector schema.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The UAT connector or connection was not configured.</strong></p>
+<ul>
+<li>Evidence for it: the runtime error explicitly says no configuration was found and comes from ConnectionService.</li>
+<li>Evidence against it or missing: a wrong resource name can produce the same missing-configuration message; no connection inventory or authentication result is captured.</li>
+<li>Exact check: test the canonical operation with a verified UAT connection, then compare canonical and shortened resource lookups.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The saved and deployed workflow versions differ.</strong></p>
+<ul>
+<li>Evidence for it: saved version 4 and deployed version 1 are different.</li>
+<li>Evidence against it or missing: the run does not contain an immutable definition hash, so it is not proven which JSON executed.</li>
+<li>Exact check: run against a definition with a recorded ID/version/hash and compare the executed n_GetSv node with the saved inspect.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: The builder did not discover the connector schema before writing the node.</strong></p>
+<ul>
+<li>Evidence for it: current builder rules prohibit guessing resource names, while the saved resource name does not match the current canonical file name.</li>
+<li>Evidence against it or missing: the generation-time prompt, skill manifest, and tool calls are unavailable.</li>
+<li>Exact check: capture generation-time schema lookup and verify that the emitted resourceName equals the returned schema key.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow JSON/resource mapping:</strong> Set n_GetSv to the exact resource name returned by the connector schema, expected currently to be variable_by_unifyapps_get_session_variables, and attach the required UAT connection.</p>
+</li>
+<li><p><strong>Example:</strong> n_GetSv resourceName get_session_variables → schema-backed variable_by_unifyapps_get_session_variables.</p>
+</li>
+<li><p><strong>Test:</strong> inspect saved and deployed definitions, then run a minimal valid UAT payload and require n_GetSv to succeed.</p>
+</li>
+<li><p><strong>Done when:</strong> the node name matches the schema, the connection reference is present, and the captured node output is successful.</p>
+</li>
+<li><p><strong>Risk:</strong> Changing a persisted operation key may require remapping downstream fields.</p>
+</li>
+<li><p><strong>Fix B — Connector/resource setup:</strong> Register the canonical session-variable resource for the UAT app and verify the scoped connection without printing credentials.</p>
+</li>
+<li><p><strong>Example:</strong> missing resource configuration → canonical resource registered with a healthy UAT connection.</p>
+</li>
+<li><p><strong>Test:</strong> perform a read-only resource/connection lookup, then rerun n_GetSv.</p>
+</li>
+<li><p><strong>Done when:</strong> the lookup returns the resource and connection, and the run no longer returns the missing-config error.</p>
+</li>
+<li><p><strong>Risk:</strong> Shared UAT connection changes could affect other tests.</p>
+</li>
+<li><p><strong>Fix C — Deployment/runtime:</strong> Include definition ID, version, and content hash in each run and show whether the run used saved or deployed content.</p>
+</li>
+<li><p><strong>Example:</strong> saved version 4 / deployed version 1 → run record explicitly names the executed definition and hash.</p>
+</li>
+<li><p><strong>Test:</strong> change a draft without deploying, run it, deploy it, rerun it, and verify the recorded version/hash changes only after deployment.</p>
+</li>
+<li><p><strong>Done when:</strong> the run’s n_GetSv JSON can be matched to one immutable definition.</p>
+</li>
+<li><p><strong>Risk:</strong> More visible version differences may expose existing stale deployments.</p>
+</li>
+<li><p><strong>Fix D — Builder schema lookup:</strong> Make connector schema lookup mandatory and reject any resourceName not present in the returned schema.</p>
+</li>
+<li><p><strong>Example:</strong> schema key variable_by_unifyapps_get_session_variables → accepted; guessed get_session_variables → rejected before save.</p>
+</li>
+<li><p><strong>Test:</strong> generate this case with a schema containing only the canonical key and require the guessed name to fail.</p>
+</li>
+<li><p><strong>Done when:</strong> the generation record shows the schema key used and the saved inspect contains that key.</p>
+</li>
+<li><p><strong>Risk:</strong> Legacy connector aliases will need an explicit compatibility list.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The fresh run has a confirmed ConnectionService configuration failure at n_GetSv. It is not yet known whether the main cause was the wrong resource name, missing UAT configuration, or the saved/deployed version difference.</p>
+<h2>IT Asset Health Check — automation 6a7c298148f1e978809b5aaf</h2>
+<h3>What was requested</h3>
+<p>Current Sheet row 48 was originally assigned as row 56. The request was to build an IT asset health workflow and then add an error path for the fetch-records step. A valid non-empty asset_id should reach fetch-records; an empty asset_id should be rejected before that step. The reported enhancement was intended to make fetch-records follow its error path instead of stopping the automation.</p>
+<h3>What broke</h3>
+<p><strong>The reported error-path change broke. The two most likely reasons are missing stepError settings or a saved/deployed version mismatch.</strong></p>
+<ol>
+<li>The fresh run entered with asset_id=&quot;&quot;.</li>
+<li>Validation node n_VALD1 returned true, and the workflow took the invalid-input branch n_NAID1 instead of reaching fetch-records n_FETA1.</li>
+<li>The fresh run returned success false, health_classification ERROR, and an invalid-asset message.</li>
+<li>Fetch-records and its error edge were never exercised, so the fresh COMPLETED status does not prove that the requested error path works.</li>
+</ol>
+<h3>Proof</h3>
+<ul>
+<li>The current Sheet row 48, originally assigned row 56, says the final enhancement left the fetch-records Error Handling field at Stop Automation rather than Follow error path. The Sheet reports this, and it is not independently proven. <a href="https://docs.google.com/spreadsheets/d/1TX2ci5vwhrfYMjFkQ5y0ZRt7KyfJWtPyqp4nsZEN8FI/edit#gid=0&amp;range=A48:K48">Tracker, current row 48/original row 56, columns F, H, I, J, K</a></li>
+<li>The saved inspect identifies stable automation 6a7c298148f1e978809b5aaf, required asset_id, and n_FETA1 with fallbackMode MANUAL plus an error edge to n_RERR1. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7c298148f1e978809b5aaf-inspect.json:410">Inspect lines 2–8, 154–171, and 410–436</a></li>
+<li>The saved version is 9 and the deployed version is 5. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7c298148f1e978809b5aaf-inspect.json:123">Inspect lines 123–129 and 743–745</a></li>
+<li>The fresh run used asset_id=&quot;&quot;, returned COMPLETED, and had runId 6a7c4f4f1d617d376dd87161. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7c298148f1e978809b5aaf-run-6a7c4f4f1d617d376dd87161.json:2">Run lines 2–21</a></li>
+<li>Validation returned true, and n_NAID1 returned success false with ERROR health classification and an invalid-asset message. <a href="/Users/admin/unifyapps/ua-builder-no-prompt-attest-metric/.attest/evidence/group-1/automation-6a7c298148f1e978809b5aaf-run-6a7c4f4f1d617d376dd87161.json:27">Run lines 27–35 and 180–217</a></li>
+<li>Current source says fallbackMode alone does nothing; MANUAL handling requires stepError options and an error edge. This is current source, not proof it was loaded for the enhancement. <a href="/Users/admin/unifyapps/ua-builder-no-prompt/prompts/skills/workflow-error-handling.md:10">Current error-handling rules, lines 10–31 and 75–94</a></li>
+</ul>
+<h3>Possible reasons</h3>
+<ol>
+<li><p><strong>Reason A: n_FETA1 has MANUAL mode but lacks the effective stepError setting.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet reports Stop Automation, while the inspect excerpt shows MANUAL but does not display the complete options; current source says fallbackMode alone is not enough.</li>
+<li>Evidence against it or missing: the inspect does show an error edge, and the missing option could exist outside the captured excerpt or only in deployed JSON.</li>
+<li>Exact check: inspect complete n_FETA1 options in saved and deployed JSON, then force a controlled fetch-records error.</li>
+</ul>
+</li>
+<li><p><strong>Reason B: The enhancement was only partially applied by the builder or editor.</strong></p>
+<ul>
+<li>Evidence for it: the Sheet says the error path was added but the visible Error Handling field stayed at Stop Automation.</li>
+<li>Evidence against it or missing: no generation manifest or editor mutation payload shows which fields were actually changed.</li>
+<li>Exact check: capture the before/after n_FETA1 JSON and verify that both the stepError field and the n_FETA1-to-n_RERR1 error edge changed.</li>
+</ul>
+</li>
+<li><p><strong>Reason C: The saved correction was not deployed or the run used an older version.</strong></p>
+<ul>
+<li>Evidence for it: saved version 9 differs from deployed version 5.</li>
+<li>Evidence against it or missing: the fresh run does not contain an immutable definition hash, and it never reached n_FETA1.</li>
+<li>Exact check: compare saved and deployed n_FETA1 JSON, deploy the corrected version, and run with a valid asset_id that reaches fetch-records.</li>
+</ul>
+</li>
+<li><p><strong>Reason D: The connector did not produce a controlled fetch error.</strong></p>
+<ul>
+<li>Evidence for it: no valid fetch-records run or connector error response was captured.</li>
+<li>Evidence against it or missing: the reported issue is a field setting, not a captured connector exception; the current run stopped before fetch-records.</li>
+<li>Exact check: use an isolated UAT input that reaches fetch-records and produces a known structured connector error.</li>
+</ul>
+</li>
+</ol>
+<h3>Fixes</h3>
+<ul>
+<li><p><strong>Fix A — Workflow JSON/editor:</strong> Set n_FETA1’s effective stepError option to Follow error path, retain fallbackMode MANUAL, and keep exactly one error edge from n_FETA1 to n_RERR1.</p>
+</li>
+<li><p><strong>Example:</strong> n_FETA1 fallbackMode MANUAL + missing stepError → MANUAL + stepError Follow error path + n_FETA1 → n_RERR1.</p>
+</li>
+<li><p><strong>Test:</strong> inspect both fields, then force a controlled fetch-records error and require n_RERR1 to run.</p>
+</li>
+<li><p><strong>Done when:</strong> saved and deployed JSON contain the option and edge, and the run captures n_RERR1 execution.</p>
+</li>
+<li><p><strong>Risk:</strong> Callers may receive an explicit error response instead of the previous stop behavior.</p>
+</li>
+<li><p><strong>Fix B — Enhancement builder/editor:</strong> After adding the edge, read n_FETA1 back and reject completion unless both the stepError option and error edge are present.</p>
+</li>
+<li><p><strong>Example:</strong> edge added only → reject; stepError Follow error path plus edge → accept.</p>
+</li>
+<li><p><strong>Test:</strong> run the exact enhancement request and compare the before/after node JSON.</p>
+</li>
+<li><p><strong>Done when:</strong> the edit record proves both changes and the UI no longer shows Stop Automation.</p>
+</li>
+<li><p><strong>Risk:</strong> Read-back checks add a small delay and may expose existing persistence failures.</p>
+</li>
+<li><p><strong>Fix C — Persistence/deployment:</strong> Show saved/deployed versions and hashes, require deployment after the correction, and verify the deployed n_FETA1 options.</p>
+</li>
+<li><p><strong>Example:</strong> saved version 9 / deployed version 5 → corrected version deployed with a new recorded hash.</p>
+</li>
+<li><p><strong>Test:</strong> change only the error option, verify the saved hash changes, deploy, verify the deployed hash changes, and run a controlled fetch error.</p>
+</li>
+<li><p><strong>Done when:</strong> save response, deployed definition, version/hash linkage, and run ID all prove the deployed correction.</p>
+</li>
+<li><p><strong>Risk:</strong> Deployment gating may slow normal iteration.</p>
+</li>
+<li><p><strong>Fix D — UAT connector test data:</strong> Provide isolated success and controlled-error inputs for fetch-records without changing production data.</p>
+</li>
+<li><p><strong>Example:</strong> valid non-empty asset_id → success path; isolated known error input → n_RERR1 error path.</p>
+</li>
+<li><p><strong>Test:</strong> run both inputs and require distinct success and error branches.</p>
+</li>
+<li><p><strong>Done when:</strong> the connector response, n_FETA1 input/output, and n_RERR1 execution are captured.</p>
+</li>
+<li><p><strong>Risk:</strong> Shared test data could affect other UAT cases unless isolated.</p>
+</li>
+</ul>
+<h3>Bottom line</h3>
+<p>The fresh run only proves that empty asset_id follows the invalid-input branch; it does not prove the fetch-records error path. The reported Stop Automation setting may reflect missing stepError configuration, incomplete persistence, deployment drift, or an untested connector condition.</p>
+</article>
+</main>
+</body>
+</html>
