@@ -47,15 +47,6 @@
       "expiresAt": "2026-08-17T14:14:35.000Z"
     },
     {
-      "id": "mcIwIPJ0vR",
-      "project": "github.com/unify-apps/www",
-      "slug": "platform-design-system-questionnaire",
-      "title": "Platform Design System — Designer Questionnaire",
-      "kind": "questionnaire",
-      "createdAt": "2026-07-16T12:40:03.236Z",
-      "expiresAt": "2026-08-15T15:36:40.107Z"
-    },
-    {
       "id": "u1S79c65IU",
       "project": "github.com/hatim-s/ai-app-builder",
       "slug": "n12-error-states",
