@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Loopy Local-First MVP Architecture and Roadmap</title>
+<style>/* planloft theme: detailed — structured, technical, readable */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #1a1d21;
+  --muted: #5a6169;
+  --paper: #fbfbfc;
+  --rule: #e3e6ea;
+  --accent: #2563eb;
+  --code-bg: #f2f4f7;
+  --table-heading: #eef1f5;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f3f4f6;
+    --muted: #aeb5bf;
+    --paper: #121417;
+    --rule: #363b42;
+    --accent: #7db0ff;
+    --code-bg: #20242a;
+    --table-heading: #272c33;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #1a1d21;
+  --muted: #5a6169;
+  --paper: #fbfbfc;
+  --rule: #e3e6ea;
+  --accent: #2563eb;
+  --code-bg: #f2f4f7;
+  --table-heading: #eef1f5;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f3f4f6;
+  --muted: #aeb5bf;
+  --paper: #121417;
+  --rule: #363b42;
+  --accent: #7db0ff;
+  --code-bg: #20242a;
+  --table-heading: #272c33;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.planloft-plan {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 6rem;
+}
+h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
+h2 {
+  font-size: 1.25rem;
+  margin: 2.25rem 0 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; color: var(--muted); }
+a { color: var(--accent); }
+code { background: var(--code-bg); padding: 0.12em 0.35em; border-radius: 4px; font-size: 0.9em; }
+pre { background: var(--code-bg); padding: 1rem 1.15rem; overflow: auto; border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.95em; }
+th, td { border: 1px solid var(--rule); padding: 0.5rem 0.7rem; text-align: left; }
+th { background: var(--table-heading); }
+blockquote {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-toggle {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: Canvas;
+  color: CanvasText;
+  font: 600 0.75rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.planloft-theme-toggle:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<button class="planloft-theme-toggle" type="button" aria-label="Toggle color theme">Theme: system</button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const button = document.querySelector(".planloft-theme-toggle");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  if (saved === "light" || saved === "dark") root.dataset.planloftColorScheme = saved;
+  const update = () => {
+    const selected = root.dataset.planloftColorScheme;
+    const effective = selected || (media.matches ? "dark" : "light");
+    button.textContent = selected ? `Theme: ${effective}` : `Theme: system (${effective})`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  };
+  button.addEventListener("click", () => {
+    const current = root.dataset.planloftColorScheme || (media.matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.planloftColorScheme = next;
+    try { localStorage.setItem(key, next); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Loopy Local-First MVP Architecture and Roadmap</h1>
+<p>Build Loopy as a local recorder, extractor, workflow runtime, and visual debugger that turns completed coding-agent work into an editable loop and runs it again without a hosted service.</p>
+<h2>Context</h2>
+<p>Loopy starts from a simple product contract:</p>
+<blockquote>
+<p>Do the work once with Codex, Claude Code, OpenCode, or Pi. Loopy captures what happened, extracts the reusable process, lets the user edit it visually, and runs it again locally.</p>
+</blockquote>
+<p>The MVP is not a generic cloud workflow platform. It is a local developer tool with four responsibilities:</p>
+<ol>
+<li>Capture or import an agent session as a normalized trace.</li>
+<li>Extract an evidence-backed workflow proposal from that trace.</li>
+<li>Execute the approved workflow through locally installed coding agents.</li>
+<li>Visualize, pause, resume, retry, replay, fork, and edit the workflow and its runs.</li>
+</ol>
+<p>Everything operational stays on the user&#39;s machine: source code, prompts, traces, artifacts, state, provider credentials, and agent subprocesses. Cloud deployment, accounts, team collaboration, hosted execution, billing, and enterprise governance are explicitly deferred. If Loopy later needs a cloud architecture, it may be rewritten around the proven local contracts rather than forcing speculative distributed-systems abstractions into the MVP.</p>
+<h3>Product boundary</h3>
+<p>The MVP must support:</p>
+<ul>
+<li>Codex, Claude Code, OpenCode, and Pi through separate provider adapters.</li>
+<li>Forward capture of runs started through Loopy.</li>
+<li>Import of historical sessions where a provider exposes a supported export, hook, SDK, or machine-readable interface.</li>
+<li>An editable directed graph with branching and parallel joins.</li>
+<li>Agent nodes plus deterministic control nodes for verification, approval, routing, and joining.</li>
+<li>Crash-safe local run state.</li>
+<li>Graceful pause between nodes, cancellation of an active node, and explicit resume behavior.</li>
+<li>Playback of stored events without executing tools.</li>
+<li>Retry of one failed node and fork of a run from a checkpoint.</li>
+<li>Trace-to-loop extraction with trace-event evidence for every inferred node.</li>
+</ul>
+<p>The MVP does not include:</p>
+<ul>
+<li>Hosted agent compute or hosted trace storage.</li>
+<li>A marketplace, plugin store, or multi-tenant control plane.</li>
+<li>Enterprise SSO, RBAC, audit retention, or data residency controls.</li>
+<li>A universal OS sandbox.</li>
+<li>Arbitrary business automation outside coding-agent sessions.</li>
+<li>Claims that generated workflows or model outputs are deterministic.</li>
+<li>Model-selection optimization without observed evaluation data.</li>
+<li>TypeScript or shell code generation as the primary execution mechanism.</li>
+</ul>
+<h2>Approach</h2>
+<h3>Architectural position</h3>
+<p>Loopy should interpret a versioned workflow definition through a small local state machine. It should not generate one large shell script and treat that script as the runtime. Branch readiness, parallel joins, attempts, approvals, pause state, retries, and crash recovery require persistent orchestration state even when every work node ultimately launches a CLI process.</p>
+<p>The architecture has six layers:</p>
+<pre><code class="language-text">Provider CLIs / SDKs / exports
+             |
+             v
+    Provider adapter layer
+             |
+             v
+ Canonical events and sessions ----&gt; Extraction engine
+             |                            |
+             v                            v
+      SQLite local store &lt;-------- Workflow proposal
+             |                            |
+             v                            v
+       Runtime state machine ------&gt; Versioned workflow
+             |                            |
+             +------------+---------------+
+                          v
+              Local API and React Studio
+</code></pre>
+<p>The provider layer owns incompatibility. The runtime consumes one canonical contract and refuses to silently emulate provider capabilities that do not exist.</p>
+<h3>Primary implementation decisions</h3>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Choice</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Runtime</td>
+<td>Bun and strict TypeScript</td>
+<td>One language across CLI, runtime, extraction, local server, contracts, and UI tooling.</td>
+</tr>
+<tr>
+<td>Workflow execution</td>
+<td>Interpreted, versioned execution plan</td>
+<td>Easier pause, resume, migration, inspection, and testing than generated shell or TypeScript.</td>
+</tr>
+<tr>
+<td>Operational storage</td>
+<td>SQLite through <code>bun:sqlite</code>, WAL mode</td>
+<td>Transactions, indexed queries, recovery, concurrent readers, and one local writer.</td>
+</tr>
+<tr>
+<td>Trace interchange</td>
+<td>Deterministic JSONL export</td>
+<td>Human-inspectable, streamable, portable, and easy to attach to bug reports.</td>
+</tr>
+<tr>
+<td>Contract validation</td>
+<td>Zod 4 plus emitted JSON Schema</td>
+<td>Runtime validation, TypeScript inference, and provider-independent structured-output schemas from one source.</td>
+</tr>
+<tr>
+<td>Local API</td>
+<td>Hono on Bun, bound only to <code>127.0.0.1</code></td>
+<td>Small typed HTTP surface with straightforward Bun deployment.</td>
+</tr>
+<tr>
+<td>Live updates</td>
+<td>Server-Sent Events</td>
+<td>Runs are predominantly server-to-UI event streams; commands remain ordinary authenticated POST requests.</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>React, Vite, TanStack Router, TanStack Query</td>
+<td>Typed routes, cached server state, mature local web application tooling.</td>
+</tr>
+<tr>
+<td>Graph canvas</td>
+<td><code>@xyflow/react</code></td>
+<td>Node/edge editing, selection, handles, minimap, viewport controls, and custom node rendering.</td>
+</tr>
+<tr>
+<td>Client editing state</td>
+<td>Zustand with Immer</td>
+<td>Small transient graph/editor state; server state remains in TanStack Query.</td>
+</tr>
+<tr>
+<td>Styling</td>
+<td>Tailwind CSS plus CSS variables</td>
+<td>Fast application UI work with deliberate light/dark tokens.</td>
+</tr>
+<tr>
+<td>Unit/integration tests</td>
+<td>Vitest</td>
+<td>Consistent TypeScript tests across packages and React components.</td>
+</tr>
+<tr>
+<td>Browser tests</td>
+<td>Playwright</td>
+<td>End-to-end tests for extraction review, graph editing, and run controls.</td>
+</tr>
+<tr>
+<td>Formatting/linting</td>
+<td>Biome</td>
+<td>One fast formatter and linter for the monorepo.</td>
+</tr>
+<tr>
+<td>Packaging</td>
+<td>Bun workspaces; no Turborepo initially</td>
+<td>The first repository is small enough to avoid another orchestration layer.</td>
+</tr>
+<tr>
+<td>Desktop shell</td>
+<td>Browser opened by <code>loopy ui</code>; no Electron/Tauri</td>
+<td>Avoid packaging and update complexity until the local web product works.</td>
+</tr>
+</tbody></table>
+<p>Use current stable versions when scaffolding and pin them in <code>bun.lock</code>. Do not encode loose <code>latest</code> ranges in committed package manifests.</p>
+<h3>Why SQLite, not JSONL, for live traces</h3>
+<p>Use <code>.loopy/loopy.db</code> as the canonical live store. Use JSONL as an export generated from committed database events.</p>
+<p>SQLite is the better operational format because Loopy needs to answer and atomically update questions such as:</p>
+<ul>
+<li>Which nodes are ready now?</li>
+<li>Which attempts are running, paused, blocked, or complete?</li>
+<li>Have all incoming branches reached a join?</li>
+<li>Which approval is pending?</li>
+<li>What was the last committed event sequence before a crash?</li>
+<li>Which provider sessions, artifacts, and workflow versions belong to this run?</li>
+<li>What changed between two attempts or two workflow versions?</li>
+</ul>
+<p>Pure JSONL makes those queries projection work that Loopy would have to rebuild, synchronize, lock, and recover itself. SQLite already supplies transactions, indexes, migrations, uniqueness constraints, and crash recovery.</p>
+<p>JSONL remains important as a boundary format:</p>
+<ul>
+<li><code>loopy trace export &lt;run-id&gt;</code> writes events in sequence order.</li>
+<li><code>loopy trace import &lt;file&gt;</code> validates and imports a compatible trace.</li>
+<li>Raw provider streams may be preserved as artifacts when useful.</li>
+<li>Exported JSONL contains normalized Loopy events, not an undocumented dump of arbitrary internal objects.</li>
+</ul>
+<p>Do not dual-write every live event to SQLite and JSONL. SQLite is the source of truth. Generate JSONL deterministically on request or when a run is archived. This avoids disagreement after a partial write.</p>
+<p>Enable WAL mode, foreign keys, a busy timeout, and explicit schema migrations. Use one runtime writer per project, guarded by a project lock. The Studio and read-only CLI commands may use separate read connections.</p>
+<h2>Repository structure</h2>
+<p>Create the project at <code>/Users/admin/Projects/loopy</code> with this initial layout:</p>
+<pre><code class="language-text">loopy/
+  apps/
+    studio/                    # React visual editor and trace debugger
+  packages/
+    cli/                       # `loopy` command and command handlers
+    contracts/                 # Zod schemas, TS types, JSON Schema emission
+    runtime/                   # scheduler, state machine, attempts, joins
+    storage/                   # SQLite schema, migrations, repositories
+    tracing/                   # normalized events, exporters, redaction
+    extractor/                 # trace segmentation and workflow proposal
+    providers/                 # adapter interface and four implementations
+    local-api/                 # Hono routes, SSE, auth, static Studio serving
+    workspace/                 # git worktrees, snapshots, diff/artifact capture
+    testing/                   # fake provider and conformance harness
+  fixtures/
+    sessions/                  # sanitized provider import fixtures
+    workflows/                 # valid and invalid contract fixtures
+  docs/
+    architecture.md
+    contracts.md
+    provider-capabilities.md
+    trace-format.md
+  package.json
+  tsconfig.base.json
+  biome.json
+  bunfig.toml
+  bun.lock
+</code></pre>
+<p>Keep the user-facing project data separate from the Loopy source repository:</p>
+<pre><code class="language-text">&lt;user-project&gt;/
+  loopy.json                   # project-level defaults and policy
+  loopy/
+    workflows/
+      &lt;workflow-id&gt;/
+        workflow.json          # canonical editable workflow definition
+        prompts/
+        skills/
+        fixtures/
+  .loopy/
+    loopy.db                   # local operational state; ignored by Git
+    lock                       # single active scheduler ownership
+    artifacts/
+      &lt;sha256&gt;/...
+    exports/
+      &lt;run-id&gt;.events.jsonl
+    logs/
+</code></pre>
+<p>Workflow definitions, prompts, skills, and fixtures are source-controlled. Runs, imported sessions, transient logs, the SQLite database, and generated exports are ignored by default.</p>
+<h2>Loopy contracts</h2>
+<p>Place every cross-package contract in <code>packages/contracts</code>. Every persisted structure includes a <code>schemaVersion</code>; user-authored workflows also include a monotonically increasing <code>workflowVersion</code> and stable UUIDs for nodes and edges.</p>
+<h3>Workflow definition</h3>
+<p><code>WorkflowDefinition</code> contains:</p>
+<ul>
+<li>identity: <code>id</code>, <code>name</code>, <code>description</code>, <code>schemaVersion</code>, <code>workflowVersion</code></li>
+<li>inputs: named, typed runtime inputs with defaults and secret markers</li>
+<li>nodes: stable node definitions</li>
+<li>edges: explicit source, target, optional route, and condition</li>
+<li>defaults: provider, model, reasoning level, timeout, retry policy</li>
+<li>policies: tools, workspace, network, approval, budget, concurrency</li>
+<li>triggers: manual in the core MVP; local scheduling after runtime stability</li>
+<li>metadata: creation source, extraction ID, timestamps, tags</li>
+</ul>
+<p>The initial visible node kinds are:</p>
+<table>
+<thead>
+<tr>
+<th>Node kind</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agent</code></td>
+<td>Run one provider session or turn with a prompt, skills, inputs, and compiled policy.</td>
+</tr>
+<tr>
+<td><code>verify</code></td>
+<td>Run deterministic commands or inspect artifacts and emit pass/fail evidence.</td>
+</tr>
+<tr>
+<td><code>approval</code></td>
+<td>Stop scheduling downstream work until the user approves, rejects, or edits.</td>
+</tr>
+<tr>
+<td><code>route</code></td>
+<td>Select an outgoing edge from structured data.</td>
+</tr>
+<tr>
+<td><code>join</code></td>
+<td>Wait for configured upstream branches and combine their completion envelopes.</td>
+</tr>
+<tr>
+<td><code>transform</code></td>
+<td>Perform a small deterministic data mapping without spending an agent turn.</td>
+</tr>
+</tbody></table>
+<p>“Every step is an agent” remains a useful authoring shorthand, but control flow and verification must not be hidden inside prompts. The UI can visually distinguish agent work from runtime control primitives.</p>
+<h3>Node completion envelope</h3>
+<p>Every node attempt produces a validated <code>NodeCompletion</code>:</p>
+<pre><code class="language-ts">type NodeCompletion = {
+  status: &quot;succeeded&quot; | &quot;failed&quot; | &quot;cancelled&quot; | &quot;skipped&quot;;
+  route?: string;
+  summary: string;
+  outputs: Record&lt;string, unknown&gt;;
+  artifacts: ArtifactRef[];
+  verification: VerificationResult[];
+  providerSession?: ProviderSessionRef;
+  usage?: UsageRecord;
+  warnings: ContractWarning[];
+};
+</code></pre>
+<p>The agent may reason freely inside a node. The handoff is structured so the runtime can route, join, verify, display, and retry without parsing prose.</p>
+<h3>Canonical trace event</h3>
+<p>Every stored event has:</p>
+<ul>
+<li><code>id</code>: globally unique event ID</li>
+<li><code>runId</code>, optional <code>nodeId</code>, optional <code>attemptId</code></li>
+<li><code>sequence</code>: strictly increasing integer scoped to a run</li>
+<li><code>occurredAt</code>: wall-clock timestamp</li>
+<li><code>monotonicOffsetMs</code>: ordering/duration aid within the process</li>
+<li><code>type</code>: discriminant</li>
+<li><code>payload</code>: schema-validated event body</li>
+<li><code>provider</code>: optional provider provenance</li>
+<li><code>parentEventId</code>: optional causal parent</li>
+<li><code>redaction</code>: whether fields were removed or summarized</li>
+</ul>
+<p>Initial event families:</p>
+<ul>
+<li>run lifecycle: created, started, pause-requested, paused, resumed, cancelling, completed</li>
+<li>node lifecycle: ready, started, output, blocked, completed</li>
+<li>attempt lifecycle: created, retrying, failed, cancelled</li>
+<li>provider lifecycle: probed, session-started, message, usage, session-ended</li>
+<li>tools: requested, started, completed, denied</li>
+<li>workspace: snapshot-created, file-change-summary, diff-created</li>
+<li>artifacts: recorded, rejected-by-limit</li>
+<li>verification: started, result</li>
+<li>approval: requested, resolved</li>
+<li>extraction: imported, segmented, proposal-created, proposal-approved</li>
+<li>runtime diagnostics: warning, capability-degraded, recovery</li>
+</ul>
+<p>Do not persist hidden chain-of-thought. Persist user-visible messages, tool activity, structured outputs, usage, errors, and runtime decisions.</p>
+<h3>Compiled execution plan</h3>
+<p>Compilation converts <code>WorkflowDefinition</code> into <code>ExecutionPlan</code>:</p>
+<ol>
+<li>Validate graph shape, IDs, cycles, joins, and reachable terminal nodes.</li>
+<li>Resolve defaults into every node.</li>
+<li>Bind provider adapter and installed provider version.</li>
+<li>Compile prompt, skills, runtime inputs, and completion schema.</li>
+<li>Compile provider-specific permissions and policy flags.</li>
+<li>Compare required capabilities with the adapter capability report.</li>
+<li>Fail on required unsupported behavior; warn on explicitly optional degradation.</li>
+<li>Hash the normalized plan and record the hash on every run.</li>
+</ol>
+<p>The execution plan is reproducible. Agent output is not deterministic.</p>
+<h2>Provider adapter layer</h2>
+<p>Define one <code>ProviderAdapter</code> interface rather than forcing identical CLI flags:</p>
+<pre><code class="language-ts">interface ProviderAdapter {
+  readonly id: &quot;codex&quot; | &quot;claude&quot; | &quot;opencode&quot; | &quot;pi&quot;;
+  probe(): Promise&lt;ProviderInstallation&gt;;
+  capabilities(): Promise&lt;ProviderCapabilities&gt;;
+  listSessions?(query: SessionQuery): AsyncIterable&lt;SessionSummary&gt;;
+  importSession?(ref: SessionRef): Promise&lt;ImportedSession&gt;;
+  start(request: ProviderRunRequest): AsyncIterable&lt;ProviderEvent&gt;;
+  resume?(request: ProviderResumeRequest): AsyncIterable&lt;ProviderEvent&gt;;
+  cancel(handle: ProviderProcessHandle): Promise&lt;void&gt;;
+}
+</code></pre>
+<p>The capability matrix is a contract, not documentation alone:</p>
+<ul>
+<li>structured streaming events</li>
+<li>historical session export/import</li>
+<li>session resume</li>
+<li>session fork</li>
+<li>explicit model selection</li>
+<li>explicit reasoning level</li>
+<li>tool allowlist</li>
+<li>writable path policy</li>
+<li>network policy</li>
+<li>maximum turns</li>
+<li>token or monetary budget</li>
+<li>timeout/cancellation</li>
+<li>usage reporting</li>
+<li>nested subagent visibility</li>
+<li>provider-native sandbox mode</li>
+</ul>
+<p>Implement all four adapters in the first product slice, but allow capability differences. A provider that cannot enforce a required policy causes compilation to fail with an actionable message; Loopy must not silently pretend the policy exists.</p>
+<h3>Trace capture modes</h3>
+<p>Loopy captures sessions in two ways.</p>
+<h4>Forward capture</h4>
+<p><code>loopy run</code> launches the provider through its supported programmatic surface and normalizes machine-readable output while the process runs. This is the reliable path and must be implemented first.</p>
+<p>Capture:</p>
+<ul>
+<li>prompts and visible provider messages</li>
+<li>tool requests and results exposed by the provider</li>
+<li>subprocess stdout/stderr with size limits</li>
+<li>provider session and parent/subagent identifiers when available</li>
+<li>usage and model metadata when exposed</li>
+<li>workspace baseline and final diff summary</li>
+<li>verification commands and results</li>
+<li>runtime policy, routing, retry, approval, and recovery decisions</li>
+</ul>
+<h4>Historical import</h4>
+<p><code>loopy sessions</code> and <code>loopy import</code> use provider-supported exports, SDKs, or hooks. Raw internal transcript files may be supported only behind a versioned, explicitly unstable importer with fixtures for known provider versions.</p>
+<p>Every imported event records:</p>
+<ul>
+<li>original provider</li>
+<li>original session identifier</li>
+<li>importer version</li>
+<li>provider version when known</li>
+<li>source format</li>
+<li>lossiness warnings</li>
+<li>stable source locator when it is safe to retain</li>
+</ul>
+<p>Never promise identical fidelity across providers. The UI must show the capability and lossiness report before extraction.</p>
+<h2>Runtime</h2>
+<h3>State machine</h3>
+<p>Run states:</p>
+<ul>
+<li><code>created</code></li>
+<li><code>running</code></li>
+<li><code>pause_requested</code></li>
+<li><code>paused</code></li>
+<li><code>cancelling</code></li>
+<li><code>cancelled</code></li>
+<li><code>succeeded</code></li>
+<li><code>failed</code></li>
+</ul>
+<p>Node attempt states:</p>
+<ul>
+<li><code>pending</code></li>
+<li><code>ready</code></li>
+<li><code>running</code></li>
+<li><code>blocked_approval</code></li>
+<li><code>succeeded</code></li>
+<li><code>failed</code></li>
+<li><code>cancelled</code></li>
+<li><code>skipped</code></li>
+</ul>
+<p>Persist every state transition and its event in one SQLite transaction. The scheduler computes ready nodes from committed predecessor attempts and edge conditions. A join becomes ready only after its declared join policy is satisfied.</p>
+<h3>Pause, stop, resume, replay, retry, and fork</h3>
+<p>These terms must have precise product semantics:</p>
+<ul>
+<li><strong>Pause</strong>: stop scheduling new nodes. The active provider process may finish its current node. Once no active node remains, the run becomes <code>paused</code>.</li>
+<li><strong>Stop current node</strong>: cancel the provider subprocess. The attempt becomes cancelled or failed based on the adapter result.</li>
+<li><strong>Resume</strong>: continue scheduling from committed state. An interrupted node is retried or provider-resumed only through an explicit user choice.</li>
+<li><strong>Replay</strong>: render stored events and artifacts without executing any provider or tool.</li>
+<li><strong>Retry node</strong>: create a new attempt for one node using the recorded inputs and current workflow version unless the user chooses edited inputs.</li>
+<li><strong>Fork run</strong>: create a new run from a checkpoint, preserving upstream outputs while allowing provider, model, prompt, policy, or downstream graph changes.</li>
+</ul>
+<p>MVP pause is a safe boundary pause, not OS-level suspension of an arbitrary CLI process. The UI must not label subprocess cancellation as pause.</p>
+<h3>Crash recovery</h3>
+<p>On startup, the runtime:</p>
+<ol>
+<li>Acquires the project lock.</li>
+<li>Opens SQLite and applies idempotent migrations.</li>
+<li>Finds attempts left in <code>running</code> without a live owned process.</li>
+<li>Records a recovery event and marks them <code>interrupted</code> through the failed/cancelled envelope.</li>
+<li>Leaves the run paused for user inspection unless the workflow explicitly allows automatic retry of that node.</li>
+<li>Recomputes ready nodes only after recovery transactions commit.</li>
+</ol>
+<p>Do not automatically repeat nodes with external side effects after a crash.</p>
+<h3>Workspace and artifacts</h3>
+<p>For Git repositories, default mutating workflows to a temporary Git worktree under <code>.loopy/workspaces/&lt;run-id&gt;</code>. Record the baseline commit, branch, dirty-state warning, final status, and diff artifact. Never discard a user&#39;s pre-existing working-tree changes.</p>
+<p>Store artifacts by SHA-256 with a manifest containing media type, size, producer node, relative source path, and redaction state. Enforce per-artifact and per-run size limits. Do not copy the whole repository into the artifact store.</p>
+<h2>Extraction layer</h2>
+<p>Extraction is a compiler assisted by a local coding agent, not a single prompt that produces an unquestioned graph.</p>
+<h3>Inputs</h3>
+<p><code>ExtractionRequest</code> contains:</p>
+<ul>
+<li>imported canonical session and capability/lossiness report</li>
+<li>user-stated goal or selected successful outcome</li>
+<li>repository identity and baseline/final Git metadata when available</li>
+<li>observed commands, tests, and verification outcomes</li>
+<li>selected extraction provider/model</li>
+<li>user preferences such as cost sensitivity and allowed tools</li>
+</ul>
+<h3>Pipeline</h3>
+<ol>
+<li><strong>Normalize:</strong> convert provider events to canonical events and group subagent activity.</li>
+<li><strong>Segment:</strong> divide the session into goal episodes, tool clusters, failures, recoveries, and verification phases.</li>
+<li><strong>Classify:</strong> distinguish reusable intent, environment discovery, accidental detours, one-off fixes, and side effects.</li>
+<li><strong>Infer inputs:</strong> replace concrete versions, paths, issue IDs, branches, and similar values with typed variables.</li>
+<li><strong>Draft graph:</strong> propose nodes, edges, joins, route conditions, prompts, skills, and provider defaults.</li>
+<li><strong>Derive verification:</strong> prefer commands and checks that actually demonstrated success in the source session.</li>
+<li><strong>Infer policy:</strong> suggest tools, writable roots, network access, approval gates, budgets, and timeouts from observed behavior.</li>
+<li><strong>Attach evidence:</strong> every proposed node and policy points to the trace event IDs that justify it.</li>
+<li><strong>Validate:</strong> run the proposal through the same workflow compiler used at execution time.</li>
+<li><strong>Repair:</strong> allow a bounded structured repair pass for schema or graph errors.</li>
+<li><strong>Review:</strong> show the trace and proposed workflow side by side; nothing becomes runnable until the user approves it.</li>
+<li><strong>Persist:</strong> save the accepted workflow as version 1 and retain the proposal plus user edits for provenance.</li>
+</ol>
+<h3>Extraction proposal contract</h3>
+<p>Each proposal includes:</p>
+<ul>
+<li>workflow draft</li>
+<li>inferred inputs with examples and confidence</li>
+<li>per-node evidence event IDs</li>
+<li>removed detours and why they were removed</li>
+<li>uncertainty and provider-data loss warnings</li>
+<li>proposed verification strategy</li>
+<li>proposed permissions and approvals</li>
+<li>expected side effects</li>
+<li>unresolved questions that block safe execution</li>
+</ul>
+<p>The extractor may suggest a simpler workflow than the original session. It must never claim that inferred steps are proven merely because they appeared once.</p>
+<h2>Local API and Studio</h2>
+<h3>Local API</h3>
+<p><code>loopy ui</code> starts one local API/server process and opens the Studio in the browser.</p>
+<p>Security requirements:</p>
+<ul>
+<li>bind only to <code>127.0.0.1</code> by default</li>
+<li>use a random high port unless configured</li>
+<li>create a short-lived random session token and place it in the opened URL fragment or bootstrap exchange</li>
+<li>require the token on mutation requests and SSE connections</li>
+<li>validate <code>Origin</code> and reject cross-site requests</li>
+<li>never expose provider credentials through API responses</li>
+<li>never capture environment variables wholesale</li>
+</ul>
+<p>Primary endpoints:</p>
+<ul>
+<li><code>/api/providers</code></li>
+<li><code>/api/sessions</code></li>
+<li><code>/api/imports</code></li>
+<li><code>/api/extractions</code></li>
+<li><code>/api/workflows</code></li>
+<li><code>/api/workflow-versions</code></li>
+<li><code>/api/runs</code></li>
+<li><code>/api/runs/:runId/events</code></li>
+<li><code>/api/runs/:runId/commands</code></li>
+<li><code>/api/artifacts/:artifactId</code></li>
+<li><code>/api/stream</code> for SSE</li>
+</ul>
+<p>Mutations accept contract-validated commands such as <code>WorkflowPatch</code>, <code>PauseRun</code>, <code>ResumeRun</code>, <code>RetryNode</code>, and <code>ForkRun</code>. The React application does not write workflow JSON or SQLite directly.</p>
+<h3>Studio routes</h3>
+<ul>
+<li><code>/</code> — recent workflows, imports, and runs</li>
+<li><code>/sessions</code> — provider sessions and import fidelity</li>
+<li><code>/extract/:importId</code> — trace-to-loop review</li>
+<li><code>/workflows/:workflowId</code> — workflow overview and versions</li>
+<li><code>/workflows/:workflowId/edit</code> — graph editor</li>
+<li><code>/runs/:runId</code> — live graph, timeline, logs, artifacts, and controls</li>
+<li><code>/runs/:runId/replay</code> — playback without execution</li>
+<li><code>/providers</code> — installation and capability diagnostics</li>
+<li><code>/settings</code> — local paths, retention, redaction, and defaults</li>
+</ul>
+<h3>Essential Studio views</h3>
+<h4>Extraction review</h4>
+<p>Use a split view:</p>
+<ul>
+<li>left: original session timeline with search, tool filters, and subagent grouping</li>
+<li>center: proposed workflow graph</li>
+<li>right: selected node contract, evidence links, inferred inputs, permissions, and verification</li>
+</ul>
+<p>Selecting a node highlights the source trace events. The user can accept, edit, merge, split, or remove nodes before saving.</p>
+<h4>Workflow editor</h4>
+<p>Use React Flow for nodes and edges. Persist edits as atomic patches validated by the local server. Include:</p>
+<ul>
+<li>drag/drop and connect/disconnect</li>
+<li>node configuration drawer</li>
+<li>branch labels and join policy</li>
+<li>validation markers</li>
+<li>auto-layout through ELK.js</li>
+<li>undo/redo over client-side patch history</li>
+<li>version save with change summary</li>
+<li>capability warnings per provider</li>
+</ul>
+<h4>Run debugger</h4>
+<p>Synchronize three views:</p>
+<ul>
+<li>execution graph with node/attempt status</li>
+<li>ordered event timeline</li>
+<li>detail panel for messages, tools, artifacts, verification, usage, and errors</li>
+</ul>
+<p>Controls include graceful pause, cancel active node, resume, retry, fork, and playback. Destructive or side-effectful retries require explicit confirmation.</p>
+<h2>CLI surface</h2>
+<p>Implement the CLI in this order:</p>
+<pre><code class="language-text">loopy init
+loopy doctor
+loopy providers list
+loopy providers inspect &lt;provider&gt;
+loopy sessions list [--provider]
+loopy sessions import &lt;session-ref&gt;
+loopy extract &lt;import-id&gt;
+loopy validate &lt;workflow&gt;
+loopy run &lt;workflow&gt; [--input key=value]
+loopy pause &lt;run-id&gt;
+loopy resume &lt;run-id&gt;
+loopy cancel &lt;run-id&gt;
+loopy retry &lt;run-id&gt; --node &lt;node-id&gt;
+loopy fork &lt;run-id&gt; --from &lt;node-id&gt;
+loopy replay &lt;run-id&gt;
+loopy trace export &lt;run-id&gt; [--out file]
+loopy trace import &lt;file&gt;
+loopy ui
+</code></pre>
+<p>Exit codes and machine-readable <code>--json</code> output are part of the CLI contract. Interactive prompts must have non-interactive flag equivalents before the command is used by scheduling or other agents.</p>
+<h2>Local safety model</h2>
+<p>Prompt instructions are guidance, not isolation. Compile policy through every provider&#39;s native permission controls where available, and expose the result before execution.</p>
+<p>MVP safety layers:</p>
+<ol>
+<li>Explicit workflow policy and tool allowlist.</li>
+<li>Provider-native permission/sandbox flags.</li>
+<li>Git worktree isolation for repository mutations.</li>
+<li>Explicit writable roots and working directory.</li>
+<li>Approval nodes before configured side effects.</li>
+<li>Runtime timeouts, cancellation, retry limits, and concurrency limits.</li>
+<li>No implicit environment-variable capture.</li>
+<li>Trace and artifact redaction plus size limits.</li>
+</ol>
+<p>When a provider cannot enforce a required filesystem or network restriction, compilation fails. When the restriction is advisory, the UI labels it advisory. Do not market local execution as universally sandboxed.</p>
+<h2>Steps</h2>
+<h3>Phase 0 — Repository and contracts</h3>
+<ol>
+<li>Scaffold the Bun workspace and package boundaries under <code>/Users/admin/Projects/loopy</code>.</li>
+<li>Add strict TypeScript, Biome, Vitest, package exports, and a single root command surface.</li>
+<li>Implement versioned Zod contracts for workflows, nodes, edges, events, completion envelopes, provider capabilities, extraction proposals, and commands.</li>
+<li>Emit JSON Schema fixtures and add compatibility tests that fail on unplanned breaking changes.</li>
+<li>Implement graph validation: stable IDs, reachability, terminal nodes, route labels, join shape, and cycle rejection for MVP.</li>
+</ol>
+<p><strong>Exit evidence:</strong> valid fixtures parse; invalid fixtures fail with paths; JSON Schema snapshots are reviewed; <code>bun test</code> is green.</p>
+<h3>Phase 1 — Storage and fake runtime</h3>
+<ol>
+<li>Implement <code>packages/storage</code> with <code>bun:sqlite</code>, WAL, migrations, repositories, and project locking.</li>
+<li>Create tables for workflow versions, imports, extraction jobs, runs, node attempts, events, approvals, artifacts, and provider installations.</li>
+<li>Implement transactional event append plus state projection updates.</li>
+<li>Build the runtime scheduler against a deterministic fake provider.</li>
+<li>Add linear workflows, branching, joins, verification, approval blocking, graceful pause, resume, cancel, retry, and crash recovery.</li>
+<li>Add deterministic JSONL trace export and re-import tests.</li>
+</ol>
+<p><strong>Exit evidence:</strong> kill the runtime mid-node, restart it, and recover without duplicating a completed node or side effect; parallel join tests pass; exported traces round-trip.</p>
+<h3>Phase 2 — Provider adapters and capture</h3>
+<ol>
+<li>Build the adapter conformance harness in <code>packages/testing</code>.</li>
+<li>Implement <code>probe</code>, capability reporting, start, event normalization, cancellation, and session provenance for all four providers.</li>
+<li>Add supported historical import mechanisms provider by provider.</li>
+<li>Store sanitized, version-labelled fixture sessions for regression tests.</li>
+<li>Record capability degradation instead of normalizing it away.</li>
+<li>Add provider CLI version checks to <code>loopy doctor</code>.</li>
+</ol>
+<p><strong>Exit evidence:</strong> the same two-node fixture workflow runs through Codex, Claude Code, OpenCode, and Pi; each produces a canonical trace and honest capability report.</p>
+<h3>Phase 3 — Extraction MVP</h3>
+<ol>
+<li>Implement trace segmentation and deterministic feature extraction before invoking an agent.</li>
+<li>Define the extraction prompt and strict <code>ExtractionProposal</code> response schema.</li>
+<li>Attach evidence event IDs to nodes, variables, verification, and policies.</li>
+<li>Add bounded schema-repair and compile-validation passes.</li>
+<li>Implement CLI review output and save an approved proposal as workflow version 1.</li>
+<li>Create golden extraction fixtures from successful, failed-then-recovered, and subagent-heavy sessions.</li>
+</ol>
+<p><strong>Exit evidence:</strong> an imported real session produces a valid editable workflow; every proposed node links back to evidence; the accepted loop can execute through the fake provider and one real provider.</p>
+<h3>Phase 4 — Local API and Studio debugger</h3>
+<ol>
+<li>Implement Hono routes, local token bootstrap, origin checks, and SSE.</li>
+<li>Build the React shell with TanStack Router and Query.</li>
+<li>Implement provider/session lists and extraction review.</li>
+<li>Implement the live run graph, event timeline, details, artifacts, and pause/cancel/resume controls.</li>
+<li>Implement replay, retry, and fork flows.</li>
+<li>Add Playwright coverage for live updates and recovery after browser refresh.</li>
+</ol>
+<p><strong>Exit evidence:</strong> a user can import, extract, approve, run, pause, resume, inspect failure evidence, retry, and replay without editing JSON or using the terminal after launching <code>loopy ui</code>.</p>
+<h3>Phase 5 — Visual workflow authoring</h3>
+<ol>
+<li>Add React Flow editing and custom node renderers.</li>
+<li>Implement server-validated <code>WorkflowPatch</code> operations.</li>
+<li>Add undo/redo, auto-layout, graph diagnostics, and version saving.</li>
+<li>Add forms for inputs, prompts, skills, providers, policies, verification, routing, and joins.</li>
+<li>Add visual diffs between workflow versions.</li>
+</ol>
+<p><strong>Exit evidence:</strong> the user can change provider/model, insert or remove a node, add a branch/join, edit verification, save a new workflow version, and run it successfully.</p>
+<h3>Phase 6 — Local scheduling and packaging</h3>
+<ol>
+<li>Add a scheduler contract with manual and cron-expression triggers.</li>
+<li>Implement per-workflow overlap policy: skip, queue, or cancel previous.</li>
+<li>Implement missed-run policy: skip or run once; defer catch-up fan-out.</li>
+<li>Export launchd on macOS and systemd timer/cron fallback on Linux. Add Windows Task Scheduler only after a Windows test environment exists.</li>
+<li>Package the CLI as an npm package with platform checks and <code>loopy doctor</code> guidance.</li>
+<li>Add retention and cleanup commands for local runs and artifacts.</li>
+</ol>
+<p><strong>Exit evidence:</strong> a scheduled workflow launches through the same runtime and database, respects overlap policy, and appears in Studio with a complete trace.</p>
+<h2>Testing and release gates</h2>
+<h3>Contract tests</h3>
+<ul>
+<li>schema snapshots and compatibility fixtures</li>
+<li>workflow patch validation</li>
+<li>event sequence and causal references</li>
+<li>provider capability compilation</li>
+<li>JSONL export/import round trips</li>
+</ul>
+<h3>Runtime tests</h3>
+<ul>
+<li>table-driven state transitions</li>
+<li>randomized DAG readiness tests</li>
+<li>parallel join timing permutations</li>
+<li>pause requests during different node states</li>
+<li>cancellation races</li>
+<li>crash recovery after every transaction boundary</li>
+<li>retry idempotency and side-effect approval</li>
+<li>lock contention between CLI and Studio</li>
+</ul>
+<h3>Provider conformance tests</h3>
+<ul>
+<li>probe and version detection</li>
+<li>structured event normalization</li>
+<li>stdout/stderr truncation</li>
+<li>cancellation behavior</li>
+<li>session resume when supported</li>
+<li>lossiness declaration for imports</li>
+<li>tool and permission compilation</li>
+</ul>
+<p>Tests that require an installed provider or paid subscription are opt-in and labelled separately from deterministic local CI.</p>
+<h3>UI tests</h3>
+<ul>
+<li>extraction evidence linking</li>
+<li>graph patch validation and rollback</li>
+<li>event-stream reconnect using the last sequence ID</li>
+<li>run control confirmations</li>
+<li>browser refresh during a live run</li>
+<li>light, dark, and system theme behavior</li>
+<li>keyboard navigation and focus on graph-adjacent controls</li>
+</ul>
+<h3>MVP acceptance scenario</h3>
+<p>The release candidate must demonstrate this end-to-end scenario:</p>
+<ol>
+<li>Complete a small repository task with one supported agent.</li>
+<li>Import or forward-capture the session.</li>
+<li>Extract a workflow and inspect evidence for its nodes.</li>
+<li>Remove one exploratory detour and parameterize one concrete input.</li>
+<li>Save workflow version 1.</li>
+<li>Run it locally through a different supported provider.</li>
+<li>Pause between nodes and resume.</li>
+<li>Fail verification, inspect the failure, and retry the failed node.</li>
+<li>Replay the completed run without executing tools.</li>
+<li>Export the normalized trace to JSONL and re-import it.</li>
+</ol>
+<h2>Risks and mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Provider CLIs change output formats.</td>
+<td>Prefer supported SDK/export/event interfaces, version adapters, retain sanitized fixtures, and fail probes clearly.</td>
+</tr>
+<tr>
+<td>Historical imports are lossy or unstable.</td>
+<td>Show an import fidelity report and prioritize forward capture.</td>
+</tr>
+<tr>
+<td>Extraction reproduces accidental detours.</td>
+<td>Segment first, require evidence, show removed steps, and require human approval.</td>
+</tr>
+<tr>
+<td>An extracted loop repeats a destructive action.</td>
+<td>Infer side effects, require approval nodes, default retries off for side-effectful nodes, and use worktrees.</td>
+</tr>
+<tr>
+<td>Pause semantics mislead users.</td>
+<td>Define pause as boundary pause and expose cancellation separately.</td>
+</tr>
+<tr>
+<td>SQLite has multiple writers.</td>
+<td>Use a project lock, one scheduler writer, WAL, busy timeout, and transactional commands.</td>
+</tr>
+<tr>
+<td>Artifacts or traces consume excessive disk.</td>
+<td>Hash/deduplicate artifacts, set size/retention limits, and provide cleanup diagnostics.</td>
+</tr>
+<tr>
+<td>Local web UI is attacked from another webpage.</td>
+<td>Loopback bind, random token, origin checks, authenticated SSE and mutations, no permissive CORS.</td>
+</tr>
+<tr>
+<td>“Four providers” creates lowest-common-denominator design.</td>
+<td>Keep one adapter interface plus explicit capabilities; compile provider-specific policy instead of erasing differences.</td>
+</tr>
+<tr>
+<td>Runtime becomes coupled to UI.</td>
+<td>Keep contracts and runtime headless; Studio uses the same local command API as CLI automation.</td>
+</tr>
+<tr>
+<td>Code generation becomes a second runtime.</td>
+<td>Interpret the canonical plan in MVP; treat future exporters as adapters, not sources of truth.</td>
+</tr>
+</tbody></table>
+<h2>Open questions</h2>
+<p>These decisions should be resolved with implementation evidence, not architecture speculation:</p>
+<ol>
+<li>Whether Pi integration is more stable through its SDK or RPC mode for the first adapter.</li>
+<li>Whether Codex historical import has a supported stable export sufficient for extraction, or should initially be forward-capture only.</li>
+<li>Whether active provider output can be resumed after cancellation or must always create a new attempt.</li>
+<li>Whether the extractor should default to the source provider or a user-selected preferred extraction provider.</li>
+<li>Which artifact types deserve first-class rendering beyond text, JSON, diffs, and images.</li>
+<li>Whether workflow cycles are needed after real user evidence; the MVP should reject cycles and model bounded retry explicitly.</li>
+<li>Whether a Tauri shell adds enough value after the browser-based Studio is stable.</li>
+</ol>
+<h2>References</h2>
+<ul>
+<li><a href="https://bun.sh/docs/runtime/sqlite">Bun SQLite API</a></li>
+<li><a href="https://zod.dev/json-schema">Zod JSON Schema support</a></li>
+<li><a href="https://tanstack.com/router/latest/docs/overview">TanStack Router</a></li>
+<li><a href="https://reactflow.dev/">React Flow</a></li>
+<li><a href="https://hono.dev/docs/getting-started/bun">Hono on Bun</a></li>
+<li><a href="https://vite.dev/guide/">Vite</a></li>
+<li><a href="https://playwright.dev/docs/intro">Playwright</a></li>
+</ul>
+</article>
+</main>
+</body>
+</html>
