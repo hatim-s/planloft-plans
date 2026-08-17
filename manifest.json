@@ -2,15 +2,6 @@
   "version": 1,
   "deploys": [
     {
-      "id": "EfMEfseCwD",
-      "project": "github.com/hatim-s/ai-app-builder",
-      "slug": "progress-and-roadmap",
-      "title": "AI App Builder — Progress & Roadmap",
-      "kind": "note",
-      "createdAt": "2026-07-11T12:27:25.046Z",
-      "expiresAt": "2026-08-16T10:14:33.000Z"
-    },
-    {
       "id": "N8GSl8SiYq",
       "project": "github.com/hatim-s/ai-app-builder",
       "slug": "binding-ux-plan",
