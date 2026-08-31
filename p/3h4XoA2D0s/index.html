@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PR 28885 typed workflow authoring audit</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>PR 28885 typed workflow authoring audit</h1>
+<p>Turn <a href="https://github.com/unify-apps/www/pull/28885">PR #28885</a> into a reviewable experiment that keeps workflow identities and native serialization host-owned without building a second workflow platform inside <code>llm-tools</code>.</p>
+<p>Do not merge commit <code>2387c5ac62a3b3bef6b48c3946ae384acbe60964</code> in its current form. The trust boundary and production-builder lowering are in the right direction. The compiler validation, source layout, runtime placement, dependency boundary, and review state are not merge-ready.</p>
+<ol>
+<li><p>Preserve the parts of the approach that are already sound.</p>
+<ul>
+<li>Keep opaque resource, connection, and lookup-option handles. The model should never receive native IDs or author <code>WorkflowDefinition</code> JSON.</li>
+<li>Keep the optimistic schema-revision handshake in <code>compiler.ts</code> and <code>context.ts</code>. A changed selector or workflow context should suspend compilation and require a new pass.</li>
+<li>Keep lowering through <code>FlowBuilder</code>, <code>NodeStore</code>, <code>workflowTreeToXyNodeEdges</code>, and <code>transformToWorkflowDefinition</code> in <code>canonicalBuilder.ts</code>. This is the strongest part of the design because the product still owns node IDs, edges, groups, indexes, defaults, mappings, and serialization.</li>
+<li>Keep the four-tool Pi allowlist, in-memory sessions, one-time artifact handles, <code>_at</code>-only cookie extraction, and persisted UAT execution checks.</li>
+</ul>
+</li>
+<li><p>Reposition the PR as an experiment before changing more code.</p>
+<ul>
+<li>The head is one commit, 58 changed files, 11,245 additions, and 131 deletions. It is open as a non-draft <code>feat</code> PR, but no shipped product or MCP registration imports the new module. The only external entrypoints are three manual package scripts.</li>
+<li>Move Pi, Attest, demo, alert, local-runtime, and live-UAT code out of <code>packages/llm-tools/src/tools/workflow/code-authoring</code>. Use an evaluation-only location such as <code>packages/llm-tools/evals/workflow-code-authoring</code> or a separate workspace package.</li>
+<li>Keep only a reusable authoring core and the production-builder adapter in shipped source. If this is meant to become a product feature now, add the actual caller, authentication boundary, session lifecycle, and artifact consumer in the same architectural plan before calling it production code.</li>
+<li>Mark the PR as draft or replace it with a small stack until the intended runtime is explicit.</li>
+</ul>
+</li>
+<li><p>Replace the custom JSON Schema validator before trusting <code>status: &quot;compiled&quot;</code>.</p>
+<ul>
+<li><code>validator.ts:703-705</code> treats every non-literal expression as a match for <code>const</code> and <code>enum</code>. I reproduced a dynamic field constrained to <code>const: &quot;email&quot;</code> compiling with <code>{ invalid: true }</code>, zero diagnostics, and that object in the serialized workflow.</li>
+<li>The same validator implements <code>oneOf</code> as <code>anyOf</code>, approximates <code>if/then/else</code>, ignores several standard constraints, and has its own incomplete <code>$ref</code> handling. This is a correctness boundary, not a formatting concern.</li>
+<li>Reuse the package&#39;s existing Ajv and RJSF schema machinery under <code>tools/plugins/automation-inputSchemaValidation</code>, including its schema expansion and pointer handling. Keep only workflow-reference availability and output-to-input assignability as authoring-specific checks.</li>
+<li>Add focused tests for non-literal <code>const</code> and <code>enum</code> values, exact <code>oneOf</code> behavior, <code>if/then/else</code> selection, nested and escaped <code>$ref</code> paths, defaults, and <code>additionalProperties</code>. The reproduced invalid program must fail before an artifact handle is issued.</li>
+</ul>
+</li>
+<li><p>Reuse shared workflow schema primitives instead of forking them.</p>
+<ul>
+<li><code>schemaLifecycle.ts</code> and <code>context.ts</code> reimplement dynamic-field discovery, payload interpolation, schema injection, and builder-local operation dispatch that already exist in <code>resolveNodeDynamicSchemas.ts</code> and <code>tools/plugins/automation-inputSchemaValidation</code>.</li>
+<li>Extend the shared dynamic-schema loader for workflow-specific operations such as <code>getCallableResponse</code> and <code>getNodesByResourceName</code>. Do not keep two parsers for <code>DynamicSchemaField</code> metadata or two interpretations of schema paths.</li>
+<li>Move the hard-coded Groovy checks from <code>validator.ts:192-294</code> and <code>typeGenerator.ts:85-99</code> into a resource-contract registry owned by the provider or catalog adapter. A generic compiler should not know <code>code_by_unifyapps_groovy</code>, and evaluation-specific prompt repairs should not define the core architecture.</li>
+<li>Keep the authoring path independent from cleanup and JSON repair. Sharing schema primitives does not require routing compiled output through <code>cleanup_automation_config</code>.</li>
+</ul>
+</li>
+<li><p>Split the implementation along real ownership boundaries.</p>
+<ul>
+<li>Twenty new TypeScript files exceed the repository&#39;s 200-line limit. <code>validator.ts</code> is 750 lines, <code>context.ts</code> is 612, <code>parser.ts</code> is 509, <code>canonicalBuilder.ts</code> is 480, and <code>provider.ts</code> is 471.</li>
+<li>The root folder has 14 files and <code>pi-runtime</code> has 20, both beyond the repository&#39;s folder-size rule. The two new <code>index.ts</code> files are generated barrel exports despite the repository rule against them.</li>
+<li>Separate the language AST and parser, catalog/context state, schema resolution, platform lowering, Pi adapter, and evaluation harness. Import concrete modules directly.</li>
+<li>Run Oxlint as a gate after the split. The current command completes with 20 warnings, including <code>max-depth</code>, <code>max-params</code>, and <code>curly</code> violations that the repository rules explicitly call out.</li>
+</ul>
+</li>
+<li><p>Remove evaluation dependencies and dead code from the production package boundary.</p>
+<ul>
+<li><code>@earendil-works/pi-coding-agent</code> and <code>typebox</code> are production dependencies even though only the manual evaluation runtime imports them. Put them in the isolated evaluation package or its development dependencies.</li>
+<li><code>pnpm-lock.yaml</code> changes by 880 additions and 128 deletions and also changes unrelated peer resolutions such as <code>jiti</code>, <code>yaml</code>, and Babel. Regenerate a minimal lockfile after the package split.</li>
+<li><code>pi-runtime/localRuntime.ts</code> has no caller outside its barrel export. Remove it if it is obsolete. If local execution remains required, do not execute model-authored JavaScript in an in-process <code>node:vm</code> guarded by a regular expression. Use a disposable process or container with explicit resource limits.</li>
+<li>If the local runtime remains, align its numeric operators with the compiler. <code>canonicalBuilder.ts:429-438</code> emits <code>GT</code>, <code>GTE</code>, <code>LT</code>, and <code>LTE</code>, while <code>localRuntime.ts:187-200</code> checks <code>GREATER_THAN</code>, <code>GREATER_THAN_OR_EQUAL</code>, <code>LESS_THAN</code>, and <code>LESS_THAN_OR_EQUAL</code>.</li>
+</ul>
+</li>
+<li><p>Make provider failures return compiler diagnostics instead of escaping the tool call.</p>
+<ul>
+<li><code>compileWorkflowSource</code> catches builder lowering and serialization errors, but <code>loadRequiredControls</code> and <code>resolveContextualSchemas</code> can reject outside those catches. The Pi compile tool also awaits the compiler without its own error boundary.</li>
+<li>Convert catalog, system-node, schema-lookup, and option-lookup failures into typed diagnostics with the current context handle when retry is safe. Pass abort signals into provider requests instead of checking only before and after network calls.</li>
+<li>Add one test for a rejected workflow-schema request and one for a rejected system-node lookup. Neither should crash the Pi session or lose actionable context.</li>
+</ul>
+</li>
+<li><p>Separate implementation proof from historical evaluation prose.</p>
+<ul>
+<li>The focused suite passes locally with 22 tests and 80 assertions. Package typecheck, Biome, and formatting also pass.</li>
+<li>The changelog still claims two tools, 17 focused tests, three scenarios, and GPT-5.5, while the current runtime has four tools, 22 focused tests, larger UAT suites, and Luna/Terra results. Update or replace the stale entry.</li>
+<li>Remove personal absolute Node paths from <code>README.md</code>. Use package scripts and an explicit supported Node range.</li>
+<li>Move Attest configuration and results out of <code>src</code>. Commit sanitized, immutable result summaries or machine-readable artifacts for claims that reviewers are expected to trust. The current 30-case and alert raw reports live only in ignored local directories, so the PR cannot independently reproduce those historical claims.</li>
+</ul>
+</li>
+<li><p>Split the work into a reviewable stack.</p>
+<ul>
+<li>First PR: extract or extend shared schema and production-builder adapter primitives with no behavior change.</li>
+<li>Second PR: add the restricted language, authoring context, compiler, and focused correctness tests.</li>
+<li>Third PR: add the remote provider and Pi adapter in the evaluation-only package.</li>
+<li>Fourth PR: add Attest and live-UAT cases plus sanitized evidence. Keep live workflow creation and deployment out of ordinary unit-test and CI paths.</li>
+</ul>
+</li>
+<li><p>Clear every merge gate on the final core PR.</p>
+<ul>
+<li>The current GitHub test and typecheck jobs pass, but <code>vulnerabilities-sca-scan</code> fails. Its log names <code>postcss</code> 8.5.26 and CVE-2026-45623 with CVSS 9.1. That version already exists in the base lockfile, so the failure blocks the PR but does not prove the Pi dependencies introduced the vulnerability.</li>
+<li>The Wiz summary reports four medium and five low SAST findings, and the SAST check is neutral. Triage the actual findings before merge rather than treating the neutral conclusion as a pass.</li>
+<li>No human review has been submitted. The automated Codex review did not run because repository review credits were exhausted.</li>
+<li>Re-run the focused tests, package typecheck, Biome, Oxlint with zero warnings, formatting, full affected package tests, SCA, and SAST on each split PR. Require one workflow-platform owner and one <code>llm-tools</code> owner to approve the core compiler PR.</li>
+</ul>
+</li>
+<li><p>Merge only when the architecture has one source of truth and the compiler fails closed.</p>
+<ul>
+<li>Accept the direction when invalid schema values cannot return <code>compiled</code>, dynamic-schema semantics come from shared code, resource-specific guidance is registered outside the core, the production dependency graph excludes the evaluation agent, and a real caller or explicit experiment boundary owns the lifecycle.</li>
+<li>Close or keep the current PR as an evaluation record if those conditions are intentionally out of scope. Do not merge the present 11,000-line branch as the production implementation.</li>
+</ul>
+</li>
+</ol>
+<h2>Risks</h2>
+<ul>
+<li>Splitting the PR can accidentally change serialized workflow shape. Freeze a small set of canonical workflow fixtures around linear flow, IF join, named branches, connections, lookup options, and dynamic-schema suspension before moving files.</li>
+<li>Reusing shared schema code may expose differences between RJSF form semantics and backend strict validation. Record those differences explicitly and make backend strict validation the final acceptance gate.</li>
+<li>Moving Pi and live UAT out of <code>src</code> can make experiments less convenient. Preserve the three package commands as thin wrappers into the evaluation package so the developer workflow stays one command.</li>
+</ul>
+</article>
+</main>
+</body>
+</html>
