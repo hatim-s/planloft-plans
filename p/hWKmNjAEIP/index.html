@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PR #28885 audit — reposition the typed workflow authoring DSL</title>
+<style>/* planloft theme: minimal — mono, black & white, tight */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f5f5f5;
+    --paper: #111;
+    --rule: #3f3f46;
+    --code-bg: #242424;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #111;
+  --paper: #fff;
+  --rule: #e5e5e5;
+  --code-bg: #f4f4f4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f5f5f5;
+  --paper: #111;
+  --rule: #3f3f46;
+  --code-bg: #242424;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.55 ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.planloft-plan {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+ul { padding-left: 1.1rem; }
+li { margin: 0.15rem 0; }
+a { color: var(--ink); text-underline-offset: 2px; }
+code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem; overflow: auto; border-radius: 4px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>PR #28885 audit — reposition the typed workflow authoring DSL</h1>
+<p>Reposition PR #28885 (<code>feat(llm-tools): add typed workflow authoring DSL</code>, +11,245/−131) so the well-designed DSL core can merge without shipping its eval harness, AI-SDK runtime dependency, and convention violations inside <code>@unifyapps/llm-tools</code>.</p>
+<h2>Verdict</h2>
+<p>The approach architecture is right; the positioning is not merge-ready.</p>
+<p>Right direction — keep as-is:</p>
+<ul>
+<li>One-directional coupling: the experiment imports production (<code>FlowBuilder</code>, <code>NodeStore</code>, serializer); production imports nothing back. Nothing registers on any MCP surface, so product blast radius is zero.</li>
+<li>Host-owned identity: opaque handles for resources, connections, and options; the model never sees native workflow JSON; IDs, pills, and mappings come from the production serializer path.</li>
+<li>Two-pass compile with schema-revision suspension (<code>compiler.ts</code>) is a clean <code>compiled | suspended | failed</code> contract with no serialization against stale schemas.</li>
+<li>Changelog entry, <code>WORKFLOW_TOOLS.md</code> cross-link, and colocated <code>__tests__/</code> follow convention.</li>
+</ul>
+<p>Findings, severity-ordered:</p>
+<ol>
+<li>Eval/agent harness inside <code>src/</code> of a shipped package: <code>pi-runtime/</code> (20 files: CLIs, Pi session runner, live UAT/alert evaluators) and the <code>attest/</code> project (with nested <code>attest/attest/</code> and <code>RESULTS.md</code>) sit in <code>src/tools/workflow/code-authoring/</code>. Repo convention puts runnable non-tool code in package-root <code>scripts/</code>; no package checks an eval harness into <code>src/</code>; attest has no precedent on <code>origin/main</code>.</li>
+<li>Dependency placement: <code>@earendil-works/pi-coding-agent</code> and <code>typebox</code> are runtime deps of <code>@unifyapps/llm-tools</code> but are used only by the harness — the first AI-SDK dependency in any package manifest in the repo. <code>tsx</code> was added although every existing CLI runs via bun. Lockfile grew 880 lines.</li>
+<li>Production module patched for the experiment: <code>workflowUpdate/flowBuilder.ts</code> gained a <code>.default ?? Module</code> ESM/CJS interop shim solely because the harness runs under node+tsx; its two production importers never needed it.</li>
+<li>Ambiguous placement: on <code>origin/main</code> the PR creates <code>src/tools/workflow/</code> holding only the experiment, while branch <code>fix/workflow-edit-flow-hardening</code> restructures llm-tools to make <code>workflow/</code> the real module home (and moves <code>flowBuilder.ts</code> into <code>workflow/update/</code>), guaranteeing conflicts. The three sibling experiment PRs use three different layouts, undermining comparison.</li>
+<li>CLAUDE.md violations: 19 files exceed the 200-line cap (<code>validator.ts</code> 750, <code>alertEvaluator.ts</code> 684, <code>platformProof.ts</code> 676, <code>context.ts</code> 612, <code>parser.ts</code> 509); both folders exceed the 7–8-item rule; two barrel <code>index.ts</code> files were added where the convention is a sibling entry file (<code>workflowUpdate.ts</code> pattern).</li>
+<li>Hygiene: root <code>.gitignore</code> gained package-specific artifact paths (belongs in <code>packages/llm-tools/.gitignore</code>); the README hardcodes machine paths (<code>/Users/hatim.shakir/.nvm/...</code>) and live run IDs; the changelog entry sits above the deeper <code>src/tools/changelog/</code>; no <code>docs/specs/</code> design record exists for a novel language (the approaches A–F note was never pushed to any ref).</li>
+</ol>
+<h2>Actions</h2>
+<ol>
+<li>Split the PR: keep the DSL core (lexer, parser, validator, typeGenerator, context, schemaLifecycle, canonicalBuilder, compiler, provider, diagnostics, types, <code>__tests__/</code>) in llm-tools; move <code>pi-runtime/</code> and <code>attest/</code> to a repo-root workspace package <code>tools/workflow-code-authoring-evals/</code> with <code>src/</code> + <code>evals/attest/</code>, mirroring the sibling pi PR&#39;s <code>tools/pi-workflow-runtime/</code> layout.</li>
+<li>Move <code>@earendil-works/pi-coding-agent</code>, <code>typebox</code>, <code>tsx</code>, and the three <code>workflow:code:*</code> scripts into that harness package, restoring <code>@unifyapps/llm-tools</code> to a zero dependency diff.</li>
+<li>Revert <code>workflowUpdate/flowBuilder.ts</code> to the <code>origin/main</code> version; if node+tsx interop is still needed, wrap it inside the harness package.</li>
+<li>Resolve the <code>workflow/</code> placement against <code>fix/workflow-edit-flow-hardening</code>: rebase onto it and land as <code>workflow/code-authoring/</code> if it merges first, otherwise rename to the flat convention (<code>src/tools/workflowCodeAuthoring/</code> with a sibling entry file instead of <code>index.ts</code>); align the semantic and pi experiment PRs on the same core/harness split.</li>
+<li>Decompose oversized core files toward the 200-line cap: <code>validator.ts</code> into structure / input-option / ref-and-control-flow / condition modules; <code>context.ts</code> into build / refresh / catalog; <code>parser.ts</code> into statements / expressions; <code>canonicalBuilder.ts</code> into topology / mappings / conditions; harness files after the move.</li>
+<li>Sweep hygiene: move the root <code>.gitignore</code> entries into package-local <code>.gitignore</code>; replace machine paths with a stated Node version requirement; move run IDs and results into <code>attest/RESULTS.md</code>; relocate the changelog entry to <code>src/tools/changelog/</code>; add a <code>docs/specs/</code> design note recording why this approach beat mutation tools, a typed SDK, and code-mode scripts.</li>
+</ol>
+<h2>Verification</h2>
+<ul>
+<li>Run <code>pnpm --filter @unifyapps/llm-tools ts</code> and <code>bun test</code> on the relocated <code>__tests__/</code> — 22 tests, 80 assertions must pass.</li>
+<li>Run <code>pnpm --filter @unifyapps/llm-tools build</code> and confirm no pi/typebox/tsx in the package dependency tree.</li>
+<li>Rerun <code>attest eval run typed-dsl</code> and one <code>workflow:code:pi</code> smoke session from the new harness package to prove it resolves the core through package exports.</li>
+<li>Run <code>node scripts/changelog-check.mjs</code> plus biome/oxlint/oxfmt over touched paths.</li>
+</ul>
+</article>
+</main>
+</body>
+</html>
