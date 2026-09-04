@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="How 17 coding agents, app builders, and workflow tools change prompts, tools, and context for different models.">
+  <meta name="description" content="How Cursor, OpenCode, Lovable, Make, and Zapier change prompts, tools, and context for different models.">
   <title>Agent setup by model</title>
   <style>
     :root {
@@ -326,106 +326,13 @@
       color: var(--muted);
     }
 
-    .layer-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-    }
-
-    .layer {
-      min-height: 250px;
-      display: flex;
-      flex-direction: column;
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--paper);
-    }
-
-    .layer-number {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 32px;
-      border-radius: 11px;
-      color: white;
-      background: linear-gradient(145deg, var(--blue), var(--violet));
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .layer h3 { margin-bottom: 8px; font-size: 17px; letter-spacing: -0.02em; }
-    .layer p { margin: 0; color: var(--muted); font-size: 13px; }
-    .layer code { color: var(--ink); }
-
-    .filter-shell {
-      position: sticky;
-      top: 78px;
-      z-index: 20;
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: color-mix(in srgb, var(--paper-solid) 90%, transparent);
-      box-shadow: 0 10px 32px rgba(14, 22, 44, 0.08);
-      backdrop-filter: blur(18px);
-    }
-
-    .search-wrap { position: relative; }
-    .search-wrap::before {
-      content: "⌕";
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      color: var(--muted);
-      transform: translateY(-53%);
-      font-size: 20px;
-    }
-
-    #search {
-      width: 100%;
-      padding: 10px 14px 10px 42px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      outline: none;
-      color: var(--ink);
-      background: var(--page);
-    }
-
-    #search:focus { border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 16%, transparent); }
-
-    .select-wrap { display: flex; align-items: center; gap: 8px; }
-    .select-wrap label { color: var(--muted); font-size: 12px; font-weight: 700; }
-
-    select {
-      padding: 10px 34px 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      color: var(--ink);
-      background: var(--page);
-      font: inherit;
-      font-size: 13px;
-      font-weight: 650;
-    }
-
-    #result-count {
-      min-width: 78px;
-      color: var(--muted);
-      text-align: right;
-      font-size: 12px;
-      font-weight: 750;
-    }
-
     .cards {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
     }
+
+    .cards .product-card:last-child { grid-column: 1 / -1; }
 
     .product-card {
       display: flex;
@@ -503,15 +410,6 @@
     .sources a { text-decoration: none; }
     .sources a::after { content: " ↗"; }
 
-    #empty-state {
-      display: none;
-      padding: 40px;
-      border: 1px dashed var(--line-strong);
-      border-radius: 18px;
-      color: var(--muted);
-      text-align: center;
-    }
-
     .table-shell {
       overflow-x: auto;
       border: 1px solid var(--line);
@@ -533,7 +431,7 @@
 
     .decision-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
 
@@ -547,34 +445,6 @@
     .decision h3 { margin-bottom: 10px; font-size: 20px; letter-spacing: -0.025em; }
     .decision p { margin: 0; color: var(--muted); }
 
-    .formula {
-      margin-top: 18px;
-      padding: 22px;
-      border-radius: 16px;
-      color: #eef3ff;
-      background: #11182c;
-      font: 600 13px/1.75 ui-monospace, SFMono-Regular, Menlo, monospace;
-      overflow-x: auto;
-      white-space: pre;
-    }
-
-    .method {
-      display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: 22px;
-    }
-
-    .method > div {
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--paper);
-    }
-
-    .method h3 { font-size: 20px; letter-spacing: -0.025em; }
-    .method p, .method li { color: var(--muted); }
-    .method ul { margin: 0; padding-left: 20px; }
-
     footer {
       padding: 28px 0 48px;
       border-top: 1px solid var(--line);
@@ -582,15 +452,10 @@
       font-size: 12px;
     }
 
-    .hidden { display: none !important; }
-
     @media (max-width: 980px) {
-      .hero, .thesis-grid, .method { grid-template-columns: 1fr; }
+      .hero, .thesis-grid { grid-template-columns: 1fr; }
       .hero { gap: 30px; }
-      .layer-grid { grid-template-columns: repeat(2, 1fr); }
-      .filter-shell { grid-template-columns: 1fr 1fr; }
-      .search-wrap { grid-column: 1 / -1; }
-      #result-count { text-align: left; }
+      .decision-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 720px) {
@@ -599,13 +464,8 @@
       .theme-picker button { min-width: 34px; padding-inline: 7px; }
       main { padding-top: 50px; }
       .stat-row, .cards, .decision-grid, .fact-grid { grid-template-columns: 1fr; }
-      .layer-grid { grid-template-columns: 1fr; }
-      .layer { min-height: 0; }
-      .layer-number { margin-bottom: 18px; }
       .section-heading { display: block; }
       .section-heading h2 { margin-bottom: 16px; }
-      .filter-shell { position: static; grid-template-columns: 1fr; }
-      .search-wrap { grid-column: auto; }
       .product-card { min-height: 0; padding: 20px; }
     }
   </style>
@@ -617,8 +477,8 @@
     <div class="topbar-inner">
       <a class="brand" href="#main"><span class="brand-mark">A</span><span>Agent setup by model</span></a>
       <div class="top-actions">
+        <a class="jump-link" href="#products">Products</a>
         <a class="jump-link" href="#comparison">Comparison</a>
-        <a class="jump-link" href="#recommendations">Recommendations</a>
         <div class="theme-picker" role="group" aria-label="Color theme">
           <button type="button" data-theme-choice="light" aria-pressed="false" title="Light theme">Light</button>
           <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark theme">Dark</button>
@@ -631,17 +491,17 @@
   <main id="main">
     <section class="hero" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">Research review · September 2026</p>
+        <p class="eyebrow">Five-product review · September 2026</p>
         <h1 id="page-title">What changes when an agent <span class="gradient-word">changes models</span></h1>
-        <p class="hero-copy">I checked 17 coding agents, app builders, and workflow tools to see whether they swap only the model or also change its instructions, tools, and context.</p>
+        <p class="hero-copy">I checked Cursor, OpenCode, Lovable, Make, and Zapier. The question was whether each product swaps only the model or also changes the instructions, tools, and context around it.</p>
       </div>
       <aside class="hero-note">
         <strong>The answer</strong>
-        <p>Coding agents often change the prompt, edit format, tool definitions, and message handling for each model. App and workflow builders usually change the model assigned to a job, the tools it may use, or the role it plays. Most products keep skills reusable across models.</p>
+        <p>Cursor, OpenCode, and Lovable say they adjust the agent for each model. Make and Zapier expose model choice, agent roles, and capability limits, but they do not publish the same level of model-specific prompt detail.</p>
         <div class="stat-row" aria-label="Report coverage">
-          <div class="stat"><b>17</b><span>products</span></div>
-          <div class="stat"><b>5</b><span>methods</span></div>
-          <div class="stat"><b>29</b><span>sources</span></div>
+          <div class="stat"><b>5</b><span>products</span></div>
+          <div class="stat"><b>3</b><span>direct</span></div>
+          <div class="stat"><b>10</b><span>sources</span></div>
         </div>
       </aside>
     </section>
@@ -649,309 +509,101 @@
     <article class="thesis">
       <div class="thesis-grid">
         <div>
-          <p class="section-kicker">Main finding</p>
-          <h2>The product changes the request. It does not retrain the model.</h2>
+          <p class="section-kicker">The split</p>
+          <h2>Three products tune the agent. Two expose controls without showing the full setup.</h2>
         </div>
         <div class="thesis-copy">
-          <p>The model weights do not change. The product changes the request sent to the model. That can include the system prompt, tool schema, message order, available context, or reasoning setting.</p>
-          <p>OpenCode, Cursor, Factory, Cline, and Aider publish code or technical notes that describe these changes. Amp bundles the model, prompt, tools, and reasoning setting into a mode. Lovable says it rewrites instructions, tools, and context for each model it uses to build apps.</p>
-          <p>n8n, Make, and Zapier usually adapt at a different level. They qualify models for certain jobs, restrict tools by capability, use fallback models, or give each agent role its own instructions. Public sources reveal less about prompt changes inside these workflow products.</p>
+          <p><strong>Cursor, OpenCode, and Lovable</strong> publish direct evidence that the selected model can change its prompt, tools, tool descriptions, edit format, or context handling.</p>
+          <p><strong>Make and Zapier</strong> let users choose models and tools. They also route work through agent roles or model tiers. Their public material does not show a separate prompt and tool contract maintained for every model.</p>
         </div>
       </div>
     </article>
-
-    <section id="taxonomy" aria-labelledby="taxonomy-title">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">Do not lump these together</p>
-          <h2 id="taxonomy-title">Five ways a product can adapt to a model</h2>
-        </div>
-        <p>Each method solves a different problem. Reformatting an API request proves provider compatibility. It does not prove that the product changes the agent's behavior.</p>
-      </div>
-      <div class="layer-grid">
-        <article class="layer">
-          <span class="layer-number">01</span>
-          <h3>Provider format</h3>
-          <p>Converts system messages, tool calls, reasoning state, cache fields, images, and schemas into the format each API accepts.</p>
-        </article>
-        <article class="layer">
-          <span class="layer-number">02</span>
-          <h3>Capability checks</h3>
-          <p>Checks whether a model supports native tools, images, parallel calls, patch edits, or structured output before enabling them.</p>
-        </article>
-        <article class="layer">
-          <span class="layer-number">03</span>
-          <h3>Model instructions</h3>
-          <p>Changes prompt wording, tool names, examples, edit syntax, context order, or verification rules for a model family.</p>
-        </article>
-        <article class="layer">
-          <span class="layer-number">04</span>
-          <h3>Agent role</h3>
-          <p>Gives a planner, implementer, reviewer, or researcher its own instructions, permissions, tools, and context.</p>
-        </article>
-        <article class="layer">
-          <span class="layer-number">05</span>
-          <h3>Model routing</h3>
-          <p>Picks a model based on task difficulty, cost, speed, context size, input type, or the reason a previous attempt failed.</p>
-        </article>
-      </div>
-    </section>
 
     <section id="products" aria-labelledby="products-title">
       <div class="section-heading">
         <div>
           <p class="section-kicker">The products</p>
-          <h2 id="products-title">What the public evidence says</h2>
+          <h2 id="products-title">What the evidence says</h2>
         </div>
-        <p>Direct means the company says it does this or the source code shows it. Documented means the product exposes the feature but leaves some model-specific behavior unclear. Undisclosed means we can see the product behavior, not the implementation.</p>
-      </div>
-
-      <div class="filter-shell" aria-label="Product filters">
-        <div class="search-wrap">
-          <label class="hidden" for="search">Search products</label>
-          <input id="search" type="search" placeholder="Search products, tools, or findings" autocomplete="off">
-        </div>
-        <div class="select-wrap">
-          <label for="category">Category</label>
-          <select id="category">
-            <option value="all">All</option>
-            <option value="coding">Coding agents</option>
-            <option value="ui">UI builders</option>
-            <option value="workflow">Workflow tools</option>
-          </select>
-        </div>
-        <div class="select-wrap">
-          <label for="evidence">Evidence</label>
-          <select id="evidence">
-            <option value="all">All</option>
-            <option value="confirmed">Direct</option>
-            <option value="strong">Documented</option>
-            <option value="limited">Undisclosed</option>
-          </select>
-        </div>
-        <output id="result-count" aria-live="polite">17 shown</output>
+        <p>Direct means source code or a first-party technical post describes the model-specific change. Documented means the feature is public but the internal setup is not.</p>
       </div>
 
       <div class="cards" id="product-grid">
-        <article class="product-card" data-category="coding" data-evidence="confirmed" data-search="opencode model prompts tools schemas provider skills">
+        <article class="product-card">
+          <div class="card-top"><div><h3 class="product-name">Cursor</h3><span class="product-type">Coding agent</span></div><span class="evidence confirmed">Direct</span></div>
+          <p class="verdict">Cursor gives each model its own instructions and tools, then tests the result with Cursor Bench.</p>
+          <div class="fact-grid"><div class="fact"><b>What changes</b><p>For Codex, Cursor changed tool names, lint instructions, progress updates, action rules, message order, and handling of reasoning state.</p></div><div class="fact"><b>What stays unclear</b><p>Cursor documents skills separately from model instructions. It has not said that each model gets different skill files.</p></div></div>
+          <div class="tags"><span class="tag">Model instructions</span><span class="tag">Tool definitions</span><span class="tag">Reasoning state</span></div>
+          <div class="sources"><a href="https://cursor.com/blog/codex-model-harness">Cursor's Codex setup</a></div>
+        </article>
+
+        <article class="product-card">
           <div class="card-top"><div><h3 class="product-name">OpenCode</h3><span class="product-type">Coding agent</span></div><span class="evidence confirmed">Direct</span></div>
           <p class="verdict">OpenCode maps model IDs to separate prompts and passes the model and provider IDs into its tool registry.</p>
-          <div class="fact-grid"><div class="fact"><b>What we know</b><p>The code has prompt files for Codex, GPT, Claude, Gemini, Kimi, Trinity, Meta, and a fallback. It can also change which tools a model receives.</p></div><div class="fact"><b>What we don't</b><p>Changing the model does not replace the skills. OpenCode filters skills through the selected agent's permissions.</p></div></div>
-          <div class="tags"><span class="tag">Model instructions</span><span class="tag">Tool selection</span><span class="tag">Schema changes</span></div>
+          <div class="fact-grid"><div class="fact"><b>What changes</b><p>The code has prompt files for Codex, GPT, Claude, Gemini, Kimi, Trinity, Meta, and a fallback. The tool registry can also change which tools a model receives.</p></div><div class="fact"><b>What stays shared</b><p>Changing the model does not replace the skills. OpenCode filters skills through the selected agent's permissions.</p></div></div>
+          <div class="tags"><span class="tag">Prompt files</span><span class="tag">Tool selection</span><span class="tag">Shared skills</span></div>
           <div class="sources"><a href="https://github.com/anomalyco/opencode/blob/dev/packages/opencode/src/session/system.ts">Prompt routing</a><a href="https://github.com/anomalyco/opencode/blob/dev/packages/opencode/src/tool/registry.ts">Tool registry</a></div>
         </article>
 
-        <article class="product-card" data-category="coding" data-evidence="confirmed" data-search="cursor model instructions tools codex reasoning lints shell prompt">
-          <div class="card-top"><div><h3 class="product-name">Cursor</h3><span class="product-type">Coding agent</span></div><span class="evidence confirmed">Direct</span></div>
-          <p class="verdict">Cursor says every model gets its own instructions and tools, which the team tests with Cursor Bench.</p>
-          <div class="fact-grid"><div class="fact"><b>What changes</b><p>For Codex, Cursor changed tool names, lint instructions, progress updates, action rules, message order, and handling of reasoning state.</p></div><div class="fact"><b>What we don't know</b><p>Cursor documents skills separately from model instructions. It has not said that each model gets different skill files.</p></div></div>
-          <div class="tags"><span class="tag">Model instructions</span><span class="tag">Tool definitions</span><span class="tag">Reasoning state</span></div>
-          <div class="sources"><a href="https://cursor.com/blog/codex-model-harness">Codex model setup</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="confirmed" data-search="factory droid model setup prompt hierarchy tool instructions find replace diff">
-          <div class="card-top"><div><h3 class="product-name">Factory Droid</h3><span class="product-type">Coding agent</span></div><span class="evidence confirmed">Direct</span></div>
-          <p class="verdict">Factory says different models need different agent setups to do their best work.</p>
-          <div class="fact-grid"><div class="fact"><b>What changes</b><p>Factory changes edit formats, path handling, and tool instructions when models behave differently. It also injects timely instructions during a run.</p></div><div class="fact"><b>What stays shared</b><p>The common parts stay in one system. Factory changes the pieces that a model handles poorly instead of building a separate product for it.</p></div></div>
-          <div class="tags"><span class="tag">Model setup</span><span class="tag">Edit format</span><span class="tag">Tool instructions</span></div>
-          <div class="sources"><a href="https://factory.ai/news/terminal-bench">How Factory designs agents</a><a href="https://docs.factory.ai/harness/subagents">Custom Droids</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="confirmed" data-search="amp modes models prompt tools oracle subagents routing">
-          <div class="card-top"><div><h3 class="product-name">Amp</h3><span class="product-type">Coding agent</span></div><span class="evidence confirmed">Direct</span></div>
-          <p class="verdict">Amp asks users to choose a work mode, not a raw model.</p>
-          <div class="fact-grid"><div class="fact"><b>What a mode contains</b><p>Each mode sets the model, reasoning effort, system prompt, tools, and oracle. Specialist models handle review, search, research, and other focused jobs.</p></div><div class="fact"><b>Why that matters</b><p>Amp can replace the model later without changing what the mode is for. The role remains stable while its implementation changes.</p></div></div>
-          <div class="tags"><span class="tag">Mode settings</span><span class="tag">Model routing</span><span class="tag">Subagents</span></div>
-          <div class="sources"><a href="https://ampcode.com/docs/models-and-subagents">Modes and models</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="confirmed" data-search="cline gpt5 system prompts native tools prompt variants model">
-          <div class="card-top"><div><h3 class="product-name">Cline</h3><span class="product-type">Coding agent</span></div><span class="evidence confirmed">Direct</span></div>
-          <p class="verdict">Cline has shipped prompt and native-tool changes made specifically for GPT-5.</p>
-          <div class="fact-grid"><div class="fact"><b>What we know</b><p>The changelog records GPT-5 system-prompt changes and native-tool fixes. Project issues also name model-specific prompt variants.</p></div><div class="fact"><b>What we don't</b><p>This proves targeted work for some models. It does not prove that Cline does the same amount of work for every model it supports.</p></div></div>
-          <div class="tags"><span class="tag">Prompt variant</span><span class="tag">Native tools</span><span class="tag">Model integration</span></div>
-          <div class="sources"><a href="https://github.com/cline/cline/blob/main/CHANGELOG.md">Project changelog</a><a href="https://github.com/cline/cline/issues/5451">GPT-5 tool prompting</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="confirmed" data-search="aider model settings edit format repo map reasoning cache weak editor model">
-          <div class="card-top"><div><h3 class="product-name">Aider</h3><span class="product-type">Coding agent</span></div><span class="evidence confirmed">Direct</span></div>
-          <p class="verdict">Aider stores the code-editing rules in per-model settings.</p>
-          <div class="fact-grid"><div class="fact"><b>What changes</b><p>Each model's settings can choose the edit format, example placement, repo map, reminders, prompt prefix, reasoning tags, caching, helper model, and editor model.</p></div><div class="fact"><b>Where it focuses</b><p>Aider concentrates on editing and context. It has fewer kinds of tools to coordinate than Cursor or Factory.</p></div></div>
-          <div class="tags"><span class="tag">Editing protocol</span><span class="tag">Model settings</span><span class="tag">Helper models</span></div>
-          <div class="sources"><a href="https://aider.chat/docs/config/adv-model-settings.html">Advanced model settings</a><a href="https://aider.chat/docs/config/options.html">Options reference</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="strong" data-search="continue model capabilities native tools prompted tools roles prompt templates">
-          <div class="card-top"><div><h3 class="product-name">Continue</h3><span class="product-type">Coding agent</span></div><span class="evidence strong">Documented</span></div>
-          <p class="verdict">Continue checks model capabilities and lets users configure prompts and model roles.</p>
-          <div class="fact-grid"><div class="fact"><b>What it does</b><p>Continue can choose native or prompt-based tool calls, assign models to jobs, and apply prompt templates and system messages.</p></div><div class="fact"><b>What we don't know</b><p>The docs show the available controls. They do not say that Continue tests and maintains separate settings for every major model.</p></div></div>
-          <div class="tags"><span class="tag">Capability adapter</span><span class="tag">Configurable prompts</span><span class="tag">Model roles</span></div>
-          <div class="sources"><a href="https://docs.continue.dev/customize/deep-dives/model-capabilities">Model capabilities</a><a href="https://docs.continue.dev/reference">Configuration reference</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="strong" data-search="roo code custom modes role instructions tool groups file restrictions skills">
-          <div class="card-top"><div><h3 class="product-name">Roo Code</h3><span class="product-type">Coding agent</span></div><span class="evidence strong">Documented</span></div>
-          <p class="verdict">Roo changes its behavior by mode. Its docs say less about separate setups for individual model families.</p>
-          <div class="fact-grid"><div class="fact"><b>What a mode sets</b><p>A custom mode defines the role, instructions, tool groups, file restrictions, and available skills. Native tool calls handle provider differences.</p></div><div class="fact"><b>What we don't know</b><p>The public docs focus on modes. They do not describe model-specific prompt work as thoroughly as Cursor or Factory does.</p></div></div>
-          <div class="tags"><span class="tag">Mode settings</span><span class="tag">Tool groups</span><span class="tag">Mode skills</span></div>
-          <div class="sources"><a href="https://docs.roocode.com/features/custom-modes">Custom modes</a><a href="https://docs.roocode.com/features/skills">Skills</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="strong" data-search="swe-agent yaml templates action parser tools history model params system message">
-          <div class="card-top"><div><h3 class="product-name">SWE-agent</h3><span class="product-type">Research agent</span></div><span class="evidence strong">Documented</span></div>
-          <p class="verdict">SWE-agent lets researchers define the full agent setup in YAML.</p>
-          <div class="fact-grid"><div class="fact"><b>What it configures</b><p>The YAML joins system and task templates, action parsers, tool bundles, history processing, and model request settings.</p></div><div class="fact"><b>Who chooses</b><p>The researcher usually builds and tests the setup. SWE-agent provides the parts. It does not pick a polished setup automatically.</p></div></div>
-          <div class="tags"><span class="tag">Test setup</span><span class="tag">Parser</span><span class="tag">History rules</span></div>
-          <div class="sources"><a href="https://swe-agent.com/0.7/config/config/">Configuration</a><a href="https://swe-agent.com/latest/reference/agent/">Agent reference</a></div>
-        </article>
-
-        <article class="product-card" data-category="coding" data-evidence="strong" data-search="openhands provider protocol native tool calling custom agents tools schema">
-          <div class="card-top"><div><h3 class="product-name">OpenHands</h3><span class="product-type">Coding agent platform</span></div><span class="evidence strong">Documented</span></div>
-          <p class="verdict">OpenHands handles provider and tool-call differences behind one LLM interface.</p>
-          <div class="fact-grid"><div class="fact"><b>What it does</b><p>The LLM layer handles provider settings and native tool calls. The tool system creates schemas and rejects invalid calls.</p></div><div class="fact"><b>What we don't know</b><p>The docs do not show separate, maintained instructions for Claude, GPT, and Gemini like OpenCode does.</p></div></div>
-          <div class="tags"><span class="tag">Protocol adapter</span><span class="tag">Native tools</span><span class="tag">Custom agents</span></div>
-          <div class="sources"><a href="https://docs.openhands.dev/openhands/usage/llms/llms">LLM configuration</a><a href="https://docs.openhands.dev/sdk/arch/tool-system">Tool system</a></div>
-        </article>
-
-        <article class="product-card" data-category="ui" data-evidence="confirmed" data-search="lovable ui app builder model independence control plane tools prompts context routing summarization evals">
-          <div class="card-top"><div><h3 class="product-name">Lovable</h3><span class="product-type">UI and app builder</span></div><span class="evidence confirmed">Direct</span></div>
+        <article class="product-card">
+          <div class="card-top"><div><h3 class="product-name">Lovable</h3><span class="product-type">App builder</span></div><span class="evidence confirmed">Direct</span></div>
           <p class="verdict">Lovable says it changes the instructions, tools, context, and summaries for each model.</p>
-          <div class="fact-grid"><div class="fact"><b>What changes</b><p>A dedicated team adjusts each model's setup. During a build, Lovable can switch the model, rewrite tool descriptions, change how much project context it sees, or summarize earlier work.</p></div><div class="fact"><b>How it tests</b><p>Lovable judges the finished app, not a single model response. Its exact internal mappings remain private.</p></div></div>
+          <div class="fact-grid"><div class="fact"><b>What changes</b><p>During a build, Lovable can switch the model, rewrite tool descriptions, change how much project context it sees, or summarize earlier work.</p></div><div class="fact"><b>How it tests</b><p>Lovable judges the finished app, not a single response. Its exact internal mappings remain private.</p></div></div>
           <div class="tags"><span class="tag">Model instructions</span><span class="tag">Model routing</span><span class="tag">Full-app tests</span></div>
-          <div class="sources"><a href="https://lovable.dev/blog/the-model-picker-is-a-dead-end">Model independence</a></div>
+          <div class="sources"><a href="https://lovable.dev/blog/the-model-picker-is-a-dead-end">Lovable's model setup</a></div>
         </article>
 
-        <article class="product-card" data-category="workflow" data-evidence="confirmed" data-search="n8n workflow builder anthropic provider prompt caching schema supervisor planner discovery builder skills evaluations">
-          <div class="card-top"><div><h3 class="product-name">n8n workflow builder</h3><span class="product-type">Workflow builder</span></div><span class="evidence confirmed">Direct</span></div>
-          <p class="verdict">n8n qualifies models for workflow generation and gives each builder role its own instructions.</p>
-          <div class="fact-grid"><div class="fact"><b>What the code shows</b><p>Public code has relied on Anthropic prompt caching and schema behavior. Current Instance AI code also includes a workflow-builder skill and tests that run through the real workflow service.</p></div><div class="fact"><b>The practical choice</b><p>n8n often picks a model that can run the builder correctly. It does not maintain a complete alternate builder setup for every model.</p></div></div>
-          <div class="tags"><span class="tag">Provider qualification</span><span class="tag">Role prompts</span><span class="tag">Evaluations</span></div>
-          <div class="sources"><a href="https://github.com/n8n-io/n8n/blob/master/packages/%40n8n/instance-ai/skills/workflow-builder/SKILL.md">Workflow-builder skill</a><a href="https://github.com/n8n-io/n8n/blob/master/packages/%40n8n/instance-ai/evaluations/README.md">Instance AI evaluations</a></div>
+        <article class="product-card">
+          <div class="card-top"><div><h3 class="product-name">Make</h3><span class="product-type">Workflow agent and builder</span></div><span class="evidence strong">Documented</span></div>
+          <p class="verdict">Make lets users choose the model, tools, knowledge, and models assigned to subagents.</p>
+          <div class="fact-grid"><div class="fact"><b>What changes</b><p>An agent can use Make modules, scenarios, MCP tools, or other agents. Subagents can use different models for focused jobs.</p></div><div class="fact"><b>What stays unclear</b><p>Make has not published separate prompts or tool definitions for each model. Maia's model routing and prompt setup are also private.</p></div></div>
+          <div class="tags"><span class="tag">User configuration</span><span class="tag">Subagent models</span><span class="tag">Private prompts</span></div>
+          <div class="sources"><a href="https://help.make.com/sub-agents-and-tool-output-filtering-are-now-available-in-the-make-ai-agent-new-app">Subagents</a><a href="https://help.make.com/create-your-first-ai-agent">Agent setup</a><a href="https://help.make.com/introduction-to-maia-by-make">Maia</a></div>
         </article>
 
-        <article class="product-card" data-category="workflow" data-evidence="strong" data-search="n8n ai agent node shared prompt tools primary fallback metadata provider protocol">
-          <div class="card-top"><div><h3 class="product-name">n8n AI Agent node</h3><span class="product-type">Customer workflow node</span></div><span class="evidence strong">Documented</span></div>
-          <p class="verdict">The AI Agent node treats models as more interchangeable than n8n's own workflow builder does.</p>
-          <div class="fact-grid"><div class="fact"><b>What stays shared</b><p>The primary and fallback models receive the same prompt and connected tools. Provider adapters handle API differences around that common setup.</p></div><div class="fact"><b>What that proves</b><p>This shows provider and capability handling. It does not show a separate prompt for every model.</p></div></div>
-          <div class="tags"><span class="tag">Shared contract</span><span class="tag">Fallback model</span><span class="tag">Provider adapter</span></div>
-          <div class="sources"><a href="https://github.com/n8n-io/n8n/blob/master/packages/%40n8n/nodes-langchain/nodes/agents/Agent/agents/ToolsAgent/V2/execute.ts">Tools Agent source</a><a href="https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolaiagent">Agent tool docs</a></div>
-        </article>
-
-        <article class="product-card" data-category="workflow" data-evidence="strong" data-search="make ai agents provider model tools knowledge context subagents capability">
-          <div class="card-top"><div><h3 class="product-name">Make AI Agents</h3><span class="product-type">Workflow agent</span></div><span class="evidence strong">Documented</span></div>
-          <p class="verdict">Make lets users configure the model and assign other models to subagents.</p>
-          <div class="fact-grid"><div class="fact"><b>What users control</b><p>Users choose the provider, model, instructions, tools, knowledge, conversation settings, and subagents. Tools can be Make modules, scenarios, MCP tools, or other agents.</p></div><div class="fact"><b>What we don't know</b><p>Make has not published separate prompts or tool schemas maintained for every model it supports.</p></div></div>
-          <div class="tags"><span class="tag">User configuration</span><span class="tag">Subagent routing</span><span class="tag">Capability gates</span></div>
-          <div class="sources"><a href="https://help.make.com/sub-agents-and-tool-output-filtering-are-now-available-in-the-make-ai-agent-new-app">Subagents</a><a href="https://help.make.com/create-your-first-ai-agent">Agent setup</a></div>
-        </article>
-
-        <article class="product-card" data-category="workflow" data-evidence="limited" data-search="make maia natural language automation workflow builder canvas">
-          <div class="card-top"><div><h3 class="product-name">Make Maia</h3><span class="product-type">Workflow builder</span></div><span class="evidence limited">Undisclosed</span></div>
-          <p class="verdict">Maia builds automations from a conversation. Make has not explained how Maia adapts to different models.</p>
-          <div class="fact-grid"><div class="fact"><b>What it does</b><p>Maia turns plain-language requests into automation steps on Make's canvas and lets users revise the result through chat.</p></div><div class="fact"><b>What we don't know</b><p>Public sources do not reveal Maia's prompt variants, model routing, tool variants, or test setup.</p></div></div>
-          <div class="tags"><span class="tag">Builder role</span><span class="tag">Plain language</span><span class="tag">Private implementation</span></div>
-          <div class="sources"><a href="https://help.make.com/introduction-to-maia-by-make">Introduction to Maia</a></div>
-        </article>
-
-        <article class="product-card" data-category="workflow" data-evidence="strong" data-search="zapier ai agents model tier tools knowledge action schemas routing">
-          <div class="card-top"><div><h3 class="product-name">Zapier AI and Agents</h3><span class="product-type">Workflow agent</span></div><span class="evidence strong">Documented</span></div>
-          <p class="verdict">Zapier changes tool and knowledge access by model tier.</p>
-          <div class="fact-grid"><div class="fact"><b>What changes</b><p>The selected tier decides whether the model can use tools and knowledge. Users choose which action fields stay fixed and which ones the agent fills in.</p></div><div class="fact"><b>What we don't know</b><p>Zapier has not published a separate behavior prompt and tool contract for each model.</p></div></div>
-          <div class="tags"><span class="tag">Model tiers</span><span class="tag">Capability gates</span><span class="tag">Action schemas</span></div>
-          <div class="sources"><a href="https://help.zapier.com/hc/en-us/articles/46425475442829-AI-by-Zapier-model-tier-pricing">Model tiers</a><a href="https://help.zapier.com/hc/en-us/articles/45863491098893-Add-tools-to-your-AI-by-Zapier-step">Tools</a></div>
-        </article>
-
-        <article class="product-card" data-category="workflow" data-evidence="limited" data-search="zapier copilot build configure modify workflows natural language">
-          <div class="card-top"><div><h3 class="product-name">Zapier Copilot</h3><span class="product-type">Workflow builder</span></div><span class="evidence limited">Undisclosed</span></div>
-          <p class="verdict">Copilot builds and configures automations, but Zapier has not published the model setup behind it.</p>
-          <div class="fact-grid"><div class="fact"><b>What it does</b><p>Zapier documents tools that create and configure automations from plain-language requests.</p></div><div class="fact"><b>What we don't know</b><p>Public sources do not show Copilot's model routing, prompt variants, tool variants, or tests.</p></div></div>
-          <div class="tags"><span class="tag">Builder role</span><span class="tag">Private implementation</span></div>
-          <div class="sources"><a href="https://help.zapier.com/hc/en-us/articles/24393442652557-Build-an-agent-in-Zapier-Agents">Build an agent</a></div>
+        <article class="product-card">
+          <div class="card-top"><div><h3 class="product-name">Zapier</h3><span class="product-type">Workflow agent and builder</span></div><span class="evidence strong">Documented</span></div>
+          <p class="verdict">Zapier changes tool and knowledge access by model tier and exposes a common action format.</p>
+          <div class="fact-grid"><div class="fact"><b>What changes</b><p>The selected tier decides whether the model can use tools and knowledge. Users choose which action fields stay fixed and which ones the agent fills in.</p></div><div class="fact"><b>What stays unclear</b><p>Zapier has not published separate prompts or tool definitions for each model. Copilot's routing and tests are also private.</p></div></div>
+          <div class="tags"><span class="tag">Model tiers</span><span class="tag">Capability limits</span><span class="tag">Common actions</span></div>
+          <div class="sources"><a href="https://help.zapier.com/hc/en-us/articles/46425475442829-AI-by-Zapier-model-tier-pricing">Model tiers</a><a href="https://help.zapier.com/hc/en-us/articles/45863491098893-Add-tools-to-your-AI-by-Zapier-step">Agent tools</a><a href="https://help.zapier.com/hc/en-us/articles/24393442652557-Build-an-agent-in-Zapier-Agents">Agent builder</a></div>
         </article>
       </div>
-      <div id="empty-state">No products match those filters.</div>
     </section>
 
     <section id="comparison" aria-labelledby="comparison-title">
       <div class="section-heading">
         <div>
           <p class="section-kicker">At a glance</p>
-          <h2 id="comparison-title">Which parts change in each product</h2>
+          <h2 id="comparison-title">The five-product comparison</h2>
         </div>
-        <p>Some means the product checks capabilities or lets users configure the behavior, but the company does not publish a complete model-by-model setup.</p>
+        <p>Not public means the product may do it, but the sources reviewed here do not support the claim.</p>
       </div>
       <div class="table-shell">
         <table>
-          <thead><tr><th>Product</th><th>Model prompt</th><th>Model-specific tools</th><th>Agent roles</th><th>Model routing</th><th>Skills tied to model</th></tr></thead>
+          <thead><tr><th>Product</th><th>Prompt changes by model</th><th>Tools change by model</th><th>Routes work by model or role</th><th>Skills tied to model</th></tr></thead>
           <tbody>
-            <tr><td>OpenCode</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Some</span></td><td><span class="signal no">○ No</span></td></tr>
-            <tr><td>Cursor</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Some</span></td><td><span class="signal no">○ Not shown</span></td></tr>
-            <tr><td>Factory Droid</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal no">○ No</span></td></tr>
-            <tr><td>Amp</td><td><span class="signal yes">● By mode</span></td><td><span class="signal yes">● By mode</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal no">○ No</span></td></tr>
-            <tr><td>Cline</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal no">○ Usually no</span></td></tr>
-            <tr><td>Aider</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Editing</span></td><td><span class="signal partial">◐ Limited</span></td><td><span class="signal partial">◐ Helper models</span></td><td><span class="signal no">○ No</span></td></tr>
-            <tr><td>Continue</td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal partial">◐ Capabilities</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal no">○ Usually no</span></td></tr>
-            <tr><td>Roo Code</td><td><span class="signal partial">◐ Mode-led</span></td><td><span class="signal partial">◐ Native tools</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal partial">◐ Mode-bound</span></td></tr>
-            <tr><td>SWE-agent</td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal partial">◐ Experimental</span></td><td><span class="signal no">○ No</span></td></tr>
-            <tr><td>OpenHands</td><td><span class="signal partial">◐ Custom</span></td><td><span class="signal yes">● Protocol</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Configurable</span></td><td><span class="signal no">○ Usually no</span></td></tr>
-            <tr><td>Lovable</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal no">○ Task-led</span></td></tr>
-            <tr><td>n8n builder</td><td><span class="signal yes">● Qualified</span></td><td><span class="signal yes">● Provider-aware</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Evaluated</span></td><td><span class="signal no">○ Task-led</span></td></tr>
-            <tr><td>n8n Agent node</td><td><span class="signal no">○ Shared</span></td><td><span class="signal partial">◐ Protocol</span></td><td><span class="signal partial">◐ Agent type</span></td><td><span class="signal partial">◐ Fallback</span></td><td><span class="signal no">○ User-defined</span></td></tr>
-            <tr><td>Make AI Agents</td><td><span class="signal no">○ Not shown</span></td><td><span class="signal partial">◐ Capabilities</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Subagents</span></td><td><span class="signal no">○ Task-led</span></td></tr>
-            <tr><td>Make Maia</td><td><span class="signal no">○ Not public</span></td><td><span class="signal no">○ Not public</span></td><td><span class="signal yes">● Builder</span></td><td><span class="signal no">○ Not public</span></td><td><span class="signal no">○ Not public</span></td></tr>
-            <tr><td>Zapier AI and Agents</td><td><span class="signal no">○ Not shown</span></td><td><span class="signal partial">◐ By tier</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Auto model</span></td><td><span class="signal no">○ User-defined</span></td></tr>
-            <tr><td>Zapier Copilot</td><td><span class="signal no">○ Not public</span></td><td><span class="signal no">○ Not public</span></td><td><span class="signal yes">● Builder</span></td><td><span class="signal no">○ Not public</span></td><td><span class="signal no">○ Not public</span></td></tr>
+            <tr><td>Cursor</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Some</span></td><td><span class="signal no">○ Not shown</span></td></tr>
+            <tr><td>OpenCode</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal partial">◐ Some</span></td><td><span class="signal no">○ No</span></td></tr>
+            <tr><td>Lovable</td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal no">○ Task-led</span></td></tr>
+            <tr><td>Make</td><td><span class="signal no">○ Not public</span></td><td><span class="signal partial">◐ Capabilities</span></td><td><span class="signal yes">● Yes</span></td><td><span class="signal no">○ Task-led</span></td></tr>
+            <tr><td>Zapier</td><td><span class="signal no">○ Not public</span></td><td><span class="signal partial">◐ By tier</span></td><td><span class="signal partial">◐ Some</span></td><td><span class="signal no">○ User-defined</span></td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="recommendations" aria-labelledby="recommendations-title">
+    <section id="takeaways" aria-labelledby="takeaways-title">
       <div class="section-heading">
         <div>
-          <p class="section-kicker">If you are building this</p>
-          <h2 id="recommendations-title">Keep one agent. Change only what the model needs.</h2>
+          <p class="section-kicker">What to take from this</p>
+          <h2 id="takeaways-title">The useful pattern is small, tested changes.</h2>
         </div>
-        <p>Start with common instructions and tools. Add a model-specific change only after a test shows that the common version fails.</p>
       </div>
       <div class="decision-grid">
-        <article class="decision"><h3>Keep skills model-neutral</h3><p>A skill should describe the job, the capabilities it needs, and the tools it may use. If the job needs a specialist model, state that requirement or delegate the job. Do not maintain copies of the same skill for Claude, GPT, and Gemini without a measured reason.</p></article>
-        <article class="decision"><h3>Fix the actual failure</h3><p>If a model misuses an edit tool, change the tool instructions or edit syntax. If it forgets earlier work, fix the message history. If it keeps stopping, change the action rules. Do not make every model carry prompt text written for one model's mistake.</p></article>
-        <article class="decision"><h3>Score the finished result</h3><p>A coding agent should leave a correct patch that passes its tests. An app builder should leave a working app. A workflow builder should leave a valid workflow that runs. A polished response does not make up for a broken result.</p></article>
-        <article class="decision"><h3>Write down why each exception exists</h3><p>For every model-specific rule, keep the failing test, the rule that fixed it, and the condition for removing it. Without that record, old workarounds pile up and nobody knows which ones still matter.</p></article>
-      </div>
-      <div class="formula" role="img" aria-label="Recommended agent request">request = common agent rules
-        + provider API format
-        + model capability checks
-        + tested model-specific changes
-        + instructions for this agent role
-        + project context
-        + relevant skills
-        + model chosen for this job</div>
-    </section>
-
-    <section id="method" aria-labelledby="method-title">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">How I judged the evidence</p>
-          <h2 id="method-title">Source code first. Unknown stays unknown.</h2>
-        </div>
-      </div>
-      <div class="method">
-        <div>
-          <h3>Rules I used</h3>
-          <ul>
-            <li>Use source code and the company's own technical writing where possible.</li>
-            <li>Do not call model routing a model-specific prompt.</li>
-            <li>Do not call role-specific tools model-specific tools.</li>
-            <li>Mark private implementation details as unknown.</li>
-          </ul>
-        </div>
-        <div>
-          <h3>What "not public" means</h3>
-          <p>It does not mean the product lacks the feature. It means I could not support the claim with public material. A closed product may run detailed internal tests without publishing its prompts or tool definitions. Open-source products are simply easier to check.</p>
-          <p>Products and source files change. I reviewed these sources on September 4, 2026.</p>
-        </div>
+        <article class="decision"><h3>Tune the part that fails</h3><p>Change the edit format when edits fail. Change tool instructions when calls fail. Change context handling when the model forgets earlier work.</p></article>
+        <article class="decision"><h3>Keep skills reusable</h3><p>None of these products provides good evidence that skill files should change with every model. Keep the procedure stable and declare the capabilities it needs.</p></article>
+        <article class="decision"><h3>Mark private details as unknown</h3><p>Make and Zapier may tune prompts internally. Their public docs do not prove it, so the report does not claim it.</p></article>
       </div>
     </section>
   </main>
@@ -976,32 +628,6 @@
       themeButtons.forEach((button) => button.addEventListener('click', () => setTheme(button.dataset.themeChoice)));
       setTheme(savedTheme);
 
-      const search = document.querySelector('#search');
-      const category = document.querySelector('#category');
-      const evidence = document.querySelector('#evidence');
-      const cards = [...document.querySelectorAll('.product-card')];
-      const count = document.querySelector('#result-count');
-      const empty = document.querySelector('#empty-state');
-
-      function filterCards() {
-        const query = search.value.trim().toLowerCase();
-        let visible = 0;
-        cards.forEach((card) => {
-          const categoryMatch = category.value === 'all' || card.dataset.category === category.value;
-          const evidenceMatch = evidence.value === 'all' || card.dataset.evidence === evidence.value;
-          const searchText = `${card.dataset.search} ${card.textContent}`.toLowerCase();
-          const queryMatch = !query || searchText.includes(query);
-          const show = categoryMatch && evidenceMatch && queryMatch;
-          card.classList.toggle('hidden', !show);
-          if (show) visible += 1;
-        });
-        count.textContent = `${visible} shown`;
-        empty.style.display = visible ? 'none' : 'block';
-      }
-
-      search.addEventListener('input', filterCards);
-      category.addEventListener('change', filterCards);
-      evidence.addEventListener('change', filterCards);
     })();
   </script>
 </body>
