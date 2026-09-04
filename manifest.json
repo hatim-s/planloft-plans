@@ -234,6 +234,15 @@
       "kind": "report",
       "createdAt": "2026-09-04T14:23:46.639Z",
       "expiresAt": "2026-10-04T14:23:46.639Z"
+    },
+    {
+      "id": "Hxb2gFKvoO",
+      "project": "github.com/unify-apps/ua-builder-no-prompt",
+      "slug": "text-to-workflow-hld",
+      "title": "Text to Workflow — system map",
+      "kind": "plan",
+      "createdAt": "2026-09-04T15:58:40.309Z",
+      "expiresAt": "2026-10-04T15:58:40.309Z"
     }
   ]
 }

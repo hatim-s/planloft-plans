@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Text to Workflow — system map</title>
+<style>/* planloft theme: editorial — magazine, serif, generous */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #201c1a;
+  --muted: #6b625c;
+  --paper: #fdfcfa;
+  --rule: #e7e1d9;
+  --accent: #a8321f;
+  --code-bg: #f0ebe4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f1ece7;
+    --muted: #bcb1a8;
+    --paper: #171412;
+    --rule: #403933;
+    --accent: #ff8f78;
+    --code-bg: #29231f;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #201c1a;
+  --muted: #6b625c;
+  --paper: #fdfcfa;
+  --rule: #e7e1d9;
+  --accent: #a8321f;
+  --code-bg: #f0ebe4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f1ece7;
+  --muted: #bcb1a8;
+  --paper: #171412;
+  --rule: #403933;
+  --accent: #ff8f78;
+  --code-bg: #29231f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 19px/1.72 Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+}
+.planloft-plan {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 7rem;
+}
+h1 {
+  font-size: 2.6rem;
+  line-height: 1.08;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.5rem;
+  margin: 2.75rem 0 0.6rem;
+  font-weight: 700;
+}
+/* Drop-cap on the opening paragraph. */
+.planloft-plan > article > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.4rem;
+  line-height: 0.8;
+  padding: 0.1rem 0.6rem 0 0;
+  font-weight: 700;
+}
+p { margin: 0 0 1.1rem; }
+a { color: var(--accent); text-underline-offset: 3px; }
+blockquote {
+  margin: 1.8rem 0;
+  padding-left: 1.4rem;
+  border-left: 3px solid var(--accent);
+  font-style: italic;
+  font-size: 1.15em;
+  color: var(--muted);
+}
+code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.82em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem 1.15rem; overflow: auto; border-radius: 6px; font-size: 0.8em; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Text to Workflow — System Design</title>
+<style>
+  :root{
+    --paper:#FAF7F0; --surface:#FFFFFF; --surface2:#F4EFE3;
+    --canvas:#F7F3E9;
+    --ink:#1B241F; --ink2:#4A544E; --ink3:#7A8078;
+    --line:#E8E1D2; --line2:#CFC5AD;
+    --green:#166B4A; --green-soft:#E7F0EA; --green-line:#A9CCB9;
+    --amber:#96660F; --amber-soft:#F7EEDC; --amber-line:#DCC48E;
+    --blue:#20647B; --blue-soft:#E4EEF2; --blue-line:#A6C8D5;
+    --code-bg:#EFEAE0;
+    --shadow:0 1px 2px rgba(27,36,31,.06), 0 10px 26px -18px rgba(27,36,31,.35);
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#121714; --surface:#1B221D; --surface2:#20281F;
+      --canvas:#151B17;
+      --ink:#EAE5D8; --ink2:#B3AE9F; --ink3:#847F72;
+      --line:#2A332C; --line2:#46524A;
+      --green:#57C08F; --green-soft:#1C2C24; --green-line:#3E6650;
+      --amber:#D9A855; --amber-soft:#2C2517; --amber-line:#5C4A28;
+      --blue:#6FB3C9; --blue-soft:#18262C; --blue-line:#355763;
+      --code-bg:#242C25;
+      --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 30px -18px rgba(0,0,0,.65);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#FAF7F0; --surface:#FFFFFF; --surface2:#F4EFE3;
+    --canvas:#F7F3E9;
+    --ink:#1B241F; --ink2:#4A544E; --ink3:#7A8078;
+    --line:#E8E1D2; --line2:#CFC5AD;
+    --green:#166B4A; --green-soft:#E7F0EA; --green-line:#A9CCB9;
+    --amber:#96660F; --amber-soft:#F7EEDC; --amber-line:#DCC48E;
+    --blue:#20647B; --blue-soft:#E4EEF2; --blue-line:#A6C8D5;
+    --code-bg:#EFEAE0;
+    --shadow:0 1px 2px rgba(27,36,31,.06), 0 10px 26px -18px rgba(27,36,31,.35);
+  }
+  :root[data-theme="dark"]{
+    --paper:#121714; --surface:#1B221D; --surface2:#20281F;
+    --canvas:#151B17;
+    --ink:#EAE5D8; --ink2:#B3AE9F; --ink3:#847F72;
+    --line:#2A332C; --line2:#46524A;
+    --green:#57C08F; --green-soft:#1C2C24; --green-line:#3E6650;
+    --amber:#D9A855; --amber-soft:#2C2517; --amber-line:#5C4A28;
+    --blue:#6FB3C9; --blue-soft:#18262C; --blue-line:#355763;
+    --code-bg:#242C25;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 30px -18px rgba(0,0,0,.65);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  .page{padding:38px 22px 44px}
+
+  .head{max-width:1600px;margin:0 auto 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--green);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,3.4vw,34px);margin:0;line-height:1.1}
+  .sub{color:var(--ink2);font-size:13.5px;margin-top:6px;max-width:980px}
+  .meta{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{font-family:var(--mono);font-size:10.5px;padding:4px 10px;border:1px solid var(--line2);border-radius:999px;color:var(--ink2);background:var(--surface);white-space:nowrap}
+  .chip b{color:var(--ink);font-weight:600}
+  .chip.live{border-color:var(--green-line);color:var(--green);background:var(--green-soft)}
+
+  .board{overflow-x:auto;padding-bottom:6px}
+  .canvas{position:relative;width:1600px;height:1110px;margin:0 auto;
+          border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+          background-color:var(--canvas);
+          background-image:radial-gradient(color-mix(in srgb, var(--ink3) 24%, transparent) 1px, transparent 1.4px);
+          background-size:18px 18px}
+  .canvas svg.edges{position:absolute;left:0;top:0;z-index:1;pointer-events:none}
+
+  .rg{position:absolute;z-index:0;border:1.5px dashed color-mix(in srgb, var(--ink3) 45%, transparent);border-radius:16px}
+  .rg.tg{background:color-mix(in srgb, var(--green) 4%, transparent)}
+  .rg.tn{background:color-mix(in srgb, var(--ink3) 4%, transparent)}
+  .rg.tb{background:color-mix(in srgb, var(--blue) 5%, transparent);border-color:color-mix(in srgb, var(--blue) 40%, transparent)}
+  .rgt{position:absolute;top:-11px;left:14px;z-index:2;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;color:var(--ink2);background:var(--surface);border:1px solid var(--line2);border-radius:99px;padding:2.5px 10px;white-space:nowrap}
+  .rgt em{font-style:normal;color:var(--green);margin-right:5px}
+
+  .eL{stroke:var(--line2);stroke-width:1.7;fill:none}
+  .eG{stroke:var(--green-line);stroke-width:2;fill:none}
+  .eB{stroke:var(--blue-line);stroke-width:1.7;fill:none}
+  .eA{stroke:var(--amber-line);stroke-width:1.7;fill:none}
+  .aL{fill:var(--line2)} .aG{fill:var(--green-line)} .aB{fill:var(--blue-line)} .aA{fill:var(--amber-line)}
+  .dash{stroke-dasharray:5 6}
+  @media (prefers-reduced-motion: no-preference){
+    .anim{stroke-dasharray:5 7;animation:dashm 1.15s linear infinite}
+    @keyframes dashm{to{stroke-dashoffset:-12}}
+  }
+
+  .node{position:absolute;z-index:2;background:var(--surface);border:1px solid var(--line2);border-radius:11px;box-shadow:var(--shadow);padding:9px 12px}
+  .node .nh{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:650;line-height:1.25}
+  .node .ns{font-family:var(--mono);font-size:9.6px;color:var(--ink3);margin-top:5px;line-height:1.5}
+  .node .ns b{color:var(--ink2);font-weight:600}
+  .node.hero{border-color:var(--green-line);background:linear-gradient(135deg,color-mix(in srgb,var(--green) 11%,var(--surface)),var(--surface) 72%)}
+  .node.hero .nh{color:var(--green)}
+  .node.read{border-color:var(--blue-line);background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 9%,var(--surface)),var(--surface) 72%)}
+  .node.act{border-color:var(--amber-line);background:linear-gradient(135deg,color-mix(in srgb,var(--amber) 10%,var(--surface)),var(--surface) 72%)}
+  .node.plan{border-color:var(--blue-line);border-width:1.5px;background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 14%,var(--surface)),var(--surface) 74%)}
+  .node.plan .nh{color:var(--blue)}
+
+  .nico{width:23px;height:23px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--green);background:var(--green-soft);border:1px solid var(--green-line)}
+  .nico svg{width:13px;height:13px}
+  .nico.a{color:var(--amber);background:var(--amber-soft);border-color:var(--amber-line)}
+  .nico.b{color:var(--blue);background:var(--blue-soft);border-color:var(--blue-line)}
+  .nico.n{color:var(--ink2);background:var(--surface2);border-color:var(--line2)}
+
+  .pill{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:999px;margin-left:auto}
+  .pill.read{color:var(--blue);background:var(--blue-soft);border:1px solid var(--blue-line)}
+  .pill.act{color:var(--amber);background:var(--amber-soft);border:1px solid var(--amber-line)}
+  .pill.disp{color:var(--green);background:var(--green-soft);border:1px solid var(--green-line)}
+
+  .elbl{position:absolute;z-index:3;font-family:var(--mono);font-size:9.5px;color:var(--ink2);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:2.5px 9px;white-space:nowrap;box-shadow:0 1px 0 rgba(27,36,31,.05)}
+  .elbl.g{color:var(--green);border-color:var(--green-line);background:var(--green-soft)}
+  .elbl.b{color:var(--blue);border-color:var(--blue-line);background:var(--blue-soft)}
+  .elbl.a{color:var(--amber);border-color:var(--amber-line);background:var(--amber-soft)}
+
+  .railc{position:absolute;z-index:2;border:1.5px dashed var(--blue-line);border-radius:12px;background:color-mix(in srgb, var(--blue-soft) 60%, transparent);padding:9px 12px}
+  .railc .rh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:650;color:var(--blue)}
+  .railc .rl{font-family:var(--mono);font-size:9.6px;color:var(--ink2);margin-top:5px;line-height:1.55}
+  .railc .rl b{color:var(--blue);font-weight:600}
+
+  .stack{position:absolute;z-index:2;background:var(--surface);border:1px solid var(--line2);border-radius:11px;box-shadow:var(--shadow);padding:5px 8px}
+  .srow{display:flex;align-items:center;gap:9px;padding:6px 5px;font-size:11.5px;font-weight:600;border-top:1px dashed var(--line)}
+  .srow:first-child{border-top:none}
+  .srow svg{width:13px;height:13px;color:var(--ink3);flex:0 0 auto}
+  .srow small{margin-left:auto;font-family:var(--mono);font-size:8.5px;font-weight:500;color:var(--ink3);text-align:right;line-height:1.35}
+  .srow.gg{color:var(--green)} .srow.gg svg{color:var(--green)}
+  .srow.aa{color:var(--amber)} .srow.aa svg{color:var(--amber)}
+
+  .legend{max-width:1600px;margin:16px auto 4px;display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--ink2)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:11px;height:11px;border-radius:3.5px;display:inline-block;border:1px solid}
+  .sw.g{background:var(--green-soft);border-color:var(--green-line)}
+  .sw.b{background:var(--blue-soft);border-color:var(--blue-line)}
+  .sw.a{background:var(--amber-soft);border-color:var(--amber-line)}
+  .sw.d{background:transparent;border:1.5px dashed var(--line2);border-radius:4px}
+  .lw{width:22px;height:0;border-top:2px solid var(--line2);display:inline-block}
+  .lw.gg{border-top:2px dashed var(--green-line)}
+  .lw.bb{border-top:2px dashed var(--blue-line)}
+  .foot{max-width:1600px;margin:14px auto 0;text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink3)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0115 0"/></g></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5H4v11h5l3 3 3-3h5z"/></g></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4M5.3 5.3l2.8 2.8M15.9 15.9l2.8 2.8M18.7 5.3l-2.8 2.8M8.1 15.9l-2.8 2.8"/></g></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A2.5 2.5 0 017.5 2H19v17.5H7.5A2.5 2.5 0 005 22z"/><path d="M5 19.5A2.5 2.5 0 017.5 17H19"/></g></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5v17"/><path d="M7 9c7.5 0 4.5 8.5 11 8.5"/><path d="M15 14.5l3 3-3 3"/></g></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="5.5" r="2.5"/><path d="M8 18.5h6a4 4 0 004-4V8"/></g></symbol>
+  <symbol id="i-hammer" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l4 4M12.5 7.5l-8 8a2 2 0 002.8 2.8l8-8M13 4.5l6.5 6.5M17.5 3l3.5 3.5-2 2-3.5-3.5z"/></g></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16.5 4.5l3 3L8 19z"/><path d="M14.5 6.5l3 3"/></g></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L5 18a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/><path d="M7.5 14h9"/></g></symbol>
+  <symbol id="i-loop" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 11-2.4-5.7"/><path d="M20.5 3.5v5h-5"/></g></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.5 18-4-8-8-4z"/></g></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><ellipse cx="12" cy="5.5" rx="7.5" ry="3"/><path d="M4.5 5.5V18c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V5.5"/><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></g></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="7.5" cy="12" r="3.5"/><path d="M11 12h9.5M17 12v3.5M20.5 12v2.5"/></g></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></g></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L5 13.5h5.5L10 22l8.5-11.5H13z"/></g></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 2.5h7.5l4.5 4.5v14.5H6.5z"/><path d="M14 2.5V7h4.5"/></g></symbol>
+  <symbol id="i-app" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 9h17M9.5 9v11.5"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></g></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0113.7-5.7M20 12a8 8 0 01-13.7 5.7"/><path d="M17.5 3v4h-4M6.5 21v-4h4"/></g></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/></g></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0111 0"/><path d="M16 5.6a3 3 0 010 5.8M17.5 20a5.5 5.5 0 00-3-4.9"/></g></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></g></symbol>
+  <symbol id="i-stetho" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v5a4 4 0 008 0V3"/><path d="M9 15v1a5 5 0 005 5 4 4 0 004-4v-3"/><circle cx="18" cy="10.5" r="2"/></g></symbol>
+</svg>
+
+<div class="page">
+
+  <div class="head">
+    <div>
+      <div class="eyebrow">UnifyApps · Platform AI · System Map</div>
+      <h1>Text to Workflow — one planner, three specialists</h1>
+      <div class="sub">The Workflow Planner is the only agent that talks to the user. It resolves ids, checks the platform docs, gets the plan confirmed, then hands a brief to the Builder, Editor, or Tester. Every build or edit is validated by a planner-driven test loop before the user hears "done".</div>
+    </div>
+    <div class="meta">
+      <span class="chip live">● Live · agent-code-migration.uat</span>
+      <span class="chip">agents <b>4</b> · all sonnet</span>
+      <span class="chip">skills <b>14</b> · loaded on demand</span>
+      <span class="chip">source <b>.claude/agents/workflow/</b></span>
+    </div>
+  </div>
+
+  <div class="board">
+  <div class="canvas">
+
+    <!-- ═══ regions ═══ -->
+    <div class="rg tg" style="left:20px;top:64px;width:228px;height:680px"><span class="rgt"><em>01</em>SURFACES</span></div>
+    <div class="rg tb" style="left:278px;top:64px;width:320px;height:680px"><span class="rgt"><em>02</em>WORKFLOW PLANNER</span></div>
+    <div class="rg tg" style="left:628px;top:64px;width:336px;height:680px"><span class="rgt"><em>03</em>SUBAGENTS</span></div>
+    <div class="rg tn" style="left:994px;top:64px;width:286px;height:680px"><span class="rgt"><em>04</em>PLATFORM SERVICES</span></div>
+    <div class="rg tn" style="left:1310px;top:64px;width:270px;height:680px"><span class="rgt"><em>05</em>SKILLS &amp; SHARED KNOWLEDGE</span></div>
+    <div class="rg tg" style="left:20px;top:790px;width:1560px;height:300px"><span class="rgt" style="left:auto;right:14px"><em>06</em>VALIDATION LOOP — planner-driven, after every build or edit, before the user summary</span></div>
+
+    <!-- ═══ edges ═══ -->
+    <svg class="edges" width="1600" height="1110" viewBox="0 0 1600 1110">
+      <!-- surfaces → planner -->
+      <path class="eL anim" d="M230,166 C262,166 262,142 292,142"/><polygon class="aL" points="292,138 292,146 300,142"/>
+      <path class="eL" d="M230,306 C266,306 258,158 292,158"/><polygon class="aL" points="292,154 292,162 300,158"/>
+      <!-- pipeline bypass: app create → builder, over the top corridor -->
+      <path class="eA dash" d="M230,438 C252,438 263,438 263,412 L263,46 C263,38 269,34 279,34 L782,34 C792,34 796,38 796,46 L796,92"/><polygon class="aA" points="792,92 800,92 796,100"/>
+      <!-- planner spine -->
+      <path class="eL" d="M438,184 L438,192"/><polygon class="aL" points="434,190 442,190 438,198"/>
+      <path class="eL" d="M438,266 L438,274"/><polygon class="aL" points="434,272 442,272 438,280"/>
+      <path class="eL" d="M438,404 L438,412"/><polygon class="aL" points="434,410 442,410 438,416"/>
+      <path class="eL" d="M438,536 L438,544"/><polygon class="aL" points="434,542 442,542 438,548"/>
+      <!-- dispatch fan → subagents -->
+      <path class="eG anim" d="M584,580 C620,580 610,160 642,160"/><polygon class="aG" points="642,156 642,164 650,160"/>
+      <path class="eG anim" d="M584,600 C620,600 610,301 642,301"/><polygon class="aG" points="642,297 642,305 650,301"/>
+      <path class="eG anim" d="M584,620 C620,620 610,442 642,442"/><polygon class="aG" points="642,438 642,446 650,442"/>
+      <!-- subagents → services -->
+      <path class="eL" d="M950,160 C980,160 980,128 1008,128"/><polygon class="aL" points="1008,124 1008,132 1016,128"/>
+      <path class="eL" d="M950,301 C980,301 980,164 1008,164"/><polygon class="aL" points="1008,160 1008,168 1016,164"/>
+      <path class="eL" d="M950,442 C980,442 980,272 1008,272"/><polygon class="aL" points="1008,268 1008,276 1016,272"/>
+      <!-- planner → services via the bottom corridor -->
+      <path class="eL dash" d="M584,650 C604,650 610,656 610,668 L610,756 C610,764 616,766 624,766 L1126,766 C1134,766 1137,760 1137,752 L1137,752"/><polygon class="aL" points="1133,752 1141,752 1137,744"/>
+      <!-- skills: planner + subagents → skills rail via the top corridor -->
+      <path class="eB dash" d="M438,100 L438,60 C438,54 444,52 450,52 L1437,52 C1443,52 1445,56 1445,64 L1445,92"/><polygon class="aB" points="1441,92 1449,92 1445,100"/>
+      <path class="eB dash" d="M840,100 L840,52"/>
+      <!-- validation loop: planner → manifest chip -->
+      <path class="eG anim" d="M438,692 L438,730 C438,750 156,750 156,830"/><polygon class="aG" points="152,830 160,830 156,838"/>
+      <!-- chips left → right -->
+      <path class="eG anim" d="M272,900 L296,900"/><polygon class="aG" points="296,896 296,904 304,900"/>
+      <path class="eG anim" d="M528,900 L552,900"/><polygon class="aG" points="552,896 552,904 560,900"/>
+      <path class="eG anim" d="M784,900 L808,900"/><polygon class="aG" points="808,896 808,904 816,900"/>
+      <path class="eG anim" d="M1040,900 L1064,900"/><polygon class="aG" points="1064,896 1064,904 1072,900"/>
+      <path class="eG anim" d="M1296,900 L1320,900"/><polygon class="aG" points="1320,896 1320,904 1328,900"/>
+      <!-- red run branch: harden → diagnose -->
+      <path class="eA dash" d="M700,968 L700,1008 L928,1008 L928,976"/><polygon class="aA" points="924,976 932,976 928,968"/>
+      <!-- loop back: fix → rerun -->
+      <path class="eG dash anim" d="M1184,968 L1184,1040 L650,1040 L650,976"/><polygon class="aG" points="646,976 654,976 650,968"/>
+    </svg>
+
+    <!-- ═══ 01 · surfaces ═══ -->
+    <div class="node hero" style="left:34px;top:100px;width:196px;min-height:132px">
+      <div class="nh"><span class="nico"><svg><use href="#i-chat"/></svg></span>Workflow screen copilot</div>
+      <div class="ns">user on the workflow canvas · deployOnCopilot<br><b>userMessage</b> · workflowId · workflowName · attachments · selectedNodeIds / EdgeIds</div>
+    </div>
+    <div class="node read" style="left:34px;top:248px;width:196px;min-height:116px">
+      <div class="nh"><span class="nico b"><svg><use href="#i-spark"/></svg></span>AI FDE drawer</div>
+      <div class="ns">workflow-helper skill → <b>Invoke Workflow Planner</b> for any build · edit · test · debug ask, from any page (see the dispatch-path map)</div>
+    </div>
+    <div class="node act" style="left:34px;top:380px;width:196px;min-height:116px">
+      <div class="nh"><span class="nico a"><svg><use href="#i-app"/></svg></span>App CREATE pipeline</div>
+      <div class="ns">solution-planner → <b>Create Interface</b> → one Workflow Builder per automation brief · pipeline mode · no planner, no validation loop</div>
+    </div>
+    <div class="node" style="left:34px;top:512px;width:196px;min-height:104px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-shield"/></svg></span>Consent gates</div>
+      <div class="ns">plan confirmed before dispatch · a real run that writes or sends is named first · deploy only on an explicit yes</div>
+    </div>
+
+    <!-- ═══ 02 · workflow planner ═══ -->
+    <div class="node plan" style="left:292px;top:100px;width:292px;min-height:84px">
+      <div class="nh"><span class="nico b"><svg><use href="#i-spark"/></svg></span>Workflow Planner<span class="pill disp">ORCHESTRATOR</span></div>
+      <div class="ns">sonnet · e_69e8f53f… · the only agent that talks to the user · subagents never see this conversation</div>
+    </div>
+    <div class="node" style="left:292px;top:198px;width:292px;min-height:68px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-route"/></svg></span>Route the turn</div>
+      <div class="ns">from workflowId + the ask → <b>CREATE · EDIT · DEBUG · VALIDATE · TEST ASSET · ASSET</b></div>
+    </div>
+    <div class="node read" style="left:292px;top:280px;width:292px;min-height:124px">
+      <div class="nh"><span class="nico b"><svg><use href="#i-grid"/></svg></span>Understand &amp; resolve</div>
+      <div class="ns"><b>requestClarification</b> at every decision point · Fetch Workflow Assets (connections) · Fetch Assets (objects → columns, automations → deployed?) · list_tables / describe-table · <b>ls packages/workflow-nodes/</b> to name each operation</div>
+    </div>
+    <div class="node read" style="left:292px;top:420px;width:292px;min-height:116px">
+      <div class="nh"><span class="nico b"><svg><use href="#i-book"/></svg></span>Draft &amp; validate</div>
+      <div class="ns">skills while drafting: code-node-selection · storage-vs-analytics · caching windows → then <b>Fetch Platform Knowledge</b>: every assumption queried before any plan reaches the user</div>
+    </div>
+    <div class="node act" style="left:292px;top:552px;width:292px;min-height:140px">
+      <div class="nh"><span class="nico a"><svg><use href="#i-send"/></svg></span>Propose → dispatch</div>
+      <div class="ns">plain-language plan · [Yes, build it] [Change something] → the <b>handoff brief</b>: Workflow · Trigger · Resolved ids · Decisions · Constraints · Platform notes · Flow (node plan) · Payloads. The brief is the subagent's whole world.</div>
+    </div>
+
+    <!-- ═══ 03 · subagents ═══ -->
+    <div class="node hero" style="left:642px;top:100px;width:308px;min-height:120px">
+      <div class="nh"><span class="nico"><svg><use href="#i-hammer"/></svg></span>Workflow Builder<span class="pill act">CREATE</span></div>
+      <div class="ns">sonnet · e_69e8f417… · pipeline brief or planner brief → reads <b>packages/workflow-nodes/&lt;app&gt;/&lt;op&gt;.json</b> · loads topic skills · emits full JSON → <b>Upsert Automation</b> (workflowId → in place) → manifest + gaps: + testContext:</div>
+    </div>
+    <div class="node hero" style="left:642px;top:234px;width:308px;min-height:134px">
+      <div class="nh"><span class="nico"><svg><use href="#i-pencil"/></svg></span>Workflow Editor<span class="pill act">EDIT</span></div>
+      <div class="ns">sonnet · e_69e8f44e… · edit brief (Edit · Preserve · Selection · Nodes) → <b>get_workflow_summary</b> → get_node_details → get_node_references → ONE <b>update_workflow</b> (patch · insert · remove · replaceEdges) · edges regenerated, orphans pruned → summary + gaps: + testContext:</div>
+    </div>
+    <div class="node act" style="left:642px;top:382px;width:308px;min-height:120px">
+      <div class="nh"><span class="nico a"><svg><use href="#i-flask"/></svg></span>Workflow Tester<span class="pill read">TEST</span></div>
+      <div class="ns">sonnet · e_6a82ba2e… · workflowId + testContext + one operation + origin (user | validation) → <b>Get Automation Metadata</b> → Manage Test Case / Suites &amp; Plans → <b>Start Run</b> → Inspect Runs → ids + runs + evidence</div>
+    </div>
+    <div class="node" style="left:642px;top:516px;width:308px;min-height:120px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-lock"/></svg></span>Specialist contract</div>
+      <div class="ns">never talk to the user · never ask · an id the brief left out becomes a <b>&lt;PLACEHOLDER&gt;</b> and a line under gaps: · the planner restates gaps as the user's Next Steps · the tester never edits a workflow</div>
+    </div>
+
+    <!-- ═══ 04 · platform services ═══ -->
+    <div class="stack" style="left:1008px;top:100px;width:258px">
+      <div class="srow"><svg><use href="#i-branch"/></svg>Workflow definitions<small>Upsert Automation<br>update_workflow</small></div>
+      <div class="srow"><svg><use href="#i-doc"/></svg>Summary &amp; node reads<small>summary · details · refs</small></div>
+      <div class="srow"><svg><use href="#i-grid"/></svg>Asset lookup<small>planner · connections<br>objects · automations</small></div>
+      <div class="srow"><svg><use href="#i-book"/></svg>Platform knowledge<small>planner · product docs RAG</small></div>
+      <div class="srow"><svg><use href="#i-flask"/></svg>Test runtime<small>/mcp/workflow-test<br>cases · suites · plans · runs</small></div>
+      <div class="srow"><svg><use href="#i-bolt"/></svg>Deploy Automation<small>planner · callables · on yes</small></div>
+      <div class="srow"><svg><use href="#i-key"/></svg>API Manager · Storage objects<small>planner · ASSET flow</small></div>
+      <div class="srow aa"><svg><use href="#i-app"/></svg>Connected apps<small>real effects only on<br>runType: workflow</small></div>
+    </div>
+    <div class="node" style="left:1008px;top:436px;width:258px;min-height:108px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-sync"/></svg></span>Sync tooling</div>
+      <div class="ns"><b>tools/workflow/workflow.sh</b> status · pull · push --publish → UAT · index.json maps slug → entity id → agents[] · sync-history.jsonl logs every publish</div>
+    </div>
+    <div class="node" style="left:1008px;top:560px;width:258px;min-height:104px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-check"/></svg></span>Truth after a mutation</div>
+      <div class="ns">success envelope ≠ task success · read the body for rootCauseMessage / errorCode · confirm with get_workflow_summary or a passing run</div>
+    </div>
+
+    <!-- ═══ 05 · skills & shared knowledge ═══ -->
+    <div class="railc" style="left:1324px;top:100px;width:242px;min-height:172px">
+      <div class="rh"><span class="nico b" style="background:var(--surface)"><svg><use href="#i-book"/></svg></span>Skills · e_skill_ai_agent</div>
+      <div class="rl">prompts/skills/&lt;slug&gt;.md · the frontmatter <b>description is the trigger</b> · attached per agent via index.json · loaded on demand, never preloaded · <b>planner 8 · builder 11 · editor 11 · tester 0</b> · siblings open with a "wrong skill? switch" table</div>
+    </div>
+    <div class="node read" style="left:1324px;top:288px;width:242px;min-height:104px">
+      <div class="nh"><span class="nico b"><svg><use href="#i-doc"/></svg></span>Connector catalog</div>
+      <div class="ns"><b>packages/workflow-nodes/&lt;appName&gt;/&lt;resourceName&gt;.json</b> · one file per operation · the only files an agent may open at runtime (Shell: ls · cat · grep)</div>
+    </div>
+    <div class="node" style="left:1324px;top:408px;width:242px;min-height:116px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-users"/></svg></span>Shared prompt sections</div>
+      <div class="ns">builder ↔ editor carry <b>structural_rules · edge_rules · pill_mapping · filter_grammar · schema_read_protocol</b> verbatim · the handoff brief lives in the planner only</div>
+    </div>
+    <div class="node" style="left:1324px;top:540px;width:242px;min-height:100px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-lock"/></svg></span>Runtime isolation</div>
+      <div class="ns">an agent sees its own system prompt + packages/ · no cross-agent prompt references · the brief is the only channel between them</div>
+    </div>
+
+    <!-- ═══ 06 · validation loop chips ═══ -->
+    <div class="node" style="left:40px;top:838px;width:232px;min-height:130px">
+      <div class="nh"><span class="nico n"><svg><use href="#i-doc"/></svg></span>Manifest returned</div>
+      <div class="ns">builder or editor hands back <b>gaps:</b> (placeholders, assumptions) + <b>testContext:</b> (exact nodes + edges) · agent-to-agent only, never shown to the user</div>
+    </div>
+    <div class="node read" style="left:304px;top:838px;width:224px;min-height:130px">
+      <div class="nh"><span class="nico b"><svg><use href="#i-flask"/></svg></span>1 · Smoke case</div>
+      <div class="ns">tester creates ONE happy-path case · <b>mocks only, no assertions</b> · every connector / write / call mocked · runs it via <b>test_case_inline</b> (sync)</div>
+    </div>
+    <div class="node read" style="left:560px;top:838px;width:224px;min-height:130px">
+      <div class="nh"><span class="nico b"><svg><use href="#i-check"/></svg></span>2 · Harden</div>
+      <div class="ns">same path, now <b>with assertions</b> on the outputs that matter + the most material branch · DATA · VERIFY_CALL · STEP_FAILURE · one case per dispatch</div>
+    </div>
+    <div class="node act" style="left:816px;top:838px;width:224px;min-height:130px">
+      <div class="nh"><span class="nico a"><svg><use href="#i-stetho"/></svg></span>3 · Red run → diagnose</div>
+      <div class="ns">planner loads <b>workflow-debugging</b> · Inspect Runs when evidence is thin · cause tables: pill paths · id mix-ups · input shape · silent failures</div>
+    </div>
+    <div class="node act" style="left:1072px;top:838px;width:224px;min-height:130px">
+      <div class="nh"><span class="nico a"><svg><use href="#i-pencil"/></svg></span>4 · Fix the right thing</div>
+      <div class="ns">bad mock / assertion / membership → <b>tester</b> updates that asset id · wrong output or flow → <b>editor</b> repair, new testContext · external blocker → stop</div>
+    </div>
+    <div class="node hero" style="left:1328px;top:838px;width:232px;min-height:130px">
+      <div class="nh"><span class="nico"><svg><use href="#i-user"/></svg></span>Green → user summary</div>
+      <div class="ns"><b>Summary · Flow · Next Steps</b> (gaps restated) · <b>Tests</b> · cases persist for reuse · then offer [Test it now] — a real run, side effects named → DEBUG step 2</div>
+    </div>
+
+    <!-- ═══ edge labels ═══ -->
+    <div class="elbl a" style="left:300px;top:22px">pipeline mode — Create Interface spawns one builder per automation · no planner</div>
+    <div class="elbl b" style="left:1120px;top:40px">skills load on demand, by trigger</div>
+    <div class="elbl" style="left:962px;top:76px">MCP tools</div>
+    <div class="elbl" style="left:640px;top:755px">planner → asset lookup · knowledge · deploy · ASSET flow (direct, no dispatch)</div>
+    <div class="elbl g" style="left:180px;top:739px">testContext → validation loop</div>
+    <div class="elbl a" style="left:740px;top:997px">a run is red</div>
+    <div class="elbl g" style="left:760px;top:1029px">rerun the same case ids · loop until green or an external blocker</div>
+    <div class="elbl" style="left:40px;top:1058px">a pass = terminal completion + every assertion green + counts agree · missing evidence is never a pass · runType: workflow is unmocked and needs consent</div>
+
+  </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw g"></i>agent · subagent</span>
+    <span><i class="sw b"></i>planner step · read · skill</span>
+    <span><i class="sw a"></i>write · dispatch · side effects</span>
+    <span><i class="sw d"></i>cross-cutting rail</span>
+    <span><i class="lw"></i>request path</span>
+    <span><i class="lw gg"></i>dispatch / loop (animated)</span>
+    <span><i class="lw bb"></i>skill load</span>
+  </div>
+
+  <div class="foot">Workflow Planner e_69e8f53f7b11356004965425 · Workflow Builder e_69e8f417a2d13979bb58c0e6 · Workflow Editor e_69e8f44ea2d13979bb58c0fc · Workflow Tester e_6a82ba2eed731e6d0657e2a5 · source .claude/agents/workflow/ + prompts/skills/ · synced by tools/workflow · agent-code-migration.uat · Sep 2026</div>
+
+</div>
+</html>
+</article>
+</main>
+</body>
+</html>
