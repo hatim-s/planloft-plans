@@ -207,6 +207,15 @@
       "kind": "plan",
       "createdAt": "2026-08-31T22:24:35.617Z",
       "expiresAt": "2026-09-30T22:24:35.617Z"
+    },
+    {
+      "id": "gDtetrGk4Z",
+      "project": "github.com/unify-apps/uacode",
+      "slug": "uacode-onprem-security-audit",
+      "title": "UACode on-prem security audit and hardening plan",
+      "kind": "plan",
+      "createdAt": "2026-09-04T14:04:34.374Z",
+      "expiresAt": "2026-10-04T14:04:34.374Z"
     }
   ]
 }

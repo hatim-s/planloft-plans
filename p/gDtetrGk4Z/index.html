@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UACode on-prem security audit and hardening plan</title>
+<style>/* planloft theme: editorial — magazine, serif, generous */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #201c1a;
+  --muted: #6b625c;
+  --paper: #fdfcfa;
+  --rule: #e7e1d9;
+  --accent: #a8321f;
+  --code-bg: #f0ebe4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f1ece7;
+    --muted: #bcb1a8;
+    --paper: #171412;
+    --rule: #403933;
+    --accent: #ff8f78;
+    --code-bg: #29231f;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #201c1a;
+  --muted: #6b625c;
+  --paper: #fdfcfa;
+  --rule: #e7e1d9;
+  --accent: #a8321f;
+  --code-bg: #f0ebe4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f1ece7;
+  --muted: #bcb1a8;
+  --paper: #171412;
+  --rule: #403933;
+  --accent: #ff8f78;
+  --code-bg: #29231f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 19px/1.72 Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+}
+.planloft-plan {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 7rem;
+}
+h1 {
+  font-size: 2.6rem;
+  line-height: 1.08;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.5rem;
+  margin: 2.75rem 0 0.6rem;
+  font-weight: 700;
+}
+/* Drop-cap on the opening paragraph. */
+.planloft-plan > article > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.4rem;
+  line-height: 0.8;
+  padding: 0.1rem 0.6rem 0 0;
+  font-weight: 700;
+}
+p { margin: 0 0 1.1rem; }
+a { color: var(--accent); text-underline-offset: 3px; }
+blockquote {
+  margin: 1.8rem 0;
+  padding-left: 1.4rem;
+  border-left: 3px solid var(--accent);
+  font-style: italic;
+  font-size: 1.15em;
+  color: var(--muted);
+}
+code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.82em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem 1.15rem; overflow: auto; border-radius: 6px; font-size: 0.8em; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>UACode on-prem security audit and hardening plan</h1>
+<h2>TL;DR</h2>
+<p>Six parallel audits across RBAC, APIs, workflow execution, secrets, infrastructure, and sessions found 32 ship-blocking issues in the UnifyApps tree at <code>main</code>. Almost all share one root cause. Security controls default to off. This plan flips every control to fail closed, in code rather than config, in four phases before any on-prem ship.</p>
+<blockquote>
+<p>The platform does not need more checks. It needs its existing checks turned on by default, so a missing properties entry cannot leave RCE or cross-tenant read open.</p>
+</blockquote>
+<h2>Situation</h2>
+<p>You asked for an airtight build for critical on-prem environments. Air gapped, flat network, hostile insider, no internet to save you. I ran six subagents against code as source of truth, not docs. Scope covered <code>auth/</code>, <code>api/</code>, <code>api-platform/</code>, <code>workflow/</code>, <code>workflow-runtime/</code>, <code>infra/*</code>, <code>webhooks/</code>, <code>scheduler/</code>, <code>connectors/</code>, <code>docker/</code>, <code>k8s/</code>, <code>internal/</code>, plus <code>.github/</code> and build files.</p>
+<p>Note on scope. There is no <code>www/</code> directory in <code>main</code>. I treated www as the full web and API surface. That means the gateway on 30081, platform API on 30082, internal API on 30085, and all inbound webhooks.</p>
+<p>The pattern repeats. Groovy sandbox off unless two tenants set it. SSRF strict mode off unless one tenant sets it. DPoP off. Internal auth off. Redis auth off. Webhook filter off for most paths. Each one is safe in isolation if operators set the flag. None of them are safe together on an on-prem install where operators miss one file.</p>
+<h2>What actually blocks the ship</h2>
+<p>Workflow code execution is the worst of it. Any user who can create a workflow can likely get RCE today. Groovy runs in process with no sandbox in default envs. JavaScript falls back to <code>allowAllAccess(true)</code>. Python runs unsandboxed with a 10 minute timeout and author controlled pip installs. The <code>third_party_library</code> node lets an author name any class and runs <code>setAccessible(true)</code> on it. That alone justifies holding the release.</p>
+<p>The second blocker is tenant escape. Tenant isolation is database selection driven by <code>UserContext.customerId</code>. Redis sessions live in a global namespace by default. The <code>x-ua-assume-customer-id</code> header can pivot tenants on unauthenticated filters. Session lookup ignores tenant. One header plus one stolen bearer crosses tenants.</p>
+<p>The third blocker is unauthenticated reach. Internal API on NodePort 30085 is unauthenticated by default and includes decrypt oracles and customer creation. Inbound webhooks trigger workflows with no secret on most routes. A <code>dt-ms</code> controller permits all and ignores <code>/internal/execute/code</code>.</p>
+<p>The rest matters but does not RCE on day one. Weak hashes, ECB, PKCS1 v1.5, CAST5, presigned URL TTLs, XXE, ReDoS, mass assignment, pagination bombs, missing throttles. Fix those in phase two and three, after the RCE and escape paths close.</p>
+<h2>Phase 0. Stop RCE and escape in one day</h2>
+<p>Do this first. Do not ship without it. Each item is a one to twenty line change with outsized effect.</p>
+<h3>Workflow sandbox must fail closed</h3>
+<p>Groovy nodes run in process with no <code>SecureASTCustomizer</code> when config is missing. See <code>infra/scripts/src/main/java/com/unifyapps/scripts/groovy/SandboxGroovyProvider.java:95-99</code> and <code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/nodes/action/builder/CodeByUnifyAppsActionBuilder.java:121-128</code>. Only <code>uat-docebo</code> and <code>prod-es</code> set <code>groovy.sandbox.config</code> in <code>k8s/charts/global-properties/releases/</code>. Every other env runs raw Groovy. An author can call <code>Runtime.exec</code>, read IMDS, read env secrets, or pin a thread with <code>while(true)</code> because <code>CodeExecuteInlineAction.java:146-180</code> has no timeout and loads author JARs.</p>
+<p>Impact is RCE on workflow-runtime as the service account, then lateral movement to Redis, Mongo, Kafka, and the K8s API.</p>
+<p>Fix in code, not config. Bake a default deny <code>SecureASTCustomizer</code> into <code>SandboxGroovyProvider</code> so a null config returns a locked loader instead of a plain <code>GroovyClassLoader</code>. Flip <code>workflow.action.code.inline.force.remote.for.non.standard</code> to true so customer code runs in scripts-engine, never the workflow JVM. Wrap inline runs in <code>ExecutorService.submit(...).get(nodeTimeout)</code> with <code>Future.cancel(true)</code>. Restrict <code>jarLibs</code> to admin uploaded allow listed JARs. Turn <code>code.syntax.validation</code> on by default.</p>
+<p>Same story for JavaScript. See <code>infra/scripts/src/main/java/com/unifyapps/scripts/javascript/SandboxJavaScriptProvider.java:54-75</code>. The no config path calls <code>allowAllAccess(true)</code>. The engine at <code>scripts/engine-core/src/main/java/com/unifyapps/scripts/engine/javascript/JavascriptExecutionServiceImpl.java:44-61</code> sets no <code>ResourceLimits</code> and no timeout. Fix by inverting the default to <code>HostAccess.NONE</code>, <code>IOAccess.NONE</code>, <code>allowCreateProcess(false)</code>, <code>PolyglotAccess.NONE</code>, no npm, plus statement and heap limits and a wall clock timeout. Loosening requires explicit config.</p>
+<p>Python is off by default. See <code>ai/python/python/code_snippet_executor.py:62</code> where <code>python.code.execution.sandbox.enabled</code> defaults to false, and <code>BubbleWrapCodeExecutionAction.java:68-77</code> where <code>language</code> accepts <code>bash</code>. Prompt injected agents reach the same shell through <code>SandboxCodeExecutorImpl.java:36-56</code>. Fix by defaulting sandbox to true, denying egress except through an allow listed proxy, forbidding custom <code>package_index_url</code> for non standard workflows, stripping SA tokens and secrets from executor env, validating input keys as Python identifiers, and cutting the 600 second default at <code>code_snippet_executor.py:54-59</code> down to 60 to 120 seconds.</p>
+<p>The <code>third_party_library</code> node needs an allow list now. See <code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/nodes/action/code/ExecuteThirdPartyLibraryAction.java:33-43</code> and <code>scripts/engine/src/main/java/com/unifyapps/scripts/engine/third_party/ThirdPartyLibraryExecutionService.java:56-80</code>. It loads any class name, including <code>java.lang.Runtime</code> and <code>javax.script.ScriptEngineManager</code>, and calls <code>setAccessible(true)</code>. Fix with a hard pair list of allowed class plus method, reject <code>java.*</code>, <code>javax.script*</code>, <code>groovy.*</code>, <code>reflect*</code>, <code>net.*</code>, require <code>RAW_QUERY_ACTION</code> or admin, and drop <code>setAccessible(true)</code>.</p>
+<h3>Close the decrypt oracle and plaintext fallback</h3>
+<p>The internal decrypt endpoint has no <code>@CriticalIntAPI</code> annotation. See <code>internal/src/main/java/com/unifyapps/internal/setup/CryptoConfigIntRestAPI.java:89-101</code> and <code>internal/src/main/java/com/unifyapps/internal/filter/InternalAuthFilter.java:29</code> where <code>internal.auth.enabled</code> defaults to false. Any SSRF or flat network access gives a full KMS decrypt oracle for any customer ciphertext over GET with <code>?value=</code> in logs.</p>
+<p>Impact is total. All connector OAuth tokens, <code>@Secure</code> Mongo fields, S3 blobs, and PII vault contents decrypt.</p>
+<p>Fix by adding <code>@CriticalIntAPI</code> to both <code>CryptoConfigIntRestAPI</code> and <code>PropertiesIntRestAPI</code>, flipping <code>internal.auth.enabled</code> to true, switching to POST with JSON body, and auditing every call. In the same change delete the plaintext fallback. See <code>infra/crypto/src/main/java/com/unifyapps/infra/crypto/EncryptionProviderFactoryImpl.java:209-234</code> and <code>AbstractCloudBasedEncryptionProvider.java:78-81</code> where a missing KMS config returns <code>NoOpEncryptionProvider</code> or the raw value when <code>crypto.encryption.fallback.to.plaintext</code> is true. Make the factory throw, fail the deploy, and add a metric that alerts if <code>type=&quot;NO_OP&quot;</code> ever appears in prod.</p>
+<h3>Lock internal API, dt-ms, and cluster RBAC</h3>
+<p>Internal API on 30085 is unauthenticated by default, documented as such in <code>docs/local-deployment-testing.md:417</code>, reachable from <code>scripts/run-everything.sh:14</code>. That exposes <code>create-customer</code>, config sync, scheduler, and domain mapping. Fix with <code>internal.auth.enabled: true</code> plus <code>internal.http.authentication.enabled: true</code> in the on-prem profile, disable ingress for internal, and enable a default deny NetworkPolicy that only allows ingress-nginx.</p>
+<p>Delete the open door in <code>customers/dt/dt-ms/src/main/java/com/unifyapps/standalone/dt/SecurityConfig.java:24-33</code> where <code>anyRequest().permitAll()</code> plus ignored <code>/internal/execute</code> and <code>/internal/execute/code</code> gives code execution. Require admin auth and deny all except health.</p>
+<p>Replace the Helm hook <code>cluster-admin</code> binding at <code>k8s/charts/hybrid-mono/templates/helm-hook-rbac.yaml:14-26</code> with a namespaced Role limited to pods, configmaps, and jobs in the release namespace. Scope Sensu at <code>k8s/charts/sensu/templates/clusterrole.yaml:6-10</code> the same way, drop <code>pods/exec:create</code>, and pull the hardcoded <code>P@ssw0rd!</code> at <code>sensu-entrypoint.yaml:42</code> from an ExternalSecret.</p>
+<h3>Require webhook secrets</h3>
+<p>Most inbound webhooks run with no verification. See <code>webhooks/src/main/java/com/unifyapps/webhooks/InboundAPI.java:91-101</code> where <code>trigger-workflow/{customerId}/{workflowId}</code> builds a UserContext from URL parts and calls <code>startAsync</code>, while <code>WebhookAuthFilter.java:79</code> only covers <code>connections/data/</code>. GitHub, Slack, HubSpot, Meta, and Zoom handlers in <code>webhooks/src/main/java/com/unifyapps/webhooks/apps/</code> skip HMAC entirely except Enigma. Enigma signs without the body at <code>EnigmaWebhookAPI.java:153</code> and has no replay store.</p>
+<p>Impact is unauthenticated workflow execution as system in the victim tenant, plus spoofed Slack block actions that trigger arbitrary workflows. Replay within 300 seconds duplicates side effects.</p>
+<p>Fix by requiring a per workflow HMAC secret on every <code>trigger-workflow</code> route, verifying provider signatures before <code>startAsync</code> with constant time compare and a 300 second timestamp window, changing Enigma to sign <code>timestamp + &quot;.&quot; + rawBody</code>, storing <code>sha256(signature)</code> in Redis with <code>SETNX EX 600</code>, setting <code>webhook.auth.filter.drop-unknown-urls=true</code> by default, extending the filter to all trigger paths, and returning uniform 404s with per tenant and per IP rate limits.</p>
+<h3>Fix session forgery and tenant pivot</h3>
+<p>Any caller with VIEW on one low code interface can mint a session for any user. See <code>api/src/main/java/com/unifyapps/api/rest/SessionRestAPI.java:118-143</code> where <code>request.getUserId()</code> is never checked against caller or tenant. Fix by requiring an impersonate grant plus a same customer and same app check, or delete the endpoint and force the <code>ImpersonationService</code> grant path at <code>tenant/.../governance/ImpersonationServiceImpl.java:80-95</code>.</p>
+<p>Drop <code>ASSUME_CUSTOMER_ID</code> from <code>APIPlatformNoAuthFilter.java:90-95</code> entirely and only honor it for admin authenticators with <code>allowedAdminScopes</code> in <code>APIPlatformServerAuthFilter.java:250-268</code>. Turn on <code>redis.acl.tenant.enabled</code>, add a <code>customerId</code> predicate to every session Mongo query in <code>RedisSessionStorageService.java:76-85</code>, and reject <code>session.customerId != domain.customerId</code> in all auth filters.</p>
+<h2>Phase 1. Harden auth, SSRF, and storage in week one</h2>
+<h3>Rotate refresh tokens and turn on DPoP</h3>
+<p>Refresh reuse is rolling and endless. See <code>auth/client/src/main/java/com/unifyapps/auth/client/service/RedisSessionStorageService.java:183-205</code> where the same <code>refreshTokenId</code> is re saved with a fresh 30 day TTL, and <code>AuthRestAPI.java:984-1002</code>. DPoP is opt in and fail open at <code>api/src/main/java/com/unifyapps/api/filter/AuthFilter.java:248-267</code> and <code>DPoPProofVerifier.java:192-202</code>, with replay, <code>htm</code>, and <code>htu</code> checks off and Redis errors returning true.</p>
+<p>Fix by rotating to a new refresh ID on every use with a short grace window like <code>OAuthServiceImpl.java:140-149</code> already does, capping absolute lifetime at 7 to 30 days, revoking families on reuse, password reset, and logout all. Enable <code>dpop.proof.enabled</code>, replay, <code>htm</code>, and <code>htu</code>, fail closed on store error, and replace the SSR exemption keyed on client supplied <code>x-ua-trace-id: s_*</code> with a server minted proof.</p>
+<h3>Enforce JWT audience and issuer</h3>
+<p>External JWT accepts <code>claims=null</code>. See <code>auth/lib/src/main/java/com/unifyapps/auth/lib/oauth/service/JWTAuthServiceImpl.java:44-62</code> and <code>infra/crypto/src/main/java/com/unifyapps/infra/crypto/jwt/JWTService.java:77-107</code>. <code>JWTIdentityProviderConfig.java:13-25</code> has no audience or issuer fields. <code>kid</code> drives a DB lookup on an unverified token at <code>JWTAPIPlatformAuthenticator.java:46-55</code>.</p>
+<p>Impact is cross audience replay. A dev token or a token for another app sharing the same HMAC secret works in prod.</p>
+<p>Fix by adding <code>expectedAudience</code>, <code>expectedIssuer</code>, and clock skew to configs, passing a non null claims map, verifying before any <code>getKeyId</code> or <code>findBy</code> use, rejecting <code>alg=none</code>, pinning expected <code>alg</code>, and replacing the unbounded <code>publicKeyCache</code> with a 5 to 10 minute Caffeine cache with explicit invalidation.</p>
+<h3>Make SSRF strict the default</h3>
+<p>The SSRF guard no ops on null props and allows <code>10/8</code> plus <code>172.16/12</code> unless strict mode is on. See <code>infra/ssrf/src/main/java/com/unifyapps/infra/ssrf/SSRFUtils.java:279-282</code> and <code>FileUtils.java:525-551</code> where the three arg <code>readFile</code> passes null. <code>HttpExecutor.java:106-108</code> checks only <code>baseUrl</code>, never templated path, query, or headers. Only <code>prod-es</code> enables the flags. IMDS literal is blocked but attacker DNS plus redirect is not without rebinding protection.</p>
+<p>Impact is K8s API, Vault, Redis, and Mongo reach from any workflow HTTP node, plus a file import path at <code>UtilityRestAPI.java:306</code> and <code>EntityRestAPI.java:200-203</code> that fetches <code>EXTERNAL_URL</code> server side.</p>
+<p>Fix by requiring non null props, defaulting strict and DNS rebinding protection to true, resolving and validating IPs on every hop and pinning the address, blocking all private ranges, link local, and metadata IPs regardless of flag, validating path traversal, adding a per tenant egress allow list, and cutting the 1800 second timeouts in <code>OkHttpClientImpl.java:82-87</code> to seconds.</p>
+<h3>Fix privilege boundaries in workflows and files</h3>
+<p>Workflows run as system. See <code>ScheduledWorkflowTriggerHandlerImpl.java:159-163</code>, <code>EventBasedWorkflowTriggerHandler.java:344</code>, and <code>WebhookWorkflowTriggerHandler.java:240-244</code>. The sensitive action gate at <code>SensitiveActionAuthorizer.java:55-58</code> defaults to false and system always bypasses. Any author in a tenant can use any connection in that tenant because <code>ConnectionServiceImpl.java:625-646</code> does no permission check. Fix by enforcing a USE permission at build, deploy, and execute time, enabling the sensitive check by default, removing the system bypass for customer authored workflows, and redacting decrypted credentials from logs and traces.</p>
+<p>Files default to open. <code>FileRestAPI.java:131-141</code> skips authz when <code>accessScope</code> is empty, and <code>downloadFile</code> at <code>:160-216</code> decrypts any <code>fileId</code> with no ownership check. Fix with default deny, binding encrypted payloads to customer plus uploader plus expiry, and short lived signed URLs only.</p>
+<h3>Encrypt storage and scan uploads</h3>
+<p>S3 and GCS writes set no server side encryption. See <code>S3CloudStorage.java:586-593</code> and <code>GCPCloudStorage.java:84-96</code>, with client side encryption off by default at <code>EncryptionServiceStrategy.java:31-34</code>. File validation is fail open at <code>FileValidationServiceImpl.java:105-107</code> with antivirus, mime, and metadata scans skipped unless per customer config, and octet stream bypass. Fix with per customer KMS on every put and multipart, GCS <code>kmsKeyName</code>, bucket default SSE enforced by Terraform, secure defaults of antivirus on and deny by default mime, blocking octet stream mismatch, failing closed on scanner error, and quarantining on fail.</p>
+<h3>Stop logging secrets</h3>
+<p>Secrets land in logs and traces. See <code>AbstractCloudBasedEncryptionProvider.java:78</code> logging the raw value, <code>HMACService.java:33</code> logging secret plus data, and <code>S3EndpointLogger.java:23</code> logging presigned URLs. Audit diffs persist decrypted <code>Connection.userInput</code> via <code>GenericAuditLogGenerator.java:29-48</code>. Fix with a central <code>AuditRedactor</code> on <code>@Secure</code> paths, logging only hash plus key id plus length plus prefix, and redacting auth and signature params in request log filters.</p>
+<h2>Phase 2. Fix injection, crypto agility, and network in weeks two to three</h2>
+<h3>Input validation and NoSQL hardening</h3>
+<p>Only 46 <code>@Valid</code> uses cover more than 100 endpoints. <code>Query</code>, <code>Page</code>, <code>Sort</code>, <code>Filter</code>, <code>Update</code>, and <code>AggregationQuery</code> carry zero Bean Validation. Gateway <code>api/</code> sets no <code>max-body-size</code> while <code>api-platform</code> allows 100M. Regex compiles user input verbatim in <code>MongoFilterBuilder.java:203-205</code>, <code>OpenSearchQueryBuilder.java:147-150</code>, and <code>RegexFilterBuilder.java:55</code> while <code>SafeRegex.java</code> sits unused. <code>MongoTemplateImpl.java:760-779</code> builds <code>new Document(query)</code> verbatim from a map, reachable from <code>MongoIntRestAPI.java:95-96</code> with no collection allow list and <code>limit=-1</code> for unlimited. Mass assignment binds <code>Entity</code> directly in <code>EntityRestAPI.java:87-577</code> exposing <code>ownerUserId</code>, <code>grants</code>, <code>projectId</code>, <code>version</code>, and friends, and <code>Update.java:12-14</code> honors client <code>skipVersionIncrement</code> and <code>skipSchemaValidation</code>.</p>
+<p>Fix order is strict SSRF first, then RE2J plus length caps for regex, <code>$</code> deny plus collection allow list plus <code>@Max(1000)</code> limits for internal Mongo, webhook tokens, denylists plus <code>cleanContextualFields()</code> for mass assignment, a global <code>Page</code> validator with <code>@Max(200)</code>, and a <code>@Valid</code> sweep with <code>@Size</code> caps, recursive depth caps at 10, and <code>StreamReadConstraints</code> at 100 depth and 5M string length. Set <code>api</code> max body to 30M, return only <code>errorId</code> plus code when <code>api.response.remove.error.details=true</code>, and harden <code>XmlMapper</code> with <code>SUPPORT_DTD=false</code> and <code>DISALLOW_DOCTYPE_DECL</code>.</p>
+<h3>Crypto agility release</h3>
+<p>Hashing is <code>PBKDF2WithHmacSHA1</code> at 65k iterations and 128 bit with a static legacy salt in <code>HashingService.java:24-30</code>, used by <code>UserPasswordStoreImpl.java:92-93</code>. AES ECB is first class in <code>AESUtils.java:72-474</code> and <code>AesECBEncryptionParams.java:12-14</code>. RSA defaults to PKCS1 v1.5 in <code>RSAUtils.java:43-184</code>. PGP uses CAST5 in <code>PGPUtils.java:309-310</code>. <code>HMACService.java:27-52</code> shares a non thread safe <code>Mac</code>, logs secrets, uses <code>equals</code>, and uses platform charset. Private keys hit world readable temp files in <code>CryptoUtils.java:114-127</code>.</p>
+<p>Fix by moving to <code>PBKDF2WithHmacSHA256</code> at 210k iterations and 256 bit with per user <code>SecureRandom</code> salts and rehash on login, deleting ECB support and defaulting to <code>AES/GCM/NoPadding</code> with 12 byte IVs, defaulting RSA to <code>OAEPWithSHA-256AndMGF1Padding</code> and rejecting PKCS1 for new configs, moving PGP to <code>AES_256</code> with integrity packets, fixing HMAC to per call <code>Mac</code>, UTF8, and <code>MessageDigest.isEqual</code>, and writing keys with <code>0600</code> plus immediate delete and zeroed buffers. Include a re encrypt job for existing rows.</p>
+<h3>Network, pods, and air gap</h3>
+<p>gRPC uses plaintext by default at <code>ChannelProviderImpl.java:70-73</code>. Kafka is plaintext with TLS false at <code>k8s/charts/kafka/values.yaml:8-14</code> and <code>scripts/run-everything.sh:388</code>. Redis has auth disabled at <code>k8s/charts/redis-sentinel/values.yaml:11</code> with TLS no and a hardcoded 2028 session at <code>run-everything.sh:170</code>. Mongo local exec has no auth at <code>run-everything.sh:88-267</code>. Hostname verification is disabled globally in <code>docker/Dockerfile.jvm:60</code>. CORS reflects any origin with credentials at <code>CORSUtil.java:59-60</code> and <code>APIPlatformCorsFilter.java:82-83</code>.</p>
+<p>Pod hardening is opt in. <code>unifyapps-base/values.yaml:42-81</code> leaves <code>networkPolicy.enabled=false</code>, empty security contexts, no read only root FS, and <code>automountServiceAccountToken</code> defaulting true. Init containers run as root with privileged sysctl and hostPath volumes at <code>deployment.yaml:142-599</code>. Secrets ship as plain env at <code>:345-355</code> including <code>HF_TOKEN</code>. Most services set no limits and run one replica.</p>
+<p>Fresh on-prem install halts offline. Public pulls from <code>nodejs.org</code>, <code>github.com/BtbN</code>, <code>storage.googleapis.com</code>, <code>raw.githubusercontent.com</code>, and <code>repo1.maven.org</code> plus private ECR plus curl installs in <code>run-everything.sh:373-399</code> are hard requirements. Images are unsigned with <code>latest</code> plus <code>IfNotPresent</code>, no SBOM gate, and Trivy metadata suppressed in <code>data-pipeline/flink-plugin/build.gradle:449-486</code>. CI leaks <code>INTERNAL_ADMIN_TOKEN</code> and AWS keys into <code>$GITHUB_ENV</code> at <code>execute-internal-request.yaml:71</code> and <code>convert-volume.yaml:41-42</code>.</p>
+<p>Fix with an on-prem values profile. Default <code>ssl=true</code> for gRPC with Linkerd strict mTLS, <code>SASL_SSL</code> plus <code>SCRAM-SHA-512</code> for Kafka with 3 replicas, Redis auth plus TLS plus a NetworkPolicy that only allows api, auth, and internal to 6379, Mongo <code>enableAuth:true</code> plus SCRAM plus TLS, delete the hostname verification disable line, enforce an explicit CORS allow list with <code>trust.only.secured.origins=true</code>, set runAsNonRoot 1001 plus drop ALL plus no privilege escalation plus RuntimeDefault seccomp plus read only root FS plus <code>automountServiceAccountToken:false</code> plus default deny NetworkPolicy, replace hostPath with PVCs, move secrets to <code>secretKeyRef</code> plus ExternalSecrets with a Vault or file provider for air gap, enforce <code>requests==limits</code> with 2 plus replicas for stateless, publish an air gap bundle with vendored images, Helm OCI, and pip plus maven mirrors plus digest pins plus cosign verify, and tighten CI to <code>contents:read</code>, <code>persist-credentials:false</code>, and short lived OIDC only.</p>
+<h3>Sessions, scheduler, and DoS</h3>
+<p>Login, OTP, and reset have no IP or global throttle. See <code>PasswordLoginProvider.java:281-307</code>, <code>LoginFailureTrackerImpl.java:33-50</code> keyed only on user id, and <code>ResetPasswordServiceImpl.java:74-77</code>. Per user counters alone enable spraying across users and locking a victim with five bad tries. Pagination is uncapped in <code>Page.java:11-80</code> so <code>limit=2147483647</code> hits Mongo and Vespa directly. Scheduler builds <code>Class.forName(jobClassName)</code> from DB values at <code>TriggerExecutor.java:158-165</code>, accepts raw <code>Query</code> for bulk trigger ops with no forced customer id, and allows infinite immediate retries. GET logout still ships at <code>AuthRestAPI.java:585-605</code> with <code>block.get.logout.call=false</code>. Session material rides in URLs at <code>:281-478</code>.</p>
+<p>Fix with Redis fixed window limits per IP plus per account plus global burst, exponential backoff plus CAPTCHA, generic errors to stop enumeration, <code>Page.MAX_LIMIT=100</code> with 200 for admin async plus cursor pagination beyond that, an allow listed job class registry with validated cron and zone plus forced customer scoping plus <code>preventConcurrentExecution=true</code> plus backoff and DLQ, POST only logout with origin checks, cookie only session transport with PKCE or DPoP proof for exchanges, and concurrent session caps with LRU evict.</p>
+<h2>Concrete steps near the end</h2>
+<p>Work in this order. Each phase gates the next.</p>
+<p>Phase 0, day one. Fail closed Groovy, JS, Python, and C#. Allow list <code>third_party_library</code>. Add <code>@CriticalIntAPI</code> to KMS oracles and flip internal auth on. Delete plaintext fallback. Replace <code>dt-ms</code> permitAll. Fix hook and Sensu RBAC. Require webhook HMAC plus replay cache. Fix session forgery plus assume customer pivot plus Redis tenant mode.</p>
+<p>Phase 1, week one. Rotate refresh tokens. Enable DPoP with replay, htm, and htu. Add JWT aud and iss. Enable SSRF strict plus DNS pinning. Enforce connection USE ACLs and enable the sensitive action gate. Default deny file downloads. Turn on S3 SSE plus ClamAV fail closed. Add audit redaction and stop logging secrets. Fix SSH verifier, HMAC thread safety, and key file perms.</p>
+<p>Phase 2, weeks two to three. Sweep <code>@Valid</code>, RE2J, <code>$</code> deny, mass assignment denylist, page caps, body limits, error redaction, XXE and zip bomb caps, presign TTL clamps, path traversal enforcement, and SAML HTML escaping. Ship the crypto agility release with new hashes plus GCM plus OAEP plus AES256 PGP and a re encrypt job. Land the on-prem network and pod profile with mTLS, SASL, auth, CORS allow list, seccomp, read only FS, resource limits, and ExternalSecrets.</p>
+<p>Phase 3, before sign off. Throttle auth plus webhooks plus AI plus export. Fix scheduler allow lists and tenant scoping. Remove GET logout and URL bearers. Publish the air gap bundle with signed images, SBOM attestations, <code>pullPolicy:Always</code> plus digests, and a verified <code>helm template | kube-linter | checkov | trivy | cosign verify</code> gate. Rotate every secret touched by <code>.gitleaksignore</code>, the Sensu password, the admin platform token capped to 24 hours, and the year 2028 Redis session.</p>
+<p>Verify with replay. Re run each exploit path from the audits. Workflow RCE as low priv author, tenant pivot header, session forgery, webhook trigger with no secret, decrypt oracle from an untrusted pod, regex and pagination DoS, mass assignment of owner and grants. Every path must fail closed with no flag set. Record the run in the release checklist.</p>
+<p>Airtight does not mean bug free. It means a missing config line cannot open RCE or cross tenant read, and every remaining issue needs an authenticated, authorized, rate limited path with an audit trail.</p>
+</article>
+</main>
+</body>
+</html>
