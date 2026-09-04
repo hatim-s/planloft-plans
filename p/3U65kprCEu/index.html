@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WWW critical on-prem security audit</title>
+<style>/* planloft theme: editorial — magazine, serif, generous */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #201c1a;
+  --muted: #6b625c;
+  --paper: #fdfcfa;
+  --rule: #e7e1d9;
+  --accent: #a8321f;
+  --code-bg: #f0ebe4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #f1ece7;
+    --muted: #bcb1a8;
+    --paper: #171412;
+    --rule: #403933;
+    --accent: #ff8f78;
+    --code-bg: #29231f;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #201c1a;
+  --muted: #6b625c;
+  --paper: #fdfcfa;
+  --rule: #e7e1d9;
+  --accent: #a8321f;
+  --code-bg: #f0ebe4;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #f1ece7;
+  --muted: #bcb1a8;
+  --paper: #171412;
+  --rule: #403933;
+  --accent: #ff8f78;
+  --code-bg: #29231f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 19px/1.72 Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+}
+.planloft-plan {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 7rem;
+}
+h1 {
+  font-size: 2.6rem;
+  line-height: 1.08;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.5rem;
+  margin: 2.75rem 0 0.6rem;
+  font-weight: 700;
+}
+/* Drop-cap on the opening paragraph. */
+.planloft-plan > article > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.4rem;
+  line-height: 0.8;
+  padding: 0.1rem 0.6rem 0 0;
+  font-weight: 700;
+}
+p { margin: 0 0 1.1rem; }
+a { color: var(--accent); text-underline-offset: 3px; }
+blockquote {
+  margin: 1.8rem 0;
+  padding-left: 1.4rem;
+  border-left: 3px solid var(--accent);
+  font-style: italic;
+  font-size: 1.15em;
+  color: var(--muted);
+}
+code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.82em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 1rem 1.15rem; overflow: auto; border-radius: 6px; font-size: 0.8em; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h2>TL;DR</h2>
+<p>Do not ship this snapshot to a critical on-prem environment yet. The audit found five immediate release blockers: plaintext registry credentials, stored-expression code execution in Matrix SSR, native session-cookie disclosure, anonymous access to unpublished interface records, and tenant-unsafe Tensor fallbacks.</p>
+<p>The fixes are concrete. Remove tenant-authored JavaScript from shared server processes, make every route and tenant lookup fail closed, isolate authored browser code, and make the build chain reproducible. Then prove the result with a backend authorization matrix and an environment-level penetration test.</p>
+<blockquote>
+<p>Audited commit: <code>76785cee0cf020c207c29151ddc0df1e1d3de4c8</code></p>
+<p>Decision: release blocked until every P0 item is fixed and independently verified.</p>
+</blockquote>
+<h2>What this audit covered</h2>
+<p>The review split into parallel passes for RBAC and tenant isolation, low-code execution, middleware and proxy trust, and software supply chain. It inspected the source snapshot, existing security tests, GitHub Actions, package policy, container builds, and the production dependency graph.</p>
+<p>The audit did not test live customer data, validate whether exposed registry tokens remain active, or attack a deployed environment. The enforcing backend for many generated API clients is not part of <code>www</code>, so object-level authorization still needs black-box verification.</p>
+<p>No source files were changed during the audit.</p>
+<h2>Priority model</h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Meaning</th>
+<th>Release treatment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td>Confirmed critical boundary failure or exposed credential</td>
+<td>Block every critical deployment</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>High-impact exploit path or missing security control</td>
+<td>Fix before production readiness sign-off</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Supply-chain and operational weakness that increases future risk</td>
+<td>Schedule in the same hardening program</td>
+</tr>
+</tbody></table>
+<h2>P0 release blockers</h2>
+<h3>Plaintext package-registry credentials</h3>
+<p>The tracked root <code>.npmrc</code> contains credential-shaped plaintext tokens for npm and Tiptap&#39;s registry at lines 3 and 5. Their values are intentionally omitted from this report.</p>
+<p><strong>Impact.</strong> Anyone with repository or artifact access may obtain package-registry authority. A compromised read token can disclose private packages. A write token can publish malicious packages under a trusted scope.</p>
+<p><strong>Required fix.</strong> Revoke and rotate both credentials. Inspect registry access logs and token scopes. Remove the values from the current tree and coordinated Git history, then purge CI caches, artifacts, and images that may contain them. Keep only environment-variable placeholders in <code>.npmrc</code>. Use read-only credentials for installation and OIDC or trusted publishing for releases.</p>
+<p><strong>Acceptance test.</strong> Full-history secret scanning returns no live credential. A clean build succeeds with credentials injected only at the step that needs them.</p>
+<h3>Stored expressions execute in the shared SSR process</h3>
+<p><code>packages/carbon/src/no-code/utils/indirectEval.ts:83-303</code> compiles stored expression text with <code>new Function</code>. Matrix evaluates stored attributes and conditional themes during SSR through <code>apps/matrix/src/app/layout.tsx:221-269</code>.</p>
+<p>The repository&#39;s Node-environment security suite documents that default evaluation can reach and modify <code>process.env</code>:</p>
+<p><code>packages/carbon/src/no-code/utils/__tests__/recursiveUpdate.security.test.ts:14-108</code></p>
+<p>The current mitigation in <code>getShouldEvaluateResult.ts:23-32</code> depends on an optional interface flag. It stops specific nested re-evaluation paths. It does not turn <code>new Function</code> into a sandbox.</p>
+<p><strong>Impact.</strong> A malicious app author, compromised builder account, unsafe import, or injectable nested value can run code in the Matrix server process. That process may hold environment secrets, filesystem access, internal-network reachability, and other tenants&#39; work.</p>
+<p><strong>Required fix.</strong> Disable authored expression evaluation during SSR globally. Replace JavaScript formulas with an allowlisted AST interpreter that supports own-property reads and explicit pure operations. If arbitrary code remains a product requirement, run it in a disposable process, container, or microVM with no inherited credentials, writable mounts, or tenant-shared lifetime. Enforce CPU, memory, and wall-clock limits. Node&#39;s <code>vm</code> module and shadowed globals are not security boundaries.</p>
+<p><strong>Acceptance test.</strong> Server bundles contain no authored-code path to <code>eval</code>, <code>Function</code>, <code>new Function</code>, dynamic import, process globals, filesystem, network, or constructor-chain escape. Infinite loops terminate outside the renderer process.</p>
+<h3>Native WebView forwards the session cookie to arbitrary URLs</h3>
+<p>Builder-controlled navigation reaches <code>apps/matrix-native/src/modules/webview/pages/WebViewPage/WebViewPage.tsx:103-170</code>. The component attaches the raw stored session cookie to the initial URL and to arbitrary popup targets.</p>
+<p><strong>Impact.</strong> An app action can direct a signed-in user to an attacker-controlled URL and disclose the application session.</p>
+<p><strong>Required fix.</strong> Attach credentials only after an exact normalized comparison of scheme, host, and port with the configured tenant origin. Apply the same rule to redirects and popups. Open external destinations in the OS browser or a fresh cookieless WebView. Disable WebView debugging in release builds.</p>
+<p><strong>Acceptance test.</strong> Initial navigation, redirects, and popups to every non-tenant origin receive no cookie or authorization header.</p>
+<h3>Anonymous preview exposes unpublished interface records</h3>
+<p><code>apps/platform/src/app/(application)/_internal/preview/[interfaceId]/page.tsx:14-58</code> accepts a caller-selected interface ID and passes the complete record to a client component. <code>fetchAuthInterface.ts:22-45</code> sends no user credential, while the Platform proxy excludes <code>_internal</code> routes.</p>
+<p>The record may contain custom code, functions, permission structure, security configuration, and secret-bearing integration settings.</p>
+<p><strong>Required fix.</strong> Validate the session, tenant, and exact-interface <code>VIEW</code> or <code>EDIT</code> permission inside the route. Authenticate screenshot workers with a short-lived capability bound to tenant, interface, action, audience, and expiry. Return a purpose-built preview DTO instead of <code>InterfaceEntity</code>.</p>
+<p><strong>Acceptance test.</strong> Anonymous, wrong-tenant, and wrong-interface requests return indistinguishable <code>401</code> or <code>404</code> responses and never serialize the entity.</p>
+<h3>Tensor&#39;s legacy fallback can cross tenant ownership</h3>
+<p><code>apps/tensor/src/appDir.ts:47-94</code> treats missing, malformed, or unreadable ownership metadata as unowned, then permits a root-level legacy-directory fallback. The code also records that app IDs are not globally unique.</p>
+<p><strong>Impact.</strong> If such a legacy directory exists, one customer can receive another customer&#39;s deployed application files.</p>
+<p><strong>Required fix.</strong> Inventory and migrate every legacy directory before rollout. Remove the unscoped fallback. Fail readiness when ownership is missing, malformed, duplicated, or ambiguous. Resolve application ownership from an authoritative immutable mapping.</p>
+<p><strong>Acceptance test.</strong> Startup or readiness fails while any legacy app lacks a valid customer mapping. Cross-tenant app-ID collisions always return an error.</p>
+<h2>P1 findings by category</h2>
+<h3>RBAC and authentication</h3>
+<p>Tensor treats the presence of <code>_at</code> or <code>_aut</code> as a session and allows private application rendering on auth-service failures in <code>apps/tensor/src/authGate.ts:24-70</code>. Matrix has a similar cookie-name check and continues after rejected user-context calls in <code>apps/matrix/src/proxy-utils/handlePrivatePages.ts:129-273</code>.</p>
+<p>Require a successful, schema-valid user-context response with an expected subject and tenant. Deny every other response. Return <code>503</code> without rendering when the auth dependency fails.</p>
+<p>The test-studio UI can also request run-as sessions for a selected user. The backend implementation sits outside this repository. Before release, prove that the backend checks caller privilege, tenant equality, role ceilings, application binding, short expiry, single use, revocation, and immutable audit logging.</p>
+<h3>Browser execution and stored XSS</h3>
+<p>The following features give authored or remotely supplied content same-origin authority:</p>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Evidence</th>
+<th>Required boundary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Raw iframe <code>srcDoc</code> combines <code>allow-scripts</code> and <code>allow-same-origin</code></td>
+<td><code>packages/defs/src/blocks/Iframe/contentSchema.ts:81-96</code>; <code>packages/blocks/src/Iframe/utils.ts:21-43</code></td>
+<td>Force opaque origin for <code>srcDoc</code>; prevent authored attributes from restoring same-origin access</td>
+</tr>
+<tr>
+<td>External custom components run in unsandboxed <code>srcDoc</code> and receive live store functions</td>
+<td><code>packages/blocks/src/CustomBlock/CustomBlock.tsx:161-262</code></td>
+<td>Cookieless component origin and capability-scoped, schema-validated RPC</td>
+</tr>
+<tr>
+<td>Mobile compute context exposes the raw auth token</td>
+<td><code>packages/carbon/src/no-code/hooks/computeContext/ContextBuilder.ts:520-524</code></td>
+<td>Native request broker with relative paths and scoped authorization</td>
+</tr>
+<tr>
+<td>Legacy Copilot avatar HTML remains executable</td>
+<td><code>packages/blocks/src/CopilotChat/components/AgentAvatarAddon/Avatar.tsx:49-55</code></td>
+<td>Reject HTML at runtime and migrate existing records</td>
+</tr>
+<tr>
+<td>Theme CSS reaches <code>dangerouslySetInnerHTML</code></td>
+<td><code>packages/ui/src/styles/StyleOverride/StyleOverride.tsx:3-15</code></td>
+<td>Use text content, reject HTML end tags, remove unsafe CSP directives</td>
+</tr>
+</tbody></table>
+<p>Custom code should carry a separate permission from ordinary content editing. Publishing it should require review, a signed immutable version, and an audit entry. Critical installations need a global switch that disables all authored JavaScript.</p>
+<h3>Middleware and proxy trust</h3>
+<p><code>packages/network/src/utils/proxyHeaders.ts:10-14</code> explicitly documents that deleting reserved headers from the middleware request object does not remove them from the downstream request. Forged <code>x-ua-*</code> values can influence public or private routing, application selection, pathname, and tenant prefixes.</p>
+<p>Clone incoming headers, remove the complete reserved namespace, author trusted values, and pass the sanitized bag through <code>NextResponse.next({ request: { headers } })</code>. Configure ingress to reject or overwrite every external <code>x-ua-*</code> and forwarded-host header.</p>
+<p>Tensor also builds its platform origin from <code>x-forwarded-host</code> and <code>x-forwarded-proto</code>, then forwards the request cookie to that origin in <code>apps/tensor/src/handler.ts:90-100</code> and <code>apps/tensor/src/resolver.ts:62-73</code>. Use a fixed internal platform origin and validate public hosts against authoritative mappings.</p>
+<h3>Privileged CI shell injection</h3>
+<p>The manually supplied image tag in <code>.github/workflows/deploy-docker-image.yml:25-27</code> reaches a shell-expanded Helm command after AWS credentials and kubeconfig are installed in <code>.github/actions/helm-deploy/action.yaml:55-105</code>.</p>
+<p>Validate tags with a strict OCI-tag pattern. Pass workflow inputs through environment variables and quote every expansion. Prefer argument arrays over generated shell. Require production environment approval and narrow the assumed role to the exact cluster and namespace.</p>
+<h3>Supply chain and build integrity</h3>
+<p>The intended package quarantine is inactive. <code>minimumReleaseAge</code> appears at the top level of <code>package.json:211</code>, while <code>pnpm config</code> reports it as undefined. CI runs plain <code>pnpm install</code> without a lifecycle-script allowlist in <code>.github/actions/setup-env/action.yaml:20-33</code>.</p>
+<p>Set a release-age quarantine in <code>pnpm-workspace.yaml</code>, use frozen lockfiles, and explicitly allow the few dependency build scripts the repository needs. Fetch dependencies in a job with no cloud credentials.</p>
+<p>Privileged workflows execute mutable third-party code. Examples include major-version action tags, Sonar&#39;s <code>@master</code>, an unversioned global <code>codeowners-generator</code> that later pushes to the repository, and a <code>latest</code> Wiz binary downloaded without checksum verification. Pin actions and tools to full commits or digests. Verify signatures or checksums before execution.</p>
+<p>Container builds are not reproducible. Production images use mutable <code>node:lts-alpine</code>; several Dockerfiles also run <code>apk upgrade</code> against the latest repository state. Pin base images by digest, rebuild through an internal mirror, sign the result, generate an SBOM and provenance attestation, and deploy by digest rather than tag.</p>
+<p>The audited lockfile reports 6 high, 8 moderate, and 5 low advisories across 3,364 production dependencies. The high set includes four <code>fast-uri</code> host-confusion or SSRF advisories through Platform&#39;s AJV path and two <code>image-size</code> infinite-loop advisories through Matrix Native. Upgrade <code>fast-uri</code> to at least <code>3.1.6</code>; resolve or isolate the affected <code>image-size</code> path.</p>
+<h2>P2 engineering controls</h2>
+<p>The repository carries 59 dependency patches, several without version-qualified keys, while <code>allowUnusedPatches</code> is enabled. Disable unused patches, bind every patch to a package version and hash, record its upstream reference, and require security ownership for changes under <code>patches/**</code>.</p>
+<p>SheetJS is fetched from an external CDN tarball without lockfile integrity metadata. Mirror it into an immutable internal registry and pin its digest.</p>
+<p>For a real air gap, ship one signed bundle containing images, charts, package artifacts, SBOMs, vulnerability exceptions, and verification keys. Installation and runtime should make no public DNS or HTTP requests. Enforce this with default-deny egress rather than documentation.</p>
+<h2>Safe browser reproductions</h2>
+<p>The browser examples below reproduce three unsafe mechanisms with fake state on localhost. They do not read repository secrets, contact a tenant, or send data outside the machine.</p>
+<p><img src="./assets/www-critical-onprem-security-audit/reproduction-lab.jpg" alt="Chrome showing all three successful local reproductions"></p>
+<p>Chrome verified these outputs:</p>
+<ol>
+<li>Dynamic evaluation changed a host-owned object to <code>secretVisible: true</code>.</li>
+<li>Authored <code>srcDoc</code> called a function in its parent document.</li>
+<li>A caller-supplied <code>x-ua-public-interface</code> header changed the server-selected route from private to external.</li>
+</ol>
+<h3>Reproduction 1: dynamic source crosses into host state</h3>
+<pre><code class="language-html">&lt;button id=&quot;run&quot;&gt;Run proof&lt;/button&gt;
+&lt;output id=&quot;result&quot;&gt;&lt;/output&gt;
+&lt;script&gt;
+  document.querySelector(&#39;#run&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+    const hostState = { secretVisible: false, audit: [] };
+    const storedExpression =
+      &#39;hostState.secretVisible = true; hostState.audit.push(&quot;expression crossed host boundary&quot;)&#39;;
+
+    new Function(&#39;hostState&#39;, storedExpression)(hostState);
+    document.querySelector(&#39;#result&#39;).textContent = JSON.stringify(hostState);
+  });
+&lt;/script&gt;
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-json">{&quot;secretVisible&quot;:true,&quot;audit&quot;:[&quot;expression crossed host boundary&quot;]}
+</code></pre>
+<p>A hardened SSR evaluator must reject the expression before compilation.</p>
+<h3>Reproduction 2: same-origin <code>srcDoc</code> changes its parent</h3>
+<pre><code class="language-html">&lt;output id=&quot;result&quot;&gt;Not run&lt;/output&gt;
+&lt;div id=&quot;slot&quot;&gt;&lt;/div&gt;
+&lt;script&gt;
+  window.recordFrameEscape = (message) =&gt; {
+    document.querySelector(&#39;#result&#39;).textContent = message;
+  };
+
+  const frame = document.createElement(&#39;iframe&#39;);
+  frame.setAttribute(&#39;sandbox&#39;, &#39;allow-scripts allow-same-origin&#39;);
+  frame.srcdoc = &#39;&lt;script src=&quot;/frame-payload.js&quot;&gt;&lt;/scr&#39; + &#39;ipt&gt;&#39;;
+  document.querySelector(&#39;#slot&#39;).replaceChildren(frame);
+&lt;/script&gt;
+</code></pre>
+<p><code>/frame-payload.js</code> contains:</p>
+<pre><code class="language-js">parent.recordFrameEscape(&#39;Authored srcDoc changed its parent&#39;);
+</code></pre>
+<p>Expected output: <code>Authored srcDoc changed its parent</code>.</p>
+<p>Remove <code>allow-same-origin</code> for authored <code>srcDoc</code>. A hardened frame should fail to access <code>parent.recordFrameEscape</code>.</p>
+<h3>Reproduction 3: forged proxy context changes routing</h3>
+<p>Browser call:</p>
+<pre><code class="language-js">const response = await fetch(&#39;/proxy-check&#39;, {
+  headers: { &#39;x-ua-public-interface&#39;: &#39;true&#39; },
+});
+console.log(await response.json());
+</code></pre>
+<p>Intentionally unsafe local handler:</p>
+<pre><code class="language-ts">const callerSelectedPublicState =
+  request.headers.get(&#39;x-ua-public-interface&#39;) === &#39;true&#39;;
+
+return Response.json({
+  acceptedClientHeader: callerSelectedPublicState,
+  selectedRoute: callerSelectedPublicState
+    ? &#39;/api-endpoint/external&#39;
+    : &#39;/api/private&#39;,
+});
+</code></pre>
+<p>Observed output:</p>
+<pre><code class="language-json">{&quot;acceptedClientHeader&quot;:true,&quot;selectedRoute&quot;:&quot;/api-endpoint/external&quot;}
+</code></pre>
+<p>A hardened ingress or middleware should strip the header and always select <code>/api/private</code> for this request.</p>
+<h2>Execution plan</h2>
+<h3>Same day containment</h3>
+<ol>
+<li>Revoke and rotate the two registry credentials.</li>
+<li>Disable every SSR path that evaluates authored JavaScript.</li>
+<li>Stop native WebViews from forwarding credentials to non-tenant origins.</li>
+<li>Require authentication and exact-interface authorization on the preview route.</li>
+<li>Make Tensor and Matrix deny rendering when session validation fails.</li>
+</ol>
+<h3>Before the next critical release candidate</h3>
+<ol>
+<li>Remove Tensor&#39;s legacy unowned-directory fallback and complete the ownership migration.</li>
+<li>Replace dynamic SSR formulas with an AST interpreter.</li>
+<li>Isolate iframe content, custom components, and custom code.</li>
+<li>Repair proxy-header propagation and ingress header policy.</li>
+<li>Remove privileged workflow interpolation.</li>
+<li>Pin actions, tools, packages, and base images. Produce signed SBOM and provenance artifacts.</li>
+<li>Resolve the current high dependency advisories.</li>
+</ol>
+<h3>Verification gate</h3>
+<p>Run an authorization matrix across anonymous, viewer, editor, administrator, and impersonated sessions in two tenants. Exercise read, list, search, export, share, update, delete, publish, execute, and run-as operations with both valid and guessed cross-tenant IDs.</p>
+<p>Then test the assembled on-prem installation, not only the source tree:</p>
+<ul>
+<li>verify ingress strips reserved and forwarded headers;</li>
+<li>verify default-deny network egress;</li>
+<li>verify workloads run as non-root with read-only filesystems and restricted service accounts;</li>
+<li>verify container signatures and admission policy;</li>
+<li>verify no runtime component contacts a public registry, CDN, telemetry endpoint, or update service;</li>
+<li>verify logs, error responses, and scanner artifacts contain no secrets;</li>
+<li>verify backup, restore, key rotation, audit retention, and incident revocation.</li>
+</ul>
+<blockquote>
+<p>Passing unit tests is not the release decision. The release decision depends on proving the assembled system fails closed at every trust boundary.</p>
+</blockquote>
+<h2>Definition of ready</h2>
+<p>The critical on-prem build is ready for an independent penetration test when:</p>
+<ul>
+<li>every P0 has a merged fix and a negative security test;</li>
+<li>every P1 has a fix or a documented, time-bounded risk acceptance signed by the security owner;</li>
+<li>backend RBAC tests show no cross-tenant or role-ceiling bypass;</li>
+<li>the build is reproducible from mirrored, digest-pinned inputs;</li>
+<li>every shipped artifact has a signature, SBOM, provenance record, and vulnerability decision;</li>
+<li>the installation completes and runs with public network access disabled;</li>
+<li>a fresh reviewer can reproduce the three hardened browser examples and see all three attempts refused.</li>
+</ul>
+<p>That is the minimum credible bar for calling this platform ready for a critical environment.</p>
+</article>
+</main>
+</body>
+</html>
