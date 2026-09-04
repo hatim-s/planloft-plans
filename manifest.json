@@ -252,6 +252,15 @@
       "kind": "plan",
       "createdAt": "2026-09-04T15:59:10.632Z",
       "expiresAt": "2026-10-04T16:18:12.453Z"
+    },
+    {
+      "id": "UgzUBgvlSq",
+      "project": "github.com/unify-apps/ua-builder-no-prompt",
+      "slug": "openai-workflow-agent-rewrite-audit",
+      "title": "Why the OpenAI workflow-agent rewrite was necessary",
+      "kind": "plan",
+      "createdAt": "2026-09-04T21:02:11.635Z",
+      "expiresAt": "2026-10-04T21:02:11.635Z"
     }
   ]
 }

@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Why the OpenAI workflow-agent rewrite was necessary</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Why the OpenAI workflow-agent rewrite was necessary</h1>
+<h2>TL;DR</h2>
+<p>The previous workflow-agent stack was built and tuned around Claude Sonnet. Much of its platform knowledge was sound, but the delivery mechanism was costly, repetitive, and too dependent on the model recovering intent from weak tool schemas. Moving to an OpenAI model required more than changing the model selector.</p>
+<p>The rewrite keeps the useful workflow contracts, cuts the combined prompt, skill, and tool-text inventory from 102,848 to 19,287 tokens, and replaces implicit tool behavior with explicit JSON boundaries and proof-based completion. QA confirmed the new save, patch, and mocked-run adapters. A full behavioral comparison still needs to run after the QA daily cost limit is raised or reset.</p>
+<blockquote>
+<p>The main reason for the rewrite is not that Claude instructions are unusable by GPT. It is that the old stack asked the model to compensate for duplicated guidance and underspecified tools. The QA failures proved that compensation was part of the old operating model.</p>
+</blockquote>
+<h2>Scope and evidence</h2>
+<p>This audit compares the previous four workflow roles and their 20-skill, 52-tool inventory with the isolated OpenAI rewrite at commit <code>93742aec9dc512e524ba15a4e9aedc78d10d17bf</code> on branch <code>feat/openai-workflow-rewrite</code>.</p>
+<p>The current asset set contains:</p>
+<ul>
+<li>four new agents;</li>
+<li>15 new skills;</li>
+<li>48 newly named tool wrappers;</li>
+<li>three cloned specialist-dispatch workflows;</li>
+<li>three JSON adapter workflows for save, patch, and mocked execution.</li>
+</ul>
+<p>The old assets were not edited. The new agents and every dependent asset have separate IDs on QA.</p>
+<p>Evidence used in this report:</p>
+<ul>
+<li>checked-in legacy and rewritten prompt files;</li>
+<li>the pre-rewrite QA and UAT asset snapshots;</li>
+<li>exact <code>o200k_base</code> token counts over the stored Markdown and tool label text;</li>
+<li>the rewrite manifest and provisioning tests;</li>
+<li>persisted QA workflow and run results;</li>
+<li>the changelog written while the QA failures were being fixed.</li>
+</ul>
+<h2>What &quot;Claude-dogfooded&quot; means here</h2>
+<p>The phrase needs precision. There are three different kinds of evidence.</p>
+<h3>Confirmed Claude coupling</h3>
+<p>The legacy planner, builder, editor, and tester prompt sources declare <code>model: sonnet</code>. Their language, decomposition, and tool-use conventions were therefore being exercised against Claude during development.</p>
+<p>The legacy builder also describes an interface-building pipeline that &quot;spawns one builder per automation in parallel&quot;. Builder and editor contain a dedicated <code>use_parallel_tool_calls</code> section. These are not universal workflow requirements. They encode the behavior expected from the Claude-based host and its surrounding agent pipeline.</p>
+<h3>Strong signs of Claude-specific tuning</h3>
+<p>The old prompts read like accumulated operational handbooks. The builder was 14,151 tokens and the editor 11,455. They repeated the same node, edge, pill, filter, trigger, and control-flow material. Across those two files, 244 distinct nonblank lines were exact matches.</p>
+<p>The legacy agents and local workflow skills contained 53 uppercase <code>MUST</code>, <code>MANDATORY</code>, or <code>HARD RULE</code> markers. The rewritten set contains none of those uppercase markers. The requirements still exist, but they now live in named contracts and validation gates.</p>
+<p>This looks like dogfooding by correction. A model fails on a detail, so another warning and another example are added to the system prompt. That can improve the model being tested while making the prompt harder to port, review, and maintain.</p>
+<p>The skill router showed the same pattern. Twenty skill names and descriptions occupied 2,739 tokens before any skill body was loaded. Several descriptions were paragraph-length trigger grammars beginning with <code>MANDATORY whenever</code>. The new 15-skill catalog occupies 704 tokens, a 74.3% reduction.</p>
+<h3>Portable material that should not be dismissed as Claude-only</h3>
+<p>XML sections, examples, explicit negative constraints, and skill-based disclosure are not inherently Claude-specific. GPT can use them too. The rewrite retains XML-style sections because they give the prompt a readable hierarchy.</p>
+<p>The old platform facts were also valuable. Node contexts, callable response rules, Storage versus Analytics boundaries, code output envelopes, filter shapes, mock rules, and polling behavior were not thrown away. They were consolidated and tied to a source-precedence policy.</p>
+<p>Calling every legacy detail &quot;Claude-specific&quot; would be a weak audit. The problem was the combination of model pinning, repetition, implicit tool recovery, and missing completion contracts.</p>
+<h2>Why a rewrite was necessary</h2>
+<h3>Changing the model did not change the contract</h3>
+<p>The original mutation wrappers exposed closed object inputs whose schemas declared no usable properties. The model needed to supply a complete workflow or patch, but the function schema effectively allowed only <code>{}</code>.</p>
+<p>Claude may have appeared to work around this through prompt context or host behavior. GPT 5.4 did not. The first QA run reached the tool and then failed at the boundary. This was the clearest reason not to treat the migration as a model dropdown change.</p>
+<p>The rewrite adds three explicit string contracts:</p>
+<ul>
+<li><code>workflowDefinitionJson</code> for a complete workflow definition;</li>
+<li><code>patchJson</code> for one bounded edit;</li>
+<li><code>inputsJson</code> for mocked trigger input.</li>
+</ul>
+<p>Each string is parsed inside a cloned helper workflow. The platform still receives typed objects after parsing, while the model sees a schema it can satisfy reliably.</p>
+<h3>Too much always-on knowledge competed for attention</h3>
+<p>The old builder and editor each carried a large copy of the workflow format. That raised input cost and made the same rule available in several slightly different places. A correction could land in one prompt and not the other.</p>
+<p>The rewrite gives every role a small permanent contract. Shared graph rules live in <code>workflow-core-openai</code>. Conditional behavior lives in loadable skills. The live operation file remains authoritative for node inputs and outputs.</p>
+<p>This is a maintainability change as much as a token change. One control-flow fix now belongs in one skill.</p>
+<h3>Tool names and descriptions assumed too much context</h3>
+<p>Legacy names included <code>Shell</code>, <code>Ask from knowledge</code>, <code>Fetch automations by query or id</code>, and <code>Invoke Workflow builder agent</code>. Several descriptions said little more than &quot;Calls another automation&quot; or &quot;Execute tool&quot;.</p>
+<p>Those wrappers relied on the model understanding ownership and intent from the surrounding prompt. The new names expose the action directly: <code>Read Workflow Operations</code>, <code>Read API Guidance</code>, <code>Find Workflows</code>, <code>Build Workflow</code>, <code>Save Workflow Definition</code>, and <code>Apply Workflow Patch</code>.</p>
+<p>Descriptions now state argument names, array versus scalar requirements, return evidence, side-effect boundaries, and readback expectations. High-risk mutation descriptions intentionally became longer.</p>
+<h3>Delegation needed a complete handoff</h3>
+<p>The planner and specialists are separate agents. The specialist does not see the planner&#39;s conversation, searches, or unresolved thoughts unless the handoff includes them.</p>
+<p>The new planner owns one handoff schema containing the operation, workflow identity, trigger, resolved assets, decisions, constraints, flow, preservation boundary, and test approval. Dispatch tool descriptions repeat that requirement at the point of use.</p>
+<p>This removes a fragile assumption that an agent invocation carries shared conversational context.</p>
+<h3>Completion needed evidence rather than momentum</h3>
+<p>The old prompts contained output guidance, but execution and proof were spread across long procedural sections. The rewritten roles define completion in their output contracts:</p>
+<ul>
+<li>a builder completes only after save and matching readback;</li>
+<li>an editor completes only after the bounded patch and preservation checks;</li>
+<li>a tester polls one run to terminal evidence and never turns a queued status into a verdict;</li>
+<li>a planner reports completion only after the specialist returns evidence.</li>
+</ul>
+<p>This matters for any model family. It matters more during a migration because apparent progress can hide a different tool-call or stopping style.</p>
+<h2>Token and structural improvements</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th align="right">Previous</th>
+<th align="right">Rewritten</th>
+<th align="right">Reduction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Agent prompts</td>
+<td align="right">37,612</td>
+<td align="right">4,557</td>
+<td align="right">87.9%</td>
+</tr>
+<tr>
+<td>Skill bodies</td>
+<td align="right">61,844</td>
+<td align="right">12,467</td>
+<td align="right">79.8%</td>
+</tr>
+<tr>
+<td>Tool names and descriptions</td>
+<td align="right">3,392</td>
+<td align="right">2,263</td>
+<td align="right">33.3%</td>
+</tr>
+<tr>
+<td>Combined inventory</td>
+<td align="right">102,848</td>
+<td align="right">19,287</td>
+<td align="right">81.2%</td>
+</tr>
+</tbody></table>
+<p>The rewritten inventory is 5.33 times smaller. These figures describe the whole asset set, not one request. Skills load when relevant, and each role sees only its assigned tools.</p>
+<p>The old performance skill also linked to 1,270 tokens of optional examples. Counting those would make the skill reduction 80.2%.</p>
+<h2>Agent-by-agent audit</h2>
+<h3>Planner</h3>
+<p>The planner fell from 8,608 to 1,426 tokens, an 83.4% reduction.</p>
+<p>The old planner contained separate CREATE, EDIT, DEBUG, and asset procedures with repeated resolution and reporting instructions. The new planner routes by desired outcome, resolves tenant facts, creates one complete handoff, dispatches one specialist, and checks the returned proof.</p>
+<p>Important changes:</p>
+<ul>
+<li>user intent outranks role and skill guidance;</li>
+<li>read-only questions do not dispatch writers;</li>
+<li>diagnosis does not silently become a fix;</li>
+<li>asset IDs are resolved before dispatch when the specialist cannot discover them;</li>
+<li>unresolved values become named placeholders rather than plausible guesses;</li>
+<li>a clarification is asked only when the missing choice changes behavior, security, data loss, or a public contract;</li>
+<li>testing defaults to no real side effects;</li>
+<li>the final response distinguishes saved, deployed, queued, terminal, and blocked states.</li>
+</ul>
+<h3>Builder</h3>
+<p>The builder fell from 14,151 to 1,138 tokens, a 92.0% reduction.</p>
+<p>The old prompt was a large workflow-format manual plus examples. The new builder follows a seven-step loop: parse the brief, select operations, read schemas, build inside-out, validate, save once, and read back.</p>
+<p>Important changes:</p>
+<ul>
+<li>the START <code>trigger.type</code> is required independently of <code>resourceName</code>;</li>
+<li>operation files control inputs and outputs;</li>
+<li>one workflow definition is serialized once at the tool boundary;</li>
+<li><code>caseId</code> and <code>taskId</code> are recognized as runtime metadata rather than missing user facts;</li>
+<li>one repair retry is allowed only when the platform returns a specific correctable defect;</li>
+<li>a local JSON object is not reported as completion without a persisted ID and matching readback.</li>
+</ul>
+<h3>Editor</h3>
+<p>The editor fell from 11,455 to 850 tokens, a 92.6% reduction.</p>
+<p>The old editor repeated much of the builder&#39;s format reference. The new editor is about mutation semantics.</p>
+<p>Important changes:</p>
+<ul>
+<li>fetch before edit and after edit;</li>
+<li>trace incoming and outgoing edges, pills, conditions, loop ownership, branch membership, and response paths;</li>
+<li>merge changes into live nodes rather than regenerate them;</li>
+<li>preserve unknown fields;</li>
+<li>rewire references in the same atomic patch as a removal or replacement;</li>
+<li>use the granular fallback tool only when the main patch contract cannot express the edit;</li>
+<li>do not deploy or run unless the request says so.</li>
+</ul>
+<h3>Tester</h3>
+<p>The tester fell from 3,398 to 1,143 tokens, a 66.4% reduction.</p>
+<p>The tester remains relatively detailed because mock and assertion errors can produce believable but false results.</p>
+<p>Important changes:</p>
+<ul>
+<li>authoring requires a live workflow with a START node, nodes, and edges;</li>
+<li>external and nondeterministic work is mocked by default;</li>
+<li>mocks follow resolved output schemas, not pills that may themselves be wrong;</li>
+<li>assertion pills, operators, expected values, and code-result envelopes are explicit;</li>
+<li>a production <code>workflow</code> run requires <code>sideEffectsApproved: true</code>;</li>
+<li>one run ID is preserved and polled rather than retriggered;</li>
+<li>a red run means testing completed with a failing verdict, not that the workflow succeeded;</li>
+<li>validation-origin edits may repair mechanics but may not weaken business expectations.</li>
+</ul>
+<h2>Skill architecture audit</h2>
+<p>The rewrite consolidated related responsibilities rather than merely shortening files.</p>
+<table>
+<thead>
+<tr>
+<th>New skill</th>
+<th>Replaces</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>workflow-core-openai</code></td>
+<td>capability index, code selection, Storage versus Analytics</td>
+<td>One source hierarchy, operation discovery protocol, shared graph shape, pills, filters, and validation gate.</td>
+</tr>
+<tr>
+<td><code>workflow-control-flow-openai</code></td>
+<td>branching and convergence</td>
+<td>Exact topology retained without long repeated examples. Nesting and loop ownership are explicit.</td>
+</tr>
+<tr>
+<td><code>workflow-reliability-openai</code></td>
+<td>debugging and error handling</td>
+<td>Retry policy, side-effect approval, polling, first-divergence triage, silent failures, and repair handoff now form one lifecycle.</td>
+</tr>
+<tr>
+<td><code>workflow-performance-openai</code></td>
+<td>workflow performance</td>
+<td>Cache keys use semantic inputs, not incidental wrapper identity. Batching, pagination, projections, ordering, and error-equivalence are covered.</td>
+</tr>
+<tr>
+<td><code>workflow-callables-openai</code></td>
+<td>callables</td>
+<td>Trigger choice, START-owned contracts, response leaves, caller version, and deployment are one contract.</td>
+</tr>
+<tr>
+<td><code>workflow-code-openai</code></td>
+<td>code by UnifyApps</td>
+<td>Native-first selection, language variants, input/output JSON Schema, parameter binding, final values, libraries, and <code>outputs.result</code> remain explicit.</td>
+</tr>
+<tr>
+<td><code>workflow-variables-openai</code></td>
+<td>variables</td>
+<td>Creation linkage, reachability, loop lifetime, scalar/list shapes, and operation-specific output paths replace a long action catalog.</td>
+</tr>
+<tr>
+<td><code>workflow-storage-records-openai</code></td>
+<td>Storage records</td>
+<td>Live object schema, differing ID keys, payload discriminators, safe filters, envelopes, and consistency limits are preserved.</td>
+</tr>
+<tr>
+<td><code>workflow-analytics-openai</code></td>
+<td>analytics and reports</td>
+<td>Projection resolution, structured versus raw SQL, aliases, pagination, eventual consistency, and <code>objects[].columns</code> are centralized.</td>
+</tr>
+<tr>
+<td><code>workflow-platform-assets-openai</code></td>
+<td>platform users and assets</td>
+<td>Identity ambiguity, actor versus subject, administrative approval, platform filters, and event triggers are explicit.</td>
+</tr>
+<tr>
+<td><code>workflow-files-openai</code></td>
+<td>files and attachments</td>
+<td>File object, URL, base64, single versus multiple, privacy, conversion, and per-item failure rules replace an oversized operation list.</td>
+</tr>
+<tr>
+<td><code>workflow-data-utilities-openai</code></td>
+<td>utilities</td>
+<td>Native transform routing remains. Template Resolver nested fields are now forbidden unless a live dynamic contract proves them.</td>
+</tr>
+<tr>
+<td><code>workflow-sql-openai</code></td>
+<td>SQL query builder</td>
+<td>Connection, table, and column discovery precede parameterized SQL. Flat row outputs are distinguished from Analytics columns.</td>
+</tr>
+<tr>
+<td><code>platform-api-assets-openai</code></td>
+<td>API Manager and API publishing</td>
+<td>Publication chain, reuse, auth schemas, policies, workflow compatibility, approval, and readback share one tool set.</td>
+</tr>
+<tr>
+<td><code>platform-storage-objects-openai</code></td>
+<td>object manager and object schema</td>
+<td>Complete-schema replacement, destructive checks, stores, indexes, direct records, sharing, and readback share one contract.</td>
+</tr>
+</tbody></table>
+<p>The rewrite also removes cross-skill routing prose that made each skill explain several neighboring skills. Boundaries remain, but the descriptions are short enough for model selection.</p>
+<h2>Tool audit</h2>
+<p>The rewrite keeps 48 source capabilities and removes four overlapping legacy wrappers. Forty-six retained wrappers have new names, and all 48 descriptions changed.</p>
+<p>Retained wrapper text fell from 3,107 to 2,263 tokens, a 27.2% reduction. Including the four removed wrappers, the tool-text inventory fell 33.3%.</p>
+<p>The reductions came from verbose discovery tools, generic shell instructions, and duplicated test/API tools. Mutation tools became more explicit:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th align="right">Previous tokens</th>
+<th align="right">Rewritten tokens</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Save workflow</td>
+<td align="right">35</td>
+<td align="right">100</td>
+<td>Defines the exact JSON string, create versus fill behavior, forbidden envelope shapes, and returned evidence.</td>
+</tr>
+<tr>
+<td>Apply workflow patch</td>
+<td align="right">12</td>
+<td align="right">67</td>
+<td>Defines the bounded patch vocabulary and prevents fields from being sent at the wrong level.</td>
+</tr>
+<tr>
+<td>Build workflow dispatch</td>
+<td align="right">8</td>
+<td align="right">46</td>
+<td>Requires one self-contained brief because the specialist cannot see planner context.</td>
+</tr>
+<tr>
+<td>Validate workflow code</td>
+<td align="right">20</td>
+<td align="right">45</td>
+<td>States supported languages and separates code validation from pill and graph validation.</td>
+</tr>
+</tbody></table>
+<p>The tester&#39;s six direct tool descriptions grew from 212 to 325 tokens. That is a good increase. The extra text specifies run lanes, IDs, terminal evidence, asset writes, and the difference between starting and judging a run.</p>
+<p>Four old wrappers were left out of the new asset graph:</p>
+<ul>
+<li><code>List API Assets</code>, on the assumption that the consolidated API asset read path covers the planner&#39;s inventory needs;</li>
+<li><code>Execute Test</code>, superseded by the dedicated tester run contract;</li>
+<li>the older <code>Get Automation Metadata</code> and <code>Inspect Runs</code>, superseded by the tester-owned versions and the reliability skill&#39;s focused primitives.</li>
+</ul>
+<h2>Critical findings that remain</h2>
+<p>The rewrite is materially better, but the audit found issues that should be corrected before calling it the final OpenAI asset set.</p>
+<h3>Prompt and tool names do not fully match</h3>
+<p>The planner, builder, and editor prompts refer to <code>Search Workflows</code>, <code>Search Connections</code>, <code>Search Storage Objects</code>, <code>Search Platform Entities</code>, and <code>Search Workflow Assets</code>. The manifest registers those tools as <code>Find Workflows</code>, <code>Find Connections</code>, <code>Find Storage Objects</code>, <code>Find Platform Entities</code>, and <code>Find Workflow Assets</code>.</p>
+<p>GPT can often infer the intended tool from the available list, but an OpenAI-focused rewrite should not depend on that inference. The prompts and wrapper names should use one vocabulary. This is a source defect, not an evaluation question.</p>
+<h3>Run tooling overlaps across roles and skills</h3>
+<p>The tester directly owns <code>Inspect Workflow Runs</code> and <code>Start Workflow Run</code>. Loading <code>workflow-reliability-openai</code> can also expose <code>Inspect Workflow Run</code> and <code>Start Mocked Workflow Run</code>.</p>
+<p>The distinction is defensible. One pair handles general tester lanes, while the other is a focused mocked-run primitive. The names are still close enough to create selection ambiguity. The planner, builder, and editor can also load the reliability skill and gain run tools even though their role prompts discourage direct execution.</p>
+<p>The next revision should either narrow which agents can access the reliability tools or make the two run families visibly distinct in name, scope, and input schema.</p>
+<h3>Removing broad API listing may have reduced capability</h3>
+<p>The old <code>List API Assets</code> wrapper supported type-wide enumeration, filtering, sorting, and limits. The retained <code>Read API Asset</code> wrapper resolves one asset through supported name or parent parameters.</p>
+<p>That is not proven to be equivalent. If API publication needs collision detection across several existing assets, the old list capability may still be necessary. A focused <code>List API Assets</code> wrapper should be restored if paired evaluation finds that singular lookup cannot perform the preflight reliably.</p>
+<h3>JSON strings solve compatibility by moving validation later</h3>
+<p>The three adapters are the right short-term repair for closed, fieldless object schemas. They also remove schema-native validation from the model-facing boundary. A malformed string reaches the parser before the platform can validate individual fields.</p>
+<p>The long-term fix is a complete JSON Schema for each structured argument. Until the platform can expose that schema correctly, the adapters need size limits, clear parse errors, and tests for malformed JSON, unexpected top-level types, and unsupported patch fields.</p>
+<h3>Most source tool schemas remain inherited</h3>
+<p>The rewrite changed every tool name and description, but most wrappers still clone their source automation and input schema. Better prose cannot repair a wrong or ambiguous schema. The remaining 45 non-adapter wrappers should be checked for empty objects, mismatched required fields, misleading defaults, and descriptions that disagree with the actual trigger contract.</p>
+<h3>The schema reader is still a general shell wrapper</h3>
+<p><code>Read Workflow Operations</code> is clearer than <code>Shell</code>, but the underlying capability remains a shell-oriented reader governed partly by prose constraints. A structured operation-schema tool would give the model explicit <code>appName</code> and <code>resourceName</code> fields, return normalized operation metadata, and enforce repository boundaries outside the prompt.</p>
+<p>This is not required to validate the current rewrite, but it is the cleaner OpenAI contract.</p>
+<h2>What QA fixed</h2>
+<p>The QA work changed the design in concrete ways.</p>
+<ol>
+<li>The save adapter first exposed the source wrapper&#39;s fieldless object problem. <code>workflowDefinitionJson</code> fixed the boundary.</li>
+<li>The saved smoke workflow then failed because START had no explicit trigger marker. <code>workflow-core-openai</code> now requires it.</li>
+<li>The first patch adapter rewrote root references but left nested patch fields attached to removed START inputs. Recursive rewriting fixed it.</li>
+<li>The mocked-run adapter initially treated <code>inputs</code> as a prefix of <code>inputsJson</code> and created a self-reference. Boundary-aware matching fixed it.</li>
+<li>Template Resolver guidance invented nested fields the static schema did not declare. That recipe was removed, and the skill now requires a verified dynamic contract.</li>
+<li>The cloned patch helper carried an obsolete inactive-connection error branch. The isolated helper removes it.</li>
+<li>Provisioning now records versions, checks ownership and name collisions, saves state after each creation, links agents before publishing skills, and verifies deployed content against source.</li>
+</ol>
+<p>The final QA adapter sequence proved:</p>
+<ul>
+<li>save produced workflow <code>6a99f4e23109286238dd47a2</code> with a callable START;</li>
+<li>patch changed only the intended metadata and preserved two nodes plus one edge;</li>
+<li>mocked execution returned <code>{&quot;message&quot;:&quot;Hatim&quot;}</code> in 81 ms.</li>
+</ul>
+<p>All three model stages are pinned to Azure OpenAI GPT 5.4, model ID <code>e_6a4bec127709eb05ba7007ee</code>.</p>
+<h2>What the rewrite does not prove yet</h2>
+<p>The token counts are exact. They do not prove better task accuracy.</p>
+<p>The save, patch, and mocked-run boundaries are proven on QA. Local verification has 9 passing tests and 268 assertions. The provisioner bundles, the worktree is clean, and persisted assets match the manifest.</p>
+<p>The full planner-to-builder conversation did not finish. QA stopped execution when the estimated daily cost reached <code>1.009241</code> against a <code>1.0</code> hard limit. The run reached the new save and workflow-read tools before the limit stopped it.</p>
+<p>There are still risks:</p>
+<ul>
+<li>shorter skills depend more strongly on operation files and tenant reads being available;</li>
+<li>moving detail out of role prompts makes correct skill selection more important;</li>
+<li>broader sharing of the consolidated skills may add selection choices to roles that previously had narrower sets;</li>
+<li>one smoke workflow does not cover branching, Storage, Analytics, files, SQL, API publication, and destructive-operation refusal;</li>
+<li>the old prompts may contain rare operational examples that have not yet been represented in an eval case.</li>
+</ul>
+<blockquote>
+<p>The rewrite is ready for comparative evaluation, not for declaring the old stack obsolete on token count alone.</p>
+</blockquote>
+<h2>Recommended evaluation plan</h2>
+<h3>1. Restore a usable QA evaluation budget</h3>
+<p>Raise or reset the daily hard limit for the isolated OpenAI agents. Do not alter the existing Claude agents or their assets.</p>
+<h3>2. Run paired task suites</h3>
+<p>Run the same prompts against the legacy and OpenAI asset graphs. Record model input tokens, output tokens, tool calls, latency, retries, persisted artifact validity, and human corrections.</p>
+<p>Minimum cases:</p>
+<ul>
+<li>simple callable creation;</li>
+<li>schedule plus connector read;</li>
+<li>nested IF_ELSE or BRANCH inside a LOOP;</li>
+<li>bounded edit that removes a referenced node;</li>
+<li>Storage record flow with a dynamic object schema;</li>
+<li>Analytics aggregation and output pill;</li>
+<li>external SQL discovery and parameterized query;</li>
+<li>file download, conversion, and attachment mapping;</li>
+<li>callable contract edit with all response leaves;</li>
+<li>API publication with auth and policy;</li>
+<li>Storage object schema change with collision checks;</li>
+<li>mocked test authoring, queued polling, and failing assertion;</li>
+<li>refusal of an unapproved production side effect or destructive operation.</li>
+</ul>
+<h3>3. Judge contracts, not prose style</h3>
+<p>Score each case on:</p>
+<ul>
+<li>correct role routing;</li>
+<li>schema-valid tool call on the first attempt;</li>
+<li>no invented IDs, fields, operations, or pill paths;</li>
+<li>smallest valid mutation;</li>
+<li>preserved behavior outside the request;</li>
+<li>correct terminal and deployment status;</li>
+<li>exact artifact and run IDs;</li>
+<li>no unapproved side effect;</li>
+<li>final answer matching persisted evidence.</li>
+</ul>
+<h3>4. Promote findings back to the owning layer</h3>
+<p>Fix a repeated issue in the narrowest durable place:</p>
+<ul>
+<li>tool schema or description when the call envelope is wrong;</li>
+<li>domain skill when one family of nodes is wrong;</li>
+<li>shared core when graph invariants are wrong;</li>
+<li>role prompt when ownership, sequencing, or stopping is wrong;</li>
+<li>platform operation metadata when the source contract itself is wrong.</li>
+</ul>
+<p>Do not grow every agent prompt in response to one failure.</p>
+<h3>5. Decide rollout with measured thresholds</h3>
+<p>The OpenAI stack should replace the legacy default only when it matches or improves first-pass validity, task completion, safety, and persisted readback across the paired suite. Token and latency savings are supporting metrics, not the acceptance gate.</p>
+<h2>Source locations</h2>
+<ul>
+<li>Rewrite worktree: <code>/Users/hatim.shakir/work/ua-builder-no-prompt/openai-workflow-rewrite</code></li>
+<li>Agent prompts: <code>.claude/agents/workflow/openai/</code></li>
+<li>Skills: <code>prompts/skills/openai-workflow/</code></li>
+<li>Asset manifest: <code>tools/openai-workflow-rewrite/assets.ts</code></li>
+<li>Provisioning and verification: <code>tools/openai-workflow-rewrite/provision.ts</code></li>
+<li>QA asset report: <code>docs/openai-workflow-qa-assets.md</code></li>
+<li>QA asset index: <code>tools/openai-workflow-rewrite/qa-assets.json</code></li>
+</ul>
+<p>The rewrite turns a model-specific body of accumulated instructions into a smaller, testable contract between roles, skills, tools, and persisted platform state. That is the improvement worth keeping even if later evaluations lead to another model.</p>
+</article>
+</main>
+</body>
+</html>
