@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Text to Workflow — Skills &amp; Tools</title>
+<style>
+  :root{
+    --paper:#FAF7F0; --surface:#FFFFFF; --surface2:#F4EFE3;
+    --canvas:#F7F3E9;
+    --ink:#1B241F; --ink2:#4A544E; --ink3:#7A8078;
+    --line:#E8E1D2; --line2:#CFC5AD;
+    --green:#166B4A; --green-soft:#E7F0EA; --green-line:#A9CCB9;
+    --amber:#96660F; --amber-soft:#F7EEDC; --amber-line:#DCC48E;
+    --blue:#20647B; --blue-soft:#E4EEF2; --blue-line:#A6C8D5;
+    --code-bg:#EFEAE0;
+    --shadow:0 1px 2px rgba(27,36,31,.06), 0 10px 26px -18px rgba(27,36,31,.35);
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#121714; --surface:#1B221D; --surface2:#20281F;
+      --canvas:#151B17;
+      --ink:#EAE5D8; --ink2:#B3AE9F; --ink3:#847F72;
+      --line:#2A332C; --line2:#46524A;
+      --green:#57C08F; --green-soft:#1C2C24; --green-line:#3E6650;
+      --amber:#D9A855; --amber-soft:#2C2517; --amber-line:#5C4A28;
+      --blue:#6FB3C9; --blue-soft:#18262C; --blue-line:#355763;
+      --code-bg:#242C25;
+      --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 30px -18px rgba(0,0,0,.65);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#FAF7F0; --surface:#FFFFFF; --surface2:#F4EFE3;
+    --canvas:#F7F3E9;
+    --ink:#1B241F; --ink2:#4A544E; --ink3:#7A8078;
+    --line:#E8E1D2; --line2:#CFC5AD;
+    --green:#166B4A; --green-soft:#E7F0EA; --green-line:#A9CCB9;
+    --amber:#96660F; --amber-soft:#F7EEDC; --amber-line:#DCC48E;
+    --blue:#20647B; --blue-soft:#E4EEF2; --blue-line:#A6C8D5;
+    --code-bg:#EFEAE0;
+    --shadow:0 1px 2px rgba(27,36,31,.06), 0 10px 26px -18px rgba(27,36,31,.35);
+  }
+  :root[data-theme="dark"]{
+    --paper:#121714; --surface:#1B221D; --surface2:#20281F;
+    --canvas:#151B17;
+    --ink:#EAE5D8; --ink2:#B3AE9F; --ink3:#847F72;
+    --line:#2A332C; --line2:#46524A;
+    --green:#57C08F; --green-soft:#1C2C24; --green-line:#3E6650;
+    --amber:#D9A855; --amber-soft:#2C2517; --amber-line:#5C4A28;
+    --blue:#6FB3C9; --blue-soft:#18262C; --blue-line:#355763;
+    --code-bg:#242C25;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 30px -18px rgba(0,0,0,.65);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  .page{padding:38px 22px 44px}
+
+  .head{max-width:1600px;margin:0 auto 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--green);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,3.4vw,34px);margin:0;line-height:1.1}
+  .sub{color:var(--ink2);font-size:13.5px;margin-top:6px;max-width:980px}
+  .meta{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{font-family:var(--mono);font-size:10.5px;padding:4px 10px;border:1px solid var(--line2);border-radius:999px;color:var(--ink2);background:var(--surface);white-space:nowrap}
+  .chip b{color:var(--ink);font-weight:600}
+  .chip.live{border-color:var(--green-line);color:var(--green);background:var(--green-soft)}
+
+  .board{overflow-x:auto;padding-bottom:6px}
+  .canvas{position:relative;width:1600px;height:1560px;margin:0 auto;
+          border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+          background-color:var(--canvas);
+          background-image:radial-gradient(color-mix(in srgb, var(--ink3) 24%, transparent) 1px, transparent 1.4px);
+          background-size:18px 18px}
+  .canvas svg.edges{position:absolute;left:0;top:0;z-index:1;pointer-events:none}
+  .eL{stroke:var(--line2);stroke-width:1.7;fill:none}
+  .eB{stroke:var(--blue-line);stroke-width:1.7;fill:none}
+  .eG{stroke:var(--green-line);stroke-width:2;fill:none}
+  .aL{fill:var(--line2)} .aB{fill:var(--blue-line)} .aG{fill:var(--green-line)}
+  .dash{stroke-dasharray:5 6}
+
+  .nico{width:23px;height:23px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--green);background:var(--green-soft);border:1px solid var(--green-line)}
+  .nico svg{width:13px;height:13px}
+  .nico.a{color:var(--amber);background:var(--amber-soft);border-color:var(--amber-line)}
+  .nico.b{color:var(--blue);background:var(--blue-soft);border-color:var(--blue-line)}
+  .nico.n{color:var(--ink2);background:var(--surface2);border-color:var(--line2)}
+
+  .pill{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:999px;margin-left:auto}
+  .pill.read{color:var(--blue);background:var(--blue-soft);border:1px solid var(--blue-line)}
+  .pill.act{color:var(--amber);background:var(--amber-soft);border:1px solid var(--amber-line)}
+  .pill.disp{color:var(--green);background:var(--green-soft);border:1px solid var(--green-line)}
+
+  .node{position:absolute;z-index:2;background:var(--surface);border:1px solid var(--line2);border-radius:11px;box-shadow:var(--shadow);padding:9px 12px}
+  .node .nh{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:650;line-height:1.25}
+  .node .ns{font-family:var(--mono);font-size:9.6px;color:var(--ink3);margin-top:5px;line-height:1.5}
+  .node .ns b{color:var(--ink2);font-weight:600}
+  .node.hero{border-color:var(--green-line);background:linear-gradient(135deg,color-mix(in srgb,var(--green) 11%,var(--surface)),var(--surface) 72%)}
+  .node.hero .nh{color:var(--green)}
+  .node.read{border-color:var(--blue-line);background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 9%,var(--surface)),var(--surface) 72%)}
+
+  .colcard{position:absolute;z-index:2;background:var(--surface);border:1px solid var(--amber-line);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px}
+  .colcard.route{border-color:var(--blue-line)}
+  .colcard.test{border-color:var(--green-line)}
+  .colcard .ch{display:flex;align-items:center;gap:9px;padding-bottom:10px;margin-bottom:4px;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .colcard .ct{font-size:14.5px;font-weight:650}
+  .colcard .cv{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-left:2px}
+  .sect{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;padding:12px 2px 2px}
+  .sect b{color:var(--ink2)}
+  .trow{padding:7px 2px 8px;border-top:1px dashed var(--line)}
+  .sect + .trow{border-top:none}
+  .trow .tn{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;flex-wrap:wrap}
+  .trow .tn .mini{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.08em;padding:1.5px 6px;border-radius:99px;border:1px solid;white-space:nowrap}
+  .trow .tn .mini.r{color:var(--blue);background:var(--blue-soft);border-color:var(--blue-line)}
+  .trow .tn .mini.w{color:var(--amber);background:var(--amber-soft);border-color:var(--amber-line)}
+  .trow .tn .mini.d{color:var(--green);background:var(--green-soft);border-color:var(--green-line)}
+  .trow .tn .mini.u{color:var(--ink2);background:var(--surface2);border-color:var(--line2)}
+  .trow .ops{font-family:var(--mono);font-size:9.6px;color:var(--ink3);margin-top:3px;line-height:1.55}
+  .trow .ops b{color:var(--ink2);font-weight:600}
+  .srow{display:flex;gap:8px;align-items:baseline;padding:4px 2px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:9.6px;color:var(--ink3);line-height:1.5}
+  .sect + .srow{border-top:none}
+  .srow .sk{flex:0 0 172px;color:var(--blue);font-weight:600}
+  .srow .sk.dim{color:var(--ink3);font-weight:500}
+  .cfoot{margin-top:8px;padding-top:9px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:9.6px;color:var(--green);line-height:1.5}
+  .cfoot.b{color:var(--blue)}
+  .cfoot.a{color:var(--amber)}
+
+  .rg{position:absolute;z-index:0;border:1.5px dashed color-mix(in srgb, var(--ink3) 45%, transparent);border-radius:16px;background:color-mix(in srgb, var(--ink3) 4%, transparent)}
+  .rg.tb{background:color-mix(in srgb, var(--blue) 5%, transparent);border-color:color-mix(in srgb, var(--blue) 40%, transparent)}
+  .rgt{position:absolute;top:-11px;left:14px;z-index:2;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink2);background:var(--surface);border:1px solid var(--line2);border-radius:99px;padding:2.5px 10px;white-space:nowrap}
+  .rgt em{font-style:normal;color:var(--green);margin-right:5px}
+  .gwrap{position:absolute;z-index:2;display:flex;gap:10px;align-items:stretch}
+  .ghost{flex:1 1 0;font-family:var(--mono);font-size:9.8px;color:var(--ink2);border:1.5px dashed var(--line2);border-radius:9px;padding:8px 11px;background:color-mix(in srgb, var(--surface) 70%, transparent);line-height:1.5}
+  .ghost b{color:var(--ink);font-weight:650;display:block;margin-bottom:3px;font-family:var(--sans);font-size:11.5px}
+  .ghost em{font-style:normal;color:var(--green);font-weight:700;margin-right:4px}
+  .ghost.solid{border-style:solid;border-color:var(--blue-line);background:var(--blue-soft)}
+
+  .legend{max-width:1600px;margin:16px auto 4px;display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--ink2)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:11px;height:11px;border-radius:3.5px;display:inline-block;border:1px solid}
+  .sw.b{background:var(--blue-soft);border-color:var(--blue-line)}
+  .sw.a{background:var(--amber-soft);border-color:var(--amber-line)}
+  .sw.g{background:var(--green-soft);border-color:var(--green-line)}
+  .sw.n{background:var(--surface2);border-color:var(--line2)}
+  .foot{max-width:1600px;margin:14px auto 0;text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink3)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-spark" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4M5.3 5.3l2.8 2.8M15.9 15.9l2.8 2.8M18.7 5.3l-2.8 2.8M8.1 15.9l-2.8 2.8"/></g></symbol>
+  <symbol id="i-hammer" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l4 4M12.5 7.5l-8 8a2 2 0 002.8 2.8l8-8M13 4.5l6.5 6.5M17.5 3l3.5 3.5-2 2-3.5-3.5z"/></g></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16.5 4.5l3 3L8 19z"/><path d="M14.5 6.5l3 3"/></g></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L5 18a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/><path d="M7.5 14h9"/></g></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A2.5 2.5 0 017.5 2H19v17.5H7.5A2.5 2.5 0 005 22z"/><path d="M5 19.5A2.5 2.5 0 017.5 17H19"/></g></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 2.5h7.5l4.5 4.5v14.5H6.5z"/><path d="M14 2.5V7h4.5"/></g></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0113.7-5.7M20 12a8 8 0 01-13.7 5.7"/><path d="M17.5 3v4h-4M6.5 21v-4h4"/></g></symbol>
+</svg>
+
+<div class="page">
+
+  <div class="head">
+    <div>
+      <div class="eyebrow">UnifyApps · Platform AI · Skills &amp; Tools</div>
+      <h1>Text to Workflow — what each agent can call, and what it loads</h1>
+      <div class="sub">Companion to the system map. One column per agent: its direct tools, the skills it loads and the exact trigger for each, and the contract it returns. The strip at the bottom is how a skill goes from a markdown file to something an agent loads mid-turn.</div>
+    </div>
+    <div class="meta">
+      <span class="chip live">● Live · agent-code-migration.uat</span>
+      <span class="chip">skills <b>prompts/skills/</b> · 14 workflow skills</span>
+      <span class="chip">sync <b>tools/workflow/index.json</b></span>
+    </div>
+  </div>
+
+  <div class="board">
+  <div class="canvas">
+
+    <svg class="edges" width="1600" height="1560" viewBox="0 0 1600 1560">
+    </svg>
+
+    <!-- ═══ Workflow Planner ═══ -->
+    <div class="colcard route" style="left:32px;top:40px;width:372px">
+      <div class="ch"><span class="nico b"><svg><use href="#i-spark"/></svg></span><span class="ct">Workflow Planner</span><span class="cv">e_69e8f53f… · sonnet</span><span class="pill disp">ORCHESTRATOR</span></div>
+
+      <div class="sect">direct tools</div>
+      <div class="trow">
+        <div class="tn">requestClarification <span class="mini u">USER</span></div>
+        <div class="ops">every decision point · predefined options over open questions · independent questions grouped in one call</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Fetch Workflow Assets <span class="mini r">READ</span></div>
+        <div class="ops">assetType <b>CONNECTION</b> by connector folder name · one lookup per call · 1 match = auto-pick, N = ask, 0 = build without connectionId</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Fetch Assets <span class="mini r">READ</span></div>
+        <div class="ops"><b>OBJECT</b> → entity id + columns verbatim from the schema · <b>AUTOMATION</b> → id + deployed? (an undeployed callee fails at runtime)</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Fetch Platform Knowledge <span class="mini r">READ</span></div>
+        <div class="ops">product-docs RAG · behavior only, never ids or JSON · <b>mandatory between draft and proposal</b>, one question per call</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Shell <span class="mini r">READ</span></div>
+        <div class="ops">ls <b>packages/workflow-nodes/&lt;appName&gt;/</b> → each .json is one operation; its filename is the resourceName written into the Flow</div>
+      </div>
+      <div class="trow">
+        <div class="tn">get_workflow_summary · Inspect Runs <span class="mini r">READ</span></div>
+        <div class="ops">confirming read after any mutation · run evidence when the tester's report is thin · reuse results already in the turn</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Invoke Workflow Builder · Editor · Tester <span class="mini d">DISPATCH</span></div>
+        <div class="ops">the brief is the subagent's user prompt · <b>envelope success ≠ task success</b> · re-dispatch only after diagnosing and changing the instruction</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Borrowed through skills <span class="mini w">WRITE</span></div>
+        <div class="ops">list_tables · describe-table (sql) · Start Run · Get Automation Metadata (debug) · <b>Deploy Automation</b> (callables, on yes) · api-manager + storage-object-manager routers (ASSET flow)</div>
+      </div>
+
+      <div class="sect">skills · <b>8 loaded by the prompt</b> · trigger →</div>
+      <div class="srow"><span class="sk">code-node-selection</span><span>drafting any compute / parse / API step, or a named language</span></div>
+      <div class="srow"><span class="sk">storage-vs-analytics</span><span>drafting any read, count, or export over app-object data</span></div>
+      <div class="srow"><span class="sk">sql-query-builder</span><span>a step reads a SQL source → connection → table → columns</span></div>
+      <div class="srow"><span class="sk">callables</span><span>callable trigger · a step calls another automation · deploy</span></div>
+      <div class="srow"><span class="sk">workflow-debugging</span><span>DEBUG flow · any red validation run</span></div>
+      <div class="srow"><span class="sk">api-manager</span><span>ASSET flow: expose, secure, or throttle an endpoint</span></div>
+      <div class="srow"><span class="sk">storage-object-manager</span><span>ASSET flow: create or alter an object or field</span></div>
+      <div class="srow"><span class="sk">workflow-performance</span><span>caching windows on repeat-call reads</span></div>
+      <div class="srow"><span class="sk dim">storage-records · analytics-and-reports · platform-users-and-assets</span><span>attached via index.json, not loaded by the prompt — builder-grade detail</span></div>
+
+      <div class="cfoot b">talks to the user · owns the handoff brief · drives the validation loop · never shows node ids, pills, or JSON</div>
+    </div>
+
+    <!-- ═══ Workflow Builder ═══ -->
+    <div class="colcard" style="left:424px;top:40px;width:372px">
+      <div class="ch"><span class="nico a"><svg><use href="#i-hammer"/></svg></span><span class="ct">Workflow Builder</span><span class="cv">e_69e8f417… · sonnet · prompt name automation-builder</span><span class="pill act">CREATE</span></div>
+
+      <div class="sect">inputs</div>
+      <div class="trow">
+        <div class="tn">Pipeline brief <span class="mini u">MODE</span></div>
+        <div class="ops">from <b>Create Interface</b>: one automation (trigger · inputPayload · flow · outputPayload) · returns a manifest the orchestrator keeps</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Standalone brief <span class="mini u">MODE</span></div>
+        <div class="ops">from the planner: resolved ids · Decisions · Constraints · Platform notes · node-level Flow · every named resourceName is <b>still read from disk</b></div>
+      </div>
+
+      <div class="sect">direct tools</div>
+      <div class="trow">
+        <div class="tn">Shell <span class="mini r">READ</span></div>
+        <div class="ops">cat · grep · head · ls · find on <b>packages/workflow-nodes/</b> for input/output schemas — no python3, no node</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Fetch Automations <span class="mini r">READ</span></div>
+        <div class="ops">a CALL_WORKFLOW target's payload schema, by the id the brief carries</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Upsert Automation <span class="mini w">WRITE</span></div>
+        <div class="ops">the final step, always · MCP tool · <b>workflowId → update in place</b>, absent → create, never invented</div>
+      </div>
+      <div class="trow">
+        <div class="tn">No lookup tools <span class="mini u">BY DESIGN</span></div>
+        <div class="ops">no connection listing, entity search, or table describe → an id the brief lacks is a <b>&lt;PLACEHOLDER&gt;</b> + a gaps: line</div>
+      </div>
+
+      <div class="sect">skills · <b>11 · load before emitting node JSON</b> · trigger →</div>
+      <div class="srow"><span class="sk">code-by-unifyapps</span><span>any code_by_unifyapps_* node (Groovy · Python · JS · Java · Playwright)</span></div>
+      <div class="srow"><span class="sk">callables</span><span>CALLABLE / API trigger · call, schedule, cancel an automation</span></div>
+      <div class="srow"><span class="sk">storage-records</span><span>any storage_by_unifyapps_* node or record trigger</span></div>
+      <div class="srow"><span class="sk">analytics-and-reports</span><span>any analytics_by_unifyapps_* node · exports · SQL over an object</span></div>
+      <div class="srow"><span class="sk">platform-users-and-assets</span><span>any standard_entities_* node · user / platform triggers</span></div>
+      <div class="srow"><span class="sk">files-and-attachments</span><span>a file moves · an input or output named file / attachment / document</span></div>
+      <div class="srow"><span class="sk">utilities</span><span>in-memory transforms · utility_by_unifyapps_* · templates · hashing</span></div>
+      <div class="srow"><span class="sk">workflow-performance</span><span>caching directives · repeat calls · router + references/ (batch-callable · cache-config)</span></div>
+      <div class="srow"><span class="sk">workflow-error-handling</span><span>retry · backoff · non-STOP fallbackMode · any SCOPE</span></div>
+      <div class="srow"><span class="sk">branching-and-convergence</span><span>IF_ELSE · BRANCH · SCOPE wiring and convergence</span></div>
+      <div class="srow"><span class="sk">variable-by-unifyapps</span><span>any variable_by_unifyapps node</span></div>
+
+      <div class="cfoot a">returns manifest · gaps: · testContext: (standalone) — faithful to the brief, never asks a question</div>
+    </div>
+
+    <!-- ═══ Workflow Editor ═══ -->
+    <div class="colcard" style="left:816px;top:40px;width:372px">
+      <div class="ch"><span class="nico a"><svg><use href="#i-pencil"/></svg></span><span class="ct">Workflow Editor</span><span class="cv">e_69e8f44e… · sonnet</span><span class="pill act">EDIT</span></div>
+
+      <div class="sect">input</div>
+      <div class="trow">
+        <div class="tn">Edit brief <span class="mini u">MODE</span></div>
+        <div class="ops"><b>Edit</b> (self-contained sentence) · <b>Workflow</b> (id + one line of purpose) · <b>Preserve</b> · <b>Selection</b> (selectedNodeIds / EdgeIds) · resolved ids · <b>Nodes</b> plan when the edit adds or replaces</div>
+      </div>
+
+      <div class="sect">direct tools</div>
+      <div class="trow">
+        <div class="tn">get_workflow_summary <span class="mini r">READ</span></div>
+        <div class="ops">start of every edit · nodes (id · type · title · app · resource · connection) + edges</div>
+      </div>
+      <div class="trow">
+        <div class="tn">get_node_details <span class="mini r">READ</span></div>
+        <div class="ops">full config for specific nodeIds, batched · before modifying any node — arrays are replaced wholesale, so read them first</div>
+      </div>
+      <div class="trow">
+        <div class="tn">get_node_references <span class="mini r">READ</span></div>
+        <div class="ops">pill references + in/out edges pointing at a node · before deleting it or changing its output shape</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Shell <span class="mini r">READ</span></div>
+        <div class="ops">read-only Glob / Read on packages/workflow-nodes/** for connector schemas</div>
+      </div>
+      <div class="trow">
+        <div class="tn">update_workflow <span class="mini w">WRITE</span></div>
+        <div class="ops"><b>one atomic call</b>: patchNodes (deep-merge) · insertNodes (afterNodeId + branch) · removeNodeIds · replaceEdges (escape hatch) · metadata · edges regenerated from the tree, orphans pruned, groupId/connectionId cleaned · returns <b>violations</b> to fix in a follow-up</div>
+      </div>
+
+      <div class="sect">skills · <b>same 11 as the builder</b> · trigger →</div>
+      <div class="srow"><span class="sk">the matching topic skill</span><span>whenever the edit inserts, modifies, or rewires a node of that kind</span></div>
+      <div class="srow"><span class="sk">code-by-unifyapps · callables</span><span>code node touched · callable trigger, response node, or call node touched</span></div>
+      <div class="srow"><span class="sk">storage-records · analytics-and-reports · platform-users-and-assets</span><span>the connector family of the node being edited — often two at once</span></div>
+      <div class="srow"><span class="sk">files-and-attachments · utilities</span><span>file I/O touched · in-memory transform touched</span></div>
+      <div class="srow"><span class="sk">workflow-performance · workflow-error-handling</span><span>caching ask · retry, fallbackMode, stepError, SCOPE touched</span></div>
+      <div class="srow"><span class="sk">branching-and-convergence · variable-by-unifyapps</span><span>conditional wiring · variable nodes</span></div>
+
+      <div class="cfoot a">returns plain-language summary · gaps: · testContext: — minimal mutations, preserves what exists, never re-opens a Decision</div>
+    </div>
+
+    <!-- ═══ Workflow Tester ═══ -->
+    <div class="colcard test" style="left:1208px;top:40px;width:372px">
+      <div class="ch"><span class="nico"><svg><use href="#i-flask"/></svg></span><span class="ct">Workflow Tester</span><span class="cv">e_6a82ba2e… · sonnet</span><span class="pill disp">TEST</span></div>
+
+      <div class="sect">input</div>
+      <div class="trow">
+        <div class="tn">Test request <span class="mini u">MODE</span></div>
+        <div class="ops">workflowId · <b>testContext</b> (exact nodes + edges, every time) · one operation: create · update · delete · run · <b>origin: user | validation</b> — only user may change what a case expects</div>
+      </div>
+
+      <div class="sect">direct tools · each a callable automation → JSON-RPC to /mcp/workflow-test</div>
+      <div class="trow">
+        <div class="tn">Get Automation Metadata <span class="mini r">READ</span></div>
+        <div class="ops">trigger / node schemas · configured inputs · deployment state · representative outputs → <b>describe_automation</b></div>
+      </div>
+      <div class="trow">
+        <div class="tn">Manage Test Case <span class="mini w">WRITE</span></div>
+        <div class="ops">TEST_CASE list · view · create · update · delete · <b>mocked: true</b> generates schema-valid mocks for the trigger + every connector node; assertions are always hand-written → manage_test_assets</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Manage Test Suites and Plans <span class="mini w">WRITE</span></div>
+        <div class="ops">TEST_SUITE (case ids) · TEST_PLAN (suite ids · strategy · schedule) → manage_test_assets</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Start Run <span class="mini w">WRITE</span></div>
+        <div class="ops">runType: <b>test_case · test_suite · test_plan</b> (queued) · <b>test_case_inline</b> (sync, the validation lane) · <b>workflow_test</b> (mocked) · <b>workflow</b> (production, real side effects, planner approval) → manage_workflow_tests</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Inspect Runs <span class="mini r">READ</span></div>
+        <div class="ops">status + node-level evidence by runId, passing the runType it started with · poll ~8s then a few seconds apart · ~1 min then blocked</div>
+      </div>
+      <div class="trow">
+        <div class="tn">Shell <span class="mini r">READ</span></div>
+        <div class="ops">sleep between polls · nothing else</div>
+      </div>
+
+      <div class="sect">skills · <b>none attached</b></div>
+      <div class="srow"><span class="sk dim">mock boundary + assertion grammar</span><span>live in the prompt itself: START is always MOCK; connectors, writes, calls, and nondeterminism are mocked; branches, loops, and pure code run NO_MOCK</span></div>
+
+      <div class="cfoot">returns status · created / updated / deleted ids · runs (runId · status · pass/fail counts) · evidence · gaps — never edits a workflow, never talks to the user, never decides the repair</div>
+    </div>
+
+    <!-- ═══ how a skill loads ═══ -->
+    <div class="rg tb" style="left:32px;top:1360px;width:1548px;height:178px"><span class="rgt"><em>HOW A SKILL LOADS</em>from a markdown file to text an agent reads mid-turn</span></div>
+    <div class="gwrap" style="left:48px;top:1384px;width:1516px">
+      <span class="ghost solid"><b><em>1</em>author</b>prompts/skills/&lt;slug&gt;.md · the frontmatter <b style="display:inline;font:inherit">description</b> is the trigger ("MANDATORY whenever…", "NOT for … load &lt;sibling&gt;")</span>
+      <span class="ghost solid"><b><em>2</em>sync</b>tools/workflow/workflow.sh push --publish → an e_skill_ai_agent entity · access = index.json agents[] · every publish logged to sync-history.jsonl</span>
+      <span class="ghost solid"><b><em>3</em>name the load point</b>the agent prompt says where: &lt;topics&gt; "load before emitting node JSON" (builder · editor) · the flow step that needs it (planner)</span>
+      <span class="ghost solid"><b><em>4</em>load on demand</b>never preloaded · the skill text joins the turn when its trigger fires · a flow that only writes records never pays for analytics or platform material</span>
+      <span class="ghost"><b><em>5</em>packages</b>router + references/&lt;name&gt;/*.md when one subject is too deep for a single load · today: workflow-performance → batch-callable · cache-config</span>
+      <span class="ghost"><b><em>6</em>retire</b>push --prune detaches, never deletes · storage-and-entities → storage-records · analytics-and-reports · platform-users-and-assets (siblings, not a package)</span>
+    </div>
+
+  </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw b"></i>READ tool</span>
+    <span><i class="sw a"></i>WRITE tool</span>
+    <span><i class="sw g"></i>DISPATCH → another agent</span>
+    <span><i class="sw n"></i>USER · MODE · contract row</span>
+    <span>skill rows: <b>name</b> → the trigger that loads it</span>
+  </div>
+
+  <div class="foot">Workflow Planner e_69e8f53f7b11356004965425 · Workflow Builder e_69e8f417a2d13979bb58c0e6 · Workflow Editor e_69e8f44ea2d13979bb58c0fc · Workflow Tester e_6a82ba2eed731e6d0657e2a5 · prompts/skills/ · tools/workflow/index.json · agent-code-migration.uat · Sep 2026</div>
+
+</div>
+</html>
