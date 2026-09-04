@@ -243,6 +243,15 @@
       "kind": "plan",
       "createdAt": "2026-09-04T15:58:40.309Z",
       "expiresAt": "2026-10-04T15:58:40.309Z"
+    },
+    {
+      "id": "zmYf4Zjx0u",
+      "project": "github.com/unify-apps/ua-builder-no-prompt",
+      "slug": "text-to-workflow-skills-tools",
+      "title": "Text to Workflow — skills and tools",
+      "kind": "plan",
+      "createdAt": "2026-09-04T15:59:10.632Z",
+      "expiresAt": "2026-10-04T15:59:10.632Z"
     }
   ]
 }
