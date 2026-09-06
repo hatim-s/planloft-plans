@@ -11,24 +11,6 @@
       "expiresAt": "2026-10-22T03:20:58.711Z"
     },
     {
-      "id": "nKsD1IWDXi",
-      "project": "path-125fea",
-      "slug": "attest-implementation-plan",
-      "title": "attest — Implementation Plan",
-      "kind": "plan",
-      "createdAt": "2026-08-06T06:42:27.329Z",
-      "expiresAt": "2026-09-05T12:49:15.129Z"
-    },
-    {
-      "id": "I0LcLZeFnD",
-      "project": "github.com/hatim-s/attest",
-      "slug": "attest-agent-eval-setup-ux",
-      "title": "Attest agent and eval setup UX",
-      "kind": "report",
-      "createdAt": "2026-08-07T05:27:49.831Z",
-      "expiresAt": "2026-09-06T05:27:49.832Z"
-    },
-    {
       "id": "boj0LZJyCw",
       "project": "github.com/hatim-s/attest",
       "slug": "attest-local-cli-north-star-roadmap",
