@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pi paired TEST evaluation — September 8</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="report">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Pi workflow evaluation — test evidence</title><style>
+:root{color-scheme:light dark;--bg:#f6f8fc;--surface:#fff;--ink:#172947;--muted:#51647e;--line:#d7e0ef;--blue:#1852a0;--bad:#a52b38;--good:#14664d;--tint:#eaf0fa}html[data-theme=dark]{--bg:#101d32;--surface:#192a43;--ink:#e4edf9;--muted:#b0c0d7;--line:#354963;--blue:#9bc3ff;--bad:#ffadb5;--good:#8fdbbc;--tint:#203853;color-scheme:dark}@media(prefers-color-scheme:dark){html:not([data-theme=light]){--bg:#101d32;--surface:#192a43;--ink:#e4edf9;--muted:#b0c0d7;--line:#354963;--blue:#9bc3ff;--bad:#ffadb5;--good:#8fdbbc;--tint:#203853}}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'Helvetica Neue',Arial,sans-serif}main{max-width:1600px;margin:auto;padding:24px 4vw 60px}.theme{display:flex;justify-content:flex-end;gap:10px;align-items:center}select,input{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:9px 12px;font:inherit}h1{font-size:clamp(29px,4vw,48px);line-height:1.12;max-width:850px;margin:28px 0 18px;letter-spacing:-1px}h2{font-size:23px;margin:0 0 14px}p{max-width:80ch}a{color:var(--blue);text-underline-offset:3px}small{display:block;font-size:12px;line-height:1.55;font-weight:400;color:var(--muted);overflow-wrap:anywhere;margin-top:6px}.summary{font-size:21px}.summary strong{font-size:29px}.evidence{display:flex;gap:28px;flex-wrap:wrap;padding:16px 0;border-block:1px solid var(--line);margin:24px 0 32px}.evidence span{white-space:nowrap}.notes{background:var(--tint);padding:24px;border-radius:8px;margin:24px 0 32px}.notes ul{padding-left:22px;max-width:100ch}.notes li{margin:9px 0}.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:20px 0}.controls input{min-width:230px;flex:1;max-width:460px}.scroll{overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}table{width:100%;border-collapse:collapse;font-size:14px;min-width:1120px}thead{background:var(--tint)}th,td{text-align:left;vertical-align:top;padding:17px 14px;border-bottom:1px solid var(--line)}thead th{font-size:13px}tbody th{min-width:215px;max-width:260px}td:nth-child(3),td:nth-child(4){min-width:205px}td:last-child{min-width:230px}.index{display:inline-block;min-width:25px;color:var(--muted);font-size:12px}.verdict{font-weight:700}.fail{color:var(--bad)}.pass{color:var(--good)}.muted{color:var(--muted)}footer{margin-top:28px;color:var(--muted);font-size:13px}:focus-visible{outline:3px solid var(--blue);outline-offset:3px}@media(max-width:600px){main{padding:18px 18px 40px}.evidence{gap:12px;font-size:14px}.notes{padding:18px}}
+</style></head><body><main><div class="theme"><label for="theme">Appearance</label><select id="theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><h1>Pi workflow evaluation<br>What the TEST runs proved</h1><p class="summary"><strong>3 / 31 passed</strong> (9.7%). Target: at least 85%.</p><p>Every case uses GPT-5.6 Luna. The harness saves the generated workflow, attempts its TEST and the reference TEST with identical testcase arguments, then compares their returned JSON exactly. A pass also requires private authoring evidence with no declared omissions.</p><div class="evidence"><span>28 generated TESTs</span><span>31 reference TESTs</span><span>$1.647 recorded Pi cost</span><span>Status: completed</span></div><section class="notes"><h2>Read the score with its evidence</h2><ul><li>The dataset remains unchanged. Nine reference TESTs failed or were cancelled. If those outcomes persist, even perfect generated workflows could reach only 22/31 (71%). Missing business rules and contradictory output types also remain unresolved.</li><li>Earlier output-only scoring accepted a quartile workflow that omitted computation and writes, because both sides returned the specified success literal. The current metric rejects declared incomplete authoring even when outputs match.</li><li>The preceding full run recorded 0/31; its last 16 cases were affected by a DNS outage. A subsequent run was stopped because Attest rejected the metric result format. Neither is merged into this run.</li><li>Expected workflow definitions are blocked from author tools and direct/transitive calls. Prior evaluation-generated workflows remained discoverable in this snapshot; a host-side generated-ID registry was added afterward. This is not a claim of absolute isolation.</li><li>The three metric passes have limits: customer messages tested an empty-result path; balance sheet contained a stale code-output reference; profit and loss did not check bulk-update failure results. The latter two do not prove all requested writes succeeded. A generic validator now catches the stale reference in the working runtime.</li></ul></section><h2>Case-by-case results</h2><p>Workflow links open UAT and require access. TEST run IDs are shown without guessing a run URL. Raw sessions, generated definitions and full execution evidence remain in the local audit archive; this report contains no credentials or business payloads.</p><div class="controls"><label for="query">Find case</label><input id="query" type="search" placeholder="Name, workflow ID or TEST run ID"><label for="state">Show</label><select id="state"><option>All</option><option>Pass</option><option>Fail</option></select><span id="visible" aria-live="polite"></span></div><div class="scroll"><table><thead><tr><th scope="col">Case</th><th scope="col">Verdict</th><th scope="col">Generated workflow</th><th scope="col">Reference workflow</th><th scope="col">Evidence</th><th scope="col">Metric reason</th></tr></thead><tbody><tr data-state="Fail"><th scope="row"><span class="index">1</span>Response confidence<small>platform-6a7d9c87da18630cae42a3ba</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6e4747a15a7203518e45/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6e4747a15a7203518e45</small><small>TEST 6a9f6e475544270890f70313</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a15845180830b496b6c6d53/builder" target="_blank" rel="noopener">Open workflow</a><small>6a15845180830b496b6c6d53</small><small>TEST 6a9f6e488d3dc76e180617ed</small></td><td>Different<small>Author: partial</small><small>3 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">2</span>Candidate job pagination<small>platform-6a7d9c87da18630cae42a3bc</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6e965b05a933f28540f8/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6e965b05a933f28540f8</small><small>TEST 6a9f6e965544270890f70b75</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/68cef5d64ee734456417e15d/builder" target="_blank" rel="noopener">Open workflow</a><small>68cef5d64ee734456417e15d</small><small>TEST 6a9f6e9747a15a7203519202</small></td><td>Equal<small>Author: partial</small><small>1 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">3</span>Invoice ingestion<small>platform-6a7d9c87da18630cae42a3c2</small></th><td class="verdict fail">Fail</td><td><strong>NO_RETURN_NODE</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6e40f77d9411f4294f73/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6e40f77d9411f4294f73</small><small>TEST 6a9f6e415544270890f70224</small></td><td><strong>NO_RETURN_NODE</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a4759aeb4c3251150b89b19/builder" target="_blank" rel="noopener">Open workflow</a><small>6a4759aeb4c3251150b89b19</small><small>TEST 6a9f6e41a2b7c15cc112b777</small></td><td>Unavailable<small>Author: partial</small><small>6 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">4</span>Application lookup<small>platform-6a7d9c87da18630cae42a3c3</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6ed3f77d9411f4295848/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6ed3f77d9411f4295848</small><small>TEST 6a9f6ed38950724fbb17c1fa</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69e8ad5b7eba262eeeaea7cf/builder" target="_blank" rel="noopener">Open workflow</a><small>69e8ad5b7eba262eeeaea7cf</small><small>TEST 6a9f6ed5a2b7c15cc112d1bc</small></td><td>Different<small>Author: partial</small><small>1 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">5</span>Quartile calculation<small>platform-6a7d9c87da18630cae42a3c5</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6f223136f8391bb7cafe/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6f223136f8391bb7cafe</small><small>TEST 6a9f6f238950724fbb17ca63</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a292329a9fa534bb6e50b3c/builder" target="_blank" rel="noopener">Open workflow</a><small>6a292329a9fa534bb6e50b3c</small><small>TEST 6a9f6f2bf77d9411f4295c6a</small></td><td>Unavailable<small>Author: partial</small><small>3 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">6</span>Agent upsert<small>platform-6a7d9c886364d255e60bd533</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6ec65b05a933f285450e/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6ec65b05a933f285450e</small><small>TEST 6a9f6ec78d3dc76e180620eb</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69d927b0c5c3a00aa68bf410/builder" target="_blank" rel="noopener">Open workflow</a><small>69d927b0c5c3a00aa68bf410</small><small>TEST 6a9f6ec78950724fbb17c1a6</small></td><td>Different<small>Author: partial</small><small>2 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">7</span>SQL correctness<small>platform-6a7d9c88da18630cae42a3cc</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6fac5b05a933f285538d/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6fac5b05a933f285538d</small><small>TEST 6a9f6fad47a15a720351a4b1</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/695790cc326d5e13b9ee7106/builder" target="_blank" rel="noopener">Open workflow</a><small>695790cc326d5e13b9ee7106</small><small>TEST 6a9f6fae5544270890f7283f</small></td><td>Different<small>Author: partial</small><small>1 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">8</span>Sales enrichment<small>platform-6a7d9c88da18630cae42a3ce</small></th><td class="verdict fail">Fail</td><td><strong>ERROR</strong><br><span class="muted">No saved workflow</span><small></small><small>TEST not started</small></td><td><strong>CANCELLED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a0c30385f4a391c5d1a37db/builder" target="_blank" rel="noopener">Open workflow</a><small>6a0c30385f4a391c5d1a37db</small><small>TEST 6a9f6f48f77d9411f4296268</small></td><td>Unavailable<small>Author: partial</small><small>3 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">9</span>Claim line items<small>platform-6a7d9c886364d255e60bd536</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f70185544270890f7318d/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f70185544270890f7318d</small><small>TEST 6a9f7019f77d9411f4297e12</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/688e7215a57c630637d0eb44/builder" target="_blank" rel="noopener">Open workflow</a><small>688e7215a57c630637d0eb44</small><small>TEST 6a9f701b5b05a933f2855c25</small></td><td>Unavailable<small>Author: partial</small><small>2 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">10</span>Loan document filing<small>platform-6a7d9c88da18630cae42a3d0</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6f683136f8391bb7d0e0/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6f683136f8391bb7d0e0</small><small>TEST 6a9f6f685b05a933f285510e</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69d4e3add2f3b519b42d4604/builder" target="_blank" rel="noopener">Open workflow</a><small>69d4e3add2f3b519b42d4604</small><small>TEST 6a9f6f693136f8391bb7d0e4</small></td><td>Unavailable<small>Author: partial</small><small>4 declared omissions</small></td><td>Reference TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">11</span>Customer team<small>platform-6a7d9c88da18630cae42a3d2</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6fcd47a15a720351a660/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6fcd47a15a720351a660</small><small>TEST 6a9f6fcef77d9411f4297376</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69bd324e7b770b64484b484d/builder" target="_blank" rel="noopener">Open workflow</a><small>69bd324e7b770b64484b484d</small><small>TEST 6a9f6fcf5b05a933f2855630</small></td><td>Different<small>Author: partial</small><small>3 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">12</span>Screenplay research<small>platform-6a7d9c886364d255e60bd53a</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f70a68950724fbb17f431/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f70a68950724fbb17f431</small><small>TEST 6a9f70a65544270890f73d7b</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/696f35120fb61a245799dd63/builder" target="_blank" rel="noopener">Open workflow</a><small>696f35120fb61a245799dd63</small><small>TEST 6a9f70a78d3dc76e180647cc</small></td><td>Different<small>Author: generated</small><small>0 declared omissions</small></td><td>TEST outputs differ.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">13</span>Outlook reply-all<small>platform-6a7d9c88da18630cae42a3d8</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f6fd05544270890f72a74/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f6fd05544270890f72a74</small><small>TEST 6a9f6fd0a2b7c15cc112f019</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69c18c731795cf2cf65c38cc/builder" target="_blank" rel="noopener">Open workflow</a><small>69c18c731795cf2cf65c38cc</small><small>TEST 6a9f6fd18d3dc76e18063a5f</small></td><td>Unavailable<small>Author: partial</small><small>1 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">14</span>Approval cleanup<small>platform-6a7d9c886364d255e60bd53c</small></th><td class="verdict fail">Fail</td><td><strong>ERROR</strong><br><span class="muted">No saved workflow</span><small></small><small>TEST not started</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/695c3171b5ceff5fc4ecb556/builder" target="_blank" rel="noopener">Open workflow</a><small>695c3171b5ceff5fc4ecb556</small><small>TEST 6a9f6ff5f77d9411f42979ab</small></td><td>Unavailable<small>Author: partial</small><small>3 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">15</span>Recruitment status<small>platform-6a7d9c886364d255e60bd53e</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f71343136f8391bb8b680/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f71343136f8391bb8b680</small><small>TEST 6a9f71355544270890f8043e</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69aad0dc8983aa32657265a6/builder" target="_blank" rel="noopener">Open workflow</a><small>69aad0dc8983aa32657265a6</small><small>TEST 6a9f7136a2b7c15cc1131b35</small></td><td>Different<small>Author: partial</small><small>2 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Pass"><th scope="row"><span class="index">16</span>Customer messages<small>platform-6a7d9c88da18630cae42a3de</small></th><td class="verdict pass">Pass</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f71193136f8391bb8b3fd/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f71193136f8391bb8b3fd</small><small>TEST 6a9f7119f77d9411f429969c</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a2195e9af7ba4594d1bdabf/builder" target="_blank" rel="noopener">Open workflow</a><small>6a2195e9af7ba4594d1bdabf</small><small>TEST 6a9f711f8950724fbb17fd1d</small></td><td>Equal — Empty-result path only<small>Author: generated</small><small>0 declared omissions</small></td><td>Both TEST runs completed with equal JSON outputs and no declared missing requirements.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">17</span>SharePoint processing<small>platform-6a7d9c88da18630cae42a3df</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f70faa2b7c15cc1131463/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f70faa2b7c15cc1131463</small><small>TEST 6a9f70fa5b05a933f28568a6</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69a91eb956b53e0a9421f8b8/builder" target="_blank" rel="noopener">Open workflow</a><small>69a91eb956b53e0a9421f8b8</small><small>TEST 6a9f70fb3136f8391bb8b10e</small></td><td>Different<small>Author: partial</small><small>5 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">18</span>AWS cost alerts<small>platform-6a7d9c88da18630cae42a3e1</small></th><td class="verdict fail">Fail</td><td><strong>NO_RETURN_NODE</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f710e3136f8391bb8b298/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f710e3136f8391bb8b298</small><small>TEST 6a9f710e8d3dc76e1806512a</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6992d18b41643e0da5c9ae2e/builder" target="_blank" rel="noopener">Open workflow</a><small>6992d18b41643e0da5c9ae2e</small><small>TEST 6a9f710f5b05a933f2856a1a</small></td><td>Unavailable<small>Author: partial</small><small>5 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">19</span>Recruitment API<small>platform-6a7d9c88da18630cae42a3e3</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f709b3136f8391bb8ace1/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f709b3136f8391bb8ace1</small><small>TEST 6a9f709ca2b7c15cc1130f41</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/68c2bc5e839abc59768d8366/builder" target="_blank" rel="noopener">Open workflow</a><small>68c2bc5e839abc59768d8366</small><small>TEST 6a9f709d5b05a933f28564ee</small></td><td>Different<small>Author: partial</small><small>4 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Pass"><th scope="row"><span class="index">20</span>Balance sheet<small>platform-6a7d9c886364d255e60bd544</small></th><td class="verdict pass">Pass</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f718f5544270890f80ce6/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f718f5544270890f80ce6</small><small>TEST 6a9f718f8950724fbb1806e4</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69db74a9f8807c4f9175850a/builder" target="_blank" rel="noopener">Open workflow</a><small>69db74a9f8807c4f9175850a</small><small>TEST 6a9f7190a2b7c15cc11321fa</small></td><td>Equal — Stale update reference found in audit<small>Author: generated</small><small>0 declared omissions</small></td><td>Both TEST runs completed with equal JSON outputs and no declared missing requirements.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">21</span>Nearby events<small>platform-6a7d9c88da18630cae42a3e7</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f731ca2b7c15cc1134985/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f731ca2b7c15cc1134985</small><small>TEST 6a9f731c5544270890f827fa</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69ba8d1d36ec655e8a7083cc/builder" target="_blank" rel="noopener">Open workflow</a><small>69ba8d1d36ec655e8a7083cc</small><small>TEST 6a9f731d47a15a720351d45f</small></td><td>Unavailable<small>Author: partial</small><small>4 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Pass"><th scope="row"><span class="index">22</span>Profit and loss<small>platform-6a7d9c88da18630cae42a3e9</small></th><td class="verdict pass">Pass</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f7188a2b7c15cc1132044/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f7188a2b7c15cc1132044</small><small>TEST 6a9f7188f77d9411f4299c46</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69da44d60d75c7760544c2a7/builder" target="_blank" rel="noopener">Open workflow</a><small>69da44d60d75c7760544c2a7</small><small>TEST 6a9f718947a15a720351c396</small></td><td>Equal — Bulk failure results not checked<small>Author: generated</small><small>0 declared omissions</small></td><td>Both TEST runs completed with equal JSON outputs and no declared missing requirements.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">23</span>Transaction commission<small>platform-6a7d9c88da18630cae42a3eb</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f71978d3dc76e18065b4a/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f71978d3dc76e18065b4a</small><small>TEST 6a9f7198f77d9411f4299d26</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a52429b40ddfb4e9d39da3d/builder" target="_blank" rel="noopener">Open workflow</a><small>6a52429b40ddfb4e9d39da3d</small><small>TEST 6a9f71988d3dc76e18065b6b</small></td><td>Unavailable<small>Author: partial</small><small>4 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">24</span>Tender CV<small>platform-6a7d9c88da18630cae42a3ec</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f71afa2b7c15cc113243c/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f71afa2b7c15cc113243c</small><small>TEST 6a9f71af3136f8391bb8c35c</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69c262744c91da428d8ca5da/builder" target="_blank" rel="noopener">Open workflow</a><small>69c262744c91da428d8ca5da</small><small>TEST 6a9f71b05b05a933f28573f9</small></td><td>Equal<small>Author: partial</small><small>1 declared omissions</small></td><td>Authoring is incomplete, rejected, or lacks a complete requirement assessment.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">25</span>Employment lookup<small>platform-6a7d9c886364d255e60bd547</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f71c78950724fbb180bb3/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f71c78950724fbb180bb3</small><small>TEST 6a9f71c7a2b7c15cc1132522</small></td><td><strong>UNSUPPORTED_API_RESPONSE</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a140f567abb4c32c6e5e845/builder" target="_blank" rel="noopener">Open workflow</a><small>6a140f567abb4c32c6e5e845</small><small>TEST 6a9f71c88d3dc76e18065fcb</small></td><td>Unavailable<small>Author: partial</small><small>1 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">26</span>Entity relationships<small>platform-6a7d9c88da18630cae42a3ef</small></th><td class="verdict fail">Fail</td><td><strong>MISSING_OUTPUT</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f72993136f8391bb8d104/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f72993136f8391bb8d104</small><small>TEST 6a9f7299a2b7c15cc1133e0b</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69e63f9133b45b5f7f3c330f/builder" target="_blank" rel="noopener">Open workflow</a><small>69e63f9133b45b5f7f3c330f</small><small>TEST 6a9f729a47a15a720351cf06</small></td><td>Unavailable<small>Author: partial</small><small>1 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">27</span>Message scheduling<small>platform-6a7d9c88da18630cae42a3f1</small></th><td class="verdict fail">Fail</td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f73568d3dc76e180683d1/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f73568d3dc76e180683d1</small><small>TEST 6a9f73563136f8391bb8de25</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69c95c3b494e2a158037a619/builder" target="_blank" rel="noopener">Open workflow</a><small>69c95c3b494e2a158037a619</small><small>TEST 6a9f735747a15a720351d9d7</small></td><td>Unavailable<small>Author: partial</small><small>2 declared omissions</small></td><td>Reference TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">28</span>Emirates ID lookup<small>platform-6a7d9c89da18630cae42a3f3</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f723d47a15a720351cccc/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f723d47a15a720351cccc</small><small>TEST 6a9f723d3136f8391bb8cc70</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a47930c54d0b7570bfeedf5/builder" target="_blank" rel="noopener">Open workflow</a><small>6a47930c54d0b7570bfeedf5</small><small>TEST 6a9f723f5544270890f81ac5</small></td><td>Unavailable<small>Author: partial</small><small>2 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">29</span>ACH commission<small>platform-6a7d9c89da18630cae42a3f5</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f72d8f77d9411f42a6c98/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f72d8f77d9411f42a6c98</small><small>TEST 6a9f72d83136f8391bb8d3ce</small></td><td><strong>COMPLETED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a523b3a40ddfb4e9d38c449/builder" target="_blank" rel="noopener">Open workflow</a><small>6a523b3a40ddfb4e9d38c449</small><small>TEST 6a9f72d98950724fbb181b8c</small></td><td>Unavailable<small>Author: partial</small><small>4 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">30</span>GitHub metadata<small>platform-6a7d9c89da18630cae42a3fb</small></th><td class="verdict fail">Fail</td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f726a8950724fbb1818af/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f726a8950724fbb1818af</small><small>TEST 6a9f726a47a15a720351ce04</small></td><td><strong>MISSING_OUTPUT</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69090b3ad68f9e1f981a11c9/builder" target="_blank" rel="noopener">Open workflow</a><small>69090b3ad68f9e1f981a11c9</small><small>TEST 6a9f726b47a15a720351ce05</small></td><td>Unavailable<small>Author: partial</small><small>2 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr><tr data-state="Fail"><th scope="row"><span class="index">31</span>File audit<small>platform-6a7d9c89da18630cae42a3fc</small></th><td class="verdict fail">Fail</td><td><strong>ERROR</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f735ba2b7c15cc1135f8c/builder" target="_blank" rel="noopener">Open workflow</a><small>6a9f735ba2b7c15cc1135f8c</small><small>TEST not started</small></td><td><strong>FAILED</strong><br><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69dff84001d163578902da8a/builder" target="_blank" rel="noopener">Open workflow</a><small>69dff84001d163578902da8a</small><small>TEST 6a9f735b5b05a933f285851a</small></td><td>Unavailable<small>Author: generated</small><small>0 declared omissions</small></td><td>Generated TEST failed or has no returned output.</td></tr></tbody></table></div><footer>Run 01M1ZC7KE9X5JM89D9J9MKPTNW<br>Metric: paired-test-completion-v2. Last refreshed 2026-09-08T02:32:10.649089+00:00.<br>Author cost excludes platform workflow LLM calls and review agents. Six cases ran concurrently. Source dataset: e_6a7c12611686181e2815ba42.</footer></main><script>const theme=document.querySelector('#theme');theme.addEventListener('change',()=>{if(theme.value==='system')delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=theme.value});const query=document.querySelector('#query'),state=document.querySelector('#state'),rows=[...document.querySelectorAll('tbody tr')];function filter(){let count=0;for(const row of rows){const show=row.textContent.toLowerCase().includes(query.value.toLowerCase())&&(state.value==='All'||row.dataset.state===state.value);row.hidden=!show;if(show)count++}document.querySelector('#visible').textContent=count+' cases'}query.addEventListener('input',filter);state.addEventListener('change',filter);filter();</script></body></html></article>
+</main>
+</body>
+</html>
