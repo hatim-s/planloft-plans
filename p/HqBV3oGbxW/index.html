@@ -175,9 +175,17 @@ a { overflow-wrap: anywhere; }
 </script>
 <main class="planloft-plan">
 <article><h1>Workflow Sol run statistics</h1>
-<p>The first table combines the 11 later Sol cases with the 14 added Sol cases. The five earlier smoke tests are in the second table. Every prompt name links to its automation and chat.</p>
-<p>Cost is the cumulative session total in USD. Time taken is active session time, including planning, building, repairs and attempted tests, excluding time waiting for user input, quota approval or continuation scheduling. Build-only estimates for the added cases are retained below. The batches used different configurations and test criteria; grouping the rows does not make them a controlled comparison.</p>
-<h2>Main test cases — 11 + 14</h2>
+<p>This report treats the 11 later Sol cases and 14 added Sol cases as one 25-case corpus. The five earlier smoke tests remain separate and are excluded from the corpus statistics. Every prompt name links to its automation and chat.</p>
+<p>Cost is the cumulative session total in USD. Time taken is active session time, including planning, building, repairs and attempted tests, excluding time waiting for user input, quota approval or continuation scheduling. Build-only estimates for the added cases are retained below. Corpus totals include all 25 cases and their authorized continuations, regardless of outcome.</p>
+<h2>25-case corpus statistics</h2>
+<ul>
+<li><strong>Built completely: 15 of 25 (60%).</strong> A populated implementation was saved. Test failures and unverified tests are tracked separately; this count does not certify correct behavior.</li>
+<li><strong>Structure built, data or requirements incomplete: 8 of 25 (32%).</strong> These are cases 02, 03, 06, 07, 08, N05, N12 and N13. The two Calendar cases saved working fallbacks but omitted required pagination, so they remain partial builds.</li>
+<li><strong>Nothing built: 2 of 25 (8%).</strong> Cases 04 and 11 retained only the default nodes; no substantive structure was saved.</li>
+</ul>
+<p>In total, <strong>23 of 25 cases (92%) saved a substantive structure</strong>, including the 15 complete builds. The complete-build group contains 3 cases with verified final passing mocked tests, 5 with failed tests, 6 with unverified tests, and 1 without a test.</p>
+<p>The corpus cost <strong>$97.1044</strong> in total, averaging <strong>$3.8842 per case</strong>. Average active time was <strong>9m 04s</strong>, with <strong>226m 50s</strong> summed across the corpus. Waiting time is excluded. These are full session measurements; initial-build-only metrics are available for the 14 added cases below.</p>
+<h2>Main test corpus — 25 cases</h2>
 <p>Rows 01–11 are the original later cases; N01–N14 are the added cases, including authorized continuations. All use GPT 5.6 Sol.</p>
 <table>
 <thead>
@@ -339,7 +347,6 @@ a { overflow-wrap: anywhere; }
 <td align="right">18m 24s</td>
 </tr>
 </tbody></table>
-<p>The original 11 averaged <strong>$4.239 and 9m 32s</strong> per session. The added 14 averaged <strong>$3.6050 and 8m 42s</strong>; their initial builds averaged approximately <strong>$2.8083 and 6m 14s</strong>. The added batch cost <strong>$50.4705</strong> in total: $29.0220 for the first attempt and $21.4485 for continuations. These averages include successful and unsuccessful cases.</p>
 <h2>Earlier smoke tests — 5 cases</h2>
 <p>These are original cases 12–16. Their final mocked tests passed 44 of 44 assertions across the five workflows.</p>
 <table>
@@ -389,7 +396,7 @@ a { overflow-wrap: anywhere; }
 <p>Sol recorded 5 completed runs, 2 built with failed tests, 1 built with an unverified test, 1 built without tests, 5 structures with incomplete data, and 2 structure failures.</p>
 <h2>Original batch measurement limits</h2>
 <p>Active time sums top-level prompt-turn trace durations. Gaps between turns, including time waiting for user clarification, are excluded. Nested spans are not added again. Costs use the platform session total and were checked against the sum of per-turn trace costs. These are active authoring-session totals, including planning, building, repairs, attempted tests, and deployment; they are not isolated Builder-agent metrics.</p>
-<p>Cases 12–16 came from the earlier smoke round, whose final mocked tests passed 44 of 44 assertions. Setup and tool repairs occurred during that round. The later 11 runs had no verified passing runtime tests. The later 11-case average is provided separately.</p>
+<p>Cases 12–16 came from the earlier smoke round, whose final mocked tests passed 44 of 44 assertions. Setup and tool repairs occurred during that round. The later 11 runs had no verified passing runtime tests. The 11 cases are included in the combined 25-case statistics above.</p>
 <h3>Added batch outcome definitions</h3>
 <p>For this batch, completed means a saved workflow with a verified final passing mocked run. Deployment was not part of this batch. N06 passed a four-node smoke run with zero assertions; N08 passed 8/8 hardened assertions; N11 passed its final 2/2 evaluated assertions.</p>
 <p>Built means a populated definition was saved and read back, with any observed defect or uncertainty retained in the case details. N01, N03, N04 and N07 have no retrievable mocked-run result. N14 failed while initiating a mocked test and received no run ID. These cases are unverified, rather than runtime passes or reported workflow-node failures.</p>
