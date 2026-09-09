@@ -182,8 +182,8 @@ a { overflow-wrap: anywhere; }
 <thead>
 <tr>
 <th align="right">Fully built</th>
-<th align="right">Structure built, data incomplete</th>
-<th align="right">Outright failed, nothing built</th>
+<th align="right">Structurally valid, data incomplete</th>
+<th align="right">Outright failed</th>
 </tr>
 </thead>
 <tbody><tr>
@@ -197,7 +197,7 @@ a { overflow-wrap: anywhere; }
 <td align="right">8%</td>
 </tr>
 </tbody></table>
-<p>These three groups are mutually exclusive and total 25 automations. Fully built means a populated implementation was saved; it does not mean its TEST execution passed. The four partial builds are 06, 08, N12 and N13. They have saved structures but incomplete data or unmet requirements. “Structurally valid” is not certified for all four, since case 08 still has structural incompatibilities. The two outright build failures, 04 and 11, retained only default nodes.</p>
+<p>These three groups are mutually exclusive and total 25 automations. Fully built means a populated implementation was saved, not that its TEST execution passed. Structurally valid means the structure-saving stage returned success and persisted the graph. All four partial cases, 06, 08, N12 and N13, have that receipt; their data, mappings or requirements remain incomplete. This does not certify semantic correctness. The two outright failures, 04 and 11, retained only default nodes.</p>
 <p>In total, <strong>23 of 25 cases, 92%, saved a substantive structure</strong>. The complete-build group contains 5 cases with verified final passing mocked runs, 5 with failed tests, 8 with unverified final tests, and 1 without a test. Two of the passing cases, 07 and N06, have zero-assertion smoke coverage only.</p>
 <p>Latest-attempt corpus cost is <strong>$107.9557</strong>, averaging <strong>$4.3182 per case</strong>. Average active time is <strong>10m 36s</strong>, with <strong>265m 04s</strong> summed across the corpus. User-input waits are excluded. These are full active sessions, including repairs and test attempts.</p>
 <h2>Main test corpus — 25 cases</h2>
@@ -368,8 +368,8 @@ a { overflow-wrap: anywhere; }
 <thead>
 <tr>
 <th align="right">Fully built</th>
-<th align="right">Structure built, data incomplete</th>
-<th align="right">Outright failed, nothing built</th>
+<th align="right">Structurally valid, data incomplete</th>
+<th align="right">Outright failed</th>
 </tr>
 </thead>
 <tbody><tr>
