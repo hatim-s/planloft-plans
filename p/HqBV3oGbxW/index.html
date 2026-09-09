@@ -176,17 +176,17 @@ a { overflow-wrap: anywhere; }
 <main class="planloft-plan">
 <article><h1>Workflow Sol run statistics</h1>
 <p>This report treats the 11 later Sol cases and 14 added Sol cases as one 25-case corpus. The five earlier smoke tests remain separate and are excluded from the corpus statistics. Every prompt name links to its automation and chat.</p>
-<p>Cost is the cumulative session total in USD. Time taken is active session time, including planning, building, repairs and attempted tests, excluding time waiting for user input, quota approval or continuation scheduling. Build-only estimates for the added cases are retained below. Corpus totals include all 25 cases and their authorized continuations, regardless of outcome.</p>
+<p>Cost is the cumulative session total in USD. Time taken is active session time, including planning, building, repairs and attempted tests, excluding time waiting for user input, quota approval or continuation scheduling. Build-only estimates for the added cases are retained below. Corpus totals use one latest recorded attempt per prompt, including its authorized continuations, regardless of outcome. Six exact-prompt reruns replace cases 02, 03, 06, 07, 08 and N05. They do not add cases to the denominator. Prior attempts remain in the comparison below.</p>
 <h2>25-case corpus statistics</h2>
 <ul>
-<li><strong>Built completely: 15 of 25 (60%).</strong> A populated implementation was saved. Test failures and unverified tests are tracked separately; this count does not certify correct behavior.</li>
-<li><strong>Structure built, data or requirements incomplete: 8 of 25 (32%).</strong> These are cases 02, 03, 06, 07, 08, N05, N12 and N13. The two Calendar cases saved working fallbacks but omitted required pagination, so they remain partial builds.</li>
-<li><strong>Nothing built: 2 of 25 (8%).</strong> Cases 04 and 11 retained only the default nodes; no substantive structure was saved.</li>
+<li><strong>Built completely: 19 of 25, 76%.</strong> A populated implementation was saved. This measures build completion, not behavioral correctness.</li>
+<li><strong>Structure built only: 4 of 25, 16%.</strong> Cases 06, 08, N12 and N13 retain incomplete data or unmet requirements.</li>
+<li><strong>Nothing built: 2 of 25, 8%.</strong> Cases 04 and 11 retained only default nodes.</li>
 </ul>
-<p>In total, <strong>23 of 25 cases (92%) saved a substantive structure</strong>, including the 15 complete builds. The complete-build group contains 3 cases with verified final passing mocked tests, 5 with failed tests, 6 with unverified tests, and 1 without a test.</p>
-<p>The corpus cost <strong>$97.1044</strong> in total, averaging <strong>$3.8842 per case</strong>. Average active time was <strong>9m 04s</strong>, with <strong>226m 50s</strong> summed across the corpus. Waiting time is excluded. These are full session measurements; initial-build-only metrics are available for the 14 added cases below.</p>
+<p>In total, <strong>23 of 25 cases, 92%, saved a substantive structure</strong>. The complete-build group contains 5 cases with verified final passing mocked runs, 5 with failed tests, 8 with unverified final tests, and 1 without a test. Two of the passing cases, 07 and N06, have zero-assertion smoke coverage only.</p>
+<p>Latest-attempt corpus cost is <strong>$107.9557</strong>, averaging <strong>$4.3182 per case</strong>. Average active time is <strong>10m 36s</strong>, with <strong>265m 04s</strong> summed across the corpus. User-input waits are excluded. These are full active sessions, including repairs and test attempts.</p>
 <h2>Main test corpus — 25 cases</h2>
-<p>Rows 01–11 are the original later cases; N01–N14 are the added cases, including authorized continuations. All use GPT 5.6 Sol.</p>
+<p>Rows 01–11 and N01–N14 retain their original corpus identities. The six rerun rows link to the latest automation and chat. All use GPT 5.6 Sol.</p>
 <table>
 <thead>
 <tr>
@@ -203,16 +203,16 @@ a { overflow-wrap: anywhere; }
 <td align="right">5m 13s</td>
 </tr>
 <tr>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0ad632b1df24c50dc6cd6/builder?b_9U8If-chatId=e_6aa0ad636adc5c436d0021ca&amp;nav=copilot">02. Google Meet Attendees</a></td>
-<td>Structure built; data failed</td>
-<td align="right">$1.759</td>
-<td align="right">6m 19s</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa161fb2b1df24c50fcc16b/builder?b_9U8If-chatId=e_6aa161fcf5235142006ec8e4&amp;nav=copilot">02. Google Meet Attendees</a></td>
+<td>Built; test unverified</td>
+<td align="right">$2.4414</td>
+<td align="right">6m 55s</td>
 </tr>
 <tr>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0aed18441ee04fc349ce1/builder?b_9U8If-chatId=e_6aa0aed16adc5c436d0023c5&amp;nav=copilot">03. Synchronize Company Portfolio</a></td>
-<td>Structure built; data failed</td>
-<td align="right">$3.282</td>
-<td align="right">7m 12s</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1620257ad1104aee43e01/builder?b_9U8If-chatId=e_6aa16202fe0ef7104b7e150d&amp;nav=copilot">03. Synchronize Company Portfolio</a></td>
+<td>Built; final repair not tested</td>
+<td align="right">$8.4040</td>
+<td align="right">24m 10s</td>
 </tr>
 <tr>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0af67e117e83eb6c9ffce/builder?b_9U8If-chatId=e_6aa0af676adc5c436d002424&amp;nav=copilot">04. Vehicle Maintenance Parts Ordering</a></td>
@@ -227,22 +227,22 @@ a { overflow-wrap: anywhere; }
 <td align="right">19m 47s</td>
 </tr>
 <tr>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0aff455c9f52942c076d1/builder?b_9U8If-chatId=e_6aa0aff46adc5c436d0025a7&amp;nav=copilot">06. Detect Calendar Meeting Conflicts</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1620a26d117569874a070/builder?b_9U8If-chatId=e_6aa1620af5235142006ec9a5&amp;nav=copilot">06. Detect Calendar Meeting Conflicts</a></td>
 <td>Structure built; data failed</td>
-<td align="right">$4.515</td>
-<td align="right">6m 32s</td>
+<td align="right">$3.3889</td>
+<td align="right">6m 56s</td>
 </tr>
 <tr>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b0e357ad1104aeb8b5c8/builder?b_9U8If-chatId=e_6aa0b0e33d01ae3b9ea1eca8&amp;nav=copilot">07. Track Candidate Interview Stage</a></td>
-<td>Structure built; data failed</td>
-<td align="right">$5.740</td>
-<td align="right">14m 04s</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1621355c9f52942e45d49/builder?b_9U8If-chatId=e_6aa16213aeb9ea1371abd601&amp;nav=copilot">07. Track Candidate Interview Stage</a></td>
+<td>Completed</td>
+<td align="right">$6.8769</td>
+<td align="right">20m 59s</td>
 </tr>
 <tr>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b2c1eb37863596dde1fd/builder?b_9U8If-chatId=e_6aa0b2c16adc5c436d002cf4&amp;nav=copilot">08. Aggregate User and Client Information</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1621a57ad1104aee444ca/builder?b_9U8If-chatId=e_6aa1621af5235142006ecb26&amp;nav=copilot">08. Aggregate User and Client Information</a></td>
 <td>Structure built; data failed</td>
-<td align="right">$3.679</td>
-<td align="right">8m 47s</td>
+<td align="right">$6.4154</td>
+<td align="right">13m 31s</td>
 </tr>
 <tr>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b4403db8a857dab460d9/builder?b_9U8If-chatId=e_6aa0b4407cdf9416f40a4892&amp;nav=copilot">09. Assess Vendor Risk</a></td>
@@ -287,10 +287,10 @@ a { overflow-wrap: anywhere; }
 <td align="right">6m 04s</td>
 </tr>
 <tr>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14154eb37863596fe8db1/builder?b_9U8If-chatId=e_6aa14154aeb9ea1371a7a430&amp;nav=copilot">N05. Hackathon Team Registration</a></td>
-<td>Structure built; data failed</td>
-<td align="right">$2.7704</td>
-<td align="right">8m 05s</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa162203db8a857daddcfaa/builder?b_9U8If-chatId=e_6aa16220aeb9ea1371abd72c&amp;nav=copilot">N05. Hackathon Team Registration</a></td>
+<td>Completed</td>
+<td align="right">$5.0696</td>
+<td align="right">16m 41s</td>
 </tr>
 <tr>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141698441ee04fc6311db/builder?b_9U8If-chatId=e_6aa14169f523514200680b25&amp;nav=copilot">N06. Eval 3g | Email draft</a></td>
@@ -390,6 +390,128 @@ a { overflow-wrap: anywhere; }
 </tr>
 </tbody></table>
 <p>The five smoke tests cost <strong>$24.586</strong> in total, averaging <strong>$4.917</strong> and <strong>15m 45s</strong> of active session time.</p>
+<h2>Six exact-prompt reruns, 9 September 2026</h2>
+<p>The six reruns cost $32.5963 and took 89m 12s of summed active time. They replaced six partial builds with four complete builds and two partial builds. The prior corpus snapshot was 15 complete, 8 partial and 2 empty, costing $97.1044 over 226m 50s. Total historical corpus spend including both attempts is $129.7007; this is expenditure across 31 attempts, not the 25-case latest-attempt average.</p>
+<p>Every initial prompt matches its previous corpus prompt exactly. All observed timeline model labels are OpenAI GPT 5.6 Sol. Native LLM details from each session confirm model ID <code>e_6a7e0292dcecfe25a407c78d</code>. All six chats are terminal; that platform state is separate from TEST results. No new prompts or tests were started for this report update.</p>
+<p>Active time sums top-level trace latencies and excludes gaps between user turns. Nested spans are not counted twice. The reruns exclude 12m 16s of between-turn waits. Initial-build time ends at the first Test_Workflow handoff; later repairs remain in active total time.</p>
+<table>
+<thead>
+<tr>
+<th>Prompt</th>
+<th>Outcome</th>
+<th align="right">Cost</th>
+<th align="right">Time taken</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0ad632b1df24c50dc6cd6/builder?b_9U8If-chatId=e_6aa0ad636adc5c436d0021ca&amp;nav=copilot">02. Google Meet Attendees</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$1.759</td>
+<td align="right">6m 19s</td>
+</tr>
+<tr>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0aed18441ee04fc349ce1/builder?b_9U8If-chatId=e_6aa0aed16adc5c436d0023c5&amp;nav=copilot">03. Synchronize Company Portfolio</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$3.282</td>
+<td align="right">7m 12s</td>
+</tr>
+<tr>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0aff455c9f52942c076d1/builder?b_9U8If-chatId=e_6aa0aff46adc5c436d0025a7&amp;nav=copilot">06. Detect Calendar Meeting Conflicts</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$4.515</td>
+<td align="right">6m 32s</td>
+</tr>
+<tr>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b0e357ad1104aeb8b5c8/builder?b_9U8If-chatId=e_6aa0b0e33d01ae3b9ea1eca8&amp;nav=copilot">07. Track Candidate Interview Stage</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$5.740</td>
+<td align="right">14m 04s</td>
+</tr>
+<tr>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b2c1eb37863596dde1fd/builder?b_9U8If-chatId=e_6aa0b2c16adc5c436d002cf4&amp;nav=copilot">08. Aggregate User and Client Information</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$3.679</td>
+<td align="right">8m 47s</td>
+</tr>
+<tr>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14154eb37863596fe8db1/builder?b_9U8If-chatId=e_6aa14154aeb9ea1371a7a430&amp;nav=copilot">N05. Hackathon Team Registration</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$2.7704</td>
+<td align="right">8m 05s</td>
+</tr>
+</tbody></table>
+<p>The table above preserves superseded attempts for comparison only. They are excluded from latest-attempt statistics.</p>
+<h3>Latest saved and runtime evidence</h3>
+<ul>
+<li><ol start="2">
+<li>Google Meet Attendees saved all 20 nodes at v3. Native inspection returned RUN_NOT_FOUND for <code>6aa16377bba5254a3b97565a</code>. No runtime result is verified.</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>Company Portfolio saved 15 nodes at v18. The prior v17 test <code>6aa166ddbba5254a3b97566a</code> failed in n_RawA1 with StringIndexOutOfBoundsException. The adapter was then replaced, but the retained case still referenced the old node. No v18 test started. The latest build is populated, with its final repair untested.</li>
+</ol>
+</li>
+<li><ol start="6">
+<li>Calendar Conflicts saved a partial v3 graph. Only pageToken, continuation and supported Calendar mappings were persisted in the final repair. Callable schemas, required inputs, pagination and recurring-instance expansion remain incomplete.</li>
+</ol>
+</li>
+<li><ol start="7">
+<li>Candidate Interview Stage saved 13 nodes at v13. Native TEST evidence confirms <code>6aa16686bba5254a3b975669</code> COMPLETED through the response node, with zero assertions. Hardened multi-page test authoring failed because sequential per-invocation mock outputs were rejected. Multi-page behavior remains unproven.</li>
+</ol>
+</li>
+<li><ol start="8">
+<li>User and Client Information remains an incomplete draft. Scalar-string template outputs, flattening ownerUserId arrays and null-safe ActiveSince conversion are unresolved. No runtime test occurred.</li>
+</ol>
+</li>
+<li>N05. Hackathon Team Registration saved 12 nodes at v10. Native TEST evidence for <code>6aa165e4bba5254a3b975665</code> confirms COMPLETED and 2/2 assertions for the duplicate response and reaching its terminal node. The run trace contains no employee-resolution, update or insert nodes. The assertions themselves do not independently assert non-execution of those nodes.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th align="right">Active initial build</th>
+<th align="right">Active total</th>
+<th align="right">Excluded wait</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>02</td>
+<td align="right">4m 34s</td>
+<td align="right">6m 55s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>03</td>
+<td align="right">18m 22s</td>
+<td align="right">24m 10s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>06</td>
+<td align="right">6m 56s</td>
+<td align="right">6m 56s</td>
+<td align="right">6m 05s</td>
+</tr>
+<tr>
+<td>07</td>
+<td align="right">8m 53s</td>
+<td align="right">20m 59s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>08</td>
+<td align="right">13m 31s</td>
+<td align="right">13m 31s</td>
+<td align="right">6m 10s</td>
+</tr>
+<tr>
+<td>N05</td>
+<td align="right">10m 14s</td>
+<td align="right">16m 41s</td>
+<td align="right">0m 00s</td>
+</tr>
+</tbody></table>
+<p>All six saved workflows remain undeployed. Completed here means verified final mocked-run completion, with the assertion scope stated above. Earlier batch details below describe their historical attempts and configurations, not these reruns.</p>
 <h2>Original batch outcome definitions</h2>
 <p>For the original 16-run batch, completed means a saved and deployed workflow passed its final mocked tests. Built means a populated definition was saved; it does not certify correct behavior. Failed tests and unverifiable tests remain separate outcomes. Vendor-risk testing returned RUN_NOT_FOUND, so its result is unverified.</p>
 <p>Structure built; data failed means a nonblank graph was saved, but required inputs, code, conditions, or mappings remained incomplete. It labels the stage reached and does not certify topology or behavioral correctness. Structure failed means only the default nodes remained.</p>
