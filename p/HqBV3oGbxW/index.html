@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Workflow Sol run statistics</title>
+<style>/* planloft planloft-customise theme starter */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --pl-ink: #edf0f3;
+    --pl-muted: #abb4bf;
+    --pl-paper: #121519;
+    --pl-surface: #1d2228;
+    --pl-rule: #39414a;
+    --pl-accent: #8ec5ff;
+  }
+}
+
+:root[data-planloft-color-scheme="light"] {
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
+}
+
+:root[data-planloft-color-scheme="dark"] {
+  --pl-ink: #edf0f3;
+  --pl-muted: #abb4bf;
+  --pl-paper: #121519;
+  --pl-surface: #1d2228;
+  --pl-rule: #39414a;
+  --pl-accent: #8ec5ff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  font: 16px/1.65 system-ui, sans-serif;
+}
+.planloft-plan {
+  width: min(100% - 2rem, 52rem);
+  margin-inline: auto;
+  padding-block: 4rem 6rem;
+}
+h1, h2, h3 { line-height: 1.2; }
+h2 { margin-top: 2.25rem; padding-top: 1rem; border-top: 1px solid var(--pl-rule); }
+a { color: var(--pl-accent); text-underline-offset: 0.15em; }
+a:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 3px; }
+code { padding: 0.1em 0.3em; border-radius: 0.25rem; background: var(--pl-surface); }
+pre { overflow-x: auto; padding: 1rem; border-radius: 0.5rem; background: var(--pl-surface); }
+pre code { padding: 0; background: transparent; }
+blockquote { margin-inline: 0; padding-left: 1rem; border-left: 3px solid var(--pl-accent); color: var(--pl-muted); }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+th, td { padding: 0.5rem 0.75rem; border: 1px solid var(--pl-rule); text-align: left; }
+hr { border: 0; border-top: 1px solid var(--pl-rule); }
+
+.planloft-plan { width: min(100% - 3rem, 78rem); padding-block: 5rem 6rem; }
+h1 { font-size: clamp(2rem, 4vw, 3.3rem); letter-spacing: -.045em; max-width: 900px; margin: 0 0 1.5rem; }
+h2 { font-size: 1.45rem; letter-spacing: -.02em; }
+h3 { font-size: 1.15rem; margin-top: 3rem; }
+p, blockquote { max-width: 920px; }
+blockquote { padding: 1rem 1.25rem; background: var(--pl-surface); border-radius: 0 .5rem .5rem 0; }
+blockquote p { margin: 0; }
+table { width: 100%; margin-block: 1.5rem; font-size: 14px; line-height: 1.45; border: 1px solid var(--pl-rule); border-radius: .5rem; }
+thead { background: var(--pl-surface); }
+th { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; padding-block: 1rem; }
+th, td { border: 0; border-bottom: 1px solid var(--pl-rule); padding: .9rem 1rem; vertical-align: middle; }
+th:nth-child(1), td:nth-child(1) { min-width: 62px; color: var(--pl-muted); font-variant-numeric: tabular-nums; }
+th:nth-child(2), td:nth-child(2) { min-width: 105px; max-width: 125px; }
+th:nth-child(3), td:nth-child(3) { min-width: 250px; width: 30%; font-weight: 500; }
+th:nth-child(4), td:nth-child(4) { min-width: 125px; }
+th:nth-child(5), td:nth-child(5) { min-width: 190px; }
+th:nth-child(6),td:nth-child(6),th:nth-child(7),td:nth-child(7) { min-width: 105px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+tbody tr:nth-child(4n+3), tbody tr:nth-child(4n+4) { background: var(--pl-surface); }
+tbody tr:nth-child(n+17) { background: var(--pl-surface); font-weight: 600; }
+tbody tr:nth-child(17) { border-top: 3px solid var(--pl-accent); }
+tbody tr:hover { outline: 1px solid var(--pl-accent); outline-offset: -1px; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.7 ui-monospace, monospace; max-width: 100%; }
+code { overflow-wrap: anywhere; }
+a { overflow-wrap: anywhere; }
+@media(max-width: 640px) { .planloft-plan { width: calc(100% - 2rem); padding-top: 4.5rem; } table { font-size: 13px; } }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><h1>Workflow Sol run statistics</h1>
+<p>This report covers 16 recorded runs using GPT 5.6 Sol. The average was $4.451 and 11m 29s of active authoring time per run.</p>
+<blockquote>
+<p>Of seven incomplete builds, five saved a structure but failed to finish node data. Two did not persist a structure.</p>
+</blockquote>
+<p>Recorded metrics snapshot: 9 September 2026, 07:30 UTC. Every automation link includes the run’s chatId. Costs are USD. Averages include successful and unsuccessful runs.</p>
+<h2>Sol run statistics</h2>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Model</th>
+<th>Prompt or summary</th>
+<th>Automation and chat</th>
+<th>Outcome</th>
+<th align="right">Cost, USD</th>
+<th align="right">Active time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>Sol</td>
+<td>Get Lab Performance Summary</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0ad49eb37863596dd6a8b/builder?b_9U8If-chatId=e_6aa0ad493d01ae3b9ea1e2da&amp;nav=copilot">Open run</a></td>
+<td>Built; tests failed</td>
+<td align="right">$2.443</td>
+<td align="right">5m 13s</td>
+</tr>
+<tr>
+<td>02</td>
+<td>Sol</td>
+<td>Google Meet Attendees</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0ad632b1df24c50dc6cd6/builder?b_9U8If-chatId=e_6aa0ad636adc5c436d0021ca&amp;nav=copilot">Open run</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$1.759</td>
+<td align="right">6m 19s</td>
+</tr>
+<tr>
+<td>03</td>
+<td>Sol</td>
+<td>Synchronize Company Portfolio</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0aed18441ee04fc349ce1/builder?b_9U8If-chatId=e_6aa0aed16adc5c436d0023c5&amp;nav=copilot">Open run</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$3.282</td>
+<td align="right">7m 12s</td>
+</tr>
+<tr>
+<td>04</td>
+<td>Sol</td>
+<td>Vehicle Maintenance Parts Ordering</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0af67e117e83eb6c9ffce/builder?b_9U8If-chatId=e_6aa0af676adc5c436d002424&amp;nav=copilot">Open run</a></td>
+<td>Structure failed</td>
+<td align="right">$0.320</td>
+<td align="right">0m 27s</td>
+</tr>
+<tr>
+<td>05</td>
+<td>Sol</td>
+<td>Get Director Attendance Hierarchy</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0af808441ee04fc34f69d/builder?b_9U8If-chatId=e_6aa0af806adc5c436d002431&amp;nav=copilot">Open run</a></td>
+<td>Built; tests failed</td>
+<td align="right">$8.448</td>
+<td align="right">19m 47s</td>
+</tr>
+<tr>
+<td>06</td>
+<td>Sol</td>
+<td>Detect Calendar Meeting Conflicts</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0aff455c9f52942c076d1/builder?b_9U8If-chatId=e_6aa0aff46adc5c436d0025a7&amp;nav=copilot">Open run</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$4.515</td>
+<td align="right">6m 32s</td>
+</tr>
+<tr>
+<td>07</td>
+<td>Sol</td>
+<td>Track Candidate Interview Stage</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b0e357ad1104aeb8b5c8/builder?b_9U8If-chatId=e_6aa0b0e33d01ae3b9ea1eca8&amp;nav=copilot">Open run</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$5.740</td>
+<td align="right">14m 04s</td>
+</tr>
+<tr>
+<td>08</td>
+<td>Sol</td>
+<td>Aggregate User and Client Information</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b2c1eb37863596dde1fd/builder?b_9U8If-chatId=e_6aa0b2c16adc5c436d002cf4&amp;nav=copilot">Open run</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$3.679</td>
+<td align="right">8m 47s</td>
+</tr>
+<tr>
+<td>09</td>
+<td>Sol</td>
+<td>Assess Vendor Risk</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b4403db8a857dab460d9/builder?b_9U8If-chatId=e_6aa0b4407cdf9416f40a4892&amp;nav=copilot">Open run</a></td>
+<td>Built; test unverified</td>
+<td align="right">$7.118</td>
+<td align="right">16m 42s</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Sol</td>
+<td>Resolve Session Schedule Conflicts</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b45b55c9f52942c1bcd7/builder?b_9U8If-chatId=e_6aa0b45b6adc5c436d0032a8&amp;nav=copilot">Open run</a></td>
+<td>Built; not tested</td>
+<td align="right">$8.972</td>
+<td align="right">19m 22s</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Sol</td>
+<td>Evaluate Policy Application</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b4faeb37863596df1849/builder?b_9U8If-chatId=e_6aa0b4fa6adc5c436d003651&amp;nav=copilot">Open run</a></td>
+<td>Structure failed</td>
+<td align="right">$0.359</td>
+<td align="right">0m 32s</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Sol · earlier smoke</td>
+<td>Submit Service Intake</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa076a12b1df24c50d40785/builder?b_9U8If-chatId=e_6aa076a1fd0d6c3aaf59c04b&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$6.804</td>
+<td align="right">22m 42s</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Sol · earlier smoke</td>
+<td>Process Request Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa076c6e117e83eb6c43649/builder?b_9U8If-chatId=e_6aa076c63723e155b3c27cae&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$3.687</td>
+<td align="right">14m 28s</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Sol · earlier smoke</td>
+<td>Process Change Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa07a46eb37863596cf6c3c/builder?b_9U8If-chatId=e_6aa07a46fd0d6c3aaf59e1a4&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$2.694</td>
+<td align="right">9m 14s</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Sol · earlier smoke</td>
+<td>Send Work Notification</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa07c23e117e83eb6c5bd7b/builder?b_9U8If-chatId=e_6aa07c23fd0d6c3aaf59eb1e&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$3.153</td>
+<td align="right">11m 50s</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Sol · earlier smoke</td>
+<td>Recalculate Incident Priority</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa07c7f2b1df24c50d73a80/builder?b_9U8If-chatId=e_6aa07c7f3723e155b3c2a435&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$8.248</td>
+<td align="right">20m 31s</td>
+</tr>
+<tr>
+<td>AVG</td>
+<td>Sol</td>
+<td><strong>Average · all 16 runs</strong></td>
+<td>—</td>
+<td>Includes all outcomes</td>
+<td align="right"><strong>$4.451</strong></td>
+<td align="right"><strong>11m 29s</strong></td>
+</tr>
+<tr>
+<td>AVG</td>
+<td>Sol</td>
+<td><strong>Average · later cases 1–11</strong></td>
+<td>—</td>
+<td>Includes all outcomes</td>
+<td align="right"><strong>$4.239</strong></td>
+<td align="right"><strong>9m 32s</strong></td>
+</tr>
+<tr>
+<td>TOTAL</td>
+<td>Sol</td>
+<td>16 runs</td>
+<td>—</td>
+<td>Cumulative active time</td>
+<td align="right">$71.220</td>
+<td align="right">183m 42s</td>
+</tr>
+</tbody></table>
+<h2>How to read the results</h2>
+<p>Completed means a saved and deployed workflow passed its final mocked tests. Built means a populated definition was saved; it does not certify correct behavior. Failed tests and unverifiable tests remain separate outcomes. Vendor-risk testing returned RUN_NOT_FOUND, so its result is unverified.</p>
+<p>Structure built; data failed means a nonblank graph was saved, but required inputs, code, conditions, or mappings remained incomplete. It labels the stage reached and does not certify topology or behavioral correctness. Structure failed means only the default nodes remained.</p>
+<p>Sol recorded 5 completed runs, 2 built with failed tests, 1 built with an unverified test, 1 built without tests, 5 structures with incomplete data, and 2 structure failures.</p>
+<h2>Measurement and comparison limits</h2>
+<p>Active time sums top-level prompt-turn trace durations. Gaps between turns, including time waiting for user clarification, are excluded. Nested spans are not added again. Costs use the platform session total and were checked against the sum of per-turn trace costs. These are active authoring-session totals, including planning, building, repairs, attempted tests, and deployment; they are not isolated Builder-agent metrics.</p>
+<p>Cases 12–16 came from the earlier smoke round, whose final mocked tests passed 44 of 44 assertions. Setup and tool repairs occurred during that round. The later 11 runs had no verified passing runtime tests. The later 11-case average is provided separately.</p>
+<h2>Prompts and observed failure details</h2>
+<p>Full prompts appear below in the same numbered order as the table. Follow-up clarifications remain in the linked conversations. Observations describe saved state from the evaluation snapshot, rather than the agents’ completion claims.</p>
+<h3>Prompt 1</h3>
+<p>Get Lab Performance Summary</p>
+<pre><code class="language-text">Create a callable automation named Get Lab Performance Summary. Accept required strings region, design_center, lab_description. Retrieve up to 2,000 records for the supplied region and design center from each of performance_labs_eff_matrixs and performance_labs_master_data. Normalize matching text with Unicode NFKC, lowercase, replace punctuation with spaces, collapse whitespace and trim. Select records whose normalized lab_description exactly equals the normalized input; do not invent fuzzy matches. If several exact records match in a source, choose the smallest stable record ID lexicographically and report the full match count. Use master data for specifications and efficiency-matrix data for availability/utilization/performance metrics. Copy stored metrics; do not invent formulas for unspecified metrics. Determine target_product from the selected master record&#39;s lab_application_product_wise when nonblank, otherwise lab_application, otherwise null. No match in either source returns LAB_NOT_FOUND as an explicit error.
+
+Return an object with exactly the field names in the output type map below. Type words describe field types, not literal values. For every missing specification or metric, return null and make that property nullable; never invent an intelligent default, zero, false, or a lab specification. Echo the three input strings. eff_match_count and key_mat_match_count count exact matches in the efficiency and master sources respectively; found_in_eff and found_in_key_mat are those counts &gt; 0. If a fetch reaches 2,000 rows and more rows exist, fail with LAB_QUERY_TRUNCATED rather than select from an incomplete candidate set.
+
+Output type map:
+{
+    &quot;lab_code&quot;: &quot;string&quot;,
+    &quot;owner&quot;: &quot;string&quot;,
+    &quot;test_status&quot;: &quot;string&quot;,
+    &quot;peak_load&quot;: &quot;number&quot;,
+    &quot;throughput_rps&quot;: &quot;number&quot;,
+    &quot;notes&quot;: &quot;string&quot;,
+    &quot;created_at&quot;: &quot;integer&quot;,
+    &quot;lab_type&quot;: &quot;string&quot;,
+    &quot;error_rate_percent&quot;: &quot;number&quot;,
+    &quot;created_by&quot;: &quot;string&quot;,
+    &quot;tags&quot;: &quot;array&quot;,
+    &quot;test_environment&quot;: &quot;string&quot;,
+    &quot;memory_utilization_percent&quot;: &quot;number&quot;,
+    &quot;lab_name&quot;: &quot;string&quot;,
+    &quot;test_date&quot;: &quot;integer&quot;,
+    &quot;response_time_ms&quot;: &quot;number&quot;,
+    &quot;department&quot;: &quot;string&quot;,
+    &quot;lab_id&quot;: &quot;string&quot;,
+    &quot;test_name&quot;: &quot;string&quot;,
+    &quot;cpu_utilization_percent&quot;: &quot;number&quot;,
+    &quot;test_id&quot;: &quot;string&quot;
+}
+</code></pre>
+<p><strong>Built; tests failed.</strong> All four nodes contain executable data. Efficiency-only scope follows the actual clarification. Recorded run failed at n_Cod03. Saved code emits nullable error_code for not-found/truncation and sorts with localeCompare rather than strict codepoint lexicographic comparison, so configuration alone does not prove the requested contract.</p>
+<h3>Prompt 2</h3>
+<p>Google Meet Attendees</p>
+<pre><code class="language-text">Create a callable automation named Google Meet Attendees, using Trigger by Automation. Accept a required string input named &quot;meeting_code&quot;; for example {&quot;meeting_code&quot;:&quot;rbs-cojk-yux&quot;}. Use the input value, not a hardcoded code. With connection Meet | K1, find conference records for that meeting code. If more than one exists, choose the most recently started conference, breaking ties by conference resource name. Retrieve all participant pages for that conference. Include only signed-in participants and return their display names in {&quot;result&quot;:[&quot;string&quot;]}; ignore anonymous and phone-only participants. If no conference or no signed-in participants exists, return {&quot;result&quot;:[]}. Do not turn a connector failure into an empty success.
+</code></pre>
+<p><strong>Structure built; data failed.</strong> Thirteen of twenty nodes have empty inputs, including conference list creation, both loops, participant fetches and final response.</p>
+<h3>Prompt 3</h3>
+<p>Synchronize Company Portfolio</p>
+<pre><code class="language-text">Create a callable automation that requires no input and retrieves company portfolio data from `https://yc-oss.github.io/api/companies/top.json`. The automation should clean and standardize the retrieved records&#39; result, synchronize them with the internal object:companies by updating existing companies and creating new ones where necessary, and finally return a summary containing the total number of companies processed, the data source, and the synchronized company records.
+
+Input Schema
+
+
+{}
+
+Output Schema
+
+
+{
+  &quot;result&quot;: {
+    &quot;total&quot;: &quot;number&quot;,
+    &quot;source&quot;: &quot;string&quot;,
+    &quot;data&quot;: [
+      {
+        &quot;company&quot;: {
+          &quot;name&quot;: &quot;string&quot;,
+          &quot;slug&quot;: &quot;string&quot;,
+          &quot;url&quot;: &quot;string&quot;,
+          &quot;logo&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;string&quot;
+        },
+        &quot;founders&quot;: [
+          {
+            &quot;name&quot;: &quot;string&quot;
+          }
+        ],
+        &quot;companyOwners&quot;: &quot;string&quot;,
+        &quot;investment&quot;: {
+          &quot;round&quot;: &quot;string&quot;,
+          &quot;stage&quot;: &quot;string&quot;,
+          &quot;year&quot;: &quot;number&quot;,
+          &quot;raw&quot;: &quot;string&quot;
+        },
+        &quot;exit&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    ]
+  }
+}
+
+Use slug as the required unique company match key. Map only fields actually returned by the source: name to company.name, slug to company.slug, website (falling back to url) to company.url, small_logo_thumb_url (falling back to logo) to company.logo, and long_description (falling back to one_liner) to company.description. Trim text. Missing company text fields become empty strings. Copy structured founders only if present, otherwise use []; use empty string for absent companyOwners and absent investment round/stage/raw or exit type; use null for unknown investment year and make that output property nullable. Do not infer financing, founders or exit history from unrelated fields. Match the existing companies object by slug and resolve its actual storage fields for this mapping. Preserve unrelated fields on updates. Skip and count no records silently: a source row without slug, duplicate source slugs, or multiple stored matches for a slug is a validation error. Validate the whole source before writes. Return total equal to the number successfully synchronized, source equal to the requested URL, and data in source order. API failures or partial write failures are failed runs, not successful summaries.
+</code></pre>
+<p><strong>Structure built; data failed.</strong> All thirteen node input objects are empty.</p>
+<h3>Prompt 4</h3>
+<p>Vehicle Maintenance Parts Ordering</p>
+<pre><code class="language-text">Create a callable automation that accepts a vehicle model ID and mileage value and identifies maintenance parts that need to be ordered before servicing. The automation should fetch the vehicle&#39;s maintenance parts list from the Vehicles storage object, matching on vehicle_model_id. For every part in the list, calculate the Scaled Quantity as (quantity / base_mileage_interval) * mileage, representing the proportionally adjusted amount required for the vehicle&#39;s actual mileage. Next, cross-reference each part against the Garage_Inventory storage object using part_id, and calculate the Part Shortfall as scaled_quantity − quantity_in_stock. For every part whose Part Shortfall is greater than zero, collect it into a list containing the part ID, part name, scaled quantity, quantity in stock, and part shortfall. Finally, return the complete scaled parts list along with the list of parts that require restocking.
+input schema:{
+  &quot;vehicle_model_id&quot;: &quot;string&quot;,
+  &quot;mileage&quot;: &quot;number&quot;
+}
+output schema:
+{
+  &quot;scaled_parts_list&quot;: [
+    {
+      &quot;part_id&quot;: &quot;string&quot;,
+      &quot;part_name&quot;: &quot;string&quot;,
+      &quot;scaled_quantity&quot;: &quot;number&quot;,
+      &quot;unit&quot;: &quot;string&quot;
+    }
+  ],
+  &quot;shortfall_list&quot;: [
+    {
+      &quot;part_id&quot;: &quot;string&quot;,
+      &quot;part_name&quot;: &quot;string&quot;,
+      &quot;scaled_quantity&quot;: &quot;number&quot;,
+      &quot;quantity_in_stock&quot;: &quot;number&quot;,
+      &quot;part_shortfall&quot;: &quot;number&quot;
+    }
+  ]
+}
+
+Treat mileage as a nonnegative number and every base_mileage_interval as a strictly positive number; fail before division on invalid intervals. Preserve fractional scaled quantities as requested; do not round to whole parts. If a vehicle is missing, fail with VEHICLE_NOT_FOUND. For a missing Garage_Inventory part record, use quantity_in_stock = 0; if several records share a part_id, sum their quantities. Return empty arrays for a vehicle with no maintenance parts. The unit in scaled_parts_list comes from the vehicle part entry.
+</code></pre>
+<p><strong>Structure failed.</strong> Version zero retains two default nodes without context or inputs. No nonblank build.</p>
+<h3>Prompt 5</h3>
+<p>Get Director Attendance Hierarchy</p>
+<pre><code class="language-text">Build a callable automation named Get Director Attendance Hierarchy with input {}. Fetch all 2026-07-02 attendance records from UA reports | Eval. Resolve the stable employee ID, manager ID, role, attendance status and email fields. Select directors whose role contains Director, case-insensitively. Build the manager-to-employee graph from that day&#39;s records. For each director, traverse all direct and indirect reports using a visited set to avoid cycles; exclude that director from their own team and count every descendant employee once. Match attendance statuses exactly as In Office, Work From Home, Out of Office; include an Unknown count for missing or other statuses. If duplicate rows for an employee disagree on manager or attendance status, fail before sending emails; identical duplicate rows count once. A director with no descendants still receives a zero-count report. Validate all director email destinations before any send.
+
+Send each director one personalized HTML table through Gmail | K1 containing the four counts and date. Escape names and other record text in HTML. Return {&quot;results&quot;:[{&quot;directorId&quot;:&quot;string&quot;,&quot;labelIds&quot;:[&quot;string&quot;]}]}, with one item per successful send, sorted by director ID. If there are no directors, return {&quot;results&quot;:[]}. Gmail errors fail the run. Read labelIds from Gmail&#39;s response; do not invent label identifiers.
+</code></pre>
+<p><strong>Built; tests failed.</strong> All seventeen nodes contain inputs and both Groovy nodes contain code. Three recorded mocked runs fail at n_Prepa, with empty attendance field mapping. This is saved configuration, not runtime success.</p>
+<h3>Prompt 6</h3>
+<p>Detect Calendar Meeting Conflicts</p>
+<pre><code class="language-text">Build a callable automation named Detect Calendar Meeting Conflicts using Calendar | K1. Accept {&quot;calendarId&quot;:&quot;string&quot;,&quot;timeMin&quot;:&quot;RFC3339 string&quot;,&quot;timeMax&quot;:&quot;RFC3339 string&quot;}, with a valid increasing time window. Fetch all pages of events for that calendar/window, expanding recurring events. Ignore cancelled events, transparent events and all-day entries; this evaluation checks timed meetings only. Convert each timed event start/end to UTC and use half-open intervals [start,end), so back-to-back meetings do not conflict. Two meetings conflict when startA &lt; endB and startB &lt; endA. Return connected components of this overlap relation containing at least two events: transitive overlaps belong to one group even if not every pair overlaps. Sort events by start then ID, and groups by earliest event start. Return {&quot;conflictGroups&quot;:[{&quot;meetings&quot;:[{&quot;eventId&quot;:&quot;string&quot;,&quot;title&quot;:&quot;string&quot;,&quot;start&quot;:&quot;RFC3339 string&quot;,&quot;end&quot;:&quot;RFC3339 string&quot;,&quot;durationMinutes&quot;:0,&quot;attendees&quot;:[&quot;email string&quot;]}]}]}. Compute duration from the original event interval, and use an empty attendee list when absent. Empty/no conflicts returns {&quot;conflictGroups&quot;:[]}. Do not propose new meeting times.
+</code></pre>
+<p><strong>Structure built; data failed.</strong> Callable input/output setup is persisted, but validation, Calendar query, conflict calculation and return inputs are empty.</p>
+<h3>Prompt 7</h3>
+<p>Track Candidate Interview Stage</p>
+<pre><code class="language-text">Create a callable automation named Track Candidate Interview Stage. Accept required string candidate_job_ID plus a required evaluationRules object. Query candidate_job where candidateJobId equals candidate_job_ID, then interview_scheduling where jobCandidateLink equals that same value; fetch all interview pages. Retrieve shortlistedByAI, currentStatus and interview round/status values. Missing candidate is CANDIDATE_NOT_FOUND.
+
+The source does not define the tenant&#39;s currentStatus/status vocabulary, so do not invent it. evaluationRules must contain candidateStatusStages (a map from each supported currentStatus value to a six-element outcome array) and interviewStatusOutcomes (a map from each supported interview status value to passed, failed, pending, to_be_scheduled, or skipped). These maps are explicit evaluation input and must be supplied from the test fixture. Stages in order are AI Match, AI Screening, AI Video Interview, Round 1 Interview, Round 2 Interview, Decision. Each candidateStatusStages array has exactly six entries using the same five outcome values. Unknown statuses or malformed maps fail with UNMAPPED_PIPELINE_STATUS.
+
+In a Groovy node, start from the mapped candidate status array. Set AI Match to passed when shortlistedByAI is true and failed when false; require a boolean. Interview round 1 overrides Round 1 Interview and round 2 overrides Round 2 Interview using interviewStatusOutcomes. Reject conflicting statuses for the same round; identical duplicates count once. Other round numbers do not alter the six standard stages. currentStage is the first failed stage if any, otherwise the first pending or to_be_scheduled stage, otherwise Decision. Return {&quot;currentStage&quot;:&quot;string&quot;,&quot;resultArray&quot;:[{&quot;name&quot;:&quot;string&quot;,&quot;pass&quot;:&quot;string&quot;,&quot;description&quot;:&quot;string&quot;}]} with exactly six entries in stage order. pass holds the outcome string; description contains the matching icon and outcome: passed ✓, failed ✗, pending …, to_be_scheduled ◷, skipped —. The Groovy outputs must feed the callable return.
+</code></pre>
+<p><strong>Structure built; data failed.</strong> Thirteen of fifteen nodes have populated inputs, including n_AccL0 list initialization despite final prose calling that node incomplete. n_Eval8 has no Groovy code and n_RetA9 has no result mapping. Still partial.</p>
+<h3>Prompt 8</h3>
+<p>Aggregate User and Client Information</p>
+<pre><code class="language-text">Create a callable automation that retrieves and aggregates user and client information based on a specific customer ID. The automation accepts an input schema matching {&quot;customerId&quot;: &quot;string&quot;}. First, query the delivery_brain_user_vs_customer_mapping storage table using the provided customerId to fetch all mapped user records, and initialize an empty list variable named UA to store the aggregated user details. Next, use a Loop node to iterate through each fetched mapping record. Inside the loop, query the users table using the mapped userId to retrieve the user&#39;s profile details, and concurrently query the delivery_brain_user_vs_customer_mapping table again using that specific userId to calculate their total workload or capacity count. Add these details as a new object to the UA list, mapping the user&#39;s name, email, designation, capacity (total count), employment start date (as ActiveSince), and user ID. After the loop completes, query the useCaseObject storage table using the original customerId to fetch associated use case records. Create a second list variable named Client by mapping the ownerUserId properties (name and email) from the fetched use case object. Finally, pass both constructed lists to a Callable Return node to output a response exactly matching the schema {&quot;arr&quot;: [{&quot;name&quot;: &quot;string&quot;, &quot;email&quot;: &quot;string&quot;, &quot;designation&quot;: &quot;string&quot;, &quot;Capacity&quot;: &quot;string&quot;, &quot;ActiveSince&quot;: &quot;string&quot;, &quot;userid&quot;: &quot;string&quot;}], &quot;arr2&quot;: [{&quot;name&quot;: &quot;string&quot;, &quot;email&quot;: &quot;string&quot;}]}.
+
+Use an explicit Loop node as requested. Deduplicate the first mapping results by userId so one user appears once in UA. Capacity is the count of all mapping records for that userId across all customers, serialized as a decimal string to match the output contract. ActiveSince is the stored employment start date as a string, or an empty string when absent. For a mapped user with no users record, fail with USER_NOT_FOUND instead of returning invented profile details. Resolve ownerUserId: if it is a reference ID, look up the referenced user to obtain name/email; if it already contains an expanded object, use its name/email. Deduplicate Client by ownerUserId. Sort UA by userid and Client by ownerUserId before dropping the owner ID from arr2. No customer mappings/use cases returns the corresponding empty arrays. Run the two lookups inside the user loop independently, then append to UA only after both complete.
+</code></pre>
+<p><strong>Structure built; data failed.</strong> Only the callable input/output contract is populated in the twenty-one-node graph. Explicit user loop, lookups, USER_NOT_FOUND code and final return remain empty.</p>
+<h3>Prompt 9</h3>
+<p>Assess Vendor Risk</p>
+<pre><code class="language-text">Build a callable automation named Assess Vendor Risk. Accept vendorId (string), asOf (RFC3339 timestamp), procurementEmail (string) and scoringRules (object). scoringRules contains paymentWeight, financialWeight, incidentWeight (nonnegative numbers summing to 1), lateDeliveryPenalty, invoiceDiscrepancyPenalty, declinePenaltyPerFraction, and incidentPenalties (nonnegative map keyed by incident type). These are evaluation fixture inputs, not inferred production risk policy.
+
+Fetch the vendor from vendor_eval1; fetch Vendor_Transactions for the preceding 24 calendar months, ending before asOf, and Vendor_Incidents for the latest 12 months. Resolve vendor linkage, transaction date/amount, late-delivery and invoice-discrepancy flags, incident type and incident date from actual object schemas. The latest and prior 12-month windows are adjacent half-open intervals. In Groovy: lateRate and discrepancyRate are fractions of current-window transactions carrying those flags. paymentScore = clamp(100 - lateDeliveryPenalty*lateRate - invoiceDiscrepancyPenalty*discrepancyRate,0,100). currentVolume and priorVolume are transaction amount sums; require both current-window transactions and positive priorVolume, otherwise fail with INSUFFICIENT_HISTORY before writes/mail. decline = max((priorVolume-currentVolume)/priorVolume,0); financialScore = clamp(100-declinePenaltyPerFraction*decline,0,100). For each incident, ageDays is elapsed UTC days from incident to asOf and recencyWeight=max(0,1-ageDays/365). incidentScore=clamp(100-sum(incidentPenalties[type]*recencyWeight),0,100). Unknown incident types are errors. riskScore is the weighted sum of the three scores; higher means healthier/lower risk. Compare the unrounded score, and round returned/logged scores to two decimals.
+
+Use a Branch node: score &lt;40 updates that vendor&#39;s active contracts in contracts to On Hold and emails procurementEmail via Gmail | K1 with sub-scores and factors, action HOLD; 40&lt;=score&lt;=70 updates the vendor review flag for quarterly review without a hold, action QUARTERLY_REVIEW; &gt;70 changes no contract/review flags, action NO_ACTION. Resolve the actual status and review fields before building. On every successful decision path insert one Vendor_Risk_Assessments record including vendorId, asOf, rules, sub-scores, composite and action. Return {&quot;riskScore&quot;:0,&quot;action&quot;:&quot;string&quot;}. Missing vendor, missing required data or connector/write failures are explicit failures, not fabricated decisions.
+</code></pre>
+<p><strong>Built; test unverified.</strong> All 35 nodes have populated inputs and both Groovy nodes contain code. Calendar windows use Instant.atZone(UTC).minusMonths. Separate mutable cursors/lists drive pagination. No verified runtime result: the reported smoke run was unavailable. Saved scoring treats missing transaction flags as false, rather than failing missing required data, so fully populated does not establish semantic correctness.</p>
+<h3>Prompt 10</h3>
+<p>Resolve Session Schedule Conflicts</p>
+<pre><code class="language-text">Build a callable automation named Resolve Session Schedule Conflicts, accepting {&quot;eventId&quot;:&quot;string&quot;}. Use Sessions for proposals, Venue_Slots for room/time options, Registrations for expected attendee counts, and Session_Schedule for final output. The source&#39;s trailing session_conflict name conflicts with these four roles; do not substitute that object. Resolve the four named objects and their event, session, speaker, room, capacity, start/end, speaker-email and availability fields before building.
+
+Fetch all relevant event records. In Groovy, sort sessions by stable session ID. For each session, sort venue slots by start time then room ID then slot ID. Assign the first slot fully within the speaker&#39;s availability, with capacity &gt;= that session&#39;s registration count, and with no overlap for either room or speaker with an already assigned session. Use [start,end) intervals; adjacent sessions may share a room or speaker. Each assignment reserves both room and speaker. If none fits, add the session with all applicable reasons: no speaker-compatible time, insufficient capacity, room occupied, speaker occupied. This fixed greedy algorithm is the evaluation rule; do not claim that an unresolved session proves no global solution exists.
+
+Branch on unresolvedSessions.length &gt; 0. If true, invoke an LLM with the proposals, candidate assignments and conflicts to suggest room/slot swaps, and email its suggestions to kavankansodariya@unifyapps.com through Gmail | K1 for review. Do not apply LLM suggestions, insert a partial schedule or email confirmations to speakers on this branch. If none are unresolved and there are sessions, perform one bulk insert of the full schedule into Session_Schedule and email each speaker their assigned sessions. For an empty event, return empty arrays with no writes, LLM or emails. Return {&quot;scheduledSessions&quot;:[{&quot;sessionId&quot;:&quot;string&quot;,&quot;room&quot;:&quot;string&quot;,&quot;timeSlot&quot;:&quot;string&quot;}],&quot;unresolvedSessions&quot;:[{&quot;sessionId&quot;:&quot;string&quot;,&quot;conflictReason&quot;:&quot;string&quot;}]}. On the unresolved branch scheduledSessions contains provisional assignments only; on the all-resolved branch it contains the saved schedule. Format timeSlot as startRFC3339/endRFC3339. Propagate persistence/mail failures.
+</code></pre>
+<p><strong>Built; not tested.</strong> All 33 nodes have inputs, but n_Grv01 parses timeSlot as JSON instead of the slash-delimited RFC3339 interval required by the actual followup. Valid clarified values become empty maps and date parsing fails. Early continue also prevents collecting all applicable conflict reasons per slot. No runtime test evidence.</p>
+<h3>Prompt 11</h3>
+<p>Evaluate Policy Application</p>
+<pre><code class="language-text">Create a callable automation named Evaluate Policy Application. This is a synthetic evaluation workflow, not production underwriting policy. Accept applicantId (string), coverageType (enum auto, home, health), creditScore (number from 0 to 1000), and underwritingRules (object). Replace the original Math.random()*300+500 expression with the supplied creditScore; do not call an unspecified credit service. underwritingRules includes creditThreshold and one object for each coverage type. Each type object contains basePremium (nonnegative number), highRiskThreshold (nonnegative number) and factors (array). Each factor has source (profile or claimsSummary), path (dot path), op (eq, gt, gte or in), value (comparison value; array for in), riskPoints (nonnegative number), and premiumMultiplier (number &gt;=1).
+
+Fetch the Applicants profile and all Claims_History records linked to applicantId. Build claimsSummary with count and totalClaimAmount; require a numeric claim amount on every claim. Missing applicant is an error. Supply evaluation fixture factors for auto that cover driving record and vehicle value; for home, property age, location risk zone and prior claims; for health, age, pre-existing conditions and claims frequency. Paths must match the actual profile schema or claimsSummary; missing configured values are errors, not false predicates.
+
+Use a Branch node keyed on coverageType and one Groovy node per type. Start with that type&#39;s basePremium and zero risk points. For each matching factor add riskPoints and multiply premium by premiumMultiplier. Set riskCategory to High when the total points &gt;= highRiskThreshold, otherwise Standard. Round the final premium to two decimals. After merging branches, if riskCategory is High AND creditScore &lt; creditThreshold, insert one Underwriting_Queue review task with applicant ID, coverage, premium and factor details, and email kavankansodariya@unifyapps.com through Gmail | K1; return decision MANUAL_REVIEW. Otherwise create a PDF policy summary containing applicant, coverage, premium and decision, attach it to one Gmail | K1 email to the applicant&#39;s stored email, and return decision APPROVED. Validate recipient and required data before side effects. Use the HTML-to-PDF utility&#39;s file output as the attachment. Return {&quot;decision&quot;:&quot;string&quot;,&quot;premium&quot;:0,&quot;riskCategory&quot;:&quot;High | Standard&quot;}, with one enum value for riskCategory. Propagate write, PDF and email errors. Identical profile, claims and rule/score inputs must give identical premium and decision.
+</code></pre>
+<p><strong>Structure failed.</strong> Version zero contains two default nodes without contexts or inputs. Initial object discovery remained unresolved. No build or runtime evidence.</p>
+<h3>Prompt 12</h3>
+<p>Submit Service Intake</p>
+<pre><code class="language-text">Automation: Submit Service Intake
+Creates a governed incident or service request and returns its identifier.
+
+Trigger: callable from the on-platform app — fixed input schema {work_type: string required, requester_email: string required, summary: string required, description: string required, category: string required, request_type: string optional, impact: string optional, urgency: string optional, affected_asset_id: string optional, requested_for_date: integer optional}. Fixed response {success, message, data?}; do not change either contract end.
+
+Objects (already exist — do not create; bind by entityId): person obj_r4wab7me read; sla_policy obj_wf6941f0 read live; incident obj_xl869d1l create; service_request obj_964bhikn create.
+Connections: none.
+
+Steps:
+1. Validate required values and work_type incident or service_request; require impact and urgency for incident and request_type for service_request.
+2. Resolve requester_email against person.email for validation only; the created work schemas have no requester field, so do not invent one.
+3. Read active sla_policy live and match work_type and priority; no caching.
+4. For incidents derive priority from impact and urgency using a conventional 3x3 matrix, calculate dates, generate a stable incident_number and create only available fields.
+5. For requests set approval fields and status consistently, calculate dates, generate request_number and create only available fields.
+6. Return created built-in record id and human number in data.
+
+On failure: return success false and message; create nothing on validation or policy failure.
+Decisions: requester and affected asset cannot be persisted because those fields are absent; accept contract inputs but report this as a gap. Run as system.
+Constraints: unattended build; ask no questions. Preserve trigger/envelope, bind by ids, use only manifest fields, deploy after build.
+</code></pre>
+<p><strong>Completed.</strong> Built, deployed and final mocked assertions passed in the earlier five-case smoke round.</p>
+<h3>Prompt 13</h3>
+<p>Process Request Approval</p>
+<pre><code class="language-text">Automation: Process Request Approval
+Records one valid request decision and advances fulfillment state.
+
+Trigger: callable from the on-platform app — fixed input {service_request_id: string required, decision: string required, reason: string required}; fixed response {success,message,data?}.
+Objects: service_request obj_964bhikn read/write; person obj_r4wab7me read only if recipient resolution becomes possible.
+Connections: Microsoft Outlook none configured — run without email.
+Steps:
+1. Load by built-in id and require status awaiting_approval and approval_status pending.
+2. Accept only approved or rejected and require reason.
+3. Store approval_status, approval_reason, approved_at for approval, and set approved or rejected status.
+4. Invoke deployed Send Work Notification 6aa01bd42d3a4073cfa46d84 with object_type service_request, record id, event_type approval_decided and changed_fields.
+5. Return updated fields.
+On failure: no mutation for invalid/repeated decisions; if notification fails, preserve decision and return success with a delivery warning.
+Decisions: no approver/requester/assignee fields exist, so attribution and recipient delivery are unavailable and must be reported as gaps, not invented.
+Constraints: current user means the signed-in caller, but cannot be persisted absent a field. Unattended; preserve fixed contract; deploy.
+</code></pre>
+<p><strong>Completed.</strong> Built, deployed and final mocked assertions passed in the earlier five-case smoke round.</p>
+<h3>Prompt 14</h3>
+<p>Process Change Approval</p>
+<pre><code class="language-text">Automation: Process Change Approval
+Validates change readiness, records one decision and advances governance state.
+
+Trigger: callable from the on-platform app — fixed input {change_id: string required, decision: string required, reason: string required}; fixed response {success,message,data?}.
+Objects: change obj_tujxxr1u read/write; person obj_r4wab7me read only if recipients can be resolved.
+Connections: Microsoft Outlook none configured — run without email.
+Steps:
+1. Load change by built-in id; require status awaiting_approval and approval_status pending.
+2. Require implementation_plan, test_plan and rollback_plan; accept approved or rejected only.
+3. Store approval_status and approval_reason; approved becomes scheduled eligibility, rejected becomes cancelled.
+4. Invoke Send Work Notification 6aa01bd42d3a4073cfa46d84 with change event details.
+5. Return updated fields.
+On failure: reject incomplete or repeated decisions without mutation; notification failure never rolls back the decision.
+Decisions: owner, requester, approver and affected asset fields are absent, so attribution and recipients cannot be persisted or resolved; report gaps.
+Constraints: unattended, live reads, system authority, fixed contract and deployed completion.
+</code></pre>
+<p><strong>Completed.</strong> Built, deployed and final mocked assertions passed in the earlier five-case smoke round.</p>
+<h3>Prompt 15</h3>
+<p>Send Work Notification</p>
+<pre><code class="language-text">Automation: Send Work Notification
+Provides the approved lifecycle-notification behavior as a callable helper because the stub platform supports callable or schedule triggers only.
+
+Trigger: callable by on-platform lifecycle automations — fixed input {object_type: string required, record_id: string required, event_type: string required, changed_fields: object required}; fixed response {success,message,data?}. Preserve this corrected stub-compatible contract.
+Objects: incident obj_xl869d1l read; service_request obj_964bhikn read; change obj_tujxxr1u read; person obj_r4wab7me read.
+Connections: Microsoft Outlook none configured — run without sending.
+Steps:
+1. Validate object_type, record id and supported event: created, assignment_changed, approval_decided, status_changed or resolution_changed.
+2. Load the record by the matching entityId and built-in id.
+3. Determine recipients only from available persisted relationships; none currently exist in the created schemas.
+4. If no Outlook connection or no resolvable recipient, return success false with a precise non-destructive message and data describing notification_skipped.
+5. When a connection and recipients later exist, send one concise message with number, state and outcome; never mutate the business record.
+On failure: return failure; never roll back caller updates and never retry silently.
+Decisions: callable helper replaces unsupported record-event stub while preserving approved behavior through callers. Missing recipient relationship fields are a declared gap.
+Constraints: unattended; live reads; run as system; fixed contract; deploy.
+</code></pre>
+<p><strong>Completed.</strong> Built, deployed and final mocked assertions passed in the earlier five-case smoke round.</p>
+<h3>Prompt 16</h3>
+<p>Recalculate Incident Priority</p>
+<pre><code class="language-text">Automation: Recalculate Incident Priority
+Keeps an open incident&#39;s priority and deadlines aligned with impact and urgency.
+
+Trigger: callable from the on-platform app — fixed input {incident_id: string required, impact: string required, urgency: string required}; fixed response {success,message,data?}.
+Objects: incident obj_xl869d1l read/write; sla_policy obj_wf6941f0 read live.
+Connections: none.
+Steps:
+1. Load incident by built-in id and reject terminal status.
+2. Validate supported impact and urgency and derive priority with the same 3x3 matrix used by intake.
+3. Read the matching active incident SLA policy live; no cache.
+4. Update impact, urgency, priority, response_due_at, resolution_due_at and updated_at without erasing achieved timestamps.
+5. Return changed priority and SLA values.
+On failure: return success false with no mutation.
+Decisions: sla_policy lookup cannot be persisted because that field is absent; calculate from the live policy and report the omission as a gap.
+Constraints: unattended, system authority, fixed contract and deployed completion.
+</code></pre>
+<p><strong>Completed.</strong> Built, deployed and final mocked assertions passed in the earlier five-case smoke round.</p>
+</article>
+</main>
+</body>
+</html>
