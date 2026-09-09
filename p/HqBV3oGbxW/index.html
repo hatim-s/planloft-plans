@@ -175,12 +175,12 @@ a { overflow-wrap: anywhere; }
 </script>
 <main class="planloft-plan">
 <article><h1>Workflow Sol run statistics</h1>
-<p>This report covers 16 recorded runs using GPT 5.6 Sol. The average was $4.451 and 11m 29s of active authoring time per run.</p>
+<p>This report keeps two GPT 5.6 Sol evaluations separate. The original 16-run batch averaged $4.451 and 11m 29s of active authoring time. The added 14-case batch averaged $3.6050, with 6m 14s of active initial build time and 8m 42s of active total time after its authorized continuations. The batches used different configurations and completion criteria, so their aggregates are not pooled.</p>
 <blockquote>
-<p>Of seven incomplete builds, five saved a structure but failed to finish node data. Two did not persist a structure.</p>
+<p>In the original 16-run batch, five incomplete builds saved a structure but failed to finish node data. Two did not persist a structure.</p>
 </blockquote>
-<p>Recorded metrics snapshot: 9 September 2026, 07:30 UTC. Every automation link includes the run’s chatId. Costs are USD. Averages include successful and unsuccessful runs.</p>
-<h2>Sol run statistics</h2>
+<p>Original 16-run metrics snapshot: 9 September 2026, 07:30 UTC. Every automation link includes the run’s chatId. Costs are USD. Averages include successful and unsuccessful runs.</p>
+<h2>Original 16-run batch</h2>
 <table>
 <thead>
 <tr>
@@ -365,14 +365,378 @@ a { overflow-wrap: anywhere; }
 <td align="right">183m 42s</td>
 </tr>
 </tbody></table>
-<h2>How to read the results</h2>
-<p>Completed means a saved and deployed workflow passed its final mocked tests. Built means a populated definition was saved; it does not certify correct behavior. Failed tests and unverifiable tests remain separate outcomes. Vendor-risk testing returned RUN_NOT_FOUND, so its result is unverified.</p>
+<h2>Original batch outcome definitions</h2>
+<p>For the original 16-run batch, completed means a saved and deployed workflow passed its final mocked tests. Built means a populated definition was saved; it does not certify correct behavior. Failed tests and unverifiable tests remain separate outcomes. Vendor-risk testing returned RUN_NOT_FOUND, so its result is unverified.</p>
 <p>Structure built; data failed means a nonblank graph was saved, but required inputs, code, conditions, or mappings remained incomplete. It labels the stage reached and does not certify topology or behavioral correctness. Structure failed means only the default nodes remained.</p>
 <p>Sol recorded 5 completed runs, 2 built with failed tests, 1 built with an unverified test, 1 built without tests, 5 structures with incomplete data, and 2 structure failures.</p>
-<h2>Measurement and comparison limits</h2>
+<h2>Original batch measurement limits</h2>
 <p>Active time sums top-level prompt-turn trace durations. Gaps between turns, including time waiting for user clarification, are excluded. Nested spans are not added again. Costs use the platform session total and were checked against the sum of per-turn trace costs. These are active authoring-session totals, including planning, building, repairs, attempted tests, and deployment; they are not isolated Builder-agent metrics.</p>
 <p>Cases 12–16 came from the earlier smoke round, whose final mocked tests passed 44 of 44 assertions. Setup and tool repairs occurred during that round. The later 11 runs had no verified passing runtime tests. The later 11-case average is provided separately.</p>
-<h2>Prompts and observed failure details</h2>
+<h2>Added 14-case Sol batch</h2>
+<p>All 14 original prompts were submitted through Chrome before the first group completed, then monitored in rotating groups of up to five. Seven existing chats were continued after the approved daily cost cap increased from $100 to $250. Case N06 received only its final summary; its passing smoke test was not rerun. All 14 cases reached terminal evidence by 9 September 2026, before 12:14:44 UTC.</p>
+<p>The final outcomes are 3 completed, 5 built with runtime tests unverified, 3 built with failed tests, and 3 with incomplete data or unmet requirements. The original 14-case attempt cost $29.0220; continuation added $21.4485, bringing the cumulative session cost to $50.4705.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Model</th>
+<th>Prompt or summary</th>
+<th>Automation and chat</th>
+<th>Outcome</th>
+<th align="right">Cumulative cost, USD</th>
+<th align="right">Active initial build / total</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>N01</td>
+<td>Sol</td>
+<td>Gmail Expense Attachment Archiver</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1413655c9f52942dc4909/builder?b_9U8If-chatId=e_6aa14137fe0ef7104b7a7473&amp;nav=copilot">Open run</a></td>
+<td>Built; test unverified</td>
+<td align="right">$3.4429</td>
+<td align="right">6m 52s / 7m 40s</td>
+</tr>
+<tr>
+<td>N02</td>
+<td>Sol</td>
+<td>Regional Sales Performance</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1414ceb37863596fe8cdd/builder?b_9U8If-chatId=e_6aa1414cf5235142006808c5&amp;nav=copilot">Open run</a></td>
+<td>Built; tests failed</td>
+<td align="right">$3.2632</td>
+<td align="right">4m 32s / 9m 04s</td>
+</tr>
+<tr>
+<td>N03</td>
+<td>Sol</td>
+<td>Warehouse Inventory Replenishment</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1414f57ad1104aed7d9cb/builder?b_9U8If-chatId=e_6aa1414ffe0ef7104b7a7495&amp;nav=copilot">Open run</a></td>
+<td>Built; test unverified</td>
+<td align="right">$2.5124</td>
+<td align="right">4m 49s / 5m 23s</td>
+</tr>
+<tr>
+<td>N04</td>
+<td>Sol</td>
+<td>NamSor Origin Batch Country Name Enrichment</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141512b1df24c50f68f4b/builder?b_9U8If-chatId=e_6aa14151aeb9ea1371a7a40f&amp;nav=copilot">Open run</a></td>
+<td>Built; test unverified</td>
+<td align="right">$3.0246</td>
+<td align="right">5m 31s / 6m 04s</td>
+</tr>
+<tr>
+<td>N05</td>
+<td>Sol</td>
+<td>Hackathon Team Registration</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14154eb37863596fe8db1/builder?b_9U8If-chatId=e_6aa14154aeb9ea1371a7a430&amp;nav=copilot">Open run</a></td>
+<td>Structure built; data failed</td>
+<td align="right">$2.7704</td>
+<td align="right">8m 05s / 8m 05s</td>
+</tr>
+<tr>
+<td>N06</td>
+<td>Sol</td>
+<td>Eval 3g | Email draft</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141698441ee04fc6311db/builder?b_9U8If-chatId=e_6aa14169f523514200680b25&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$1.3855</td>
+<td align="right">2m 14s / 3m 05s</td>
+</tr>
+<tr>
+<td>N07</td>
+<td>Sol</td>
+<td>Inventory Shortfall Restock Alert</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1416b2b1df24c50f69956/builder?b_9U8If-chatId=e_6aa1416bf523514200680b32&amp;nav=copilot">Open run</a></td>
+<td>Built; test unverified</td>
+<td align="right">$3.6908</td>
+<td align="right">3m 02s / 6m 56s</td>
+</tr>
+<tr>
+<td>N08</td>
+<td>Sol</td>
+<td>Evaluate Loan Applicant Eligibility</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1416d3db8a857dad8f581/builder?b_9U8If-chatId=e_6aa1416ef523514200680b40&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$3.3019</td>
+<td align="right">5m 15s / 9m 25s</td>
+</tr>
+<tr>
+<td>N09</td>
+<td>Sol</td>
+<td>Monitor Hospital Bed Turnover</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141708441ee04fc631390/builder?b_9U8If-chatId=e_6aa14170fe0ef7104b7a75ad&amp;nav=copilot">Open run</a></td>
+<td>Built; tests failed</td>
+<td align="right">$4.6311</td>
+<td align="right">9m 58s / 11m 41s</td>
+</tr>
+<tr>
+<td>N10</td>
+<td>Sol</td>
+<td>Calculate Employee Shift Overtime</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1417257ad1104aed7e8c6/builder?b_9U8If-chatId=e_6aa14172fe0ef7104b7a75b2&amp;nav=copilot">Open run</a></td>
+<td>Built; tests failed</td>
+<td align="right">$5.6982</td>
+<td align="right">7m 11s / 16m 57s</td>
+</tr>
+<tr>
+<td>N11</td>
+<td>Sol</td>
+<td>Export Workflow Changeset</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1418008527666b23aba01/builder?b_9U8If-chatId=e_6aa14180f523514200680c42&amp;nav=copilot">Open run</a></td>
+<td>Completed</td>
+<td align="right">$1.9253</td>
+<td align="right">2m 22s / 5m 09s</td>
+</tr>
+<tr>
+<td>N12</td>
+<td>Sol</td>
+<td>List Upcoming Calendar Events</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14182eb37863596ff65b4/builder?b_9U8If-chatId=e_6aa14182fe0ef7104b7a7634&amp;nav=copilot">Open run</a></td>
+<td>Built fallback; requirement unmet</td>
+<td align="right">$5.4366</td>
+<td align="right">5m 04s / 8m 40s</td>
+</tr>
+<tr>
+<td>N13</td>
+<td>Sol</td>
+<td>Count Google Calendar Events</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14184e117e83eb6e7ddfb/builder?b_9U8If-chatId=e_6aa14184fe0ef7104b7a763c&amp;nav=copilot">Open run</a></td>
+<td>Built fallback; requirement unmet</td>
+<td align="right">$3.5196</td>
+<td align="right">4m 07s / 5m 20s</td>
+</tr>
+<tr>
+<td>N14</td>
+<td>Sol</td>
+<td>Validate BFF Agent Response</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141862b1df24c50f6b0a7/builder?b_9U8If-chatId=e_6aa14186f523514200680c7b&amp;nav=copilot">Open run</a></td>
+<td>Built; test initiation failed</td>
+<td align="right">$5.8681</td>
+<td align="right">18m 15s / 18m 24s</td>
+</tr>
+</tbody></table>
+<h3>Costs and timing for each added case</h3>
+<p>First attempt and added continuation costs sum to the cumulative session cost above. Approximate initial build cost covers authoring up to the first test handoff; later repairs stay in the testing/finalization phase. All monetary values are USD.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th align="right">First attempt cost</th>
+<th align="right">Added continuation cost</th>
+<th align="right">Cumulative session cost</th>
+<th align="right">Approx. initial build cost</th>
+<th align="right">Active initial build</th>
+<th align="right">Active total</th>
+<th align="right">Excluded wait</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>N01</td>
+<td align="right">$3.4429</td>
+<td align="right">$0.0000</td>
+<td align="right">$3.4429</td>
+<td align="right">$3.1071</td>
+<td align="right">6m 52s</td>
+<td align="right">7m 40s</td>
+<td align="right">1m 34s</td>
+</tr>
+<tr>
+<td>N02</td>
+<td align="right">$3.2632</td>
+<td align="right">$0.0000</td>
+<td align="right">$3.2632</td>
+<td align="right">$1.9122</td>
+<td align="right">4m 32s</td>
+<td align="right">9m 04s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>N03</td>
+<td align="right">$2.5124</td>
+<td align="right">$0.0000</td>
+<td align="right">$2.5124</td>
+<td align="right">$2.4991</td>
+<td align="right">4m 49s</td>
+<td align="right">5m 23s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>N04</td>
+<td align="right">$3.0246</td>
+<td align="right">$0.0000</td>
+<td align="right">$3.0246</td>
+<td align="right">$2.9815</td>
+<td align="right">5m 31s</td>
+<td align="right">6m 04s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>N05</td>
+<td align="right">$2.7704</td>
+<td align="right">$0.0000</td>
+<td align="right">$2.7704</td>
+<td align="right">$2.7704</td>
+<td align="right">8m 05s</td>
+<td align="right">8m 05s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>N06</td>
+<td align="right">$1.2354</td>
+<td align="right">$0.1501</td>
+<td align="right">$1.3855</td>
+<td align="right">$1.0055</td>
+<td align="right">2m 14s</td>
+<td align="right">3m 05s</td>
+<td align="right">20m 38s</td>
+</tr>
+<tr>
+<td>N07</td>
+<td align="right">$0.6518</td>
+<td align="right">$3.0390</td>
+<td align="right">$3.6908</td>
+<td align="right">$1.9179</td>
+<td align="right">3m 02s</td>
+<td align="right">6m 56s</td>
+<td align="right">30m 51s</td>
+</tr>
+<tr>
+<td>N08</td>
+<td align="right">$1.2718</td>
+<td align="right">$2.0301</td>
+<td align="right">$3.3019</td>
+<td align="right">$2.0626</td>
+<td align="right">5m 15s</td>
+<td align="right">9m 25s</td>
+<td align="right">20m 48s</td>
+</tr>
+<tr>
+<td>N09</td>
+<td align="right">$0.3300</td>
+<td align="right">$4.3011</td>
+<td align="right">$4.6311</td>
+<td align="right">$4.1554</td>
+<td align="right">9m 58s</td>
+<td align="right">11m 41s</td>
+<td align="right">36m 03s</td>
+</tr>
+<tr>
+<td>N10</td>
+<td align="right">$5.6982</td>
+<td align="right">$0.0000</td>
+<td align="right">$5.6982</td>
+<td align="right">$2.7050</td>
+<td align="right">7m 11s</td>
+<td align="right">16m 57s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>N11</td>
+<td align="right">$1.9253</td>
+<td align="right">$0.0000</td>
+<td align="right">$1.9253</td>
+<td align="right">$1.1826</td>
+<td align="right">2m 22s</td>
+<td align="right">5m 09s</td>
+<td align="right">0m 00s</td>
+</tr>
+<tr>
+<td>N12</td>
+<td align="right">$1.0926</td>
+<td align="right">$4.3440</td>
+<td align="right">$5.4366</td>
+<td align="right">$4.2436</td>
+<td align="right">5m 04s</td>
+<td align="right">8m 40s</td>
+<td align="right">27m 40s</td>
+</tr>
+<tr>
+<td>N13</td>
+<td align="right">$1.1837</td>
+<td align="right">$2.3358</td>
+<td align="right">$3.5196</td>
+<td align="right">$2.9502</td>
+<td align="right">4m 07s</td>
+<td align="right">5m 20s</td>
+<td align="right">27m 16s</td>
+</tr>
+<tr>
+<td>N14</td>
+<td align="right">$0.6197</td>
+<td align="right">$5.2484</td>
+<td align="right">$5.8681</td>
+<td align="right">$5.8231</td>
+<td align="right">18m 15s</td>
+<td align="right">18m 24s</td>
+<td align="right">30m 21s</td>
+</tr>
+</tbody></table>
+<h3>Added batch totals and averages</h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th align="right">Cases</th>
+<th align="right">Total session cost</th>
+<th align="right">Average session cost</th>
+<th align="right">Average active initial build</th>
+<th align="right">Average active total</th>
+<th align="right">Average approximate initial build cost</th>
+<th align="right">Summed excluded wait</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frozen first attempt</td>
+<td align="right">14</td>
+<td align="right">$29.0220</td>
+<td align="right">$2.0730</td>
+<td align="right">3m 37s</td>
+<td align="right">5m 02s</td>
+<td align="right">$1.6652</td>
+<td align="right">8m 14s</td>
+</tr>
+<tr>
+<td>Cumulative after continuation</td>
+<td align="right">14</td>
+<td align="right">$50.4705</td>
+<td align="right">$3.6050</td>
+<td align="right">6m 14s</td>
+<td align="right">8m 42s</td>
+<td align="right">$2.8083</td>
+<td align="right">195m 11s</td>
+</tr>
+<tr>
+<td>Continued chats, cumulative</td>
+<td align="right">7</td>
+<td align="right">$27.8335</td>
+<td align="right">$3.9762</td>
+<td align="right">6m 51s</td>
+<td align="right">9m 04s</td>
+<td align="right">$3.1655</td>
+<td align="right">193m 37s</td>
+</tr>
+<tr>
+<td>Completed cases N06, N08, N11</td>
+<td align="right">3</td>
+<td align="right">$6.6127</td>
+<td align="right">$2.2042</td>
+<td align="right">3m 17s</td>
+<td align="right">5m 53s</td>
+<td align="right">$1.4169</td>
+<td align="right">41m 26s</td>
+</tr>
+</tbody></table>
+<p>Continuation added $21.4485 and 51m 29s of summed active case time. The cumulative averages include failed builds and tests. Excluded waits are summed across cases; 195m 11s is not the wall-clock duration of the batch.</p>
+<h3>Added batch outcome definitions</h3>
+<p>For this batch, completed means a saved workflow with a verified final passing mocked run. Deployment was not part of this batch. N06 passed a four-node smoke run with zero assertions; N08 passed 8/8 hardened assertions; N11 passed its final 2/2 evaluated assertions.</p>
+<p>Built means a populated definition was saved and read back, with any observed defect or uncertainty retained in the case details. N01, N03, N04 and N07 have no retrievable mocked-run result. N14 failed while initiating a mocked test and received no run ID. These cases are unverified, rather than runtime passes or reported workflow-node failures.</p>
+<p>N02, N09 and N10 have terminal failed/error test evidence. N05 has incomplete node data. N12 and N13 passed limited mocked tests but count only a single Calendar page, so their saved fallbacks do not satisfy the original all-page requirement. They remain in the incomplete-data-or-requirements category.</p>
+<h3>Added batch configuration and measurement</h3>
+<p>All five split workflow agents and all observed LLM calls used OpenAI GPT 5.6 Sol, model ID <code>e_6a7e0292dcecfe25a407c78d</code>. Saved and deployed agent and skill properties matched the frozen snapshot at the final audit. The save-node-data wrapper used workflow version 10, deployment 6, tag <code>compact-save-v1</code>, throughout every reported run.</p>
+<p>The verifier fix was deployed only afterward at <code>2026-09-09T12:14:44.601Z</code>, workflow version 12, deployment 7, tag <code>verify-recovery-v1</code>. A further verifier update followed at <code>2026-09-09T12:22:34.916Z</code>, workflow version 13, deployment 8, tag <code>verify-recovery-v2</code>. These results evaluate neither later fix.</p>
+<p>Active total time sums top-level prompt-turn trace durations, including planning, builds, repairs, attempted tests and final replies. It excludes gaps for user clarification, quota approval and continuation scheduling. N09 also had a stale generation indicator after its trace had already ended; the recorded trace end excludes that stale interval. Nested spans are not added again.</p>
+<p>Active initial build ends at the first test handoff. Later repairs and finalization remain in active total time. Session costs come from the native aggregate; approximate initial build costs sum rounded LLM timeline costs and can differ slightly from exact billing. Traces without native latency use the last completed timeline event, which can omit final failed-request overhead. N09 also has a failed quota trace with no measurable latency or completed events; its unknown duration contributes zero to the sum, rather than representing a measured zero.</p>
+<p>All external business actions were mocked during testing. The synthetic fixture for N14 supplied explicit rules for all three intents. No real BFF policy or schema was inferred.</p>
+<h2>Original batch prompts and failure details</h2>
 <p>Full prompts appear below in the same numbered order as the table. Follow-up clarifications remain in the linked conversations. Observations describe saved state from the evaluation snapshot, rather than the agents’ completion claims.</p>
 <h3>Prompt 1</h3>
 <p>Get Lab Performance Summary</p>
@@ -644,6 +1008,176 @@ Decisions: sla_policy lookup cannot be persisted because that field is absent; c
 Constraints: unattended, system authority, fixed contract and deployed completion.
 </code></pre>
 <p><strong>Completed.</strong> Built, deployed and final mocked assertions passed in the earlier five-case smoke round.</p>
+<h2>Added batch exact prompts and evidence</h2>
+<p>Case identifiers N01 through N14 refer only to the added batch. Each prompt below is the original submitted prompt; source-backed clarifications and recovery turns remain in its linked chat.</p>
+<h3>N01. Gmail Expense Attachment Archiver</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1413655c9f52942dc4909/builder?b_9U8If-chatId=e_6aa14137fe0ef7104b7a7473&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create an event-driven automation that triggers whenever a new email is received in the configured Gmail inbox and the email contains one or more attachments. Before processing, evaluate whether the email matches at least one of the following conditions: the sender&#39;s email address contains the keyword **&quot;invoice&quot;**, the sender&#39;s email address contains the keyword **&quot;receipt&quot;**, or the email subject contains the keyword **&quot;payment&quot;**. If none of these conditions are satisfied, terminate the automation without performing any further actions. If the email matches the filter criteria, iterate through every attachment in the email, download each attachment using the configured Gmail connection, and upload it to the **&quot;Business Expenses&quot;** folder in the configured Google Drive account while preserving the original file name and MIME type. This automation requires a **Gmail trigger** configured to detect new emails with attachments, a **Gmail connection** to download attachments, and a **Google Drive connection** with write access to the **Business Expenses** folder for uploading files. The automation does not require any manual input parameters because it is initiated by the Gmail event, and it does not need to return any output since it performs background file processing. use gmail connection: Gmail | K1, Drive | K1
+
+Match sender-address and subject keywords case-insensitively. Use Gmail | K1 for both the trigger and attachment downloads, and Drive | K1 for uploads. Resolve the existing Business Expenses folder by name; if it is absent or ambiguous, report the dependency error without choosing another folder. An email with no attachments or no keyword match must produce no uploads. Process every attachment once per received event, preserving its filename and MIME type. Connector errors must remain failures.
+</code></pre>
+<p>Built and read back at v8. Mocked test was started, but independent getRun returns RUN_NOT_FOUND, so this category means no verified runtime result, not that no test was attempted.</p>
+<h3>N02. Regional Sales Performance</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1414ceb37863596fe8cdd/builder?b_9U8If-chatId=e_6aa1414cf5235142006808c5&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation that accepts an input object containing a global FiscalTarget and a list of transactions, and computes regional sales performance metrics based on the provided schema. The automation should group all transactions by the regionMap field and, for each region, calculate the Gross Revenue as the sum of (price × units_sold) across its transactions, the Total Discount as the sum of all discount values, and the Net Revenue as Gross Revenue − Total Discount. For each region, determine the applicable target by checking if a transaction-level fiscalTarget is specified; if absent, use the root-level FiscalTarget value. If a region&#39;s Net Revenue exceeds its resolved Fiscal Target, calculate the Surplus as Net Revenue − Fiscal Target, or set it to 0 if the target is not exceeded. For every region where Net Revenue exceeds the target, create a record in the Regional_Performance storage object containing the region name in region, the surplus in TotalSurplus, and an array of associated TransactionId values in transactionIds. Finally, return an output object containing a regional_summary array with the regionMap, transactionIds, grossRevenue, totalDiscount, netRevenue, fiscalTarget, and surplus for every evaluated region.
+
+Use this input shape: {&quot;FiscalTarget&quot;:5000,&quot;transactions&quot;:[{&quot;TransactionId&quot;:&quot;TXN-001&quot;,&quot;regionMap&quot;:&quot;NORTH&quot;,&quot;price&quot;:100,&quot;units_sold&quot;:10,&quot;discount&quot;:50,&quot;fiscalTarget&quot;:4000}]}. FiscalTarget, price, units_sold, discount and optional fiscalTarget are numbers; transaction IDs and regions are strings. A discount is the total discount amount for that transaction, not a percentage or per-unit discount. For each region, collect its distinct non-null transaction fiscalTarget values: use the sole value when exactly one exists, otherwise use FiscalTarget when none exists. If a region contains conflicting targets, fail with CONFLICTING_REGION_TARGETS before writing any records. Validate all regions before writing. Return {&quot;regional_summary&quot;:[{&quot;regionMap&quot;:&quot;NORTH&quot;,&quot;transactionIds&quot;:[&quot;TXN-001&quot;],&quot;grossRevenue&quot;:1000,&quot;totalDiscount&quot;:50,&quot;netRevenue&quot;:950,&quot;fiscalTarget&quot;:4000,&quot;surplus&quot;:0}]}. The values are examples, not constants. Preserve transaction input order within a region; sort regions by regionMap. Empty transactions returns an empty summary and performs no writes.
+</code></pre>
+<p>Smoke passed after repairing Groovy direct input bindings. Latest hardened run FAILED with two assertions false; expected and actual regional summaries serialize identically. Treat the runner inconsistency as evidence, without changing the failed verdict.</p>
+<h3>N03. Warehouse Inventory Replenishment</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1414f57ad1104aed7d9cb/builder?b_9U8If-chatId=e_6aa1414ffe0ef7104b7a7495&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation that accepts a list of warehouse inventory items and identifies products that require replenishment. The automation should process each inventory record by calculating the **Net Stock** as `quantity − backorder_count`. For every item whose Net Stock is less than or equal to its **Safety Buffer (Safety Threshold)**, calculate the **Restock Deficiency** as `max_capacity − net_stock`, representing the exact number of units required to replenish the item back to its maximum storage capacity. Collect all such low-stock items into a list containing the product SKU, net stock, safety buffer, maximum capacity, and restock deficiency. After processing all inventory records, perform a bulk insert of the collected items into the **Restock_Ledger** storage object, creating one record per item. Finally, return the complete list of items that require restocking. The expected input schema is `{ &quot;inventory_snapshots&quot;: [{ &quot;product_sku&quot;: &quot;string&quot;, &quot;quantity&quot;: &quot;number&quot;, &quot;backorder_count&quot;: &quot;number&quot;, &quot;safety_buffer&quot;: &quot;number&quot;, &quot;max_capacity&quot;: &quot;number&quot; }] }`, and the output schema is `{ &quot;flagged_items&quot;: [{ &quot;product_sku&quot;: &quot;string&quot;, &quot;net_stock&quot;: &quot;number&quot;, &quot;safety_buffer&quot;: &quot;number&quot;, &quot;max_capacity&quot;: &quot;number&quot;, &quot;restock_deficiency&quot;: &quot;number&quot; }] }`. This automation requires the **Restock_Ledger** storage object with fields for `product_sku`, `net_stock`, `safety_buffer`, `max_capacity`, and `restock_deficiency`, and does not require any external connections or third-party services.
+
+The quoted type names in the schema examples describe types: all quantities are whole numbers. Inputs must have quantity &gt;= 0, backorder_count &gt;= 0, and 0 &lt;= safety_buffer &lt;= max_capacity. Negative net_stock is valid when backorders exceed quantity. Preserve input order. If no items qualify, return {&quot;flagged_items&quot;:[]} without calling bulk insert. Otherwise perform one bulk insert, with one record per qualifying input item, and return the same list.
+</code></pre>
+<p>Built and read back at v4. Mocked test was started, but independent getRun returns RUN_NOT_FOUND. No verified runtime result.</p>
+<h3>N04. NamSor Origin Batch Country Name Enrichment</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141512b1df24c50f68f4b/builder?b_9U8If-chatId=e_6aa14151aeb9ea1371a7a40f&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation that accepts an input array of personal names, where each entry contains a `firstName` and `lastName`. The automation should send a **POST** request to the NamSor Origin Batch API at `https://v2.namsor.com/NamSorAPIv2/api2/json/originBatch`, passing the input array in the request body as the `personalNames` field. Configure the request to use the required API key along with the `Content-Type: application/json` and `Accept: application/json` headers, and parse the JSON response containing the inferred country origins, alternate country origins, regional classifications, top candidate countries, confidence scores, calibrated probabilities, and related demographic information for each name. After receiving the response, execute a Groovy transformation that converts all ISO country codes returned by the API into their corresponding English country names, including both the primary and alternate country origins as well as every value in the `countriesOriginTop` array, while preserving all remaining response fields unchanged. Finally, return the transformed data as a structured list containing the original first and last names together with the generated demographic metrics, including `script`, `id`, `countryOrigin`, `countryOriginAlt`, `countriesOriginTop`, `score`, `regionOrigin`, `topRegionOrigin`, `subRegionOrigin`, `probabilityCalibrated`, and `probabilityAltCalibrated`. The expected input schema is `{ &quot;personalNames&quot;: [{ &quot;firstName&quot;: &quot;string&quot;, &quot;lastName&quot;: &quot;string&quot; }] }`, and the output schema is `{ &quot;personalNames&quot;: [{ &quot;script&quot;: &quot;string&quot;, &quot;id&quot;: &quot;string&quot;, &quot;firstName&quot;: &quot;string&quot;, &quot;lastName&quot;: &quot;string&quot;, &quot;countryOrigin&quot;: &quot;string&quot;, &quot;countryOriginAlt&quot;: &quot;string&quot;, &quot;countriesOriginTop&quot;: [&quot;string&quot;], &quot;score&quot;: &quot;number&quot;, &quot;regionOrigin&quot;: &quot;string&quot;, &quot;topRegionOrigin&quot;: &quot;string&quot;, &quot;subRegionOrigin&quot;: &quot;string&quot;, &quot;probabilityCalibrated&quot;: &quot;number&quot;, &quot;probabilityAltCalibrated&quot;: &quot;number&quot; }] }`. This automation requires access to the NamSor Origin Batch REST API using a valid API key and a Groovy code step to perform the response transformation before returning the final result.
+
+Use the key personalNames consistently in callable input, API request, and response; personalName is not the input key. Obtain the API key from an existing secret-backed credential, not from prompt text or a literal in the workflow. Convert recognized ISO country codes to English names; preserve null values and unrecognized codes unchanged. Preserve list order and every response field other than the specified country-code replacements. Empty input returns {&quot;personalNames&quot;:[]} without an HTTP request. API failures must fail the automation rather than returning an empty successful result.
+</code></pre>
+<p>Built and read back at v5. Mocked test was started, but independent getRun returns RUN_NOT_FOUND. No real NamSor request occurred.</p>
+<h3>N05. Hackathon Team Registration</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14154eb37863596fe8db1/builder?b_9U8If-chatId=e_6aa14154aeb9ea1371a7a430&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation named Hackathon Team Registration that accepts the team details, including the team name, theme, project details, team size, and up to six team members (name, email, employee ID, PL team, business unit, and department).
+
+First, check Storage by UnifyApps to determine whether a record already exists in the registeredteams_catalyst object with the same team name, theme, and team size. If a matching record is found, immediately return a response with the status &quot;duplicate&quot;.
+
+If no duplicate exists, process each team member. For every member whose employee ID is provided, update the corresponding employee record in the catalyst_data object by setting the selected field to 1.
+
+Next, transform the provided team member information into an array of objects containing:
+
+name
+employee ID
+email
+business unit
+department
+
+Also generate a comma-separated string containing the email addresses of all team members.
+
+Create a new record in the registeredteams_catalyst object containing:
+
+Team name
+Theme
+Project details
+Team size
+Captain details (Member 1)
+Transformed team members array
+Comma-separated email list
+
+Finally, return a success response indicating the registration completed successfully.
+
+Input Schema
+
+{
+  &quot;teamName&quot;: &quot;string&quot;,
+  &quot;theme&quot;: &quot;string&quot;,
+  &quot;projectDetails&quot;: &quot;string&quot;,
+  &quot;teamSize&quot;: 0,
+  &quot;teamMembers&quot;: [
+    {
+      &quot;name&quot;: &quot;string&quot;,
+      &quot;email&quot;: &quot;string&quot;,
+      &quot;employeeId&quot;: &quot;string&quot;,
+      &quot;plTeam&quot;: &quot;string&quot;,
+      &quot;businessUnit&quot;: &quot;string&quot;,
+      &quot;department&quot;: &quot;string&quot;
+    }
+  ]
+}
+
+Output Schema
+
+{
+  &quot;status&quot;: &quot;string&quot;
+}
+
+Require an integer teamSize from 1 through 6 equal to teamMembers.length. Member 1 is teamMembers[0] and supplies captain details. Validate the entire payload and resolve every nonblank employeeId before any writes; missing or ambiguous employees are errors. The field named selected in catalyst_data is a numeric flag and must be set to 1. Check duplicates with exact equality on teamName, theme, and teamSize combined with AND; on a duplicate return {&quot;status&quot;:&quot;duplicate&quot;} without updating employees. Otherwise update each distinct supplied employeeId once, then create one team record. Keep member order in the transformed array and email list; join nonblank emails with a comma. Return {&quot;status&quot;:&quot;success&quot;} only after the team insert succeeds. This is a single-run evaluation; concurrent registration deduplication is outside its scope.
+</code></pre>
+<p>Structure has 12 nodes; only callable input/result and two response nodes are configured. Two valid JSON attempts received actionable mapping/schema rejections, then three malformed nodeDataJson attempts failed parsing. No test.</p>
+<h3>N06. Eval 3g | Email draft</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141698441ee04fc6311db/builder?b_9U8If-chatId=e_6aa14169f523514200680b25&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation named Eval 3g | Email draft. Accept required string inputs recipientEmail, subject, title, and details. Invoke the existing child automation Simple Call LLM with a prompt to generate a professional email body from title and details. Use its returned content as the body, and send one email with the supplied recipientEmail and subject using Gmail | K1. This automation sends the email; it does not merely create a draft. Only after Gmail succeeds, return {&quot;recipientEmail&quot;:&quot;&lt;supplied recipient&gt;&quot;,&quot;subject&quot;:&quot;&lt;supplied subject&gt;&quot;,&quot;confirmation&quot;:&quot;Email sent successfully&quot;}. Propagate child-automation or Gmail failures; do not return success when no email was sent. Input example: {&quot;recipientEmail&quot;:&quot;recipient@example.com&quot;,&quot;subject&quot;:&quot;Project update&quot;,&quot;title&quot;:&quot;Weekly progress&quot;,&quot;details&quot;:&quot;The API migration is complete.&quot;}. The recipient example is a test placeholder, to be replaced with a controlled test mailbox for a live run.
+</code></pre>
+<p>Existing v2 and passing four-node smoke mock (zero assertions) preserved. Continuation provided only the final summary; no rebuild or test rerun.</p>
+<h3>N07. Inventory Shortfall Restock Alert</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1416b2b1df24c50f69956/builder?b_9U8If-chatId=e_6aa1416bf523514200680b32&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation that accepts the following input: item_id, current_stock, reorder_threshold, and owner_email. Deserialize the input and use a Groovy script to compare current_stock against reorder_threshold to calculate the inventory shortfall as max(reorder_threshold - current_stock, 0). If the shortfall is greater than zero, invoke a &quot;Simple Call LLM&quot; automation to generate a concise restock request email that includes the item_id and the shortfall quantity. Store an alert record containing the item_id, shortfall, and generated email draft in storage. Send the generated email to the specified owner_email. Finally, return the calculated shortfall and the generated email draft.
+use connection: Gmail | K1
+Input Schema
+
+{
+  &quot;item_id&quot;: &quot;string&quot;,
+  &quot;current_stock&quot;: 0,
+  &quot;reorder_threshold&quot;: 0,
+  &quot;owner_email&quot;: &quot;string&quot;
+}
+
+Output Schema
+
+{
+  &quot;shortfall&quot;: 0,
+  &quot;email_draft&quot;: &quot;&quot;
+}
+</code></pre>
+<p>Saved v3 repairs the confirmed unsupported Groovy parameters binding. Both mocked run IDs remained RUN_NOT_FOUND, so runtime and assertions are unverified.</p>
+<h3>N08. Evaluate Loan Applicant Eligibility</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1416d3db8a857dad8f581/builder?b_9U8If-chatId=e_6aa1416ef523514200680b40&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation named Evaluate Loan Applicant Eligibility. Accept {&quot;applicant_id&quot;:&quot;string&quot;}; retrieve the matching LoanDataEval record using Fetch Records. Resolve its name, monthly income, existing monthly EMI, requested loan principal, and credit score fields. Apply these fixed evaluation rules: max_emi_allowed = 0.4 * monthlyIncome - existingEMI; loanEMI = principal * (1 + 0.10 * 3) / 36, using flat annual interest over 36 months, not a reducing-balance formula. The EMI check passes when loanEMI &lt;= max_emi_allowed. The credit check passes when creditScore &gt;= 700. Both checks pass: Approved. Exactly one passes: Conditional. Neither passes: Rejected. Compare unrounded numbers; round max_emi_allowed to two decimals in the response. Return {&quot;name&quot;:&quot;string&quot;,&quot;eligibility&quot;:&quot;Approved | Conditional | Rejected&quot;,&quot;max_emi_allowed&quot;:0,&quot;remarks&quot;:&quot;string&quot;}, where eligibility is one enum value and remarks identifies the result of both checks. Missing applicant or missing/non-numeric financial values is an explicit error rather than a guessed decision. These are benchmark rules, not a claim about lending policy.
+</code></pre>
+<p>Groovy parameters binding failed, then repaired to direct inputs. Saved v5; independent hardened run passed 8/8 assertions for the boundary fixture.</p>
+<h3>N09. Monitor Hospital Bed Turnover</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141708441ee04fc631390/builder?b_9U8If-chatId=e_6aa14170fe0ef7104b7a75ad&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Build a callable automation named Monitor Hospital Bed Turnover, with empty input {}. Retrieve all admission/discharge records from HealthCare | Eval. For this evaluation the requested metric is admission-to-discharge duration (length of stay), not discharge-to-next-admission bed turnover. Preserve the original calculation: durationHours = (Discharge_Timestamp - Admission_Timestamp) / 3600000. Exclude records missing either timestamp, with invalid timestamps, or with discharge earlier than admission. Group valid records by Ward_ID and Responsible_Shift and calculate the arithmetic mean duration in hours. For every group with a mean strictly greater than 2, send one email through Gmail | K1 to kavankansodariya@unifyapps.com containing the ward, shift and mean. Return {&quot;status&quot;:&quot;success&quot;,&quot;labelIds&quot;:[&quot;string&quot;]} after all required sends succeed, combining returned Gmail labelIds without duplicates. If no group exceeds 2 hours, send nothing and return {&quot;status&quot;:&quot;no_alert&quot;,&quot;labelIds&quot;:[]}. Mail failure is a failed automation, never a success or no_alert response.
+</code></pre>
+<p>Saved v7 has all 16 nodes configured. Mocked smoke ended ERROR after 205 ms, without a node-level error payload; success behavior is unverified. Stale parent generation was recovered separately.</p>
+<h3>N10. Calculate Employee Shift Overtime</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1417257ad1104aed7e8c6/builder?b_9U8If-chatId=e_6aa14172fe0ef7104b7a75b2&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation that accepts an `employee_id` and `standard_hours_per_day` as input. Retrieve all shift records for the specified employee from the **employeeListEval** object. Calculate the employee&#39;s total hours worked by summing the hours across all shift records, then calculate the total overtime hours by grouping the records by date and summing only the hours worked beyond the specified `standard_hours_per_day` for each day. Return the employee&#39;s name, total hours worked, and total overtime hours.
+
+Input Schema
+{
+  &quot;employee_id&quot;: &quot;string&quot;,
+  &quot;standard_hours_per_day&quot;: 8
+}
+
+Output Schema
+{
+  &quot;employee_name&quot;: &quot;string&quot;,
+  &quot;total_hours_worked&quot;: 0,
+  &quot;overtime_hours&quot;: 0
+}
+
+Use the stored shift date as the grouping key and numeric hours worked from each shift. Resolve these fields from employeeListEval; do not group by full timestamps. total_hours_worked is the sum across all shifts. For each date calculate max(sum(hours on that date) - standard_hours_per_day, 0), then sum these daily values for overtime_hours. Multiple shifts on the same date share one daily allowance. Require standard_hours_per_day &gt; 0 and nonnegative numeric shift hours. If no matching employee shifts exist, return EMPLOYEE_SHIFTS_NOT_FOUND as an explicit error rather than inventing an employee name.
+</code></pre>
+<p>Saved at v13 after autonomous repairs and four failed smoke runs. Latest run confirms fetch/append completed but aggregation received shifts:[] and raised EMPLOYEE_SHIFTS_NOT_FOUND. No callable response.</p>
+<h3>N11. Export Workflow Changeset</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1418008527666b23aba01/builder?b_9U8If-chatId=e_6aa14180f523514200680c42&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation named Export Workflow Changeset with input {}. Use Standard Entities by UnifyApps to export changeset name test_actual, Asset Class Workflow Definition, Asset ID 6a217f811fe117525fe1bc4a, Asset Version 1. Pass the resulting file to the Public File URL utility. Return {&quot;status&quot;:&quot;success&quot;} if the utility returns a nonempty public URL; return {&quot;status&quot;:&quot;Failed&quot;} if export succeeded but no URL was returned. The output schema is an object with required string property status, enum [&quot;success&quot;,&quot;Failed&quot;]. If export or URL generation raises an error, propagate it. Do not substitute another asset or version.
+</code></pre>
+<p>Independent getRun confirms smoke and hardened runs COMPLETED. Final hardened run has two evaluated assertions, both passed. Earlier hardening authored a third assertion absent from evidence; later run retains two passed assertions. Export and URL generation were mocked.</p>
+<h3>N12. List Upcoming Calendar Events</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14182eb37863596ff65b4/builder?b_9U8If-chatId=e_6aa14182fe0ef7104b7a7634&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation named List Upcoming Calendar Events with input {}. Using Calendar | K1, list events on the primary calendar with eventTypes restricted to default, timeMin = 2026-06-05T11:16:00.000Z, and singleEvents = false. Keep the fixed timestamp as the evaluation baseline, not the current date. Follow all page tokens. Count the returned event resources without expanding recurring series, and return {&quot;eventCount&quot;:0}, with eventCount a nonnegative integer. Return zero if no events match; propagate connector errors.
+</code></pre>
+<p>Saved v5; empty and three-event mocked tests pass (2/2 final assertions). Only one page is counted; original all-page requirement remains unmet because no continuation token is exposed.</p>
+<h3>N13. Count Google Calendar Events</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa14184e117e83eb6e7ddfb/builder?b_9U8If-chatId=e_6aa14184fe0ef7104b7a763c&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation named Count Google Calendar Events. Accept required RFC3339 strings start_time and end_time, for example {&quot;start_time&quot;:&quot;2026-06-05T18:30:43.807Z&quot;,&quot;end_time&quot;:&quot;2026-06-06T18:15:30.078Z&quot;}. Require start_time &lt; end_time. Using Calendar | K1, list primary-calendar events with timeMin = start_time, timeMax = end_time and singleEvents = false. Follow all page tokens and count returned event resources, not expanded recurring instances. Preserve the connector&#39;s timeMin/timeMax filtering semantics; do not add a starts-within-window-only filter. Return {&quot;total_events_found&quot;:0}, with a nonnegative integer value. No matches returns zero; connector errors remain failures.
+</code></pre>
+<p>Saved v4; mocked two-event run passes and reversed interval fails as expected. Counts only first 2,500 resources; original all-page requirement remains unmet.</p>
+<h3>N14. Validate BFF Agent Response</h3>
+<p><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141862b1df24c50f6b0a7/builder?b_9U8If-chatId=e_6aa14186f523514200680c7b&amp;nav=copilot">Automation and chat</a></p>
+<pre><code class="language-text">Create a callable automation named Validate BFF Agent Response. Accept intent (string), bffResponse (open JSON object), memberId (string), asOf (RFC3339 timestamp), and evaluationRules (object). This is a deterministic validation evaluation. Do not guess BFF schemas or business rules. evaluationRules has one entry for each supported intent: shourak_payment, generate_certificate, pension_simulator. Each entry contains requiredFields (array of dot paths), fieldTypes (map of dot paths to string, number, boolean, object or array), timestampPath (dot path), maxAgeHours (nonnegative number), and memberIdPath (dot path). Supply these entries with the test fixture.
+
+Use an initial JavaScript node to validate input shape, rule shape, nonempty memberId and valid asOf, then a Condition node. Malformed inputs or unsupported intent return a normal error payload with confidenceScore 0, suggestedAction ERROR, both string checks set to &quot;0&quot;, both boolean checks false, a specific reason, and ticketContext {}. On valid input, use a Branch node with an intent-specific JavaScript node for each of the three intents to select that intent&#39;s rules and fields from bffResponse.
+
+After the branch, use four consecutive JavaScript nodes: (1) completeness = fraction of requiredFields whose values exist and are not null or blank strings, or 1 for no requiredFields; (2) freshness = 1 if timestampPath parses and is between asOf-maxAgeHours and asOf inclusive, otherwise 0; (3) schemaValidity = true only when every fieldTypes path exists with the specified JSON type (null fails); (4) internalConsistency = true only when the memberIdPath value exactly equals input memberId. Another JavaScript node computes confidenceScore = (completeness + freshness + Number(schemaValidity) + Number(internalConsistency))/4. Use a Condition node: confidenceScore &gt;= 0.8 AND schemaValidity gives PROCEED, otherwise CREATE_TICKET. This workflow returns a ticket recommendation; it does not create a ticket externally. Include every failed check in reason and put intent, memberId and failure names in ticketContext for CREATE_TICKET; PROCEED uses reason &quot;Validation passed&quot; and ticketContext {}.
+
+Merge response paths with a final JavaScript node and return {&quot;originalResponse&quot;:{},&quot;confidenceScore&quot;:0,&quot;suggestedAction&quot;:&quot;string&quot;,&quot;confidenceChecks&quot;:{&quot;dataCompleteness&quot;:&quot;string&quot;,&quot;dataFreshness&quot;:&quot;string&quot;,&quot;schemaValidity&quot;:false,&quot;internalConsistency&quot;:false},&quot;reason&quot;:&quot;string&quot;,&quot;ticketContext&quot;:{}}. originalResponse preserves the received object; numeric completeness and freshness are converted to decimal strings for the original output contract. The score is numeric. Explicitly allow arbitrary properties in input bffResponse and output originalResponse/ticketContext.
+</code></pre>
+<p>Recovered context and direct save batches; all 27 nodes configured/read back at v10. Mock initiation returned HTTP 500 TestWorkflowClient failure with no run ID, so expected PROCEED output is unverified.</p>
 </article>
 </main>
 </body>
