@@ -178,11 +178,26 @@ a { overflow-wrap: anywhere; }
 <p>This report treats the 11 later Sol cases and 14 added Sol cases as one 25-case corpus. The five earlier smoke tests remain separate and are excluded from the corpus statistics. Every prompt name links to its automation and chat.</p>
 <p>Cost is the cumulative session total in USD. Time taken is active session time, including planning, building, repairs and attempted tests, excluding time waiting for user input, quota approval or continuation scheduling. Build-only estimates for the added cases are retained below. Corpus totals use one latest recorded attempt per prompt, including its authorized continuations, regardless of outcome. Six exact-prompt reruns replace cases 02, 03, 06, 07, 08 and N05. They do not add cases to the denominator. Prior attempts remain in the comparison below.</p>
 <h2>25-case corpus statistics</h2>
-<ul>
-<li><strong>Built completely: 19 of 25, 76%.</strong> A populated implementation was saved. This measures build completion, not behavioral correctness.</li>
-<li><strong>Structure built only: 4 of 25, 16%.</strong> Cases 06, 08, N12 and N13 retain incomplete data or unmet requirements.</li>
-<li><strong>Nothing built: 2 of 25, 8%.</strong> Cases 04 and 11 retained only default nodes.</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th align="right">Fully built</th>
+<th align="right">Structure built, data incomplete</th>
+<th align="right">Outright failed, nothing built</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right"><strong>19</strong></td>
+<td align="right"><strong>4</strong></td>
+<td align="right"><strong>2</strong></td>
+</tr>
+<tr>
+<td align="right">76%</td>
+<td align="right">16%</td>
+<td align="right">8%</td>
+</tr>
+</tbody></table>
+<p>These three groups are mutually exclusive and total 25 automations. Fully built means a populated implementation was saved; it does not mean its TEST execution passed. The four partial builds are 06, 08, N12 and N13. They have saved structures but incomplete data or unmet requirements. “Structurally valid” is not certified for all four, since case 08 still has structural incompatibilities. The two outright build failures, 04 and 11, retained only default nodes.</p>
 <p>In total, <strong>23 of 25 cases, 92%, saved a substantive structure</strong>. The complete-build group contains 5 cases with verified final passing mocked runs, 5 with failed tests, 8 with unverified final tests, and 1 without a test. Two of the passing cases, 07 and N06, have zero-assertion smoke coverage only.</p>
 <p>Latest-attempt corpus cost is <strong>$107.9557</strong>, averaging <strong>$4.3182 per case</strong>. Average active time is <strong>10m 36s</strong>, with <strong>265m 04s</strong> summed across the corpus. User-input waits are excluded. These are full active sessions, including repairs and test attempts.</p>
 <h2>Main test corpus — 25 cases</h2>
@@ -349,6 +364,21 @@ a { overflow-wrap: anywhere; }
 </tbody></table>
 <h2>Earlier smoke tests — 5 cases</h2>
 <p>These are original cases 12–16. Their final mocked tests passed 44 of 44 assertions across the five workflows.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Fully built</th>
+<th align="right">Structure built, data incomplete</th>
+<th align="right">Outright failed, nothing built</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right"><strong>5</strong></td>
+<td align="right"><strong>0</strong></td>
+<td align="right"><strong>0</strong></td>
+</tr>
+</tbody></table>
+<p>These five are separate from the 25-case corpus above.</p>
 <table>
 <thead>
 <tr>
