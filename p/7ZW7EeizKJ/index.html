@@ -292,11 +292,11 @@ summary { cursor: pointer; font-weight: 700; }
 <main class="planloft-plan">
 <article><p>This report compares the initial OpenAI rewrite, Workflow Split and Automation Coder on the same 25 prompt identities. Workflow Split saved the most substantive workflows, 23 of 25. Automation Coder recorded much lower model cost, but 13 saved drafts still needed repairs that could not be persisted.</p>
 <p>The evidence supports a comparison of build persistence and tested paths. It does not support a full requirements-accuracy score: test coverage differed, some fixtures checked only empty inputs, and several reported successful runs did not establish the complete requested behavior. Snapshot: 10 September 2026. No new generations or TEST runs were launched for this comparison.</p>
-<h2>Accuracy and build outcomes</h2>
+<h2>Accuracy, cost and active time</h2>
 <table>
 <thead>
 <tr>
-<th>Measure, denominator 25</th>
+<th>Metric</th>
 <th align="right">Initial OpenAI rewrite</th>
 <th align="right">Workflow Split</th>
 <th align="right">Automation Coder</th>
@@ -333,6 +333,18 @@ summary { cursor: pointer; font-weight: 700; }
 <td align="right"><strong>4 / 25, 16%</strong></td>
 </tr>
 <tr>
+<td>Average cost on the same 22 fully measured prompts</td>
+<td align="right"><strong>$3.0904</strong></td>
+<td align="right"><strong>$5.4049</strong></td>
+<td align="right"><strong>$0.0863</strong></td>
+</tr>
+<tr>
+<td>Average active time on the same 19 fully measured prompts</td>
+<td align="right"><strong>5m 41s</strong></td>
+<td align="right"><strong>13m 03s</strong></td>
+<td align="right"><strong>5m 26s</strong></td>
+</tr>
+<tr>
 <td>Requirement gaps among counted TEST paths</td>
 <td align="right">3</td>
 <td align="right">0 recorded</td>
@@ -350,21 +362,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td align="right">35</td>
 <td align="right">28</td>
 </tr>
-</tbody></table>
-<p>A saved workflow can still have bad mappings, missing behavior or failing code. The TEST rows count cases, not assertions, and retain limited-path coverage. They are observed pass rates, not a certification of all prompt requirements. Automation Coder N06 is excluded because a Gmail SENT receipt made mocked-only compliance unverified.</p>
-<p>For Workflow Split, the existing stage classification remains <strong>19 fully populated, 4 structure/data-or-requirement incomplete, and 2 empty</strong>. That complete-build count includes failed and unverified tests. The two other approaches do not have an equivalent independently scored full-requirements rubric, so their saved counts should not be relabeled as complete builds.</p>
-<h2>Cost and active time</h2>
-<p>The primary spending comparison includes all known attempts for each prompt, including abandoned or superseded retry conversations. Active time sums top-level trace durations and excludes gaps while waiting for user input, quota approval or continuation. It includes planning, building, repair and test activity. Comparable build-only phase timing is unavailable across all three approaches.</p>
-<table>
-<thead>
 <tr>
-<th>Metric</th>
-<th align="right">Initial OpenAI rewrite</th>
-<th align="right">Workflow Split</th>
-<th align="right">Automation Coder</th>
-</tr>
-</thead>
-<tbody><tr>
 <td>Observed total cost, all attempts</td>
 <td align="right">$74.8230, lower bound</td>
 <td align="right">$144.1670</td>
@@ -394,19 +392,10 @@ summary { cursor: pointer; font-weight: 700; }
 <td align="right">14m 11s</td>
 <td align="right">5m 14s</td>
 </tr>
-<tr>
-<td>Average cost on the same 22 fully measured prompts</td>
-<td align="right"><strong>$3.0904</strong></td>
-<td align="right"><strong>$5.4049</strong></td>
-<td align="right"><strong>$0.0863</strong></td>
-</tr>
-<tr>
-<td>Average active time on the same 19 fully measured prompts</td>
-<td align="right"><strong>5m 41s</strong></td>
-<td align="right"><strong>13m 03s</strong></td>
-<td align="right"><strong>5m 26s</strong></td>
-</tr>
 </tbody></table>
+<p>A saved workflow can still have bad mappings, missing behavior or failing code. The TEST rows count cases, not assertions, and retain limited-path coverage. They are observed pass rates, not a certification of all prompt requirements. Automation Coder N06 is excluded because a Gmail SENT receipt made mocked-only compliance unverified.</p>
+<p>For Workflow Split, the existing stage classification remains <strong>19 fully populated, 4 structure/data-or-requirement incomplete, and 2 empty</strong>. That complete-build count includes failed and unverified tests. The two other approaches do not have an equivalent independently scored full-requirements rubric, so their saved counts should not be relabeled as complete builds.</p>
+<p>The primary spending comparison includes all known attempts for each prompt, including abandoned or superseded retry conversations. Active time sums top-level trace durations and excludes gaps while waiting for user input, quota approval or continuation. It includes planning, building, repair and test activity. Comparable build-only phase timing is unavailable across all three approaches.</p>
 <p>The paired cost cohort excludes 05, 10, N05. The paired active-time cohort excludes 05, 10, N05, N06, N09, N12. Rewrite N05 has incomplete native telemetry; Coder 05 and 10 are unavailable rather than zero. Split N06, N09 and the superseded N12 attempt contain estimated or missing native durations, so they are excluded from complete all-attempt time averages.</p>
 <p>For comparison with the prior report, Workflow Split&#39;s <strong>latest-attempt-only</strong> cost is $103.6614, averaging $4.1465. Its active total is 258m 11s, averaging 10m 20s, including the marked estimates. This now includes the four later reruns of 06, 08, N12 and N13. They cost $14.4663, did not resolve the original requirements, and were absent from the earlier published totals.</p>
 <p>These are observed platform token costs. Different models, tool paths, retries, changing configurations and prompt clarifications prevent attributing the cost or latency difference solely to architecture. A fast failure also reduces average latency.</p>
