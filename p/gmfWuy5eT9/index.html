@@ -290,9 +290,9 @@ summary { cursor: pointer; font-weight: 700; }
 })();
 </script>
 <main class="planloft-plan">
-<article><p>15 of the 74 solution briefs have reached a recorded outcome. This report follows the Sol workflow agents from prompt submission through persisted structure, node data, and mocked TEST execution. It is updated at the same URL after each completed batch.</p>
-<p>The corpus contains 74 distinct briefs from 16 of 76 solution-builder plan records, created from September 8, 2026 at 18:00 IST through the frozen cutoff of September 10 at 05:41:26 IST. Existing-automation update instructions were removed before submission, including briefs without an Automation heading. 59 prompts remain outside this completed snapshot.</p>
-<p>Last snapshot: 2026-09-10T08:26:50.114969+00:00. Platform model: OpenAI GPT 5.6 Sol.</p>
+<article><p>30 of the 74 solution briefs have reached a recorded outcome. This report follows the Sol workflow agents from prompt submission through persisted structure, node data, and mocked TEST execution. It is updated at the same URL after each completed batch.</p>
+<p>The corpus contains 74 distinct briefs from 16 of 76 solution-builder plan records, created from September 8, 2026 at 18:00 IST through the frozen cutoff of September 10 at 05:41:26 IST. Existing-automation update instructions were removed before submission, including briefs without an Automation heading. 44 prompts remain outside this completed snapshot.</p>
+<p>Last snapshot: 2026-09-10T10:08:37.365762+00:00. Platform model: OpenAI GPT 5.6 Sol.</p>
 <h2>Build results</h2>
 <table>
 <thead>
@@ -304,21 +304,21 @@ summary { cursor: pointer; font-weight: 700; }
 </thead>
 <tbody><tr>
 <td>Fully built, structure and data persisted</td>
-<td align="right">10</td>
+<td align="right">20</td>
 <td align="right">66.7%</td>
 </tr>
 <tr>
 <td>Structure persisted, data incomplete</td>
-<td align="right">5</td>
-<td align="right">33.3%</td>
+<td align="right">9</td>
+<td align="right">30.0%</td>
 </tr>
 <tr>
 <td>No validated structure persisted</td>
-<td align="right">0</td>
-<td align="right">0.0%</td>
+<td align="right">1</td>
+<td align="right">3.3%</td>
 </tr>
 </tbody></table>
-<p>15/15 cases have a successfully saved structure. These three build categories are mutually exclusive. A fully built workflow can still have a failed or unverified test.</p>
+<p>29/30 cases have a successfully saved structure. These three build categories are mutually exclusive. A fully built workflow can still have a failed or unverified test.</p>
 <h2>Test results</h2>
 <table>
 <thead>
@@ -329,11 +329,11 @@ summary { cursor: pointer; font-weight: 700; }
 </thead>
 <tbody><tr>
 <td>Completed with verified TEST evidence</td>
-<td align="right">2</td>
+<td align="right">3</td>
 </tr>
 <tr>
 <td>Fully built, TEST outcome unverified</td>
-<td align="right">6</td>
+<td align="right">15</td>
 </tr>
 <tr>
 <td>Fully built, test or required runtime behavior failed</td>
@@ -341,7 +341,7 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td>Build incomplete</td>
-<td align="right">5</td>
+<td align="right">10</td>
 </tr>
 </tbody></table>
 <h2>Cost and active time</h2>
@@ -355,23 +355,23 @@ summary { cursor: pointer; font-weight: 700; }
 </thead>
 <tbody><tr>
 <td>Observed trace cost</td>
-<td align="right">$99.9414</td>
-<td align="right">15 cases, including partial measurements</td>
+<td align="right">$193.6952</td>
+<td align="right">30 cases, including partial measurements</td>
 </tr>
 <tr>
 <td>Fully measured trace cost</td>
-<td align="right">$92.0650</td>
-<td align="right">14 cases</td>
+<td align="right">$149.1188</td>
+<td align="right">25 cases</td>
 </tr>
 <tr>
 <td>Average cost</td>
-<td align="right">$6.5761</td>
-<td align="right">14 fully measured cases</td>
+<td align="right">$5.9648</td>
+<td align="right">25 fully measured cases</td>
 </tr>
 <tr>
 <td>Average active time</td>
-<td align="right">18m 43s</td>
-<td align="right">14 fully measured cases</td>
+<td align="right">18m 02s</td>
+<td align="right">25 fully measured cases</td>
 </tr>
 </tbody></table>
 <p>Cost is the sum of per-trace token costs. Session summary totals can remain at zero, so they are not used. Active time combines build, clarification-response work, repair, and testing; it excludes gaps waiting for user replies. Overlapping trace intervals are counted once. Missing measurements are excluded from averages, and partial row values are marked.</p>
@@ -506,6 +506,126 @@ summary { cursor: pointer; font-weight: 700; }
 <td align="right">$3.6472</td>
 <td align="right">10m 02s</td>
 <td>Initial 80-node structure persisted; later writer omitted complete nodes/edges and returned INVALID_ROOT_COUNT. Data incomplete. Stored lifecycle mappings differ from literal prompt statuses.</td>
+</tr>
+<tr>
+<td align="right">16</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2690de117e83eb6276c75/builder?b_9U8If-chatId=e_6aa2690dc3b48a7e12692a40&amp;nav=copilot&amp;generatingCaseId=e_6aa2690dc3b48a7e12692a40">Monitor Service Risk</a></td>
+<td>Built; test unverified</td>
+<td align="right">$13.3275 partial</td>
+<td align="right">39m 37s estimated</td>
+<td>All data persistedv14 after correcting malformed generated JSON nesting. Native test initiation failed HTTP500 TestWorkflowClient before run ID. No runtime result verified; inactive and undeployed.</td>
+</tr>
+<tr>
+<td align="right">17</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2694657ad1104ae387c52/builder?b_9U8If-chatId=e_6aa26946925f613bb822c126&amp;nav=copilot&amp;generatingCaseId=e_6aa26946925f613bb822c126">Vaccination Reminder Run</a></td>
+<td>Completed and tested</td>
+<td align="right">$4.8740</td>
+<td align="right">19m 32s</td>
+<td>All node data persisted. Native mocked smoke run completed in326ms with no assertion records. Gmail unavailable branch retained; future connected-send path missing and deployment attempt rejected.</td>
+</tr>
+<tr>
+<td align="right">18</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269462b1df24c502de667/builder?b_9U8If-chatId=e_6aa26946c848f8198d258140&amp;nav=copilot&amp;generatingCaseId=e_6aa26946c848f8198d258140">Reserve Workspace</a></td>
+<td>Built; test unverified</td>
+<td align="right">$9.9636 partial</td>
+<td align="right">54m 09s estimated</td>
+<td>All data persistedv9 after strict-schema dateFormat removal and native booking-number UUID insertion. Native mocked run not found. Callable contract preserved; concurrency remains best effort without atomic compare-and-create.</td>
+</tr>
+<tr>
+<td align="right">19</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269473db8a857da1013f8/builder?b_9U8If-chatId=e_6aa26947c848f8198d258147&amp;nav=copilot&amp;generatingCaseId=e_6aa26947c848f8198d258147">Issue Visitor Pass</a></td>
+<td>Built; test unverified</td>
+<td align="right">$9.0897</td>
+<td align="right">21m 36s</td>
+<td>All data persistedv9 with unavailable-Gmail delivery branch; connected-send path missing. Native mocked run not found in execution stores. Deployment rejected.</td>
+</tr>
+<tr>
+<td align="right">20</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26947e117e83eb6278979/builder?b_9U8If-chatId=e_6aa26947c3b48a7e12692ae0&amp;nav=copilot&amp;generatingCaseId=e_6aa26947c3b48a7e12692ae0">Generate Monthly Invoices</a></td>
+<td>Built; test unverified</td>
+<td align="right">$7.7129 partial</td>
+<td align="right">25m 20s estimated</td>
+<td>Full data persistedv8; latestv9 pagination repair saved. Oldv8 mocked run later CANCELLED after3,604,604ms. Tester cannot retrieve full definition for finitev9 rerun. Gmail send path unavailable. Latest runtime unverified.</td>
+</tr>
+<tr>
+<td align="right">21</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aec55c9f529421f0701/builder?b_9U8If-chatId=e_6aa26aec925f613bb822d2e6&amp;nav=copilot&amp;generatingCaseId=e_6aa26aec925f613bb822d2e6">Send Unpaid Invoice Reminders</a></td>
+<td>Built; test unverified</td>
+<td align="right">$6.7450</td>
+<td align="right">18m 16s</td>
+<td>All data persistedv9, inactive10:00 schedule and7/14/21 guard. Unavailable-Gmail branch retained; connected-send path missing. Native mocked run not found.</td>
+</tr>
+<tr>
+<td align="right">22</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed3db8a857da106d5b/builder?b_9U8If-chatId=e_6aa26aedc848f8198d26a91c&amp;nav=copilot&amp;generatingCaseId=e_6aa26aedc848f8198d26a91c">Request Approval</a></td>
+<td>Structure failed</td>
+<td align="right">$0.5547</td>
+<td align="right">3m 59s</td>
+<td>No verified signed-in caller email for fixed callable input. Cannot establish approver authority safely without changing frozen contract; blank starter retained.</td>
+</tr>
+<tr>
+<td align="right">23</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed57ad1104ae39714e/builder?b_9U8If-chatId=e_6aa26aee925f613bb822d2ee&amp;nav=copilot&amp;generatingCaseId=e_6aa26aee925f613bb822d2ee">Change Decision</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$2.2915</td>
+<td align="right">9m 04s</td>
+<td>Valid structure savedv4 but verified signed-in caller identity absent from fixed callable contract. Actor authorization and dependent writes remain incomplete; no owner-email substitution.</td>
+</tr>
+<tr>
+<td align="right">24</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aee57ad1104ae39728e/builder?b_9U8If-chatId=e_6aa26aee925f613bb822d2f5&amp;nav=copilot&amp;generatingCaseId=e_6aa26aee925f613bb822d2f5">SLA Monitor</a></td>
+<td>Built; test unverified</td>
+<td align="right">$7.1660</td>
+<td align="right">24m 18s</td>
+<td>All data persistedv12 after reconstruction from original brief and current schema. Native mocked run not found. Schedule inactive, undeployed.</td>
+</tr>
+<tr>
+<td align="right">25</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aef8441ee04fcc2ecfa/builder?b_9U8If-chatId=e_6aa26aef925f613bb822d300&amp;nav=copilot&amp;generatingCaseId=e_6aa26aef925f613bb822d300">Create Seat Hold</a></td>
+<td>Built; test unverified</td>
+<td align="right">$7.3785</td>
+<td align="right">25m 29s</td>
+<td>All data persistedv6. Readback confirms booking_reference and hold_token share the same UUID. Cross-object rollback remains best effort, not atomic. Native mocked run not found; runtime unverified.</td>
+</tr>
+<tr>
+<td align="right">26</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b192b1df24c502f4d96/builder?b_9U8If-chatId=e_6aa26b19c848f8198d26a98d&amp;nav=copilot&amp;generatingCaseId=e_6aa26b19c848f8198d26a98d">Release Seat Hold</a></td>
+<td>Built; test unverified</td>
+<td align="right">$6.7199</td>
+<td align="right">17m 54s</td>
+<td>All data persistedv7. Readback confirms matching booking_reference/hold_token guards and inactive schedule. Native mocked run not found; runtime and mutation assertions unverified.</td>
+</tr>
+<tr>
+<td align="right">27</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1ae117e83eb629307a/builder?b_9U8If-chatId=e_6aa26b1a925f613bb822d39d&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1a925f613bb822d39d">Process Checkout</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$2.7522</td>
+<td align="right">13m 36s</td>
+<td>Initial structure persisted. Later topology saves hit confirmed Cloudflare outage; fixed callable contract also lacks a verified signed-in customer identifier needed for ownership authorization. No untrusted identity substitution; data incomplete.</td>
+</tr>
+<tr>
+<td align="right">28</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a26d1175698b96852/builder?b_9U8If-chatId=e_6aa26b1a925f613bb822d39e&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1a925f613bb822d39e">Issue Ticket</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$2.3644</td>
+<td align="right">10m 12s</td>
+<td>Structure persisted, but required real-time Storage trigger cannot validate because source booking-object webhooks are disabled. Source object left unchanged; some Scope/UUID data saved, downstream data incomplete.</td>
+</tr>
+<tr>
+<td align="right">29</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a3db8a857da107720/builder?b_9U8If-chatId=e_6aa26b1ac3b48a7e12693db9&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1ac3b48a7e12693db9">Prepare Booking Update</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$5.6959 partial</td>
+<td align="right">46m 39s estimated</td>
+<td>Most data persistedv9; two create nodes lack UUID record_key/current integer time, leaving two responses pending. Repeated Find Workflows stall after recovery and concrete producer guidance was stopped after10minutes unchanged. Final trace cost/time incomplete.</td>
+</tr>
+<tr>
+<td align="right">30</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1b55c9f529421f0bdf/builder?b_9U8If-chatId=e_6aa26b1bc3b48a7e12693dbe&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1bc3b48a7e12693dbe">Send Upcoming Show Reminders</a></td>
+<td>Built; test unverified</td>
+<td align="right">$7.1180</td>
+<td align="right">24m 50s</td>
+<td>All data persistedv11,22nodes28edges. Native mocked run not found, so counters and STOP traversal unverified. Schedule inactive.</td>
 </tr>
 </tbody></table>
 <h2>Reading the evidence</h2>
