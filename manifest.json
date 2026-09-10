@@ -182,15 +182,6 @@
       "expiresAt": "2026-10-09T15:40:58.887Z"
     },
     {
-      "id": "gmfWuy5eT9",
-      "project": "path-ef2498",
-      "slug": "solution-briefs-workflow-evaluation",
-      "title": "Solution brief workflow evaluation",
-      "kind": "plan",
-      "createdAt": "2026-09-10T08:28:12.135Z",
-      "expiresAt": "2026-10-10T11:05:35.437Z"
-    },
-    {
       "id": "1vKtjZYX21",
       "project": "path-ef2498",
       "slug": "main25-direct-agent-partial",
@@ -198,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-09-10T09:51:50.361Z",
       "expiresAt": "2026-10-10T11:23:43.151Z"
+    },
+    {
+      "id": "gmfWuy5eT9",
+      "project": "path-ef2498",
+      "slug": "solution-briefs-workflow-evaluation",
+      "title": "Solution brief workflow evaluation",
+      "kind": "plan",
+      "createdAt": "2026-09-10T08:28:12.135Z",
+      "expiresAt": "2026-10-10T11:26:05.076Z"
     }
   ]
 }

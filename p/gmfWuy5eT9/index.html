@@ -290,36 +290,40 @@ summary { cursor: pointer; font-weight: 700; }
 })();
 </script>
 <main class="planloft-plan">
-<article><p>45 of the 74 solution briefs have reached a recorded outcome. This report follows the Sol workflow agents from prompt submission through persisted structure, node data, and mocked TEST execution. It is updated at the same URL after each completed batch.</p>
-<p>The corpus contains 74 distinct briefs from 16 of 76 solution-builder plan records, created from September 8, 2026 at 18:00 IST through the frozen cutoff of September 10 at 05:41:26 IST. Existing-automation update instructions were removed before submission, including briefs without an Automation heading. 29 prompts remain outside this completed snapshot.</p>
-<p>Last snapshot: 2026-09-10T11:00:31.121376+00:00. Platform model: OpenAI GPT 5.6 Sol.</p>
-<h2>Build results</h2>
+<article><p>The Sol evaluation was stopped at the user&#39;s request. All 60 triggered prompts are listed below; 54 have recorded outcomes and six were stopped before a final outcome was assessed. The remaining 14 prompts were never submitted.</p>
+<p>Stop requested September 10, 2026 at 16:50:48 IST. Final evidence snapshot: 2026-09-10T11:25:44.423719+00:00. No new prompts, clarification replies, retries, or tests were submitted after the stop instruction. Six active generations were stopped through the platform UI, and final native checks show no Sol generation still active.</p>
+<p>The frozen corpus contains 74 briefs from 16 of 76 solution-builder plan records created from September 8 at 18:00 IST through September 10 at 05:41:26 IST. Existing-automation update prefixes were removed. All 60 initial submitted prompts match the frozen corpus. Platform model: OpenAI GPT 5.6 Sol.</p>
+<h2>Recorded build outcomes</h2>
 <table>
 <thead>
 <tr>
 <th>Result</th>
 <th align="right">Cases</th>
-<th align="right">Share of completed cases</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Fully built, structure and data persisted</td>
-<td align="right">33</td>
-<td align="right">73.3%</td>
+<td>Fully built, with recorded outcome</td>
+<td align="right">37</td>
 </tr>
 <tr>
-<td>Structure persisted, data incomplete</td>
-<td align="right">11</td>
-<td align="right">24.4%</td>
+<td>Structure built, required data or business path incomplete</td>
+<td align="right">16</td>
 </tr>
 <tr>
-<td>No validated structure persisted</td>
+<td>No validated structure built</td>
 <td align="right">1</td>
-<td align="right">2.2%</td>
+</tr>
+<tr>
+<td>Paused by user; final outcome unassessed</td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>Not run; user stopped</td>
+<td align="right">14</td>
 </tr>
 </tbody></table>
-<p>44/45 cases have a successfully saved structure. These three build categories are mutually exclusive. A fully built workflow can still have a failed or unverified test.</p>
-<h2>Test results</h2>
+<p>Paused cases are excluded from completion and failure counts. A saved draft or completed agent turn alone is not a completed requested workflow. Case 52 has a tested two-node refusal fallback, but the required approval path is absent, so it is counted as incomplete.</p>
+<h2>Recorded test outcomes</h2>
 <table>
 <thead>
 <tr>
@@ -328,20 +332,16 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 </thead>
 <tbody><tr>
-<td>Completed with verified TEST evidence</td>
+<td>Completed with verified test evidence</td>
 <td align="right">6</td>
 </tr>
 <tr>
-<td>Fully built, TEST outcome unverified</td>
-<td align="right">22</td>
+<td>Fully built, test unverified</td>
+<td align="right">25</td>
 </tr>
 <tr>
 <td>Fully built, test or required runtime behavior failed</td>
-<td align="right">5</td>
-</tr>
-<tr>
-<td>Build incomplete</td>
-<td align="right">12</td>
+<td align="right">6</td>
 </tr>
 </tbody></table>
 <h2>Cost and active time</h2>
@@ -355,41 +355,38 @@ summary { cursor: pointer; font-weight: 700; }
 </thead>
 <tbody><tr>
 <td>Observed trace cost</td>
-<td align="right">$283.0079</td>
-<td align="right">45 cases, including partial measurements</td>
+<td align="right">$348.8545</td>
+<td align="right">60 triggered cases, including partial costs</td>
 </tr>
 <tr>
-<td>Fully measured trace cost</td>
-<td align="right">$227.0312</td>
-<td align="right">37 cases</td>
+<td>Average measured cost</td>
+<td align="right">$5.6745</td>
+<td align="right">47 fully measured cases</td>
 </tr>
 <tr>
-<td>Average cost</td>
-<td align="right">$6.1360</td>
-<td align="right">37 fully measured cases</td>
-</tr>
-<tr>
-<td>Average active time</td>
-<td align="right">18m 51s</td>
-<td align="right">31 fully measured cases</td>
+<td>Average measured active time</td>
+<td align="right">17m 32s</td>
+<td align="right">40 fully measured cases</td>
 </tr>
 </tbody></table>
-<p>Cost is the sum of per-trace token costs. Session summary totals can remain at zero, so they are not used. Active time combines build, clarification-response work, repair, and testing; it excludes gaps waiting for user replies. Overlapping trace intervals are counted once. Missing measurements are excluded from averages, and partial row values are marked.</p>
-<h2>Case results</h2>
+<p>Costs sum native per-trace token costs. Active time combines build, repair, and testing, excludes gaps waiting for user replies, and counts overlapping trace intervals once. Interrupted or unfinished traces can retain stale costs and missing latency; partial values are marked and excluded from measured averages. These are observed costs at the stop snapshot, not a guaranteed final billing total.</p>
+<h2>All triggered prompts</h2>
 <table>
 <thead>
 <tr>
 <th align="right">Case</th>
-<th>Prompt and workflow conversation</th>
+<th>Prompt</th>
+<th>Automation and conversation</th>
 <th>Outcome</th>
 <th align="right">Cost</th>
 <th align="right">Active time</th>
-<th>Evidence or remaining limitation</th>
+<th>Evidence or limitation</th>
 </tr>
 </thead>
 <tbody><tr>
 <td align="right">1</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f7e12b1df24c501b8929/builder?b_9U8If-chatId=e_6aa1f7e1fe0ef7104b837940&amp;nav=copilot&amp;generatingCaseId=e_6aa1f7e1fe0ef7104b837940">Submit Ticket</a></td>
+<td>Submit Ticket</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f7e12b1df24c501b8929/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f7e12b1df24c501b8929/builder?b_9U8If-chatId=e_6aa1f7e1fe0ef7104b837940&amp;nav=copilot&amp;generatingCaseId=e_6aa1f7e1fe0ef7104b837940">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$6.3650</td>
 <td align="right">13m 19s</td>
@@ -397,7 +394,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">2</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f81757ad1104ae139303/builder?b_9U8If-chatId=e_6aa1f817aeb9ea1371b5df76&amp;nav=copilot&amp;generatingCaseId=e_6aa1f817aeb9ea1371b5df76">Start Approval</a></td>
+<td>Start Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f81757ad1104ae139303/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f81757ad1104ae139303/builder?b_9U8If-chatId=e_6aa1f817aeb9ea1371b5df76&amp;nav=copilot&amp;generatingCaseId=e_6aa1f817aeb9ea1371b5df76">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$3.2680</td>
 <td align="right">9m 38s</td>
@@ -405,7 +403,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">3</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8508441ee04fca12d24/builder?b_9U8If-chatId=e_6aa1f850aeb9ea1371b5e023&amp;nav=copilot&amp;generatingCaseId=e_6aa1f850aeb9ea1371b5e023">Send Work Update</a></td>
+<td>Send Work Update</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8508441ee04fca12d24/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8508441ee04fca12d24/builder?b_9U8If-chatId=e_6aa1f850aeb9ea1371b5e023&amp;nav=copilot&amp;generatingCaseId=e_6aa1f850aeb9ea1371b5e023">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$4.5526</td>
 <td align="right">12m 18s</td>
@@ -413,7 +412,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">4</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f899e117e83eb612c93a/builder?b_9U8If-chatId=e_6aa1f89afe0ef7104b8379f9&amp;nav=copilot&amp;generatingCaseId=e_6aa1f89afe0ef7104b8379f9">Monitor SLA Commitments</a></td>
+<td>Monitor SLA Commitments</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f899e117e83eb612c93a/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f899e117e83eb612c93a/builder?b_9U8If-chatId=e_6aa1f89afe0ef7104b8379f9&amp;nav=copilot&amp;generatingCaseId=e_6aa1f89afe0ef7104b8379f9">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$10.2781</td>
 <td align="right">21m 11s</td>
@@ -421,23 +421,26 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">5</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f89f26d11756989f157d/builder?b_9U8If-chatId=e_6aa1f89ffe0ef7104b837a03&amp;nav=copilot&amp;generatingCaseId=e_6aa1f89ffe0ef7104b837a03">Follow Up Pending Approvals</a></td>
+<td>Follow Up Pending Approvals</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f89f26d11756989f157d/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f89f26d11756989f157d/builder?b_9U8If-chatId=e_6aa1f89ffe0ef7104b837a03&amp;nav=copilot&amp;generatingCaseId=e_6aa1f89ffe0ef7104b837a03">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$5.2540</td>
 <td align="right">13m 48s</td>
-<td>Version 7, all 29 nodes validated; mocked run unavailable. Duplicate prevention remains best effort without atomic compare-and-set.</td>
+<td>Version7 all29nodes validated; mocked run unavailable. Duplicate prevention remains best effort without atomic compare-and-set.</td>
 </tr>
 <tr>
 <td align="right">6</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8a526d11756989f16c9/builder?b_9U8If-chatId=e_6aa1f8a5aeb9ea1371b5e32b&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8a5aeb9ea1371b5e32b">Submit Service Intake</a></td>
+<td>Submit Service Intake</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8a526d11756989f16c9/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8a526d11756989f16c9/builder?b_9U8If-chatId=e_6aa1f8a5aeb9ea1371b5e32b&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8a5aeb9ea1371b5e32b">Conversation / trace</a></td>
 <td>Completed and tested</td>
 <td align="right">$5.8599</td>
 <td align="right">18m 25s</td>
-<td>Native terminal mocked smoke and hardened runs verified; 11 hardened assertions passed, none failed. Coverage is recorded tests, not exhaustive proof.</td>
+<td>Native terminal mocked smoke and hardened runs verified; hardened11 passed0failed. Coverage is recorded tests, not exhaustive proof.</td>
 </tr>
 <tr>
 <td align="right">7</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8aa57ad1104ae14a727/builder?b_9U8If-chatId=e_6aa1f8aaf52351420077c638&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8aaf52351420077c638">Process Request Approval</a></td>
+<td>Process Request Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8aa57ad1104ae14a727/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8aa57ad1104ae14a727/builder?b_9U8If-chatId=e_6aa1f8aaf52351420077c638&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8aaf52351420077c638">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$5.4964</td>
 <td align="right">13m 17s</td>
@@ -445,7 +448,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">8</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b108527666b2704348/builder?b_9U8If-chatId=e_6aa1f8b1f52351420077c66a&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8b1f52351420077c66a">Process Change Approval</a></td>
+<td>Process Change Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b108527666b2704348/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b108527666b2704348/builder?b_9U8If-chatId=e_6aa1f8b1f52351420077c66a&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8b1f52351420077c66a">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$3.0483</td>
 <td align="right">8m 05s</td>
@@ -453,15 +457,17 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">9</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b926d11756989f243e/builder?b_9U8If-chatId=e_6aa1f8b9fe0ef7104b837a40&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8b9fe0ef7104b837a40">Send Work Notification</a></td>
+<td>Send Work Notification</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b926d11756989f243e/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b926d11756989f243e/builder?b_9U8If-chatId=e_6aa1f8b9fe0ef7104b837a40&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8b9fe0ef7104b837a40">Conversation / trace</a></td>
 <td>Completed and tested</td>
 <td align="right">$5.7797</td>
 <td align="right">16m 04s</td>
-<td>Native smoke and hardened terminal runs verified, 11 hardened assertions passed after optional-input and field mapping repair.</td>
+<td>Native smoke and hardened terminal runs verified, hardened11 assertions passed after optional-input and field mapping repair.</td>
 </tr>
 <tr>
 <td align="right">10</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d055c9f52942060313/builder?b_9U8If-chatId=e_6aa1f8d0f52351420077c7dd&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8d0f52351420077c7dd">Monitor SLA Health</a></td>
+<td>Monitor SLA Health</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d055c9f52942060313/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d055c9f52942060313/builder?b_9U8If-chatId=e_6aa1f8d0f52351420077c7dd&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8d0f52351420077c7dd">Conversation / trace</a></td>
 <td>Built; test failed</td>
 <td align="right">$21.2895</td>
 <td align="right">57m 02s</td>
@@ -469,15 +475,17 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">11</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d82b1df24c501ba0ff/builder?b_9U8If-chatId=e_6aa1f8d8f52351420077c7fd&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8d8f52351420077c7fd">Recalculate Incident Priority</a></td>
+<td>Recalculate Incident Priority</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d82b1df24c501ba0ff/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d82b1df24c501ba0ff/builder?b_9U8If-chatId=e_6aa1f8d8f52351420077c7fd&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8d8f52351420077c7fd">Conversation / trace</a></td>
 <td>Built; test failed</td>
 <td align="right">$7.0013</td>
 <td align="right">45m 06s</td>
-<td>Original version 6 mocked tests passed and deployment remains. Current version 8 Scope repair fails mocked update-error test because options.stepError:SCOPE was not persisted. No redeployment.</td>
+<td>Originalv6 mocked tests passed and deployment remains. Currentv8 Scope repair fails mocked update-error test because options.stepError:SCOPE was not persisted. No redeployment.</td>
 </tr>
 <tr>
 <td align="right">12</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8e1e117e83eb612d950/builder?b_9U8If-chatId=e_6aa1f8e1aeb9ea1371b5e501&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8e1aeb9ea1371b5e501">Initialize Ticket Lifecycle</a></td>
+<td>Initialize Ticket Lifecycle</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8e1e117e83eb612d950/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8e1e117e83eb612d950/builder?b_9U8If-chatId=e_6aa1f8e1aeb9ea1371b5e501&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8e1aeb9ea1371b5e501">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$5.5023</td>
 <td align="right">13m 46s</td>
@@ -485,15 +493,17 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">13</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8eb2b1df24c501ba649/builder?b_9U8If-chatId=e_6aa1f8ebfe0ef7104b837b1a&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8ebfe0ef7104b837b1a">Submit Work Decision</a></td>
+<td>Submit Work Decision</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8eb2b1df24c501ba649/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8eb2b1df24c501ba649/builder?b_9U8If-chatId=e_6aa1f8ebfe0ef7104b837b1a&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8ebfe0ef7104b837b1a">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$7.8765 partial</td>
 <td align="right">20m 17s estimated</td>
-<td>Most data saved in version 7; eight activity timestamps require integer but operation emits number. Full 83-node structural insertion of integer variables not persisted. Best-effort compensation remains non-atomic.</td>
+<td>Most data savedv7;8 activity timestamps require integer but operation emits number. Full83-node structural insertion of integer variables not persisted. Best-effort compensation remains non-atomic.</td>
 </tr>
 <tr>
 <td align="right">14</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8f308527666b2706005/builder?b_9U8If-chatId=e_6aa1f8f3fe0ef7104b837b54&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8f3fe0ef7104b837b54">Process Ticket Transition</a></td>
+<td>Process Ticket Transition</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8f308527666b2706005/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8f308527666b2706005/builder?b_9U8If-chatId=e_6aa1f8f3fe0ef7104b837b54&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8f3fe0ef7104b837b54">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$4.7227</td>
 <td align="right">9m 56s</td>
@@ -501,15 +511,17 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">15</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8fc8441ee04fca18886/builder?b_9U8If-chatId=e_6aa1f8fcfe0ef7104b837b74&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8fcfe0ef7104b837b74">Process Change Transition</a></td>
+<td>Process Change Transition</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8fc8441ee04fca18886/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8fc8441ee04fca18886/builder?b_9U8If-chatId=e_6aa1f8fcfe0ef7104b837b74&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8fcfe0ef7104b837b74">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$3.6472</td>
 <td align="right">10m 02s</td>
-<td>Initial 80-node structure persisted; later writer omitted complete nodes/edges and returned INVALID_ROOT_COUNT. Data incomplete. Stored lifecycle mappings differ from literal prompt statuses.</td>
+<td>Initial80-node structure persisted; later writer omitted complete nodes/edges and returned INVALID_ROOT_COUNT. Data incomplete. Stored lifecycle mappings differ from literal prompt statuses.</td>
 </tr>
 <tr>
 <td align="right">16</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2690de117e83eb6276c75/builder?b_9U8If-chatId=e_6aa2690dc3b48a7e12692a40&amp;nav=copilot&amp;generatingCaseId=e_6aa2690dc3b48a7e12692a40">Monitor Service Risk</a></td>
+<td>Monitor Service Risk</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2690de117e83eb6276c75/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2690de117e83eb6276c75/builder?b_9U8If-chatId=e_6aa2690dc3b48a7e12692a40&amp;nav=copilot&amp;generatingCaseId=e_6aa2690dc3b48a7e12692a40">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$13.3275 partial</td>
 <td align="right">39m 37s estimated</td>
@@ -517,7 +529,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">17</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2694657ad1104ae387c52/builder?b_9U8If-chatId=e_6aa26946925f613bb822c126&amp;nav=copilot&amp;generatingCaseId=e_6aa26946925f613bb822c126">Vaccination Reminder Run</a></td>
+<td>Vaccination Reminder Run</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2694657ad1104ae387c52/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2694657ad1104ae387c52/builder?b_9U8If-chatId=e_6aa26946925f613bb822c126&amp;nav=copilot&amp;generatingCaseId=e_6aa26946925f613bb822c126">Conversation / trace</a></td>
 <td>Completed and tested</td>
 <td align="right">$4.8740</td>
 <td align="right">19m 32s</td>
@@ -525,7 +538,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">18</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269462b1df24c502de667/builder?b_9U8If-chatId=e_6aa26946c848f8198d258140&amp;nav=copilot&amp;generatingCaseId=e_6aa26946c848f8198d258140">Reserve Workspace</a></td>
+<td>Reserve Workspace</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269462b1df24c502de667/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269462b1df24c502de667/builder?b_9U8If-chatId=e_6aa26946c848f8198d258140&amp;nav=copilot&amp;generatingCaseId=e_6aa26946c848f8198d258140">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$9.9636 partial</td>
 <td align="right">54m 09s estimated</td>
@@ -533,7 +547,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">19</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269473db8a857da1013f8/builder?b_9U8If-chatId=e_6aa26947c848f8198d258147&amp;nav=copilot&amp;generatingCaseId=e_6aa26947c848f8198d258147">Issue Visitor Pass</a></td>
+<td>Issue Visitor Pass</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269473db8a857da1013f8/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa269473db8a857da1013f8/builder?b_9U8If-chatId=e_6aa26947c848f8198d258147&amp;nav=copilot&amp;generatingCaseId=e_6aa26947c848f8198d258147">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$9.0897</td>
 <td align="right">21m 36s</td>
@@ -541,7 +556,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">20</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26947e117e83eb6278979/builder?b_9U8If-chatId=e_6aa26947c3b48a7e12692ae0&amp;nav=copilot&amp;generatingCaseId=e_6aa26947c3b48a7e12692ae0">Generate Monthly Invoices</a></td>
+<td>Generate Monthly Invoices</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26947e117e83eb6278979/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26947e117e83eb6278979/builder?b_9U8If-chatId=e_6aa26947c3b48a7e12692ae0&amp;nav=copilot&amp;generatingCaseId=e_6aa26947c3b48a7e12692ae0">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$7.7129 partial</td>
 <td align="right">25m 20s estimated</td>
@@ -549,7 +565,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">21</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aec55c9f529421f0701/builder?b_9U8If-chatId=e_6aa26aec925f613bb822d2e6&amp;nav=copilot&amp;generatingCaseId=e_6aa26aec925f613bb822d2e6">Send Unpaid Invoice Reminders</a></td>
+<td>Send Unpaid Invoice Reminders</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aec55c9f529421f0701/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aec55c9f529421f0701/builder?b_9U8If-chatId=e_6aa26aec925f613bb822d2e6&amp;nav=copilot&amp;generatingCaseId=e_6aa26aec925f613bb822d2e6">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$6.7450</td>
 <td align="right">18m 16s</td>
@@ -557,7 +574,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">22</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed3db8a857da106d5b/builder?b_9U8If-chatId=e_6aa26aedc848f8198d26a91c&amp;nav=copilot&amp;generatingCaseId=e_6aa26aedc848f8198d26a91c">Request Approval</a></td>
+<td>Request Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed3db8a857da106d5b/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed3db8a857da106d5b/builder?b_9U8If-chatId=e_6aa26aedc848f8198d26a91c&amp;nav=copilot&amp;generatingCaseId=e_6aa26aedc848f8198d26a91c">Conversation / trace</a></td>
 <td>Structure failed</td>
 <td align="right">$0.5547</td>
 <td align="right">3m 59s</td>
@@ -565,7 +583,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">23</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed57ad1104ae39714e/builder?b_9U8If-chatId=e_6aa26aee925f613bb822d2ee&amp;nav=copilot&amp;generatingCaseId=e_6aa26aee925f613bb822d2ee">Change Decision</a></td>
+<td>Change Decision</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed57ad1104ae39714e/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aed57ad1104ae39714e/builder?b_9U8If-chatId=e_6aa26aee925f613bb822d2ee&amp;nav=copilot&amp;generatingCaseId=e_6aa26aee925f613bb822d2ee">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$2.2915</td>
 <td align="right">9m 04s</td>
@@ -573,7 +592,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">24</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aee57ad1104ae39728e/builder?b_9U8If-chatId=e_6aa26aee925f613bb822d2f5&amp;nav=copilot&amp;generatingCaseId=e_6aa26aee925f613bb822d2f5">SLA Monitor</a></td>
+<td>SLA Monitor</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aee57ad1104ae39728e/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aee57ad1104ae39728e/builder?b_9U8If-chatId=e_6aa26aee925f613bb822d2f5&amp;nav=copilot&amp;generatingCaseId=e_6aa26aee925f613bb822d2f5">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$7.1660</td>
 <td align="right">24m 18s</td>
@@ -581,7 +601,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">25</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aef8441ee04fcc2ecfa/builder?b_9U8If-chatId=e_6aa26aef925f613bb822d300&amp;nav=copilot&amp;generatingCaseId=e_6aa26aef925f613bb822d300">Create Seat Hold</a></td>
+<td>Create Seat Hold</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aef8441ee04fcc2ecfa/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26aef8441ee04fcc2ecfa/builder?b_9U8If-chatId=e_6aa26aef925f613bb822d300&amp;nav=copilot&amp;generatingCaseId=e_6aa26aef925f613bb822d300">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$7.3785</td>
 <td align="right">25m 29s</td>
@@ -589,7 +610,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">26</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b192b1df24c502f4d96/builder?b_9U8If-chatId=e_6aa26b19c848f8198d26a98d&amp;nav=copilot&amp;generatingCaseId=e_6aa26b19c848f8198d26a98d">Release Seat Hold</a></td>
+<td>Release Seat Hold</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b192b1df24c502f4d96/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b192b1df24c502f4d96/builder?b_9U8If-chatId=e_6aa26b19c848f8198d26a98d&amp;nav=copilot&amp;generatingCaseId=e_6aa26b19c848f8198d26a98d">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$6.7199</td>
 <td align="right">17m 54s</td>
@@ -597,7 +619,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">27</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1ae117e83eb629307a/builder?b_9U8If-chatId=e_6aa26b1a925f613bb822d39d&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1a925f613bb822d39d">Process Checkout</a></td>
+<td>Process Checkout</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1ae117e83eb629307a/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1ae117e83eb629307a/builder?b_9U8If-chatId=e_6aa26b1a925f613bb822d39d&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1a925f613bb822d39d">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$2.7522</td>
 <td align="right">13m 36s</td>
@@ -605,7 +628,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">28</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a26d1175698b96852/builder?b_9U8If-chatId=e_6aa26b1a925f613bb822d39e&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1a925f613bb822d39e">Issue Ticket</a></td>
+<td>Issue Ticket</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a26d1175698b96852/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a26d1175698b96852/builder?b_9U8If-chatId=e_6aa26b1a925f613bb822d39e&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1a925f613bb822d39e">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$2.3644</td>
 <td align="right">10m 12s</td>
@@ -613,7 +637,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">29</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a3db8a857da107720/builder?b_9U8If-chatId=e_6aa26b1ac3b48a7e12693db9&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1ac3b48a7e12693db9">Prepare Booking Update</a></td>
+<td>Prepare Booking Update</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a3db8a857da107720/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1a3db8a857da107720/builder?b_9U8If-chatId=e_6aa26b1ac3b48a7e12693db9&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1ac3b48a7e12693db9">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$5.6959 partial</td>
 <td align="right">46m 39s estimated</td>
@@ -621,7 +646,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">30</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1b55c9f529421f0bdf/builder?b_9U8If-chatId=e_6aa26b1bc3b48a7e12693dbe&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1bc3b48a7e12693dbe">Send Upcoming Show Reminders</a></td>
+<td>Send Upcoming Show Reminders</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1b55c9f529421f0bdf/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26b1b55c9f529421f0bdf/builder?b_9U8If-chatId=e_6aa26b1bc3b48a7e12693dbe&amp;nav=copilot&amp;generatingCaseId=e_6aa26b1bc3b48a7e12693dbe">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$7.1180</td>
 <td align="right">24m 50s</td>
@@ -629,7 +655,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">31</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28194e117e83eb62fcd4d/builder?b_9U8If-chatId=e_6aa28194c3b48a7e126b440d&amp;nav=copilot&amp;generatingCaseId=e_6aa28194c3b48a7e126b440d">Cancel Booking</a></td>
+<td>Cancel Booking</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28194e117e83eb62fcd4d/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28194e117e83eb62fcd4d/builder?b_9U8If-chatId=e_6aa28194c3b48a7e126b440d&amp;nav=copilot&amp;generatingCaseId=e_6aa28194c3b48a7e126b440d">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$2.1222 partial</td>
 <td align="right">2m 53s estimated</td>
@@ -637,7 +664,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">32</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281b9e117e83eb62fdb71/builder?b_9U8If-chatId=e_6aa281bac3b48a7e126b489b&amp;nav=copilot&amp;generatingCaseId=e_6aa281bac3b48a7e126b489b">Generate Show Inventory</a></td>
+<td>Generate Show Inventory</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281b9e117e83eb62fdb71/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281b9e117e83eb62fdb71/builder?b_9U8If-chatId=e_6aa281bac3b48a7e126b489b&amp;nav=copilot&amp;generatingCaseId=e_6aa281bac3b48a7e126b489b">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$5.7237</td>
 <td align="right">16m 34s</td>
@@ -645,7 +673,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">33</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281ba55c9f529422b6922/builder?b_9U8If-chatId=e_6aa281bac848f8198d28b757&amp;nav=copilot&amp;generatingCaseId=e_6aa281bac848f8198d28b757">Cancel Show</a></td>
+<td>Cancel Show</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281ba55c9f529422b6922/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281ba55c9f529422b6922/builder?b_9U8If-chatId=e_6aa281bac848f8198d28b757&amp;nav=copilot&amp;generatingCaseId=e_6aa281bac848f8198d28b757">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$6.0211</td>
 <td align="right">18m 42s</td>
@@ -653,7 +682,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">34</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d308527666b296f508/builder?b_9U8If-chatId=e_6aa281d3925f613bb8251ebf&amp;nav=copilot&amp;generatingCaseId=e_6aa281d3925f613bb8251ebf">Expire Unpaid Bookings</a></td>
+<td>Expire Unpaid Bookings</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d308527666b296f508/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d308527666b296f508/builder?b_9U8If-chatId=e_6aa281d3925f613bb8251ebf&amp;nav=copilot&amp;generatingCaseId=e_6aa281d3925f613bb8251ebf">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$4.0828</td>
 <td align="right">12m 58s estimated</td>
@@ -661,7 +691,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">35</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d308527666b296f672/builder?b_9U8If-chatId=e_6aa281d4925f613bb8251ec5&amp;nav=copilot&amp;generatingCaseId=e_6aa281d4925f613bb8251ec5">Retry Failed In-App Update</a></td>
+<td>Retry Failed In-App Update</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d308527666b296f672/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d308527666b296f672/builder?b_9U8If-chatId=e_6aa281d4925f613bb8251ec5&amp;nav=copilot&amp;generatingCaseId=e_6aa281d4925f613bb8251ec5">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$3.5051</td>
 <td align="right">20m 37s</td>
@@ -669,7 +700,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">36</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d408527666b296f7ec/builder?b_9U8If-chatId=e_6aa281d5c3b48a7e126b4b6c&amp;nav=copilot&amp;generatingCaseId=e_6aa281d5c3b48a7e126b4b6c">Reconcile Booking Totals</a></td>
+<td>Reconcile Booking Totals</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d408527666b296f7ec/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281d408527666b296f7ec/builder?b_9U8If-chatId=e_6aa281d5c3b48a7e126b4b6c&amp;nav=copilot&amp;generatingCaseId=e_6aa281d5c3b48a7e126b4b6c">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$5.1887</td>
 <td align="right">14m 18s estimated</td>
@@ -677,7 +709,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">37</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281e826d1175698c63cb8/builder?b_9U8If-chatId=e_6aa281e8925f613bb8251f00&amp;nav=copilot&amp;generatingCaseId=e_6aa281e8925f613bb8251f00">Submit Work Item</a></td>
+<td>Submit Work Item</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281e826d1175698c63cb8/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281e826d1175698c63cb8/builder?b_9U8If-chatId=e_6aa281e8925f613bb8251f00&amp;nav=copilot&amp;generatingCaseId=e_6aa281e8925f613bb8251f00">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$6.6815</td>
 <td align="right">18m 04s estimated</td>
@@ -685,7 +718,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">38</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281e93db8a857da1c1e35/builder?b_9U8If-chatId=e_6aa281e9925f613bb8251f03&amp;nav=copilot&amp;generatingCaseId=e_6aa281e9925f613bb8251f03">Update Work Item</a></td>
+<td>Update Work Item</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281e93db8a857da1c1e35/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281e93db8a857da1c1e35/builder?b_9U8If-chatId=e_6aa281e9925f613bb8251f03&amp;nav=copilot&amp;generatingCaseId=e_6aa281e9925f613bb8251f03">Conversation / trace</a></td>
 <td>Completed and tested</td>
 <td align="right">$9.5677</td>
 <td align="right">28m 05s estimated</td>
@@ -693,7 +727,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">39</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281ea3db8a857da1c1e83/builder?b_9U8If-chatId=e_6aa281eac3b48a7e126b4bb5&amp;nav=copilot&amp;generatingCaseId=e_6aa281eac3b48a7e126b4bb5">Decide Change Approval</a></td>
+<td>Decide Change Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281ea3db8a857da1c1e83/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281ea3db8a857da1c1e83/builder?b_9U8If-chatId=e_6aa281eac3b48a7e126b4bb5&amp;nav=copilot&amp;generatingCaseId=e_6aa281eac3b48a7e126b4bb5">Conversation / trace</a></td>
 <td>Built; test unverified</td>
 <td align="right">$6.2295 partial</td>
 <td align="right">21m 05s estimated</td>
@@ -701,7 +736,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">40</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fae117e83eb6300127/builder?b_9U8If-chatId=e_6aa281fa925f613bb8251f32&amp;nav=copilot&amp;generatingCaseId=e_6aa281fa925f613bb8251f32">Recalculate SLA</a></td>
+<td>Recalculate SLA</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fae117e83eb6300127/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fae117e83eb6300127/builder?b_9U8If-chatId=e_6aa281fa925f613bb8251f32&amp;nav=copilot&amp;generatingCaseId=e_6aa281fa925f613bb8251f32">Conversation / trace</a></td>
 <td>Built; test failed</td>
 <td align="right">$3.0486 partial</td>
 <td align="right">32m 18s estimated</td>
@@ -709,7 +745,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">41</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fb8441ee04fccee471/builder?b_9U8If-chatId=e_6aa281fbc3b48a7e126b4c2b&amp;nav=copilot&amp;generatingCaseId=e_6aa281fbc3b48a7e126b4c2b">Monitor SLA Risk</a></td>
+<td>Monitor SLA Risk</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fb8441ee04fccee471/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fb8441ee04fccee471/builder?b_9U8If-chatId=e_6aa281fbc3b48a7e126b4c2b&amp;nav=copilot&amp;generatingCaseId=e_6aa281fbc3b48a7e126b4c2b">Conversation / trace</a></td>
 <td>Built; test failed</td>
 <td align="right">$9.3366</td>
 <td align="right">28m 46s</td>
@@ -717,7 +754,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">42</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fce117e83eb6300371/builder?b_9U8If-chatId=e_6aa281fcc3b48a7e126b4c34&amp;nav=copilot&amp;generatingCaseId=e_6aa281fcc3b48a7e126b4c34">Check Warranty Expiry</a></td>
+<td>Check Warranty Expiry</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fce117e83eb6300371/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa281fce117e83eb6300371/builder?b_9U8If-chatId=e_6aa281fcc3b48a7e126b4c34&amp;nav=copilot&amp;generatingCaseId=e_6aa281fcc3b48a7e126b4c34">Conversation / trace</a></td>
 <td>Completed and tested</td>
 <td align="right">$3.7349</td>
 <td align="right">11m 31s</td>
@@ -725,7 +763,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">43</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820b08527666b29780a5/builder?b_9U8If-chatId=e_6aa2820bc848f8198d28bbdf&amp;nav=copilot&amp;generatingCaseId=e_6aa2820bc848f8198d28bbdf">Submit Dine-In Order</a></td>
+<td>Submit Dine-In Order</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820b08527666b29780a5/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820b08527666b29780a5/builder?b_9U8If-chatId=e_6aa2820bc848f8198d28bbdf&amp;nav=copilot&amp;generatingCaseId=e_6aa2820bc848f8198d28bbdf">Conversation / trace</a></td>
 <td>Built; test failed</td>
 <td align="right">$13.7326</td>
 <td align="right">37m 17s</td>
@@ -733,7 +772,8 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">44</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820d8441ee04fcceeada/builder?b_9U8If-chatId=e_6aa2820dc3b48a7e126b4c83&amp;nav=copilot&amp;generatingCaseId=e_6aa2820dc3b48a7e126b4c83">Update Order Stage</a></td>
+<td>Update Order Stage</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820d8441ee04fcceeada/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820d8441ee04fcceeada/builder?b_9U8If-chatId=e_6aa2820dc3b48a7e126b4c83&amp;nav=copilot&amp;generatingCaseId=e_6aa2820dc3b48a7e126b4c83">Conversation / trace</a></td>
 <td>Completed and tested</td>
 <td align="right">$5.7898</td>
 <td align="right">22m 48s estimated</td>
@@ -741,19 +781,234 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td align="right">45</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820f08527666b2978737/builder?b_9U8If-chatId=e_6aa2820fc848f8198d28bbfc&amp;nav=copilot&amp;generatingCaseId=e_6aa2820fc848f8198d28bbfc">Record Daily Check-in</a></td>
+<td>Record Daily Check-in</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820f08527666b2978737/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2820f08527666b2978737/builder?b_9U8If-chatId=e_6aa2820fc848f8198d28bbfc&amp;nav=copilot&amp;generatingCaseId=e_6aa2820fc848f8198d28bbfc">Conversation / trace</a></td>
 <td>Structure built; data incomplete</td>
 <td align="right">$4.5478</td>
 <td align="right">12m 03s estimated</td>
 <td>Structure and most data persisted. Create check-in rejects omitted required checkin_code with both useUuid and raw mode, conflicting with the brief’s object-generated identifier requirement. Identifier semantics preserved; create remains unsaved. Atomicity and concurrent duplicate prevention also unproven.</td>
 </tr>
+<tr>
+<td align="right">46</td>
+<td>Send Weekly Habit Summary</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28df626d1175698cd740f/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28df626d1175698cd740f/builder?b_9U8If-chatId=e_6aa28df6925f613bb8259db8&amp;nav=copilot&amp;generatingCaseId=e_6aa28df6925f613bb8259db8">Conversation / trace</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$2.9998</td>
+<td align="right">12m 52s</td>
+<td>Structure and all other data persisted at v7. Gmail send remains rejected because connectionId is required; no authorization exists. Recipient/subject/message mappings retained, but whole workflow cannot validate or test. Inactive schedule, undeployed.</td>
+</tr>
+<tr>
+<td align="right">47</td>
+<td>Triage Incident</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28df78441ee04fcd6eca4/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28df78441ee04fcd6eca4/builder?b_9U8If-chatId=e_6aa28df7925f613bb8259dbe&amp;nav=copilot&amp;generatingCaseId=e_6aa28df7925f613bb8259dbe">Conversation / trace</a></td>
+<td>Paused by user; outcome unassessed</td>
+<td align="right">$5.5462 partial</td>
+<td align="right">20m 51s estimated</td>
+<td>User stopped this evaluation. Generation was stopped through the platform UI; draft retained. Final build/test outcome not assessed.</td>
+</tr>
+<tr>
+<td align="right">48</td>
+<td>Resolve or Reopen Incident</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28df98441ee04fcd6edbd/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28df98441ee04fcd6edbd/builder?b_9U8If-chatId=e_6aa28df9c848f8198d2939f7&amp;nav=copilot&amp;generatingCaseId=e_6aa28df9c848f8198d2939f7">Conversation / trace</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$4.0341</td>
+<td align="right">12m 54s</td>
+<td>Structure, integer Date.now producer and fail-closed response persisted at v5. Required work-note author has no verified system-authority record/field; dependent mutations and audit data remain incomplete. No arbitrary requester/owner substitution. Atomicity also unavailable; undeployed.</td>
+</tr>
+<tr>
+<td align="right">49</td>
+<td>Submit Service Request</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e0c8441ee04fcd6ffdc/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e0c8441ee04fcd6ffdc/builder?b_9U8If-chatId=e_6aa28e0cc848f8198d293a44&amp;nav=copilot&amp;generatingCaseId=e_6aa28e0cc848f8198d293a44">Conversation / trace</a></td>
+<td>Paused by user; outcome unassessed</td>
+<td align="right">$4.8489 partial</td>
+<td align="right">18m 16s estimated</td>
+<td>User stopped this evaluation. Generation was stopped through the platform UI; draft retained. Final build/test outcome not assessed.</td>
+</tr>
+<tr>
+<td align="right">50</td>
+<td>Fulfill Request Item</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e0e57ad1104ae4cb162/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e0e57ad1104ae4cb162/builder?b_9U8If-chatId=e_6aa28e0ec3b48a7e126bce76&amp;nav=copilot&amp;generatingCaseId=e_6aa28e0ec3b48a7e126bce76">Conversation / trace</a></td>
+<td>Paused by user; outcome unassessed</td>
+<td align="right">$5.0678 partial</td>
+<td align="right">9m 59s estimated</td>
+<td>User stopped this evaluation. Generation was stopped through the platform UI; draft retained. Final build/test outcome not assessed.</td>
+</tr>
+<tr>
+<td align="right">51</td>
+<td>Submit Change for Approval</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e123db8a857da1f78d6/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e123db8a857da1f78d6/builder?b_9U8If-chatId=e_6aa28e12c848f8198d293a66&amp;nav=copilot&amp;generatingCaseId=e_6aa28e12c848f8198d293a66">Conversation / trace</a></td>
+<td>Built; test unverified</td>
+<td align="right">$5.0663</td>
+<td align="right">19m 28s</td>
+<td>All data persisted at v9. Native mocked run not found in execution stores. Deployment rejected; saved draft runtime unverified.</td>
+</tr>
+<tr>
+<td align="right">52</td>
+<td>Record Approval Decision</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e24e117e83eb63416a5/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e24e117e83eb63416a5/builder?b_9U8If-chatId=e_6aa28e24925f613bb8259e7c&amp;nav=copilot&amp;generatingCaseId=e_6aa28e24925f613bb8259e7c">Conversation / trace</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$3.3946</td>
+<td align="right">7m 38s</td>
+<td>Only a two-node fail-closed callable was built and deployed; required approval-processing nodes remain absent because no verified invoking-user email is available. Native fallback smoke and4/4 assertions passed, proving refusal response only. Not counted as a fully built requested workflow; no owner/system substitution or effectful writes.</td>
+</tr>
+<tr>
+<td align="right">53</td>
+<td>Monitor SLA Commitments</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e2508527666b2a32016/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e2508527666b2a32016/builder?b_9U8If-chatId=e_6aa28e25925f613bb8259e83&amp;nav=copilot&amp;generatingCaseId=e_6aa28e25925f613bb8259e83">Conversation / trace</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$4.0836</td>
+<td align="right">10m 07s</td>
+<td>Validated53-node base and inactive schedule persisted at v2. Required transformation/error nodes and MANUAL scope corrections remain absent. After two concrete full-graph recovery instructions, specialist read the complete base but attempted no save. Data incomplete; no tests or deployment.</td>
+</tr>
+<tr>
+<td align="right">54</td>
+<td>Dispatch Pending Notifications</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e272b1df24c50383d3b/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e272b1df24c50383d3b/builder?b_9U8If-chatId=e_6aa28e27925f613bb8259e95&amp;nav=copilot&amp;generatingCaseId=e_6aa28e27925f613bb8259e95">Conversation / trace</a></td>
+<td>Built; test failed</td>
+<td align="right">$1.7770</td>
+<td align="right">4m 55s</td>
+<td>Data-complete authorization-gap draft deployed with inactive15-minute schedule. Connected Outlook send/update/recovery path is absent, an explicit requirement gap. Native smoke completed; hardened run failed its single verify_stop_reached assertion despite the STOP path appearing in trace. Runner defect is not proven.</td>
+</tr>
+<tr>
+<td align="right">55</td>
+<td>Create Class Booking</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e3a3db8a857da1f8d14/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e3a3db8a857da1f8d14/builder?b_9U8If-chatId=e_6aa28e3ac3b48a7e126bcf54&amp;nav=copilot&amp;generatingCaseId=e_6aa28e3ac3b48a7e126bcf54">Conversation / trace</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$5.5299</td>
+<td align="right">17m 59s</td>
+<td>Saved structure and most data. Two booking-create nodes reject omitted required booking_reference, conflicting with object-generated reference requirement. No fabricated identifier or source-object changes. Duplicate/capacity atomicity remains unproven; undeployed.</td>
+</tr>
+<tr>
+<td align="right">56</td>
+<td>Cancel Class Booking</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e3c8441ee04fcd73c87/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e3c8441ee04fcd73c87/builder?b_9U8If-chatId=e_6aa28e3c925f613bb8259f18&amp;nav=copilot&amp;generatingCaseId=e_6aa28e3c925f613bb8259f18">Conversation / trace</a></td>
+<td>Paused by user; outcome unassessed</td>
+<td align="right">$3.9227</td>
+<td align="right">20m 19s estimated</td>
+<td>User stopped this evaluation. Generation was stopped through the platform UI; draft retained. Final build/test outcome not assessed.</td>
+</tr>
+<tr>
+<td align="right">57</td>
+<td>Generate Upcoming Class Sessions</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e3f3db8a857da1f905c/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e3f3db8a857da1f905c/builder?b_9U8If-chatId=e_6aa28e3fc3b48a7e126bcf82&amp;nav=copilot&amp;generatingCaseId=e_6aa28e3fc3b48a7e126bcf82">Conversation / trace</a></td>
+<td>Paused by user; outcome unassessed</td>
+<td align="right">$5.6658 partial</td>
+<td align="right">17m 26s estimated</td>
+<td>User stopped this evaluation. Generation was stopped through the platform UI; draft retained. Final build/test outcome not assessed.</td>
+</tr>
+<tr>
+<td align="right">58</td>
+<td>Overdue Payment Reminders</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e51e117e83eb63420f0/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e51e117e83eb63420f0/builder?b_9U8If-chatId=e_6aa28e51925f613bb825a0b5&amp;nav=copilot&amp;generatingCaseId=e_6aa28e51925f613bb825a0b5">Conversation / trace</a></td>
+<td>Built; test unverified</td>
+<td align="right">$4.2359</td>
+<td align="right">13m 02s</td>
+<td>All data persisted at v6 with inactive09:00 schedule. Gmail-unavailable branch records failures without reminder-state updates. Connected send-then-update lane is absent and requires future implementation. Mocked test start failed HTTP500 TestWorkflowClient; deployment rejected.</td>
+</tr>
+<tr>
+<td align="right">59</td>
+<td>Assign New Lead</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e5326d1175698cdb76c/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e5326d1175698cdb76c/builder?b_9U8If-chatId=e_6aa28e53c3b48a7e126bd1c4&amp;nav=copilot&amp;generatingCaseId=e_6aa28e53c3b48a7e126bd1c4">Conversation / trace</a></td>
+<td>Paused by user; outcome unassessed</td>
+<td align="right">$5.0453 partial</td>
+<td align="right">19m 57s estimated</td>
+<td>User stopped this evaluation. Generation was stopped through the platform UI; draft retained. Final build/test outcome not assessed.</td>
+</tr>
+<tr>
+<td align="right">60</td>
+<td>Schedule and Remind Site Visit</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e5655c9f529422f1827/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28e5655c9f529422f1827/builder?b_9U8If-chatId=e_6aa28e56c3b48a7e126bd1e3&amp;nav=copilot&amp;generatingCaseId=e_6aa28e56c3b48a7e126bd1e3">Conversation / trace</a></td>
+<td>Built; test unverified</td>
+<td align="right">$4.6285</td>
+<td align="right">18m 17s</td>
+<td>All data persisted at v8. Mocked run with reads/writes/delay mocked not found in execution stores. Deployment failed and readback remains undeployed.</td>
+</tr>
 </tbody></table>
-<h2>Reading the evidence</h2>
-<p>Workflow links include the chat ID and open the exact generated conversation. Build outcomes use successful validation and persistence responses together with workflow readback. TEST success requires a native execution record and assertion evidence where assertions were configured. A returned run ID or a completed agent turn alone is not a passing test.</p>
-<p>External sends and operational data mutations were mocked for testing. Scheduled and webhook triggers were kept inactive. Native run-indexing or test-service errors are recorded as unverified tests, with no invented pass or failure counts.</p>
-<p>The source corpus, exact submitted prompts, amendments, per-case trace metrics, save receipts, and native test receipts are retained in the local evaluation ledger. The separate 25-prompt direct Copilot evaluation uses a different agent and is not included in these Sol totals.</p>
-<h2>Update schedule</h2>
-<p>The next completed batch updates this report in place. The planned cumulative snapshots are 15, 30, 45, 60, and 74 cases.</p>
+<h2>Not run because the user stopped</h2>
+<table>
+<thead>
+<tr>
+<th align="right">Case</th>
+<th>Prompt</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">61</td>
+<td>Generate Full Lease Payment Schedule</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">62</td>
+<td>Process Overdue Rent</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">63</td>
+<td>Process Expiring Leases</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">64</td>
+<td>Notify Maintenance Lifecycle</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">65</td>
+<td>Complete Sale and Create Commission</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">66</td>
+<td>Activate or Renew Lease</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">67</td>
+<td>Process Expiring Documents</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">68</td>
+<td>Confirm Paid Rent</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">69</td>
+<td>Alert Saved Search Matches</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">70</td>
+<td>Create Personalized Greeting</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">71</td>
+<td>Refresh Weather Data</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">72</td>
+<td>Monitor Severe Weather</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">73</td>
+<td>Send Daily Weather Briefing</td>
+<td>Not submitted; user stopped</td>
+</tr>
+<tr>
+<td align="right">74</td>
+<td>Cancel Class Booking</td>
+<td>Not submitted; user stopped</td>
+</tr>
+</tbody></table>
+<h2>Evidence and remaining activity</h2>
+<p>Conversation links include the exact chat ID. Build evidence combines validation/save receipts and persisted workflow readback. Native test records are required for test claims; unavailable run IDs and test-start errors remain unverified. Operational mutations and external sends were mocked for Sol tests; scheduled and webhook triggers remain inactive.</p>
+<p>No Sol conversation generation remains active in the final native snapshot. Stopping a conversation does not necessarily cancel an already-dispatched test; no additional tests were launched as part of stop/report work. Existing missing-run results remain unverified. The local stop ledger preserves full prompts, metrics, save receipts, test receipts, and UI stop evidence.</p>
+<p>The separate direct Copilot 25-case evaluation continues independently and is excluded from these totals. The temporary personal daily limit remains $750 for that evaluation; restoration to the original $250 is assigned to its coordinator after it finishes.</p>
+<p>This evaluation is stopped. It will not resume without a new user instruction.</p>
 </article>
 </main>
 </body>
