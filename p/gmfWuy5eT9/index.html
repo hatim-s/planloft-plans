@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Solution brief workflow evaluation</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>15 of the 74 solution briefs have reached a recorded outcome. This report follows the Sol workflow agents from prompt submission through persisted structure, node data, and mocked TEST execution. It is updated at the same URL after each completed batch.</p>
+<p>The corpus contains 74 distinct briefs from 16 of 76 solution-builder plan records, created from September 8, 2026 at 18:00 IST through the frozen cutoff of September 10 at 05:41:26 IST. Existing-automation update instructions were removed before submission, including briefs without an Automation heading. 59 prompts remain outside this completed snapshot.</p>
+<p>Last snapshot: 2026-09-10T08:26:50.114969+00:00. Platform model: OpenAI GPT 5.6 Sol.</p>
+<h2>Build results</h2>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th align="right">Cases</th>
+<th align="right">Share of completed cases</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fully built, structure and data persisted</td>
+<td align="right">10</td>
+<td align="right">66.7%</td>
+</tr>
+<tr>
+<td>Structure persisted, data incomplete</td>
+<td align="right">5</td>
+<td align="right">33.3%</td>
+</tr>
+<tr>
+<td>No validated structure persisted</td>
+<td align="right">0</td>
+<td align="right">0.0%</td>
+</tr>
+</tbody></table>
+<p>15/15 cases have a successfully saved structure. These three build categories are mutually exclusive. A fully built workflow can still have a failed or unverified test.</p>
+<h2>Test results</h2>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th align="right">Cases</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Completed with verified TEST evidence</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>Fully built, TEST outcome unverified</td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>Fully built, test or required runtime behavior failed</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>Build incomplete</td>
+<td align="right">5</td>
+</tr>
+</tbody></table>
+<h2>Cost and active time</h2>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th align="right">Value</th>
+<th align="right">Denominator</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Observed trace cost</td>
+<td align="right">$99.9414</td>
+<td align="right">15 cases, including partial measurements</td>
+</tr>
+<tr>
+<td>Fully measured trace cost</td>
+<td align="right">$92.0650</td>
+<td align="right">14 cases</td>
+</tr>
+<tr>
+<td>Average cost</td>
+<td align="right">$6.5761</td>
+<td align="right">14 fully measured cases</td>
+</tr>
+<tr>
+<td>Average active time</td>
+<td align="right">18m 43s</td>
+<td align="right">14 fully measured cases</td>
+</tr>
+</tbody></table>
+<p>Cost is the sum of per-trace token costs. Session summary totals can remain at zero, so they are not used. Active time combines build, clarification-response work, repair, and testing; it excludes gaps waiting for user replies. Overlapping trace intervals are counted once. Missing measurements are excluded from averages, and partial row values are marked.</p>
+<h2>Case results</h2>
+<table>
+<thead>
+<tr>
+<th align="right">Case</th>
+<th>Prompt and workflow conversation</th>
+<th>Outcome</th>
+<th align="right">Cost</th>
+<th align="right">Active time</th>
+<th>Evidence or remaining limitation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f7e12b1df24c501b8929/builder?b_9U8If-chatId=e_6aa1f7e1fe0ef7104b837940&amp;nav=copilot&amp;generatingCaseId=e_6aa1f7e1fe0ef7104b837940">Submit Ticket</a></td>
+<td>Built; test unverified</td>
+<td align="right">$6.3650</td>
+<td align="right">13m 19s</td>
+<td>Retry produced run ID but execution store unavailable; no assertion result verified.</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f81757ad1104ae139303/builder?b_9U8If-chatId=e_6aa1f817aeb9ea1371b5df76&amp;nav=copilot&amp;generatingCaseId=e_6aa1f817aeb9ea1371b5df76">Start Approval</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$3.2680</td>
+<td align="right">9m 38s</td>
+<td>Full structure fetched but specialist refused complete JSON submission; zero structural save attempts after explicit repair guidance. Compensation absent.</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8508441ee04fca12d24/builder?b_9U8If-chatId=e_6aa1f850aeb9ea1371b5e023&amp;nav=copilot&amp;generatingCaseId=e_6aa1f850aeb9ea1371b5e023">Send Work Update</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$4.5526</td>
+<td align="right">12m 18s</td>
+<td>Scope MANUAL/MANUAL correction submitted as bounded patch to whole-definition writer and rejected. Executable data incomplete.</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f899e117e83eb612c93a/builder?b_9U8If-chatId=e_6aa1f89afe0ef7104b8379f9&amp;nav=copilot&amp;generatingCaseId=e_6aa1f89afe0ef7104b8379f9">Monitor SLA Commitments</a></td>
+<td>Built; test unverified</td>
+<td align="right">$10.2781</td>
+<td align="right">21m 11s</td>
+<td>Tester cannot retrieve complete mock authoring context and refuses unsafe test.</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f89f26d11756989f157d/builder?b_9U8If-chatId=e_6aa1f89ffe0ef7104b837a03&amp;nav=copilot&amp;generatingCaseId=e_6aa1f89ffe0ef7104b837a03">Follow Up Pending Approvals</a></td>
+<td>Built; test unverified</td>
+<td align="right">$5.2540</td>
+<td align="right">13m 48s</td>
+<td>Version 7, all 29 nodes validated; mocked run unavailable. Duplicate prevention remains best effort without atomic compare-and-set.</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8a526d11756989f16c9/builder?b_9U8If-chatId=e_6aa1f8a5aeb9ea1371b5e32b&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8a5aeb9ea1371b5e32b">Submit Service Intake</a></td>
+<td>Completed and tested</td>
+<td align="right">$5.8599</td>
+<td align="right">18m 25s</td>
+<td>Native terminal mocked smoke and hardened runs verified; 11 hardened assertions passed, none failed. Coverage is recorded tests, not exhaustive proof.</td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8aa57ad1104ae14a727/builder?b_9U8If-chatId=e_6aa1f8aaf52351420077c638&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8aaf52351420077c638">Process Request Approval</a></td>
+<td>Built; test unverified</td>
+<td align="right">$5.4964</td>
+<td align="right">13m 17s</td>
+<td>No-code nonblank guard recovered with native MATCHES_REGEX. All data persisted; mocked run not found.</td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b108527666b2704348/builder?b_9U8If-chatId=e_6aa1f8b1f52351420077c66a&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8b1f52351420077c66a">Process Change Approval</a></td>
+<td>Built; test unverified</td>
+<td align="right">$3.0483</td>
+<td align="right">8m 05s</td>
+<td>Smoke and hardened retained test runs not found in execution store.</td>
+</tr>
+<tr>
+<td align="right">9</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8b926d11756989f243e/builder?b_9U8If-chatId=e_6aa1f8b9fe0ef7104b837a40&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8b9fe0ef7104b837a40">Send Work Notification</a></td>
+<td>Completed and tested</td>
+<td align="right">$5.7797</td>
+<td align="right">16m 04s</td>
+<td>Native smoke and hardened terminal runs verified, 11 hardened assertions passed after optional-input and field mapping repair.</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d055c9f52942060313/builder?b_9U8If-chatId=e_6aa1f8d0f52351420077c7dd&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8d0f52351420077c7dd">Monitor SLA Health</a></td>
+<td>Built; test failed</td>
+<td align="right">$21.2895</td>
+<td align="right">57m 02s</td>
+<td>Initial saved structure/data and smoke completed, but native hardened update-failure run stopped at n_IncUp. Full graph repair rejected; row error isolation unmet. Native failed assertion count not available.</td>
+</tr>
+<tr>
+<td align="right">11</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8d82b1df24c501ba0ff/builder?b_9U8If-chatId=e_6aa1f8d8f52351420077c7fd&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8d8f52351420077c7fd">Recalculate Incident Priority</a></td>
+<td>Built; test failed</td>
+<td align="right">$7.0013</td>
+<td align="right">45m 06s</td>
+<td>Original version 6 mocked tests passed and deployment remains. Current version 8 Scope repair fails mocked update-error test because options.stepError:SCOPE was not persisted. No redeployment.</td>
+</tr>
+<tr>
+<td align="right">12</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8e1e117e83eb612d950/builder?b_9U8If-chatId=e_6aa1f8e1aeb9ea1371b5e501&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8e1aeb9ea1371b5e501">Initialize Ticket Lifecycle</a></td>
+<td>Built; test unverified</td>
+<td align="right">$5.5023</td>
+<td align="right">13m 46s</td>
+<td>Retry produced run ID but no terminal execution or assertions available.</td>
+</tr>
+<tr>
+<td align="right">13</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8eb2b1df24c501ba649/builder?b_9U8If-chatId=e_6aa1f8ebfe0ef7104b837b1a&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8ebfe0ef7104b837b1a">Submit Work Decision</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$7.8765 partial</td>
+<td align="right">20m 17s estimated</td>
+<td>Most data saved in version 7; eight activity timestamps require integer but operation emits number. Full 83-node structural insertion of integer variables not persisted. Best-effort compensation remains non-atomic.</td>
+</tr>
+<tr>
+<td align="right">14</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8f308527666b2706005/builder?b_9U8If-chatId=e_6aa1f8f3fe0ef7104b837b54&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8f3fe0ef7104b837b54">Process Ticket Transition</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$4.7227</td>
+<td align="right">9m 56s</td>
+<td>Initial structure persisted but required idempotency and notification-boundary graph repairs absent after rejected save. Node data incomplete.</td>
+</tr>
+<tr>
+<td align="right">15</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1f8fc8441ee04fca18886/builder?b_9U8If-chatId=e_6aa1f8fcfe0ef7104b837b74&amp;nav=copilot&amp;generatingCaseId=e_6aa1f8fcfe0ef7104b837b74">Process Change Transition</a></td>
+<td>Structure built; data incomplete</td>
+<td align="right">$3.6472</td>
+<td align="right">10m 02s</td>
+<td>Initial 80-node structure persisted; later writer omitted complete nodes/edges and returned INVALID_ROOT_COUNT. Data incomplete. Stored lifecycle mappings differ from literal prompt statuses.</td>
+</tr>
+</tbody></table>
+<h2>Reading the evidence</h2>
+<p>Workflow links include the chat ID and open the exact generated conversation. Build outcomes use successful validation and persistence responses together with workflow readback. TEST success requires a native execution record and assertion evidence where assertions were configured. A returned run ID or a completed agent turn alone is not a passing test.</p>
+<p>External sends and operational data mutations were mocked for testing. Scheduled and webhook triggers were kept inactive. Native run-indexing or test-service errors are recorded as unverified tests, with no invented pass or failure counts.</p>
+<p>The source corpus, exact submitted prompts, amendments, per-case trace metrics, save receipts, and native test receipts are retained in the local evaluation ledger. The separate 25-prompt direct Copilot evaluation uses a different agent and is not included in these Sol totals.</p>
+<h2>Update schedule</h2>
+<p>The next completed batch updates this report in place. The planned cumulative snapshots are 15, 30, 45, 60, and 74 cases.</p>
+</article>
+</main>
+</body>
+</html>
