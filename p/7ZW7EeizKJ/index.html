@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Workflow builders: three approaches on 25 cases</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This report compares the initial OpenAI rewrite, Workflow Split and Automation Coder on the same 25 prompt identities. Workflow Split saved the most substantive workflows, 23 of 25. Automation Coder recorded much lower model cost, but 13 saved drafts still needed repairs that could not be persisted.</p>
+<p>The evidence supports a comparison of build persistence and tested paths. It does not support a full requirements-accuracy score: test coverage differed, some fixtures checked only empty inputs, and several reported successful runs did not establish the complete requested behavior. Snapshot: 10 September 2026. No new generations or TEST runs were launched for this comparison.</p>
+<h2>Accuracy and build outcomes</h2>
+<table>
+<thead>
+<tr>
+<th>Measure, denominator 25</th>
+<th align="right">Initial OpenAI rewrite</th>
+<th align="right">Workflow Split</th>
+<th align="right">Automation Coder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Observed model</td>
+<td align="right">GPT 5.6 Sol</td>
+<td align="right">GPT 5.6 Sol</td>
+<td align="right">GPT 5.6 Luna</td>
+</tr>
+<tr>
+<td>Substantive workflow saved</td>
+<td align="right"><strong>14 / 25, 56%</strong></td>
+<td align="right"><strong>23 / 25, 92%</strong></td>
+<td align="right"><strong>22 / 25, 88%</strong></td>
+</tr>
+<tr>
+<td>Nothing substantive saved</td>
+<td align="right">11 / 25, 44%</td>
+<td align="right">2 / 25, 8%</td>
+<td align="right">3 / 25, 12%</td>
+</tr>
+<tr>
+<td>Successful final TEST path on saved definition</td>
+<td align="right">7 / 25, 28%</td>
+<td align="right">5 / 25, 20%</td>
+<td align="right">4 / 25, 16%</td>
+</tr>
+<tr>
+<td>Above TEST passes without a recorded requirement gap or test-mode deviation</td>
+<td align="right"><strong>4 / 25, 16%</strong></td>
+<td align="right"><strong>5 / 25, 20%</strong></td>
+<td align="right"><strong>4 / 25, 16%</strong></td>
+</tr>
+<tr>
+<td>Requirement gaps among counted TEST paths</td>
+<td align="right">3</td>
+<td align="right">0 recorded</td>
+<td align="right">0 recorded</td>
+</tr>
+<tr>
+<td>Saved drafts with unresolved repair failure</td>
+<td align="right">Not separately graded</td>
+<td align="right">4 data/requirement-incomplete structures</td>
+<td align="right">13</td>
+</tr>
+<tr>
+<td>Conversations represented, including fresh retries</td>
+<td align="right">25</td>
+<td align="right">35</td>
+<td align="right">28</td>
+</tr>
+</tbody></table>
+<p>A saved workflow can still have bad mappings, missing behavior or failing code. The TEST rows count cases, not assertions, and retain limited-path coverage. They are observed pass rates, not a certification of all prompt requirements. Automation Coder N06 is excluded because a Gmail SENT receipt made mocked-only compliance unverified.</p>
+<p>For Workflow Split, the existing stage classification remains <strong>19 fully populated, 4 structure/data-or-requirement incomplete, and 2 empty</strong>. That complete-build count includes failed and unverified tests. The two other approaches do not have an equivalent independently scored full-requirements rubric, so their saved counts should not be relabeled as complete builds.</p>
+<h2>Cost and active time</h2>
+<p>The primary spending comparison includes all known attempts for each prompt, including abandoned or superseded retry conversations. Active time sums top-level trace durations and excludes gaps while waiting for user input, quota approval or continuation. It includes planning, building, repair and test activity. Comparable build-only phase timing is unavailable across all three approaches.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th align="right">Initial OpenAI rewrite</th>
+<th align="right">Workflow Split</th>
+<th align="right">Automation Coder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Observed total cost, all attempts</td>
+<td align="right">$74.8230, lower bound</td>
+<td align="right">$144.1670</td>
+<td align="right">$2.0541, 23 measured cases only</td>
+</tr>
+<tr>
+<td>Cases with complete cost</td>
+<td align="right">24 / 25</td>
+<td align="right">25 / 25</td>
+<td align="right">23 / 25</td>
+</tr>
+<tr>
+<td>Average cost over complete cases</td>
+<td align="right">$2.9681</td>
+<td align="right">$5.7667</td>
+<td align="right">$0.0893</td>
+</tr>
+<tr>
+<td>Cases with complete native active time</td>
+<td align="right">24 / 25</td>
+<td align="right">22 / 25</td>
+<td align="right">23 / 25</td>
+</tr>
+<tr>
+<td>Average active time over those complete cases</td>
+<td align="right">5m 25s</td>
+<td align="right">14m 11s</td>
+<td align="right">5m 14s</td>
+</tr>
+<tr>
+<td>Average cost on the same 22 fully measured prompts</td>
+<td align="right"><strong>$3.0904</strong></td>
+<td align="right"><strong>$5.4049</strong></td>
+<td align="right"><strong>$0.0863</strong></td>
+</tr>
+<tr>
+<td>Average active time on the same 19 fully measured prompts</td>
+<td align="right"><strong>5m 41s</strong></td>
+<td align="right"><strong>13m 03s</strong></td>
+<td align="right"><strong>5m 26s</strong></td>
+</tr>
+</tbody></table>
+<p>The paired cost cohort excludes 05, 10, N05. The paired active-time cohort excludes 05, 10, N05, N06, N09, N12. Rewrite N05 has incomplete native telemetry; Coder 05 and 10 are unavailable rather than zero. Split N06, N09 and the superseded N12 attempt contain estimated or missing native durations, so they are excluded from complete all-attempt time averages.</p>
+<p>For comparison with the prior report, Workflow Split&#39;s <strong>latest-attempt-only</strong> cost is $103.6614, averaging $4.1465. Its active total is 258m 11s, averaging 10m 20s, including the marked estimates. This now includes the four later reruns of 06, 08, N12 and N13. They cost $14.4663, did not resolve the original requirements, and were absent from the earlier published totals.</p>
+<p>These are observed platform token costs. Different models, tool paths, retries, changing configurations and prompt clarifications prevent attributing the cost or latency difference solely to architecture. A fast failure also reduces average latency.</p>
+<h2>Where the remembered 15 / 25 came from</h2>
+<p>The Codex session <code>01a082a7-3e77-76b0-afb7-8300f7751483</code> recorded the calculation on <strong>9 September 2026 at 18:06 IST</strong>, before the six Workflow Split reruns. It stated <strong>15 complete builds, 8 partial builds and 2 empty workflows</strong>, with average cost <strong>$3.8842</strong> and active time <strong>9m 04s</strong>. The same message explicitly separated complete builds from passing tests and linked to the <a href="https://hatim-s.github.io/planloft-plans/p/HqBV3oGbxW/">Workflow Split report</a>.</p>
+<p>Searching the 6–10 September Codex session logs, plus the earlier rewrite thread, did not locate a separate initial OpenAI rewrite evaluation with 15 TEST passes out of 25. The source sessions used here identify <code>Workflow Planner - OpenAI</code>, agent <code>e_6a9c720c9ea79525cbc97f2d</code>, and match all 25 source prompts. Their currently saved definitions and native run records support the rewrite counts above. The historical 15 / 25 is therefore retained as a Workflow Split build snapshot, rather than assigned to the rewrite&#39;s TEST accuracy.</p>
+<h2>Case outcomes</h2>
+<p>Every approach links to its automation and conversation. The initial rewrite and split conversation links include chatId in the builder URL. Automation Coder uses its direct Copilot conversation and has separate automation links. Multiple Coder links preserve fresh retry conversations.</p>
+<table>
+<thead>
+<tr>
+<th>Prompt</th>
+<th>Initial OpenAI rewrite</th>
+<th>Workflow Split, latest attempt</th>
+<th>Automation Coder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01. Get Lab Performance Summary</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f335d5544270890e7edb3/builder?b_9U8If-chatId=e_6a9f335de27fae194eec076f&amp;nav=copilot&amp;generatingCaseId=e_6a9f335de27fae194eec076f">Automation + chat</a></td>
+<td>Built; tests failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0ad49eb37863596dd6a8b/builder?b_9U8If-chatId=e_6aa0ad493d01ae3b9ea1e2da&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2686b3db8a857da0ff30c/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267a0b244c660af24a20f">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27a49cc090449e833d4f8">Chat 2</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267a0b244c660af24a210">Trace</a></td>
+</tr>
+<tr>
+<td>02. Google Meet Attendees</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f38f75b05a933f27b1641/builder?b_9U8If-chatId=e_6a9f38f70dfd8d53e7f92a93&amp;nav=copilot&amp;generatingCaseId=e_6a9f38f70dfd8d53e7f92a93">Automation + chat</a></td>
+<td>Built; test unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa161fb2b1df24c50fcc16b/builder?b_9U8If-chatId=e_6aa161fcf5235142006ec8e4&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2689f8441ee04fcc183c6/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267bcb244c660af24a634">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27a89fcf51f018d103d2e">Chat 2</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267bcb244c660af24a635">Trace</a></td>
+</tr>
+<tr>
+<td>03. Synchronize Company Portfolio</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f46c9f77d9411f4209066/builder?b_9U8If-chatId=e_6a9f46c9b2d8e84a44d84988&amp;nav=copilot&amp;generatingCaseId=e_6a9f46c9b2d8e84a44d84988">Automation + chat</a></td>
+<td>Built; final repair not tested. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1620257ad1104aee43e01/builder?b_9U8If-chatId=e_6aa16202fe0ef7104b7e150d&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa268e808527666b288b294/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267dfcc090449e830b1da">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267dfcc090449e830b1db">Trace</a></td>
+</tr>
+<tr>
+<td>04. Vehicle Maintenance Parts Ordering</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f52def77d9411f422ffad/builder?b_9U8If-chatId=e_6a9f52deb2d8e84a44d8aec9&amp;nav=copilot&amp;generatingCaseId=e_6a9f52deb2d8e84a44d8aec9">Automation + chat</a></td>
+<td>Build failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0af67e117e83eb6c9ffce/builder?b_9U8If-chatId=e_6aa0af676adc5c436d002424&amp;nav=copilot">Automation + chat</a></td>
+<td>Draft saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa268be08527666b288a928/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267fd5bfe6345aca05efc">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267fd5bfe6345aca05efd">Trace</a></td>
+</tr>
+<tr>
+<td>05. Get Director Attendance Hierarchy</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f53e83136f8391bb264cd/builder?b_9U8If-chatId=e_6a9f53e8e27fae194eec8547&amp;nav=copilot&amp;generatingCaseId=e_6a9f53e8e27fae194eec8547">Automation + chat</a></td>
+<td>Built; tests failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0af808441ee04fc34f69d/builder?b_9U8If-chatId=e_6aa0af806adc5c436d002431&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa280bb08527666b2953a2f/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26820d51003401d36ad18">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27e5cd51003401d3c7461">Chat 2</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26820d51003401d36ad19">Trace</a></td>
+</tr>
+<tr>
+<td>06. Detect Calendar Meeting Conflicts</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f560ba2b7c15cc107b2b4/builder?b_9U8If-chatId=e_6a9f560b0dfd8d53e7f99f66&amp;nav=copilot&amp;generatingCaseId=e_6a9f560b0dfd8d53e7f99f66">Automation + chat</a></td>
+<td>Structure saved; data or requirements incomplete. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1974755c9f52942ef5b38/builder?b_9U8If-chatId=e_6aa19747f52351420072e7dd&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26a4808527666b288f4f3/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa2690cfcf51f018d0df1a2">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2690cfcf51f018d0df1a3">Trace</a></td>
+</tr>
+<tr>
+<td>07. Track Candidate Interview Stage</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f5615a2b7c15cc107b615/builder?b_9U8If-chatId=e_6a9f5615e27fae194eec8d35&amp;nav=copilot&amp;generatingCaseId=e_6a9f5615e27fae194eec8d35">Automation + chat</a></td>
+<td>TEST path passed; smoke only. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1621355c9f52942e45d49/builder?b_9U8If-chatId=e_6aa16213aeb9ea1371abd601&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26a87e117e83eb628959f/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa2692c3d41fe1ccf8a8a12">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2692c3d41fe1ccf8a8a13">Trace</a></td>
+</tr>
+<tr>
+<td>08. Aggregate User and Client Information</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f57478950724fbb10a1d0/builder?b_9U8If-chatId=e_6a9f5747b2d8e84a44d8d146&amp;nav=copilot&amp;generatingCaseId=e_6a9f5747b2d8e84a44d8d146">Automation + chat</a></td>
+<td>Structure saved; data or requirements incomplete. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa19767e117e83eb6fdee03/builder?b_9U8If-chatId=e_6aa19767f52351420072e8ad&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26a982b1df24c502e8693/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26953cc090449e830faac">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26953cc090449e830faad">Trace</a></td>
+</tr>
+<tr>
+<td>09. Assess Vendor Risk</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f57555b05a933f27edb3a/builder?b_9U8If-chatId=e_6a9f57550dfd8d53e7f9a258&amp;nav=copilot&amp;generatingCaseId=e_6a9f57550dfd8d53e7f9a258">Automation + chat</a></td>
+<td>Built; test unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b4403db8a857dab460d9/builder?b_9U8If-chatId=e_6aa0b4407cdf9416f40a4892&amp;nav=copilot">Automation + chat</a></td>
+<td>Draft saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa280ab55c9f529422b3c08/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26a33fcf51f018d0e4741">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a33fcf51f018d0e474a">Trace</a></td>
+</tr>
+<tr>
+<td>10. Resolve Session Schedule Conflicts</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f575df77d9411f42455d9/builder?b_9U8If-chatId=e_6a9f575de27fae194eec90c3&amp;nav=copilot&amp;generatingCaseId=e_6a9f575de27fae194eec90c3">Automation + chat</a></td>
+<td>Built; not tested. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b45b55c9f52942c1bcd7/builder?b_9U8If-chatId=e_6aa0b45b6adc5c436d0032a8&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa286052b1df24c5036de91/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26a5d5bfe6345aca084a0">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a5d5bfe6345aca084a1">Trace</a></td>
+</tr>
+<tr>
+<td>11. Evaluate Policy Application</td>
+<td>Structure failed; default two-node placeholder remains. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f576347a15a72034d0082/builder?b_9U8If-chatId=e_6a9f57640dfd8d53e7f9a26c&amp;nav=copilot&amp;generatingCaseId=e_6a9f57640dfd8d53e7f9a26c">Automation + chat</a></td>
+<td>Build failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa0b4faeb37863596df1849/builder?b_9U8If-chatId=e_6aa0b4fa6adc5c436d003651&amp;nav=copilot">Automation + chat</a></td>
+<td>No saved draft; dependency blocked. No saved automation · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b553d41fe1ccf8a95d4">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b553d41fe1ccf8a95d5">Trace</a></td>
+</tr>
+<tr>
+<td>N01. Gmail Expense Attachment Archiver</td>
+<td>Saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9efa395544270890d91edc/builder?b_9U8If-chatId=e_6a9efa39b2d8e84a44d40a20&amp;nav=copilot">Automation + chat</a></td>
+<td>only built but not tested. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1413655c9f52942dc4909/builder?b_9U8If-chatId=e_6aa14137fe0ef7104b7a7473&amp;nav=copilot">Automation + chat</a></td>
+<td>No saved draft; dependency blocked. No saved automation · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b62d51003401d374700">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b62d51003401d374701">Trace</a></td>
+</tr>
+<tr>
+<td>N02. Regional Sales Performance</td>
+<td>TEST path passed; zero assertions. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f39373136f8391ba85e31/builder?b_9U8If-chatId=e_6a9f39370dfd8d53e7f92b93&amp;nav=copilot">Automation + chat</a></td>
+<td>built but tests failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1414ceb37863596fe8cdd/builder?b_9U8If-chatId=e_6aa1414cf5235142006808c5&amp;nav=copilot">Automation + chat</a></td>
+<td>No saved draft; dependency blocked. No saved automation · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b6dfcf51f018d0e67ab">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b6dfcf51f018d0e67ac">Trace</a></td>
+</tr>
+<tr>
+<td>N03. Warehouse Inventory Replenishment</td>
+<td>Saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f3cdf47a15a7203481df9/builder?b_9U8If-chatId=e_6a9f3cdfe27fae194eec29e1&amp;nav=copilot">Automation + chat</a></td>
+<td>only built but not tested. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1414f57ad1104aed7d9cb/builder?b_9U8If-chatId=e_6aa1414ffe0ef7104b7a7495&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa280be2b1df24c50360594/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b7b5bfe6345aca08877">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b7b5bfe6345aca08878">Trace</a></td>
+</tr>
+<tr>
+<td>N04. NamSor Origin Batch Country Name Enrichment</td>
+<td>Empty-input TEST passed; nullable-item requirement unmet. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f3e5d5544270890e89b3a/builder?b_9U8If-chatId=e_6a9f3e5de27fae194eec2dfb&amp;nav=copilot">Automation + chat</a></td>
+<td>only built but not tested. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141512b1df24c50f68f4b/builder?b_9U8If-chatId=e_6aa14151aeb9ea1371a7a40f&amp;nav=copilot">Automation + chat</a></td>
+<td>Empty-input TEST passed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2827926d1175698c709c2/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b8bb244c660af26701d">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b8bb244c660af26701e">Trace</a></td>
+</tr>
+<tr>
+<td>N05. Hackathon Team Registration</td>
+<td>Saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f43ea5544270890ebc130/builder?b_9U8If-chatId=e_6a9f43ea0dfd8d53e7f95a18&amp;nav=copilot">Automation + chat</a></td>
+<td>TEST path passed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa162203db8a857daddcfaa/builder?b_9U8If-chatId=e_6aa16220aeb9ea1371abd72c&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa27b7ae117e83eb62ebd39/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27ad43d41fe1ccf8d000c">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27ad43d41fe1ccf8d001a">Trace</a></td>
+</tr>
+<tr>
+<td>N06. Eval 3g | Email draft</td>
+<td>Saved; final hardened TEST failed, 6/7 assertions. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f4496f77d9411f41ff109/builder?b_9U8If-chatId=e_6a9f4496b2d8e84a44d82f36&amp;nav=copilot">Automation + chat</a></td>
+<td>TEST path passed; smoke only. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141698441ee04fc6311db/builder?b_9U8If-chatId=e_6aa14169f523514200680b25&amp;nav=copilot">Automation + chat</a></td>
+<td>TEST completed; mocking unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa27c8d08527666b28efca7/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27b50b244c660af26eb96">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27b50b244c660af26eb97">Trace</a></td>
+</tr>
+<tr>
+<td>N07. Inventory Shortfall Restock Alert</td>
+<td>Saved; TEST error. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f4a7c8950724fbb0ee668/builder?b_9U8If-chatId=e_6a9f4a7ce27fae194eec6a98&amp;nav=copilot">Automation + chat</a></td>
+<td>only built but not tested. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1416b2b1df24c50f69956/builder?b_9U8If-chatId=e_6aa1416bf523514200680b32&amp;nav=copilot">Automation + chat</a></td>
+<td>No-shortfall TEST passed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa286128441ee04fcd1a84a/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27b82cc090449e83518e8">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27b82cc090449e83518f5">Trace</a></td>
+</tr>
+<tr>
+<td>N08. Evaluate Loan Applicant Eligibility</td>
+<td>TEST passed; 4/4 assertions. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f51135544270890ed5452/builder?b_9U8If-chatId=e_6a9f5113b2d8e84a44d8a089&amp;nav=copilot">Automation + chat</a></td>
+<td>TEST path passed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1416d3db8a857dad8f581/builder?b_9U8If-chatId=e_6aa1416ef523514200680b40&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28f2757ad1104ae4d1f1b/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa2865fcc090449e8391fd7">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2865fcc090449e8391ff4">Trace</a></td>
+</tr>
+<tr>
+<td>N09. Monitor Hospital Bed Turnover</td>
+<td>Saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f51085b05a933f27e431d/builder?b_9U8If-chatId=e_6a9f5108e27fae194eec7c2e&amp;nav=copilot">Automation + chat</a></td>
+<td>built but tests failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141708441ee04fc631390/builder?b_9U8If-chatId=e_6aa14170fe0ef7104b7a75ad&amp;nav=copilot">Automation + chat</a></td>
+<td>Draft saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa291193db8a857da22523e/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa286a8fcf51f018d15cc00">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa286a8fcf51f018d15cc68">Trace</a></td>
+</tr>
+<tr>
+<td>N10. Calculate Employee Shift Overtime</td>
+<td>TEST passed; 4/4 assertions. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f521c8d3dc76e18fee314/builder?b_9U8If-chatId=e_6a9f521c0dfd8d53e7f99207&amp;nav=copilot">Automation + chat</a></td>
+<td>built but tests failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1417257ad1104aed7e8c6/builder?b_9U8If-chatId=e_6aa14172fe0ef7104b7a75b2&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28bffe117e83eb633bbc1/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa286ec5bfe6345aca74a61">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa286ec5bfe6345aca74a6c">Trace</a></td>
+</tr>
+<tr>
+<td>N11. Export Workflow Changeset</td>
+<td>TEST passed; final empty-URL path, 2/2 assertions. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f54ac3136f8391bb27d43/builder?b_9U8If-chatId=e_6a9f54ac0dfd8d53e7f997ae&amp;nav=copilot">Automation + chat</a></td>
+<td>TEST path passed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa1418008527666b23aba01/builder?b_9U8If-chatId=e_6aa14180f523514200680c42&amp;nav=copilot">Automation + chat</a></td>
+<td>Draft saved; TEST unverified. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28d732b1df24c50381f0f/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa288023d41fe1ccf93de7b">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa288023d41fe1ccf93de7c">Trace</a></td>
+</tr>
+<tr>
+<td>N12. List Upcoming Calendar Events</td>
+<td>Saved fallback; all-page requirement unmet. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f54b13136f8391bb27e34/builder?b_9U8If-chatId=e_6a9f54b1b2d8e84a44d8b912&amp;nav=copilot">Automation + chat</a></td>
+<td>Structure saved; data or requirements incomplete. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa197a608527666b259bbed/builder?b_9U8If-chatId=e_6aa197a6fe0ef7104b80a015&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved workflow TEST passed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28d3c3db8a857da1f4dcc/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa28836cc090449e83ac6bb">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa28836cc090449e83ac6e2">Trace</a></td>
+</tr>
+<tr>
+<td>N13. Count Google Calendar Events</td>
+<td>TEST passed; single-page fallback does not meet all-page requirement. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f54b95b05a933f27e937b/builder?b_9U8If-chatId=e_6a9f54b90dfd8d53e7f997da&amp;nav=copilot">Automation + chat</a></td>
+<td>Structure saved; data or requirements incomplete. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa197b157ad1104aef51ef3/builder?b_9U8If-chatId=e_6aa197b1aeb9ea1371af48fc&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved workflow TEST passed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28b5e55c9f529422e9b51/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa2886bfcf51f018d1667f0">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2886bfcf51f018d1667f1">Trace</a></td>
+</tr>
+<tr>
+<td>N14. Validate BFF Agent Response</td>
+<td>TEST path passed; required branch/condition topology absent. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a9f574f5544270890ef705e/builder?b_9U8If-chatId=e_6a9f574fe27fae194eec902c&amp;nav=copilot">Automation + chat</a></td>
+<td>only built but not tested. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa141862b1df24c50f6b0a7/builder?b_9U8If-chatId=e_6aa14186f523514200680c7b&amp;nav=copilot">Automation + chat</a></td>
+<td>Saved draft repair failed. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa28bd6e117e83eb633b334/builder">Automation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa288c35bfe6345aca92bfd">Chat 1</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa288c35bfe6345aca92c28">Trace</a></td>
+</tr>
+</tbody></table>
+<h2>Cost and time for each prompt</h2>
+<p>Each cell gives USD cost and active time across all known attempts for that prompt. The outcome table above uses the latest attempt. A dagger marks incomplete native telemetry or a duration containing an estimate; missing values remain blank of numbers. These cells are not pure build-stage timings.</p>
+<table>
+<thead>
+<tr>
+<th>Prompt</th>
+<th align="right">Initial OpenAI rewrite</th>
+<th align="right">Workflow Split, all attempts</th>
+<th align="right">Automation Coder, all attempts</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01. Get Lab Performance Summary</td>
+<td align="right">$3.2182 · 7m 25s</td>
+<td align="right">$2.4428 · 5m 13s</td>
+<td align="right">$0.1537 · 10m 28s</td>
+</tr>
+<tr>
+<td>02. Google Meet Attendees</td>
+<td align="right">$1.5755 · 4m 01s</td>
+<td align="right">$4.2001 · 13m 13s</td>
+<td align="right">$0.1240 · 7m 29s</td>
+</tr>
+<tr>
+<td>03. Synchronize Company Portfolio</td>
+<td align="right">$3.6312 · 6m 52s</td>
+<td align="right">$11.6863 · 31m 22s</td>
+<td align="right">$0.0961 · 5m 19s</td>
+</tr>
+<tr>
+<td>04. Vehicle Maintenance Parts Ordering</td>
+<td align="right">$2.7195 · 5m 09s</td>
+<td align="right">$0.3197 · 0m 27s</td>
+<td align="right">$0.0785 · 3m 44s</td>
+</tr>
+<tr>
+<td>05. Get Director Attendance Hierarchy</td>
+<td align="right">$1.5452 · 3m 14s</td>
+<td align="right">$8.4479 · 19m 47s</td>
+<td align="right">Unavailable · Unavailable</td>
+</tr>
+<tr>
+<td>06. Detect Calendar Meeting Conflicts</td>
+<td align="right">$3.4215 · 5m 52s</td>
+<td align="right">$10.4657 · 18m 36s</td>
+<td align="right">$0.1333 · 6m 53s</td>
+</tr>
+<tr>
+<td>07. Track Candidate Interview Stage</td>
+<td align="right">$1.7612 · 4m 09s</td>
+<td align="right">$12.6167 · 35m 03s</td>
+<td align="right">$0.1201 · 5m 56s</td>
+</tr>
+<tr>
+<td>08. Aggregate User and Client Information</td>
+<td align="right">$2.9368 · 4m 54s</td>
+<td align="right">$14.1064 · 29m 53s</td>
+<td align="right">$0.1197 · 5m 41s</td>
+</tr>
+<tr>
+<td>09. Assess Vendor Risk</td>
+<td align="right">$2.9960 · 5m 01s</td>
+<td align="right">$7.1176 · 16m 42s</td>
+<td align="right">$0.1999 · 9m 52s</td>
+</tr>
+<tr>
+<td>10. Resolve Session Schedule Conflicts</td>
+<td align="right">$1.7008 · 3m 04s</td>
+<td align="right">$8.9719 · 19m 22s</td>
+<td align="right">Unavailable · Unavailable</td>
+</tr>
+<tr>
+<td>11. Evaluate Policy Application</td>
+<td align="right">$1.4811 · 2m 47s</td>
+<td align="right">$0.3594 · 0m 32s</td>
+<td align="right">$0.1105 · 4m 41s</td>
+</tr>
+<tr>
+<td>N01. Gmail Expense Attachment Archiver</td>
+<td align="right">$11.4002 · 7m 30s</td>
+<td align="right">$3.4429 · 7m 40s</td>
+<td align="right">$0.0277 · 0m 55s</td>
+</tr>
+<tr>
+<td>N02. Regional Sales Performance</td>
+<td align="right">$2.0037 · 5m 01s</td>
+<td align="right">$3.2632 · 9m 04s</td>
+<td align="right">$0.0364 · 1m 06s</td>
+</tr>
+<tr>
+<td>N03. Warehouse Inventory Replenishment</td>
+<td align="right">$1.8758 · 4m 22s</td>
+<td align="right">$2.5124 · 5m 23s</td>
+<td align="right">$0.0731 · 5m 08s</td>
+</tr>
+<tr>
+<td>N04. NamSor Origin Batch Country Name Enrichment</td>
+<td align="right">$7.3083 · 10m 17s</td>
+<td align="right">$3.0246 · 6m 04s</td>
+<td align="right">$0.0625 · 3m 09s</td>
+</tr>
+<tr>
+<td>N05. Hackathon Team Registration</td>
+<td align="right">$3.5875 · 3m 32s †</td>
+<td align="right">$7.8401 · 24m 46s</td>
+<td align="right">$0.1546 · 10m 53s</td>
+</tr>
+<tr>
+<td>N06. Eval 3g | Email draft</td>
+<td align="right">$1.8188 · 5m 03s</td>
+<td align="right">$1.3855 · 3m 05s †</td>
+<td align="right">$0.0244 · 1m 11s</td>
+</tr>
+<tr>
+<td>N07. Inventory Shortfall Restock Alert</td>
+<td align="right">$1.8586 · 3m 32s</td>
+<td align="right">$3.6908 · 6m 56s</td>
+<td align="right">$0.0736 · 4m 56s</td>
+</tr>
+<tr>
+<td>N08. Evaluate Loan Applicant Eligibility</td>
+<td align="right">$2.1027 · 6m 43s</td>
+<td align="right">$3.3019 · 9m 25s</td>
+<td align="right">$0.0628 · 4m 32s</td>
+</tr>
+<tr>
+<td>N09. Monitor Hospital Bed Turnover</td>
+<td align="right">$3.1470 · 7m 10s</td>
+<td align="right">$4.6311 · 11m 41s †</td>
+<td align="right">$0.0630 · 3m 00s</td>
+</tr>
+<tr>
+<td>N10. Calculate Employee Shift Overtime</td>
+<td align="right">$2.4736 · 6m 30s</td>
+<td align="right">$5.6982 · 16m 57s</td>
+<td align="right">$0.1312 · 8m 52s</td>
+</tr>
+<tr>
+<td>N11. Export Workflow Changeset</td>
+<td align="right">$1.2511 · 3m 51s</td>
+<td align="right">$1.9253 · 5m 09s</td>
+<td align="right">$0.0204 · 0m 56s</td>
+</tr>
+<tr>
+<td>N12. List Upcoming Calendar Events</td>
+<td align="right">$2.5873 · 3m 29s</td>
+<td align="right">$8.7244 · 16m 58s †</td>
+<td align="right">$0.0289 · 1m 47s</td>
+</tr>
+<tr>
+<td>N13. Count Google Calendar Events</td>
+<td align="right">$3.2426 · 5m 55s</td>
+<td align="right">$8.1242 · 11m 51s</td>
+<td align="right">$0.0310 · 2m 05s</td>
+</tr>
+<tr>
+<td>N14. Validate BFF Agent Response</td>
+<td align="right">$3.1788 · 8m 11s</td>
+<td align="right">$5.8681 · 18m 24s</td>
+<td align="right">$0.1286 · 11m 41s</td>
+</tr>
+</tbody></table>
+<h2>What the tests actually cover</h2>
+<p>The initial rewrite&#39;s seven latest passing paths are N02, N04, N08, N10, N11, N13 and N14. Their executed node inputs, node semantics and edges match the saved definitions. N02, N04 and N14 have zero assertions. N08 and N10 each pass 4/4 assertions. N11&#39;s final empty-URL path passes 2/2. N13 passes 1/1 but only checks a single-page implementation. N04 has a nullable-array-element contract gap, N13 lacks required pagination, and N14 omits the requested branch/condition topology. N12 also lacks pagination but has no verified final TEST pass. N06 had an earlier smoke pass followed by a hardened failure and stays failed.</p>
+<p>Workflow Split&#39;s passing paths are 07, N05, N06, N08 and N11. Cases 07 and N06 have zero-assertion smoke coverage. N05 covers the duplicate-registration response rather than the full create/update path. N08 passes its hardened fixture and N11 its final assertions. Cases 01, 05, N02, N09 and N10 retain failed TEST evidence; 03&#39;s latest repair was saved but not retested. A <code>RUN_NOT_FOUND</code> result remains unverified.</p>
+<p>Automation Coder&#39;s four accepted TEST paths are N04&#39;s empty-input path, N07&#39;s no-shortfall path, and the N12/N13 Calendar tests. They do not establish coverage of all branches. N06 returned a Gmail SENT receipt despite the mocked-only instruction, so its terminal success is not included. Thirteen other drafts retained failed repairs, commonly because the save submitted version 0 against saved version 1. A passing candidate test cannot certify a different persisted draft.</p>
+<h2>Evidence and reproducibility</h2>
+<p>The report freezes seven input result files with SHA-256 hashes and a normalized 25-case ledger. Native rewrite evidence includes exact source prompts, model labels, final messages, saved definitions, run inspection and executed-versus-saved comparisons. This is a retrospective evidence comparison; configurations and user follow-up instructions changed across runs.</p>
+<ul>
+<li><a href="https://hatim-s.github.io/planloft-plans/p/HqBV3oGbxW/">Workflow Split report and historical attempts</a></li>
+<li><a href="https://hatim-s.github.io/planloft-plans/p/1vKtjZYX21/">Final Automation Coder report</a></li>
+<li>Local comparison artifacts: <code>artifacts/workflow-three-approaches-20260910</code> in <code>ua-builder-no-prompt</code>.</li>
+<li>Frozen manifest: <code>source-manifest.json</code>; calculated ledger: <code>comparison-data.json</code>; reproduction script: <code>build-comparison.py</code>.</li>
+<li>Codex history evidence: <code>history-15-of-25.json</code>, including the exact timestamp, session and message line.</li>
+</ul>
+<p>The five earlier smoke tests and the stopped 74-prompt solution-brief evaluation are excluded throughout. The denominator remains 25 prompt identities, even when fresh retries create extra conversations.</p>
+<h2>What to fix next</h2>
+<p>Fix Automation Coder&#39;s version-aware persistence first, then test the saved definition after repair. For Workflow Split, close the variable/list mapping and Calendar pagination gaps that keep the four partial cases incomplete. A subsequent comparison should freeze model and configuration, give each approach the same retry budget, and run the same assertions against the final saved artifacts. That would support a full accuracy claim that these historical runs cannot establish.</p>
+</article>
+</main>
+</body>
+</html>

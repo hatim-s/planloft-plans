@@ -198,6 +198,15 @@
       "kind": "plan",
       "createdAt": "2026-09-10T09:51:50.361Z",
       "expiresAt": "2026-10-10T11:32:48.701Z"
+    },
+    {
+      "id": "7ZW7EeizKJ",
+      "project": "path-ef2498",
+      "slug": "workflow-three-approaches-comparison",
+      "title": "Workflow builders: three approaches on 25 cases",
+      "kind": "plan",
+      "createdAt": "2026-09-10T12:08:55.869Z",
+      "expiresAt": "2026-10-10T12:08:55.869Z"
     }
   ]
 }
