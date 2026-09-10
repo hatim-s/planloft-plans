@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Direct agent main 25 evaluation</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This partial report tracks the main 25-prompt corpus on the direct Automation Coder agent. 18 of 25 original cases have been triggered, with two selective retry conversations attached to their original cases. The remaining 7 prompts have not been submitted.</p>
+<p>Snapshot: 2026-09-10 09:51 UTC. The agent uses OpenAI GPT 5.6 Luna. Agent, model, tools and connection configuration were left unchanged.</p>
+<p><a href="https://hatim-s.github.io/planloft-plans/p/HqBV3oGbxW/">Source corpus</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=new">Direct agent</a></p>
+<p>The source contains 11 original main cases and 14 expanded cases. The separate five smoke prompts are excluded. This report is independent of the separate solution-brief evaluation.</p>
+<blockquote>
+<p>A saved workflow, platform validation, and a passing native TEST are separate claims. A completed diagnostic candidate is not a passing test of the full saved workflow.</p>
+</blockquote>
+<p>Blank outcome, cost and active-time cells mean the result is still being established. Only the two bounded terminal repair failures have complete cumulative cost and active-time values below. Costs sum all measured generation traces across original and retry conversations. Active time excludes user-wait gaps. Ongoing trace costs are not presented as final totals.</p>
+<h2>Triggered cases</h2>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Status</th>
+<th>Outcome</th>
+<th align="right">Cost USD</th>
+<th align="right">Active time</th>
+<th>Conversation</th>
+<th>Native traces</th>
+<th>Automation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01. Get Lab Performance Summary</td>
+<td>Finalized</td>
+<td>Saved draft repair failed</td>
+<td align="right">0.153710</td>
+<td align="right">627.8s</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267a0b244c660af24a20f">Attempt 1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27a49cc090449e833d4f8">Attempt 2</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267a0b244c660af24a210">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267fbfcf51f018d0de83f">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26890fcf51f018d0de9c2">A1.3</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa268c1b244c660af258723">A1.4</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27a49cc090449e833d4f9">A2.1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2686b3db8a857da0ff30c/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>02. Google Meet Attendees</td>
+<td>Finalized</td>
+<td>Saved draft repair failed</td>
+<td align="right">0.123967</td>
+<td align="right">448.9s</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267bcb244c660af24a634">Attempt 1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27a89fcf51f018d103d2e">Attempt 2</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267bcb244c660af24a635">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2681c3d41fe1ccf89f9c1">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa268d7cc090449e830e4eb">A1.3</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa269f1b244c660af25ee72">A1.4</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27a89fcf51f018d103d2f">A2.1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2689f8441ee04fcc183c6/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>03. Synchronize Company Portfolio</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267dfcc090449e830b1da">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267dfcc090449e830b1db">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2681db244c660af24c23f">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa268d5d51003401d36b409">A1.3</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa268e808527666b288b294/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>04. Vehicle Maintenance Parts Ordering</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa267fd5bfe6345aca05efc">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa267fd5bfe6345aca05efd">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26837cc090449e830b5f2">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa268af3d41fe1ccf8a3ae7">A1.3</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa268be08527666b288a928/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>05. Get Director Attendance Hierarchy</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26820d51003401d36ad18">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26820d51003401d36ad19">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa268485bfe6345aca06467">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2689a5bfe6345aca06da2">A1.3</a></td>
+<td></td>
+</tr>
+<tr>
+<td>06. Detect Calendar Meeting Conflicts</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa2690cfcf51f018d0df1a2">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2690cfcf51f018d0df1a3">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa269943d41fe1ccf8a9399">A1.2</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26a4808527666b288f4f3/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>07. Track Candidate Interview Stage</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa2692c3d41fe1ccf8a8a12">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2692c3d41fe1ccf8a8a13">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a05d51003401d36c503">A1.2</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26a87e117e83eb628959f/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>08. Aggregate User and Client Information</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26953cc090449e830faac">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26953cc090449e830faad">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a10cc090449e830fc89">A1.2</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa26a982b1df24c502e8693/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>09. Assess Vendor Risk</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26a33fcf51f018d0e4741">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a33fcf51f018d0e474a">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a6e3d41fe1ccf8a9577">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26bddfcf51f018d0e6a68">A1.3</a></td>
+<td></td>
+</tr>
+<tr>
+<td>10. Resolve Session Schedule Conflicts</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26a5d5bfe6345aca084a0">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a5d5bfe6345aca084a1">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26a7eb244c660af2655ff">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26be45bfe6345aca08aa0">A1.3</a></td>
+<td></td>
+</tr>
+<tr>
+<td>11. Evaluate Policy Application</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b553d41fe1ccf8a95d4">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b553d41fe1ccf8a95d5">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26c1fd51003401d3769f6">A1.2</a></td>
+<td></td>
+</tr>
+<tr>
+<td>N01. Gmail Expense Attachment Archiver</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b62d51003401d374700">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b62d51003401d374701">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26c20cc090449e831650f">A1.2</a></td>
+<td></td>
+</tr>
+<tr>
+<td>N02. Regional Sales Performance</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b6dfcf51f018d0e67ab">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b6dfcf51f018d0e67ac">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26c29fcf51f018d0e9816">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2790ab244c660af26cc33">A1.3</a></td>
+<td></td>
+</tr>
+<tr>
+<td>N03. Warehouse Inventory Replenishment</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b7b5bfe6345aca08877">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b7b5bfe6345aca08878">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26c325bfe6345aca091b8">A1.2</a></td>
+<td></td>
+</tr>
+<tr>
+<td>N04. NamSor Origin Batch Country Name Enrichment</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b8bb244c660af26701d">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b8bb244c660af26701e">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26c12b244c660af267437">A1.2</a></td>
+<td></td>
+</tr>
+<tr>
+<td>N05. Hackathon Team Registration</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27ad43d41fe1ccf8d000c">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27ad43d41fe1ccf8d001a">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27afab244c660af26ddc3">A1.2</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa27b7ae117e83eb62ebd39/builder">Open draft</a></td>
+</tr>
+<tr>
+<td>N06. Eval 3g | Email draft</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27b50b244c660af26eb96">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27b50b244c660af26eb97">A1.1</a></td>
+<td></td>
+</tr>
+<tr>
+<td>N07. Inventory Shortfall Restock Alert</td>
+<td>In progress</td>
+<td></td>
+<td align="right"></td>
+<td align="right"></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27b82cc090449e83518e8">Attempt 1</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27b82cc090449e83518f5">A1.1</a></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2>Evidence and original prompts</h2>
+<p>The prompts below are the frozen source text. The chat composer normalizes Markdown and whitespace; saved submission text is retained in the local ledger. Follow-up clarifications and repair prompts are separate from the source prompt.</p>
+<h3>01. Get Lab Performance Summary</h3>
+<p>Saved draft TEST failed with Invalid return statement. Fresh repair validated a complete candidate but could not save because version 0 was sent against current version 1. Candidate test does not establish the saved draft passes.</p>
+<p>Original case ID: <code>e_6aa267a0b244c660af24a20f</code>.
+Saved automation ID: <code>6aa2686b3db8a857da0ff30c</code>.
+Retry 2: <code>e_6aa27a49cc090449e833d4f8</code>. Reason: Stale version after runtime repair.</p>
+<pre><code class="language-text">Create a callable automation named Get Lab Performance Summary. Accept required strings region, design_center, lab_description. Retrieve up to 2,000 records for the supplied region and design center from each of performance_labs_eff_matrixs and performance_labs_master_data. Normalize matching text with Unicode NFKC, lowercase, replace punctuation with spaces, collapse whitespace and trim. Select records whose normalized lab_description exactly equals the normalized input; do not invent fuzzy matches. If several exact records match in a source, choose the smallest stable record ID lexicographically and report the full match count. Use master data for specifications and efficiency-matrix data for availability/utilization/performance metrics. Copy stored metrics; do not invent formulas for unspecified metrics. Determine target_product from the selected master record&#39;s lab_application_product_wise when nonblank, otherwise lab_application, otherwise null. No match in either source returns LAB_NOT_FOUND as an explicit error.
+
+Return an object with exactly the field names in the output type map below. Type words describe field types, not literal values. For every missing specification or metric, return null and make that property nullable; never invent an intelligent default, zero, false, or a lab specification. Echo the three input strings. eff_match_count and key_mat_match_count count exact matches in the efficiency and master sources respectively; found_in_eff and found_in_key_mat are those counts &gt; 0. If a fetch reaches 2,000 rows and more rows exist, fail with LAB_QUERY_TRUNCATED rather than select from an incomplete candidate set.
+
+Output type map:
+{
+    &quot;lab_code&quot;: &quot;string&quot;,
+    &quot;owner&quot;: &quot;string&quot;,
+    &quot;test_status&quot;: &quot;string&quot;,
+    &quot;peak_load&quot;: &quot;number&quot;,
+    &quot;throughput_rps&quot;: &quot;number&quot;,
+    &quot;notes&quot;: &quot;string&quot;,
+    &quot;created_at&quot;: &quot;integer&quot;,
+    &quot;lab_type&quot;: &quot;string&quot;,
+    &quot;error_rate_percent&quot;: &quot;number&quot;,
+    &quot;created_by&quot;: &quot;string&quot;,
+    &quot;tags&quot;: &quot;array&quot;,
+    &quot;test_environment&quot;: &quot;string&quot;,
+    &quot;memory_utilization_percent&quot;: &quot;number&quot;,
+    &quot;lab_name&quot;: &quot;string&quot;,
+    &quot;test_date&quot;: &quot;integer&quot;,
+    &quot;response_time_ms&quot;: &quot;number&quot;,
+    &quot;department&quot;: &quot;string&quot;,
+    &quot;lab_id&quot;: &quot;string&quot;,
+    &quot;test_name&quot;: &quot;string&quot;,
+    &quot;cpu_utilization_percent&quot;: &quot;number&quot;,
+    &quot;test_id&quot;: &quot;string&quot;
+}
+</code></pre>
+<h3>02. Google Meet Attendees</h3>
+<p>Saved 22-node draft remains unrepaired. Fresh retry validates the full graph, but save repeatedly fails with stale version 0/current 1. Earlier completed six-node diagnostic is excluded from full-workflow TEST results.</p>
+<p>Original case ID: <code>e_6aa267bcb244c660af24a634</code>.
+Saved automation ID: <code>6aa2689f8441ee04fcc183c6</code>.
+Retry 2: <code>e_6aa27a89fcf51f018d103d2e</code>. Reason: Stale version and reduced diagnostic TEST mistaken for full graph.</p>
+<pre><code class="language-text">Create a callable automation named Google Meet Attendees, using Trigger by Automation. Accept a required string input named &quot;meeting_code&quot;; for example {&quot;meeting_code&quot;:&quot;rbs-cojk-yux&quot;}. Use the input value, not a hardcoded code. With connection Meet | K1, find conference records for that meeting code. If more than one exists, choose the most recently started conference, breaking ties by conference resource name. Retrieve all participant pages for that conference. Include only signed-in participants and return their display names in {&quot;result&quot;:[&quot;string&quot;]}; ignore anonymous and phone-only participants. If no conference or no signed-in participants exists, return {&quot;result&quot;:[]}. Do not turn a connector failure into an empty success.
+</code></pre>
+<h3>03. Synchronize Company Portfolio</h3>
+<p>Draft saved. Semantic review and safe TEST feasibility remain open.</p>
+<p>Original case ID: <code>e_6aa267dfcc090449e830b1da</code>.
+Saved automation ID: <code>6aa268e808527666b288b294</code>.</p>
+<pre><code class="language-text">Create a callable automation that requires no input and retrieves company portfolio data from `https://yc-oss.github.io/api/companies/top.json`. The automation should clean and standardize the retrieved records&#39; result, synchronize them with the internal object:companies by updating existing companies and creating new ones where necessary, and finally return a summary containing the total number of companies processed, the data source, and the synchronized company records.
+
+Input Schema
+
+
+{}
+
+Output Schema
+
+
+{
+  &quot;result&quot;: {
+    &quot;total&quot;: &quot;number&quot;,
+    &quot;source&quot;: &quot;string&quot;,
+    &quot;data&quot;: [
+      {
+        &quot;company&quot;: {
+          &quot;name&quot;: &quot;string&quot;,
+          &quot;slug&quot;: &quot;string&quot;,
+          &quot;url&quot;: &quot;string&quot;,
+          &quot;logo&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;string&quot;
+        },
+        &quot;founders&quot;: [
+          {
+            &quot;name&quot;: &quot;string&quot;
+          }
+        ],
+        &quot;companyOwners&quot;: &quot;string&quot;,
+        &quot;investment&quot;: {
+          &quot;round&quot;: &quot;string&quot;,
+          &quot;stage&quot;: &quot;string&quot;,
+          &quot;year&quot;: &quot;number&quot;,
+          &quot;raw&quot;: &quot;string&quot;
+        },
+        &quot;exit&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    ]
+  }
+}
+
+Use slug as the required unique company match key. Map only fields actually returned by the source: name to company.name, slug to company.slug, website (falling back to url) to company.url, small_logo_thumb_url (falling back to logo) to company.logo, and long_description (falling back to one_liner) to company.description. Trim text. Missing company text fields become empty strings. Copy structured founders only if present, otherwise use []; use empty string for absent companyOwners and absent investment round/stage/raw or exit type; use null for unknown investment year and make that output property nullable. Do not infer financing, founders or exit history from unrelated fields. Match the existing companies object by slug and resolve its actual storage fields for this mapping. Preserve unrelated fields on updates. Skip and count no records silently: a source row without slug, duplicate source slugs, or multiple stored matches for a slug is a validation error. Validate the whole source before writes. Return total equal to the number successfully synchronized, source equal to the requested URL, and data in source order. API failures or partial write failures are failed runs, not successful summaries.
+</code></pre>
+<h3>04. Vehicle Maintenance Parts Ordering</h3>
+<p>Saved draft reached VEHICLE_NOT_FOUND using a synthetic missing vehicle. A positive fixture TEST remains open.</p>
+<p>Original case ID: <code>e_6aa267fd5bfe6345aca05efc</code>.
+Saved automation ID: <code>6aa268be08527666b288a928</code>.</p>
+<pre><code class="language-text">Create a callable automation that accepts a vehicle model ID and mileage value and identifies maintenance parts that need to be ordered before servicing. The automation should fetch the vehicle&#39;s maintenance parts list from the Vehicles storage object, matching on vehicle_model_id. For every part in the list, calculate the Scaled Quantity as (quantity / base_mileage_interval) * mileage, representing the proportionally adjusted amount required for the vehicle&#39;s actual mileage. Next, cross-reference each part against the Garage_Inventory storage object using part_id, and calculate the Part Shortfall as scaled_quantity − quantity_in_stock. For every part whose Part Shortfall is greater than zero, collect it into a list containing the part ID, part name, scaled quantity, quantity in stock, and part shortfall. Finally, return the complete scaled parts list along with the list of parts that require restocking.
+input schema:{
+  &quot;vehicle_model_id&quot;: &quot;string&quot;,
+  &quot;mileage&quot;: &quot;number&quot;
+}
+output schema:
+{
+  &quot;scaled_parts_list&quot;: [
+    {
+      &quot;part_id&quot;: &quot;string&quot;,
+      &quot;part_name&quot;: &quot;string&quot;,
+      &quot;scaled_quantity&quot;: &quot;number&quot;,
+      &quot;unit&quot;: &quot;string&quot;
+    }
+  ],
+  &quot;shortfall_list&quot;: [
+    {
+      &quot;part_id&quot;: &quot;string&quot;,
+      &quot;part_name&quot;: &quot;string&quot;,
+      &quot;scaled_quantity&quot;: &quot;number&quot;,
+      &quot;quantity_in_stock&quot;: &quot;number&quot;,
+      &quot;part_shortfall&quot;: &quot;number&quot;
+    }
+  ]
+}
+
+Treat mileage as a nonnegative number and every base_mileage_interval as a strictly positive number; fail before division on invalid intervals. Preserve fractional scaled quantities as requested; do not round to whole parts. If a vehicle is missing, fail with VEHICLE_NOT_FOUND. For a missing Garage_Inventory part record, use quantity_in_stock = 0; if several records share a part_id, sum their quantities. Return empty arrays for a vehicle with no maintenance parts. The unit in scaled_parts_list comes from the vehicle part entry.
+</code></pre>
+<h3>05. Get Director Attendance Hierarchy</h3>
+<p>Original generation remains pending after its compile check. No saved automation ID established. A selective fresh retry is planned after the stale session review.</p>
+<p>Original case ID: <code>e_6aa26820d51003401d36ad18</code>.</p>
+<pre><code class="language-text">Build a callable automation named Get Director Attendance Hierarchy with input {}. Fetch all 2026-07-02 attendance records from UA reports | Eval. Resolve the stable employee ID, manager ID, role, attendance status and email fields. Select directors whose role contains Director, case-insensitively. Build the manager-to-employee graph from that day&#39;s records. For each director, traverse all direct and indirect reports using a visited set to avoid cycles; exclude that director from their own team and count every descendant employee once. Match attendance statuses exactly as In Office, Work From Home, Out of Office; include an Unknown count for missing or other statuses. If duplicate rows for an employee disagree on manager or attendance status, fail before sending emails; identical duplicate rows count once. A director with no descendants still receives a zero-count report. Validate all director email destinations before any send.
+
+Send each director one personalized HTML table through Gmail | K1 containing the four counts and date. Escape names and other record text in HTML. Return {&quot;results&quot;:[{&quot;directorId&quot;:&quot;string&quot;,&quot;labelIds&quot;:[&quot;string&quot;]}]}, with one item per successful send, sorted by director ID. If there are no directors, return {&quot;results&quot;:[]}. Gmail errors fail the run. Read labelIds from Gmail&#39;s response; do not invent label identifiers.
+</code></pre>
+<h3>06. Detect Calendar Meeting Conflicts</h3>
+<p>Draft saved. Full native TEST and runtime verification remain open.</p>
+<p>Original case ID: <code>e_6aa2690cfcf51f018d0df1a2</code>.
+Saved automation ID: <code>6aa26a4808527666b288f4f3</code>.</p>
+<pre><code class="language-text">Build a callable automation named Detect Calendar Meeting Conflicts using Calendar | K1. Accept {&quot;calendarId&quot;:&quot;string&quot;,&quot;timeMin&quot;:&quot;RFC3339 string&quot;,&quot;timeMax&quot;:&quot;RFC3339 string&quot;}, with a valid increasing time window. Fetch all pages of events for that calendar/window, expanding recurring events. Ignore cancelled events, transparent events and all-day entries; this evaluation checks timed meetings only. Convert each timed event start/end to UTC and use half-open intervals [start,end), so back-to-back meetings do not conflict. Two meetings conflict when startA &lt; endB and startB &lt; endA. Return connected components of this overlap relation containing at least two events: transitive overlaps belong to one group even if not every pair overlaps. Sort events by start then ID, and groups by earliest event start. Return {&quot;conflictGroups&quot;:[{&quot;meetings&quot;:[{&quot;eventId&quot;:&quot;string&quot;,&quot;title&quot;:&quot;string&quot;,&quot;start&quot;:&quot;RFC3339 string&quot;,&quot;end&quot;:&quot;RFC3339 string&quot;,&quot;durationMinutes&quot;:0,&quot;attendees&quot;:[&quot;email string&quot;]}]}]}. Compute duration from the original event interval, and use an empty attendee list when absent. Empty/no conflicts returns {&quot;conflictGroups&quot;:[]}. Do not propose new meeting times.
+</code></pre>
+<h3>07. Track Candidate Interview Stage</h3>
+<p>Draft saved. Native TEST failed on Groovy bindings; targeted repair remains open.</p>
+<p>Original case ID: <code>e_6aa2692c3d41fe1ccf8a8a12</code>.
+Saved automation ID: <code>6aa26a87e117e83eb628959f</code>.</p>
+<pre><code class="language-text">Create a callable automation named Track Candidate Interview Stage. Accept required string candidate_job_ID plus a required evaluationRules object. Query candidate_job where candidateJobId equals candidate_job_ID, then interview_scheduling where jobCandidateLink equals that same value; fetch all interview pages. Retrieve shortlistedByAI, currentStatus and interview round/status values. Missing candidate is CANDIDATE_NOT_FOUND.
+
+The source does not define the tenant&#39;s currentStatus/status vocabulary, so do not invent it. evaluationRules must contain candidateStatusStages (a map from each supported currentStatus value to a six-element outcome array) and interviewStatusOutcomes (a map from each supported interview status value to passed, failed, pending, to_be_scheduled, or skipped). These maps are explicit evaluation input and must be supplied from the test fixture. Stages in order are AI Match, AI Screening, AI Video Interview, Round 1 Interview, Round 2 Interview, Decision. Each candidateStatusStages array has exactly six entries using the same five outcome values. Unknown statuses or malformed maps fail with UNMAPPED_PIPELINE_STATUS.
+
+In a Groovy node, start from the mapped candidate status array. Set AI Match to passed when shortlistedByAI is true and failed when false; require a boolean. Interview round 1 overrides Round 1 Interview and round 2 overrides Round 2 Interview using interviewStatusOutcomes. Reject conflicting statuses for the same round; identical duplicates count once. Other round numbers do not alter the six standard stages. currentStage is the first failed stage if any, otherwise the first pending or to_be_scheduled stage, otherwise Decision. Return {&quot;currentStage&quot;:&quot;string&quot;,&quot;resultArray&quot;:[{&quot;name&quot;:&quot;string&quot;,&quot;pass&quot;:&quot;string&quot;,&quot;description&quot;:&quot;string&quot;}]} with exactly six entries in stage order. pass holds the outcome string; description contains the matching icon and outcome: passed ✓, failed ✗, pending …, to_be_scheduled ◷, skipped —. The Groovy outputs must feed the callable return.
+</code></pre>
+<h3>08. Aggregate User and Client Information</h3>
+<p>Draft saved. Full native TEST and semantic verification remain open.</p>
+<p>Original case ID: <code>e_6aa26953cc090449e830faac</code>.
+Saved automation ID: <code>6aa26a982b1df24c502e8693</code>.</p>
+<pre><code class="language-text">Create a callable automation that retrieves and aggregates user and client information based on a specific customer ID. The automation accepts an input schema matching {&quot;customerId&quot;: &quot;string&quot;}. First, query the delivery_brain_user_vs_customer_mapping storage table using the provided customerId to fetch all mapped user records, and initialize an empty list variable named UA to store the aggregated user details. Next, use a Loop node to iterate through each fetched mapping record. Inside the loop, query the users table using the mapped userId to retrieve the user&#39;s profile details, and concurrently query the delivery_brain_user_vs_customer_mapping table again using that specific userId to calculate their total workload or capacity count. Add these details as a new object to the UA list, mapping the user&#39;s name, email, designation, capacity (total count), employment start date (as ActiveSince), and user ID. After the loop completes, query the useCaseObject storage table using the original customerId to fetch associated use case records. Create a second list variable named Client by mapping the ownerUserId properties (name and email) from the fetched use case object. Finally, pass both constructed lists to a Callable Return node to output a response exactly matching the schema {&quot;arr&quot;: [{&quot;name&quot;: &quot;string&quot;, &quot;email&quot;: &quot;string&quot;, &quot;designation&quot;: &quot;string&quot;, &quot;Capacity&quot;: &quot;string&quot;, &quot;ActiveSince&quot;: &quot;string&quot;, &quot;userid&quot;: &quot;string&quot;}], &quot;arr2&quot;: [{&quot;name&quot;: &quot;string&quot;, &quot;email&quot;: &quot;string&quot;}]}.
+
+Use an explicit Loop node as requested. Deduplicate the first mapping results by userId so one user appears once in UA. Capacity is the count of all mapping records for that userId across all customers, serialized as a decimal string to match the output contract. ActiveSince is the stored employment start date as a string, or an empty string when absent. For a mapped user with no users record, fail with USER_NOT_FOUND instead of returning invented profile details. Resolve ownerUserId: if it is a reference ID, look up the referenced user to obtain name/email; if it already contains an expanded object, use its name/email. Deduplicate Client by ownerUserId. Sort UA by userid and Client by ownerUserId before dropping the owner ID from arr2. No customer mappings/use cases returns the corresponding empty arrays. Run the two lookups inside the user loop independently, then append to UA only after both complete.
+</code></pre>
+<h3>09. Assess Vendor Risk</h3>
+<p>Previous tool responses were empty. Recovery continuation remains queued.</p>
+<p>Original case ID: <code>e_6aa26a33fcf51f018d0e4741</code>.</p>
+<pre><code class="language-text">Build a callable automation named Assess Vendor Risk. Accept vendorId (string), asOf (RFC3339 timestamp), procurementEmail (string) and scoringRules (object). scoringRules contains paymentWeight, financialWeight, incidentWeight (nonnegative numbers summing to 1), lateDeliveryPenalty, invoiceDiscrepancyPenalty, declinePenaltyPerFraction, and incidentPenalties (nonnegative map keyed by incident type). These are evaluation fixture inputs, not inferred production risk policy.
+
+Fetch the vendor from vendor_eval1; fetch Vendor_Transactions for the preceding 24 calendar months, ending before asOf, and Vendor_Incidents for the latest 12 months. Resolve vendor linkage, transaction date/amount, late-delivery and invoice-discrepancy flags, incident type and incident date from actual object schemas. The latest and prior 12-month windows are adjacent half-open intervals. In Groovy: lateRate and discrepancyRate are fractions of current-window transactions carrying those flags. paymentScore = clamp(100 - lateDeliveryPenalty*lateRate - invoiceDiscrepancyPenalty*discrepancyRate,0,100). currentVolume and priorVolume are transaction amount sums; require both current-window transactions and positive priorVolume, otherwise fail with INSUFFICIENT_HISTORY before writes/mail. decline = max((priorVolume-currentVolume)/priorVolume,0); financialScore = clamp(100-declinePenaltyPerFraction*decline,0,100). For each incident, ageDays is elapsed UTC days from incident to asOf and recencyWeight=max(0,1-ageDays/365). incidentScore=clamp(100-sum(incidentPenalties[type]*recencyWeight),0,100). Unknown incident types are errors. riskScore is the weighted sum of the three scores; higher means healthier/lower risk. Compare the unrounded score, and round returned/logged scores to two decimals.
+
+Use a Branch node: score &lt;40 updates that vendor&#39;s active contracts in contracts to On Hold and emails procurementEmail via Gmail | K1 with sub-scores and factors, action HOLD; 40&lt;=score&lt;=70 updates the vendor review flag for quarterly review without a hold, action QUARTERLY_REVIEW; &gt;70 changes no contract/review flags, action NO_ACTION. Resolve the actual status and review fields before building. On every successful decision path insert one Vendor_Risk_Assessments record including vendorId, asOf, rules, sub-scores, composite and action. Return {&quot;riskScore&quot;:0,&quot;action&quot;:&quot;string&quot;}. Missing vendor, missing required data or connector/write failures are explicit failures, not fabricated decisions.
+</code></pre>
+<h3>10. Resolve Session Schedule Conflicts</h3>
+<p>Previous tool responses were empty. Recovery must preserve the unresolved-session review email branch.</p>
+<p>Original case ID: <code>e_6aa26a5d5bfe6345aca084a0</code>.</p>
+<pre><code class="language-text">Build a callable automation named Resolve Session Schedule Conflicts, accepting {&quot;eventId&quot;:&quot;string&quot;}. Use Sessions for proposals, Venue_Slots for room/time options, Registrations for expected attendee counts, and Session_Schedule for final output. The source&#39;s trailing session_conflict name conflicts with these four roles; do not substitute that object. Resolve the four named objects and their event, session, speaker, room, capacity, start/end, speaker-email and availability fields before building.
+
+Fetch all relevant event records. In Groovy, sort sessions by stable session ID. For each session, sort venue slots by start time then room ID then slot ID. Assign the first slot fully within the speaker&#39;s availability, with capacity &gt;= that session&#39;s registration count, and with no overlap for either room or speaker with an already assigned session. Use [start,end) intervals; adjacent sessions may share a room or speaker. Each assignment reserves both room and speaker. If none fits, add the session with all applicable reasons: no speaker-compatible time, insufficient capacity, room occupied, speaker occupied. This fixed greedy algorithm is the evaluation rule; do not claim that an unresolved session proves no global solution exists.
+
+Branch on unresolvedSessions.length &gt; 0. If true, invoke an LLM with the proposals, candidate assignments and conflicts to suggest room/slot swaps, and email its suggestions to kavankansodariya@unifyapps.com through Gmail | K1 for review. Do not apply LLM suggestions, insert a partial schedule or email confirmations to speakers on this branch. If none are unresolved and there are sessions, perform one bulk insert of the full schedule into Session_Schedule and email each speaker their assigned sessions. For an empty event, return empty arrays with no writes, LLM or emails. Return {&quot;scheduledSessions&quot;:[{&quot;sessionId&quot;:&quot;string&quot;,&quot;room&quot;:&quot;string&quot;,&quot;timeSlot&quot;:&quot;string&quot;}],&quot;unresolvedSessions&quot;:[{&quot;sessionId&quot;:&quot;string&quot;,&quot;conflictReason&quot;:&quot;string&quot;}]}. On the unresolved branch scheduledSessions contains provisional assignments only; on the all-resolved branch it contains the saved schedule. Format timeSlot as startRFC3339/endRFC3339. Propagate persistence/mail failures.
+</code></pre>
+<h3>11. Evaluate Policy Application</h3>
+<p>Agent awaits confirmation to save a draft without real email or storage mutations.</p>
+<p>Original case ID: <code>e_6aa26b553d41fe1ccf8a95d4</code>.</p>
+<pre><code class="language-text">Create a callable automation named Evaluate Policy Application. This is a synthetic evaluation workflow, not production underwriting policy. Accept applicantId (string), coverageType (enum auto, home, health), creditScore (number from 0 to 1000), and underwritingRules (object). Replace the original Math.random()*300+500 expression with the supplied creditScore; do not call an unspecified credit service. underwritingRules includes creditThreshold and one object for each coverage type. Each type object contains basePremium (nonnegative number), highRiskThreshold (nonnegative number) and factors (array). Each factor has source (profile or claimsSummary), path (dot path), op (eq, gt, gte or in), value (comparison value; array for in), riskPoints (nonnegative number), and premiumMultiplier (number &gt;=1).
+
+Fetch the Applicants profile and all Claims_History records linked to applicantId. Build claimsSummary with count and totalClaimAmount; require a numeric claim amount on every claim. Missing applicant is an error. Supply evaluation fixture factors for auto that cover driving record and vehicle value; for home, property age, location risk zone and prior claims; for health, age, pre-existing conditions and claims frequency. Paths must match the actual profile schema or claimsSummary; missing configured values are errors, not false predicates.
+
+Use a Branch node keyed on coverageType and one Groovy node per type. Start with that type&#39;s basePremium and zero risk points. For each matching factor add riskPoints and multiply premium by premiumMultiplier. Set riskCategory to High when the total points &gt;= highRiskThreshold, otherwise Standard. Round the final premium to two decimals. After merging branches, if riskCategory is High AND creditScore &lt; creditThreshold, insert one Underwriting_Queue review task with applicant ID, coverage, premium and factor details, and email kavankansodariya@unifyapps.com through Gmail | K1; return decision MANUAL_REVIEW. Otherwise create a PDF policy summary containing applicant, coverage, premium and decision, attach it to one Gmail | K1 email to the applicant&#39;s stored email, and return decision APPROVED. Validate recipient and required data before side effects. Use the HTML-to-PDF utility&#39;s file output as the attachment. Return {&quot;decision&quot;:&quot;string&quot;,&quot;premium&quot;:0,&quot;riskCategory&quot;:&quot;High | Standard&quot;}, with one enum value for riskCategory. Propagate write, PDF and email errors. Identical profile, claims and rule/score inputs must give identical premium and decision.
+</code></pre>
+<h3>N01. Gmail Expense Attachment Archiver</h3>
+<p>Previous tool responses were empty. Existing Business Expenses folder dependency and inactive trigger remain required.</p>
+<p>Original case ID: <code>e_6aa26b62d51003401d374700</code>.</p>
+<pre><code class="language-text">Create an event-driven automation that triggers whenever a new email is received in the configured Gmail inbox and the email contains one or more attachments. Before processing, evaluate whether the email matches at least one of the following conditions: the sender&#39;s email address contains the keyword **&quot;invoice&quot;**, the sender&#39;s email address contains the keyword **&quot;receipt&quot;**, or the email subject contains the keyword **&quot;payment&quot;**. If none of these conditions are satisfied, terminate the automation without performing any further actions. If the email matches the filter criteria, iterate through every attachment in the email, download each attachment using the configured Gmail connection, and upload it to the **&quot;Business Expenses&quot;** folder in the configured Google Drive account while preserving the original file name and MIME type. This automation requires a **Gmail trigger** configured to detect new emails with attachments, a **Gmail connection** to download attachments, and a **Google Drive connection** with write access to the **Business Expenses** folder for uploading files. The automation does not require any manual input parameters because it is initiated by the Gmail event, and it does not need to return any output since it performs background file processing. use gmail connection: Gmail | K1, Drive | K1
+
+Match sender-address and subject keywords case-insensitively. Use Gmail | K1 for both the trigger and attachment downloads, and Drive | K1 for uploads. Resolve the existing Business Expenses folder by name; if it is absent or ambiguous, report the dependency error without choosing another folder. An email with no attachments or no keyword match must produce no uploads. Process every attachment once per received event, preserving its filename and MIME type. Connector errors must remain failures.
+</code></pre>
+<h3>N02. Regional Sales Performance</h3>
+<p>Fresh schema probe returned real MCP content with zero fields. Build continuation remains open.</p>
+<p>Original case ID: <code>e_6aa26b6dfcf51f018d0e67ab</code>.</p>
+<pre><code class="language-text">Create a callable automation that accepts an input object containing a global FiscalTarget and a list of transactions, and computes regional sales performance metrics based on the provided schema. The automation should group all transactions by the regionMap field and, for each region, calculate the Gross Revenue as the sum of (price × units_sold) across its transactions, the Total Discount as the sum of all discount values, and the Net Revenue as Gross Revenue − Total Discount. For each region, determine the applicable target by checking if a transaction-level fiscalTarget is specified; if absent, use the root-level FiscalTarget value. If a region&#39;s Net Revenue exceeds its resolved Fiscal Target, calculate the Surplus as Net Revenue − Fiscal Target, or set it to 0 if the target is not exceeded. For every region where Net Revenue exceeds the target, create a record in the Regional_Performance storage object containing the region name in region, the surplus in TotalSurplus, and an array of associated TransactionId values in transactionIds. Finally, return an output object containing a regional_summary array with the regionMap, transactionIds, grossRevenue, totalDiscount, netRevenue, fiscalTarget, and surplus for every evaluated region.
+
+Use this input shape: {&quot;FiscalTarget&quot;:5000,&quot;transactions&quot;:[{&quot;TransactionId&quot;:&quot;TXN-001&quot;,&quot;regionMap&quot;:&quot;NORTH&quot;,&quot;price&quot;:100,&quot;units_sold&quot;:10,&quot;discount&quot;:50,&quot;fiscalTarget&quot;:4000}]}. FiscalTarget, price, units_sold, discount and optional fiscalTarget are numbers; transaction IDs and regions are strings. A discount is the total discount amount for that transaction, not a percentage or per-unit discount. For each region, collect its distinct non-null transaction fiscalTarget values: use the sole value when exactly one exists, otherwise use FiscalTarget when none exists. If a region contains conflicting targets, fail with CONFLICTING_REGION_TARGETS before writing any records. Validate all regions before writing. Return {&quot;regional_summary&quot;:[{&quot;regionMap&quot;:&quot;NORTH&quot;,&quot;transactionIds&quot;:[&quot;TXN-001&quot;],&quot;grossRevenue&quot;:1000,&quot;totalDiscount&quot;:50,&quot;netRevenue&quot;:950,&quot;fiscalTarget&quot;:4000,&quot;surplus&quot;:0}]}. The values are examples, not constants. Preserve transaction input order within a region; sort regions by regionMap. Empty transactions returns an empty summary and performs no writes.
+</code></pre>
+<h3>N03. Warehouse Inventory Replenishment</h3>
+<p>Previous tool responses were empty. Recovery continuation remains queued.</p>
+<p>Original case ID: <code>e_6aa26b7b5bfe6345aca08877</code>.</p>
+<pre><code class="language-text">Create a callable automation that accepts a list of warehouse inventory items and identifies products that require replenishment. The automation should process each inventory record by calculating the **Net Stock** as `quantity − backorder_count`. For every item whose Net Stock is less than or equal to its **Safety Buffer (Safety Threshold)**, calculate the **Restock Deficiency** as `max_capacity − net_stock`, representing the exact number of units required to replenish the item back to its maximum storage capacity. Collect all such low-stock items into a list containing the product SKU, net stock, safety buffer, maximum capacity, and restock deficiency. After processing all inventory records, perform a bulk insert of the collected items into the **Restock_Ledger** storage object, creating one record per item. Finally, return the complete list of items that require restocking. The expected input schema is `{ &quot;inventory_snapshots&quot;: [{ &quot;product_sku&quot;: &quot;string&quot;, &quot;quantity&quot;: &quot;number&quot;, &quot;backorder_count&quot;: &quot;number&quot;, &quot;safety_buffer&quot;: &quot;number&quot;, &quot;max_capacity&quot;: &quot;number&quot; }] }`, and the output schema is `{ &quot;flagged_items&quot;: [{ &quot;product_sku&quot;: &quot;string&quot;, &quot;net_stock&quot;: &quot;number&quot;, &quot;safety_buffer&quot;: &quot;number&quot;, &quot;max_capacity&quot;: &quot;number&quot;, &quot;restock_deficiency&quot;: &quot;number&quot; }] }`. This automation requires the **Restock_Ledger** storage object with fields for `product_sku`, `net_stock`, `safety_buffer`, `max_capacity`, and `restock_deficiency`, and does not require any external connections or third-party services.
+
+The quoted type names in the schema examples describe types: all quantities are whole numbers. Inputs must have quantity &gt;= 0, backorder_count &gt;= 0, and 0 &lt;= safety_buffer &lt;= max_capacity. Negative net_stock is valid when backorders exceed quantity. Preserve input order. If no items qualify, return {&quot;flagged_items&quot;:[]} without calling bulk insert. Otherwise perform one bulk insert, with one record per qualifying input item, and return the same list.
+</code></pre>
+<h3>N04. NamSor Origin Batch Country Name Enrichment</h3>
+<p>Existing secret-backed NamSor credential remains unresolved. No credential value is included in this report.</p>
+<p>Original case ID: <code>e_6aa26b8bb244c660af26701d</code>.</p>
+<pre><code class="language-text">Create a callable automation that accepts an input array of personal names, where each entry contains a `firstName` and `lastName`. The automation should send a **POST** request to the NamSor Origin Batch API at `https://v2.namsor.com/NamSorAPIv2/api2/json/originBatch`, passing the input array in the request body as the `personalNames` field. Configure the request to use the required API key along with the `Content-Type: application/json` and `Accept: application/json` headers, and parse the JSON response containing the inferred country origins, alternate country origins, regional classifications, top candidate countries, confidence scores, calibrated probabilities, and related demographic information for each name. After receiving the response, execute a Groovy transformation that converts all ISO country codes returned by the API into their corresponding English country names, including both the primary and alternate country origins as well as every value in the `countriesOriginTop` array, while preserving all remaining response fields unchanged. Finally, return the transformed data as a structured list containing the original first and last names together with the generated demographic metrics, including `script`, `id`, `countryOrigin`, `countryOriginAlt`, `countriesOriginTop`, `score`, `regionOrigin`, `topRegionOrigin`, `subRegionOrigin`, `probabilityCalibrated`, and `probabilityAltCalibrated`. The expected input schema is `{ &quot;personalNames&quot;: [{ &quot;firstName&quot;: &quot;string&quot;, &quot;lastName&quot;: &quot;string&quot; }] }`, and the output schema is `{ &quot;personalNames&quot;: [{ &quot;script&quot;: &quot;string&quot;, &quot;id&quot;: &quot;string&quot;, &quot;firstName&quot;: &quot;string&quot;, &quot;lastName&quot;: &quot;string&quot;, &quot;countryOrigin&quot;: &quot;string&quot;, &quot;countryOriginAlt&quot;: &quot;string&quot;, &quot;countriesOriginTop&quot;: [&quot;string&quot;], &quot;score&quot;: &quot;number&quot;, &quot;regionOrigin&quot;: &quot;string&quot;, &quot;topRegionOrigin&quot;: &quot;string&quot;, &quot;subRegionOrigin&quot;: &quot;string&quot;, &quot;probabilityCalibrated&quot;: &quot;number&quot;, &quot;probabilityAltCalibrated&quot;: &quot;number&quot; }] }`. This automation requires access to the NamSor Origin Batch REST API using a valid API key and a Groovy code step to perform the response transformation before returning the final result.
+
+Use the key personalNames consistently in callable input, API request, and response; personalName is not the input key. Obtain the API key from an existing secret-backed credential, not from prompt text or a literal in the workflow. Convert recognized ISO country codes to English names; preserve null values and unrecognized codes unchanged. Preserve list order and every response field other than the specified country-code replacements. Empty input returns {&quot;personalNames&quot;:[]} without an HTTP request. API failures must fail the automation rather than returning an empty successful result.
+</code></pre>
+<h3>N05. Hackathon Team Registration</h3>
+<p>Draft saved as 6aa27b7ae117e83eb62ebd39. Readback found department type stringstring, unsafe JavaScript runtime assumptions and unpaginated storage fetches. Repair and TEST remain open. Clarification response was authored by signed-in user 100401 outside this evaluator action sequence.</p>
+<p>Original case ID: <code>e_6aa27ad43d41fe1ccf8d000c</code>.
+Saved automation ID: <code>6aa27b7ae117e83eb62ebd39</code>.</p>
+<pre><code class="language-text">Create a callable automation named Hackathon Team Registration that accepts the team details, including the team name, theme, project details, team size, and up to six team members (name, email, employee ID, PL team, business unit, and department).
+
+First, check Storage by UnifyApps to determine whether a record already exists in the registeredteams_catalyst object with the same team name, theme, and team size. If a matching record is found, immediately return a response with the status &quot;duplicate&quot;.
+
+If no duplicate exists, process each team member. For every member whose employee ID is provided, update the corresponding employee record in the catalyst_data object by setting the selected field to 1.
+
+Next, transform the provided team member information into an array of objects containing:
+
+name
+employee ID
+email
+business unit
+department
+
+Also generate a comma-separated string containing the email addresses of all team members.
+
+Create a new record in the registeredteams_catalyst object containing:
+
+Team name
+Theme
+Project details
+Team size
+Captain details (Member 1)
+Transformed team members array
+Comma-separated email list
+
+Finally, return a success response indicating the registration completed successfully.
+
+Input Schema
+
+{
+  &quot;teamName&quot;: &quot;string&quot;,
+  &quot;theme&quot;: &quot;string&quot;,
+  &quot;projectDetails&quot;: &quot;string&quot;,
+  &quot;teamSize&quot;: 0,
+  &quot;teamMembers&quot;: [
+    {
+      &quot;name&quot;: &quot;string&quot;,
+      &quot;email&quot;: &quot;string&quot;,
+      &quot;employeeId&quot;: &quot;string&quot;,
+      &quot;plTeam&quot;: &quot;string&quot;,
+      &quot;businessUnit&quot;: &quot;string&quot;,
+      &quot;department&quot;: &quot;string&quot;
+    }
+  ]
+}
+
+Output Schema
+
+{
+  &quot;status&quot;: &quot;string&quot;
+}
+
+Require an integer teamSize from 1 through 6 equal to teamMembers.length. Member 1 is teamMembers[0] and supplies captain details. Validate the entire payload and resolve every nonblank employeeId before any writes; missing or ambiguous employees are errors. The field named selected in catalyst_data is a numeric flag and must be set to 1. Check duplicates with exact equality on teamName, theme, and teamSize combined with AND; on a duplicate return {&quot;status&quot;:&quot;duplicate&quot;} without updating employees. Otherwise update each distinct supplied employeeId once, then create one team record. Keep member order in the transformed array and email list; join nonblank emails with a comma. Return {&quot;status&quot;:&quot;success&quot;} only after the team insert succeeds. This is a single-run evaluation; concurrent registration deduplication is outside its scope.
+</code></pre>
+<h3>N06. Eval 3g | Email draft</h3>
+<p>Tenant/build context supplied; generation or evidence review is in progress. Gmail TEST must be mocked.</p>
+<p>Original case ID: <code>e_6aa27b50b244c660af26eb96</code>.</p>
+<pre><code class="language-text">Create a callable automation named Eval 3g | Email draft. Accept required string inputs recipientEmail, subject, title, and details. Invoke the existing child automation Simple Call LLM with a prompt to generate a professional email body from title and details. Use its returned content as the body, and send one email with the supplied recipientEmail and subject using Gmail | K1. This automation sends the email; it does not merely create a draft. Only after Gmail succeeds, return {&quot;recipientEmail&quot;:&quot;&lt;supplied recipient&gt;&quot;,&quot;subject&quot;:&quot;&lt;supplied subject&gt;&quot;,&quot;confirmation&quot;:&quot;Email sent successfully&quot;}. Propagate child-automation or Gmail failures; do not return success when no email was sent. Input example: {&quot;recipientEmail&quot;:&quot;recipient@example.com&quot;,&quot;subject&quot;:&quot;Project update&quot;,&quot;title&quot;:&quot;Weekly progress&quot;,&quot;details&quot;:&quot;The API migration is complete.&quot;}. The recipient example is a test placeholder, to be replaced with a controlled test mailbox for a live run.
+</code></pre>
+<h3>N07. Inventory Shortfall Restock Alert</h3>
+<p>Tenant and existing dependency lookup clarification supplied; generation or evidence review is in progress. TEST must avoid real writes and email.</p>
+<p>Original case ID: <code>e_6aa27b82cc090449e83518e8</code>.</p>
+<pre><code class="language-text">Create a callable automation that accepts the following input: item_id, current_stock, reorder_threshold, and owner_email. Deserialize the input and use a Groovy script to compare current_stock against reorder_threshold to calculate the inventory shortfall as max(reorder_threshold - current_stock, 0). If the shortfall is greater than zero, invoke a &quot;Simple Call LLM&quot; automation to generate a concise restock request email that includes the item_id and the shortfall quantity. Store an alert record containing the item_id, shortfall, and generated email draft in storage. Send the generated email to the specified owner_email. Finally, return the calculated shortfall and the generated email draft.
+use connection: Gmail | K1
+Input Schema
+
+{
+  &quot;item_id&quot;: &quot;string&quot;,
+  &quot;current_stock&quot;: 0,
+  &quot;reorder_threshold&quot;: 0,
+  &quot;owner_email&quot;: &quot;string&quot;
+}
+
+Output Schema
+
+{
+  &quot;shortfall&quot;: 0,
+  &quot;email_draft&quot;: &quot;&quot;
+}
+</code></pre>
+<h2>Remaining work</h2>
+<p>Finish targeted repairs and native TEST inspection for the triggered cases, then submit the remaining seven source prompts. Keep all retries under their original corpus case, retain earlier costs and IDs, and update this same report URL. External sends and operational writes are mocked or avoided during TEST. Scheduled and event triggers remain inactive.</p>
+</article>
+</main>
+</body>
+</html>
