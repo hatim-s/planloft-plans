@@ -291,7 +291,7 @@ summary { cursor: pointer; font-weight: 700; }
 </script>
 <main class="planloft-plan">
 <article><p>This partial report tracks the main 25-prompt corpus on the direct Automation Coder agent. 18 of 25 original cases have been triggered, with 3 selective retry conversations attached to their original cases. The remaining 7 prompts have not been submitted.</p>
-<p>Snapshot: 2026-09-10 10:14 UTC. The agent uses OpenAI GPT 5.6 Luna. Agent, model, tools and connection configuration were left unchanged.</p>
+<p>Snapshot: 2026-09-10 10:16 UTC. The agent uses OpenAI GPT 5.6 Luna. Agent, model, tools and connection configuration were left unchanged.</p>
 <p><a href="https://hatim-s.github.io/planloft-plans/p/HqBV3oGbxW/">Source corpus</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=new">Direct agent</a></p>
 <p>The source contains 11 original main cases and 14 expanded cases. The separate five smoke prompts are excluded. This report is independent of the separate solution-brief evaluation.</p>
 <blockquote>
@@ -454,10 +454,10 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td>N04. NamSor Origin Batch Country Name Enrichment</td>
-<td>In progress</td>
-<td></td>
-<td align="right"></td>
-<td align="right"></td>
+<td>Finalized</td>
+<td>Empty-input TEST passed</td>
+<td align="right">0.062520</td>
+<td align="right">188.7s</td>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa26b8bb244c660af26701d">Attempt 1</a></td>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26b8bb244c660af26701e">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa26c12b244c660af267437">A1.2</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27b0efcf51f018d108d91">A1.3</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2806dd51003401d3ce3ad">A1.4</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa2823db244c660af28bbbf">A1.5</a></td>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa2827926d1175698c709c2/builder">Open draft</a></td>
@@ -474,10 +474,10 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td>N06. Eval 3g | Email draft</td>
-<td>In progress</td>
-<td></td>
-<td align="right"></td>
-<td align="right"></td>
+<td>Finalized</td>
+<td>TEST completed; mocking unverified</td>
+<td align="right">0.024448</td>
+<td align="right">70.6s</td>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/copilot?agentId=e_6aa19955aeb9ea1371af57c7&amp;b_GPiry-chatId=e_6aa27b50b244c660af26eb96">Attempt 1</a></td>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27b50b244c660af26eb97">A1.1</a>, <a href="https://agent-code-migration.uat.unifyapps.com/p/0/ai-agents/e_6aa19955aeb9ea1371af57c7/observability/traces/e_6aa27c63d51003401d3c5263">A1.2</a></td>
 <td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa27c8d08527666b28efca7/builder">Open draft</a></td>
@@ -700,7 +700,7 @@ Saved automation ID: <code>6aa280be2b1df24c50360594</code>.</p>
 The quoted type names in the schema examples describe types: all quantities are whole numbers. Inputs must have quantity &gt;= 0, backorder_count &gt;= 0, and 0 &lt;= safety_buffer &lt;= max_capacity. Negative net_stock is valid when backorders exceed quantity. Preserve input order. If no items qualify, return {&quot;flagged_items&quot;:[]} without calling bulk insert. Otherwise perform one bulk insert, with one record per qualifying input item, and return the same list.
 </code></pre>
 <h3>N04. NamSor Origin Batch Country Name Enrichment</h3>
-<p>Existing secret-backed NamSor credential remains unresolved. No credential value is included in this report.</p>
+<p>Saved six-node version1 matches the executed definition and inputs for native TEST 6aa282a53db8a857da1c4d5d. Trigger, empty-list condition and early return completed with personalNames []; HTTP and Groovy nodes were not executed. Uses the existing <strong>ENV</strong>.outputs.NAMSOR_API_KEY reference, without a literal secret. Nonempty HTTP and Groovy behavior remains untested; this result covers the empty-input branch only.</p>
 <p>Original case ID: <code>e_6aa26b8bb244c660af26701d</code>.
 Saved automation ID: <code>6aa2827926d1175698c709c2</code>.</p>
 <pre><code class="language-text">Create a callable automation that accepts an input array of personal names, where each entry contains a `firstName` and `lastName`. The automation should send a **POST** request to the NamSor Origin Batch API at `https://v2.namsor.com/NamSorAPIv2/api2/json/originBatch`, passing the input array in the request body as the `personalNames` field. Configure the request to use the required API key along with the `Content-Type: application/json` and `Accept: application/json` headers, and parse the JSON response containing the inferred country origins, alternate country origins, regional classifications, top candidate countries, confidence scores, calibrated probabilities, and related demographic information for each name. After receiving the response, execute a Groovy transformation that converts all ISO country codes returned by the API into their corresponding English country names, including both the primary and alternate country origins as well as every value in the `countriesOriginTop` array, while preserving all remaining response fields unchanged. Finally, return the transformed data as a structured list containing the original first and last names together with the generated demographic metrics, including `script`, `id`, `countryOrigin`, `countryOriginAlt`, `countriesOriginTop`, `score`, `regionOrigin`, `topRegionOrigin`, `subRegionOrigin`, `probabilityCalibrated`, and `probabilityAltCalibrated`. The expected input schema is `{ &quot;personalNames&quot;: [{ &quot;firstName&quot;: &quot;string&quot;, &quot;lastName&quot;: &quot;string&quot; }] }`, and the output schema is `{ &quot;personalNames&quot;: [{ &quot;script&quot;: &quot;string&quot;, &quot;id&quot;: &quot;string&quot;, &quot;firstName&quot;: &quot;string&quot;, &quot;lastName&quot;: &quot;string&quot;, &quot;countryOrigin&quot;: &quot;string&quot;, &quot;countryOriginAlt&quot;: &quot;string&quot;, &quot;countriesOriginTop&quot;: [&quot;string&quot;], &quot;score&quot;: &quot;number&quot;, &quot;regionOrigin&quot;: &quot;string&quot;, &quot;topRegionOrigin&quot;: &quot;string&quot;, &quot;subRegionOrigin&quot;: &quot;string&quot;, &quot;probabilityCalibrated&quot;: &quot;number&quot;, &quot;probabilityAltCalibrated&quot;: &quot;number&quot; }] }`. This automation requires access to the NamSor Origin Batch REST API using a valid API key and a Groovy code step to perform the response transformation before returning the final result.
@@ -767,7 +767,7 @@ Output Schema
 Require an integer teamSize from 1 through 6 equal to teamMembers.length. Member 1 is teamMembers[0] and supplies captain details. Validate the entire payload and resolve every nonblank employeeId before any writes; missing or ambiguous employees are errors. The field named selected in catalyst_data is a numeric flag and must be set to 1. Check duplicates with exact equality on teamName, theme, and teamSize combined with AND; on a duplicate return {&quot;status&quot;:&quot;duplicate&quot;} without updating employees. Otherwise update each distinct supplied employeeId once, then create one team record. Keep member order in the transformed array and email list; join nonblank emails with a comma. Return {&quot;status&quot;:&quot;success&quot;} only after the team insert succeeds. This is a single-run evaluation; concurrent registration deduplication is outside its scope.
 </code></pre>
 <h3>N06. Eval 3g | Email draft</h3>
-<p>Tenant/build context supplied; generation or evidence review is in progress. Gmail TEST must be mocked.</p>
+<p>Native TEST 6aa27c9657ad1104ae4578db completed all four nodes, with executed inputs matching saved draft 6aa27c8d08527666b28efca7. It returned the expected recipient/subject/confirmation. However, Gmail returned a SENT receipt, id 1a08ab6bf060e3e6, for <a href="mailto:test-placeholder@example.com">test-placeholder@example.com</a>, and the native evidence contains no mock marker or assertions. The evaluator explicitly required mocked Gmail or no TEST if unavailable. Mocking is not verified, so this is not counted as a mock-only pass. No additional email-path TEST was requested.</p>
 <p>Original case ID: <code>e_6aa27b50b244c660af26eb96</code>.
 Saved automation ID: <code>6aa27c8d08527666b28efca7</code>.</p>
 <pre><code class="language-text">Create a callable automation named Eval 3g | Email draft. Accept required string inputs recipientEmail, subject, title, and details. Invoke the existing child automation Simple Call LLM with a prompt to generate a professional email body from title and details. Use its returned content as the body, and send one email with the supplied recipientEmail and subject using Gmail | K1. This automation sends the email; it does not merely create a draft. Only after Gmail succeeds, return {&quot;recipientEmail&quot;:&quot;&lt;supplied recipient&gt;&quot;,&quot;subject&quot;:&quot;&lt;supplied subject&gt;&quot;,&quot;confirmation&quot;:&quot;Email sent successfully&quot;}. Propagate child-automation or Gmail failures; do not return success when no email was sent. Input example: {&quot;recipientEmail&quot;:&quot;recipient@example.com&quot;,&quot;subject&quot;:&quot;Project update&quot;,&quot;title&quot;:&quot;Weekly progress&quot;,&quot;details&quot;:&quot;The API migration is complete.&quot;}. The recipient example is a test placeholder, to be replaced with a controlled test mailbox for a live run.
