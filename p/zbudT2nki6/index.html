@@ -579,6 +579,73 @@ HARNESS_DIR=&lt;fresh-dir&gt; CONC=8 node verify-pass.mjs
 HARNESS_DIR=&lt;fresh-dir&gt; python3 realrun-status.py
 </code></pre>
 <p>The next useful turn is controlled, not larger: fix one named failure class, keep the corpus and fixtures frozen, rerun all 25, and judge the change on both build rate and TEST rate.</p>
+<h2>Failed TEST triage</h2>
+<p>The 11 failures split into four generated automation defects, four cases without a usable positive fixture, two tenant dependency/data failures, and one connector catalogue defect. H09 crosses two layers: the first TEST used <code>test</code> despite the trigger&#39;s <code>date-time</code> schema; with a corrected timestamp, the workflow then failed because <code>Instant</code> does not support month arithmetic.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Primary cause</th>
+<th>What should have caught or fixed it while building</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H01</td>
+<td>Fixture gap</td>
+<td>Discover a real region, design center, and lab description before positive-path TEST; otherwise retain <code>LAB_NOT_FOUND</code> as an expected negative-path result.</td>
+</tr>
+<tr>
+<td>H03</td>
+<td>Tenant data invariant</td>
+<td>Preflight the duplicate slug and report the fixture blocked. The brief explicitly requires duplicate stored matches to fail.</td>
+</tr>
+<tr>
+<td>H04</td>
+<td>Fixture gap</td>
+<td>Test with a real vehicle model ID; object schemas expose fields but not a usable record value.</td>
+</tr>
+<tr>
+<td>H05</td>
+<td>Generated JavaScript</td>
+<td>Escape the HTML attribute quotes and run JavaScript sandbox validation before save.</td>
+</tr>
+<tr>
+<td>H09</td>
+<td>Harness plus generated Groovy</td>
+<td>Honor JSON Schema <code>date-time</code>; replace <code>Instant.minus(..., MONTHS)</code> with calendar-aware month arithmetic.</td>
+</tr>
+<tr>
+<td>H10</td>
+<td>Generated Groovy</td>
+<td>Parse or compile the Groovy body before save. The DSL preserved the script; the script itself is invalid.</td>
+</tr>
+<tr>
+<td>HN06</td>
+<td>Tenant dependency</td>
+<td>Preflight the called automation and its active connections. Its existing OpenAI connection is inactive.</td>
+</tr>
+<tr>
+<td>HN07</td>
+<td>Generated formula</td>
+<td>Pass typed code-node parameters directly instead of constructing JSON with <code>CONCATENATE</code>; parse formulas before save.</td>
+</tr>
+<tr>
+<td>HN08</td>
+<td>Fixture gap, binding unproved</td>
+<td>Use a real applicant ID, then verify whether fetched records are flat or nested under <code>properties</code>. The negative fixture cannot decide this.</td>
+</tr>
+<tr>
+<td>HN10</td>
+<td>Fixture gap</td>
+<td>Use an employee ID that has shifts; the explicit empty-result failure is expected.</td>
+</tr>
+<tr>
+<td>HN13</td>
+<td>Catalogue/schema defect</td>
+<td>Add <code>nextPageToken</code> to the Calendar operation output schema and use it for paging. The catalogue exposes only <code>nextSyncToken</code>, which is not a page token.</td>
+</tr>
+</tbody></table>
+<p>The highest-leverage builder change is an executable pre-save gate: validate JavaScript, Groovy, and formulas with their real parsers. That would have stopped H05, H10, and HN07 before save. The next fix is a schema-aware fixture generator that respects <code>format</code>, <code>enum</code>, bounds, and corpus examples. Skill guidance is useful for avoiding HN07 and requiring preflights, but prompt text cannot repair missing connector metadata, inactive tenant dependencies, or absent fixture values.</p>
 </article>
 </main>
 </body>
