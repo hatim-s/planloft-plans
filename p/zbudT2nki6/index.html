@@ -336,6 +336,7 @@ summary { cursor: pointer; font-weight: 700; }
 </tbody></table>
 <p>Built means an automation reached a successful <code>upto=save</code> trace result and has a verified workflow ID. Tested and Ran clean mean native platform TEST, not validation. Cost is the sum of per-trace <code>tokenCost</code> across all 25 attempted cases; Avg cost is total cost divided by tried cases. Avg build is mean active agent time per tried case. All 25 cases reached a terminal evaluation state: 22 saved and tested, 3 failed before save.</p>
 <h2>The 25-case ledger</h2>
+<p>Six TEST failures happened because the automation followed the brief&#39;s required error behavior: H01, H03, H04, HN06, HN08, and HN10. They remain TEST failures because no successful positive path ran. The yellow marker separates correct error handling from generated workflow defects.</p>
 <table>
 <thead>
 <tr>
@@ -344,42 +345,48 @@ summary { cursor: pointer; font-weight: 700; }
 <th>Build</th>
 <th>TEST</th>
 <th>Result</th>
+<th>Reading</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>H01</td>
-<td>Get Lab Performance Summary</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa409e4a9e3b02c36c514f5/builder">Get Lab Performance Summary</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td><code>LAB_NOT_FOUND</code></td>
+<td>🟡 Followed brief</td>
 </tr>
 <tr>
 <td>H02</td>
-<td>Google Meet Attendees</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa409c6b393454397ed9240/builder">Google Meet Attendees</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned <code>{&quot;result&quot;:[]}</code></td>
+<td>—</td>
 </tr>
 <tr>
 <td>H03</td>
-<td>Synchronize Company Portfolio</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa409dc60e086771369946d/builder">Synchronize Company Portfolio</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td>Multiple stored matches for slug <code>moxion-power-co</code></td>
+<td>🟡 Followed brief</td>
 </tr>
 <tr>
 <td>H04</td>
-<td>Vehicle Maintenance Parts Ordering</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa4098bc27673454769b3fe/builder">Vehicle Maintenance Parts Ordering</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td><code>VEHICLE_NOT_FOUND</code></td>
+<td>🟡 Followed brief</td>
 </tr>
 <tr>
 <td>H05</td>
-<td>Get Director Attendance Hierarchy</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa4099746071a4b96778e97/builder">Get Director Attendance Hierarchy</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td>JavaScript rejected by sandbox validation</td>
+<td>Workflow defect</td>
 </tr>
 <tr>
 <td>H06</td>
@@ -387,34 +394,39 @@ summary { cursor: pointer; font-weight: 700; }
 <td>🔴 Fail</td>
 <td>⚪ Not run</td>
 <td>Trace has no successful save call</td>
+<td>No automation saved</td>
 </tr>
 <tr>
 <td>H07</td>
-<td>Track Candidate Interview Stage</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40a77a9e3b02c36c52f21/builder">Track Candidate Interview Stage</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned stage <code>Decision</code></td>
+<td>—</td>
 </tr>
 <tr>
 <td>H08</td>
-<td>Aggregate User and Client Information</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40a7546071a4b9677da1b/builder">Aggregate User and Client Information</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned two empty arrays</td>
+<td>—</td>
 </tr>
 <tr>
 <td>H09</td>
-<td>Assess Vendor Risk</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40a8ef10f834d4e5974d0/builder">Assess Vendor Risk</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
-<td>Fixture text could not be parsed as a date</td>
+<td>Invalid fixture first; corrected input exposed unsupported month arithmetic</td>
+<td>Workflow defect</td>
 </tr>
 <tr>
 <td>H10</td>
-<td>Resolve Session Schedule Conflicts</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40a8cc27673454769fe08/builder">Resolve Session Schedule Conflicts</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td>Groovy syntax error</td>
+<td>Workflow defect</td>
 </tr>
 <tr>
 <td>H11</td>
@@ -422,97 +434,111 @@ summary { cursor: pointer; font-weight: 700; }
 <td>🔴 Fail</td>
 <td>⚪ Not run</td>
 <td>Trace has no successful save call</td>
+<td>No automation saved</td>
 </tr>
 <tr>
 <td>HN01</td>
-<td>Gmail Expense Attachment Archiver</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40ac846071a4b9677f2f7/builder">Gmail Expense Attachment Archiver</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>TEST completed with no response body</td>
+<td>—</td>
 </tr>
 <tr>
 <td>HN02</td>
-<td>Regional Sales Performance</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40accadee19160ff97823/builder">Regional Sales Performance</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned an empty regional summary</td>
+<td>—</td>
 </tr>
 <tr>
 <td>HN03</td>
-<td>Warehouse Inventory Replenishment</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40aeca9e3b02c36c60cda/builder">Warehouse Inventory Replenishment</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned an empty flagged-items list</td>
+<td>—</td>
 </tr>
 <tr>
 <td>HN04</td>
-<td>NamSor Origin Batch Country Name Enrichment</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b12a9e3b02c36c61715/builder">NamSor Origin Batch Country Name Enrichment</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned an empty personal-names list</td>
+<td>—</td>
 </tr>
 <tr>
 <td>HN05</td>
-<td>Hackathon Team Registration</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b9460e08677136a16dd/builder">Hackathon Team Registration</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned <code>{&quot;status&quot;:&quot;error&quot;}</code></td>
+<td>Clean terminal run only</td>
 </tr>
 <tr>
 <td>HN06</td>
-<td>Eval 3g, Email draft</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b07f10f834d4e59885c/builder">Eval 3g, Email draft</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
-<td>Named OpenAI connection is inactive</td>
+<td>Child automation&#39;s OpenAI connection is inactive</td>
+<td>🟡 Followed brief</td>
 </tr>
 <tr>
 <td>HN07</td>
-<td>Inventory Shortfall Restock Alert</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b4eb393454397ee6043/builder">Inventory Shortfall Restock Alert</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td>Generated formula parse error</td>
+<td>Workflow defect</td>
 </tr>
 <tr>
 <td>HN08</td>
-<td>Evaluate Loan Applicant Eligibility</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b4f2cb0ec24778346d1/builder">Evaluate Loan Applicant Eligibility</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td>Applicant fixture not found</td>
+<td>🟡 Followed brief</td>
 </tr>
 <tr>
 <td>HN09</td>
-<td>Monitor Hospital Bed Turnover</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40ba82cb0ec2477836382/builder">Monitor Hospital Bed Turnover</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned <code>no_alert</code></td>
+<td>—</td>
 </tr>
 <tr>
 <td>HN10</td>
-<td>Calculate Employee Shift Overtime</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b98c2767345476a43a2/builder">Calculate Employee Shift Overtime</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td><code>EMPLOYEE_SHIFTS_NOT_FOUND</code></td>
+<td>🟡 Followed brief</td>
 </tr>
 <tr>
 <td>HN11</td>
-<td>Export Workflow Changeset</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b75c2767345476a3aa7/builder">Export Workflow Changeset</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned <code>{&quot;status&quot;:&quot;success&quot;}</code></td>
+<td>—</td>
 </tr>
 <tr>
 <td>HN12</td>
-<td>List Upcoming Calendar Events</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40c37c2767345476b2e96/builder">List Upcoming Calendar Events</a></td>
 <td>🟢 Pass</td>
 <td>🟢 Pass</td>
 <td>Returned <code>{&quot;eventCount&quot;:30}</code></td>
+<td>—</td>
 </tr>
 <tr>
 <td>HN13</td>
-<td>Count Google Calendar Events</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40bd560e08677136a2690/builder">Count Google Calendar Events</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
 <td>Google Calendar rejected an invalid page token</td>
+<td>Catalogue-driven workflow defect</td>
 </tr>
 <tr>
 <td>HN14</td>
@@ -520,10 +546,11 @@ summary { cursor: pointer; font-weight: 700; }
 <td>🔴 Fail</td>
 <td>⚪ Not run</td>
 <td>Trace shows the final save call failed</td>
+<td>No automation saved</td>
 </tr>
 </tbody></table>
 <h2>What the failures say</h2>
-<p>The eleven runtime failures are not one defect. Two generated code nodes fail to parse, H05 in JavaScript and H10 in Groovy. HN07 emits an invalid formula. HN06 depends on an inactive connection, while HN13 passes an invalid page token to Google Calendar. The remaining failures hit missing or unsuitable fixture data: H01, H03, H04, H09, HN08, and HN10.</p>
+<p>The eleven runtime failures are not one defect. Six executed the brief&#39;s required error behavior. H01, H04, HN08, and HN10 rejected missing records; H03 rejected duplicate records; HN06 propagated the required child-automation failure. Two generated code nodes fail to parse, H05 in JavaScript and H10 in Groovy. H09 contains unsupported month arithmetic, HN07 emits an invalid formula, and HN13 passes an invalid page token to Google Calendar.</p>
 <p>Three prompts never saved a workflow: H06, H11, and HN14. The other three apparent misses did save, but their final chat streams ended before returning an ID. Their successful <code>upto=save</code> trace outputs supplied the workflow IDs for TEST. No follow-up agent answer was used as evidence.</p>
 <p>Several clean TESTs exercised empty, guard, or error-return paths. H02, H08, HN02, HN03, HN04, and HN09 returned empty collections or a no-alert state. HN01 completed without a response body, and HN05 returned <code>status: error</code>. Those runs prove the platform reached a clean terminal state for the supplied fixture, but they do not prove that every intended or side-effecting branch ran.</p>
 <h2>Movement across Hatim runs</h2>
