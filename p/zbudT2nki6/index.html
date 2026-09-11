@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UAC Hatim corpus: run 4 report</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This report measures all 25 prompts in Hatim&#39;s frozen UAC corpus against the published <code>Automation Coder (Hatim)</code> agent on <code>agent-code-migration.uat.unifyapps.com</code>. Each prompt ran in a clean agent session. Every saved automation then entered the platform TEST runner with the corpus fixture where one was supplied.</p>
+<p>The result is mixed but useful. Twenty-two prompts built, and eleven of those passed TEST. The run spent $1.04 and processed 17.49 million tokens. Build and TEST remain separate verdicts because a saved automation is not evidence that the workflow runs.</p>
+<blockquote>
+<p>Run 4 built 22 of 25 prompts. Eleven of the 22 saved workflows ran clean, so the full-corpus end-to-end rate is 11 of 25, or 44%.</p>
+</blockquote>
+<h2>Scorecard</h2>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th align="right">Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Corpus</td>
+<td align="right">25 prompts</td>
+</tr>
+<tr>
+<td>Attempted</td>
+<td align="right">25 of 25</td>
+</tr>
+<tr>
+<td>Built</td>
+<td align="right">22 of 25, 88%</td>
+</tr>
+<tr>
+<td>Blocked before save</td>
+<td align="right">3 of 25, 12%</td>
+</tr>
+<tr>
+<td>TEST attempted</td>
+<td align="right">22 of 22 saved workflows</td>
+</tr>
+<tr>
+<td>TEST passed</td>
+<td align="right">11 of 22, 50%</td>
+</tr>
+<tr>
+<td>TEST failed</td>
+<td align="right">11 of 22, 50%</td>
+</tr>
+<tr>
+<td>End-to-end</td>
+<td align="right">11 of 25, 44%</td>
+</tr>
+<tr>
+<td>Spend</td>
+<td align="right">$1.0398</td>
+</tr>
+<tr>
+<td>Tokens</td>
+<td align="right">17,491,736</td>
+</tr>
+<tr>
+<td>Median agent time</td>
+<td align="right">130 seconds</td>
+</tr>
+</tbody></table>
+<h2>The 25-case ledger</h2>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H01</td>
+<td>Get Lab Performance Summary</td>
+<td>Pass</td>
+<td>Fail</td>
+<td><code>LAB_NOT_FOUND</code></td>
+</tr>
+<tr>
+<td>H02</td>
+<td>Google Meet Attendees</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned <code>{&quot;result&quot;:[]}</code></td>
+</tr>
+<tr>
+<td>H03</td>
+<td>Synchronize Company Portfolio</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>Multiple stored matches for slug <code>moxion-power-co</code></td>
+</tr>
+<tr>
+<td>H04</td>
+<td>Vehicle Maintenance Parts Ordering</td>
+<td>Pass</td>
+<td>Fail</td>
+<td><code>VEHICLE_NOT_FOUND</code></td>
+</tr>
+<tr>
+<td>H05</td>
+<td>Get Director Attendance Hierarchy</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>JavaScript rejected by sandbox validation</td>
+</tr>
+<tr>
+<td>H06</td>
+<td>Detect Calendar Meeting Conflicts</td>
+<td>Fail</td>
+<td>Not run</td>
+<td>Trace has no successful save call</td>
+</tr>
+<tr>
+<td>H07</td>
+<td>Track Candidate Interview Stage</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned stage <code>Decision</code></td>
+</tr>
+<tr>
+<td>H08</td>
+<td>Aggregate User and Client Information</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned two empty arrays</td>
+</tr>
+<tr>
+<td>H09</td>
+<td>Assess Vendor Risk</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>Fixture text could not be parsed as a date</td>
+</tr>
+<tr>
+<td>H10</td>
+<td>Resolve Session Schedule Conflicts</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>Groovy syntax error</td>
+</tr>
+<tr>
+<td>H11</td>
+<td>Evaluate Policy Application</td>
+<td>Fail</td>
+<td>Not run</td>
+<td>Trace has no successful save call</td>
+</tr>
+<tr>
+<td>HN01</td>
+<td>Gmail Expense Attachment Archiver</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>TEST completed with no response body</td>
+</tr>
+<tr>
+<td>HN02</td>
+<td>Regional Sales Performance</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned an empty regional summary</td>
+</tr>
+<tr>
+<td>HN03</td>
+<td>Warehouse Inventory Replenishment</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned an empty flagged-items list</td>
+</tr>
+<tr>
+<td>HN04</td>
+<td>NamSor Origin Batch Country Name Enrichment</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned an empty personal-names list</td>
+</tr>
+<tr>
+<td>HN05</td>
+<td>Hackathon Team Registration</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned <code>{&quot;status&quot;:&quot;error&quot;}</code></td>
+</tr>
+<tr>
+<td>HN06</td>
+<td>Eval 3g, Email draft</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>Named OpenAI connection is inactive</td>
+</tr>
+<tr>
+<td>HN07</td>
+<td>Inventory Shortfall Restock Alert</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>Generated formula parse error</td>
+</tr>
+<tr>
+<td>HN08</td>
+<td>Evaluate Loan Applicant Eligibility</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>Applicant fixture not found</td>
+</tr>
+<tr>
+<td>HN09</td>
+<td>Monitor Hospital Bed Turnover</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned <code>no_alert</code></td>
+</tr>
+<tr>
+<td>HN10</td>
+<td>Calculate Employee Shift Overtime</td>
+<td>Pass</td>
+<td>Fail</td>
+<td><code>EMPLOYEE_SHIFTS_NOT_FOUND</code></td>
+</tr>
+<tr>
+<td>HN11</td>
+<td>Export Workflow Changeset</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned <code>{&quot;status&quot;:&quot;success&quot;}</code></td>
+</tr>
+<tr>
+<td>HN12</td>
+<td>List Upcoming Calendar Events</td>
+<td>Pass</td>
+<td>Pass</td>
+<td>Returned <code>{&quot;eventCount&quot;:30}</code></td>
+</tr>
+<tr>
+<td>HN13</td>
+<td>Count Google Calendar Events</td>
+<td>Pass</td>
+<td>Fail</td>
+<td>Google Calendar rejected an invalid page token</td>
+</tr>
+<tr>
+<td>HN14</td>
+<td>Validate BFF Agent Response</td>
+<td>Fail</td>
+<td>Not run</td>
+<td>Trace shows the final save call failed</td>
+</tr>
+</tbody></table>
+<h2>What the failures say</h2>
+<p>The eleven runtime failures are not one defect. Two generated code nodes fail to parse, H05 in JavaScript and H10 in Groovy. HN07 emits an invalid formula. HN06 depends on an inactive connection, while HN13 passes an invalid page token to Google Calendar. The remaining failures hit missing or unsuitable fixture data: H01, H03, H04, H09, HN08, and HN10.</p>
+<p>Three prompts never saved a workflow: H06, H11, and HN14. The other three apparent misses did save, but their final chat streams ended before returning an ID. Their successful <code>upto=save</code> trace outputs supplied the workflow IDs for TEST. No follow-up agent answer was used as evidence.</p>
+<p>Several clean TESTs exercised empty, guard, or error-return paths. H02, H08, HN02, HN03, HN04, and HN09 returned empty collections or a no-alert state. HN01 completed without a response body, and HN05 returned <code>status: error</code>. Those runs prove the platform reached a clean terminal state for the supplied fixture, but they do not prove that every intended or side-effecting branch ran.</p>
+<h2>Movement across Hatim runs</h2>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th align="right">Built</th>
+<th align="right">TEST passed</th>
+<th align="right">Clean rate among built</th>
+<th align="right">Spend</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First harness baseline</td>
+<td align="right">23/25</td>
+<td align="right">4/23</td>
+<td align="right">17.4%</td>
+<td align="right">$0.84</td>
+</tr>
+<tr>
+<td>After the structural gate moved</td>
+<td align="right">16/25</td>
+<td align="right">4/16</td>
+<td align="right">25.0%</td>
+<td align="right">$1.07</td>
+</tr>
+<tr>
+<td>Gate plus both compiler fixes</td>
+<td align="right">23/25</td>
+<td align="right">2/23</td>
+<td align="right">8.7%</td>
+<td align="right">$0.86</td>
+</tr>
+<tr>
+<td>Run 4, fresh parity rerun</td>
+<td align="right">22/25</td>
+<td align="right">11/22</td>
+<td align="right">50.0%</td>
+<td align="right">$1.04</td>
+</tr>
+</tbody></table>
+<p>No intentional compiler, gate, agent, or prompt change separated run 3 and run 4. The four-point build-rate drop and 41.3-point rise in clean TEST rate therefore measure run-to-run variance as well as differences in generated workflows and live fixture state. They should not be described as a product improvement without another controlled change and rerun.</p>
+<h2>Evidence and reproduction</h2>
+<p>The frozen source is <code>packages/uac/docs/eval/briefs-hatim.json</code>. Run 4 evidence is in <code>packages/uac/docs/eval/run-2026-09-11-hatim-run4/</code>, including build responses, recovery responses, session usage, TEST outputs, fixtures, and the folded 25-row status file.</p>
+<p>The run used this sequence from <code>packages/uac/scripts/harness</code>:</p>
+<pre><code class="language-bash">bash preflight.sh
+CONC=5 HARNESS_DIR=&lt;fresh-dir&gt; node agent-sse.mjs &lt;fresh-dir&gt;/briefs-hatim.json &lt;fresh-dir&gt;/real-agent-H.jsonl
+CONC=2 HARNESS_DIR=&lt;fresh-dir&gt; node agent-recover.mjs &lt;fresh-dir&gt;/real-agent-H.jsonl &lt;fresh-dir&gt;/recovered-H.jsonl
+HARNESS_DIR=&lt;fresh-dir&gt; node sessions.mjs
+HARNESS_DIR=&lt;fresh-dir&gt; CONC=8 node traces.mjs
+HARNESS_DIR=&lt;fresh-dir&gt; CONC=8 node verify-pass.mjs
+HARNESS_DIR=&lt;fresh-dir&gt; python3 realrun-status.py
+</code></pre>
+<p>The next useful turn is controlled, not larger: fix one named failure class, keep the corpus and fixtures frozen, rerun all 25, and judge the change on both build rate and TEST rate.</p>
+</article>
+</main>
+</body>
+</html>
