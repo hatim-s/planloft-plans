@@ -14,10 +14,6 @@
   --surface: #f1ede6;
   --rule: #e2dbd1;
   --accent: #7d2436;
-  --success: #18733a;
-  --success-bg: #e3f4e8;
-  --failure: #b42318;
-  --failure-bg: #fde8e7;
   --code-bg: #efeae2;
   --planloft-ink: var(--ink);
   --planloft-paper: var(--paper);
@@ -32,10 +28,6 @@
     --surface: #24211e;
     --rule: #393430;
     --accent: #e39aa8;
-    --success: #75d696;
-    --success-bg: #153d25;
-    --failure: #ff9a92;
-    --failure-bg: #4b201d;
     --code-bg: #262320;
   }
 }
@@ -46,10 +38,6 @@
   --surface: #f1ede6;
   --rule: #e2dbd1;
   --accent: #7d2436;
-  --success: #18733a;
-  --success-bg: #e3f4e8;
-  --failure: #b42318;
-  --failure-bg: #fde8e7;
   --code-bg: #efeae2;
 }
 :root[data-planloft-color-scheme="dark"] {
@@ -59,10 +47,6 @@
   --surface: #24211e;
   --rule: #393430;
   --accent: #e39aa8;
-  --success: #75d696;
-  --success-bg: #153d25;
-  --failure: #ff9a92;
-  --failure-bg: #4b201d;
   --code-bg: #262320;
 }
 
@@ -133,19 +117,7 @@ a {
 a:hover { text-decoration-color: currentColor; }
 strong { font-weight: 700; }
 mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
-ins, del {
-  display: inline-block;
-  padding: 0.08em 0.48em;
-  border-radius: 999px;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.78em;
-  font-weight: 750;
-  line-height: 1.45;
-  letter-spacing: 0.025em;
-  text-decoration: none;
-}
-ins { color: var(--success); background: var(--success-bg); }
-del { color: var(--failure); background: var(--failure-bg); }
+del { color: var(--muted); }
 abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
 sup, sub { font-size: 0.7em; line-height: 0; }
 
@@ -377,176 +349,176 @@ summary { cursor: pointer; font-weight: 700; }
 <tbody><tr>
 <td>H01</td>
 <td>Get Lab Performance Summary</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td><code>LAB_NOT_FOUND</code></td>
 </tr>
 <tr>
 <td>H02</td>
 <td>Google Meet Attendees</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned <code>{&quot;result&quot;:[]}</code></td>
 </tr>
 <tr>
 <td>H03</td>
 <td>Synchronize Company Portfolio</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>Multiple stored matches for slug <code>moxion-power-co</code></td>
 </tr>
 <tr>
 <td>H04</td>
 <td>Vehicle Maintenance Parts Ordering</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td><code>VEHICLE_NOT_FOUND</code></td>
 </tr>
 <tr>
 <td>H05</td>
 <td>Get Director Attendance Hierarchy</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>JavaScript rejected by sandbox validation</td>
 </tr>
 <tr>
 <td>H06</td>
 <td>Detect Calendar Meeting Conflicts</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
-<td>&lt;del&gt;Not run&lt;/del&gt;</td>
+<td>🔴 Fail</td>
+<td>⚪ Not run</td>
 <td>Trace has no successful save call</td>
 </tr>
 <tr>
 <td>H07</td>
 <td>Track Candidate Interview Stage</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned stage <code>Decision</code></td>
 </tr>
 <tr>
 <td>H08</td>
 <td>Aggregate User and Client Information</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned two empty arrays</td>
 </tr>
 <tr>
 <td>H09</td>
 <td>Assess Vendor Risk</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>Fixture text could not be parsed as a date</td>
 </tr>
 <tr>
 <td>H10</td>
 <td>Resolve Session Schedule Conflicts</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>Groovy syntax error</td>
 </tr>
 <tr>
 <td>H11</td>
 <td>Evaluate Policy Application</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
-<td>&lt;del&gt;Not run&lt;/del&gt;</td>
+<td>🔴 Fail</td>
+<td>⚪ Not run</td>
 <td>Trace has no successful save call</td>
 </tr>
 <tr>
 <td>HN01</td>
 <td>Gmail Expense Attachment Archiver</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>TEST completed with no response body</td>
 </tr>
 <tr>
 <td>HN02</td>
 <td>Regional Sales Performance</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned an empty regional summary</td>
 </tr>
 <tr>
 <td>HN03</td>
 <td>Warehouse Inventory Replenishment</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned an empty flagged-items list</td>
 </tr>
 <tr>
 <td>HN04</td>
 <td>NamSor Origin Batch Country Name Enrichment</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned an empty personal-names list</td>
 </tr>
 <tr>
 <td>HN05</td>
 <td>Hackathon Team Registration</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned <code>{&quot;status&quot;:&quot;error&quot;}</code></td>
 </tr>
 <tr>
 <td>HN06</td>
 <td>Eval 3g, Email draft</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>Named OpenAI connection is inactive</td>
 </tr>
 <tr>
 <td>HN07</td>
 <td>Inventory Shortfall Restock Alert</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>Generated formula parse error</td>
 </tr>
 <tr>
 <td>HN08</td>
 <td>Evaluate Loan Applicant Eligibility</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>Applicant fixture not found</td>
 </tr>
 <tr>
 <td>HN09</td>
 <td>Monitor Hospital Bed Turnover</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned <code>no_alert</code></td>
 </tr>
 <tr>
 <td>HN10</td>
 <td>Calculate Employee Shift Overtime</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td><code>EMPLOYEE_SHIFTS_NOT_FOUND</code></td>
 </tr>
 <tr>
 <td>HN11</td>
 <td>Export Workflow Changeset</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned <code>{&quot;status&quot;:&quot;success&quot;}</code></td>
 </tr>
 <tr>
 <td>HN12</td>
 <td>List Upcoming Calendar Events</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
 <td>Returned <code>{&quot;eventCount&quot;:30}</code></td>
 </tr>
 <tr>
 <td>HN13</td>
 <td>Count Google Calendar Events</td>
-<td>&lt;ins&gt;Pass&lt;/ins&gt;</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
 <td>Google Calendar rejected an invalid page token</td>
 </tr>
 <tr>
 <td>HN14</td>
 <td>Validate BFF Agent Response</td>
-<td>&lt;del&gt;Fail&lt;/del&gt;</td>
-<td>&lt;del&gt;Not run&lt;/del&gt;</td>
+<td>🔴 Fail</td>
+<td>⚪ Not run</td>
 <td>Trace shows the final save call failed</td>
 </tr>
 </tbody></table>
