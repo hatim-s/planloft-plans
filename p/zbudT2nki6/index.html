@@ -295,59 +295,41 @@ summary { cursor: pointer; font-weight: 700; }
 <blockquote>
 <p>Run 4 built 22 of 25 prompts. Eleven of the 22 saved workflows ran clean, so the full-corpus end-to-end rate is 11 of 25, or 44%.</p>
 </blockquote>
-<h2>Scorecard</h2>
+<h2>Corpus summary</h2>
+<p><code>CLONED AGENT E_6AA3C2B0925F613BB82DDD46 · MODEL T2W GPT-5.6 LUNA (OPENROUTER) - DNT · 25 PROMPTS · HOST AGENT-CODE-MIGRATION.UAT.UNIFYAPPS.COM · 25 COMPLETED</code></p>
 <table>
 <thead>
 <tr>
-<th>Measure</th>
-<th align="right">Result</th>
+<th></th>
+<th align="right">Briefs</th>
+<th align="right">Tried</th>
+<th align="right">Built</th>
+<th align="right">Build rate</th>
+<th align="right">Tested</th>
+<th align="right">Ran clean</th>
+<th align="right">Test rate</th>
+<th align="right">Avg cost</th>
+<th align="right">Total cost</th>
+<th align="right">Avg build</th>
+<th align="right">Set complete</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Corpus</td>
-<td align="right">25 prompts</td>
-</tr>
-<tr>
-<td>Attempted</td>
-<td align="right">25 of 25</td>
-</tr>
-<tr>
-<td>Built</td>
-<td align="right">22 of 25, 88%</td>
-</tr>
-<tr>
-<td>Blocked before save</td>
-<td align="right">3 of 25, 12%</td>
-</tr>
-<tr>
-<td>TEST attempted</td>
-<td align="right">22 of 22 saved workflows</td>
-</tr>
-<tr>
-<td>TEST passed</td>
-<td align="right">11 of 22, 50%</td>
-</tr>
-<tr>
-<td>TEST failed</td>
-<td align="right">11 of 22, 50%</td>
-</tr>
-<tr>
-<td>End-to-end</td>
-<td align="right">11 of 25, 44%</td>
-</tr>
-<tr>
-<td>Spend</td>
-<td align="right">$1.0398</td>
-</tr>
-<tr>
-<td>Tokens</td>
-<td align="right">17,491,736</td>
-</tr>
-<tr>
-<td>Median agent time</td>
-<td align="right">130 seconds</td>
+<td>25-prompt corpus</td>
+<td align="right">25</td>
+<td align="right">25</td>
+<td align="right">22</td>
+<td align="right">88.0%</td>
+<td align="right">22</td>
+<td align="right">11</td>
+<td align="right">50.0%</td>
+<td align="right">4.16¢</td>
+<td align="right">$1.04</td>
+<td align="right">130s</td>
+<td align="right">88.0%</td>
 </tr>
 </tbody></table>
+<p>Built means an automation reached a successful <code>upto=save</code> trace result and has a verified workflow ID. Tested and Ran clean mean native platform TEST, not validation. Cost is the sum of per-trace <code>tokenCost</code> across all 25 attempted cases; Avg cost is total cost divided by tried cases. Avg build is mean active agent time per tried case. All 25 cases reached a terminal evaluation state: 22 saved and tested, 3 failed before save.</p>
 <h2>The 25-case ledger</h2>
 <table>
 <thead>
