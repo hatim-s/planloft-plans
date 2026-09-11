@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>UAC Hatim corpus: run 4 report</title>
-<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+<style>/* planloft theme: editorial-wide-report. Editorial prose with full-width report tables. */
 /* planloft-color-schemes: light dark */
 :root {
   color-scheme: light dark;
@@ -61,11 +61,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 .planloft-plan {
-  width: min(100% - 2.5rem, 37rem);
+  width: min(100% - 3rem, 90rem);
   margin-inline: auto;
   padding-block: 5rem 8rem;
 }
 article > :first-child { margin-top: 0; }
+article > p,
+article > blockquote,
+article > pre {
+  max-width: 48rem;
+}
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--ink);
@@ -198,7 +203,7 @@ summary { cursor: pointer; font-weight: 700; }
 
 @media (max-width: 40rem) {
   body { font-size: 17px; }
-  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  .planloft-plan { width: min(100% - 2rem, 90rem); padding-block: 4.5rem 5rem; }
   h1 { font-size: 2.1rem; }
   h2 { font-size: 1.4rem; }
   blockquote { margin-left: 1rem; }
