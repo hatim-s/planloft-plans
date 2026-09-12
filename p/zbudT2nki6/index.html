@@ -296,9 +296,9 @@ summary { cursor: pointer; font-weight: 700; }
 </script>
 <main class="planloft-plan">
 <article><p>This report measures all 25 prompts in Hatim&#39;s frozen UAC corpus against the published <code>Automation Coder (Hatim)</code> agent on <code>agent-code-migration.uat.unifyapps.com</code>. Each prompt ran in a clean agent session. Every saved automation then entered the platform TEST runner with the corpus fixture where one was supplied.</p>
-<p>The result is mixed but useful. Twenty-two prompts built, and eleven of those passed TEST. The run spent $1.04 and processed 17.49 million tokens. Build and TEST remain separate verdicts because a saved automation is not evidence that the workflow runs.</p>
+<p>The result is mixed but useful. Twenty-two prompts built. After rerunning the four cases originally classified as generated-script defects, fourteen of those workflows now pass TEST. The original run spent $1.04 and processed 17.49 million tokens. Build and TEST remain separate verdicts because a saved automation is not evidence that the workflow runs.</p>
 <blockquote>
-<p>Run 4 built 22 of 25 prompts. Eleven of the 22 saved workflows ran clean, so the full-corpus end-to-end rate is 11 of 25, or 44%.</p>
+<p>Run 4 built 22 of 25 prompts. After the post-merge script-case rerun, fourteen of the 22 saved workflows run clean. The effective full-corpus end-to-end rate is 14 of 25, or 56%.</p>
 </blockquote>
 <h2>Corpus summary</h2>
 <p><code>CLONED AGENT E_6AA3C2B0925F613BB82DDD46 · MODEL T2W GPT-5.6 LUNA (OPENROUTER) - DNT · 25 PROMPTS · HOST AGENT-CODE-MIGRATION.UAT.UNIFYAPPS.COM · 25 COMPLETED</code></p>
@@ -326,8 +326,8 @@ summary { cursor: pointer; font-weight: 700; }
 <td align="right">22</td>
 <td align="right">88.0%</td>
 <td align="right">22</td>
-<td align="right">11</td>
-<td align="right">50.0%</td>
+<td align="right">14</td>
+<td align="right">63.6%</td>
 <td align="right">4.16¢</td>
 <td align="right">$1.04</td>
 <td align="right">130s</td>
@@ -382,11 +382,11 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td>H05</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa4099746071a4b96778e97/builder">Get Director Attendance Hierarchy</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5249160e0867713e15598/builder">Get Director Attendance Hierarchy</a></td>
 <td>🟢 Pass</td>
 <td>🔴 Fail</td>
-<td>JavaScript rejected by sandbox validation</td>
-<td>Workflow defect</td>
+<td>Rebuilt JavaScript still rejected: invalid top-level <code>return</code></td>
+<td>Workflow defect remains</td>
 </tr>
 <tr>
 <td>H06</td>
@@ -414,19 +414,19 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td>H09</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40a8ef10f834d4e5974d0/builder">Assess Vendor Risk</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa52353f10f834d4eb25691/builder">Assess Vendor Risk</a></td>
 <td>🟢 Pass</td>
-<td>🔴 Fail</td>
-<td>Invalid fixture first; corrected input exposed unsupported month arithmetic</td>
-<td>Workflow defect</td>
+<td>🟢 Pass</td>
+<td>Rebuilt workflow completed with an RFC3339 fixture</td>
+<td>Post-merge rerun pass</td>
 </tr>
 <tr>
 <td>H10</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40a8cc27673454769fe08/builder">Resolve Session Schedule Conflicts</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa523baf10f834d4eb26945/builder">Resolve Session Schedule Conflicts</a></td>
 <td>🟢 Pass</td>
-<td>🔴 Fail</td>
-<td>Groovy syntax error</td>
-<td>Workflow defect</td>
+<td>🟢 Pass</td>
+<td>Rebuilt Groovy completed cleanly</td>
+<td>Post-merge rerun pass</td>
 </tr>
 <tr>
 <td>H11</td>
@@ -486,11 +486,11 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 <tr>
 <td>HN07</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa40b4eb393454397ee6043/builder">Inventory Shortfall Restock Alert</a></td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5253d2cb0ec2477ccf098/builder">Inventory Restock Alert</a></td>
 <td>🟢 Pass</td>
-<td>🔴 Fail</td>
-<td>Generated formula parse error</td>
-<td>Workflow defect</td>
+<td>🟢 Pass</td>
+<td>Rebuilt workflow completed without the formula parse error</td>
+<td>Post-merge rerun pass</td>
 </tr>
 <tr>
 <td>HN08</td>
@@ -550,7 +550,7 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 </tbody></table>
 <h2>What the failures say</h2>
-<p>The eleven runtime failures are not one defect. Six executed the brief&#39;s required error behavior. H01, H04, HN08, and HN10 rejected missing records; H03 rejected duplicate records; HN06 propagated the required child-automation failure. Two generated code nodes fail to parse, H05 in JavaScript and H10 in Groovy. H09 contains unsupported month arithmetic, HN07 emits an invalid formula, and HN13 passes an invalid page token to Google Calendar.</p>
+<p>The eight remaining runtime failures are not one defect. Six executed the brief&#39;s required error behavior. H01, H04, HN08, and HN10 rejected missing records; H03 rejected duplicate records; HN06 propagated the required child-automation failure. H05 still emits JavaScript the sandbox rejects. HN13 passes an invalid page token to Google Calendar. The post-merge rerun cleared the previous H09 month-arithmetic, H10 Groovy-parser, and HN07 formula-parser failures.</p>
 <p>Three prompts never saved a workflow: H06, H11, and HN14. The other three apparent misses did save, but their final chat streams ended before returning an ID. Their successful <code>upto=save</code> trace outputs supplied the workflow IDs for TEST. No follow-up agent answer was used as evidence.</p>
 <p>Several clean TESTs exercised empty, guard, or error-return paths. H02, H08, HN02, HN03, HN04, and HN09 returned empty collections or a no-alert state. HN01 completed without a response body, and HN05 returned <code>status: error</code>. Those runs prove the platform reached a clean terminal state for the supplied fixture, but they do not prove that every intended or side-effecting branch ran.</p>
 <h2>Movement across Hatim runs</h2>
@@ -592,6 +592,13 @@ summary { cursor: pointer; font-weight: 700; }
 <td align="right">50.0%</td>
 <td align="right">$1.04</td>
 </tr>
+<tr>
+<td>Run 4, effective result after script-case rerun</td>
+<td align="right">22/25</td>
+<td align="right">14/22</td>
+<td align="right">63.6%</td>
+<td align="right">Original run spend only</td>
+</tr>
 </tbody></table>
 <p>No intentional compiler, gate, agent, or prompt change separated run 3 and run 4. The four-point build-rate drop and 41.3-point rise in clean TEST rate therefore measure run-to-run variance as well as differences in generated workflows and live fixture state. They should not be described as a product improvement without another controlled change and rerun.</p>
 <h2>Evidence and reproduction</h2>
@@ -606,8 +613,51 @@ HARNESS_DIR=&lt;fresh-dir&gt; CONC=8 node verify-pass.mjs
 HARNESS_DIR=&lt;fresh-dir&gt; python3 realrun-status.py
 </code></pre>
 <p>The next useful turn is controlled, not larger: fix one named failure class, keep the corpus and fixtures frozen, rerun all 25, and judge the change on both build rate and TEST rate.</p>
-<h2>Failed TEST triage</h2>
-<p>The 11 failures split into four generated automation defects, four cases without a usable positive fixture, two tenant dependency/data failures, and one connector catalogue defect. H09 crosses two layers: the first TEST used <code>test</code> despite the trigger&#39;s <code>date-time</code> schema; with a corrected timestamp, the workflow then failed because <code>Instant</code> does not support month arithmetic.</p>
+<h2>Post-merge script-case rerun</h2>
+<p>On 12 September 2026, the four cases classified as generated automation defects were rebuilt in fresh agent sessions and tested with the native platform runner. Workflow IDs came from the run output and saved tenant definitions; no follow-up request to the agent was used to recover IDs.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Build</th>
+<th>TEST</th>
+<th>New workflow</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H05</td>
+<td>🟢 Pass</td>
+<td>🔴 Fail</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5249160e0867713e15598/builder">Open builder</a></td>
+<td><code>Invalid return statement</code> in JavaScript sandbox validation</td>
+</tr>
+<tr>
+<td>H09</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa52353f10f834d4eb25691/builder">Open builder</a></td>
+<td>Completed; returned <code>riskScore: 0</code>, <code>action: MISSING_VENDOR</code></td>
+</tr>
+<tr>
+<td>H10</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa523baf10f834d4eb26945/builder">Open builder</a></td>
+<td>Completed; returned empty scheduled and unresolved arrays</td>
+</tr>
+<tr>
+<td>HN07</td>
+<td>🟢 Pass</td>
+<td>🟢 Pass</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5253d2cb0ec2477ccf098/builder">Open builder</a></td>
+<td>Completed; returned <code>shortfall: 0</code> and an empty draft</td>
+</tr>
+</tbody></table>
+<p>The rerun moves three cases from TEST failure to TEST pass. It does not change the 22/25 build denominator: these are replacement results for existing corpus cases, not four additional prompts. H05 remains the only unresolved generated-script failure from this group.</p>
+<p>The preflight proved that the tenant accepted the session, the MCP service and tunnel served the merged tool list, the tenant connection pointed at that tunnel, and the agent answered. It also found that the published agent instructions were not byte-identical to the repository prompt: the published copy lacked the latest sandbox-tool row and one runtime-null guidance section. The numbers above therefore describe the configuration actually served by UAT, not a claim that every merged instruction change was published.</p>
+<h2>Original failed TEST triage</h2>
+<p>At the time of the original run, the 11 failures split into four generated automation defects, four cases without a usable positive fixture, two tenant dependency/data failures, and one connector catalogue defect. H09 crossed two layers: the first TEST used <code>test</code> despite the trigger&#39;s <code>date-time</code> schema; with a corrected timestamp, the workflow then failed because <code>Instant</code> did not support month arithmetic. The post-merge results for H05, H09, H10, and HN07 are recorded above.</p>
 <table>
 <thead>
 <tr>
