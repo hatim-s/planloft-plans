@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Workflow evaluation findings</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This report consolidates the failures found during the workflow evaluation. It separates problems in the brief, test data, agent output, automation checks, and the platform so each owner can act on the right evidence.</p>
+<p>The review recorded <strong>43 findings across 42 distinct cases</strong>. C22 appears in two categories because it had both an agent-generated code failure and a first-turn platform issue. Counts below describe findings, while the distinct-case total removes that overlap.</p>
+<blockquote>
+<p>The largest category is platform-related: 17 of 43 findings, or 39.5%. Nine of those came from missing, invalid, or rate-limited external connections.</p>
+</blockquote>
+<h2>Findings at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th align="right">Findings</th>
+<th align="right">Share</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Platform issue</td>
+<td align="right">17</td>
+<td align="right">39.5%</td>
+</tr>
+<tr>
+<td>Incorrect automation</td>
+<td align="right">9</td>
+<td align="right">20.9%</td>
+</tr>
+<tr>
+<td>Brief or object-schema mismatch</td>
+<td align="right">7</td>
+<td align="right">16.3%</td>
+</tr>
+<tr>
+<td>Tool-call failure</td>
+<td align="right">5</td>
+<td align="right">11.6%</td>
+</tr>
+<tr>
+<td>Incorrect test payload</td>
+<td align="right">3</td>
+<td align="right">7.0%</td>
+</tr>
+<tr>
+<td>Stuck on clarification</td>
+<td align="right">2</td>
+<td align="right">4.7%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td align="right"><strong>43</strong></td>
+<td align="right"><strong>100%</strong></td>
+</tr>
+</tbody></table>
+<h2>1. Brief or object-schema mismatch</h2>
+<p>Seven cases used an object schema that conflicted with the brief. These results cannot cleanly measure workflow-authoring quality until the brief and expected schema agree.</p>
+<ol>
+<li>C01 Vendor Invoice Escalation Ladder</li>
+<li>C09 Lead To Deal Conversion Engine</li>
+<li>C31 Major Incident Command</li>
+<li>C49 Order Fulfilment Exception Engine</li>
+<li>C54 High Value Order Fraud Screen</li>
+<li>C69 Payment Posting And Ledger Sync</li>
+<li>C73 Patient Discharge Summary Builder</li>
+</ol>
+<h2>2. Incorrect test payload</h2>
+<p>Three cases had invalid or incomplete test inputs.</p>
+<ol>
+<li>C27 Customer Escalation War Room</li>
+<li>C36 Asset Refresh Wave Planner. Some records did not include warranty time.</li>
+<li>C41 Payroll Pre Run Validation. The email input was invalid.</li>
+</ol>
+<h2>3. Tool-call failure</h2>
+<p>The automation check returned no result for five cases. This prevented the evaluation from establishing whether the generated automation worked.</p>
+<ol>
+<li>C06 Duplicate Invoice Forensics</li>
+<li>C10 Pipeline Hygiene Sweep</li>
+<li>C15 Subscription Renewal Risk Engine</li>
+<li>C18 Data Quality Gate With Quarantine</li>
+<li>C30 Backlog Ageing And Reassignment</li>
+</ol>
+<h2>4. Stuck on clarification</h2>
+<p>Two cases stalled while requesting clarification and did not progress to a usable automation.</p>
+<ol>
+<li>C13 Enterprise Deal Desk Review</li>
+<li>C63 Stock Adjustment Audit Trail</li>
+</ol>
+<h2>5. Incorrect automation</h2>
+<p>Nine cases produced an automation that was wrong or could not be saved after its test failed.</p>
+<h3>Incorrect filter</h3>
+<ol>
+<li>C14 Won Deal Handover Pack</li>
+<li>C32 Change Advisory Board Packet</li>
+</ol>
+<h3>Incorrect SQL column</h3>
+<ol>
+<li>C16 Usage Based Billing Reconciliation</li>
+</ol>
+<h3>Incorrect generated code</h3>
+<ol>
+<li>C22 Support Signal To Product Backlog</li>
+<li>C24 Ticket Triage And Routing Matrix</li>
+<li>C42 Performance Review Cycle Driver</li>
+</ol>
+<h3>Test failed before save</h3>
+<ol>
+<li>C34 CMDB Dependency Health Audit. The test failed, so the agent did not save the automation.</li>
+</ol>
+<h3>Logically incorrect mapping</h3>
+<ol>
+<li>C44 Offboarding Clearance Chain. The agent mapped a pill that could be null into a required field.</li>
+<li>C59 Fleet Maintenance And Fuel Audit. The agent mapped a pill that could be null into a required field.</li>
+</ol>
+<h2>6. Platform issue</h2>
+<p>Seventeen findings point to platform behavior, test-runtime limits, or external-system setup rather than the requested workflow logic.</p>
+<h3>No LLM call on the first turn</h3>
+<ol>
+<li>C19 Tenant Health Composite Deep Dive</li>
+<li>C21 Warehouse Export With Retry</li>
+<li>C22 Support Signal To Product Backlog. This is the one case counted in two categories.</li>
+</ol>
+<h3>TEST exceeded the 20-second timeout</h3>
+<ol>
+<li>C25 SLA Breach Forensics Sweep</li>
+<li>C43 Attrition Risk Watchlist</li>
+<li>C47 Compensation Band Fairness Scan</li>
+<li>C51 Catalogue Sync And Price Guard</li>
+<li>C61 Supplier Lead Time Scorecard</li>
+</ol>
+<h3>Invalid connection or external-system failure</h3>
+<ol>
+<li>C39 New Hire Onboarding Orchestrator. No Google Drive connection was selected, which made the sheet invalid.</li>
+<li>C40 Leave Balance Accrual Run. No Google Drive connection was selected, which made the sheet invalid.</li>
+<li>C45 Recruiting Funnel Weekly Report. The external system hit its rate limit.</li>
+<li>C50 Reorder And Supplier Dispatch. No Google Drive connection was selected, which made the sheet invalid.</li>
+<li>C53 Daily Revenue And Basket Rollup. The external system hit its rate limit.</li>
+<li>C55 Abandoned Cart Recovery Waves. The external system hit its rate limit.</li>
+<li>C62 Cross Dock Load Balancer. The required connection was missing.</li>
+<li>C65 Collections DPD Escalation Ladder. The required connection was missing.</li>
+<li>C72 Clinic Day Preparation Run. No Google Drive connection was selected, which made the sheet invalid.</li>
+</ol>
+<h2>Recommended next actions</h2>
+<ol>
+<li>Fix the seven brief and schema mismatches before rerunning those cases. Treat the corrected brief as the evaluation contract.</li>
+<li>Repair the three payload fixtures and validate required fields, email formats, and warranty values before execution.</li>
+<li>Investigate why the automation check returned no output. Rerun the five affected cases only after the check reports an explicit terminal result.</li>
+<li>Review the two clarification stalls and tighten the prompts or defaults that should let the agent proceed.</li>
+<li>Rework and retest the nine incorrect automations. Pay special attention to filter semantics, SQL column names, nullable-to-required mappings, and generated code.</li>
+<li>Separate platform-blocked cases from agent-quality scoring. Restore connections, choose a valid Google Drive connection, handle rate limits, and revisit the 20-second TEST limit before rerunning them.</li>
+<li>Publish the rerun as a delta against this baseline. Report completed tests, blocked tests, and distinct passing cases separately.</li>
+</ol>
+<h2>Source</h2>
+<p>The findings above were derived from the analysis of the <a href="https://claude.ai/code/artifact/eda7631a-cf8c-4366-9a35-f653889bc8f7">original report</a>.</p>
+<p>The next evaluation should measure agent quality only after the brief, fixtures, automation check, runtime, and external connections are valid.</p>
+</article>
+</main>
+</body>
+</html>

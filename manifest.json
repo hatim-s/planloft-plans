@@ -162,6 +162,15 @@
       "kind": "plan",
       "createdAt": "2026-09-11T14:21:15.293Z",
       "expiresAt": "2026-10-12T10:12:47.690Z"
+    },
+    {
+      "id": "cy2h7aBbNB",
+      "project": "path-71ea78",
+      "slug": "workflow-evaluation-findings",
+      "title": "Workflow evaluation findings",
+      "kind": "plan",
+      "createdAt": "2026-09-12T11:25:17.139Z",
+      "expiresAt": "2026-10-12T11:25:17.139Z"
     }
   ]
 }
