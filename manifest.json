@@ -171,6 +171,15 @@
       "kind": "plan",
       "createdAt": "2026-09-12T11:25:17.139Z",
       "expiresAt": "2026-10-12T11:25:17.139Z"
+    },
+    {
+      "id": "cSCJzQFNng",
+      "project": "path-8807d9",
+      "slug": "luna-workflow-e2e-case-report",
+      "title": "Luna workflow evaluation: case-by-case results",
+      "kind": "plan",
+      "createdAt": "2026-09-12T18:47:34.611Z",
+      "expiresAt": "2026-10-12T18:47:34.611Z"
     }
   ]
 }

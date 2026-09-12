@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luna workflow evaluation: case-by-case results</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This report covers the 50-case T2W | E2E dataset using the TypeScript workflow SDK and Pi with GPT 5.6 Luna. It records the latest completed authoring attempts, reviewed TEST retries, and verified draft saves from the evaluation ending 13 September 2026 IST. No Sol tests were run in this round.</p>
+<p>Thirty-six cases were attempted. Thirty-four compiled, and 33 were saved and read back successfully. Fifteen cases matched their reference outputs; a platform run reaching COMPLETED alone does not count as an expected-output pass.</p>
+<blockquote>
+<p>Build, native execution, and expected-output correctness are separate results. The automation links below point to the generated drafts, not the reference workflows.</p>
+</blockquote>
+<h2>Results at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th align="right">Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dataset cases</td>
+<td align="right">50</td>
+</tr>
+<tr>
+<td>Cases attempted</td>
+<td align="right">36</td>
+</tr>
+<tr>
+<td>Build completed: compiled, saved, read back</td>
+<td align="right">33</td>
+</tr>
+<tr>
+<td>Build failed among attempted cases</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>Compiled locally</td>
+<td align="right">34</td>
+</tr>
+<tr>
+<td>Native TEST executions, distinct cases</td>
+<td align="right">24</td>
+</tr>
+<tr>
+<td>Native TEST reached COMPLETED</td>
+<td align="right">21</td>
+</tr>
+<tr>
+<td>TEST successful: exact expected-output match</td>
+<td align="right">15</td>
+</tr>
+<tr>
+<td>TEST failed: runtime failure or output mismatch</td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td>TEST not tested: no execution or no expected-output verdict</td>
+<td align="right">27</td>
+</tr>
+<tr>
+<td>Cases not attempted</td>
+<td align="right">14</td>
+</tr>
+</tbody></table>
+<p>The 27 not-tested verdicts include 14 cases not launched, 12 attempted cases without a native TEST execution, and case 39, which executed but could not be checked against an expected output. There are 28 cases with usable expected outputs, giving 15/28 exact reference matches, or 53.6%. Eight attempted cases lack usable expected outputs. These are iterative results across repairs and retries, not a single frozen benchmark, and they do not meet the greater-than-95-percent target.</p>
+<h2>How to read the statuses</h2>
+<p><strong>Build Completed</strong> means the authored TypeScript passed compilation and a draft was saved with matching GET readback. <strong>Build Failed</strong> means compilation or verified persistence did not complete. Case 09 compiled locally but failed at save, so its build is Failed.</p>
+<p><strong>TEST Successful</strong> means a native TEST completed and its observed output exactly matched the expected output. <strong>TEST Failed</strong> means the native run failed or its output did not match. <strong>TEST Not tested</strong> means no native execution occurred, or the expected-output check could not be performed. The Native run column makes the exceptional completed-but-unscored case 39 explicit.</p>
+<p>Missing and empty dataset inputs were used as <code>{}</code>. External business actions were mocked; local variables, code and control flow executed normally. Nine drafts were saved solely for review after mock preflight blocked their TESTs. Names below come from the prompt or a concise description of it; some reference automation names are unrelated or generic.</p>
+<h2>Attempted cases</h2>
+<p>Each Open link targets the generated automation. Reference links identify the dataset&#39;s expected automation and never imply a successful generated build. All links use the agent-code-migration UAT environment and require platform access.</p>
+<h3>Cases 01 to 10</h3>
+<table>
+<thead>
+<tr>
+<th>Case and name</th>
+<th>Automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th>Native run</th>
+<th>Result or blocker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01 · Analyze Testcase Ratings</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa599d060e086771310bed3/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a26886924389234baa9a5f4/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>FAILED</td>
+<td>Native TEST failed at advance. The query/schema uses short projection names while the frozen mock uses qualified keys; exact runtime cause remains unresolved.</td>
+</tr>
+<tr>
+<td>02 · Assign Employee Project</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592f52cb0ec2477dc9e09/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a26a8f076e2b54dd4a578ff/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>03 · Fetch Google Sheets Rows</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592dd2cb0ec2477dc9d3f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a268e3b24389234baaa0678/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>04 · Get Lab Performance Summary</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5931ab393454397879e3d/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69df6abe78319502ece668eb/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>COMPLETED</td>
+<td>Native run completed, but the lab summary differs from the reference output.</td>
+</tr>
+<tr>
+<td>05 · Count Support Tickets</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592c4b39345439787993f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a23fa6ade1bde28ebf02d07/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>06 · List Running GitHub Workflows</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59325e51bec3623ad167f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69de307ace3fdf72fd083baf/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>07 · Lead Status Evaluator</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5970a2cb0ec2477dcc047/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a23f114e456723048d8dd57/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Passed after the earlier missing-value failure was repaired in fresh Luna authoring.</td>
+</tr>
+<tr>
+<td>09 · Customer Loyalty Tier</td>
+<td>Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d2f9f625fcb0f5c669b8a/builder">Reference</a></td>
+<td>Failed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>TypeScript compiled. Draft save returned HTTP 500; no verified automation ID or TEST execution.</td>
+</tr>
+<tr>
+<td>10 · New Delhi Weather Report</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5972fb39345439787cf73/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d6525625fcb0f5c68ba26/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>FAILED</td>
+<td>Native TEST failed. Reference also lacks a usable expected output, so no output comparison is available.</td>
+</tr>
+</tbody></table>
+<h3>Cases 11 to 20</h3>
+<table>
+<thead>
+<tr>
+<th>Case and name</th>
+<th>Automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th>Native run</th>
+<th>Result or blocker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>12 · Regional Sales Performance</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5988b2cb0ec2477dccf2c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3ccfa6625fcb0f5c61aaf0/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>COMPLETED</td>
+<td>Native run completed; regional-sales response differs from the reference output.</td>
+</tr>
+<tr>
+<td>13 · Warehouse Inventory Replenishment</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59963f10f834d4ecc0b05/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3c230daf3d5c1cca1a067b/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Passed after correcting the runner to execute local list mutations. Retested the original authored code.</td>
+</tr>
+<tr>
+<td>15 · Synchronize Company Portfolio</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42e51bec3623b4980c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3b6c56f7c60c3cb394beaf/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. TEST blocked by missing mock for fetchPortfolio.</td>
+</tr>
+<tr>
+<td>17 · Split Patient Full Name</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59923f10f834d4ecbc077/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5de2c24ac65f34a4b24ed6/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Passed using the supplied input; the missing reference trigger schema was retained as a diagnostic.</td>
+</tr>
+<tr>
+<td>18 · Customer Orders Lookup</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4246071a4b96ff5394/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dd7eefd18834f06bc1480/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. Missing mock for ordersQuery; reference output is also unavailable.</td>
+</tr>
+<tr>
+<td>19 · Full Name Validator</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5929846071a4b96fd40b7/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dd6daf6efb718088d105b/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>COMPLETED</td>
+<td>Native run completed. Generated response includes message; the reference response omits it. Exact comparison failed.</td>
+</tr>
+<tr>
+<td>20 · Employee Bonus Calculator</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa593012cb0ec2477dc9e1c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dcaacf6efb718088a2cd2/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+</tbody></table>
+<h3>Cases 21 to 30</h3>
+<table>
+<thead>
+<tr>
+<th>Case and name</th>
+<th>Automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th>Native run</th>
+<th>Result or blocker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>21 · Full Name Builder</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5946ef10f834d4ecb0f9c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dc7f3fd18834f06b820df/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>22 · Hackathon Team Registration</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42e51bec3623b4983b/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6a4ccc467e457ecc6f04b4/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. TEST blocked by missing mock for checkDuplicate.</td>
+</tr>
+<tr>
+<td>25 · Employees Missing Bonus</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42f10f834d4ecc81a2/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b86ba57e0bb56832863b6/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. TEST blocked by missing mock for readSheet.</td>
+</tr>
+<tr>
+<td>27 · Hospital Bed Turnover Monitor</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa597c560e086771310ae65/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a463ecfaf3d5c1cca9770b0/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>FAILED</td>
+<td>Native TEST failed. Reference provides no usable expected output.</td>
+</tr>
+<tr>
+<td>28 · Loan Eligibility Evaluator</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594a0e51bec3623ad36c1/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a463876af3d5c1cca96bc08/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>COMPLETED</td>
+<td>Native run completed. The remarks wording differs from the reference, so exact comparison failed.</td>
+</tr>
+<tr>
+<td>29 · Employee Shift Overtime</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594c2b39345439787ad51/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a4632c2625fcb0f5cdd5599/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+</tbody></table>
+<h3>Cases 31 to 40</h3>
+<table>
+<thead>
+<tr>
+<th>Case and name</th>
+<th>Automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th>Native run</th>
+<th>Result or blocker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>31 · Director Attendance Summary</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4260e0867713116dfd/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a464e6daf3d5c1cca9a64c4/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Compiled after Luna retries and saved. The generated Gmail list-emails action has no mock in the reference send-email plan.</td>
+</tr>
+<tr>
+<td>32 · Send Payment Confirmation</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa599632cb0ec2477dcd37e/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a2401bee456723048db04d9/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Passed a fresh TEST using unchanged authored code after an earlier HTTP 500 during save.</td>
+</tr>
+<tr>
+<td>33 · Fetch Greif Call and Collection Record</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5948ff10f834d4ecb1300/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a217bdcd68d0e14d365782d/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>34 · Export Workflow Changeset</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4246071a4b96ff53a0/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a21856ca6dc901e051f461d/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. Missing mock for publishExport; reference output is unavailable.</td>
+</tr>
+<tr>
+<td>35 · Fetch Gmail Message and Slack Channel</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594a1e51bec3623ad36ce/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a218906a6dc901e051fb24b/builder">Reference</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td>COMPLETED</td>
+<td>Native run completed but omitted properties. Generated code reads storage.object.properties; the resolved output exposes storage.properties.</td>
+</tr>
+<tr>
+<td>36 · List Upcoming Calendar Events</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594e3b39345439787ae46/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a24010bde1bde28ebf0b331/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>38 · Warehouse Inventory Replenishment</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa598922cb0ec2477dccf44/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3c230daf3d5c1cca1a067b/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Passed with corrected reference fixtures that execute local list mutations.</td>
+</tr>
+<tr>
+<td>39 · Daily Meeting Conflict Detector</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59740e51bec3623b03123/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a61b8cc2e0db41ccbb1f59d/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>COMPLETED</td>
+<td>Native run COMPLETED. Expected-output check was not tested because the reference has no usable output. No pass is awarded.</td>
+</tr>
+<tr>
+<td>40 · Data Transformation Test</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594ddb39345439787adfd/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b39b857e0bb568325b552/builder">Reference</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+</tbody></table>
+<h3>Cases 41 to 50</h3>
+<table>
+<thead>
+<tr>
+<th>Case and name</th>
+<th>Automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th>Native run</th>
+<th>Result or blocker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>41 · Check Order Existence</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b43f10f834d4ecc81be/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6c74e03d1d5a606095328f/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. Missing get-record mock: generated lookup uses the business order ID as a physical record ID.</td>
+</tr>
+<tr>
+<td>44 · BFF Intent Data Quality Checker</td>
+<td>Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a15845180830b496b6c6d53/builder">Reference</a></td>
+<td>Failed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Luna exhausted its 30-turn authoring allowance after TypeScript and source-edit repairs. No verified compiled workflow.</td>
+</tr>
+<tr>
+<td>45 · Encoded Interview Event</td>
+<td>Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69b96d900a70d20a92ebe427/builder">Reference</a></td>
+<td>Failed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Live schema resolution for utility_by_unifyapps_send_mqtt_request returned no resolved JSON schema; authoring exhausted its turn allowance.</td>
+</tr>
+<tr>
+<td>48 · Resolve Session Schedule Conflicts</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4346071a4b96ff53a2/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f89463d1d5a6060c40a94/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. Missing mock for suggestions; reference output is unavailable.</td>
+</tr>
+<tr>
+<td>49 · Evaluate Policy Application</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4460e0867713116e0f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f9b563d1d5a6060f43354/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+<td>Not run</td>
+<td>Draft saved. Missing mock for getApplicant; reference output is unavailable.</td>
+</tr>
+</tbody></table>
+<h2>Cases not attempted</h2>
+<p>These 14 cases have no generated automation and no build attempt. They are not counted as build failures. Each TEST status is Not tested; links below are references only.</p>
+<table>
+<thead>
+<tr>
+<th>Case and name</th>
+<th>Reference automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th>Why it was not launched</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>08 · Google Meet Attendees</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a21574d444cba34522043a0/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Input uses Meeting code; reference schema expects meetingCode. Historical input also differs.</td>
+</tr>
+<tr>
+<td>11 · Gmail Attachment Categorization</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d20138ff6f920d21d94f4/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Missing retained download/upload responses for attachment handling.</td>
+</tr>
+<tr>
+<td>14 · NamSor Name Origin Enrichment</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3b7b05f7c60c3cb3970470/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Dataset input is non-object JSON and does not satisfy the reference trigger contract.</td>
+</tr>
+<tr>
+<td>16 · Priority Shipment Evaluator</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3a7d01d6a70c53c706b12d/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Input uses order_id; reference schema expects orderId. Historical input also differs.</td>
+</tr>
+<tr>
+<td>23 · Generate and Send Email Draft</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5791634c3f4d5ef60ee60c/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Missing retained Gmail send response consumed by the workflow.</td>
+</tr>
+<tr>
+<td>24 · Vehicle Maintenance Parts Checker</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a686d404c009a54b470f1ba/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Historical and dataset inputs differ; missing maintenance-record creation mock.</td>
+</tr>
+<tr>
+<td>26 · Inventory Restock Alert</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a491784bbb68d11c3888f5f/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>No completed reference run and no retained child-automation mock.</td>
+</tr>
+<tr>
+<td>30 · Order Loyalty Discount Report</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b43228324d323e759748b/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Missing retained order/customer read responses.</td>
+</tr>
+<tr>
+<td>37 · Count Google Calendar Events</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a2406cfde1bde28ebf16f9f/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Missing retained calendar response for the current external node.</td>
+</tr>
+<tr>
+<td>42 · Candidate Interview Pipeline Tracker</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6c827d57e0bb56832c56df/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Input uses candidate_job_ID; reference schema requires candidateJobId.</td>
+</tr>
+<tr>
+<td>43 · Aggregate User and Client Information</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69bd324e7b770b64484b484d/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Historical input differs; repeated per-user reads need request-dependent mocks.</td>
+</tr>
+<tr>
+<td>46 · Count PDF and Word Documents</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/699448aa578bcc647f3cf316/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Missing retained responses for both document-count queries.</td>
+</tr>
+<tr>
+<td>47 · Assess Vendor Risk</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f82023d1d5a6060b6c772/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Historical input differs and repeated reads have ambiguous selectors; write mocks are also incomplete.</td>
+</tr>
+<tr>
+<td>50 · Match Buyer to Property Listings</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a702f0f3d1d5a6060538c18/builder">Reference</a></td>
+<td>Not attempted</td>
+<td>Not tested</td>
+<td>Missing buyer, listing and availability reads, plus downstream write/email mocks.</td>
+</tr>
+</tbody></table>
+<h2>What needs attention next</h2>
+<p>The largest coverage gap is the mock plan. Several generated workflows select an action or projection shape that differs from the reference automation. Those differences need case review and mocks based on the evaluated request. Missing mocks are not evidence that generated business logic failed.</p>
+<p>Case 44 needs better Luna authoring convergence for the BFF branching flow. Case 45 needs live MQTT schema resolution. Case 09 needs a verified save after the HTTP 500; its unknown save outcome is retained, and no automation ID is invented. The mismatches in cases 04, 12, 19, 28 and 35 need prompt, output-contract or code review before retesting. Case 01 remains a failed native TEST with a query/schema versus mock-shape discrepancy.</p>
+<p>The runner&#39;s local-list-mutation error was corrected, clearing cases 13 and 38. The SDK&#39;s contradictory Analytics aggregation dependency was corrected, allowing case 01 to compile. Runtime skill guidance now shows required-output guards and inclusion of referenced statements. All 72 PoC tests and TypeScript checks passed; the SDK passed 198 tests with four optional skips, its TypeScript check and build. The shared node_modules directory was reduced to 67 MB while retaining historical package tarballs and authored source.</p>
+<h2>Evidence and source code</h2>
+<p>The source of the 50 cases is the <a href="https://agent-code-migration.uat.unifyapps.com/p/0/evaluation/datasets/e_6a869e6aa39e924d3d3b6673/test-cases?dataset_q=e2e">T2W | E2E dataset</a>. This report uses the completed local evidence; it does not rerun or modify automations.</p>
+<p>The local repository is <code>~/projects/misc/workflow-pi-poc</code>. Every authored <code>workflow.ts</code>, generated schema snapshot, trace, receipt and native TEST artifact remains available. The published report contains status and automation links; raw fixture payloads and traces remain local.</p>
+<table>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Repository path</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Consolidated case and attempt history</td>
+<td><code>evals/report/provenance/expanded-results.json</code></td>
+</tr>
+<tr>
+<td>Dataset prompts and input mapping</td>
+<td><code>evals/report/provenance/e2e-cases.json</code></td>
+</tr>
+<tr>
+<td>Input, mocks and expected-output provenance</td>
+<td><code>evals/report/fixtures/e2e-XX.json</code></td>
+</tr>
+<tr>
+<td>Authored TypeScript</td>
+<td><code>runs/attest/&lt;run-id&gt;/e2e-XX/workflow.ts</code></td>
+</tr>
+<tr>
+<td>Source and package receipts</td>
+<td><code>runs/attest/&lt;run-id&gt;/e2e-XX/receipt.json</code></td>
+</tr>
+<tr>
+<td>Native TEST evidence</td>
+<td><code>runs/attest/&lt;run-id&gt;/e2e-XX/platform-tests/</code></td>
+</tr>
+<tr>
+<td>Reviewed native retries for 09, 13 and 32</td>
+<td><code>runs/attest-retests/1789237603211/summary.json</code></td>
+</tr>
+<tr>
+<td>Nine saved, untested drafts</td>
+<td><code>runs/attest-saved-untested/1789238081797/summary.json</code></td>
+</tr>
+</tbody></table>
+<h3>Latest authored source by case</h3>
+<p>Use the run ID below with <code>runs/attest/&lt;run-id&gt;/e2e-XX/workflow.ts</code>. Native retries reuse that authored source; they do not replace it with hand-written workflow code.</p>
+<table>
+<thead>
+<tr>
+<th>Run ID</th>
+<th>Cases using this authored source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>01M2BC83Q6RRQVAX8TEB5GW6V9</code></td>
+<td>02, 03, 04, 05, 06, 13, 19, 20</td>
+</tr>
+<tr>
+<td><code>01M2BCNETVZGZCGPWJWPC2R301</code></td>
+<td>21, 28, 29, 33, 35, 36, 40, 41</td>
+</tr>
+<tr>
+<td><code>01M2BDAB1DJXMBT2X001YXJ6G2</code></td>
+<td>07, 10, 18, 27, 34, 39, 45</td>
+</tr>
+<tr>
+<td><code>01M2BDNDXWM360Q8JMC9RXEHCF</code></td>
+<td>09, 12, 15, 17, 22, 25, 32, 38, 48, 49</td>
+</tr>
+<tr>
+<td><code>01M2BDY13BSVKMZ100M4VWX7T8</code></td>
+<td>01, 31, 44</td>
+</tr>
+</tbody></table>
+</article>
+</main>
+</body>
+</html>
