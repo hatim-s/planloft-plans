@@ -351,7 +351,7 @@ summary { cursor: pointer; font-weight: 700; }
 <p>The 27 not-tested verdicts include 14 cases not launched, 12 attempted cases without a native TEST execution, and case 39, which executed but could not be checked against an expected output. There are 28 cases with usable expected outputs, giving 15/28 exact reference matches, or 53.6%. Eight attempted cases lack usable expected outputs. These are iterative results across repairs and retries, not a single frozen benchmark, and they do not meet the greater-than-95-percent target.</p>
 <h2>How to read the statuses</h2>
 <p><strong>Build Completed</strong> means the authored TypeScript passed compilation and a draft was saved with matching GET readback. <strong>Build Failed</strong> means compilation or verified persistence did not complete. Case 09 compiled locally but failed at save, so its build is Failed.</p>
-<p><strong>TEST Successful</strong> means a native TEST completed and its observed output exactly matched the expected output. <strong>TEST Failed</strong> means the native run failed or its output did not match. <strong>TEST Not tested</strong> means no native execution occurred, or the expected-output check could not be performed. The Native run column makes the exceptional completed-but-unscored case 39 explicit.</p>
+<p><strong>TEST Successful</strong> means a native TEST completed and its observed output exactly matched the expected output. <strong>TEST Failed</strong> means the native run failed or its output did not match. <strong>TEST Not tested</strong> means no native execution occurred, or the expected-output check could not be performed. The Native TEST detail table makes the exceptional completed-but-unscored case 39 explicit.</p>
 <p>Missing and empty dataset inputs were used as <code>{}</code>. External business actions were mocked; local variables, code and control flow executed normally. Nine drafts were saved solely for review after mock preflight blocked their TESTs. Names below come from the prompt or a concise description of it; some reference automation names are unrelated or generic.</p>
 <h2>Attempted cases</h2>
 <p>Each Open link targets the generated automation. Reference links identify the dataset&#39;s expected automation and never imply a successful generated build. All links use the agent-code-migration UAT environment and require platform access.</p>
@@ -359,351 +359,460 @@ summary { cursor: pointer; font-weight: 700; }
 <table>
 <thead>
 <tr>
-<th>Case and name</th>
+<th>Case</th>
 <th>Automation</th>
 <th>Build</th>
 <th>TEST</th>
-<th>Native run</th>
-<th>Result or blocker</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>01 · Analyze Testcase Ratings</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa599d060e086771310bed3/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a26886924389234baa9a5f4/builder">Reference</a></td>
+<td>01</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa599d060e086771310bed3/builder">Analyze Testcase Ratings</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a26886924389234baa9a5f4/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>FAILED</td>
-<td>Native TEST failed at advance. The query/schema uses short projection names while the frozen mock uses qualified keys; exact runtime cause remains unresolved.</td>
 </tr>
 <tr>
-<td>02 · Assign Employee Project</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592f52cb0ec2477dc9e09/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a26a8f076e2b54dd4a578ff/builder">Reference</a></td>
+<td>02</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592f52cb0ec2477dc9e09/builder">Assign Employee Project</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a26a8f076e2b54dd4a578ff/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 <tr>
-<td>03 · Fetch Google Sheets Rows</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592dd2cb0ec2477dc9d3f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a268e3b24389234baaa0678/builder">Reference</a></td>
+<td>03</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592dd2cb0ec2477dc9d3f/builder">Fetch Google Sheets Rows</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a268e3b24389234baaa0678/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 <tr>
-<td>04 · Get Lab Performance Summary</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5931ab393454397879e3d/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69df6abe78319502ece668eb/builder">Reference</a></td>
+<td>04</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5931ab393454397879e3d/builder">Get Lab Performance Summary</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69df6abe78319502ece668eb/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>COMPLETED</td>
-<td>Native run completed, but the lab summary differs from the reference output.</td>
 </tr>
 <tr>
-<td>05 · Count Support Tickets</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592c4b39345439787993f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a23fa6ade1bde28ebf02d07/builder">Reference</a></td>
+<td>05</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa592c4b39345439787993f/builder">Count Support Tickets</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a23fa6ade1bde28ebf02d07/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 <tr>
-<td>06 · List Running GitHub Workflows</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59325e51bec3623ad167f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69de307ace3fdf72fd083baf/builder">Reference</a></td>
+<td>06</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59325e51bec3623ad167f/builder">List Running GitHub Workflows</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69de307ace3fdf72fd083baf/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 <tr>
-<td>07 · Lead Status Evaluator</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5970a2cb0ec2477dcc047/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a23f114e456723048d8dd57/builder">Reference</a></td>
+<td>07</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5970a2cb0ec2477dcc047/builder">Lead Status Evaluator</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a23f114e456723048d8dd57/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Passed after the earlier missing-value failure was repaired in fresh Luna authoring.</td>
 </tr>
 <tr>
-<td>09 · Customer Loyalty Tier</td>
-<td>Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d2f9f625fcb0f5c669b8a/builder">Reference</a></td>
+<td>09</td>
+<td>Customer Loyalty Tier. Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d2f9f625fcb0f5c669b8a/builder">Reference</a></td>
 <td>Failed</td>
 <td>Not tested</td>
-<td>Not run</td>
-<td>TypeScript compiled. Draft save returned HTTP 500; no verified automation ID or TEST execution.</td>
 </tr>
 <tr>
-<td>10 · New Delhi Weather Report</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5972fb39345439787cf73/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d6525625fcb0f5c68ba26/builder">Reference</a></td>
+<td>10</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5972fb39345439787cf73/builder">New Delhi Weather Report</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d6525625fcb0f5c68ba26/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>FAILED</td>
-<td>Native TEST failed. Reference also lacks a usable expected output, so no output comparison is available.</td>
 </tr>
 </tbody></table>
 <h3>Cases 11 to 20</h3>
 <table>
 <thead>
 <tr>
-<th>Case and name</th>
+<th>Case</th>
 <th>Automation</th>
 <th>Build</th>
 <th>TEST</th>
-<th>Native run</th>
-<th>Result or blocker</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>12 · Regional Sales Performance</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5988b2cb0ec2477dccf2c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3ccfa6625fcb0f5c61aaf0/builder">Reference</a></td>
+<td>12</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5988b2cb0ec2477dccf2c/builder">Regional Sales Performance</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3ccfa6625fcb0f5c61aaf0/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>COMPLETED</td>
-<td>Native run completed; regional-sales response differs from the reference output.</td>
 </tr>
 <tr>
-<td>13 · Warehouse Inventory Replenishment</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59963f10f834d4ecc0b05/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3c230daf3d5c1cca1a067b/builder">Reference</a></td>
+<td>13</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59963f10f834d4ecc0b05/builder">Warehouse Inventory Replenishment</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3c230daf3d5c1cca1a067b/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Passed after correcting the runner to execute local list mutations. Retested the original authored code.</td>
 </tr>
 <tr>
-<td>15 · Synchronize Company Portfolio</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42e51bec3623b4980c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3b6c56f7c60c3cb394beaf/builder">Reference</a></td>
+<td>15</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42e51bec3623b4980c/builder">Synchronize Company Portfolio</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3b6c56f7c60c3cb394beaf/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
-<td>Not run</td>
-<td>Draft saved. TEST blocked by missing mock for fetchPortfolio.</td>
 </tr>
 <tr>
-<td>17 · Split Patient Full Name</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59923f10f834d4ecbc077/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5de2c24ac65f34a4b24ed6/builder">Reference</a></td>
+<td>17</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59923f10f834d4ecbc077/builder">Split Patient Full Name</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5de2c24ac65f34a4b24ed6/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Passed using the supplied input; the missing reference trigger schema was retained as a diagnostic.</td>
 </tr>
 <tr>
-<td>18 · Customer Orders Lookup</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4246071a4b96ff5394/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dd7eefd18834f06bc1480/builder">Reference</a></td>
+<td>18</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4246071a4b96ff5394/builder">Customer Orders Lookup</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dd7eefd18834f06bc1480/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
-<td>Not run</td>
-<td>Draft saved. Missing mock for ordersQuery; reference output is also unavailable.</td>
 </tr>
 <tr>
-<td>19 · Full Name Validator</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5929846071a4b96fd40b7/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dd6daf6efb718088d105b/builder">Reference</a></td>
+<td>19</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5929846071a4b96fd40b7/builder">Full Name Validator</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dd6daf6efb718088d105b/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>COMPLETED</td>
-<td>Native run completed. Generated response includes message; the reference response omits it. Exact comparison failed.</td>
 </tr>
 <tr>
-<td>20 · Employee Bonus Calculator</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa593012cb0ec2477dc9e1c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dcaacf6efb718088a2cd2/builder">Reference</a></td>
+<td>20</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa593012cb0ec2477dc9e1c/builder">Employee Bonus Calculator</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dcaacf6efb718088a2cd2/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 </tbody></table>
 <h3>Cases 21 to 30</h3>
 <table>
 <thead>
 <tr>
-<th>Case and name</th>
+<th>Case</th>
 <th>Automation</th>
 <th>Build</th>
 <th>TEST</th>
-<th>Native run</th>
-<th>Result or blocker</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>21 · Full Name Builder</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5946ef10f834d4ecb0f9c/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dc7f3fd18834f06b820df/builder">Reference</a></td>
+<td>21</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5946ef10f834d4ecb0f9c/builder">Full Name Builder</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5dc7f3fd18834f06b820df/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 <tr>
-<td>22 · Hackathon Team Registration</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42e51bec3623b4983b/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6a4ccc467e457ecc6f04b4/builder">Reference</a></td>
+<td>22</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42e51bec3623b4983b/builder">Hackathon Team Registration</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6a4ccc467e457ecc6f04b4/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
-<td>Not run</td>
-<td>Draft saved. TEST blocked by missing mock for checkDuplicate.</td>
 </tr>
 <tr>
-<td>25 · Employees Missing Bonus</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42f10f834d4ecc81a2/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b86ba57e0bb56832863b6/builder">Reference</a></td>
+<td>25</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b42f10f834d4ecc81a2/builder">Employees Missing Bonus</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b86ba57e0bb56832863b6/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
-<td>Not run</td>
-<td>Draft saved. TEST blocked by missing mock for readSheet.</td>
 </tr>
 <tr>
-<td>27 · Hospital Bed Turnover Monitor</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa597c560e086771310ae65/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a463ecfaf3d5c1cca9770b0/builder">Reference</a></td>
+<td>27</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa597c560e086771310ae65/builder">Hospital Bed Turnover Monitor</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a463ecfaf3d5c1cca9770b0/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>FAILED</td>
-<td>Native TEST failed. Reference provides no usable expected output.</td>
 </tr>
 <tr>
-<td>28 · Loan Eligibility Evaluator</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594a0e51bec3623ad36c1/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a463876af3d5c1cca96bc08/builder">Reference</a></td>
+<td>28</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594a0e51bec3623ad36c1/builder">Loan Eligibility Evaluator</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a463876af3d5c1cca96bc08/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>COMPLETED</td>
-<td>Native run completed. The remarks wording differs from the reference, so exact comparison failed.</td>
 </tr>
 <tr>
-<td>29 · Employee Shift Overtime</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594c2b39345439787ad51/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a4632c2625fcb0f5cdd5599/builder">Reference</a></td>
+<td>29</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594c2b39345439787ad51/builder">Employee Shift Overtime</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a4632c2625fcb0f5cdd5599/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 </tbody></table>
 <h3>Cases 31 to 40</h3>
 <table>
 <thead>
 <tr>
-<th>Case and name</th>
+<th>Case</th>
 <th>Automation</th>
 <th>Build</th>
 <th>TEST</th>
-<th>Native run</th>
-<th>Result or blocker</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>31 · Director Attendance Summary</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4260e0867713116dfd/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a464e6daf3d5c1cca9a64c4/builder">Reference</a></td>
+<td>31</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4260e0867713116dfd/builder">Director Attendance Summary</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a464e6daf3d5c1cca9a64c4/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
-<td>Not run</td>
-<td>Compiled after Luna retries and saved. The generated Gmail list-emails action has no mock in the reference send-email plan.</td>
 </tr>
 <tr>
-<td>32 · Send Payment Confirmation</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa599632cb0ec2477dcd37e/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a2401bee456723048db04d9/builder">Reference</a></td>
+<td>32</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa599632cb0ec2477dcd37e/builder">Send Payment Confirmation</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a2401bee456723048db04d9/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Passed a fresh TEST using unchanged authored code after an earlier HTTP 500 during save.</td>
 </tr>
 <tr>
-<td>33 · Fetch Greif Call and Collection Record</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5948ff10f834d4ecb1300/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a217bdcd68d0e14d365782d/builder">Reference</a></td>
+<td>33</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5948ff10f834d4ecb1300/builder">Fetch Greif Call and Collection Record</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a217bdcd68d0e14d365782d/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 <tr>
-<td>34 · Export Workflow Changeset</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4246071a4b96ff53a0/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a21856ca6dc901e051f461d/builder">Reference</a></td>
+<td>34</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4246071a4b96ff53a0/builder">Export Workflow Changeset</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a21856ca6dc901e051f461d/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
-<td>Not run</td>
-<td>Draft saved. Missing mock for publishExport; reference output is unavailable.</td>
 </tr>
 <tr>
-<td>35 · Fetch Gmail Message and Slack Channel</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594a1e51bec3623ad36ce/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a218906a6dc901e051fb24b/builder">Reference</a></td>
+<td>35</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594a1e51bec3623ad36ce/builder">Fetch Gmail Message and Slack Channel</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a218906a6dc901e051fb24b/builder">Reference</a></td>
 <td>Completed</td>
 <td>Failed</td>
-<td>COMPLETED</td>
-<td>Native run completed but omitted properties. Generated code reads storage.object.properties; the resolved output exposes storage.properties.</td>
 </tr>
 <tr>
-<td>36 · List Upcoming Calendar Events</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594e3b39345439787ae46/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a24010bde1bde28ebf0b331/builder">Reference</a></td>
+<td>36</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594e3b39345439787ae46/builder">List Upcoming Calendar Events</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a24010bde1bde28ebf0b331/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 <tr>
-<td>38 · Warehouse Inventory Replenishment</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa598922cb0ec2477dccf44/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3c230daf3d5c1cca1a067b/builder">Reference</a></td>
+<td>38</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa598922cb0ec2477dccf44/builder">Warehouse Inventory Replenishment</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3c230daf3d5c1cca1a067b/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Passed with corrected reference fixtures that execute local list mutations.</td>
 </tr>
 <tr>
-<td>39 · Daily Meeting Conflict Detector</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59740e51bec3623b03123/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a61b8cc2e0db41ccbb1f59d/builder">Reference</a></td>
+<td>39</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59740e51bec3623b03123/builder">Daily Meeting Conflict Detector</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a61b8cc2e0db41ccbb1f59d/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
-<td>COMPLETED</td>
-<td>Native run COMPLETED. Expected-output check was not tested because the reference has no usable output. No pass is awarded.</td>
 </tr>
 <tr>
-<td>40 · Data Transformation Test</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594ddb39345439787adfd/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b39b857e0bb568325b552/builder">Reference</a></td>
+<td>40</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa594ddb39345439787adfd/builder">Data Transformation Test</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b39b857e0bb568325b552/builder">Reference</a></td>
 <td>Completed</td>
 <td>Successful</td>
-<td>COMPLETED</td>
-<td>Native TEST completed and matched the expected output.</td>
 </tr>
 </tbody></table>
 <h3>Cases 41 to 50</h3>
 <table>
 <thead>
 <tr>
-<th>Case and name</th>
+<th>Case</th>
 <th>Automation</th>
 <th>Build</th>
 <th>TEST</th>
-<th>Native run</th>
-<th>Result or blocker</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>41 · Check Order Existence</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b43f10f834d4ecc81be/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6c74e03d1d5a606095328f/builder">Reference</a></td>
+<td>41</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b43f10f834d4ecc81be/builder">Check Order Existence</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6c74e03d1d5a606095328f/builder">Reference</a></td>
 <td>Completed</td>
 <td>Not tested</td>
+</tr>
+<tr>
+<td>44</td>
+<td>BFF Intent Data Quality Checker. Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a15845180830b496b6c6d53/builder">Reference</a></td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>45</td>
+<td>Encoded Interview Event. Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69b96d900a70d20a92ebe427/builder">Reference</a></td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>48</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4346071a4b96ff53a2/builder">Resolve Session Schedule Conflicts</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f89463d1d5a6060c40a94/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>49</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4460e0867713116e0f/builder">Evaluate Policy Application</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f9b563d1d5a6060f43354/builder">Reference</a></td>
+<td>Completed</td>
+<td>Not tested</td>
+</tr>
+</tbody></table>
+<h2>Native TEST detail</h2>
+<p>This table records execution separately from the output-check verdict above. Not run means the fixture checks or authoring stage prevented execution.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Native run</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>FAILED</td>
+<td>Native TEST failed at advance. The query/schema uses short projection names while the frozen mock uses qualified keys; exact runtime cause remains unresolved.</td>
+</tr>
+<tr>
+<td>02</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>03</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>04</td>
+<td>COMPLETED</td>
+<td>Native run completed, but the lab summary differs from the reference output.</td>
+</tr>
+<tr>
+<td>05</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>06</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>07</td>
+<td>COMPLETED</td>
+<td>Passed after the earlier missing-value failure was repaired in fresh Luna authoring.</td>
+</tr>
+<tr>
+<td>09</td>
+<td>Not run</td>
+<td>TypeScript compiled. Draft save returned HTTP 500; no verified automation ID or TEST execution.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>FAILED</td>
+<td>Native TEST failed. Reference also lacks a usable expected output, so no output comparison is available.</td>
+</tr>
+<tr>
+<td>12</td>
+<td>COMPLETED</td>
+<td>Native run completed; regional-sales response differs from the reference output.</td>
+</tr>
+<tr>
+<td>13</td>
+<td>COMPLETED</td>
+<td>Passed after correcting the runner to execute local list mutations. Retested the original authored code.</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Not run</td>
+<td>Draft saved. TEST blocked by missing mock for fetchPortfolio.</td>
+</tr>
+<tr>
+<td>17</td>
+<td>COMPLETED</td>
+<td>Passed using the supplied input; the missing reference trigger schema was retained as a diagnostic.</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Not run</td>
+<td>Draft saved. Missing mock for ordersQuery; reference output is also unavailable.</td>
+</tr>
+<tr>
+<td>19</td>
+<td>COMPLETED</td>
+<td>Native run completed. Generated response includes message; the reference response omits it. Exact comparison failed.</td>
+</tr>
+<tr>
+<td>20</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>21</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Not run</td>
+<td>Draft saved. TEST blocked by missing mock for checkDuplicate.</td>
+</tr>
+<tr>
+<td>25</td>
+<td>Not run</td>
+<td>Draft saved. TEST blocked by missing mock for readSheet.</td>
+</tr>
+<tr>
+<td>27</td>
+<td>FAILED</td>
+<td>Native TEST failed. Reference provides no usable expected output.</td>
+</tr>
+<tr>
+<td>28</td>
+<td>COMPLETED</td>
+<td>Native run completed. The remarks wording differs from the reference, so exact comparison failed.</td>
+</tr>
+<tr>
+<td>29</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>31</td>
+<td>Not run</td>
+<td>Compiled after Luna retries and saved. The generated Gmail list-emails action has no mock in the reference send-email plan.</td>
+</tr>
+<tr>
+<td>32</td>
+<td>COMPLETED</td>
+<td>Passed a fresh TEST using unchanged authored code after an earlier HTTP 500 during save.</td>
+</tr>
+<tr>
+<td>33</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>34</td>
+<td>Not run</td>
+<td>Draft saved. Missing mock for publishExport; reference output is unavailable.</td>
+</tr>
+<tr>
+<td>35</td>
+<td>COMPLETED</td>
+<td>Native run completed but omitted properties. Generated code reads storage.object.properties; the resolved output exposes storage.properties.</td>
+</tr>
+<tr>
+<td>36</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>38</td>
+<td>COMPLETED</td>
+<td>Passed with corrected reference fixtures that execute local list mutations.</td>
+</tr>
+<tr>
+<td>39</td>
+<td>COMPLETED</td>
+<td>Native run COMPLETED. Expected-output check was not tested because the reference has no usable output. No pass is awarded.</td>
+</tr>
+<tr>
+<td>40</td>
+<td>COMPLETED</td>
+<td>Native TEST completed and matched the expected output.</td>
+</tr>
+<tr>
+<td>41</td>
 <td>Not run</td>
 <td>Draft saved. Missing get-record mock: generated lookup uses the business order ID as a physical record ID.</td>
 </tr>
 <tr>
-<td>44 · BFF Intent Data Quality Checker</td>
-<td>Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a15845180830b496b6c6d53/builder">Reference</a></td>
-<td>Failed</td>
-<td>Not tested</td>
+<td>44</td>
 <td>Not run</td>
 <td>Luna exhausted its 30-turn authoring allowance after TypeScript and source-edit repairs. No verified compiled workflow.</td>
 </tr>
 <tr>
-<td>45 · Encoded Interview Event</td>
-<td>Not saved · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69b96d900a70d20a92ebe427/builder">Reference</a></td>
-<td>Failed</td>
-<td>Not tested</td>
+<td>45</td>
 <td>Not run</td>
 <td>Live schema resolution for utility_by_unifyapps_send_mqtt_request returned no resolved JSON schema; authoring exhausted its turn allowance.</td>
 </tr>
 <tr>
-<td>48 · Resolve Session Schedule Conflicts</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4346071a4b96ff53a2/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f89463d1d5a6060c40a94/builder">Reference</a></td>
-<td>Completed</td>
-<td>Not tested</td>
+<td>48</td>
 <td>Not run</td>
 <td>Draft saved. Missing mock for suggestions; reference output is unavailable.</td>
 </tr>
 <tr>
-<td>49 · Evaluate Policy Application</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa59b4460e0867713116e0f/builder">Open</a> · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f9b563d1d5a6060f43354/builder">Reference</a></td>
-<td>Completed</td>
-<td>Not tested</td>
+<td>49</td>
 <td>Not run</td>
 <td>Draft saved. Missing mock for getApplicant; reference output is unavailable.</td>
 </tr>
@@ -713,109 +822,64 @@ summary { cursor: pointer; font-weight: 700; }
 <table>
 <thead>
 <tr>
-<th>Case and name</th>
-<th>Reference automation</th>
-<th>Build</th>
-<th>TEST</th>
-<th>Why it was not launched</th>
+<th>Case and reference</th>
+<th>Blocker</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>08 · Google Meet Attendees</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a21574d444cba34522043a0/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>08 · Google Meet Attendees · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a21574d444cba34522043a0/builder">Reference</a></td>
 <td>Input uses Meeting code; reference schema expects meetingCode. Historical input also differs.</td>
 </tr>
 <tr>
-<td>11 · Gmail Attachment Categorization</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d20138ff6f920d21d94f4/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>11 · Gmail Attachment Categorization · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3d20138ff6f920d21d94f4/builder">Reference</a></td>
 <td>Missing retained download/upload responses for attachment handling.</td>
 </tr>
 <tr>
-<td>14 · NamSor Name Origin Enrichment</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3b7b05f7c60c3cb3970470/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>14 · NamSor Name Origin Enrichment · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3b7b05f7c60c3cb3970470/builder">Reference</a></td>
 <td>Dataset input is non-object JSON and does not satisfy the reference trigger contract.</td>
 </tr>
 <tr>
-<td>16 · Priority Shipment Evaluator</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3a7d01d6a70c53c706b12d/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>16 · Priority Shipment Evaluator · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a3a7d01d6a70c53c706b12d/builder">Reference</a></td>
 <td>Input uses order_id; reference schema expects orderId. Historical input also differs.</td>
 </tr>
 <tr>
-<td>23 · Generate and Send Email Draft</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5791634c3f4d5ef60ee60c/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>23 · Generate and Send Email Draft · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a5791634c3f4d5ef60ee60c/builder">Reference</a></td>
 <td>Missing retained Gmail send response consumed by the workflow.</td>
 </tr>
 <tr>
-<td>24 · Vehicle Maintenance Parts Checker</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a686d404c009a54b470f1ba/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>24 · Vehicle Maintenance Parts Checker · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a686d404c009a54b470f1ba/builder">Reference</a></td>
 <td>Historical and dataset inputs differ; missing maintenance-record creation mock.</td>
 </tr>
 <tr>
-<td>26 · Inventory Restock Alert</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a491784bbb68d11c3888f5f/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>26 · Inventory Restock Alert · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a491784bbb68d11c3888f5f/builder">Reference</a></td>
 <td>No completed reference run and no retained child-automation mock.</td>
 </tr>
 <tr>
-<td>30 · Order Loyalty Discount Report</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b43228324d323e759748b/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>30 · Order Loyalty Discount Report · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6b43228324d323e759748b/builder">Reference</a></td>
 <td>Missing retained order/customer read responses.</td>
 </tr>
 <tr>
-<td>37 · Count Google Calendar Events</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a2406cfde1bde28ebf16f9f/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>37 · Count Google Calendar Events · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a2406cfde1bde28ebf16f9f/builder">Reference</a></td>
 <td>Missing retained calendar response for the current external node.</td>
 </tr>
 <tr>
-<td>42 · Candidate Interview Pipeline Tracker</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6c827d57e0bb56832c56df/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>42 · Candidate Interview Pipeline Tracker · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6c827d57e0bb56832c56df/builder">Reference</a></td>
 <td>Input uses candidate_job_ID; reference schema requires candidateJobId.</td>
 </tr>
 <tr>
-<td>43 · Aggregate User and Client Information</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69bd324e7b770b64484b484d/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>43 · Aggregate User and Client Information · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/69bd324e7b770b64484b484d/builder">Reference</a></td>
 <td>Historical input differs; repeated per-user reads need request-dependent mocks.</td>
 </tr>
 <tr>
-<td>46 · Count PDF and Word Documents</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/699448aa578bcc647f3cf316/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>46 · Count PDF and Word Documents · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/699448aa578bcc647f3cf316/builder">Reference</a></td>
 <td>Missing retained responses for both document-count queries.</td>
 </tr>
 <tr>
-<td>47 · Assess Vendor Risk</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f82023d1d5a6060b6c772/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>47 · Assess Vendor Risk · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a6f82023d1d5a6060b6c772/builder">Reference</a></td>
 <td>Historical input differs and repeated reads have ambiguous selectors; write mocks are also incomplete.</td>
 </tr>
 <tr>
-<td>50 · Match Buyer to Property Listings</td>
-<td><a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a702f0f3d1d5a6060538c18/builder">Reference</a></td>
-<td>Not attempted</td>
-<td>Not tested</td>
+<td>50 · Match Buyer to Property Listings · <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6a702f0f3d1d5a6060538c18/builder">Reference</a></td>
 <td>Missing buyer, listing and availability reads, plus downstream write/email mocks.</td>
 </tr>
 </tbody></table>
