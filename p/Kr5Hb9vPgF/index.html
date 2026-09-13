@@ -1,0 +1,1968 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Workflow briefs: authoring and platform evaluation</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This report separates the 39-case workflow-brief dataset into its three evaluation runs. Each dataset run is one complete pass over the corpus and contains four parallel worker batches. The harness launches one native Attest run per case; those IDs are retained in the exports. Batches are not separate datasets. Every case below belongs to one run, with its own cost, timing, workflow, and evidence links.</p>
+<p>Accuracy means every supplied fixture was scored and passed, with native TEST completion confirmed. Unscored cases, build failures, save errors, and execution failures remain in the 39-case denominator. This measures the supplied fixtures, not full-brief correctness; final independent review proved no full-brief passes.</p>
+<h2>Dataset and run progression</h2>
+<p>Workflow briefs selected from solution_builder_plan records modified between 2026-09-11T19:39:58.357Z and 2026-09-12T19:39:58.357Z: 12 plans, 39 briefs, three runs. Other historical datasets are outside this report.</p>
+<table>
+<thead>
+<tr>
+<th>Dataset run</th>
+<th align="right">Accuracy</th>
+<th align="right">Verified builds</th>
+<th align="right">TEST ran / completed</th>
+<th align="right">Total Luna cost</th>
+<th align="right">Mean cost / case</th>
+<th align="right">Mean author / TEST time per case</th>
+<th align="right">Mean recorded time / case</th>
+<th align="right">Run wall time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Run 1</td>
+<td align="right">1/39 (2.6%)</td>
+<td align="right">27/39</td>
+<td align="right">25 / 20</td>
+<td align="right">$4.0803</td>
+<td align="right">$0.1046</td>
+<td align="right">165.4 / 6.5 s</td>
+<td align="right">171.9 s</td>
+<td align="right">33.6 min</td>
+</tr>
+<tr>
+<td>Run 2</td>
+<td align="right">3/39 (7.7%)</td>
+<td align="right">32/39</td>
+<td align="right">30 / 17</td>
+<td align="right">$5.2188</td>
+<td align="right">$0.1338</td>
+<td align="right">224.2 / 33.4 s</td>
+<td align="right">257.7 s</td>
+<td align="right">50.2 min</td>
+</tr>
+<tr>
+<td>Run 3</td>
+<td align="right">7/39 (17.9%)</td>
+<td align="right">35/39</td>
+<td align="right">32 / 24</td>
+<td align="right">$5.8870</td>
+<td align="right">$0.1509</td>
+<td align="right">239.0 / 14.4 s</td>
+<td align="right">253.4 s</td>
+<td align="right">51.3 min</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Run change</th>
+<th align="right">Accuracy change</th>
+<th align="right">Newly passing / regressed cases</th>
+<th align="right">Mean cost / case change</th>
+<th align="right">Mean time / case change</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Run 2 vs previous</td>
+<td align="right">+5.1 pp</td>
+<td align="right">2 / 0</td>
+<td align="right">27.9%</td>
+<td align="right">49.9%</td>
+</tr>
+<tr>
+<td>Run 3 vs previous</td>
+<td align="right">+10.3 pp</td>
+<td align="right">5 / 1</td>
+<td align="right">12.8%</td>
+<td align="right">-1.7%</td>
+</tr>
+</tbody></table>
+<p>The same case IDs and prompts appear in every run. Payload corrections and additional assertions changed coverage between runs, alongside SDK and skill changes. Accuracy was recomputed from frozen fixture evidence using the same all-fixture rule; it is a development trend, not an isolated model comparison. Original round-1 and round-2 Attest aggregates allowed partial coverage and are not used here.</p>
+<p>Cost is the recorded Luna registry estimate, including failed attempts and repair turns. Mean cost divides by all 39 cases. Sol supervisor, collector, and reviewer billing is unavailable. The separate TLS preflight cost $0.0000096; two early sessions lost during a setup race have unknown cost and are excluded from these recorded totals.</p>
+<p>Times are per-case recorded authoring duration plus platform save/TEST duration. A case that never reached the platform contributes zero platform time; missing platform timing is marked N/A in its row. Run wall time spans first authoring start to last case result and reflects four-way concurrency and the authoring barrier. It is not the sum or average of case times.</p>
+<p><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/run-metrics.csv">Run metrics CSV</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/case-run-metrics.csv">Case metrics CSV</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/dataset-run-metrics.json">Full metrics JSON</a></p>
+<h2>Case progression</h2>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Run 1</th>
+<th>Run 2</th>
+<th>Run 3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Submit Cash Advance</td>
+<td>Not tested</td>
+<td>Not tested</td>
+<td>Successful</td>
+</tr>
+<tr>
+<td>2. Publish Announcement</td>
+<td>Not tested</td>
+<td>Completed, unscored</td>
+<td>Successful</td>
+</tr>
+<tr>
+<td>3. Summarize Conversation</td>
+<td>Completed, unscored</td>
+<td>Not tested</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>4. Acknowledge Announcement</td>
+<td>Not tested</td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>5. Roll Up Daily Chat Metrics</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>6. SLA Monitor</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>7. Submit Expense Claim</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>8. Generate Assistant Response</td>
+<td>Successful</td>
+<td>Successful</td>
+<td>Successful</td>
+</tr>
+<tr>
+<td>9. Daily Overdue Task Digest</td>
+<td>Completed, unscored</td>
+<td>Not tested</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>10. Request Approval</td>
+<td>Failed</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>11. Regenerate Assistant Response</td>
+<td>Failed</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>12. Record Approval Decision</td>
+<td>Failed</td>
+<td>Successful</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>13. Incident Intake</td>
+<td>Completed, unscored</td>
+<td>Completed, unscored</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>14. Reset Monthly Leave Balances</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>15. Chase Pending Approvals</td>
+<td>Not tested</td>
+<td>Not tested</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>16. Daily Overdue Flagging</td>
+<td>Not tested</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>17. Request Routing</td>
+<td>Not tested</td>
+<td>Failed</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>18. Process Conversation Document</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>19. Monitor Overdue Maintenance Jobs</td>
+<td>Not tested</td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>20. Daily Task Follow-up</td>
+<td>Completed, unscored</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>21. Decide Leave Request</td>
+<td>Not tested</td>
+<td>Not tested</td>
+<td>Successful</td>
+</tr>
+<tr>
+<td>22. Daily Overdue Flagging</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>23. Complete Task and Notify</td>
+<td>Failed</td>
+<td>Successful</td>
+<td>Successful</td>
+</tr>
+<tr>
+<td>24. SLA Health Monitor</td>
+<td>Completed, unscored</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>25. Resolve ITSM Work Item</td>
+<td>Failed</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>26. Major Incident Update</td>
+<td>Failed</td>
+<td>Failed</td>
+<td>Successful</td>
+</tr>
+<tr>
+<td>27. Create ITSM Work Item</td>
+<td>Not tested</td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>28. SLA Monitor</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>29. Submit ITSM Change</td>
+<td>Not tested</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>30. Record Advance Decision</td>
+<td>Not tested</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>31. Create Service Ticket</td>
+<td>Failed</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>32. Submit Maintenance Completion</td>
+<td>Failed</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>33. Daily Overdue Acknowledgment Reminders</td>
+<td>Not tested</td>
+<td>Not tested</td>
+<td>Completed, unscored</td>
+</tr>
+<tr>
+<td>34. Record Change Decision</td>
+<td>Completed, unscored</td>
+<td>Not tested</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>35. Record Expense Decision</td>
+<td>Not tested</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>36. Mark Reimbursement Paid</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td>Successful</td>
+</tr>
+<tr>
+<td>37. Change Approval</td>
+<td>Completed, unscored</td>
+<td>Failed</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>38. Review Maintenance Completion</td>
+<td>Not tested</td>
+<td>Not tested</td>
+<td>Not tested</td>
+</tr>
+<tr>
+<td>39. Submit Leave Request</td>
+<td>Failed</td>
+<td>Failed</td>
+<td>Failed</td>
+</tr>
+</tbody></table>
+<h2>Run 1</h2>
+<p>Dataset: Workflow briefs · last-day solution-builder plans. Run ID: <code>plans-20260913/round-1</code>. Model: Luna low, supervised by four Sol low workers. Started 2026-09-12T19:47:47.644Z; last recorded result 2026-09-12T20:21:26.413Z.</p>
+<p>Accuracy: <strong>1/39 (2.6%)</strong>. Mean cost per case: <strong>$0.1046</strong>. Mean recorded time per case: <strong>171.9 seconds</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th align="right">Mean</th>
+<th align="right">Median</th>
+<th align="right">P95</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Luna cost / case</td>
+<td align="right">$0.1046</td>
+<td align="right">$0.1115</td>
+<td align="right">$0.1689</td>
+</tr>
+<tr>
+<td>Recorded time / case</td>
+<td align="right">171.9 s</td>
+<td align="right">183.2 s</td>
+<td align="right">277.6 s</td>
+</tr>
+</tbody></table>
+<p>Authoring wall time: 30.9 minutes. Full run wall time: 33.6 minutes. Saved drafts: 25. Native TEST attempts: 25; all-fixture native completion: 20.</p>
+<p>Each row is this run only. Costs and times are not cumulative across runs. TEST status uses the strict accuracy rule. Code and trace links retain the exact attempt; the metrics JSON contains every native Attest run ID.</p>
+<table>
+<thead>
+<tr>
+<th>Case / automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th align="right">Luna cost</th>
+<th align="right">Author time</th>
+<th align="right">Save / TEST time</th>
+<th align="right">Recorded total</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Submit Cash Advance</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.10668</td>
+<td align="right">197.2 s</td>
+<td align="right">N/A</td>
+<td align="right">197.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-063150dad4ef547c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-063150dad4ef547c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-063150dad4ef547c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>2. Publish Announcement</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.16887</td>
+<td align="right">214.3 s</td>
+<td align="right">N/A</td>
+<td align="right">214.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-0848c2e163ca022a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-0848c2e163ca022a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-0848c2e163ca022a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>3. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3ebe51bec3623b99c99/builder">Summarize Conversation</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.14571</td>
+<td align="right">271.6 s</td>
+<td align="right">5.9 s</td>
+<td align="right">277.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-08fb43e89dc0b5cc/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-08fb43e89dc0b5cc/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-08fb43e89dc0b5cc/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>4. Acknowledge Announcement</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.11152</td>
+<td align="right">216.6 s</td>
+<td align="right">N/A</td>
+<td align="right">216.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-0bca45a425aec3e5/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-0bca45a425aec3e5/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-0bca45a425aec3e5/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>5. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3d92cb0ec2477e23744/builder">Roll Up Daily Chat Metrics</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.07236</td>
+<td align="right">113.7 s</td>
+<td align="right">3.6 s</td>
+<td align="right">117.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-1f0e1e24c7cae8a1/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-1f0e1e24c7cae8a1/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-1f0e1e24c7cae8a1/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>6. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3e146071a4b9606c303/builder">SLA Monitor</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.05741</td>
+<td align="right">99.4 s</td>
+<td align="right">3.4 s</td>
+<td align="right">102.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-24bb25ef60383724/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-24bb25ef60383724/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-24bb25ef60383724/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>7. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3f2e51bec3623b99ea5/builder">Submit Expense Claim</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.14169</td>
+<td align="right">152.3 s</td>
+<td align="right">6.8 s</td>
+<td align="right">159.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-29d3408757f9a642/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-29d3408757f9a642/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-29d3408757f9a642/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>8. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3f6e51bec3623b99ec1/builder">Generate Assistant Response</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.08857</td>
+<td align="right">138.9 s</td>
+<td align="right">6.5 s</td>
+<td align="right">145.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-2e69790a279e6f40/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-2e69790a279e6f40/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-2e69790a279e6f40/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>9. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3dd2cb0ec2477e2376d/builder">Daily Overdue Task Digest</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.04207</td>
+<td align="right">83.7 s</td>
+<td align="right">3.3 s</td>
+<td align="right">87.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-45252aa7845aa46a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-45252aa7845aa46a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-45252aa7845aa46a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>10. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3e52cb0ec2477e23804/builder">Request Approval</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.08181</td>
+<td align="right">122.3 s</td>
+<td align="right">5.9 s</td>
+<td align="right">128.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-462021d1a8ecec10/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-462021d1a8ecec10/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-462021d1a8ecec10/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>11. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3fab393454397904f7c/builder">Regenerate Assistant Response</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.06827</td>
+<td align="right">101.2 s</td>
+<td align="right">7.7 s</td>
+<td align="right">108.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-49ba14442e63106c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-49ba14442e63106c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-49ba14442e63106c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>12. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3fd60e086771318c334/builder">Record Approval Decision</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.08515</td>
+<td align="right">131.1 s</td>
+<td align="right">6.2 s</td>
+<td align="right">137.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-4fb93b5197de3ba4/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-4fb93b5197de3ba4/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-4fb93b5197de3ba4/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>13. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3e12cb0ec2477e2377a/builder">Incident Intake</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.07979</td>
+<td align="right">138.3 s</td>
+<td align="right">6.2 s</td>
+<td align="right">144.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-533a80a7479fe7a7/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-533a80a7479fe7a7/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-533a80a7479fe7a7/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>14. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3ece51bec3623b99cb5/builder">Reset Monthly Leave Balances</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.13375</td>
+<td align="right">296.5 s</td>
+<td align="right">3.1 s</td>
+<td align="right">299.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-564f63a4579ce93c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-564f63a4579ce93c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-564f63a4579ce93c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>15. Chase Pending Approvals</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.12730</td>
+<td align="right">194.2 s</td>
+<td align="right">N/A</td>
+<td align="right">194.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-5f2abb220f4fa9a6/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-5f2abb220f4fa9a6/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-5f2abb220f4fa9a6/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>16. Daily Overdue Flagging</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.12297</td>
+<td align="right">208.3 s</td>
+<td align="right">N/A</td>
+<td align="right">208.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-6424d389c1c55b2f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-6424d389c1c55b2f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-6424d389c1c55b2f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>17. Request Routing</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.13384</td>
+<td align="right">187.5 s</td>
+<td align="right">N/A</td>
+<td align="right">187.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-686b36320dc5f97d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-686b36320dc5f97d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-686b36320dc5f97d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>18. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3f0f10f834d4ed3298c/builder">Process Conversation Document</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.06212</td>
+<td align="right">140.4 s</td>
+<td align="right">6.4 s</td>
+<td align="right">146.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-73a41cc4b60a6d01/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-73a41cc4b60a6d01/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-73a41cc4b60a6d01/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>19. Monitor Overdue Maintenance Jobs</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.11354</td>
+<td align="right">191.0 s</td>
+<td align="right">N/A</td>
+<td align="right">191.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-7a15b4719c912453/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-7a15b4719c912453/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-7a15b4719c912453/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>20. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b4042cb0ec2477e23a3e/builder">Daily Task Follow-up</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.06175</td>
+<td align="right">133.7 s</td>
+<td align="right">3.5 s</td>
+<td align="right">137.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-7dcca8cc808886f9/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-7dcca8cc808886f9/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-7dcca8cc808886f9/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>21. Decide Leave Request</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.15793</td>
+<td align="right">216.0 s</td>
+<td align="right">N/A</td>
+<td align="right">216.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-810e6179d67b5e2e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-810e6179d67b5e2e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-810e6179d67b5e2e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>22. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3f72cb0ec2477e239b9/builder">Daily Overdue Flagging</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.06575</td>
+<td align="right">147.7 s</td>
+<td align="right">3.6 s</td>
+<td align="right">151.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-819d4addc2d7541d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-819d4addc2d7541d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-819d4addc2d7541d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>23. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b40346071a4b9606c6fb/builder">Complete Task and Notify</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.05603</td>
+<td align="right">68.8 s</td>
+<td align="right">6.1 s</td>
+<td align="right">74.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-81de5d0a8531578b/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-81de5d0a8531578b/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-81de5d0a8531578b/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>24. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b40846071a4b9606c713/builder">SLA Health Monitor</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.07956</td>
+<td align="right">156.5 s</td>
+<td align="right">3.2 s</td>
+<td align="right">159.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-926c040d3c077cd8/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-926c040d3c077cd8/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-926c040d3c077cd8/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>25. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3e9b393454397904bee/builder">Resolve ITSM Work Item</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.11712</td>
+<td align="right">190.8 s</td>
+<td align="right">6.2 s</td>
+<td align="right">197.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9285d825eba934df/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9285d825eba934df/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9285d825eba934df/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>26. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b3fce51bec3623b99f66/builder">Major Incident Update</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.13790</td>
+<td align="right">206.0 s</td>
+<td align="right">6.4 s</td>
+<td align="right">212.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9c2f85460547577c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9c2f85460547577c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9c2f85460547577c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>27. Create ITSM Work Item</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.21144</td>
+<td align="right">223.5 s</td>
+<td align="right">N/A</td>
+<td align="right">223.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9ffe97bf3b92e44f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9ffe97bf3b92e44f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-9ffe97bf3b92e44f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>28. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b40cf10f834d4ed32c7b/builder">SLA Monitor</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.04842</td>
+<td align="right">104.7 s</td>
+<td align="right">3.2 s</td>
+<td align="right">107.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-a43c9a15d5c1cebb/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-a43c9a15d5c1cebb/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-a43c9a15d5c1cebb/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>29. Submit ITSM Change</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.14173</td>
+<td align="right">229.9 s</td>
+<td align="right">N/A</td>
+<td align="right">229.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-a6184442d3895a99/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-a6184442d3895a99/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-a6184442d3895a99/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>30. Record Advance Decision</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.12402</td>
+<td align="right">194.7 s</td>
+<td align="right">N/A</td>
+<td align="right">194.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-ae478f30d9fe8c5d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-ae478f30d9fe8c5d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-ae478f30d9fe8c5d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>31. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b40bf10f834d4ed32c60/builder">Create Service Ticket</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.07901</td>
+<td align="right">138.3 s</td>
+<td align="right">6.4 s</td>
+<td align="right">144.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-c4b3e080be9f076e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-c4b3e080be9f076e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-c4b3e080be9f076e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>32. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b410b3934543979054ef/builder">Submit Maintenance Completion</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.14836</td>
+<td align="right">172.3 s</td>
+<td align="right">6.4 s</td>
+<td align="right">178.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-c6c90b5313dc8f49/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-c6c90b5313dc8f49/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-c6c90b5313dc8f49/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>33. Daily Overdue Acknowledgment Reminders</td>
+<td>Completed</td>
+<td>Not tested</td>
+<td align="right">$0.10201</td>
+<td align="right">166.2 s</td>
+<td align="right">60.5 s</td>
+<td align="right">226.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-d6af15b12e5bb50a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-d6af15b12e5bb50a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-d6af15b12e5bb50a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>34. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b40346071a4b9606c6f7/builder">Record Change Decision</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.13714</td>
+<td align="right">177.0 s</td>
+<td align="right">6.2 s</td>
+<td align="right">183.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-dd49d5ea22d96484/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-dd49d5ea22d96484/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-dd49d5ea22d96484/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>35. Record Expense Decision</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.12497</td>
+<td align="right">218.2 s</td>
+<td align="right">N/A</td>
+<td align="right">218.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-e5ebb65936781b2f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-e5ebb65936781b2f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-e5ebb65936781b2f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>36. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b417f10f834d4ed33b2d/builder">Mark Reimbursement Paid</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.12692</td>
+<td align="right">185.2 s</td>
+<td align="right">5.2 s</td>
+<td align="right">190.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-e6870baeaff9655e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-e6870baeaff9655e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-e6870baeaff9655e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>37. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b42e60e086771318cc7e/builder">Change Approval</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.04514</td>
+<td align="right">78.0 s</td>
+<td align="right">6.2 s</td>
+<td align="right">84.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-ecc1b7808d1c4461/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-ecc1b7808d1c4461/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-ecc1b7808d1c4461/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>38. Review Maintenance Completion</td>
+<td>Completed</td>
+<td>Not tested</td>
+<td align="right">$0.11695</td>
+<td align="right">168.0 s</td>
+<td align="right">60.4 s</td>
+<td align="right">228.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-eff1bc710abe3b5d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-eff1bc710abe3b5d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-eff1bc710abe3b5d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>39. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5b412f10f834d4ed32d72/builder">Submit Leave Request</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.05471</td>
+<td align="right">77.6 s</td>
+<td align="right">4.6 s</td>
+<td align="right">82.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-f347bb78186b5c6b/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-f347bb78186b5c6b/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-1/cases/plan-f347bb78186b5c6b/test-result.json">TEST</a></td>
+</tr>
+</tbody></table>
+<h2>Run 2</h2>
+<p>Dataset: Workflow briefs · last-day solution-builder plans. Run ID: <code>plans-20260913/round-2</code>. Model: Luna low, supervised by four Sol low workers. Started 2026-09-12T20:44:05.176Z; last recorded result 2026-09-12T21:34:15.042Z.</p>
+<p>Accuracy: <strong>3/39 (7.7%)</strong>. Mean cost per case: <strong>$0.1338</strong>. Mean recorded time per case: <strong>257.7 seconds</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th align="right">Mean</th>
+<th align="right">Median</th>
+<th align="right">P95</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Luna cost / case</td>
+<td align="right">$0.1338</td>
+<td align="right">$0.1404</td>
+<td align="right">$0.2110</td>
+</tr>
+<tr>
+<td>Recorded time / case</td>
+<td align="right">257.7 s</td>
+<td align="right">256.4 s</td>
+<td align="right">426.1 s</td>
+</tr>
+</tbody></table>
+<p>Authoring wall time: 41.9 minutes. Full run wall time: 50.2 minutes. Saved drafts: 30. Native TEST attempts: 30; all-fixture native completion: 17.</p>
+<p>Each row is this run only. Costs and times are not cumulative across runs. TEST status uses the strict accuracy rule. Code and trace links retain the exact attempt; the metrics JSON contains every native Attest run ID.</p>
+<table>
+<thead>
+<tr>
+<th>Case / automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th align="right">Luna cost</th>
+<th align="right">Author time</th>
+<th align="right">Save / TEST time</th>
+<th align="right">Recorded total</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Submit Cash Advance</td>
+<td>Completed</td>
+<td>Not tested</td>
+<td align="right">$0.14491</td>
+<td align="right">218.4 s</td>
+<td align="right">60.8 s</td>
+<td align="right">279.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-063150dad4ef547c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-063150dad4ef547c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-063150dad4ef547c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>2. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c399f10f834d4ed8b53a/builder">Publish Announcement</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.15751</td>
+<td align="right">227.2 s</td>
+<td align="right">126.8 s</td>
+<td align="right">354.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-0848c2e163ca022a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-0848c2e163ca022a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-0848c2e163ca022a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>3. Summarize Conversation</td>
+<td>Completed</td>
+<td>Not tested</td>
+<td align="right">$0.10497</td>
+<td align="right">144.7 s</td>
+<td align="right">60.5 s</td>
+<td align="right">205.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-08fb43e89dc0b5cc/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-08fb43e89dc0b5cc/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-08fb43e89dc0b5cc/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>4. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3b02cb0ec2477eb6fe7/builder">Acknowledge Announcement</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.05017</td>
+<td align="right">170.0 s</td>
+<td align="right">7.0 s</td>
+<td align="right">177.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-0bca45a425aec3e5/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-0bca45a425aec3e5/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-0bca45a425aec3e5/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>5. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3cce51bec3623bc4503/builder">Roll Up Daily Chat Metrics</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.12342</td>
+<td align="right">222.1 s</td>
+<td align="right">3.3 s</td>
+<td align="right">225.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-1f0e1e24c7cae8a1/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-1f0e1e24c7cae8a1/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-1f0e1e24c7cae8a1/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>6. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c418f10f834d4ed8c120/builder">SLA Monitor</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.11003</td>
+<td align="right">168.5 s</td>
+<td align="right">3.7 s</td>
+<td align="right">172.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-24bb25ef60383724/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-24bb25ef60383724/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-24bb25ef60383724/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>7. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3e346071a4b960a73f2/builder">Submit Expense Claim</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.12709</td>
+<td align="right">161.2 s</td>
+<td align="right">6.7 s</td>
+<td align="right">167.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-29d3408757f9a642/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-29d3408757f9a642/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-29d3408757f9a642/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>8. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3b72cb0ec2477eb7189/builder">Generate Assistant Response</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.15734</td>
+<td align="right">342.4 s</td>
+<td align="right">6.4 s</td>
+<td align="right">348.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-2e69790a279e6f40/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-2e69790a279e6f40/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-2e69790a279e6f40/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>9. Daily Overdue Task Digest</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.24364</td>
+<td align="right">326.4 s</td>
+<td align="right">N/A</td>
+<td align="right">326.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-45252aa7845aa46a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-45252aa7845aa46a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-45252aa7845aa46a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>10. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c41d46071a4b960a78ff/builder">Request Approval</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.18803</td>
+<td align="right">276.5 s</td>
+<td align="right">6.5 s</td>
+<td align="right">283.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-462021d1a8ecec10/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-462021d1a8ecec10/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-462021d1a8ecec10/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>11. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3ea2cb0ec2477eb788c/builder">Regenerate Assistant Response</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.07755</td>
+<td align="right">203.3 s</td>
+<td align="right">8.2 s</td>
+<td align="right">211.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-49ba14442e63106c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-49ba14442e63106c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-49ba14442e63106c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>12. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3bf2cb0ec2477eb72a7/builder">Record Approval Decision</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.21102</td>
+<td align="right">274.5 s</td>
+<td align="right">6.6 s</td>
+<td align="right">281.1 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-4fb93b5197de3ba4/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-4fb93b5197de3ba4/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-4fb93b5197de3ba4/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>13. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3d02cb0ec2477eb767d/builder">Incident Intake</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.20282</td>
+<td align="right">367.5 s</td>
+<td align="right">6.1 s</td>
+<td align="right">373.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-533a80a7479fe7a7/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-533a80a7479fe7a7/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-533a80a7479fe7a7/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>14. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c42460e08677131a0b06/builder">Reset Monthly Leave Balances</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.17391</td>
+<td align="right">333.7 s</td>
+<td align="right">3.4 s</td>
+<td align="right">337.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-564f63a4579ce93c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-564f63a4579ce93c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-564f63a4579ce93c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>15. Chase Pending Approvals</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.20793</td>
+<td align="right">324.8 s</td>
+<td align="right">N/A</td>
+<td align="right">324.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-5f2abb220f4fa9a6/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-5f2abb220f4fa9a6/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-5f2abb220f4fa9a6/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>16. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3c6b39345439794a496/builder">Daily Overdue Flagging</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.08583</td>
+<td align="right">291.4 s</td>
+<td align="right">3.5 s</td>
+<td align="right">294.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-6424d389c1c55b2f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-6424d389c1c55b2f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-6424d389c1c55b2f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>17. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3d746071a4b960a71b9/builder">Request Routing</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.07179</td>
+<td align="right">133.5 s</td>
+<td align="right">6.2 s</td>
+<td align="right">139.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-686b36320dc5f97d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-686b36320dc5f97d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-686b36320dc5f97d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>18. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c428e51bec3623bc974a/builder">Process Conversation Document</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.14770</td>
+<td align="right">224.0 s</td>
+<td align="right">6.4 s</td>
+<td align="right">230.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-73a41cc4b60a6d01/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-73a41cc4b60a6d01/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-73a41cc4b60a6d01/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>19. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3f3f10f834d4ed8be09/builder">Monitor Overdue Maintenance Jobs</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.06802</td>
+<td align="right">161.5 s</td>
+<td align="right">180.8 s</td>
+<td align="right">342.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-7a15b4719c912453/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-7a15b4719c912453/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-7a15b4719c912453/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>20. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3cab39345439794a4dd/builder">Daily Task Follow-up</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.08467</td>
+<td align="right">211.3 s</td>
+<td align="right">3.6 s</td>
+<td align="right">215.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-7dcca8cc808886f9/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-7dcca8cc808886f9/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-7dcca8cc808886f9/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>21. Decide Leave Request</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.16078</td>
+<td align="right">205.6 s</td>
+<td align="right">N/A</td>
+<td align="right">205.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-810e6179d67b5e2e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-810e6179d67b5e2e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-810e6179d67b5e2e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>22. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c42fb39345439794b55d/builder">Daily Overdue Flagging</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.11261</td>
+<td align="right">190.7 s</td>
+<td align="right">180.7 s</td>
+<td align="right">371.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-819d4addc2d7541d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-819d4addc2d7541d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-819d4addc2d7541d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>23. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c4a960e08677131a1b7c/builder">Complete Task and Notify</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.09349</td>
+<td align="right">141.0 s</td>
+<td align="right">6.4 s</td>
+<td align="right">147.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-81de5d0a8531578b/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-81de5d0a8531578b/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-81de5d0a8531578b/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>24. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3ceb39345439794a7b5/builder">SLA Health Monitor</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.09680</td>
+<td align="right">187.4 s</td>
+<td align="right">3.4 s</td>
+<td align="right">190.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-926c040d3c077cd8/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-926c040d3c077cd8/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-926c040d3c077cd8/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>25. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3df60e08677131a05f4/builder">Resolve ITSM Work Item</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.08239</td>
+<td align="right">117.3 s</td>
+<td align="right">6.8 s</td>
+<td align="right">124.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9285d825eba934df/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9285d825eba934df/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9285d825eba934df/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>26. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c4e5e51bec3623bcc221/builder">Major Incident Update</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.19291</td>
+<td align="right">280.5 s</td>
+<td align="right">8.3 s</td>
+<td align="right">288.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9c2f85460547577c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9c2f85460547577c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9c2f85460547577c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>27. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c4b0f10f834d4ed8cdd5/builder">Create ITSM Work Item</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.09302</td>
+<td align="right">127.9 s</td>
+<td align="right">6.6 s</td>
+<td align="right">134.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9ffe97bf3b92e44f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9ffe97bf3b92e44f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-9ffe97bf3b92e44f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>28. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3d2e51bec3623bc45a8/builder">SLA Monitor</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.16665</td>
+<td align="right">245.4 s</td>
+<td align="right">180.7 s</td>
+<td align="right">426.1 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-a43c9a15d5c1cebb/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-a43c9a15d5c1cebb/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-a43c9a15d5c1cebb/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>29. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3e6b39345439794ac83/builder">Submit ITSM Change</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.14124</td>
+<td align="right">225.6 s</td>
+<td align="right">6.5 s</td>
+<td align="right">232.1 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-a6184442d3895a99/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-a6184442d3895a99/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-a6184442d3895a99/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>30. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c4ed60e08677131a225f/builder">Record Advance Decision</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.11347</td>
+<td align="right">257.5 s</td>
+<td align="right">8.1 s</td>
+<td align="right">265.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-ae478f30d9fe8c5d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-ae478f30d9fe8c5d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-ae478f30d9fe8c5d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>31. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c4b760e08677131a1cd4/builder">Create Service Ticket</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.05934</td>
+<td align="right">110.3 s</td>
+<td align="right">7.8 s</td>
+<td align="right">118.1 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-c4b3e080be9f076e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-c4b3e080be9f076e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-c4b3e080be9f076e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>32. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c488e51bec3623bcae94/builder">Submit Maintenance Completion</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.08172</td>
+<td align="right">128.6 s</td>
+<td align="right">5.1 s</td>
+<td align="right">133.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-c6c90b5313dc8f49/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-c6c90b5313dc8f49/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-c6c90b5313dc8f49/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>33. Daily Overdue Acknowledgment Reminders</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.18153</td>
+<td align="right">296.0 s</td>
+<td align="right">N/A</td>
+<td align="right">296.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-d6af15b12e5bb50a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-d6af15b12e5bb50a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-d6af15b12e5bb50a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>34. Record Change Decision</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.17791</td>
+<td align="right">256.4 s</td>
+<td align="right">N/A</td>
+<td align="right">256.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-dd49d5ea22d96484/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-dd49d5ea22d96484/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-dd49d5ea22d96484/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>35. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c4c0b39345439794d7aa/builder">Record Expense Decision</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.05031</td>
+<td align="right">96.2 s</td>
+<td align="right">7.3 s</td>
+<td align="right">103.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-e5ebb65936781b2f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-e5ebb65936781b2f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-e5ebb65936781b2f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>36. Mark Reimbursement Paid</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.20179</td>
+<td align="right">246.1 s</td>
+<td align="right">N/A</td>
+<td align="right">246.1 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-e6870baeaff9655e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-e6870baeaff9655e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-e6870baeaff9655e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>37. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c3eee51bec3623bc5968/builder">Change Approval</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.16803</td>
+<td align="right">229.1 s</td>
+<td align="right">361.1 s</td>
+<td align="right">590.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-ecc1b7808d1c4461/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-ecc1b7808d1c4461/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-ecc1b7808d1c4461/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>38. Review Maintenance Completion</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.16609</td>
+<td align="right">287.0 s</td>
+<td align="right">N/A</td>
+<td align="right">287.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-eff1bc710abe3b5d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-eff1bc710abe3b5d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-eff1bc710abe3b5d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>39. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5c4c8b39345439794ec1e/builder">Submit Leave Request</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.14042</td>
+<td align="right">333.0 s</td>
+<td align="right">8.6 s</td>
+<td align="right">341.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-f347bb78186b5c6b/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-f347bb78186b5c6b/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-2/cases/plan-f347bb78186b5c6b/test-result.json">TEST</a></td>
+</tr>
+</tbody></table>
+<h2>Run 3</h2>
+<p>Dataset: Workflow briefs · last-day solution-builder plans. Run ID: <code>plans-20260913/round-3</code>. Model: Luna low, supervised by four Sol low workers. Started 2026-09-12T21:48:31.657Z; last recorded result 2026-09-12T22:39:51.164Z.</p>
+<p>Accuracy: <strong>7/39 (17.9%)</strong>. Mean cost per case: <strong>$0.1509</strong>. Mean recorded time per case: <strong>253.4 seconds</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th align="right">Mean</th>
+<th align="right">Median</th>
+<th align="right">P95</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Luna cost / case</td>
+<td align="right">$0.1509</td>
+<td align="right">$0.1476</td>
+<td align="right">$0.2427</td>
+</tr>
+<tr>
+<td>Recorded time / case</td>
+<td align="right">253.4 s</td>
+<td align="right">246.3 s</td>
+<td align="right">411.2 s</td>
+</tr>
+</tbody></table>
+<p>Authoring wall time: 45.3 minutes. Full run wall time: 51.3 minutes. Saved drafts: 32. Native TEST attempts: 32; all-fixture native completion: 24.</p>
+<p>Each row is this run only. Costs and times are not cumulative across runs. TEST status uses the strict accuracy rule. Code and trace links retain the exact attempt; the metrics JSON contains every native Attest run ID.</p>
+<table>
+<thead>
+<tr>
+<th>Case / automation</th>
+<th>Build</th>
+<th>TEST</th>
+<th align="right">Luna cost</th>
+<th align="right">Author time</th>
+<th align="right">Save / TEST time</th>
+<th align="right">Recorded total</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3762cb0ec2477ed14d6/builder">Submit Cash Advance</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.19920</td>
+<td align="right">318.2 s</td>
+<td align="right">6.6 s</td>
+<td align="right">324.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-063150dad4ef547c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-063150dad4ef547c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-063150dad4ef547c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>2. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d383f10f834d4ed9ae8c/builder">Publish Announcement</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.24270</td>
+<td align="right">313.5 s</td>
+<td align="right">7.3 s</td>
+<td align="right">320.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-0848c2e163ca022a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-0848c2e163ca022a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-0848c2e163ca022a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>3. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d38cb3934543979cb2ad/builder">Summarize Conversation</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.10771</td>
+<td align="right">158.7 s</td>
+<td align="right">7.8 s</td>
+<td align="right">166.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-08fb43e89dc0b5cc/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-08fb43e89dc0b5cc/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-08fb43e89dc0b5cc/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>4. Acknowledge Announcement</td>
+<td>Completed</td>
+<td>Not tested</td>
+<td align="right">$0.11030</td>
+<td align="right">181.2 s</td>
+<td align="right">60.4 s</td>
+<td align="right">241.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-0bca45a425aec3e5/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-0bca45a425aec3e5/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-0bca45a425aec3e5/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>5. Roll Up Daily Chat Metrics</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.18582</td>
+<td align="right">315.8 s</td>
+<td align="right">N/A</td>
+<td align="right">315.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-1f0e1e24c7cae8a1/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-1f0e1e24c7cae8a1/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-1f0e1e24c7cae8a1/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>6. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d38bf10f834d4ed9ae98/builder">SLA Monitor</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.14763</td>
+<td align="right">324.6 s</td>
+<td align="right">3.5 s</td>
+<td align="right">328.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-24bb25ef60383724/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-24bb25ef60383724/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-24bb25ef60383724/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>7. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d394e51bec3623c049c1/builder">Submit Expense Claim</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.19421</td>
+<td align="right">232.5 s</td>
+<td align="right">6.9 s</td>
+<td align="right">239.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-29d3408757f9a642/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-29d3408757f9a642/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-29d3408757f9a642/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>8. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3d7e51bec3623c05117/builder">Generate Assistant Response</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.10409</td>
+<td align="right">133.9 s</td>
+<td align="right">7.5 s</td>
+<td align="right">141.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-2e69790a279e6f40/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-2e69790a279e6f40/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-2e69790a279e6f40/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>9. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d37e46071a4b960e6673/builder">Daily Overdue Task Digest</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.15454</td>
+<td align="right">294.3 s</td>
+<td align="right">3.6 s</td>
+<td align="right">298.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-45252aa7845aa46a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-45252aa7845aa46a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-45252aa7845aa46a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>10. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d38f2cb0ec2477ed1715/builder">Request Approval</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.17674</td>
+<td align="right">178.1 s</td>
+<td align="right">7.3 s</td>
+<td align="right">185.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-462021d1a8ecec10/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-462021d1a8ecec10/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-462021d1a8ecec10/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>11. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d39ce51bec3623c04a36/builder">Regenerate Assistant Response</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.11656</td>
+<td align="right">146.3 s</td>
+<td align="right">9.2 s</td>
+<td align="right">155.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-49ba14442e63106c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-49ba14442e63106c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-49ba14442e63106c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>12. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3df2cb0ec2477ed1a1c/builder">Record Approval Decision</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.12696</td>
+<td align="right">256.9 s</td>
+<td align="right">9.7 s</td>
+<td align="right">266.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-4fb93b5197de3ba4/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-4fb93b5197de3ba4/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-4fb93b5197de3ba4/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>13. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d382b3934543979cb169/builder">Incident Intake</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.09179</td>
+<td align="right">136.5 s</td>
+<td align="right">8.6 s</td>
+<td align="right">145.1 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-533a80a7479fe7a7/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-533a80a7479fe7a7/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-533a80a7479fe7a7/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>14. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d397b3934543979cb67e/builder">Reset Monthly Leave Balances</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.20742</td>
+<td align="right">294.1 s</td>
+<td align="right">3.5 s</td>
+<td align="right">297.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-564f63a4579ce93c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-564f63a4579ce93c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-564f63a4579ce93c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>15. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3a6e51bec3623c04ad9/builder">Chase Pending Approvals</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.18591</td>
+<td align="right">385.4 s</td>
+<td align="right">3.6 s</td>
+<td align="right">389.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-5f2abb220f4fa9a6/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-5f2abb220f4fa9a6/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-5f2abb220f4fa9a6/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>16. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3eaf10f834d4ed9b1ec/builder">Daily Overdue Flagging</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.09968</td>
+<td align="right">164.2 s</td>
+<td align="right">180.7 s</td>
+<td align="right">344.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-6424d389c1c55b2f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-6424d389c1c55b2f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-6424d389c1c55b2f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>17. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d38bb3934543979cb2ab/builder">Request Routing</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.13101</td>
+<td align="right">403.3 s</td>
+<td align="right">8.0 s</td>
+<td align="right">411.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-686b36320dc5f97d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-686b36320dc5f97d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-686b36320dc5f97d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>18. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d39bb3934543979cb745/builder">Process Conversation Document</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.21312</td>
+<td align="right">359.3 s</td>
+<td align="right">6.5 s</td>
+<td align="right">365.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-73a41cc4b60a6d01/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-73a41cc4b60a6d01/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-73a41cc4b60a6d01/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>19. Monitor Overdue Maintenance Jobs</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.18878</td>
+<td align="right">246.3 s</td>
+<td align="right">N/A</td>
+<td align="right">246.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-7a15b4719c912453/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-7a15b4719c912453/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-7a15b4719c912453/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>20. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d49f46071a4b960e7510/builder">Daily Task Follow-up</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.07355</td>
+<td align="right">141.7 s</td>
+<td align="right">3.8 s</td>
+<td align="right">145.5 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-7dcca8cc808886f9/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-7dcca8cc808886f9/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-7dcca8cc808886f9/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>21. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d394b3934543979cb331/builder">Decide Leave Request</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.17139</td>
+<td align="right">227.2 s</td>
+<td align="right">7.1 s</td>
+<td align="right">234.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-810e6179d67b5e2e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-810e6179d67b5e2e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-810e6179d67b5e2e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>22. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3a32cb0ec2477ed18c9/builder">Daily Overdue Flagging</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.07334</td>
+<td align="right">142.8 s</td>
+<td align="right">3.6 s</td>
+<td align="right">146.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-819d4addc2d7541d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-819d4addc2d7541d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-819d4addc2d7541d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>23. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3aa2cb0ec2477ed18dc/builder">Complete Task and Notify</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.12043</td>
+<td align="right">152.9 s</td>
+<td align="right">7.6 s</td>
+<td align="right">160.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-81de5d0a8531578b/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-81de5d0a8531578b/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-81de5d0a8531578b/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>24. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d4a460e08677131e4c06/builder">SLA Health Monitor</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.14774</td>
+<td align="right">187.2 s</td>
+<td align="right">4.0 s</td>
+<td align="right">191.2 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-926c040d3c077cd8/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-926c040d3c077cd8/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-926c040d3c077cd8/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>25. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d39be51bec3623c04a34/builder">Resolve ITSM Work Item</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.09807</td>
+<td align="right">142.9 s</td>
+<td align="right">6.4 s</td>
+<td align="right">149.3 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9285d825eba934df/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9285d825eba934df/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9285d825eba934df/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>26. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3a7b3934543979cb7d4/builder">Major Incident Update</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.06457</td>
+<td align="right">173.3 s</td>
+<td align="right">6.5 s</td>
+<td align="right">179.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9c2f85460547577c/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9c2f85460547577c/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9c2f85460547577c/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>27. Create ITSM Work Item</td>
+<td>Completed</td>
+<td>Not tested</td>
+<td align="right">$0.21240</td>
+<td align="right">226.2 s</td>
+<td align="right">60.5 s</td>
+<td align="right">286.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9ffe97bf3b92e44f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9ffe97bf3b92e44f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-9ffe97bf3b92e44f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>28. SLA Monitor</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.22177</td>
+<td align="right">300.7 s</td>
+<td align="right">N/A</td>
+<td align="right">300.7 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-a43c9a15d5c1cebb/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-a43c9a15d5c1cebb/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-a43c9a15d5c1cebb/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>29. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3a32cb0ec2477ed18c4/builder">Submit ITSM Change</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.21729</td>
+<td align="right">421.4 s</td>
+<td align="right">6.5 s</td>
+<td align="right">427.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-a6184442d3895a99/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-a6184442d3895a99/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-a6184442d3895a99/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>30. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3aee51bec3623c04b18/builder">Record Advance Decision</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.09385</td>
+<td align="right">155.9 s</td>
+<td align="right">6.8 s</td>
+<td align="right">162.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-ae478f30d9fe8c5d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-ae478f30d9fe8c5d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-ae478f30d9fe8c5d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>31. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3f0f10f834d4ed9b210/builder">Create Service Ticket</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.10486</td>
+<td align="right">146.3 s</td>
+<td align="right">7.5 s</td>
+<td align="right">153.8 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-c4b3e080be9f076e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-c4b3e080be9f076e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-c4b3e080be9f076e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>32. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d4a946071a4b960e7518/builder">Submit Maintenance Completion</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.12289</td>
+<td align="right">275.3 s</td>
+<td align="right">6.6 s</td>
+<td align="right">281.9 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-c6c90b5313dc8f49/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-c6c90b5313dc8f49/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-c6c90b5313dc8f49/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>33. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3aab3934543979cb7d8/builder">Daily Overdue Acknowledgment Reminders</a></td>
+<td>Completed</td>
+<td>Completed, unscored</td>
+<td align="right">$0.10506</td>
+<td align="right">184.7 s</td>
+<td align="right">4.3 s</td>
+<td align="right">189.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-d6af15b12e5bb50a/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-d6af15b12e5bb50a/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-d6af15b12e5bb50a/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>34. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3b6b3934543979cb85e/builder">Record Change Decision</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.16977</td>
+<td align="right">307.5 s</td>
+<td align="right">7.1 s</td>
+<td align="right">314.6 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-dd49d5ea22d96484/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-dd49d5ea22d96484/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-dd49d5ea22d96484/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>35. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3f8f10f834d4ed9b2f5/builder">Record Expense Decision</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.20828</td>
+<td align="right">403.9 s</td>
+<td align="right">5.1 s</td>
+<td align="right">409.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-e5ebb65936781b2f/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-e5ebb65936781b2f/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-e5ebb65936781b2f/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>36. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d4b02cb0ec2477ed26b6/builder">Mark Reimbursement Paid</a></td>
+<td>Completed</td>
+<td>Successful</td>
+<td align="right">$0.10974</td>
+<td align="right">157.5 s</td>
+<td align="right">6.9 s</td>
+<td align="right">164.4 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-e6870baeaff9655e/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-e6870baeaff9655e/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-e6870baeaff9655e/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>37. Change Approval</td>
+<td>Failed</td>
+<td>Not tested</td>
+<td align="right">$0.24699</td>
+<td align="right">271.0 s</td>
+<td align="right">N/A</td>
+<td align="right">271.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-ecc1b7808d1c4461/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-ecc1b7808d1c4461/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-ecc1b7808d1c4461/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>38. Review Maintenance Completion</td>
+<td>Completed</td>
+<td>Not tested</td>
+<td align="right">$0.10711</td>
+<td align="right">163.6 s</td>
+<td align="right">60.5 s</td>
+<td align="right">224.1 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-eff1bc710abe3b5d/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-eff1bc710abe3b5d/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-eff1bc710abe3b5d/test-result.json">TEST</a></td>
+</tr>
+<tr>
+<td>39. <a href="https://agent-code-migration.uat.unifyapps.com/p/0/automations/6aa5d3fee51bec3623c051a2/builder">Submit Leave Request</a></td>
+<td>Completed</td>
+<td>Failed</td>
+<td align="right">$0.23374</td>
+<td align="right">297.4 s</td>
+<td align="right">8.5 s</td>
+<td align="right">306.0 s</td>
+<td><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-f347bb78186b5c6b/author/project/workflow.ts">Code</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-f347bb78186b5c6b/author/pi-session/result.json">Pi</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/round-3/cases/plan-f347bb78186b5c6b/test-result.json">TEST</a></td>
+</tr>
+</tbody></table>
+<h2>Repairs and interpretation</h2>
+<p>Round 1 native TEST evidence is retained, but its Attest runs failed to persist case and metric rows because environment redaction corrupted run IDs. A safe local replay verified the storage fix without re-executing platform actions. Round 1 counts here come from retained native platform artifacts. A separately labelled read-only archived replay subsequently persisted all 39 cases and metrics with verified hashes: 3 conservative assertion passes and 36 non-passes, with zero metric errors. It did not re-execute any platform workflow.</p>
+<p>Independent review found incomplete business behavior even among compiled workflows. Partial negative-path assertions do not establish full-brief correctness. No greater-than-95% business success claim is supported.</p>
+<p>Round 2 used a rebuilt SDK with JavaScript identifier/TDZ checks, clearer reference diagnostics, an exact-match edit tool, concise authoring guidance, per-case repair feedback, and a minimum required-storage-action check. Exclusive project leases and sequential package installation prevent the earlier setup race. Corrected payloads preserve the original evidence. Round 3 added exact object-ID binding for resolved aliases, strict native storage and Code output envelopes, smaller revised skills, nested-loop invocation evidence, and all-fixture scoring. Some malformed IDs still entered the initial resolution; existence validation remains a separate gap.</p>
+<h2>Evidence and coverage</h2>
+<p>Selection uses record modifiedTime from 2026-09-11T19:39:58.357Z through 2026-09-12T19:39:58.357Z. There were 26 records in that window; 14 had no workflow briefs. Different briefs sharing a stub remain separate cases. The original stubs are not modified.</p>
+<p><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/FROZEN_CORPUS_AND_PAYLOADS.json">Frozen corpus and payloads</a> · <a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/case-report.json">Full case history</a></p>
+<p>Record payloads and authored code are retained locally. No record values or credentials have been published.</p>
+<ol start="2">
+<li><p>Publish Announcement: No clean publishable draft exists in the captured rows: draft audience rows either attach a group to whole_team, have prior fan-out, or lack a coherent audience. A mutation-path fixture would need a reviewed seeded record.</p>
+</li>
+<li><p>Summarize Conversation: No live conversation in the captured 100-record pages has a completed user and assistant exchange, so no truthful happy-path summary fixture is available.</p>
+</li>
+<li><p>Generate Assistant Response: No live record set in the captured complete pages forms a valid active actor, visible active conversation, and submitted or retryable user message, so only truthful rejection fixtures are available.</p>
+</li>
+<li><p>Record Approval Decision: The only pending approval has both ticket and change populated, so no truthful sole-parent happy-path fixture is available.</p>
+</li>
+<li><p>Request Routing: No live service request has approval_required=true, so the approval creation happy path cannot use a genuine record.</p>
+</li>
+<li><p>Process Conversation Document: Captured file URLs use files.example.com and provide no readable source bytes. A successful extraction oracle cannot be grounded in the live records alone.</p>
+</li>
+<li><p>Decide Leave Request: The only live leave request is already approved; no pending request supports a mutating approve or reject happy path.</p>
+</li>
+<li><p>Major Incident Update: All 20 captured incident rows have major_incident=false and requester/assignee relationships absent. No valid delivery-path fixture can be grounded without a reviewed major-incident record.</p>
+</li>
+<li><p>Record Advance Decision: Every captured advance has approved_amount=0, including approved and issued rows, and every captured claim has total_amount=0. Issue and settlement success paths lack financially valid records.</p>
+</li>
+<li><p>Mark Reimbursement Paid: No live claim has approved status, ready or partially_paid reimbursement state, and positive remaining approved reimbursement, so no truthful payment happy-path fixture is available.</p>
+</li>
+<li><p>Change Approval: No live change is in draft status, so the new approval creation happy path cannot use a genuine record.</p>
+</li>
+</ol>
+<h2>Final independent review</h2>
+<p>Four fresh Sol low reviewers examined all 39 final cases. None had sufficient evidence for full-brief correctness. The seven strict fixture passes cover available rejection paths; they do not establish the missing eligible paths.</p>
+<p>Remaining priorities:</p>
+<ul>
+<li>Validate each selected storage object exists and check every output reference against the resolved native schema. Exact alias binding alone does not prevent initially resolving a mistyped ID or using an untyped node API.</li>
+<li>Add a Groovy validation path or consistently use JavaScript with preflight checks. Groovy parse errors still reached native TEST.</li>
+<li>Make optional parent reads branch-local and distinguish required guards from ordinary business rejections. Several workflows dereference absent parents or reject valid records.</li>
+<li>Check complete brief obligations, including pagination, state changes, notifications, timestamps, and idempotency. A storage-write presence check is only a minimum build gate.</li>
+<li>Expand valid eligible-path fixtures, scheduled effect assertions, and fault-injection coverage. Synthetic acknowledgements cannot establish persisted state or rollback.</li>
+</ul>
+<p>No fourth round was run. A separate unapplied type-only candidate addresses bare-object parameter compatibility; it was not part of the benchmarked package.</p>
+<ul>
+<li><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/reviews/round-3/reviewer-0.md">Final independent review, batch 1</a></li>
+<li><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/reviews/round-3/reviewer-1.md">Final independent review, batch 2</a></li>
+<li><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/reviews/round-3/reviewer-2.md">Final independent review, batch 3</a></li>
+<li><a href="/Users/hatim.shakir/projects/misc/workflow-pi-poc/runs/plans-20260913/reviews/round-3/reviewer-3.md">Final independent review, batch 4</a></li>
+</ul>
+<h2>Retained run evidence</h2>
+<p>Round 1 originally produced failed Attest headers without persisted case rows because of a redaction bug. A separately named read-only replay preserved its results in Attest without rerunning workflows. Rounds 2 and 3 persisted 39 case and metric rows each. Infrastructure-only attempts and the archived replay are not additional generation runs.</p>
+<p>Final native results include three uncertain save POST HTTP 500 outcomes and one server-rejected TEST with no execution record. Separate reconciliation receipts preserve the follow-up observations. No uncertain mutation was replayed.</p>
+<p>Generation stopped after three rounds. Cleanup reclaimed 618.6 MiB from superseded package installations while retaining the current SDK in all four projects, every source and Pi trace, and all payload and platform evidence.</p>
+</article>
+</main>
+</body>
+</html>
