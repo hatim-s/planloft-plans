@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Automation Coder skill audit</title>
-<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+<style>/* planloft theme: editorial-wide-report. Editorial prose with full-width report tables. */
 /* planloft-color-schemes: light dark */
 :root {
   color-scheme: light dark;
@@ -61,11 +61,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 .planloft-plan {
-  width: min(100% - 2.5rem, 37rem);
+  width: min(100% - 3rem, 90rem);
   margin-inline: auto;
   padding-block: 5rem 8rem;
 }
 article > :first-child { margin-top: 0; }
+article > p,
+article > blockquote,
+article > pre {
+  max-width: 48rem;
+}
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--ink);
@@ -165,20 +170,21 @@ blockquote > :last-child { margin-bottom: 0; }
 blockquote em { font-style: normal; }
 
 table {
-  display: block;
-  width: max-content;
-  max-width: 100%;
+  display: table;
+  width: 100%;
   margin: 1.75em 0;
-  overflow-x: auto;
   border-collapse: collapse;
-  font-size: 0.9em;
-  line-height: 1.5;
+  table-layout: auto;
+  font-size: 0.82em;
+  line-height: 1.45;
 }
 th, td {
   padding: 0.5em 1em 0.5em 0;
   border-bottom: 1px solid var(--rule);
   text-align: left;
   vertical-align: top;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 th { font-weight: 700; border-bottom: 1px solid var(--ink); }
 tr > :last-child { padding-right: 0; }
@@ -198,7 +204,7 @@ summary { cursor: pointer; font-weight: 700; }
 
 @media (max-width: 40rem) {
   body { font-size: 17px; }
-  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  .planloft-plan { width: min(100% - 2rem, 90rem); padding-block: 4.5rem 5rem; }
   h1 { font-size: 2.1rem; }
   h2 { font-size: 1.4rem; }
   blockquote { margin-left: 1rem; }
@@ -291,30 +297,36 @@ summary { cursor: pointer; font-weight: 700; }
 </script>
 <main class="planloft-plan">
 <article><p>Automation Coder should not inherit the Workflow Planner and Workflow Builder skill lists wholesale. Those agents manipulate or describe workflow internals. Automation Coder writes TypeScript and delegates node ids, indexes, groups, edge wiring, and JSON serialization to the compiler. The right comparison is therefore about retained behavior, not copied files.</p>
-<p>The current cut is directionally right but incomplete. It removed most structure-specific knowledge and replaced several overlapping skills with smaller TypeScript-facing ones. Five practical domains are still missing: analytics choice and reporting, callable contracts, platform users and assets, runtime error policy, and performance controls.</p>
+<p>The current Hatim cut is close. It removed most structure-specific knowledge, consolidated runtime reliability, and retained performance guidance. Two changes remain: replace the old Storage-only skill with the existing unified UnifyApps data skill, then add callable contracts.</p>
 <blockquote>
 <p>Move business and runtime knowledge. Leave JSON shape and graph construction with the compiler.</p>
 </blockquote>
 <h2>Scope and evidence</h2>
-<p>This audit compares the skill assignments stored in the <code>uacode</code> asset repository for:</p>
+<p>This audit uses the live development agent as its Automation Coder baseline:</p>
+<ul>
+<li>Automation Coder (Hatim), <code>e_6aa3c2b0925f613bb82ddd46</code>, V17</li>
+</ul>
+<p>It compares Hatim with the skill assignments stored in the <code>uacode</code> asset repository for:</p>
 <ul>
 <li>Workflow Planner, <code>e_69e8f53f7b11356004965425</code></li>
 <li>Workflow Builder, <code>e_69e8f417a2d13979bb58c0e6</code></li>
-<li>Automation Coder, <code>e_6aa19955aeb9ea1371af57c7</code></li>
+<li>production-bound Automation Coder, <code>e_6aa19955aeb9ea1371af57c7</code></li>
 </ul>
-<p>It also checks the Automation Coder source in <code>www/packages/uac</code>: the canonical prompt, all six skill files, and the live-schema tools named by those files. The Hatim deployment has previously been checked with the same six-skill set. This report treats the repository asset as the current reproducible assignment because Chrome attachment was unavailable during this audit.</p>
+<p>The live Hatim assignment is the source of truth because this is the development agent that will be synced to production. Repository and production state are supporting evidence and drift checks, not substitutes for Hatim.</p>
 <h2>General result</h2>
 <p>Workflow Planner and Workflow Builder each have 11 assigned skills. Their combined catalogue contains 17 distinct skills, with five shared by both agents.</p>
-<p>Automation Coder has six assigned skills:</p>
+<p>Automation Coder (Hatim) has eight assigned skills:</p>
 <ol>
-<li><code>data-transforms-and-code</code></li>
+<li><code>workflow-reliability</code></li>
+<li><code>workflow-performance</code></li>
+<li><code>storage-records</code></li>
 <li><code>dates-and-time</code></li>
+<li><code>data-transforms-and-code</code></li>
+<li><code>sql-nodes</code></li>
 <li><code>files-and-attachments</code></li>
 <li><code>node-inputs-and-pills</code></li>
-<li><code>sql-nodes</code></li>
-<li><code>storage-records</code></li>
 </ol>
-<p>Of the 17 Planner and Builder domains, six are represented in Automation Coder today. Two moved directly under the same name. Four were rewritten or absorbed into TypeScript-facing skills. Eleven old domains were left out. Automation Coder also gained two focused cuts, <code>dates-and-time</code> and <code>node-inputs-and-pills</code>, which do not map one-to-one to an old assigned skill.</p>
+<p>Of the 17 Planner and Builder domains, nine are represented in Hatim today. Three moved directly under the same name. Six were rewritten or absorbed into TypeScript-facing skills. Eight old domains were left out. Hatim also has two focused cuts, <code>dates-and-time</code> and <code>node-inputs-and-pills</code>, which do not map one-to-one to an old assigned skill.</p>
 <table>
 <thead>
 <tr>
@@ -339,31 +351,32 @@ summary { cursor: pointer; font-weight: 700; }
 <td>The source catalogue for this audit</td>
 </tr>
 <tr>
-<td>Old domains represented in Coder</td>
-<td align="right">6</td>
-<td>2 direct, 4 consolidated or rewritten</td>
+<td>Old domains represented in Hatim</td>
+<td align="right">9</td>
+<td>3 direct, 6 consolidated or rewritten</td>
 </tr>
 <tr>
 <td>Old domains left out</td>
-<td align="right">11</td>
-<td>5 should stay out, 6 should inform 5 new Coder skills</td>
+<td align="right">8</td>
+<td>5 should stay out, 3 are covered by two remaining changes</td>
 </tr>
 <tr>
-<td>Current Coder assignments</td>
-<td align="right">6</td>
-<td>2 direct, 2 consolidated successors, 2 focused additions</td>
+<td>Current Hatim assignments</td>
+<td align="right">8</td>
+<td>Live V17 assignment</td>
 </tr>
 <tr>
-<td>Recommended Coder additions</td>
-<td align="right">5</td>
-<td>Adapted for TypeScript and live schema tools</td>
+<td>Recommended changes</td>
+<td align="right">2</td>
+<td>Sync <code>unifyapps-data</code>; add callable contracts</td>
 </tr>
 </tbody></table>
 <p>This counting is intentionally domain-based. Calling three old files one new skill is a consolidation, not a claim that three files were copied.</p>
 <h2>What moved</h2>
-<p><code>files-and-attachments</code> and <code>storage-records</code> moved directly. Both describe runtime contracts that remain true regardless of whether the author writes JSON or TypeScript.</p>
+<p><code>files-and-attachments</code>, <code>storage-records</code>, and <code>workflow-performance</code> moved directly. They describe runtime contracts that remain true regardless of whether the author writes JSON or TypeScript.</p>
 <p><code>code-by-unifyapps</code>, <code>code-node-selection</code>, and <code>utilities</code> were consolidated into <code>data-transforms-and-code</code>. This is a good decision. The Coder needs one route from native operation to code node, plus sandbox, bindings, and result rules. It does not benefit from three overlapping entry points.</p>
 <p><code>sql-query-builder</code> became <code>sql-nodes</code>. The rewrite keeps connection, table, column, bind, and result-envelope discovery while dropping planner annotations and Builder payload examples.</p>
+<p><code>workflow-error-handling</code> and the runtime-diagnosis part of <code>workflow-debugging</code> were consolidated into <code>workflow-reliability</code>. This is the right abstraction for Coder: retry, timeout, fallback, protected execution, silent failures, and terminal run evidence without a separate planner repair-routing skill.</p>
 <p><code>dates-and-time</code> was split out of the utility material because date absence, milliseconds, unit selection, and silent &quot;now&quot; behavior are costly runtime traps. <code>node-inputs-and-pills</code> collects dynamic schemas, nullable values, mapped arrays, and output envelopes around the DSL and compiler.</p>
 <h2>Skill-by-skill audit</h2>
 <table>
@@ -379,9 +392,9 @@ summary { cursor: pointer; font-weight: 700; }
 <tbody><tr>
 <td><code>analytics-and-reports</code></td>
 <td>Both</td>
-<td>Left out</td>
-<td>Much of the old skill names raw action keys, reporting ids, projection grammar, and export details.</td>
-<td><strong>Add, adapted.</strong> Coder still must choose analytics instead of Storage, resolve reports and projections, handle paging and stale reports, and verify aggregate outputs. Merge the selection rules from <code>storage-vs-analytics</code> into one Coder skill.</td>
+<td>Left out on Hatim</td>
+<td>The production agent already has <code>unifyapps-data</code>, which consolidates Analytics, Storage, platform assets, and routing. Hatim still has <code>storage-records</code>.</td>
+<td><strong>Sync the existing consolidation to Hatim.</strong> Do not add a separate Analytics skill.</td>
 </tr>
 <tr>
 <td><code>api-manager</code></td>
@@ -428,9 +441,9 @@ summary { cursor: pointer; font-weight: 700; }
 <tr>
 <td><code>platform-users-and-assets</code></td>
 <td>Both</td>
-<td>Left out</td>
-<td>These are platform-specific operations and triggers, not workflow graph mechanics. The current prompt does not cover their semantic traps.</td>
-<td><strong>Add, adapted.</strong> Cover the boundary between app records and platform entities, user and group resolution, current-environment metadata, platform event triggers, and output verification. Drop raw payload catalogues.</td>
+<td>Left out on Hatim</td>
+<td>These are platform-specific operations and triggers, not workflow graph mechanics. They are already distilled into production&#39;s <code>unifyapps-data</code>.</td>
+<td><strong>Sync <code>unifyapps-data</code> to Hatim.</strong> Do not restore the long standalone skill.</td>
 </tr>
 <tr>
 <td><code>sql-query-builder</code></td>
@@ -449,16 +462,16 @@ summary { cursor: pointer; font-weight: 700; }
 <tr>
 <td><code>storage-records</code></td>
 <td>Both</td>
-<td>Moved directly</td>
+<td>Moved directly on Hatim</td>
 <td>Record reads, writes, filtering, paging, triggers, output envelopes, and object schema resolution all affect authored operations.</td>
-<td><strong>Keep.</strong> It is the strongest example of a skill whose behavioral contract survives the move to TypeScript.</td>
+<td><strong>Replace with <code>unifyapps-data</code>.</strong> The unified skill retains the runtime contract while adding the correct data-surface routing.</td>
 </tr>
 <tr>
 <td><code>storage-vs-analytics</code></td>
 <td>Planner</td>
-<td>Left out</td>
-<td>Its planner-facing annotations are irrelevant, but the operation-choice rule remains important.</td>
-<td><strong>Do not add separately.</strong> Fold its decision table into the recommended Coder <code>analytics-and-reports</code> skill so one route owns both selection and implementation guidance.</td>
+<td>Left out on Hatim</td>
+<td>Its planner-facing annotations are irrelevant, but the operation-choice rule remains important. Production&#39;s <code>unifyapps-data</code> already carries that rule.</td>
+<td><strong>Sync the consolidation.</strong> Do not add this as a separate skill.</td>
 </tr>
 <tr>
 <td><code>utilities</code></td>
@@ -477,51 +490,45 @@ summary { cursor: pointer; font-weight: 700; }
 <tr>
 <td><code>workflow-debugging</code></td>
 <td>Planner</td>
-<td>Left out</td>
-<td>Planner owns run triage and decides whether to dispatch repair to Builder or Editor.</td>
-<td><strong>Keep out as a standalone skill.</strong> Coder already owns its compile, platform, save, test, and deploy ladder, including real-side-effect consent and failed-run repair. A new skill would duplicate the core loop.</td>
+<td>Consolidated in part</td>
+<td>Planner-specific dispatch routing stays out. Hatim&#39;s <code>workflow-reliability</code> owns runtime-failure diagnosis, silent failures, and terminal evidence; the core prompt owns the build and test ladder.</td>
+<td><strong>Keep the current split.</strong> A standalone debugging skill would duplicate Hatim&#39;s existing loop.</td>
 </tr>
 <tr>
 <td><code>workflow-error-handling</code></td>
 <td>Builder</td>
-<td>Left out</td>
-<td>Its JSON fields are compiler concerns, but retry, backoff, best-effort behavior, fallback semantics, and compensation are business and runtime decisions.</td>
-<td><strong>Add, adapted.</strong> Teach <code>try</code> and <code>catch</code>, scope boundaries, retry options exposed by the DSL, error outputs, and when continuing after failure is unsafe. Omit <code>fallbackMode</code> and raw node-option payloads unless the DSL exposes them directly.</td>
+<td>Consolidated as <code>workflow-reliability</code></td>
+<td>Hatim already has a TypeScript-facing reliability skill for retry, timeout, fallback, SCOPE protection, safe execution, and runtime diagnosis.</td>
+<td><strong>Keep the consolidation.</strong> Verify its source is captured before syncing production.</td>
 </tr>
 <tr>
 <td><code>workflow-performance</code></td>
 <td>Both</td>
-<td>Left out</td>
-<td>Cache decisions and replacing per-item callable loops with batching remain relevant even when the compiler owns edges.</td>
-<td><strong>Add, adapted.</strong> Cover safe cache candidates, staleness, batch-callable selection, concurrency and page size where the DSL supports them, and verification under realistic volume.</td>
+<td>Moved directly</td>
+<td>Hatim already has it assigned. Cache decisions and batch-callable selection remain relevant even when the compiler owns edges.</td>
+<td><strong>Keep.</strong> Rewrite any remaining raw JSON option guidance when the skill is brought into reviewed source.</td>
 </tr>
 </tbody></table>
-<h2>The five additions</h2>
-<h3>1. Analytics and reporting</h3>
-<p>Combine the old <code>analytics-and-reports</code> implementation knowledge with the <code>storage-vs-analytics</code> choice. The skill should answer one question first: does this flow need records or a computed result? Then it should require live report, projection, filter, paging, export, and output-envelope reads through existing tools.</p>
-<h3>2. Callable contracts</h3>
+<h2>The two remaining changes</h2>
+<h3>1. Sync <code>unifyapps-data</code> to Hatim</h3>
+<p>Production Automation Coder has <code>unifyapps-data</code> V1, while Hatim still has <code>storage-records</code> V9. The unified skill covers app records, platform users and assets, Analytics, reporting SQL, exports, and the routing choice between them. It deliberately excludes object-definition and field-schema administration. Attach this skill to Hatim and remove <code>storage-records</code> after content readback proves the intended version.</p>
+<h3>2. Add callable contracts</h3>
 <p>The core prompt has the syntax. A skill should carry the deeper contract: who calls the automation, which trigger owns each input, which node owns the response, what every branch returns, whether the call waits, and which deployed version callers can reach.</p>
-<h3>3. Platform users and assets</h3>
-<p>This needs a narrow Coder rewrite. It should distinguish platform users, teams, roles, connections, projects, and automation metadata from app-object records. The mistake to prevent is choosing Storage for platform metadata or guessing fields on standard-entity outputs.</p>
-<h3>4. Error handling</h3>
-<p>Keep this behavioral. The skill should help Coder decide whether to retry, continue, compensate, or fail, then express the decision through supported TypeScript constructs and operation options. It should never teach raw fallback edges.</p>
-<h3>5. Performance</h3>
-<p>This can stay short. Teach batching over per-record callable loops, cache only when staleness is acceptable, bound database and Storage reads, and test with representative volume. Do not include topology diagrams or JSON option blocks.</p>
 <h2>Proposed final assignment</h2>
-<p>The target is 11 Automation Coder skills:</p>
+<p>The target is nine Automation Coder skills on Hatim:</p>
 <ul>
-<li>Existing: <code>data-transforms-and-code</code>, <code>dates-and-time</code>, <code>files-and-attachments</code>, <code>node-inputs-and-pills</code>, <code>sql-nodes</code>, <code>storage-records</code></li>
-<li>Add: <code>analytics-and-reports</code>, <code>callable-contracts</code>, <code>platform-users-and-assets</code>, <code>workflow-error-handling</code>, <code>workflow-performance</code></li>
+<li>Keep: <code>workflow-reliability</code>, <code>workflow-performance</code>, <code>dates-and-time</code>, <code>data-transforms-and-code</code>, <code>sql-nodes</code>, <code>files-and-attachments</code>, <code>node-inputs-and-pills</code></li>
+<li>Replace: <code>storage-records</code> with <code>unifyapps-data</code></li>
+<li>Add: <code>callable-contracts</code></li>
 </ul>
 <p>Names may differ, but ownership should not overlap. Each new skill should use the current MCP services, point to live tenant schemas over memorized examples, and avoid workflow JSON, raw edge construction, group ids, node indexes, or legacy pill strings.</p>
 <h2>Implementation order</h2>
 <ol>
-<li>Add <code>analytics-and-reports</code>, including the Storage-versus-Analytics decision.</li>
-<li>Add <code>callable-contracts</code> and <code>platform-users-and-assets</code>; both prevent workflows that compile but integrate with the wrong runtime contract.</li>
-<li>Add <code>workflow-error-handling</code> and <code>workflow-performance</code> as concise TypeScript-facing guides.</li>
-<li>Run the existing skill sync and deployment path.</li>
-<li>Reload Automation Coder (Hatim), read back the deployed skill ids and normalized contents, and compare them with source.</li>
-<li>Evaluate one focused case per new skill. A saved workflow is not proof; inspect the real test output and deployed state where deployment is requested.</li>
+<li>Capture <code>workflow-reliability</code> and the current <code>workflow-performance</code> content in reviewed source if they are not already represented there.</li>
+<li>Attach <code>unifyapps-data</code> to Hatim and remove <code>storage-records</code> only after deployed readback.</li>
+<li>Add <code>callable-contracts</code> to Hatim.</li>
+<li>Evaluate the two changed domains on Hatim.</li>
+<li>Sync Hatim to production and verify deployed prompt and skill parity by id, version, and normalized content.</li>
 </ol>
 <p>The result keeps Automation Coder small without making it naive: the compiler owns structure, while the agent owns operation choice, runtime contracts, and business behavior.</p>
 </article>
