@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Automation Coder skill audit</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>Automation Coder should not inherit the Workflow Planner and Workflow Builder skill lists wholesale. Those agents manipulate or describe workflow internals. Automation Coder writes TypeScript and delegates node ids, indexes, groups, edge wiring, and JSON serialization to the compiler. The right comparison is therefore about retained behavior, not copied files.</p>
+<p>The current cut is directionally right but incomplete. It removed most structure-specific knowledge and replaced several overlapping skills with smaller TypeScript-facing ones. Five practical domains are still missing: analytics choice and reporting, callable contracts, platform users and assets, runtime error policy, and performance controls.</p>
+<blockquote>
+<p>Move business and runtime knowledge. Leave JSON shape and graph construction with the compiler.</p>
+</blockquote>
+<h2>Scope and evidence</h2>
+<p>This audit compares the skill assignments stored in the <code>uacode</code> asset repository for:</p>
+<ul>
+<li>Workflow Planner, <code>e_69e8f53f7b11356004965425</code></li>
+<li>Workflow Builder, <code>e_69e8f417a2d13979bb58c0e6</code></li>
+<li>Automation Coder, <code>e_6aa19955aeb9ea1371af57c7</code></li>
+</ul>
+<p>It also checks the Automation Coder source in <code>www/packages/uac</code>: the canonical prompt, all six skill files, and the live-schema tools named by those files. The Hatim deployment has previously been checked with the same six-skill set. This report treats the repository asset as the current reproducible assignment because Chrome attachment was unavailable during this audit.</p>
+<h2>General result</h2>
+<p>Workflow Planner and Workflow Builder each have 11 assigned skills. Their combined catalogue contains 17 distinct skills, with five shared by both agents.</p>
+<p>Automation Coder has six assigned skills:</p>
+<ol>
+<li><code>data-transforms-and-code</code></li>
+<li><code>dates-and-time</code></li>
+<li><code>files-and-attachments</code></li>
+<li><code>node-inputs-and-pills</code></li>
+<li><code>sql-nodes</code></li>
+<li><code>storage-records</code></li>
+</ol>
+<p>Of the 17 Planner and Builder domains, six are represented in Automation Coder today. Two moved directly under the same name. Four were rewritten or absorbed into TypeScript-facing skills. Eleven old domains were left out. Automation Coder also gained two focused cuts, <code>dates-and-time</code> and <code>node-inputs-and-pills</code>, which do not map one-to-one to an old assigned skill.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th align="right">Count</th>
+<th>Reading</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Planner assignments</td>
+<td align="right">11</td>
+<td>Planning, connection resolution, operation choice, debugging</td>
+</tr>
+<tr>
+<td>Builder assignments</td>
+<td align="right">11</td>
+<td>JSON-era node construction, structure, and runtime behavior</td>
+</tr>
+<tr>
+<td>Distinct Planner and Builder skills</td>
+<td align="right">17</td>
+<td>The source catalogue for this audit</td>
+</tr>
+<tr>
+<td>Old domains represented in Coder</td>
+<td align="right">6</td>
+<td>2 direct, 4 consolidated or rewritten</td>
+</tr>
+<tr>
+<td>Old domains left out</td>
+<td align="right">11</td>
+<td>5 should stay out, 6 should inform 5 new Coder skills</td>
+</tr>
+<tr>
+<td>Current Coder assignments</td>
+<td align="right">6</td>
+<td>2 direct, 2 consolidated successors, 2 focused additions</td>
+</tr>
+<tr>
+<td>Recommended Coder additions</td>
+<td align="right">5</td>
+<td>Adapted for TypeScript and live schema tools</td>
+</tr>
+</tbody></table>
+<p>This counting is intentionally domain-based. Calling three old files one new skill is a consolidation, not a claim that three files were copied.</p>
+<h2>What moved</h2>
+<p><code>files-and-attachments</code> and <code>storage-records</code> moved directly. Both describe runtime contracts that remain true regardless of whether the author writes JSON or TypeScript.</p>
+<p><code>code-by-unifyapps</code>, <code>code-node-selection</code>, and <code>utilities</code> were consolidated into <code>data-transforms-and-code</code>. This is a good decision. The Coder needs one route from native operation to code node, plus sandbox, bindings, and result rules. It does not benefit from three overlapping entry points.</p>
+<p><code>sql-query-builder</code> became <code>sql-nodes</code>. The rewrite keeps connection, table, column, bind, and result-envelope discovery while dropping planner annotations and Builder payload examples.</p>
+<p><code>dates-and-time</code> was split out of the utility material because date absence, milliseconds, unit selection, and silent &quot;now&quot; behavior are costly runtime traps. <code>node-inputs-and-pills</code> collects dynamic schemas, nullable values, mapped arrays, and output envelopes around the DSL and compiler.</p>
+<h2>Skill-by-skill audit</h2>
+<table>
+<thead>
+<tr>
+<th>Planner or Builder skill</th>
+<th>Assigned to</th>
+<th>Actual decision</th>
+<th>Reason</th>
+<th>Audit suggestion</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>analytics-and-reports</code></td>
+<td>Both</td>
+<td>Left out</td>
+<td>Much of the old skill names raw action keys, reporting ids, projection grammar, and export details.</td>
+<td><strong>Add, adapted.</strong> Coder still must choose analytics instead of Storage, resolve reports and projections, handle paging and stale reports, and verify aggregate outputs. Merge the selection rules from <code>storage-vs-analytics</code> into one Coder skill.</td>
+</tr>
+<tr>
+<td><code>api-manager</code></td>
+<td>Planner</td>
+<td>Left out</td>
+<td>API Manager creates and secures assets outside the automation. Automation Coder builds the workflow behind them.</td>
+<td><strong>Keep out.</strong> A callable API trigger is not permission to create groups, endpoints, clients, policies, or credentials. Hand this work to an API-management agent or tool.</td>
+</tr>
+<tr>
+<td><code>branching-and-convergence</code></td>
+<td>Builder</td>
+<td>Left out</td>
+<td>It owns JSON node shapes, branch-condition nodes, group ids, loopbacks, and convergence edge rules. The compiler derives these.</td>
+<td><strong>Keep out.</strong> The canonical prompt already teaches <code>if</code>, <code>branch</code>, loops, scopes, and the single-binding constraint at the right abstraction.</td>
+</tr>
+<tr>
+<td><code>callables</code></td>
+<td>Both</td>
+<td>Left out</td>
+<td>The prompt covers trigger syntax, terminal type, <code>describe_callable_automation</code>, and deploy separation, but not the full runtime contract.</td>
+<td><strong>Add, adapted.</strong> Cover trigger-owned input schemas, response-owned values, every-path response behavior, sync versus async invocation, version and deployment prerequisites, and interface or agent callers. Use DSL examples only.</td>
+</tr>
+<tr>
+<td><code>code-by-unifyapps</code></td>
+<td>Builder</td>
+<td>Consolidated</td>
+<td>Its useful runtime rules now sit in <code>data-transforms-and-code</code>. Its canonical JSON node shape does not belong in Coder.</td>
+<td><strong>Keep the consolidation.</strong> Do not restore a separate skill.</td>
+</tr>
+<tr>
+<td><code>code-node-selection</code></td>
+<td>Planner</td>
+<td>Consolidated</td>
+<td><code>data-transforms-and-code</code> already directs Coder to search native operations first, use connectors for network calls, and choose code only for real algorithmic work.</td>
+<td><strong>Keep the consolidation.</strong> Planner-specific brief annotations should stay out.</td>
+</tr>
+<tr>
+<td><code>files-and-attachments</code></td>
+<td>Builder</td>
+<td>Moved directly</td>
+<td>File descriptors, producer and consumer representations, access lifetime, media type, and cardinality remain runtime facts.</td>
+<td><strong>Keep.</strong> The rewritten Coder version correctly relies on live schemas and avoids action catalog dumps.</td>
+</tr>
+<tr>
+<td><code>platform-users-and-assets</code></td>
+<td>Both</td>
+<td>Left out</td>
+<td>These are platform-specific operations and triggers, not workflow graph mechanics. The current prompt does not cover their semantic traps.</td>
+<td><strong>Add, adapted.</strong> Cover the boundary between app records and platform entities, user and group resolution, current-environment metadata, platform event triggers, and output verification. Drop raw payload catalogues.</td>
+</tr>
+<tr>
+<td><code>sql-query-builder</code></td>
+<td>Planner</td>
+<td>Rewritten as <code>sql-nodes</code></td>
+<td>Database discovery and safe SQL remain necessary. Planner annotations do not.</td>
+<td><strong>Keep the rewrite.</strong> It matches Coder&#39;s <code>list_connections</code>, <code>inspect_database_schema</code>, and <code>get_operation_schema</code> flow.</td>
+</tr>
+<tr>
+<td><code>storage-object-manager</code></td>
+<td>Planner</td>
+<td>Left out</td>
+<td>It changes the data model itself. Automation Coder&#39;s current responsibility is automation authoring, not schema administration.</td>
+<td><strong>Keep out for now.</strong> Add a separate capability only if Coder gains explicit object-schema mutation tools and authority. Do not bury destructive schema work inside a workflow skill.</td>
+</tr>
+<tr>
+<td><code>storage-records</code></td>
+<td>Both</td>
+<td>Moved directly</td>
+<td>Record reads, writes, filtering, paging, triggers, output envelopes, and object schema resolution all affect authored operations.</td>
+<td><strong>Keep.</strong> It is the strongest example of a skill whose behavioral contract survives the move to TypeScript.</td>
+</tr>
+<tr>
+<td><code>storage-vs-analytics</code></td>
+<td>Planner</td>
+<td>Left out</td>
+<td>Its planner-facing annotations are irrelevant, but the operation-choice rule remains important.</td>
+<td><strong>Do not add separately.</strong> Fold its decision table into the recommended Coder <code>analytics-and-reports</code> skill so one route owns both selection and implementation guidance.</td>
+</tr>
+<tr>
+<td><code>utilities</code></td>
+<td>Builder</td>
+<td>Consolidated</td>
+<td>Native transformations, list operations, templates, text, crypto, and in-memory SQL are covered by <code>data-transforms-and-code</code>; date traps have their own skill.</td>
+<td><strong>Keep the consolidation.</strong> One entry point reduces overlap and tool churn.</td>
+</tr>
+<tr>
+<td><code>variable-by-unifyapps</code></td>
+<td>Builder</td>
+<td>Left out</td>
+<td>The old file is largely exact node-shape guidance. The canonical prompt already explains mutable state, create/update operations, list differences, and live schema lookup.</td>
+<td><strong>Keep out.</strong> Promote it only if evaluations show repeated variable-operation failures that the prompt and schema lookup do not catch.</td>
+</tr>
+<tr>
+<td><code>workflow-debugging</code></td>
+<td>Planner</td>
+<td>Left out</td>
+<td>Planner owns run triage and decides whether to dispatch repair to Builder or Editor.</td>
+<td><strong>Keep out as a standalone skill.</strong> Coder already owns its compile, platform, save, test, and deploy ladder, including real-side-effect consent and failed-run repair. A new skill would duplicate the core loop.</td>
+</tr>
+<tr>
+<td><code>workflow-error-handling</code></td>
+<td>Builder</td>
+<td>Left out</td>
+<td>Its JSON fields are compiler concerns, but retry, backoff, best-effort behavior, fallback semantics, and compensation are business and runtime decisions.</td>
+<td><strong>Add, adapted.</strong> Teach <code>try</code> and <code>catch</code>, scope boundaries, retry options exposed by the DSL, error outputs, and when continuing after failure is unsafe. Omit <code>fallbackMode</code> and raw node-option payloads unless the DSL exposes them directly.</td>
+</tr>
+<tr>
+<td><code>workflow-performance</code></td>
+<td>Both</td>
+<td>Left out</td>
+<td>Cache decisions and replacing per-item callable loops with batching remain relevant even when the compiler owns edges.</td>
+<td><strong>Add, adapted.</strong> Cover safe cache candidates, staleness, batch-callable selection, concurrency and page size where the DSL supports them, and verification under realistic volume.</td>
+</tr>
+</tbody></table>
+<h2>The five additions</h2>
+<h3>1. Analytics and reporting</h3>
+<p>Combine the old <code>analytics-and-reports</code> implementation knowledge with the <code>storage-vs-analytics</code> choice. The skill should answer one question first: does this flow need records or a computed result? Then it should require live report, projection, filter, paging, export, and output-envelope reads through existing tools.</p>
+<h3>2. Callable contracts</h3>
+<p>The core prompt has the syntax. A skill should carry the deeper contract: who calls the automation, which trigger owns each input, which node owns the response, what every branch returns, whether the call waits, and which deployed version callers can reach.</p>
+<h3>3. Platform users and assets</h3>
+<p>This needs a narrow Coder rewrite. It should distinguish platform users, teams, roles, connections, projects, and automation metadata from app-object records. The mistake to prevent is choosing Storage for platform metadata or guessing fields on standard-entity outputs.</p>
+<h3>4. Error handling</h3>
+<p>Keep this behavioral. The skill should help Coder decide whether to retry, continue, compensate, or fail, then express the decision through supported TypeScript constructs and operation options. It should never teach raw fallback edges.</p>
+<h3>5. Performance</h3>
+<p>This can stay short. Teach batching over per-record callable loops, cache only when staleness is acceptable, bound database and Storage reads, and test with representative volume. Do not include topology diagrams or JSON option blocks.</p>
+<h2>Proposed final assignment</h2>
+<p>The target is 11 Automation Coder skills:</p>
+<ul>
+<li>Existing: <code>data-transforms-and-code</code>, <code>dates-and-time</code>, <code>files-and-attachments</code>, <code>node-inputs-and-pills</code>, <code>sql-nodes</code>, <code>storage-records</code></li>
+<li>Add: <code>analytics-and-reports</code>, <code>callable-contracts</code>, <code>platform-users-and-assets</code>, <code>workflow-error-handling</code>, <code>workflow-performance</code></li>
+</ul>
+<p>Names may differ, but ownership should not overlap. Each new skill should use the current MCP services, point to live tenant schemas over memorized examples, and avoid workflow JSON, raw edge construction, group ids, node indexes, or legacy pill strings.</p>
+<h2>Implementation order</h2>
+<ol>
+<li>Add <code>analytics-and-reports</code>, including the Storage-versus-Analytics decision.</li>
+<li>Add <code>callable-contracts</code> and <code>platform-users-and-assets</code>; both prevent workflows that compile but integrate with the wrong runtime contract.</li>
+<li>Add <code>workflow-error-handling</code> and <code>workflow-performance</code> as concise TypeScript-facing guides.</li>
+<li>Run the existing skill sync and deployment path.</li>
+<li>Reload Automation Coder (Hatim), read back the deployed skill ids and normalized contents, and compare them with source.</li>
+<li>Evaluate one focused case per new skill. A saved workflow is not proof; inspect the real test output and deployed state where deployment is requested.</li>
+</ol>
+<p>The result keeps Automation Coder small without making it naive: the compiler owns structure, while the agent owns operation choice, runtime contracts, and business behavior.</p>
+</article>
+</main>
+</body>
+</html>

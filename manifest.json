@@ -189,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-09-13T09:31:23.836Z",
       "expiresAt": "2026-10-13T09:31:23.836Z"
+    },
+    {
+      "id": "wOSVIRbKxI",
+      "project": "path-71ea78",
+      "slug": "automation-coder-skill-audit",
+      "title": "Automation Coder skill audit",
+      "kind": "plan",
+      "createdAt": "2026-09-14T17:17:53.144Z",
+      "expiresAt": "2026-10-14T17:17:53.144Z"
     }
   ]
 }
