@@ -198,6 +198,15 @@
       "kind": "plan",
       "createdAt": "2026-09-14T17:17:53.144Z",
       "expiresAt": "2026-10-14T17:29:52.210Z"
+    },
+    {
+      "id": "2tnkQOU8ix",
+      "project": "github.com/unify-apps/www",
+      "slug": "automation-coder-workflow-brief-evaluation",
+      "title": "Automation Coder workflow brief evaluation",
+      "kind": "plan",
+      "createdAt": "2026-09-15T01:27:22.103Z",
+      "expiresAt": "2026-10-15T01:27:22.103Z"
     }
   ]
 }

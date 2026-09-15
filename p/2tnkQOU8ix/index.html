@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Automation Coder workflow brief evaluation</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This report measures the 20 workflow briefs run against Automation Coder (Hatim) on <code>agent-code-migration.uat.unifyapps.com</code>. It joins agent-stream timing, exact observability cost, saved and deployed workflow readback, and independent platform TEST results.</p>
+<p>The schema-resolution fix recovered N16 and N20. The final suite produced 15 deployed automations. Eleven completed an independent TEST; four reproduced failures that were already present before the resolver change.</p>
+<blockquote>
+<p>A returned workflow ID is not the success criterion. The report counts build, deployed readback, and platform execution separately.</p>
+</blockquote>
+<h2>Suite summary</h2>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th align="right">Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Briefs</td>
+<td align="right">20</td>
+</tr>
+<tr>
+<td>Built and deployed</td>
+<td align="right">15 / 20, 75%</td>
+</tr>
+<tr>
+<td>Independently tested</td>
+<td align="right">15 / 15 built, 100%</td>
+</tr>
+<tr>
+<td>TEST completed</td>
+<td align="right">11 / 15 built, 73.3%</td>
+</tr>
+<tr>
+<td>Canonical generation time</td>
+<td align="right">49m 19s total</td>
+</tr>
+<tr>
+<td>Average generation time per brief</td>
+<td align="right">148.0s</td>
+</tr>
+<tr>
+<td>Canonical generation cost</td>
+<td align="right">$1.11135 total</td>
+</tr>
+<tr>
+<td>Average generation cost per brief</td>
+<td align="right">$0.05557</td>
+</tr>
+<tr>
+<td>Average successful-build time</td>
+<td align="right">173.2s</td>
+</tr>
+<tr>
+<td>Average successful-build cost</td>
+<td align="right">$0.06068</td>
+</tr>
+<tr>
+<td>Distinct generation attempts including retries</td>
+<td align="right">29</td>
+</tr>
+<tr>
+<td>Retry-inclusive generation time</td>
+<td align="right">76m 02s total, 157.3s per attempt</td>
+</tr>
+<tr>
+<td>Retry-inclusive generation cost</td>
+<td align="right">$1.69792 total, $0.05855 per attempt</td>
+</tr>
+</tbody></table>
+<p>The canonical view uses the successful generation attempt for a built brief and the latest meaningful attempt for a brief that never built. The retry-inclusive view counts every distinct agent session. Copied <code>NONE</code> recovery rows that referenced an existing session were deduplicated.</p>
+<h2>Case-by-case results</h2>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Brief</th>
+<th align="right">Attempts</th>
+<th align="right">Generation</th>
+<th align="right">Cost</th>
+<th align="center">Built</th>
+<th align="center">TEST</th>
+<th>Failure or observed outcome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>N01</td>
+<td>Retry Failed SAP Posts</td>
+<td align="right">1</td>
+<td align="right">52s</td>
+<td align="right">$0.02720</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Scheduled run completed.</td>
+</tr>
+<tr>
+<td>N02</td>
+<td>SLA and Knowledge Monitor</td>
+<td align="right">1</td>
+<td align="right">35s</td>
+<td align="right">$0.02740</td>
+<td align="center">No</td>
+<td align="center">Not run</td>
+<td>Brief omitted the exact entity IDs for incidents, requests, people, and knowledge articles. Several tenant objects matched, so the agent refused to guess.</td>
+</tr>
+<tr>
+<td>N03</td>
+<td>Monthly Plan Rollover</td>
+<td align="right">1</td>
+<td align="right">195s</td>
+<td align="right">$0.06186</td>
+<td align="center">Yes</td>
+<td align="center">Fail</td>
+<td>Existing workflow defect. <code>Aggregate records</code> received no value for the <code>properties.monthly_plan</code> equality filter. This matches the pre-fix result.</td>
+</tr>
+<tr>
+<td>N04</td>
+<td>Monitor SLA Risk and Escalate</td>
+<td align="right">2</td>
+<td align="right">39s</td>
+<td align="right">$0.02045</td>
+<td align="center">No</td>
+<td align="center">Not run</td>
+<td><code>obj_xlv7gow</code> does not exist. The fixed response envelope is also incompatible with the requested scheduled trigger. The apparent Gmail workflow ID in the first response was a connection ID, not a saved workflow.</td>
+</tr>
+<tr>
+<td>N05</td>
+<td>Monthly Fleet Invoice Intake</td>
+<td align="right">1</td>
+<td align="right">121s</td>
+<td align="right">$0.05214</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Scheduled run completed.</td>
+</tr>
+<tr>
+<td>N06</td>
+<td>Weekday Exception and SLA Sweep</td>
+<td align="right">1</td>
+<td align="right">264s</td>
+<td align="right">$0.08991</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Scheduled run completed.</td>
+</tr>
+<tr>
+<td>N07</td>
+<td>SLA Follow-up Monitor</td>
+<td align="right">1</td>
+<td align="right">231s</td>
+<td align="right">$0.06498</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Scheduled run completed.</td>
+</tr>
+<tr>
+<td>N08</td>
+<td>Notifications workflow</td>
+<td align="right">1</td>
+<td align="right">41s</td>
+<td align="right">$0.02209</td>
+<td align="center">No</td>
+<td align="center">Not run</td>
+<td>Supplied object <code>obj_0z6wnce</code> does not exist. The tenant has <code>obj_0z6wnce2</code>, but the brief prohibited substituting IDs.</td>
+</tr>
+<tr>
+<td>N09</td>
+<td>Daily Overdue Reminders</td>
+<td align="right">1</td>
+<td align="right">106s</td>
+<td align="right">$0.04058</td>
+<td align="center">Yes</td>
+<td align="center">Fail</td>
+<td>Slack <code>Post message</code> returned an external provider error. This matches the pre-fix result and is not a schema-resolution regression.</td>
+</tr>
+<tr>
+<td>N10</td>
+<td>Low-Stock Alert Sweep</td>
+<td align="right">2</td>
+<td align="right">78s</td>
+<td align="right">$0.02941</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Scheduled run completed after recovery.</td>
+</tr>
+<tr>
+<td>N11</td>
+<td>Import BW Snapshot</td>
+<td align="right">2</td>
+<td align="right">258s</td>
+<td align="right">$0.08195</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>A valid date-time and file-shaped fixture completed. The workflow correctly rejected an unsupported PDF with a business response. The first verifier attempt used the invalid date-time value <code>test</code> and was discarded.</td>
+</tr>
+<tr>
+<td>N12</td>
+<td>Confirm Purchase Receipt</td>
+<td align="right">1</td>
+<td align="right">116s</td>
+<td align="right">$0.04477</td>
+<td align="center">Yes</td>
+<td align="center">Fail</td>
+<td>Synthetic order and line IDs left <code>properties.quality_code</code> empty. This matches the pre-fix result. A real matching purchase fixture is still needed to distinguish fixture failure from workflow behavior.</td>
+</tr>
+<tr>
+<td>N13</td>
+<td>Incident Intake</td>
+<td align="right">1</td>
+<td align="right">210s</td>
+<td align="right">$0.07697</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Execution completed and returned the expected validation response for invalid placeholder inputs.</td>
+</tr>
+<tr>
+<td>N14</td>
+<td>Load BW Snapshot</td>
+<td align="right">1</td>
+<td align="right">285s</td>
+<td align="right">$0.09248</td>
+<td align="center">Yes</td>
+<td align="center">Fail</td>
+<td>Confirmed workflow defect: the JavaScript node throws <code>ReferenceError: filename is not defined</code>. This matches the pre-fix result.</td>
+</tr>
+<tr>
+<td>N15</td>
+<td>Record Investment Contribution</td>
+<td align="right">1</td>
+<td align="right">92s</td>
+<td align="right">$0.03192</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Execution completed and returned the expected ownership or input rejection for placeholder inputs.</td>
+</tr>
+<tr>
+<td>N16</td>
+<td>Reconcile Fleet Case</td>
+<td align="right">3</td>
+<td align="right">221s</td>
+<td align="right">$0.07793</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Recovered after the resolver fix. A real tenant case completed through the controlled failure path, preserved the case, and returned <code>reconciliation_failed</code>.</td>
+</tr>
+<tr>
+<td>N17</td>
+<td>Create or Update Ticket from Intake</td>
+<td align="right">1</td>
+<td align="right">197s</td>
+<td align="right">$0.09899</td>
+<td align="center">No</td>
+<td align="center">Not run</td>
+<td>Required requester object <code>obj_xlv7gow</code> does not exist, so requester and assignee resolution could not be built safely.</td>
+</tr>
+<tr>
+<td>N18</td>
+<td>Fleet reconciliation workflow</td>
+<td align="right">1</td>
+<td align="right">49s</td>
+<td align="right">$0.03220</td>
+<td align="center">No</td>
+<td align="center">Not run</td>
+<td>Both supplied object IDs were absent. The tenant returned multiple candidates for the case and exception-code objects, so the agent refused to choose one.</td>
+</tr>
+<tr>
+<td>N19</td>
+<td>Monthly Invoice Reconciliation</td>
+<td align="right">2</td>
+<td align="right">147s</td>
+<td align="right">$0.06397</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Execution completed and returned a controlled partial-failure response because live SAP comparison was unavailable.</td>
+</tr>
+<tr>
+<td>N20</td>
+<td>Recalculate grade performance</td>
+<td align="right">4</td>
+<td align="right">222s</td>
+<td align="right">$0.07414</td>
+<td align="center">Yes</td>
+<td align="center">Pass</td>
+<td>Recovered after the resolver fix. A real matching grade and student completed successfully and returned the recalculated average and risk state.</td>
+</tr>
+</tbody></table>
+<h2>What the numbers say</h2>
+<p>Successful builds cost more and take longer than terminal refusals: 173.2 seconds and $0.06068 on average, compared with 72.2 seconds and $0.04023 for the five briefs that never built. That gap is expected because successful cases progress through schema inspection, validation, save, and deployment.</p>
+<p>Retries added 1,603 seconds and $0.58656 beyond the canonical 20-case view. Most of that recovery work sits in N11, N16, N19, and N20. N16 and N20 were the important confirmation: both moved from code-node parameter rejection to deployed, independently tested workflows after the normal input-schema flow began resolving <code>DynamicSchemaField</code> schemas.</p>
+<p>No new test regression appeared after the resolver change. The four red TEST rows are either exact pre-fix reproductions or fixture-limited. N14 is the clearest authored-workflow bug and should be repaired. N03 also needs a workflow correction. N09 needs connector-level investigation, while N12 needs a real purchase-order fixture before assigning blame to the workflow.</p>
+<h2>Measurement notes</h2>
+<ul>
+<li>Generation time is wall time from the agent SSE invocation to its final response.</li>
+<li>Cost is the exact session cost reported by the tenant observability record joined by <code>caseId</code>.</li>
+<li>Built means a real workflow ID was returned and fetched successfully.</li>
+<li>Deployed means the fetched definition reported <code>deploymentState.status = DEPLOYED</code>.</li>
+<li>TEST means the platform runner reached <code>COMPLETED</code>, even when the automation intentionally returned <code>success: false</code> for a guarded business outcome.</li>
+<li>The regression pass read back all 15 built workflows as deployed before execution.</li>
+</ul>
+<p>The suite now has a reliable baseline: 15 deployed, 11 execution-clean, two recovered by the core schema fix, and four remaining failures with named owners.</p>
+</article>
+</main>
+</body>
+</html>
