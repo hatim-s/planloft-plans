@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Workflow code audit</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>Five parallel audits looked at packages/workflow-code in the executable-workflow-package worktree. The core builder is sound and worth keeping. The packaging, type strictness, and safety around it are not. This report lists what to fix first.</p>
+<p>The situation is simple. The package gives you a typed TypeScript builder that emits native UnifyApps workflow JSON. Arrays set order, both condition arms get built while the platform picks at runtime, and <code>.output</code> fields become typed <code>{{ }}</code> references. That model works. Graph guards for trigger first, single use, reachability, and path scoped references all hold. The shared filter contract with <code>NOT_EXISTS</code> to <code>MISSING</code> normalization holds across conditions, branch storage, and catalog fields. Live schema fetching with <code>withTypes</code>, <code>add object</code>, <code>add automation</code>, and <code>x-workflow-input-schema</code> resolution is the right long term bet because it stays correct when tenant objects change.</p>
+<p>The tension is that the good core ships inside a package that undermines it. Hand written source is about 1,367 lines. Generated code is about 1,085,607 lines across 1,076 apps and 14,477 resources. Source generated output is 60 MB, dist is 67 MB, and every catalog regen rewrites 2,154 tracked files. Type checking stays fast today only because <code>skipLibCheck</code> is on. IntelliSense pays the price instead, since <code>AppName</code> is a 1,076 member union evaluated on each <code>workflow.node()</code> call. Two rewrites landed a day apart, <code>9e2a75c</code> then <code>b477463</code>, and the second one alone touched 2,299 files with +120,011 and -187,322 lines. It deleted <code>src/runtime</code>, <code>src/validation</code>, <code>src/project</code>, filters, catalog, schema subdirs, evals, and about 30 test files, and replaced them with 9 test files. That was convergence toward the right small core. It also reset coverage to a thin shell over a huge typed surface.</p>
+<blockquote>
+<p>The builder is the asset. The checked in catalog is the liability. Wrong workflows still typecheck, and the package teaches agents to deploy before it can validate.</p>
+</blockquote>
+<p>Correctness gaps let wrong code through. <code>Input&lt;T&gt;</code> accepts extra keys because every generated <code>Value</code> carries <code>[k: string]: unknown</code>, so a typo like <code>TYPO_FIELD</code> typechecks in <code>src/reference.ts</code>. <code>Output&lt;T&gt;</code> accepts any property for the same reason, so <code>p.output.nonexistent</code> typechecks. An explicit <code>&lt;T&gt;</code> on code nodes erases input contracts because <code>DynamicSchema</code> maps to <code>unknown</code> in <code>src/injected-type.ts</code>, so wrong <code>parameters</code> pass only when you add the type argument meant to help. <code>nativeCondition</code> in <code>src/filter.ts</code> passes unknown operators like <code>EQUALS</code> through, stringifies <code>Reference</code> objects into invalid native shapes, and throws a raw <code>TypeError</code> for a bare <code>{operator: &#39;AND&#39;}</code> with no action context. <code>BREAK</code> and <code>CONTINUE</code> fall through in <code>src/graph.ts</code> because only <code>STOP</code> and <code>END</code> terminate paths, so <code>define([start, brk, after])</code> emits a bogus edge. There is no loop builder at all. Unresolved <code>ua:dynamic</code> markers leak into native JSON from <code>src/dynamic-schema.ts</code> and <code>src/schema-loaders.ts</code>. The <code>/api/</code> guard in <code>src/platform/client.ts</code> checks the raw path but fetches a normalized URL, so <code>/api/../admin</code> passes the guard and requests <code>/admin</code>. Empty to empty conditions emit two edges to the join node. None of these fail the current 28 tests, which tells you the suite covers the happy path and misses the adversarial one.</p>
+<p>Architecture will not scale in its present form. The build is <code>rm dist</code>, <code>tsc -p tsconfig.build.json</code>, <code>cp src/generated dist/generated</code>, in <code>scripts/build.mjs</code>. That copy puts 29 MB of <code>.d.ts</code> files that are never needed at runtime into every install. The exports map exposes only <code>.</code> and <code>./schema</code>, so <code>dist/platform</code> and <code>dist/cli</code> build but stay unimportable. The runtime catalog loader uses <code>createRequire</code> with dynamic <code>require</code> in <code>src/catalog.ts</code>, which breaks static analysis in Vite, Next, and edge runtimes and defeats tree shaking. Regen takes an untracked external directory from <code>process.argv</code>, so two devs get different output from the same commit and <code>sourceHash</code> in the manifest verifies nothing per app. Namespaces like <code>R0input</code> are index derived, so inserting one action renames every later namespace and creates thousand line diffs. Overrides live partly in <code>scripts/schema-overrides.ts</code> for one app and partly inline in <code>scripts/catalog.ts</code> for another, with no registry and no tests, while 14 known converter failures ship as <code>never</code> or <code>unknown</code> and 36 duplicates get dropped silently. Build time tools including <code>typescript</code>, <code>tsx</code>, <code>prettier</code>, and <code>json-schema-to-typescript</code> sit in <code>dependencies</code>, so every library consumer installs a compiler and an execution primitive.</p>
+<p>Developer experience blocks adoption in small ways that add up. There is no <code>list</code>, <code>get</code>, or <code>describe</code>. <code>save</code> without an <code>id</code> creates a duplicate automation silently. Token acquisition has no documented UI path and no <code>whoami</code> check, so first auth failure appears as a bare <code>HTTP 401</code> deep in deploy. <code>init</code> does bare <code>mkdir</code> and validates flags after writing files, so a retry fails with <code>EEXIST</code> and a typo leaves a half created project. There is no <code>validate</code>, <code>diff</code>, <code>dry-run</code>, or <code>test</code> command, so the only server check is write then readback verify inside create and update. Global flags get swallowed per command, <code>build</code> dumps full JSON to stdout with no quiet flag, and a non ESM project gets a misleading missing default export error instead of an ESM diagnosis. Docs and code disagree on schedule trigger fields, on <code>Condition</code> versus <code>NativeCondition</code> versus <code>FilterConditions</code> which are one type with three names, and on what <code>init</code> actually creates. The README callable binding paragraph names no fields and gives no example. Skills copy with blind <code>rm -rf</code> plus <code>cp</code>, so local edits die on sync and package fixes never reach old projects except by resync.</p>
+<p>Resilience and security need attention before wider use. The package root <code>.cookie</code> held a live looking session token at mode 644 during the audit, fanned out to three sandbox copies at 600. It is git ignored and excluded from the tarball, which is good, but any backup or screen share leaks it. The CLI executes arbitrary workflow TypeScript with full env and network access in <code>src/cli/files.ts</code>, with only a comment calling the file trusted. Catalog generation deletes <code>src/generated</code> before scanning and parses JSON with no try catch, so one bad input file can destroy the checked in catalog mid run. Network bodies buffer with no byte cap, platform strings parse with no size limit, pagination can run 1,000 pages with no operation deadline, and schema handling has no <code>$ref</code> policy, no depth cap, and no cycle detection in <code>resolveSchema</code>. A prototype path segment like <code>__proto__</code> walks the chain in <code>src/dynamic-schema.ts</code> because that lookup lacks the <code>hasOwn</code> guard used elsewhere. All writes are non atomic. <code>deploy</code> activates triggers with no confirm. <code>scripts</code> have zero automated tests and tests never touch hostile inputs.</p>
+<p>Direction is the last question. The honest name is typed builder, not executable workflow, because nothing executes except graph construction in <code>src/define.ts</code>. Keep <code>node</code>, <code>define</code>, <code>condition</code>, <code>.output</code> refs, and path availability. Keep live schema fetching and make it the default. Stop shipping <code>src/generated</code> in the tarball. Keep <code>scripts/catalog.ts</code> as internal tooling. Pivot the Pi scaffolding away from pinned models and forced deps. Keep platform commands but demote them below the pure builder. Kill the promised reverse emitter in <code>src/native.ts</code> and <code>README.md</code> until the forward path is stable. Overlap is real. The <code>pi-mcp-workflow-authoring</code> worktree owns <code>packages/workflow-authoring</code> with MCP tools and evals and fixes the same fidelity bugs this package deleted its validation layer for. Those two surfaces will diverge on every contract fix unless one owns authoring in writing. The <code>automation-code-baseline-schema</code> and <code>automation-code-fetch-records</code> worktrees are complementary upstream schema work, not rivals.</p>
+<h2>Action list</h2>
+<p>This is the ordered fix list. Each item names the files to touch.</p>
+<ol>
+<li>Strip index signatures at the <code>Input</code> and <code>Output</code> boundary in <code>src/reference.ts</code>. Add a <code>Known</code> key filter so generated <code>[k: string]: unknown</code> does not widen inputs or permit <code>output.anything</code>. Add positive and negative <code>tsc</code> fixtures and run them in <code>bun test</code>.</li>
+<li>Validate conditions at runtime in <code>src/filter.ts</code>. Reject unknown leaf operators, reject non <code>AND</code> or <code>OR</code> groups, reject <code>Reference</code> as <code>filters</code> or <code>filter</code> or define its semantics, and throw named errors with property and operator for missing <code>filters</code>. Add tests for <code>EQUALS</code>, bare <code>AND</code>, and empty <code>filters</code>.</li>
+<li>Preserve input contracts when <code>&lt;T&gt;</code> is supplied. Change <code>src/injected-type.ts</code> and <code>scripts/injected-nodes.ts</code> so <code>T</code> narrows only injected output positions while <code>ResolveDynamic</code> still checks <code>x-workflow-input-schema</code> inputs. Add the wrong <code>parameters</code> with <code>&lt;T&gt;</code> fixture.</li>
+<li>Strip <code>ua:dynamic</code> and never emit <code>x-workflow-input-schema</code> in <code>src/dynamic-schema.ts</code> unresolved paths, <code>src/schema-loaders.ts</code>, and <code>scripts/catalog.ts</code>. Extend <code>dynamic-schema.test.ts</code> to assert neither string appears in <code>JSON.stringify(flow)</code>.</li>
+<li>Fix the client guard in <code>src/platform/client.ts</code> to check normalized <code>url.pathname</code>. Add a loopback server test that <code>/api/../admin</code> throws before fetch.</li>
+<li>Terminate <code>BREAK</code> and <code>CONTINUE</code> in <code>src/graph.ts</code> and decide <code>LOOP</code> semantics. Either add a loop builder or document linear only. Collapse the empty to empty join to one edge. Add tests for both.</li>
+<li>Stop tracking generated code. Gitignore <code>src/generated/apps</code> and <code>data</code>, track only <code>manifest.json</code> plus <code>sourceHash</code>, publish only <code>data/*.json</code> plus manifest, and ship types separately or per app. Verify with <code>npm pack --dry-run</code> under 2 MB.</li>
+<li>Split the dist payload. Stop copying <code>.d.ts</code> into <code>dist</code>, add <code>exports</code> entries for programmatic platform use or delete <code>dist/platform</code> from the build, and replace <code>createRequire</code> dynamic JSON in <code>src/catalog.ts</code> with a bundler safe import map plus a <code>Set</code> for manifest lookup.</li>
+<li>Make regen reproducible. Pin the source revision and generator version in the manifest, switch <code>R{index}</code> to slug based namespaces, add <code>catalog --check</code> in CI on <code>sourceHash</code> plus failure count, and elect a duplicate winner instead of dropping both copies.</li>
+<li>Build an override registry. Replace the one app function in <code>scripts/schema-overrides.ts</code> with an <code>overrides</code> table plus unit tests, move the inline <code>utility_by_unifyapps</code> patch out of <code>scripts/catalog.ts</code>, and add a pre convert normalization for the 14 known <code>enum</code>, <code>comment</code>, and <code>$ref</code> failures. Gate regen on zero new failures.</li>
+<li>Fix ID plumbing. Add <code>workflow get &lt;id&gt;</code>, make <code>save</code> write the returned <code>id</code> back or print an explicit created message, and add <code>validate</code> or <code>dry-run</code> so iteration does not require creating real automations.</li>
+<li>Harden <code>init</code> and flags. Validate provider, model, and thinking before writing, return a friendly exists error with <code>--force</code> and <code>--name</code> options, reject unknown or irrelevant flags per command, split <code>build</code> output to one line by default with a <code>--print</code> flag for JSON, and unwrap ESM double default in <code>src/cli/files.ts</code> with a clear message.</li>
+<li>Gate code execution. Require <code>--run</code> or a confirm before <code>tsImport</code>, refuse files outside the project root, and document that workflow files run unsandboxed with full env. Long term run them in a worker without credential passthrough.</li>
+<li>Make generation and sync atomic. Scan into a temp dir then rename, per file try catch with skip and record, <code>npm install</code> staging before removal in <code>scripts/sync-sandbox.mjs</code>, no clobber <code>.cookie</code> copy with 600 at creation, and tmp plus rename for all CLI writes.</li>
+<li>Bound untrusted input. Add a 5 to 10 MB response cap plus an operation deadline in <code>PlatformClient</code>, schema size and depth caps before <code>compile</code>, local <code>#</code> only <code>$ref</code> policy with expansion limits and pinned <code>cwd</code>, <code>hasOwn</code> guarded traversal in <code>resolveSchema</code> with rejection of <code>__proto__</code>, <code>constructor</code>, and <code>prototype</code>, and minimal node and edge content checks in <code>workflowDefinition</code> plus confirm on <code>deploy</code>.</li>
+<li>Fix dependency shape. Move <code>typescript</code>, <code>tsx</code>, <code>prettier</code>, <code>json-schema-to-typescript</code>, and <code>@types</code> packages to <code>devDependencies</code>, keep <code>json-schema-to-ts</code> as peer where consumers import it, and remove or justify the forced Pi agent dep in <code>src/cli/init.ts</code>.</li>
+<li>Collapse the type aliases. Keep <code>FilterConditions</code> as the single public name, deprecate <code>Condition</code> and <code>NativeCondition</code> exports, and use one vocabulary across README, skills, and help text.</li>
+<li>Promote README examples to tests. Add a happy path test mirroring the README verbatim plus a <code>withTypes</code> storage test, run <code>tsc --noEmit</code> as part of <code>test</code>, and document the update merge plus subset verify semantics at the save section.</li>
+<li>Version the agent bundle. Write a hash at <code>setupPi</code> and sync time, refuse to clobber locally modified skills without <code>--force</code>, and move sandbox internals plus <code>SCHEMA-ADAPTERS.md</code> out of the shipped README into contributing docs with a five step quickstart in their place.</li>
+<li>Decide ownership in writing within a week. Either this package owns authoring and <code>packages/workflow-authoring</code> becomes its eval backend, or MCP owns authoring and this package becomes the typed emit layer. Reintroduce a 10 case golden eval set in CI either way.</li>
+</ol>
+<p>Dependencies are the workflow nodes source directory, the platform UAT host for live schema checks, and the Pi MCP worktree for the ownership call. Risks are stale generated types if regen lags platform changes, duplicate automations from lost IDs, and agent driven execution of untrusted workflow files. Open questions are per app lazy fetch design, loop authoring semantics, and whether the Pi runner stays pinned or becomes pluggable.</p>
+<p>The package earns trust when wrong workflows fail fast locally, installs stay small, and one team owns correctness end to end.</p>
+</article>
+</main>
+</body>
+</html>

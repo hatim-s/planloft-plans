@@ -198,6 +198,15 @@
       "kind": "plan",
       "createdAt": "2026-09-15T01:27:22.103Z",
       "expiresAt": "2026-10-15T01:27:22.103Z"
+    },
+    {
+      "id": "GKkNtqp2KD",
+      "project": "path-71ea78",
+      "slug": "workflow-code-audit",
+      "title": "Workflow code audit",
+      "kind": "plan",
+      "createdAt": "2026-09-17T07:54:58.768Z",
+      "expiresAt": "2026-10-17T07:54:58.768Z"
     }
   ]
 }
