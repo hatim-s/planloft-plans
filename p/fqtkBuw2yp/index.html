@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Automation coder corpus run 2026-09-17</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>We ran the first 20 workflow briefs through the Automation Coder agent against agent-code-migration.uat.unifyapps.com. Eleven built and saved, one deployed, for $2.33 of model cost. Every case kept a full step trace with tokens and timing.</p>
+<p>The setup matters more than any single case. Each run now logs every LLM call with input and output excerpts, tokens in and out, cost, and wall time, plus every tool call with its inputs, outputs, and latency. The trace viewer reads this ledger directly, so each row below links to a one-click timeline. The model question is settled too: every case resolved GPT 5.6 Luna through the platform agent&#39;s own OpenRouter connection, no override anywhere.</p>
+<blockquote>
+<p>Eleven of twenty saved, one deployed. The gap is test and deploy evidence, not authoring.</p>
+</blockquote>
+<p>Most failures cluster in check and test stages. Cases save cleanly, then stall on terminal test output or deploy guards. Two cases never produced a workflow id at all, and one died before billing. Manual Location Refresh is the cost outlier at $0.76 across 80 model calls. The pattern suggests the agent writes plausible automations but struggles to close the test loop within the error budget.</p>
+<h2>Results</h2>
+<p>Built 11 of 20, deployed 1 of 20, cost $2.3257, agent work 6561s. Trace links need the local viewer at 127.0.0.1:5174 running.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Build</th>
+<th>Deployed</th>
+<th>Automation link</th>
+<th>Trace link</th>
+<th>Cost</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. weather_refresh_hour</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_d630a33d">trace</a></td>
+<td>$0.0462</td>
+<td>153s</td>
+</tr>
+<tr>
+<td>2. Ingest and Validate Fleet Invoice</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_10e388eb">trace</a></td>
+<td>$0.0488</td>
+<td>159s</td>
+</tr>
+<tr>
+<td>3. Run Invoice Reconciliation</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_8f311f4d">trace</a></td>
+<td>$0.0787</td>
+<td>325s</td>
+</tr>
+<tr>
+<td>4. Post Reconciled Invoice to SAP</td>
+<td>✅</td>
+<td>✅</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabea16a05a33558ed58962">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_49981a46">trace</a></td>
+<td>$0.1165</td>
+<td>290s</td>
+</tr>
+<tr>
+<td>5. Monthly Fleet Invoice Control Check</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabeaba3b63e83e60ed2dbc">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_31a847c8">trace</a></td>
+<td>$0.1166</td>
+<td>379s</td>
+</tr>
+<tr>
+<td>6. Ingest Support Email</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabecdec0f2757135d3ddd9">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_cd59e6a8">trace</a></td>
+<td>$0.1590</td>
+<td>550s</td>
+</tr>
+<tr>
+<td>7. Notify Work Item Stakeholders</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_8959322e">trace</a></td>
+<td>$0.0549</td>
+<td>245s</td>
+</tr>
+<tr>
+<td>8. Route Change Approval</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabec67833c010af0bd9e20">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_5e3b0254">trace</a></td>
+<td>$0.0934</td>
+<td>383s</td>
+</tr>
+<tr>
+<td>9. Monitor SLA Commitments</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_f63752d6">trace</a></td>
+<td>$0.0807</td>
+<td>362s</td>
+</tr>
+<tr>
+<td>10. Send Asset Maintenance Reminders</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabec50833c010af0bd9c31">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_de205dee">trace</a></td>
+<td>$0.1575</td>
+<td>436s</td>
+</tr>
+<tr>
+<td>11. Validate and Apply Finance CSV</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133934_34c8ec00">trace</a></td>
+<td>$0.0000</td>
+<td>302s</td>
+</tr>
+<tr>
+<td>12. Submit Financial Commitment</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee316105cf4c5b19f304">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133934_32a16b87">trace</a></td>
+<td>$0.0538</td>
+<td>212s</td>
+</tr>
+<tr>
+<td>13. Record Approval Decision</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee5c96249b103f41bc3e">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133935_ee74539c">trace</a></td>
+<td>$0.0658</td>
+<td>235s</td>
+</tr>
+<tr>
+<td>14. Refresh 13-Week Cash Positions</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee7bc0f2757135d427ec">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133935_308a1d4e">trace</a></td>
+<td>$0.0731</td>
+<td>272s</td>
+</tr>
+<tr>
+<td>15. Run Daily Financial Risk Checks</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee4ca010057819b1e28c">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133935_2ade8a03">trace</a></td>
+<td>$0.0695</td>
+<td>250s</td>
+</tr>
+<tr>
+<td>16. Hourly Weather Refresh</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabf0d92740a438f67bc6cc">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_e68b6ceb">trace</a></td>
+<td>$0.1365</td>
+<td>479s</td>
+</tr>
+<tr>
+<td>17. Manual Location Refresh</td>
+<td>✅</td>
+<td>❌</td>
+<td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabf0463b63e83e60ee2d3d">automation</a></td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_a8dc4e58">trace</a></td>
+<td>$0.7633</td>
+<td>643s</td>
+</tr>
+<tr>
+<td>18. Hourly Alert Evaluation</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_68e41281">trace</a></td>
+<td>$0.0498</td>
+<td>177s</td>
+</tr>
+<tr>
+<td>19. Bulk Update Tasks</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_cec97707">trace</a></td>
+<td>$0.0795</td>
+<td>389s</td>
+</tr>
+<tr>
+<td>20. Send Daily Task Reminders</td>
+<td>❌</td>
+<td>❌</td>
+<td>-</td>
+<td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_6c4ea319">trace</a></td>
+<td>$0.0821</td>
+<td>321s</td>
+</tr>
+</tbody></table>
+<h2>How to reproduce</h2>
+<ul>
+<li>Cases ran in four batches of five through scripts/run_corpus_batch.py against the local server at 127.0.0.1:8110, target deploy, host agent-code-migration.uat.unifyapps.com, limits 80 model calls, 200 tool calls, 1800s wall, $5.</li>
+<li>Batch reports sit at .local/automation-coder/batch-reports/batch1.json through batch4.json. Each session dir holds prompt.md, flow.ts, calls.jsonl, metrics.json, result.json, and events.jsonl.</li>
+<li>Open any trace link with the viewer dev server running (trace-viewer, port 5174). The viewer loads the case files itself, no paste step.</li>
+<li>Model for every case is openrouter/openai/gpt-5.6-luna via connection 6aa3aa5a5c8fbe457f877a9c, resolved live from platform agent e_6aa3c2b0925f613bb82ddd46.</li>
+</ul>
+<p>The next run should focus on the test loop, since saving works and deploying does not.</p>
+</article>
+</main>
+</body>
+</html>
