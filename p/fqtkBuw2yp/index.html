@@ -297,7 +297,7 @@ summary { cursor: pointer; font-weight: 700; }
 </blockquote>
 <p>Most failures cluster in check and test stages. Cases save cleanly, then stall on terminal test output or deploy guards. Two cases never produced a workflow id at all, and one died before billing. Manual Location Refresh is the cost outlier at $0.76 across 80 model calls. The pattern suggests the agent writes plausible automations but struggles to close the test loop within the error budget.</p>
 <h2>Results</h2>
-<p>Built 11 of 20, deployed 1 of 20, cost $2.3257, agent work 6561s. Trace links need the local viewer at 127.0.0.1:5174 running.</p>
+<p>Built 11 of 20, deployed 1 of 20, cost $2.3257, agent work 109m21s. Trace links need the local viewer at 127.0.0.1:5174 running.</p>
 <table>
 <thead>
 <tr>
@@ -317,7 +317,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_d630a33d">trace</a></td>
 <td>$0.0462</td>
-<td>153s</td>
+<td>2m33s</td>
 </tr>
 <tr>
 <td>2. Ingest and Validate Fleet Invoice</td>
@@ -326,7 +326,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_10e388eb">trace</a></td>
 <td>$0.0488</td>
-<td>159s</td>
+<td>2m39s</td>
 </tr>
 <tr>
 <td>3. Run Invoice Reconciliation</td>
@@ -335,7 +335,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_8f311f4d">trace</a></td>
 <td>$0.0787</td>
-<td>325s</td>
+<td>5m25s</td>
 </tr>
 <tr>
 <td>4. Post Reconciled Invoice to SAP</td>
@@ -344,7 +344,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabea16a05a33558ed58962">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_49981a46">trace</a></td>
 <td>$0.1165</td>
-<td>290s</td>
+<td>4m50s</td>
 </tr>
 <tr>
 <td>5. Monthly Fleet Invoice Control Check</td>
@@ -353,7 +353,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabeaba3b63e83e60ed2dbc">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132125_31a847c8">trace</a></td>
 <td>$0.1166</td>
-<td>379s</td>
+<td>6m19s</td>
 </tr>
 <tr>
 <td>6. Ingest Support Email</td>
@@ -362,7 +362,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabecdec0f2757135d3ddd9">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_cd59e6a8">trace</a></td>
 <td>$0.1590</td>
-<td>550s</td>
+<td>9m10s</td>
 </tr>
 <tr>
 <td>7. Notify Work Item Stakeholders</td>
@@ -371,7 +371,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_8959322e">trace</a></td>
 <td>$0.0549</td>
-<td>245s</td>
+<td>4m05s</td>
 </tr>
 <tr>
 <td>8. Route Change Approval</td>
@@ -380,7 +380,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabec67833c010af0bd9e20">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_5e3b0254">trace</a></td>
 <td>$0.0934</td>
-<td>383s</td>
+<td>6m23s</td>
 </tr>
 <tr>
 <td>9. Monitor SLA Commitments</td>
@@ -389,7 +389,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_f63752d6">trace</a></td>
 <td>$0.0807</td>
-<td>362s</td>
+<td>6m02s</td>
 </tr>
 <tr>
 <td>10. Send Asset Maintenance Reminders</td>
@@ -398,7 +398,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabec50833c010af0bd9c31">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T132851_de205dee">trace</a></td>
 <td>$0.1575</td>
-<td>436s</td>
+<td>7m16s</td>
 </tr>
 <tr>
 <td>11. Validate and Apply Finance CSV</td>
@@ -407,7 +407,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133934_34c8ec00">trace</a></td>
 <td>$0.0000</td>
-<td>302s</td>
+<td>5m02s</td>
 </tr>
 <tr>
 <td>12. Submit Financial Commitment</td>
@@ -416,7 +416,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee316105cf4c5b19f304">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133934_32a16b87">trace</a></td>
 <td>$0.0538</td>
-<td>212s</td>
+<td>3m32s</td>
 </tr>
 <tr>
 <td>13. Record Approval Decision</td>
@@ -425,7 +425,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee5c96249b103f41bc3e">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133935_ee74539c">trace</a></td>
 <td>$0.0658</td>
-<td>235s</td>
+<td>3m55s</td>
 </tr>
 <tr>
 <td>14. Refresh 13-Week Cash Positions</td>
@@ -434,7 +434,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee7bc0f2757135d427ec">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133935_308a1d4e">trace</a></td>
 <td>$0.0731</td>
-<td>272s</td>
+<td>4m32s</td>
 </tr>
 <tr>
 <td>15. Run Daily Financial Risk Checks</td>
@@ -443,7 +443,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabee4ca010057819b1e28c">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T133935_2ade8a03">trace</a></td>
 <td>$0.0695</td>
-<td>250s</td>
+<td>4m10s</td>
 </tr>
 <tr>
 <td>16. Hourly Weather Refresh</td>
@@ -452,7 +452,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabf0d92740a438f67bc6cc">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_e68b6ceb">trace</a></td>
 <td>$0.1365</td>
-<td>479s</td>
+<td>7m59s</td>
 </tr>
 <tr>
 <td>17. Manual Location Refresh</td>
@@ -461,7 +461,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td><a href="https://agent-code-migration.uat.unifyapps.com/automations/6aabf0463b63e83e60ee2d3d">automation</a></td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_a8dc4e58">trace</a></td>
 <td>$0.7633</td>
-<td>643s</td>
+<td>10m43s</td>
 </tr>
 <tr>
 <td>18. Hourly Alert Evaluation</td>
@@ -470,7 +470,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_68e41281">trace</a></td>
 <td>$0.0498</td>
-<td>177s</td>
+<td>2m57s</td>
 </tr>
 <tr>
 <td>19. Bulk Update Tasks</td>
@@ -479,7 +479,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_cec97707">trace</a></td>
 <td>$0.0795</td>
-<td>389s</td>
+<td>6m29s</td>
 </tr>
 <tr>
 <td>20. Send Daily Task Reminders</td>
@@ -488,7 +488,7 @@ summary { cursor: pointer; font-weight: 700; }
 <td>-</td>
 <td><a href="http://127.0.0.1:5174/#/t/ac_20260917T134602_6c4ea319">trace</a></td>
 <td>$0.0821</td>
-<td>321s</td>
+<td>5m21s</td>
 </tr>
 </tbody></table>
 <h2>How to reproduce</h2>
