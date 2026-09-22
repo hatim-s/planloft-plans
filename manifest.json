@@ -225,6 +225,15 @@
       "kind": "plan",
       "createdAt": "2026-09-22T19:44:43.218Z",
       "expiresAt": "2026-10-22T19:44:43.218Z"
+    },
+    {
+      "id": "yem7rB7f8a",
+      "project": "path-71ea78",
+      "slug": "orbit-trace-latency-gantt",
+      "title": "Orbit Trace Latency Gantt",
+      "kind": "plan",
+      "createdAt": "2026-09-22T20:00:31.613Z",
+      "expiresAt": "2026-10-22T20:00:31.613Z"
     }
   ]
 }

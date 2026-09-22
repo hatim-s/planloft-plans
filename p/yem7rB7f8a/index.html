@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbit Trace Latency Gantt</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>We pulled every agent trace from the UAT solution chat for Advance Auto Parts Store Performance Hub and split wall clock into LLM time, tool time, and pure idle. The picture is uneven: two runs burn almost all of their life waiting on a serial poll loop, while the real build turn is dense, parallel, and LLM-heavy. Fixing the right bottleneck means treating those two failure modes as different problems.</p>
+<blockquote>
+<p><strong>95% of the worst trace is silence.</strong> <code>#1359ceb6</code> runs 43m46s end-to-end with only 2m12s of active span work — Compile → Trigger → Inspect cycles with a steady ~70–90s beat between them.</p>
+</blockquote>
+<blockquote>
+<p><strong>The build turn never idles.</strong> <code>#1acf8499</code> (“Approved — go ahead and build it”) is 9m28s, 0% idle, 128 LLM calls, 208 tools, up to 12 spans in parallel.</p>
+</blockquote>
+<h2>Situation</h2>
+<p>Chat <code>e_6ab2bd6ea8ad977d1acf2dd2</code> produced eight traces via <code>GetTraceTimeline</code>. Span trees do not carry agent labels, so we reconstructed parallel lanes with greedy interval partitioning and mapped the dense streams onto the in-chat fleet (Solution Planner + Workflow Agent #1–4).</p>
+<p>Ranked by wall clock:</p>
+<table>
+<thead>
+<tr>
+<th>Trace</th>
+<th align="right">Wall</th>
+<th align="right">LLM</th>
+<th align="right">Tools</th>
+<th align="right">Idle</th>
+<th align="right">Lanes</th>
+<th>Turn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#1359ceb6</code></td>
+<td align="right">43m46s</td>
+<td align="right">3 / 23s</td>
+<td align="right">62 / 1m52s</td>
+<td align="right"><strong>95%</strong></td>
+<td align="right">2</td>
+<td>Clarifying answers (store master)</td>
+</tr>
+<tr>
+<td><code>#1ad360d7</code></td>
+<td align="right">11m49s</td>
+<td align="right">5 / 44s</td>
+<td align="right">32 / 49s</td>
+<td align="right"><strong>87%</strong></td>
+<td align="right">1</td>
+<td>This workflow was not built: On-Demand</td>
+</tr>
+<tr>
+<td><code>#13595555</code></td>
+<td align="right">9m49s</td>
+<td align="right">79 / 11m52s ∥</td>
+<td align="right">115 / 4m49s ∥</td>
+<td align="right">8%</td>
+<td align="right">5</td>
+<td>Clarifying answers (automations)</td>
+</tr>
+<tr>
+<td><code>#1acf8499</code></td>
+<td align="right">9m28s</td>
+<td align="right">128 / 14m25s ∥</td>
+<td align="right">208 / 19m34s ∥</td>
+<td align="right">0%</td>
+<td align="right">12</td>
+<td>Approved — go ahead and build it</td>
+</tr>
+<tr>
+<td><code>#1acf6eec</code></td>
+<td align="right">3m18s</td>
+<td align="right">3 / 3m14s</td>
+<td align="right">3 / 3m28s</td>
+<td align="right">0%</td>
+<td align="right">2</td>
+<td>Use Legend unto Vulcan (Slack)</td>
+</tr>
+<tr>
+<td><code>#1acf2dfc</code></td>
+<td align="right">56s</td>
+<td align="right">5 / 48s</td>
+<td align="right">5 / 57s</td>
+<td align="right">0%</td>
+<td align="right">2</td>
+<td>Initial plan start</td>
+</tr>
+<tr>
+<td><code>#1acf3ba4</code></td>
+<td align="right">21s*</td>
+<td align="right">2 / 17s</td>
+<td align="right">—</td>
+<td align="right">0%</td>
+<td align="right">1</td>
+<td>First clarifications</td>
+</tr>
+<tr>
+<td><code>#135848b6</code></td>
+<td align="right">8.7s*</td>
+<td align="right">1 / 4.5s</td>
+<td align="right">—</td>
+<td align="right">0%</td>
+<td align="right">1</td>
+<td>Pick Snowflake-42</td>
+</tr>
+</tbody></table>
+<p>∥ = overlapped busy-time across lanes (sums can exceed wall clock). * Short traces contain a <code>Request Connection</code> span (5m35s / 1m13s) that is <strong>user wait</strong>, not agent time — it bridges into the next turn’s start timestamp.</p>
+<h2>The tension</h2>
+<p>There are three distinct latency signatures, and only one of them is “the agent is slow.”</p>
+<p><strong>Polling loops dominate wall clock.</strong> <code>#1359ceb6</code> and <code>#1ad360d7</code> spend 87–95% of their life with zero active LLM/tool span. The active work is tiny: 62 tools totaling under two minutes, three LLM calls. The gap pattern is mechanical — Trigger → wait ~80s → Inspect → Compile → repeat ×18 — so the user stares at a stalled timeline while the orchestrator sleeps between poll intervals. Same disease on the On-Demand rebuild: max idle slice 1m35s, steady multi-ten-second beats.</p>
+<p><strong>The real build is compute-bound and well-parallelized.</strong> <code>#1acf8499</code> has zero idle and twelve concurrent lanes. Lane 0 is the planner/orchestrator (<code>Invoke Solution Planner Agent</code>, <code>Generate App</code>, object writes). Lanes 1–3 are the Workflow Agent build streams — each carrying ~7–11× Compile, 8–10× Trigger, 9–10× Inspect. Lanes 4–11 are short schema/search helpers fanning out. The longest single tool is <code>Generate App</code> at <strong>10m03s</strong>, which alone exceeds the displayed 6m2s UI latency. This is where wall clock equals work, not wait.</p>
+<p><strong>Clarification turns burn tokens and wall time on huge prompts.</strong> <code>#13595555</code> is 8% idle but 79 LLM calls — one call hit <strong>1m48s</strong>, others 48s / 27s / 25s — for ~11.7M input tokens and <strong>$1.44</strong> on that turn alone. <code>RequestClarification</code> alone totaled 1m46s. Same Compile/Trigger/Inspect swarm as the build (30/30/36), so config-after-clarify re-enters the poll path even when LLM is the visible cost.</p>
+<p>Tool-time concentration on the slow traces:</p>
+<table>
+<thead>
+<tr>
+<th>Trace</th>
+<th>Top tools by total time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#1359ceb6</code></td>
+<td>Compile ×17 (60s), Trigger ×18 (45s), Inspect ×18 (4.9s)</td>
+</tr>
+<tr>
+<td><code>#1ad360d7</code></td>
+<td>Compile ×10 (28s), Trigger ×8 (17s), Inspect ×10 (2.2s)</td>
+</tr>
+<tr>
+<td><code>#13595555</code></td>
+<td>RequestClarification ×3 (1m46s), Compile ×30 (1m42s), Trigger ×30 (1m7s)</td>
+</tr>
+<tr>
+<td><code>#1acf8499</code></td>
+<td><strong>Generate App ×1 (10m3s)</strong>, RequestClarification ×3 (3m28s), Generate Workflows ×1 (1m53s), Invoke Solution Planner ×1 (1m37s), Compile ×20 (1m8s)</td>
+</tr>
+</tbody></table>
+<h2>Approach</h2>
+<p>Split the fix along the failure mode, not the trace name.</p>
+<ol>
+<li><p><strong>Kill the poll gap first.</strong> It is the largest absolute latency (43 minutes and 11 minutes of pure wait) and the cheapest to reason about. Target the Trigger → Inspect cadence: cut the fixed sleep, back off on success, fail fast when the run is terminal, and surface run status as an event instead of a timer. Success metric: idle share on the store-master turn drops from 95% toward the 0–8% range the dense builds already show.</p>
+</li>
+<li><p><strong>Cap LLM time on clarification/config turns.</strong> Cap thinking budget, batch schema/search tools instead of round-tripping one at a time, and treat <code>RequestClarification</code> as a single front-door wait rather than a multi-minute tool busy block. Watch $/turn on <code>#13595555</code>-shaped turns as the guardrail.</p>
+</li>
+<li><p><strong>Instrument <code>Generate App</code> as its own critical path.</strong> 10m single tool span is invisible in the 6m UI number. Either expose it as a progress-bearing step or chunk it so the timeline reflects real work instead of one opaque bar.</p>
+</li>
+<li><p><strong>Do not mis-attribute connection waits.</strong> Keep <code>Request Connection</code> out of agent SLAs; it is human wait and already explains the 20s / 8.7s short traces.</p>
+</li>
+</ol>
+<h2>Concrete steps</h2>
+<ul>
+<li>Re-run the offline analysis against fresh <code>GetTraceTimeline</code> pulls after any poll-timer change; compare idle % and max idle slice per trace (<code>trace_analysis.json</code>, <code>trace-gantt.html</code>).</li>
+<li>In the Trigger/Inspect path: replace the ~80s fixed beat with adaptive backoff + terminal-state short-circuit; log one structured event per poll cycle with wait duration.</li>
+<li>On clarification turns: measure p95 single-LLM latency (currently up to 1m48s) and input tokens per turn; set a budget before the next UAT pass.</li>
+<li>For <code>Generate App</code>: add start/heartbeat/end spans under the parent query so Gantt and UI both show progress.</li>
+<li>Keep the Gantt as the shared readout: <code>trace-gantt.html</code> already ranks runs, splits LLM/tool/idle by lane, and marks slow tools &gt;30s.</li>
+</ul>
+<h2>Dependencies and risks</h2>
+<ul>
+<li>Poll behavior lives in automation run orchestration, not the chat UI — changing timers affects every solver that shares the runner.</li>
+<li>Lane → Workflow Agent #1–4 mapping is inferred from concurrency + tool mix; exact attribution still needs <code>workflowId</code> from TraceTimelineDetails on Compile/Trigger inputs if we need names, not just streams.</li>
+<li>UI latency and span-window wall clock already disagree on two traces (21s vs 5m35s connection wait); any SLA definition must say which clock it uses.</li>
+</ul>
+<h2>Expected outcome</h2>
+<p>Wall-clock pain concentrates in serial waits and one opaque generator, not in the parallel build. Cut the poll beat and the two idle giants collapse; instrument <code>Generate App</code> and the dense turn becomes honest. Next UAT pass should show the store-master turn drop from 43 minutes to minutes, with the Gantt as the pass/fail artifact.</p>
+</article>
+</main>
+</body>
+</html>
