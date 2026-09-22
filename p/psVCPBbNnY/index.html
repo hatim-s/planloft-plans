@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbit Trace Analysis - Workflow Agent Long Runs</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>We analysed the eight Orbit UAT traces behind the Advance Auto Parts Store Performance Hub build to find which workflow-agent runs are actually slow. The answer is not LLM cost. Two runs burn 30+ minutes while doing almost no LLM or tool work at all.</p>
+<p>The situation is a single solution chat with eight query traces, one of which fans out to five sub-agents. Total wall time is dominated by two workflow-agent sessions that loop on Compile, Trigger, and Inspect while spending over 85% of their lives idle. The token-heavy traces are a separate problem: they finish, but they cost dollars because every turn re-sends the full brief.</p>
+<blockquote>
+<p>The longest runs are gap-dominated, not compute-dominated. Fix the waiting, not the model.</p>
+</blockquote>
+<blockquote>
+<p>Generate App is the critical path of the fan-out. Everything else waits on it.</p>
+</blockquote>
+<h2>What we looked at</h2>
+<p>Source chat: solution <code>e_6ab2bd6daa675d128106137f</code>, case <code>e_6ab2bd6ea8ad977d1acf2dd2</code>, timeline <code>6ab2c636a8ad977d1ad0a200</code> on Orbit UAT. Trace list came from <code>GetTraceDetailsNew</code>. Per-turn LLM versus tool timing came from <code>GetTraceTimeline</code> with automation <code>680cdbcaa3741471fc7c22e9</code>.</p>
+<p>Local evidence kept alongside this plan:</p>
+<ul>
+<li><code>orbit-trace-gantt.html</code> — full Gantt with LLM, tool, and gap lanes for the four long traces</li>
+<li><code>trace-1359ceb6.json</code> — Store-Master, 65 spans</li>
+<li><code>trace-1ad360d7.json</code> — On-Demand retry, 37 spans</li>
+<li><code>trace-13595555.json</code> — DailyMetrics plus Alerts, 194 spans</li>
+<li><code>trace-1acf8499.json</code> — Approved fan-out, 336 spans</li>
+</ul>
+<h2>Which runs are long</h2>
+<table>
+<thead>
+<tr>
+<th>Trace</th>
+<th>Message</th>
+<th>Wall</th>
+<th>Input tokens</th>
+<th>Cost</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#1359ceb6</td>
+<td>Store-Master questions</td>
+<td>32m 27s list, 43m 45s timeline</td>
+<td>309,445</td>
+<td>$0.236</td>
+<td>success, but Store-Master never deployed</td>
+</tr>
+<tr>
+<td>#1ad360d7</td>
+<td>On-Demand not-built retry</td>
+<td>11m 49s</td>
+<td>518,280</td>
+<td>$0.327</td>
+<td>success</td>
+</tr>
+<tr>
+<td>#13595555</td>
+<td>DailyMetrics plus Alerts questions</td>
+<td>8m 7s list, 9m 49s timeline</td>
+<td>11,699,952</td>
+<td>$1.439</td>
+<td>success</td>
+</tr>
+<tr>
+<td>#1acf8499</td>
+<td>Approved, 5-agent fan-out</td>
+<td>6m 3s list, 9m 28s wall</td>
+<td>11,271,321</td>
+<td>$1.480</td>
+<td>partially-failed</td>
+</tr>
+<tr>
+<td>#1acf6eec</td>
+<td>Use Slack connection</td>
+<td>3m 18s</td>
+<td>129,148</td>
+<td>$0.169</td>
+<td>success</td>
+</tr>
+<tr>
+<td>#1acf2dfc</td>
+<td>Build dashboard</td>
+<td>55.7s</td>
+<td>154,990</td>
+<td>$0.108</td>
+<td>success</td>
+</tr>
+<tr>
+<td>#1acf3ba4</td>
+<td>Metrics questions</td>
+<td>20.8s</td>
+<td>28,443</td>
+<td>$0.008</td>
+<td>partially-failed</td>
+</tr>
+<tr>
+<td>#135848b6</td>
+<td>Use Snowflake-42</td>
+<td>8.7s</td>
+<td>28,795</td>
+<td>$0.022</td>
+<td>success</td>
+</tr>
+</tbody></table>
+<p>The two pathological runs are Store-Master and the On-Demand retry. The two expensive runs are the fan-out and DailyMetrics plus Alerts.</p>
+<h2>LLM versus tool versus gap, per agent session</h2>
+<p>Gaps mean no LLM or tool span was active. Overlaps above 100% mean parallel sub-agent spans were summed.</p>
+<table>
+<thead>
+<tr>
+<th>Trace</th>
+<th>LLM</th>
+<th>Tool</th>
+<th>Gap idle</th>
+<th>Top tools</th>
+<th>Worst gap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#1359ceb6</td>
+<td>3 calls, 23.0s, 0.9%</td>
+<td>62 calls, 112.1s, 4.3%</td>
+<td>2454.0s, 93.5%</td>
+<td>Compile 60s, Trigger 45s, Inspect 5s</td>
+<td>89s Compile to Trigger</td>
+</tr>
+<tr>
+<td>#1ad360d7</td>
+<td>5 calls, 43.7s, 6.2%</td>
+<td>32 calls, 49.2s, 6.9%</td>
+<td>610.4s, 86.0%</td>
+<td>Compile 28s, Trigger 17s</td>
+<td>95s LoadSkill to LoadSkill</td>
+</tr>
+<tr>
+<td>#13595555</td>
+<td>79 calls, 711.7s</td>
+<td>115 calls, 288.8s</td>
+<td>239.0s, 40.6%</td>
+<td>Compile 102s, Trigger 67s, RequestClarification 106s, Inspect 9s</td>
+<td>15s Compile to Trigger</td>
+</tr>
+<tr>
+<td>#1acf8499</td>
+<td>128 calls, 865.4s</td>
+<td>208 calls, 1174.0s</td>
+<td>99.6s, 17.5%</td>
+<td>Generate App 603s, Generate Workflows 113s, RequestClarification 208s, Compile 68s, Trigger 43s</td>
+<td>5.6s Trigger to Inspect</td>
+</tr>
+<tr>
+<td>#1acf6eec</td>
+<td>3 calls, 194.2s, 98.1%</td>
+<td>3 calls, 208.4s</td>
+<td>1.4s</td>
+<td>Invoke Planner 178s including one 2m56s LLM, Publish 30s</td>
+<td>0.5s</td>
+</tr>
+</tbody></table>
+<p>Store-Master reasoning total is 23 seconds across 43 minutes. On-Demand reasoning total is 44 seconds across 12 minutes. Both agents are waiting, not thinking.</p>
+<h2>Turns and patterns that take the time</h2>
+<p>Store-Master runs a tight Compile (3s), Trigger (2s), Inspect (0.2s) loop more than fifteen times. Each iteration costs about five seconds of tool time, then sits idle for thirty to ninety seconds before the next iteration. Only three LLM calls appear in the whole run.</p>
+<p>On-Demand repeats the same loop for ten cycles, then stalls 95 seconds between two LoadSkill calls with nothing in between. Skill fetch or cold start plus serial skill loads explain that hole.</p>
+<p>DailyMetrics plus Alerts is a genuine build-test loop: 79 LLM turns averaging nine seconds, max 48 seconds with one 108-second outlier, interleaved with Compile and Trigger. The 1m45s RequestClarification span is user think time on the four questions, not compute. Input tokens hit 11.6M, which points at the full brief being re-sent every turn.</p>
+<p>The Approved fan-out is the parent of the five agents. Generate App runs 10m02s and outlives the 9m28s parent query, so it continues in the background. Generate Workflows runs 1m52s in parallel. Inside it are dozens of sub-300ms Open Automation, Describe Storage, and Get Operation Schema calls, plus a 3m28s RequestClarification wait and the usual Compile, Trigger, Inspect cycles for the four workflow stubs.</p>
+<p>The Slack-connection trace is one 2m56s Gemini thinking call with about 100k tokens. That is plan population with the full object and automation briefs in context. Expected shape, oversized prompt.</p>
+<h2>What changes</h2>
+<ul>
+<li>Cap Inspect Automation Run polling for Store-Master and On-Demand. Replace sleep-poll with run-status push, and record automation <code>runId</code> queue time as its own span so gaps stop hiding inside the agent.</li>
+<li>Cache skills and load them in parallel. The 95-second LoadSkill hole should not exist twice per run.</li>
+<li>Batch compiles in DailyMetrics plus Alerts. Do not Compile, Trigger, Inspect on every small edit when the failure signature has not changed.</li>
+<li>Shrink planner context. Summarise object and automation briefs before the 2m56s thinking call instead of sending 100k tokens raw.</li>
+<li>Profile Generate App on its own. It is the fan-out critical path at ten minutes, likely generating five screens serially.</li>
+</ul>
+<h2>Risks and open questions</h2>
+<ul>
+<li>Timeline wall time and span sums disagree on parallel traces because nested and overlapping spans are double-counted. Treat LLM and tool totals on <code>#13595555</code> and <code>#1acf8499</code> as effort, not wall time.</li>
+<li>Store-Master shows success at the trace level but the solution summary reports it as not deployed. The Deploy Automation span exists, so the loss happened after deploy or on a later overwrite. That needs a deployment-log check.</li>
+<li>Short <code>Request Connection</code> tools report durations longer than their parent traces, which means they continue asynchronously. Do not read those tool totals as blocking time.</li>
+</ul>
+<p>The slow agents are slow because of waiting between fast steps. Close the gaps first, then cut the tokens.</p>
+</article>
+</main>
+</body>
+</html>
