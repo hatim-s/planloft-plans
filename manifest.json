@@ -218,15 +218,6 @@
       "expiresAt": "2026-10-17T14:35:18.411Z"
     },
     {
-      "id": "psVCPBbNnY",
-      "project": "path-71ea78",
-      "slug": "orbit-trace-analysis",
-      "title": "Orbit Trace Analysis - Workflow Agent Long Runs",
-      "kind": "plan",
-      "createdAt": "2026-09-22T19:44:43.218Z",
-      "expiresAt": "2026-10-22T20:09:32.406Z"
-    },
-    {
       "id": "yem7rB7f8a",
       "project": "path-71ea78",
       "slug": "orbit-trace-latency-gantt",
@@ -234,6 +225,15 @@
       "kind": "plan",
       "createdAt": "2026-09-22T20:00:31.613Z",
       "expiresAt": "2026-10-22T20:16:08.833Z"
+    },
+    {
+      "id": "psVCPBbNnY",
+      "project": "path-71ea78",
+      "slug": "orbit-trace-analysis",
+      "title": "Orbit Trace Analysis - Workflow Agent Long Runs",
+      "kind": "plan",
+      "createdAt": "2026-09-22T19:44:43.218Z",
+      "expiresAt": "2026-10-22T20:19:45.847Z"
     }
   ]
 }
