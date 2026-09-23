@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Executable workflow AI approach audit</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a narrow column, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: min(100% - 2.5rem, 37rem);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: min(100% - 2rem, 37rem); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  gap: 0.125rem;
+  border: 1px solid ButtonBorder;
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1px 3px color-mix(in srgb, CanvasText 14%, transparent);
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: SelectedItem;
+  color: SelectedItemText;
+}
+.planloft-theme-option svg { width: 1rem; height: 1rem; pointer-events: none; }
+.planloft-theme-option:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="currentColor"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>The new package is a useful experiment in giving a coding agent typed workflow primitives instead of asking it to edit flat workflow JSON. The idea is sound for a trusted expert building a small workflow, but the current implementation is not safe to run unattended against production automations. It can build code that passes the local checks, accept invalid workflow semantics, replace an existing graph, and deploy a version other than the one it inspected.</p>
+<p>I recommend keeping the approach, but stopping short of autonomous save and deploy. The first release should support linear workflows and <code>IF_ELSE</code> branches, require an explicit production gate, validate against the platform before every write, and pass a semantic test suite before deployment.</p>
+<blockquote>
+<p>The current package proves that generated TypeScript can produce workflow-shaped JSON. It does not prove that the workflow is correct, safe to run, or safe to deploy.</p>
+</blockquote>
+<h2>Audit scope</h2>
+<p>This review covers the current working tree at:</p>
+<ul>
+<li>Repository: <code>/Users/hatim.shakir/work/www/executable-workflow-package</code></li>
+<li>Package: <code>packages/workflow-code</code></li>
+<li>Branch: <code>feat/executable-workflow-package</code></li>
+<li>Base commit: <code>2c4afc600d4</code></li>
+<li>Review date: September 23, 2026</li>
+</ul>
+<p>The package directory had 433 changed or untracked entries when the review began. The findings therefore describe the current working tree, not a reproducible published commit.</p>
+<p>The audit included source review, architecture tracing, test and evaluation review, direct execution probes, a local graph benchmark, package build and pack inspection, typechecking, linting, and clean-install checks. No workflow was saved or deployed during this audit.</p>
+<h2>Executive judgment</h2>
+<h3>Current decision</h3>
+<table>
+<thead>
+<tr>
+<th>Use case</th>
+<th>Decision</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Trusted local authoring for a linear workflow</td>
+<td>Conditional pilot</td>
+<td>Typed primitives and path-local reference checks are useful.</td>
+</tr>
+<tr>
+<td>Branching with <code>IF_ELSE</code></td>
+<td>Conditional pilot</td>
+<td>Branch availability checks work, but deployment and semantic validation remain weak.</td>
+</tr>
+<tr>
+<td>Updating an arbitrary existing automation</td>
+<td>No</td>
+<td>The package replaces the full graph without importing or diffing the existing contract.</td>
+</tr>
+<tr>
+<td>Autonomous production deployment</td>
+<td>No</td>
+<td>The agent is instructed to deploy after a local build, with no approval or sandbox boundary.</td>
+</tr>
+<tr>
+<td>Public npm release</td>
+<td>No</td>
+<td>Lint, lockfile, clean install, CI packaging, and release automation are incomplete.</td>
+</tr>
+<tr>
+<td>High-volume unattended generation</td>
+<td>No</td>
+<td>Model cost, retries, graph limits, response limits, and durable operation IDs are not controlled.</td>
+</tr>
+</tbody></table>
+<p>The core design can become viable. The current implementation should be treated as a prototype.</p>
+<h2>What the approach actually does</h2>
+<p>“Executable workflow” refers to executing TypeScript during workflow authoring. The package does not execute the generated automation. It does not contain the scheduler, queue, worker runtime, connector execution engine, or workflow state store.</p>
+<p>The end-to-end path is:</p>
+<ol>
+<li><code>workflow init</code> creates a local project, packs the current package, installs it, writes Pi settings, and copies platform credentials. See <code>packages/workflow-code/src/cli/init.ts:10-93</code>.</li>
+<li>An external Pi coding agent edits <code>src/workflow.ts</code>. The package has no model client, retry policy, turn limit, cost budget, or structured model-output contract. The agent policy is in <code>packages/workflow-code/agent/SYSTEM.md:1-6</code>.</li>
+<li><code>workflow build</code> finds the nearest <code>tsconfig.json</code>, runs <code>tsc --noEmit</code>, then imports and runs the source module. See <code>packages/workflow-code/src/cli/files.ts:13-40</code>.</li>
+<li><code>workflow.node(...)</code> returns a deferred step. Typed proxy objects represent future platform outputs. See <code>packages/workflow-code/src/node.ts:48-112</code> and <code>packages/workflow-code/src/reference.ts:34-76</code>.</li>
+<li><code>workflow.define(...)</code> executes the step closures, builds flat native nodes and edges, and returns JSON. See <code>packages/workflow-code/src/define.ts:3-15</code>.</li>
+<li><code>workflow save</code> either creates a new automation or updates one when the definition contains an ID. See <code>packages/workflow-code/src/cli/workflow-command.ts:17-35</code>.</li>
+<li><code>workflow deploy</code> reads the saved workflow, posts an unversioned deploy request, reads the deployed definition, and compares graph fields. See <code>packages/workflow-code/src/platform/workflows.ts:102-112</code>.</li>
+</ol>
+<p>The public API exposes <code>node</code>, <code>condition</code>, schema overrides, and lookup narrowing. It does not expose faithful loops, scopes, error paths, parallel fan-out, retries, or other native control-flow structures. See <code>packages/workflow-code/src/workflow.ts:9-58</code>.</p>
+<h2>What works</h2>
+<p>The package has several good decisions that should survive the redesign.</p>
+<ul>
+<li>Generated declarations cover 14,578 connector resources and give the agent useful app, action, input, and output names. Runtime catalog loading is lazy by app. See <code>packages/workflow-code/src/generated/manifest.json:1081-1083</code> and <code>packages/workflow-code/src/catalog.ts:15-31</code>.</li>
+<li>The graph rejects duplicate steps and IDs, invalid first-node placement, unreachable steps, and references to producers that are unavailable on the current branch. See <code>packages/workflow-code/src/graph.ts:29-68</code>.</li>
+<li>Branch output availability is intersected across both <code>IF_ELSE</code> arms, so a later node cannot consume an output that only exists on one path. See <code>packages/workflow-code/src/condition.ts:39-47</code>.</li>
+<li>Mutations are not blindly retried. The package reads create, update, and deploy results back after writing. See <code>packages/workflow-code/src/platform/client.ts:26-49</code> and <code>packages/workflow-code/src/platform/workflows.ts:71-112</code>.</li>
+<li>Requests stay on one configured <code>/api/</code> origin, redirects are rejected, each request has a 30-second timeout, and HTTP error bodies are not printed. See <code>packages/workflow-code/src/platform/client.ts:32-49</code>.</li>
+<li>The README is honest that generated TypeScript is trusted code. Credential files are created with mode <code>0600</code> and excluded from npm packaging. See <code>packages/workflow-code/README.md:13-17</code> and <code>packages/workflow-code/src/platform/config.ts:31-38</code>.</li>
+<li>The focused test suite passes: 33 tests, 170 assertions, zero failures. The strict TypeScript check and production build also pass in the current working tree.</li>
+</ul>
+<p>These are real strengths. They reduce accidental mistakes, but they do not cover the production risks below.</p>
+<h2>Risk register</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Severity</th>
+<th>Finding</th>
+<th>Direct effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C1</td>
+<td>Blocker</td>
+<td>Agent policy automatically saves and deploys after a local build.</td>
+<td>A typecheck can become a production change without approval.</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>Blocker</td>
+<td>The authoring graph cannot faithfully represent the platform state machine.</td>
+<td>Loops, scopes, branches, and error paths can compile into the wrong native structure.</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>Blocker</td>
+<td>Persistence validation checks only top-level shape.</td>
+<td>Empty, dangling, semantically invalid, or schema-invalid graphs can be accepted.</td>
+</tr>
+<tr>
+<td>C4</td>
+<td>Blocker</td>
+<td>Deployment is not version-pinned.</td>
+<td>A concurrent edit can be deployed instead of the graph the command inspected.</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>Blocker</td>
+<td>Model-written code runs with local credentials and deployment authority.</td>
+<td>Prompt injection or an unsafe source change can read secrets or mutate the tenant.</td>
+</tr>
+<tr>
+<td>H1</td>
+<td>High</td>
+<td>Updating replaces the entire graph without importing the prior graph.</td>
+<td>Existing triggers, returns, fallbacks, schemas, and unsupported fields can be lost.</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>High</td>
+<td>Create and update mutations are not idempotent.</td>
+<td>A timeout after commit can create duplicates or leave the caller unsure of state.</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>High</td>
+<td>Output references lose identity when copied or spread.</td>
+<td>A valid-looking build can silently replace runtime data with <code>{}</code>.</td>
+</tr>
+<tr>
+<td>H4</td>
+<td>High</td>
+<td>Typechecking and execution are separate, unsandboxed operations.</td>
+<td>The executed source can differ from the checked source or run forever.</td>
+</tr>
+<tr>
+<td>H5</td>
+<td>High</td>
+<td>Dynamic type arguments are erased at runtime.</td>
+<td>The model can assert a convenient output type without validating connector behavior.</td>
+</tr>
+<tr>
+<td>H6</td>
+<td>High</td>
+<td>Catalog conversion failures become <code>never</code> or <code>unknown</code> and do not fail generation.</td>
+<td>A green build can ship unusable connector contracts.</td>
+</tr>
+<tr>
+<td>H7</td>
+<td>High</td>
+<td>No graph, payload, lookup, or source-execution limits are enforced.</td>
+<td>Large inputs and deep graphs consume unbounded time, memory, and network.</td>
+</tr>
+<tr>
+<td>H8</td>
+<td>High</td>
+<td>Model cost, turns, retries, and concurrency are not controlled by the package.</td>
+<td>Failures can trigger long, expensive retry loops.</td>
+</tr>
+<tr>
+<td>M1</td>
+<td>Medium</td>
+<td>Save writes remotely before writing local output.</td>
+<td>A local write failure leaves a committed remote change and a failed command.</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>Medium</td>
+<td>Errors discard structured backend payloads.</td>
+<td>The CLI cannot handle stale versions or surface validation violations well.</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>Medium</td>
+<td>Release and CI do not prove the shipped artifact.</td>
+<td>A clean consumer can fail even when source tests pass.</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>Medium</td>
+<td>There are no structured metrics for generation or platform operations.</td>
+<td>Failures and cost regressions cannot be alerted on or compared reliably.</td>
+</tr>
+</tbody></table>
+<h2>Correctness findings</h2>
+<h3>C2. The graph model is not faithful to the platform</h3>
+<p>The public builder creates ordinary linear nodes and two-arm <code>IF_ELSE</code> nodes. Every non-terminal node receives one <code>next</code> exit, and every node is assigned <code>fallbackMode: &#39;STOP&#39;</code>. See <code>packages/workflow-code/src/graph.ts:52-68</code>.</p>
+<p>That does not match the platform&#39;s native control-flow model. The platform defines <code>LOOP</code>, <code>BRANCH</code>, <code>SCOPE</code>, and related edge semantics in <code>packages/defs/src/workflow/types.ts:9</code> and <code>apps/platform/src/modules/flow/transformers/flowTreeToEntityDefNodesAndEdges.ts:287-303</code>.</p>
+<p>The generated catalog makes the mismatch visible:</p>
+<ul>
+<li><code>loop_for_each</code>, <code>loop_for</code>, and <code>loop_while</code> are typed as ordinary <code>ACTION</code> nodes in <code>packages/workflow-code/src/generated/apps/loop.d.ts:82-88</code>.</li>
+<li><code>node.ts</code> copies that catalog type directly into the native node at <code>packages/workflow-code/src/node.ts:87-96</code>.</li>
+<li><code>BREAK</code> and <code>CONTINUE</code> resources therefore have no loop scope to target.</li>
+<li>Existing error paths, retries, fallbacks, and parallel behavior cannot be expressed through <code>NodeOptions</code>, which only contains ID, title, connection, and trigger fields. See <code>packages/workflow-code/src/node.ts:11-18</code>.</li>
+</ul>
+<p>This is more than a missing convenience API. The native types are narrower than the platform model in <code>packages/workflow-code/src/native.ts:2-35</code>, so TypeScript can report success while the graph means something different from the developer&#39;s intent.</p>
+<p>The first fix is to derive the authoring model from the platform&#39;s canonical workflow types. Do not hand-maintain a second partial model.</p>
+<h3>C3. Local success does not mean the workflow is valid</h3>
+<p><code>workflowDefinition</code> checks that <code>name</code> is a nonblank string and that <code>nodes</code> and <code>edges</code> are arrays. It does not inspect node or edge contents. See <code>packages/workflow-code/src/platform/workflows.ts:11-29</code>.</p>
+<p>The platform tests explicitly save <code>{ nodes: [], edges: [] }</code> and treat that as valid input. See <code>packages/workflow-code/src/_tests_/platform.test.ts:13-20</code> and <code>packages/workflow-code/src/_tests_/platform.test.ts:98-120</code>.</p>
+<p>A direct probe confirmed that the boundary accepts an empty graph. Another probe built a scheduled workflow with <code>delay_for</code> input <code>{ duration: 0 }</code>, even though the generated connector schema requires a positive duration. The probe emitted the invalid value unchanged.</p>
+<p>The repository already exposes a strict workflow validation endpoint at <code>packages/network/src/generated/workflow-definition-rest-api/workflow-definition-rest-api.ts:2028-2044</code>. The new package does not call it before save or deploy.</p>
+<p>Required validation should cover:</p>
+<ul>
+<li>Exactly one valid trigger and the required terminal or return behavior.</li>
+<li>Unique node and edge IDs.</li>
+<li>Existing edge endpoints.</li>
+<li>Allowed native node and edge types.</li>
+<li>Required inputs, JSON Schema constraints, patterns, enums, and numeric limits.</li>
+<li>Required return nodes and callable output contracts.</li>
+<li>Connection ownership and availability.</li>
+<li>Trigger compatibility with the graph.</li>
+<li>Cycle and scope rules.</li>
+<li>Platform size and execution-budget limits.</li>
+</ul>
+<p>Local validation should remain for fast feedback, but the platform validator must be authoritative.</p>
+<h3>C4. Deployment races with concurrent edits</h3>
+<p><code>deployWorkflow</code> reads the current definition, posts <code>{}</code> to the deploy route, then compares the deployed graph with the definition it read. See <code>packages/workflow-code/src/platform/workflows.ts:102-111</code>.</p>
+<p>The normal platform client pins deployment to <code>_workflow.version</code> in <code>apps/platform/src/modules/workflows/hooks/useDeployWorkflow.tsx:57-62</code>. The package does not.</p>
+<p>A failure sequence is straightforward:</p>
+<ol>
+<li>Agent A reads version 10.</li>
+<li>Agent B saves version 11.</li>
+<li>Agent A deploys without a version.</li>
+<li>Version 11 becomes active.</li>
+<li>Agent A&#39;s readback may match version 11 and report success, even though it never validated or intended to deploy that graph. If the readback differs, the wrong version is already active.</li>
+</ol>
+<p>Deployment must send the expected version and fail closed on a conflict. It should then verify the exact deployed version and deployment state, not only the graph shape.</p>
+<h3>H1. Existing workflows are replaced, not preserved</h3>
+<p><code>updateWorkflow</code> retains current top-level metadata, then replaces <code>nodes</code> and <code>edges</code> with the generated definition. See <code>packages/workflow-code/src/platform/workflows.ts:86-100</code>.</p>
+<p>There is no command to import an existing workflow as TypeScript, no graph diff, and no partial-update model. The README says the retained ID is needed for later edits, but the initial source template has no ID and no separate state file. See <code>packages/workflow-code/README.md:106-123</code> and <code>packages/workflow-code/src/cli/init.ts:67-76</code>.</p>
+<p>The package also cannot represent several existing native node fields. A valid update can therefore remove or change:</p>
+<ul>
+<li>Trigger configuration.</li>
+<li>Return envelopes and alternate returns.</li>
+<li>Runtime connection settings.</li>
+<li>Custom schemas.</li>
+<li>Fallback modes and error paths.</li>
+<li>Existing control-flow scopes.</li>
+<li>Platform metadata not included in the local <code>NativeWorkflow</code> type.</li>
+</ul>
+<p>The current readback check proves that the newly generated graph was stored. It does not prove that the old workflow&#39;s intended contract was preserved.</p>
+<p>An update flow needs an importer, a three-way diff, explicit replacement approval, and a durable project-to-workflow ID mapping.</p>
+<h3>H2. Mutations are ambiguous and not idempotent</h3>
+<p>Create posts a definition without an idempotency key. Update and deploy also have no operation ID. See <code>packages/workflow-code/src/platform/workflows.ts:71-112</code>.</p>
+<p>If the server commits a write and the response is delayed beyond the 30-second timeout, the client cannot tell whether the mutation succeeded. Retrying create can produce a second automation. Retrying update or deploy can repeat an operation against a changed state.</p>
+<p>The CLI also writes local output only after the remote mutation returns. See <code>packages/workflow-code/src/cli/workflow-command.ts:22-35</code>. A disk or permission failure after a successful POST leaves the remote workflow changed while the command reports failure.</p>
+<p>Use idempotency keys for create, update, and deploy. Persist the operation receipt before retrying. Treat a timeout as “unknown outcome” until the operation can be reconciled by ID.</p>
+<h3>H3. Copied output references can silently become empty objects</h3>
+<p>Output values are empty-object proxies. Only a string <code>get</code> trap returns another proxy or the hidden reference address. See <code>packages/workflow-code/src/reference.ts:45-55</code>.</p>
+<p>A direct probe confirmed this behavior:</p>
+<pre><code class="language-ts">const original = producer.output;
+const copied = { ...original };
+</code></pre>
+<p><code>copied</code> serializes as <code>{}</code> rather than a <code>{{ producer.outputs }}</code> expression. Direct access such as <code>producer.output.permalink</code> works, but spread, object assignment, destructuring, and similar operations erase the reference identity.</p>
+<p>This failure is dangerous because every existing success signal can remain green:</p>
+<ul>
+<li>Typecheck passes.</li>
+<li>Graph construction passes.</li>
+<li>Save and readback pass.</li>
+<li>Deploy can pass.</li>
+<li>Runtime receives <code>{}</code> or an empty value instead of the referenced output.</li>
+</ul>
+<p>The reference type should either be a branded non-spreadable object with tests, or the API should reject copying at the type and runtime boundary. The simplest repair is to make spread impossible and add regression tests for object spread, <code>Object.assign</code>, destructuring, <code>JSON.stringify</code>, and nested references.</p>
+<h3>H4. The checked source is not the executed source</h3>
+<p><code>readWorkflow</code> runs <code>tsc</code> and then imports the original path in a separate operation. See <code>packages/workflow-code/src/cli/files.ts:28-40</code>.</p>
+<p>There is a time-of-check to time-of-use gap. An editor or second agent can change the source or an imported dependency between typechecking and execution. The changed code runs without a new check.</p>
+<p>Generated source also has no execution timeout, memory limit, process boundary, network policy, or filesystem policy. It runs with the user&#39;s OS permissions and can read the copied <code>.cookie</code>, environment variables, local files, and network. The README calls this trusted code, which is accurate but leaves the safety burden with the user. See <code>packages/workflow-code/README.md:13-17</code>.</p>
+<p>The second problem is determinism. A TypeScript module can use time, randomness, network data, environment variables, filesystem state, or imported side effects. Identical source does not guarantee identical JSON.</p>
+<p>Typecheck and execute one immutable snapshot. For agent-generated code, use a sandbox with no platform credentials, restricted networking, a wall-clock timeout, memory and process limits, and an explicit output channel.</p>
+<h3>H5 and H6. Type safety is useful but overstated</h3>
+<p>Generic output types such as <code>workflow.node&lt;CustomerObject&gt;(...)</code> are erased before serialization. The README says this directly at <code>packages/workflow-code/README.md:55</code>. The model can choose a structurally plausible <code>T</code> that the connector never returns.</p>
+<p>Generated JSON Schema types also omit constraints that TypeScript cannot express. The delay type is a plain <code>number</code> at <code>packages/workflow-code/src/generated/apps/delay.d.ts:1-13</code>, so the positive minimum in the connector schema is not enforced at authoring time.</p>
+<p>Catalog generation catches conversion errors and emits <code>never</code> for failed inputs or <code>unknown</code> for failed outputs. It records the failure but exits successfully. See <code>packages/workflow-code/scripts/catalog.ts:90-102</code> and <code>packages/workflow-code/scripts/catalog.ts:148-180</code>.</p>
+<p>The current manifest contains 14 known conversion failures across Aweber, Cal, Capsule CRM, Eventbrite, Freshdesk, GiftUp, and HubSpot. See <code>packages/workflow-code/src/generated/manifest.json:1121-1205</code>.</p>
+<p>Typechecking is still useful, but the system should not call a schema type “validated.” Catalog failures need an explicit allowlist and owner, or generation should fail.</p>
+<h2>Security and trust findings</h2>
+<h3>C1 and C5. The agent has code execution and production authority</h3>
+<p>The agent prompt says, “After a successful build, save and deploy the automation unless the user asks otherwise.” See <code>packages/workflow-code/agent/SYSTEM.md:3</code>.</p>
+<p>That collapses four different actions into one default:</p>
+<ol>
+<li>Execute model-written local code.</li>
+<li>Persist a tenant resource.</li>
+<li>Activate a trigger.</li>
+<li>Potentially run external side effects.</li>
+</ol>
+<p>The catalog includes privileged actions, including on-premises command execution and impersonation. A compromised prompt, malicious source file, or mistaken model decision can reach those actions with the user&#39;s credentials.</p>
+<p><code>workflow schema request</code> can issue an authenticated GET or POST to any caller-selected <code>/api/</code> path on the configured origin. It is intended for schema discovery but has no route allowlist or read-only policy. See <code>packages/workflow-code/src/platform/schemas.ts:64-98</code>.</p>
+<p>The platform client accepts HTTP origins as well as HTTPS, so credentials can be sent without transport encryption if a caller supplies an HTTP host. See <code>packages/workflow-code/src/platform/client.ts:13-23</code>.</p>
+<p>The immediate policy should be:</p>
+<ul>
+<li>Never auto-deploy from the default agent prompt.</li>
+<li>Require a separate <code>validate</code>, <code>save</code>, and <code>deploy</code> approval boundary.</li>
+<li>Pin production deployment to a reviewed version.</li>
+<li>Keep generated source in a credential-free sandbox.</li>
+<li>Do not copy <code>.cookie</code> into generated projects by default.</li>
+<li>Allowlist schema request routes and methods.</li>
+<li>Require explicit approval for privileged connector categories and production credentials.</li>
+</ul>
+<h2>Scalability and operations</h2>
+<h3>Graph construction grows quadratically</h3>
+<p><code>Graph.add</code> scans all existing nodes to detect duplicate IDs and copies the full available-output set for every node. See <code>packages/workflow-code/src/graph.ts:29-37</code> and <code>packages/workflow-code/src/graph.ts:64-68</code>.</p>
+<p>A local benchmark against the built package produced:</p>
+<table>
+<thead>
+<tr>
+<th align="right">Linear nodes</th>
+<th align="right">Construction time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1,000</td>
+<td align="right">15.05 ms</td>
+</tr>
+<tr>
+<td align="right">2,000</td>
+<td align="right">51.14 ms</td>
+</tr>
+<tr>
+<td align="right">4,000</td>
+<td align="right">225.99 ms</td>
+</tr>
+<tr>
+<td align="right">8,000</td>
+<td align="right">1,131.18 ms</td>
+</tr>
+</tbody></table>
+<p>Doubling the node count multiplied construction time by about five. The cause matches the implementation: duplicate detection is O(n²), and the available-token set copies add another O(n²) term.</p>
+<p><code>define</code> then clones the completed graph through <code>JSON.parse(JSON.stringify(...))</code>, temporarily doubling memory. See <code>packages/workflow-code/src/define.ts:9-14</code>. Nested conditions add more set copies and intersections in <code>packages/workflow-code/src/condition.ts:29-47</code>.</p>
+<p>The current package has no limits for:</p>
+<ul>
+<li>Node or edge count.</li>
+<li>Branch depth.</li>
+<li>Input or output bytes.</li>
+<li>Available-reference count.</li>
+<li>Schema nesting depth.</li>
+<li>Source execution time.</li>
+<li>Final workflow JSON size.</li>
+</ul>
+<p>Use an ID map for O(1) duplicate checks, a more efficient availability representation, and explicit size and depth limits. Reject oversized graphs before work becomes superlinear.</p>
+<h3>The type catalog and package are large</h3>
+<p>The current checks measured:</p>
+<ul>
+<li>Generated source: 62 MB.</li>
+<li>Built distribution: 65 MB.</li>
+<li>Packed tarball: 5,613,721 bytes.</li>
+<li>Unpacked package: 60,521,191 bytes across 2,234 files.</li>
+<li>Package typecheck: 4.60 seconds on the review machine.</li>
+</ul>
+<p>This is workable for one local process, but it affects every scaffold, install, editor session, CI task, and agent iteration. A generated project receives the complete type tree, even when it uses a few connectors.</p>
+<p>Consider project-scoped connector declarations or a compiler plugin that loads only referenced apps. At minimum, add artifact-size and typecheck-duration budgets to CI so growth is visible.</p>
+<h3>Lookup generation is bounded by pages, not time or bytes</h3>
+<p>Lookup fetching makes up to 1,000 serial requests with 100 records per page. See <code>packages/workflow-code/src/platform/lookups.ts:19-20</code> and <code>packages/workflow-code/src/platform/lookups.ts:57-84</code>.</p>
+<p>At the 30-second request timeout, 1,000 failed page requests could take about eight hours and 20 minutes. The client buffers whole request and response bodies, and lookup code stores every page signature and every discovered key. See <code>packages/workflow-code/src/platform/client.ts:35-47</code>.</p>
+<p>Add an aggregate deadline, maximum response bytes, maximum result count, maximum page count based on business needs, and a visible partial-failure receipt. Do not hold every page signature in memory when the page offset already provides a stronger pagination identity.</p>
+<h3>Generated workflows can express unbounded runtime work</h3>
+<p>The generated types allow unrestricted loop limits and <code>loop_while</code> conditions. Delay duration has no maximum, and delay-until accepts an arbitrary date. See <code>packages/workflow-code/src/generated/apps/loop.d.ts:32-88</code> and <code>packages/workflow-code/src/generated/apps/delay.d.ts:1-33</code>.</p>
+<p>The authoring API does not expose the platform&#39;s retry, timeout, rate-limit, circuit-breaker, bulkhead, or resource-budget fields. The agent can therefore build a workflow that typechecks but has no defensible runtime ceiling.</p>
+<p>The platform runtime is outside this repository, so this audit cannot certify queue or worker scalability. It can certify that the new package does not require or preserve explicit runtime budgets. Add default limits for steps, loop iterations, delay duration, async fan-out, workflow wall time, retries, and variable size. Require explicit approval to raise them.</p>
+<h3>Model usage is expensive and poorly bounded</h3>
+<p>The latest recovery report selected 369 previously blocked or incomplete cases. It records 6,054 complete assistant turns, 181 unique Pi attempts, 526,942,259 total tokens, and $18.03 in cost. Twenty-five provider transport failures were retried and rebuilt. See <code>packages/workflow-code/.evals/recovery-20260923-005120/REPORT.md:43-50</code>.</p>
+<p>That is not necessarily a bad cost for a recovery run, but it shows why the package needs explicit budgets. Add:</p>
+<ul>
+<li>Maximum turns and tool calls per workflow.</li>
+<li>Input, output, cache, and reasoning token limits.</li>
+<li>Spend limit per case and per tenant.</li>
+<li>Retry count with exponential backoff and jitter.</li>
+<li>A circuit breaker for provider transport failures.</li>
+<li>Concurrency limits by tenant and provider.</li>
+<li>A resumable operation state that does not repeat completed work after a transport failure.</li>
+</ul>
+<h2>Evaluation evidence</h2>
+<p>The tests prove local mechanics, not business correctness.</p>
+<p>The focused suite passed 33 tests across graph construction, conditions, schema conversion, lookups, credentials, injected types, and mocked platform routes. The direct probes and source review show why semantic coverage is still missing.</p>
+<p>The latest recovery run reports:</p>
+<ul>
+<li>369 of 369 cases built.</li>
+<li>289 saved and read back.</li>
+<li>160 deployed.</li>
+<li>157 platform TEST runs completed.</li>
+<li>86 platform TEST runs succeeded.</li>
+<li>Zero cases had a machine-readable semantic oracle.</li>
+</ul>
+<p>See <code>packages/workflow-code/.evals/recovery-20260923-005120/REPORT.md:9-31</code>.</p>
+<p>An earlier 39-brief run built 34, saved 26, completed 17 supplied native fixtures, and had only two briefs pass all supplied semantic assertions. Only 14 briefs had complete assertion coverage. External writes and notifications were mocked, and runtime completion did not prove delivery or persistence. See <code>packages/workflow-code/.evals/solution-briefs-run/report.md:5-20</code>.</p>
+<p>This is the most important test gap. “Built,” “saved,” “deployed,” and “TEST completed” are transport and lifecycle signals. A release corpus needs expected records, messages, external calls, side-effect counts, timing, and negative cases.</p>
+<h2>Release readiness</h2>
+<p>The source build is not enough to call the package releasable.</p>
+<ul>
+<li><code>pnpm --filter @unifyapps/workflow-code run build</code> passes, but <code>dist</code> is generated locally and there is no <code>prepack</code> build gate. See <code>packages/workflow-code/scripts/build.mjs:1-11</code> and <code>packages/workflow-code/package.json:26-33</code>.</li>
+<li><code>npm pack --dry-run</code> succeeds, but the package is 5.6 MB compressed and 60.5 MB unpacked.</li>
+<li><code>npm ci --dry-run</code> fails because <code>package-lock.json</code> omits <code>json-schema-to-ts</code> and transitive dependencies. The repository uses pnpm, but the package is designed around npm commands during <code>init</code>.</li>
+<li>Package-focused Biome lint reports 11 errors. Root <code>pnpm lint</code> also fails and includes unrelated monorepo failures, but the package itself does not have a passing lint gate.</li>
+<li>PR CI runs workspace TypeScript and tests, but not this package&#39;s build, pack, install, CLI smoke test, or semantic evaluation. See <code>.github/workflows/pr.yml:15-43</code>.</li>
+<li>The npm publish workflow does not include <code>@unifyapps/workflow-code</code>. See <code>.github/workflows/publish-npm-packages.yml:4-13</code> and <code>.github/workflows/publish-npm-packages.yml:58-77</code>.</li>
+<li>The package has no load benchmark or benchmark script.</li>
+</ul>
+<p>A release candidate should be built from a clean checkout, packed, installed into a clean project, and exercised through the public CLI before publication.</p>
+<h2>Remediation plan</h2>
+<h3>Phase 0. Contain production risk</h3>
+<ol>
+<li>Remove “save and deploy” from the default agent prompt. Require separate commands and explicit approval.</li>
+<li>Pin deploy to the reviewed version and verify that exact version and deployment state after activation.</li>
+<li>Call the platform validator before save and again before deploy.</li>
+<li>Reject direct JSON inputs in the autonomous path until they pass the same deep validation as TypeScript output.</li>
+<li>Do not copy <code>.cookie</code> into new projects. Read credentials from the environment or a secret manager.</li>
+<li>Run generated source in a credential-free sandbox with no arbitrary network access, a wall-clock timeout, and memory limits.</li>
+<li>Allowlist schema request paths and reject mutating routes.</li>
+</ol>
+<h3>Phase 1. Make generation correct</h3>
+<ol>
+<li>Replace <code>NativeWorkflow</code> with a generated or shared contract derived from the platform API.</li>
+<li>Build faithful primitives for linear steps, <code>IF_ELSE</code>, loops, scopes, returns, error paths, and parallel branches.</li>
+<li>Preserve unsupported existing fields by default. Require an explicit replace operation before removing them.</li>
+<li>Add workflow import and a three-way diff for updates.</li>
+<li>Store workflow ID, last saved version, and operation receipts in project state rather than expecting the agent to edit an ID into source.</li>
+<li>Add idempotency keys and structured conflict handling.</li>
+<li>Make output references non-copyable, or reject copy operations with a clear error.</li>
+<li>Validate the compiled workflow against connector JSON Schema and platform graph rules.</li>
+<li>Write local output atomically after a durable remote receipt.</li>
+</ol>
+<h3>Phase 2. Add semantic and load gates</h3>
+<ol>
+<li>Build a release corpus with machine-readable expected outcomes.</li>
+<li>Include destructive actions, missing fields, wrong connections, wrong branches, duplicate sends, missing returns, and reference-copy mistakes.</li>
+<li>Require zero critical failures and an agreed pass threshold on fully asserted cases.</li>
+<li>Add benchmarks for 100, 1,000, 5,000, and 10,000 nodes across linear and branching graphs.</li>
+<li>Record build time, peak memory, package size, model turns, tokens, spend, retries, save latency, deploy latency, and semantic pass rate.</li>
+<li>Add graph, payload, lookup, source-execution, and model budgets.</li>
+</ol>
+<h3>Phase 3. Make release repeatable</h3>
+<ol>
+<li>Choose one supported package-manager path and keep its lockfile current.</li>
+<li>Make lint pass and add a package-specific lint script.</li>
+<li>Add <code>prepack</code> build and a clean pack/install smoke test.</li>
+<li>Add the package to CI and the publish workflow.</li>
+<li>Fail catalog generation on unapproved conversion failures.</li>
+<li>Add artifact-size and typecheck-duration budgets.</li>
+<li>Publish only from a clean, tagged commit with passing semantic evaluation.</li>
+</ol>
+<h2>Acceptance criteria for an autonomous pilot</h2>
+<p>Do not enable unattended deployment until all of these are true:</p>
+<ul>
+<li>Every deploy request names the exact reviewed version.</li>
+<li>Every save and deploy passes platform semantic validation.</li>
+<li>Every create, update, and deploy operation is idempotent and reconcilable.</li>
+<li>Existing workflow changes show an explicit diff before replacement.</li>
+<li>Generated code runs without access to platform credentials.</li>
+<li>Model turns, retries, spend, and concurrency are bounded.</li>
+<li>Runtime loops, delays, retries, fan-out, and variable size have enforced limits.</li>
+<li>The release corpus has complete semantic assertions and passes the agreed threshold.</li>
+<li>Graph and package load budgets pass in CI.</li>
+<li>A clean pack installs and runs through the public CLI.</li>
+<li>Lint, typecheck, tests, build, pack, and install checks all pass.</li>
+<li>The npm publish path is explicit and reproducible.</li>
+</ul>
+<h2>Final recommendation</h2>
+<p>Keep executable TypeScript as the authoring model. It is more legible for an AI agent than hand-edited workflow JSON, and the current graph checks are a good start.</p>
+<p>Do not ship the current package as an autonomous production generator. First remove automatic deployment, define a real trust boundary, use the platform as the semantic authority, pin concurrent writes, preserve existing workflows, and replace lifecycle metrics with business-outcome tests. Once those changes are in place, the approach is worth piloting on small, linear, <code>IF_ELSE</code> workflows with human approval.</p>
+</article>
+</main>
+</body>
+</html>

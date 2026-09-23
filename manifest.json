@@ -243,6 +243,15 @@
       "kind": "plan",
       "createdAt": "2026-09-22T22:22:53.538Z",
       "expiresAt": "2026-10-22T22:22:53.538Z"
+    },
+    {
+      "id": "aj4cPsKCJg",
+      "project": "github.com/unify-apps/www",
+      "slug": "executable-workflow-ai-audit",
+      "title": "Executable workflow AI approach audit",
+      "kind": "plan",
+      "createdAt": "2026-09-23T15:31:49.779Z",
+      "expiresAt": "2026-10-23T15:31:49.779Z"
     }
   ]
 }
