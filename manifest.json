@@ -369,6 +369,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T22:35:02.280Z",
       "expiresAt": "2026-10-28T22:35:02.280Z"
+    },
+    {
+      "id": "sbsnYoVBZw",
+      "project": "path-71ea78",
+      "slug": "master-data-synchronizer-latency-e-6abae30e",
+      "title": "Master Data Synchronizer latency e_6abae30e",
+      "kind": "plan",
+      "createdAt": "2026-09-28T22:35:11.456Z",
+      "expiresAt": "2026-10-28T22:35:11.456Z"
     }
   ]
 }
