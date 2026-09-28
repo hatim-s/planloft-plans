@@ -360,6 +360,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T22:34:53.463Z",
       "expiresAt": "2026-10-28T22:34:53.463Z"
+    },
+    {
+      "id": "7E0uvrV0r6",
+      "project": "path-71ea78",
+      "slug": "sales-explorer-latency-e-6abae302",
+      "title": "Sales Explorer latency e_6abae302",
+      "kind": "plan",
+      "createdAt": "2026-09-28T22:35:02.280Z",
+      "expiresAt": "2026-10-28T22:35:02.280Z"
     }
   ]
 }
