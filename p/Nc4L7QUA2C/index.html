@@ -1,3 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Solution latency: trace e_6aba52f95a1e5546f5d4e994</title>
+<style>/* planloft theme: wf-full-width. Full-bleed shell (100% - 20px) for wide trusted-HTML reports. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
+  /* The renderer's light/dark control reads these so it matches the page. */
+  --planloft-ink: var(--pl-ink);
+  --planloft-paper: var(--pl-paper);
+  --planloft-rule: var(--pl-rule);
+  --planloft-accent: var(--pl-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --pl-ink: #edf0f3;
+    --pl-muted: #abb4bf;
+    --pl-paper: #121519;
+    --pl-surface: #1d2228;
+    --pl-rule: #39414a;
+    --pl-accent: #8ec5ff;
+  }
+}
+
+:root[data-planloft-color-scheme="light"] {
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
+}
+
+:root[data-planloft-color-scheme="dark"] {
+  --pl-ink: #edf0f3;
+  --pl-muted: #abb4bf;
+  --pl-paper: #121519;
+  --pl-surface: #1d2228;
+  --pl-rule: #39414a;
+  --pl-accent: #8ec5ff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  font: 16px/1.65 system-ui, sans-serif;
+}
+/* Full width: 100% - 20px, centered (10px each side). */
+.planloft-plan {
+  width: calc(100% - 20px);
+  max-width: calc(100% - 20px);
+  margin-inline: auto;
+  padding-block: 1rem 2rem;
+}
+/* Trusted-HTML reports cap their own inner wrapper (e.g. max-width:1240px).
+   Outrank it without editing the document so the report owns the full shell. */
+.planloft-plan .wrap {
+  width: 100%;
+  max-width: none;
+}
+h1, h2, h3 { line-height: 1.2; }
+h2 { margin-top: 2.25rem; padding-top: 1rem; border-top: 1px solid var(--pl-rule); }
+a { color: var(--pl-accent); text-underline-offset: 0.15em; }
+a:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 3px; }
+code { padding: 0.1em 0.3em; border-radius: 0.25rem; background: var(--pl-surface); }
+pre { overflow-x: auto; padding: 1rem; border-radius: 0.5rem; background: var(--pl-surface); }
+pre code { padding: 0; background: transparent; }
+blockquote { margin-inline: 0; padding-left: 1rem; border-left: 3px solid var(--pl-accent); color: var(--pl-muted); }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+th, td { padding: 0.5rem 0.75rem; border: 1px solid var(--pl-rule); text-align: left; }
+hr { border: 0; border-top: 1px solid var(--pl-rule); }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="report">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><meta name="robots" content="noindex, nofollow" />
 <title>Latency  d4e994</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -277,3 +467,7 @@ root.innerHTML=ABS.map((A,k)=>{
  <details><summary>App builder method</summary><ul>${meth.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></details>`}).join('');
 })();
 </script>
+</article>
+</main>
+</body>
+</html>
