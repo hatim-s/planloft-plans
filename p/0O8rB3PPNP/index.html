@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbit solution workflow build timings</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: calc(100% - 200px);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 64rem) {
+  .planloft-plan { width: calc(100% - 100px); }
+}
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: calc(100% - 50px); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --ink: #24201c;
+    --muted: #6e655d;
+    --paper: #fbf9f5;
+    --surface: #f1ede6;
+    --rule: #e2dbd1;
+    --accent: #7d2436;
+    --code-bg: #efeae2;
+  }
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>Six Orbit solutions were built in a single 25 minute window on 28 Sep 2026, producing 21 backend workflows between them. This report breaks down how many workflows each solution produced, how long each one took to go from its first deployed version to its last, and where the build actually broke. Durations over eight minutes are called out in red.</p>
+<p>The measurement is deliberately narrow. For every workflow we pull the full deployment history from <code>DeployedWorkflowDefinition</code> and measure the gap between the earliest and latest deploy timestamps. In practice almost every workflow follows the same two-step shape: v1 is a stub that ships the moment the solution scaffolder creates it, and v2 is the real implementation once the agent has written the SQL and Groovy. The gap between those two deploys is the honest measure of how long the work took.</p>
+<blockquote>
+<p>17 of 21 workflows shipped a working v2. The 4 that did not split cleanly into two failure modes, and the more embarrassing one is not the failed workflow.</p>
+</blockquote>
+<h2>The numbers</h2>
+<p>One table, ordered by solution. Rows in red took longer than eight minutes from first to last deploy.</p>
+<style>
+:root { --slow-ink: #a8231b; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) { --slow-ink: #ff9d94; }
+}
+:root[data-planloft-color-scheme="light"] { --slow-ink: #a8231b; }
+:root[data-planloft-color-scheme="dark"] { --slow-ink: #ff9d94; }
+.slow { color: var(--slow-ink); font-weight: 650; }
+</style>
+
+<table>
+<thead>
+<tr>
+<th>Solution / workflow</th>
+<th>Versions</th>
+<th>First → last deploy</th>
+<th>Nodes</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. Advance Auto Parts Store Performance Dashboard</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>6 workflows, build window 10m 58s</td>
+</tr>
+<tr>
+<td>Store Performance Summary KPIs</td>
+<td>2</td>
+<td><span class="slow">10m 58s</span></td>
+<td>15</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Weekly Sales Trend</td>
+<td>2</td>
+<td><span class="slow">8m 3s</span></td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Top and Bottom Stores by Comp Pct</td>
+<td>2</td>
+<td>6m 29s</td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Filter Lookup Options</td>
+<td>2</td>
+<td>3m 21s</td>
+<td>3</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Store Performance List Table</td>
+<td>1</td>
+<td>not measurable</td>
+<td>2</td>
+<td>Failed, stub only</td>
+</tr>
+<tr>
+<td>Store Detail Profile</td>
+<td>1</td>
+<td>not measurable</td>
+<td>7</td>
+<td>Built but never deployed</td>
+</tr>
+<tr>
+<td><strong>2. Parts Availability Finder</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>4 workflows, build window 10m 41s</td>
+</tr>
+<tr>
+<td>Search Parts Catalog</td>
+<td>2</td>
+<td>7m 28s</td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>List Stores</td>
+<td>2</td>
+<td>7m 49s</td>
+<td>8</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Get Store And Hub Availability</td>
+<td>2</td>
+<td><span class="slow">10m 39s</span></td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Get Nearest Stores Availability</td>
+<td>2</td>
+<td>5m 30s</td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td><strong>3. Outlook Daily Digest &amp; Action Assistant</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>4 workflows, build window 23m 17s</td>
+</tr>
+<tr>
+<td>Sync daily emails</td>
+<td>2</td>
+<td><span class="slow">23m 16s</span></td>
+<td>12</td>
+<td>Deployed, scheduled</td>
+</tr>
+<tr>
+<td>Manual refresh emails</td>
+<td>2</td>
+<td><span class="slow">12m 23s</span></td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Draft reply</td>
+<td>2</td>
+<td>4m 1s</td>
+<td>10</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Update item status</td>
+<td>1</td>
+<td>not measurable</td>
+<td>2</td>
+<td>Failed, stub only</td>
+</tr>
+<tr>
+<td><strong>4. Store Operations AI Assistant &amp; Policy Hub</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>3 workflows, build window 16m 4s</td>
+</tr>
+<tr>
+<td>Ask Store Operations Assistant</td>
+<td>2</td>
+<td><span class="slow">12m 20s</span></td>
+<td>4</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Log Assistant Feedback</td>
+<td>2</td>
+<td>4m 14s</td>
+<td>3</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Sync SharePoint Documents</td>
+<td>2</td>
+<td><span class="slow">16m 2s</span></td>
+<td>9</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td><strong>5. Sales Explorer</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>2 workflows, build window 7m 47s</td>
+</tr>
+<tr>
+<td>Sales KPI Totals</td>
+<td>2</td>
+<td>7m 47s</td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Sales Pivot Explorer</td>
+<td>1</td>
+<td>not measurable</td>
+<td>7</td>
+<td>Built but never deployed</td>
+</tr>
+<tr>
+<td><strong>6. Enterprise Master Data Hub &amp; Fast Lookup</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>2 workflows, build window 19m 7s</td>
+</tr>
+<tr>
+<td>Run Sync Now</td>
+<td>2</td>
+<td><span class="slow">19m 7s</span></td>
+<td>52</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Nightly Incremental Sync</td>
+<td>2</td>
+<td><span class="slow">12m 21s</span></td>
+<td>24</td>
+<td>Deployed, scheduled</td>
+</tr>
+</tbody></table>
+<p>Totals: 21 workflows, 17 with a measurable duration, 2 failed, 2 built but never deployed. Nine of the 17 landed over the eight minute mark.</p>
+<h2>What the red rows tell us</h2>
+<p>The long workflows are the ones doing real work, and the correlation is close to perfect. Run Sync Now is a 52 node graph that syncs two Snowflake masters into local objects and takes 19 minutes to assemble. Sync daily emails chains Outlook fetch, GPT-4o analysis, and a bulk upsert across 12 nodes and runs 23 minutes, the single longest build in the set. Filter Lookup Options, at 3m 21s, is a three node lookup that barely needed building.</p>
+<p>Node count is a decent but imperfect predictor. The two Store Operations Assistant workflows invert it: Sync SharePoint Documents at 9 nodes takes 16 minutes, while Ask Store Operations Assistant at 4 nodes takes 12. Both are bottlenecked on SharePoint document retrieval rather than on graph size.</p>
+<blockquote>
+<p>Time tracks the external systems a workflow has to reason about, not the number of nodes in it.</p>
+</blockquote>
+<h2>The two failure modes</h2>
+<p>The 4 single-version workflows are not the same problem, and treating them as one number hides the useful half.</p>
+<p>Store Performance List Table and Update item status are genuine failures. Their definitions contain nothing but <code>n_StubStart</code> and <code>n_StubResponse</code>, the stub pair the scaffolder emits before any agent has touched the workflow. No SQL was ever written. There is no work to recover, only work to redo.</p>
+<p>Store Detail Profile and Sales Pivot Explorer are a different animal, and the more annoying one. Both have complete, working graphs sitting in the draft. Store Detail Profile has seven nodes with real Snowflake SQL and Groovy transforms, written 6m 51s after its v1 deploy. Sales Pivot Explorer has seven nodes, written 8m 12s after its v1. In both cases the implementation exists, was written by the agent, and simply never got deployed. Both still show the orange Undeployed Changes badge in the Automations view with an active Deploy button, and both still document themselves as returning a stub response.</p>
+<p>The Advance Auto Parts solution chat says this out loud. Its implementation notes flag Store Performance List Table as reporting no SQL found and describe the fix as ready for node reconnection. The agent knew. It reported the gap rather than closing it.</p>
+<h2>Steps to close the gap</h2>
+<ol>
+<li>Deploy the two finished drafts. Open <code>Sales Pivot Explorer</code> and <code>Store Detail Profile</code> in Orbit, confirm the graph still looks right, and hit Deploy. That is the whole fix for 2 of the 4.</li>
+<li>Rebuild the two real failures. Store Performance List Table needs its Snowflake query written against <code>V_STORE_WEEKLY_SCORECARD</code>; Update item status needs the storage write for Outlook digest items. Neither has a starting point to salvage.</li>
+<li>Add a deploy gate before a solution is called done. Every workflow in this set had a working v2 available. The gap is that nothing checked for undeployed drafts, so 2 complete workflows sat idle. A check on <code>modifiedTime</code> against <code>deploymentState.deployedAt</code> at the end of a build would have caught both.</li>
+<li>Flag long builds rather than treating them as slow. Nine of 17 workflows crossed eight minutes, and the ones that did are the ones doing genuine multi-system work. That is the expected cost, not a regression.</li>
+</ol>
+<p>Once the two undeployed drafts are shipped, this set is 19 of 21 built and live, with only the two stub-only failures left to redo from scratch.</p>
+</article>
+</main>
+</body>
+</html>
