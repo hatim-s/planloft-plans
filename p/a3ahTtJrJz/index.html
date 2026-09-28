@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Four build runs | Planloft</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --page: #f3f5f7;
+      --surface: #fff;
+      --surface-soft: #f7f9fb;
+      --ink: #1d2631;
+      --muted: #5c6875;
+      --line: #d9e0e6;
+      --grid: #e7ecf0;
+      --planning: #8062cb;
+      --workflow: #51a67d;
+      --app: #497fd0;
+      --wrap: #c59a40;
+      --danger: #a34b42;
+      --danger-bg: #f8ece9;
+      --success: #357552;
+      --success-bg: #e8f4ec;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --page: #121922;
+        --surface: #1a2430;
+        --surface-soft: #202c39;
+        --ink: #eaf0f5;
+        --muted: #b2bfcb;
+        --line: #344353;
+        --grid: #2c3b4a;
+        --planning: #a78ce8;
+        --workflow: #65c598;
+        --app: #79a7ee;
+        --wrap: #e5ba62;
+        --danger: #f4a99e;
+        --danger-bg: #3d292c;
+        --success: #9bdfb7;
+        --success-bg: #253c31;
+      }
+    }
+    :root[data-theme="dark"] {
+      --page: #121922;
+      --surface: #1a2430;
+      --surface-soft: #202c39;
+      --ink: #eaf0f5;
+      --muted: #b2bfcb;
+      --line: #344353;
+      --grid: #2c3b4a;
+      --planning: #a78ce8;
+      --workflow: #65c598;
+      --app: #79a7ee;
+      --wrap: #e5ba62;
+      --danger: #f4a99e;
+      --danger-bg: #3d292c;
+      --success: #9bdfb7;
+      --success-bg: #253c31;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: var(--ink); font-size: 14px; line-height: 1.5; }
+    a { color: var(--app); text-underline-offset: 3px; }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible, select:focus-visible { outline: 3px solid var(--app); outline-offset: 3px; border-radius: 3px; }
+    .page { max-width: 1360px; margin: 0 auto; padding: 28px 32px 72px; }
+    .theme-control { display: flex; justify-content: flex-end; align-items: center; gap: 9px; margin-bottom: 23px; color: var(--muted); font-size: 12px; }
+    select { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; font: inherit; }
+    header { margin-bottom: 34px; }
+    .dateline { color: var(--muted); font-size: 12px; margin: 0 0 8px; }
+    h1 { font-size: clamp(30px, 3.4vw, 46px); letter-spacing: -.035em; line-height: 1.08; margin: 0 0 12px; font-weight: 720; }
+    .lede { max-width: 72ch; font-size: 16px; color: var(--muted); margin: 0; }
+    .overview { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 26px 0 0; }
+    .metric { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 15px 16px 16px; }
+    .metric dt { color: var(--muted); font-size: 12px; margin-bottom: 5px; }
+    .metric dd { margin: 0; font-size: 27px; font-weight: 680; line-height: 1.15; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+    .metric small { display: block; color: var(--muted); margin-top: 4px; font-size: 12px; }
+    section { margin-top: 37px; }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: 12px; }
+    h2 { margin: 0; font-size: 19px; line-height: 1.25; letter-spacing: -.015em; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 12px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 7px 18px; align-items: center; color: var(--muted); font-size: 12px; margin: 0 0 13px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+    .planning-color { background: var(--planning); }
+    .workflow-color { background: var(--workflow); }
+    .app-color { background: var(--app); }
+    .wrap-color { background: var(--wrap); }
+    .scale { display: grid; grid-template-columns: 190px 1fr 70px; gap: 12px; padding: 0 16px 6px; color: var(--muted); font-size: 11px; }
+    .ticks { position: relative; height: 16px; font-variant-numeric: tabular-nums; }
+    .ticks span { position: absolute; left: var(--at); transform: translateX(-50%); }
+    .ticks span:first-child { transform: none; }
+    .run-list { display: grid; gap: 10px; }
+    .run { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 15px 16px 16px; }
+    .run-title { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin: 0 0 12px; }
+    .run-title h3 { margin: 0; font-size: 16px; letter-spacing: -.01em; }
+    .run-title h3 a { color: var(--ink); text-decoration-color: var(--line); }
+    .run-title h3 a:hover { text-decoration-color: var(--app); }
+    .status { font-size: 11px; border-radius: 999px; padding: 1px 7px; }
+    .status.success { color: var(--success); background: var(--success-bg); }
+    .status.partial { color: var(--danger); background: var(--danger-bg); }
+    .run-stats { margin-left: auto; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .run-stats strong { color: var(--ink); font-size: 14px; }
+    .track-row { display: grid; grid-template-columns: 190px 1fr 70px; align-items: center; gap: 12px; margin: 4px 0; font-size: 12px; }
+    .track-label { color: var(--muted); }
+    .track-value { text-align: right; font-variant-numeric: tabular-nums; }
+    .track { position: relative; height: 11px; border-radius: 3px; overflow: hidden; background: repeating-linear-gradient(to right, transparent 0, transparent calc(23.67% - 1px), var(--grid) calc(23.67% - 1px), var(--grid) 23.67%), var(--surface-soft); }
+    .bar { position: absolute; top: 0; bottom: 0; left: var(--start); width: var(--width); border-radius: 3px; }
+    .bar.planning { background: var(--planning); }
+    .bar.workflow { background: var(--workflow); }
+    .bar.app { background: var(--app); }
+    .bar.wrap { background: var(--wrap); }
+    .note { color: var(--muted); font-size: 12px; margin: 10px 0 0; }
+    .insights { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .insight { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 19px 20px 20px; }
+    .insight .eyebrow { color: var(--muted); font-size: 12px; margin: 0 0 7px; }
+    .insight .big { font-size: 31px; line-height: 1.1; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; margin: 0; }
+    .insight .detail { margin: 8px 0 15px; color: var(--muted); max-width: 55ch; }
+    .share { height: 8px; border-radius: 999px; background: var(--surface-soft); overflow: hidden; border: 1px solid var(--line); }
+    .share > span { display: block; height: 100%; background: var(--app); }
+    .share.cache > span { background: var(--planning); }
+    .takeaway { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--workflow); border-radius: 6px; padding: 15px 18px; margin: 11px 0 0; }
+    .takeaway p { margin: 0; }
+    .takeaway p + p { margin-top: 7px; color: var(--muted); }
+    footer { color: var(--muted); font-size: 12px; max-width: 95ch; margin-top: 33px; padding-top: 14px; border-top: 1px solid var(--line); }
+    footer p { margin: 0 0 7px; }
+    @media (max-width: 760px) {
+      .page { padding: 16px 16px 50px; }
+      .theme-control { margin-bottom: 25px; }
+      .overview, .insights { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .run-stats { margin-left: 0; width: 100%; }
+      .scale { display: none; }
+      .track-row { grid-template-columns: 78px 1fr 54px; gap: 8px; }
+      .track-row .track-label { font-size: 11px; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 4px; }
+    }
+    @media (max-width: 480px) {
+      .overview, .insights { grid-template-columns: 1fr 1fr; }
+      .metric { padding: 12px; }
+      .metric dd { font-size: 22px; }
+      .insight { grid-column: 1 / -1; }
+      .run { padding: 13px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="theme-control"><label for="theme">Theme</label><select id="theme" aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    <header>
+      <p class="dateline">28 Sep 2026 · Gemini 3.8 Flash, medium thinking · UAT solution runs</p>
+      <h1>Four builds, side by side</h1>
+      <p class="lede">A short comparison of planning, workflow and app build time, cost, and token use. The four runs were measured with the same stage definitions.</p>
+      <dl class="overview">
+        <div class="metric"><dt>Fastest run</dt><dd>16m 42s</dd><small>SharePoint</small></div>
+        <div class="metric"><dt>Longest run</dt><dd>21m 7s</dd><small>Snowflake</small></div>
+        <div class="metric"><dt>Combined cost</dt><dd>$9.97</dd><small>All four runs</small></div>
+        <div class="metric"><dt>Output tokens</dt><dd>774,936</dd><small>Summed across agent runs</small></div>
+      </dl>
+    </header>
+
+    <section aria-labelledby="time-title">
+      <div class="section-head"><h2 id="time-title">Plan and build time</h2><p>Each track uses the same 21m 7s scale.</p></div>
+      <div class="legend" aria-hidden="true"><span><i class="swatch planning-color"></i>Planning</span><span><i class="swatch workflow-color"></i>Workflows</span><span><i class="swatch app-color"></i>App</span><span><i class="swatch wrap-color"></i>Wrap-up</span></div>
+      <div class="scale" aria-hidden="true"><span></span><div class="ticks"><span style="--at:0%">0</span><span style="--at:23.7%">5m</span><span style="--at:47.4%">10m</span><span style="--at:71%">15m</span><span style="--at:94.7%">20m</span></div><span></span></div>
+      <div class="run-list">
+        <article class="run">
+          <div class="run-title"><h3><a href="https://hatim-s.github.io/planloft-plans/p/Nc4L7QUA2C/">Snowflake</a></h3><span class="status success">success</span><span class="run-stats"><strong>21m 7s</strong> total · $3.90 · 289,000 out tokens</span></div>
+          <div class="track-row"><span class="track-label">Planning</span><div class="track"><span class="bar planning" style="--start:0%;--width:47.2%"></span></div><span class="track-value">9m 58s</span></div>
+          <div class="track-row"><span class="track-label">Workflows</span><div class="track"><span class="bar workflow" style="--start:47.2%;--width:40.9%"></span></div><span class="track-value">8m 38s</span></div>
+          <div class="track-row"><span class="track-label">App</span><div class="track"><span class="bar app" style="--start:47.7%;--width:47.7%"></span></div><span class="track-value">10m 5s</span></div>
+          <div class="track-row"><span class="track-label">Wrap-up</span><div class="track"><span class="bar wrap" style="--start:95.5%;--width:4.5%"></span></div><span class="track-value">58s</span></div>
+        </article>
+        <article class="run">
+          <div class="run-title"><h3><a href="https://hatim-s.github.io/planloft-plans/p/Cmvvjf27LS/">Outlook</a></h3><span class="status partial">partially failed</span><span class="run-stats"><strong>17m 24s</strong> total · $2.61 · 200,106 out tokens</span></div>
+          <div class="track-row"><span class="track-label">Planning</span><div class="track"><span class="bar planning" style="--start:0%;--width:24.7%"></span></div><span class="track-value">5m 13s</span></div>
+          <div class="track-row"><span class="track-label">Workflows</span><div class="track"><span class="bar workflow" style="--start:24.7%;--width:51.5%"></span></div><span class="track-value">10m 53s</span></div>
+          <div class="track-row"><span class="track-label">App</span><div class="track"><span class="bar app" style="--start:25%;--width:41%"></span></div><span class="track-value">8m 40s</span></div>
+          <div class="track-row"><span class="track-label">Wrap-up</span><div class="track"><span class="bar wrap" style="--start:76.2%;--width:6.2%"></span></div><span class="track-value">1m 18s</span></div>
+        </article>
+        <article class="run">
+          <div class="run-title"><h3><a href="https://hatim-s.github.io/planloft-plans/p/KtiePbhZY5/">SharePoint</a></h3><span class="status success">success</span><span class="run-stats"><strong>16m 42s</strong> total · $1.58 · 134,116 out tokens</span></div>
+          <div class="track-row"><span class="track-label">Planning</span><div class="track"><span class="bar planning" style="--start:0%;--width:31.5%"></span></div><span class="track-value">6m 39s</span></div>
+          <div class="track-row"><span class="track-label">Workflows</span><div class="track"><span class="bar workflow" style="--start:31.5%;--width:47.6%"></span></div><span class="track-value">10m 3s</span></div>
+          <div class="track-row"><span class="track-label">App</span><div class="track"><span class="bar app" style="--start:31.9%;--width:42.2%"></span></div><span class="track-value">8m 54s</span></div>
+          <div class="track-row"><span class="track-label">Wrap-up</span><div class="track"></div><span class="track-value">0s</span></div>
+        </article>
+        <article class="run">
+          <div class="run-title"><h3><a href="https://hatim-s.github.io/planloft-plans/p/ucywBTQeIA/#ab0">File upload</a></h3><span class="status partial">partially failed</span><span class="run-stats"><strong>18m 18s</strong> total · $1.88 · 151,714 out tokens</span></div>
+          <div class="track-row"><span class="track-label">Planning</span><div class="track"><span class="bar planning" style="--start:0%;--width:29.6%"></span></div><span class="track-value">6m 15s</span></div>
+          <div class="track-row"><span class="track-label">Workflows</span><div class="track"><span class="bar workflow" style="--start:29.6%;--width:53.6%"></span></div><span class="track-value">11m 19s</span></div>
+          <div class="track-row"><span class="track-label">App</span><div class="track"><span class="bar app" style="--start:29.9%;--width:41.7%"></span></div><span class="track-value">8m 48s</span></div>
+          <div class="track-row"><span class="track-label">Wrap-up</span><div class="track"><span class="bar wrap" style="--start:83.2%;--width:3.6%"></span></div><span class="track-value">45s</span></div>
+        </article>
+      </div>
+      <p class="note">Workflow and app work ran in parallel. Their durations overlap, so adding the tracks will overstate total time.</p>
+    </section>
+
+    <section aria-labelledby="cost-title">
+      <div class="section-head"><h2 id="cost-title">Cost and token signals</h2></div>
+      <div class="insights">
+        <div class="insight"><p class="eyebrow">Large generations</p><p class="big">55% of output</p><p class="detail">45 of 623 LLM calls each wrote more than 5,000 tokens. Together they produced 428,908 of the 774,936 output tokens.</p><div class="share"><span style="width:55.3%"></span></div></div>
+        <div class="insight"><p class="eyebrow">Calls with no cached input</p><p class="big">$4.82 of $9.97</p><p class="detail">These calls made up 48% of combined spend. The share ranged from 34% in SharePoint to 53% in Snowflake.</p><div class="share cache"><span style="width:48.3%"></span></div></div>
+      </div>
+      <div class="takeaway"><p>Snowflake had the longest planning phase, the longest app build, and the largest output. Workflow work set the completion time in the other three runs.</p><p>App build times stayed close, from 8m 40s to 10m 5s. The two lower-cost runs should be read with their outcomes in mind: file upload was partially failed, while SharePoint succeeded.</p></div>
+    </section>
+
+    <footer>
+      <p>Source: the four linked Planloft run reports. Stage times and costs come from each report's summary. Output tokens sum its agent-run table. Total time ends at the last traced span; SharePoint's reported UI latency is about 44 seconds longer.</p>
+      <p>Planning runs from the user message to first build dispatch. Bars use the reported stage starts and durations, rounded to the nearest tenth of a percent on a common scale.</p>
+    </footer>
+  </main>
+  <script>
+    const theme = document.getElementById('theme');
+    theme.value = localStorage.getItem('four-runs-theme') || 'system';
+    if (theme.value !== 'system') document.documentElement.dataset.theme = theme.value;
+    theme.addEventListener('change', () => {
+      if (theme.value === 'system') delete document.documentElement.dataset.theme;
+      else document.documentElement.dataset.theme = theme.value;
+      localStorage.setItem('four-runs-theme', theme.value);
+    });
+  </script>
+</body>
+</html>
