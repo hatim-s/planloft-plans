@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Solution latency: trace e_6aba558c29ecab2b07100705</title>
+<style>/* planloft theme: wf-full-width. Full-bleed shell (100% - 20px) for wide trusted-HTML reports. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
+  /* The renderer's light/dark control reads these so it matches the page. */
+  --planloft-ink: var(--pl-ink);
+  --planloft-paper: var(--pl-paper);
+  --planloft-rule: var(--pl-rule);
+  --planloft-accent: var(--pl-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --pl-ink: #edf0f3;
+    --pl-muted: #abb4bf;
+    --pl-paper: #121519;
+    --pl-surface: #1d2228;
+    --pl-rule: #39414a;
+    --pl-accent: #8ec5ff;
+  }
+}
+
+:root[data-planloft-color-scheme="light"] {
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
+}
+
+:root[data-planloft-color-scheme="dark"] {
+  --pl-ink: #edf0f3;
+  --pl-muted: #abb4bf;
+  --pl-paper: #121519;
+  --pl-surface: #1d2228;
+  --pl-rule: #39414a;
+  --pl-accent: #8ec5ff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  font: 16px/1.65 system-ui, sans-serif;
+}
+/* Full width: 100% - 20px, centered (10px each side). */
+.planloft-plan {
+  width: calc(100% - 20px);
+  max-width: calc(100% - 20px);
+  margin-inline: auto;
+  padding-block: 1rem 2rem;
+}
+/* Trusted-HTML reports cap their own inner wrapper (e.g. max-width:1240px).
+   Outrank it without editing the document so the report owns the full shell. */
+.planloft-plan .wrap {
+  width: 100%;
+  max-width: none;
+}
+h1, h2, h3 { line-height: 1.2; }
+h2 { margin-top: 2.25rem; padding-top: 1rem; border-top: 1px solid var(--pl-rule); }
+a { color: var(--pl-accent); text-underline-offset: 0.15em; }
+a:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 3px; }
+code { padding: 0.1em 0.3em; border-radius: 0.25rem; background: var(--pl-surface); }
+pre { overflow-x: auto; padding: 1rem; border-radius: 0.5rem; background: var(--pl-surface); }
+pre code { padding: 0; background: transparent; }
+blockquote { margin-inline: 0; padding-left: 1rem; border-left: 3px solid var(--pl-accent); color: var(--pl-muted); }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+th, td { padding: 0.5rem 0.75rem; border: 1px solid var(--pl-rule); text-align: left; }
+hr { border: 0; border-top: 1px solid var(--pl-rule); }
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>This report covers one solution-builder run on <code>orbit.uat.unifyapps.com</code>, trace
+<code>e_6aba558c29ecab2b0710070a</code>, taken from the solutions URL for chat
+<code>e_6aba558c29ecab2b07100705</code>. The run took 18m 18s and cost $1.88 across 109 LLM
+calls, with no errors. The trace holds 172 spans and one app builder sub-trace.</p>
+<p>The shape of the run is that the main agent spends its time waiting. It hands work
+to two workflow runs and the app builder, then blocks while they finish. Almost none
+of the wall clock is the main agent doing model work.</p>
+<blockquote>
+<p>The run is 18m 18s. The main agent is actually busy for 409.5s of that. The other
+673.7s is spent blocked on sub-agents.</p>
+</blockquote>
+<h2>Stages</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Time</th>
+<th>Cost</th>
+<th>Cost share</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Planning</td>
+<td>6m 15s</td>
+<td>$0.46</td>
+<td>24%</td>
+</tr>
+<tr>
+<td>Backend (workflows)</td>
+<td>11m 19s</td>
+<td>$0.60</td>
+<td>32%</td>
+</tr>
+<tr>
+<td>Frontend (app)</td>
+<td>8m 48s</td>
+<td>$0.38</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Wrap-up</td>
+<td>45s</td>
+<td>$0.45</td>
+<td>24%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>18m 18s</strong></td>
+<td><strong>$1.88</strong></td>
+<td><strong>100%</strong></td>
+</tr>
+</tbody></table>
+<p>Backend and frontend ran in parallel, so their windows overlap and do not add up to
+the total. Stage costs do add up: $1.89 with rounding, against a $1.88 total.</p>
+<p>The backend window covers 2 workflow runs, the slowest being <code>Refresh inventory data</code>.
+The frontend window covers 1 run, the app builder on app <code>app-k5fll</code>.</p>
+<p>Planning ran 6m 15s before any build started. Wrap-up is where the main agent and
+planner spent everything after dispatch, at $0.45 for 45s of wall clock. That is
+orchestration while waiting, not building.</p>
+<h2>Per-run attribution</h2>
+<table>
+<thead>
+<tr>
+<th>Agent run</th>
+<th>Total</th>
+<th>Actual</th>
+<th>LLM (calls)</th>
+<th>Tools (calls)</th>
+<th>Runtime overhead</th>
+<th>Untraced</th>
+<th>Waiting</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Main agent</td>
+<td>1,097.6 s</td>
+<td>409.5 s</td>
+<td>405.2 s (16)</td>
+<td>9.0 s (18)</td>
+<td>14.3 s</td>
+<td>0.0 s</td>
+<td>673.7 s</td>
+</tr>
+<tr>
+<td>App builder (app-k5fll)</td>
+<td>527.7 s</td>
+<td>519.4 s</td>
+<td>483.9 s (29)</td>
+<td>115.3 s (81)</td>
+<td>6.5 s</td>
+<td>0.7 s</td>
+<td>1.1 s</td>
+</tr>
+<tr>
+<td>Create draft order</td>
+<td>268.6 s</td>
+<td>248.4 s</td>
+<td>242.8 s (26)</td>
+<td>5.7 s (25)</td>
+<td>20.2 s</td>
+<td>0.0 s</td>
+<td>0.0 s</td>
+</tr>
+<tr>
+<td>Refresh inventory data</td>
+<td>678.7 s</td>
+<td>530.3 s</td>
+<td>502.6 s (38)</td>
+<td>27.6 s (47)</td>
+<td>35.3 s</td>
+<td>113.2 s</td>
+<td>0.0 s</td>
+</tr>
+</tbody></table>
+<p>Total is first span start to last span end. Actual is the union of LLM and tool spans.
+Untraced is tool to tool gaps with no LLM span between them. For the main agent,
+Waiting is time spent on sub-agents.</p>
+<h2>Findings</h2>
+<h3>1. 113s of untraced time on the critical path</h3>
+<p><code>Refresh inventory data</code> LLM spans stop at +918s, but 8 tool calls continue to +1054s.
+That leaves 113.2s of untraced gaps after the last recorded LLM call, on the critical
+path. The trace cannot split that between real model time and stalls, so the cause is
+not measurable from the trace alone.</p>
+<h3>2. Output-bound calls dominate model time</h3>
+<p>7 LLM calls write 5k+ output tokens, totalling 78,672 tokens over 519s at about 142
+tok/s. 106s of that sits on the critical path. A further 3 calls each took over 15s for
+under 300 output tokens, adding 31s to the critical path. Savings depend on the fix.</p>
+<h3>3. Half the spend is uncached</h3>
+<p>15 uncached calls cost $0.94 of the $1.88 turn, a 50% share. This is the cheapest of
+the three findings to act on, since it needs no change to what the agent does.</p>
+<h2>App builder</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>App</td>
+<td><code>app-k5fll</code></td>
+</tr>
+<tr>
+<td>Session</td>
+<td><code>e_6aba57040c38a03adae4cddf</code></td>
+</tr>
+<tr>
+<td>Trace</td>
+<td><code>e_1f0eb53375e998df7622e89d</code></td>
+</tr>
+<tr>
+<td>Generate App span</td>
+<td><code>6aba591729ecab2b0710ed7c</code></td>
+</tr>
+<tr>
+<td>Total</td>
+<td>527.7 s</td>
+</tr>
+<tr>
+<td>LLM</td>
+<td>483.9 s across 29 calls</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>60.8 s across 68 spans</td>
+</tr>
+<tr>
+<td>Overhead</td>
+<td>7.4 s over 37 gaps</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>$0.38 (root $0.37696)</td>
+</tr>
+</tbody></table>
+<h3>Phases</h3>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Start-up</td>
+<td>0.8 s</td>
+</tr>
+<tr>
+<td>Investigation</td>
+<td>46.2 s</td>
+</tr>
+<tr>
+<td>Editing</td>
+<td>9.0 s</td>
+</tr>
+<tr>
+<td>Waiting: Await Plan</td>
+<td>68.6 s</td>
+</tr>
+<tr>
+<td>Editing</td>
+<td>295.0 s</td>
+</tr>
+<tr>
+<td>Build, commit, finish</td>
+<td>105.5 s</td>
+</tr>
+<tr>
+<td>Preview and post-processing</td>
+<td>2.5 s</td>
+</tr>
+</tbody></table>
+<p>The 68.6s Await Plan is the known pattern for initial builds, where a planning agent
+runs in parallel and the builder blocks on it. It is expected, not a fault.</p>
+<h3>Tool mix</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Calls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File Editor, create</td>
+<td>16</td>
+</tr>
+<tr>
+<td>File Editor, str_replace</td>
+<td>12</td>
+</tr>
+<tr>
+<td>File Editor, view</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Invoke Skill</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Terminal</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Task Tracker</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Create Datasource</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Confirm Automation Mapping</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Create Plan</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Get Automation Schema</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Provision Data Sources</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Set App Name</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Await Plan</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Present Plan</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Set Default Page</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Finish</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>The builder is file-writing heavy. 28 of 68 tool spans are writes.</p>
+<h3>App builder findings</h3>
+<p>Both are small.</p>
+<ul>
+<li>1 call generated at under 60% of the run&#39;s normal speed, 164 tok/s median, about 16s
+over the median rate.</li>
+<li>1 uncached call cost 6% of the app builder, $0.02 of $0.38.</li>
+</ul>
+<h2>Reconciliation</h2>
+<p>The stage and run numbers are derived, so they are checked against the root trace.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Root</th>
+<th>From spans</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cost</td>
+<td>$1.50312</td>
+<td>$1.50317</td>
+<td>match</td>
+</tr>
+<tr>
+<td>Input tokens</td>
+<td>5,680,917</td>
+<td>5,680,917</td>
+<td>match</td>
+</tr>
+<tr>
+<td>Output tokens</td>
+<td>93,240</td>
+<td>93,240</td>
+<td>match</td>
+</tr>
+<tr>
+<td>LLM calls assigned</td>
+<td>80</td>
+<td>80</td>
+<td>match</td>
+</tr>
+<tr>
+<td>Unassigned spans</td>
+<td>0</td>
+<td>0</td>
+<td>match</td>
+</tr>
+</tbody></table>
+<p>The $1.88 headline is the $1.50 solution spans plus the $0.38 app builder sub-trace.
+Nothing is unassigned.</p>
+<h2>Caveats</h2>
+<ul>
+<li>The 113s untraced stretch cannot be attributed to model time versus a stall from the
+trace alone.</li>
+<li>Backend runs in this trace do have LLM spans, so the known failure mode where a
+workflow run shows tools but no LLM spans, and understates cost, does not apply here.</li>
+<li>Other traffic on the host is not visible in a single trace.</li>
+</ul>
+<h2>What to do next</h2>
+<ol>
+<li>Instrument the tool-to-tool gaps in <code>Refresh inventory data</code> so the 113s can be
+split into model time and stall. Without this, any fix is a guess.</li>
+<li>Cut the 5k+ output token calls. 78,672 tokens over 519s at 142 tok/s is the largest
+single block of critical path time that we can see.</li>
+<li>Fix prompt caching on the 15 uncached calls, worth $0.94.</li>
+</ol>
+</article>
+</main>
+</body>
+</html>
