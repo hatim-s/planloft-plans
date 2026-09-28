@@ -351,6 +351,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T22:34:45.181Z",
       "expiresAt": "2026-10-28T22:34:45.181Z"
+    },
+    {
+      "id": "K3XnBRlCiP",
+      "project": "path-71ea78",
+      "slug": "store-operations-sop-hub-latency-e-6abae2fa",
+      "title": "Store Operations SOP Hub latency e_6abae2fa",
+      "kind": "plan",
+      "createdAt": "2026-09-28T22:34:53.463Z",
+      "expiresAt": "2026-10-28T22:34:53.463Z"
     }
   ]
 }
