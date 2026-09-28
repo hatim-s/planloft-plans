@@ -261,6 +261,15 @@
       "kind": "report",
       "createdAt": "2026-09-28T10:18:31.617Z",
       "expiresAt": "2026-10-28T10:22:08.869Z"
+    },
+    {
+      "id": "Cmvvjf27LS",
+      "project": "github.com/unify-apps/www",
+      "slug": "outlook-solution-latency-070fbfbe",
+      "title": "Outlook solution latency trace 070fbfbe",
+      "kind": "plan",
+      "createdAt": "2026-09-28T12:35:18.703Z",
+      "expiresAt": "2026-10-28T12:35:18.703Z"
     }
   ]
 }
