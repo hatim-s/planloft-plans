@@ -324,6 +324,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T16:06:46.567Z",
       "expiresAt": "2026-10-28T16:06:46.567Z"
+    },
+    {
+      "id": "EGA5T71IiB",
+      "project": "path-71ea78",
+      "slug": "store-performance-dashboard-latency-e-6abacf0e",
+      "title": "Store Performance Dashboard latency e_6abacf0e",
+      "kind": "plan",
+      "createdAt": "2026-09-28T22:34:14.385Z",
+      "expiresAt": "2026-10-28T22:34:14.385Z"
     }
   ]
 }
