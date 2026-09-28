@@ -279,6 +279,15 @@
       "kind": "report",
       "createdAt": "2026-09-28T12:37:12.916Z",
       "expiresAt": "2026-12-27T12:39:34.871Z"
+    },
+    {
+      "id": "Nc4L7QUA2C",
+      "project": "path-71ea78",
+      "slug": "solution-latency-e-6aba52f9",
+      "title": "Solution latency: trace e_6aba52f95a1e5546f5d4e994",
+      "kind": "report",
+      "createdAt": "2026-09-28T12:41:03.047Z",
+      "expiresAt": "2026-10-28T12:41:03.047Z"
     }
   ]
 }
