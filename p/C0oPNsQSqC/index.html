@@ -4,240 +4,83 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Workflow agent latency e_6aba3420 - Run Sync Now + Nightly Scheduled Sync</title>
-<style>/* planloft theme: orbit-wide. Full-width report column (viewport − 200px), prose capped for reading. */
+<style>/* planloft theme: wf-full-width. Full-bleed shell (100% - 20px) for wide trusted-HTML reports. */
 /* planloft-color-schemes: light dark */
 :root {
   color-scheme: light dark;
-  --ink: #24201c;
-  --muted: #6e655d;
-  --paper: #fbf9f5;
-  --surface: #f1ede6;
-  --rule: #e2dbd1;
-  --accent: #7d2436;
-  --code-bg: #efeae2;
-  --planloft-ink: var(--ink);
-  --planloft-paper: var(--paper);
-  --planloft-rule: var(--rule);
-  --planloft-accent: var(--accent);
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
+  /* The renderer's light/dark control reads these so it matches the page. */
+  --planloft-ink: var(--pl-ink);
+  --planloft-paper: var(--pl-paper);
+  --planloft-rule: var(--pl-rule);
+  --planloft-accent: var(--pl-accent);
 }
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-planloft-color-scheme="light"]) {
-    --ink: #e2dcd3;
-    --muted: #a39a90;
-    --paper: #1a1816;
-    --surface: #24211e;
-    --rule: #393430;
-    --accent: #e39aa8;
-    --code-bg: #262320;
+    --pl-ink: #edf0f3;
+    --pl-muted: #abb4bf;
+    --pl-paper: #121519;
+    --pl-surface: #1d2228;
+    --pl-rule: #39414a;
+    --pl-accent: #8ec5ff;
   }
 }
+
 :root[data-planloft-color-scheme="light"] {
-  --ink: #24201c;
-  --muted: #6e655d;
-  --paper: #fbf9f5;
-  --surface: #f1ede6;
-  --rule: #e2dbd1;
-  --accent: #7d2436;
-  --code-bg: #efeae2;
-}
-:root[data-planloft-color-scheme="dark"] {
-  --ink: #e2dcd3;
-  --muted: #a39a90;
-  --paper: #1a1816;
-  --surface: #24211e;
-  --rule: #393430;
-  --accent: #e39aa8;
-  --code-bg: #262320;
+  --pl-ink: #1c2024;
+  --pl-muted: #606974;
+  --pl-paper: #ffffff;
+  --pl-surface: #f4f6f8;
+  --pl-rule: #d9dee4;
+  --pl-accent: #235ea7;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+:root[data-planloft-color-scheme="dark"] {
+  --pl-ink: #edf0f3;
+  --pl-muted: #abb4bf;
+  --pl-paper: #121519;
+  --pl-surface: #1d2228;
+  --pl-rule: #39414a;
+  --pl-accent: #8ec5ff;
+}
+
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
-  font-kerning: normal;
-  text-rendering: optimizeLegibility;
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  font: 16px/1.65 system-ui, sans-serif;
 }
-/* Full width − 200px, centered */
+/* Full width: 100% - 20px, centered (10px each side). */
 .planloft-plan {
-  width: calc(100vw - 200px);
-  max-width: calc(100vw - 200px);
+  width: calc(100% - 20px);
+  max-width: calc(100% - 20px);
   margin-inline: auto;
-  padding-block: 5rem 8rem;
+  padding-block: 1rem 2rem;
 }
-article > :first-child { margin-top: 0; }
-article > p,
-article > blockquote,
-article > ul,
-article > ol,
-article > pre {
-  max-width: 48rem;
-}
-article > h1,
-article > h2,
-article > h3,
-article > h4 {
-  max-width: 56rem;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: var(--ink);
-  font-weight: 700;
-  line-height: 1.2;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-}
-h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
-h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
-h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
-h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
-h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
-h2 + h3, h3 + h4 { margin-top: 1rem; }
-h1 a, h2 a, h3 a, h4 a { color: inherit; }
-
-p { margin: 0 0 1.2em; text-wrap: pretty; }
-.planloft-plan > article > h1 + p::first-letter,
-.planloft-plan > article > p:first-child::first-letter {
-  float: left;
-  margin: 0.08em 0.45rem 0 0;
-  font-size: 3.6em;
-  line-height: 0.82;
-  font-weight: 700;
-}
-ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
-li { margin: 0.4em 0; }
-li > p { margin-bottom: 0.5em; }
-li ul, li ol { margin: 0.4em 0; }
-li::marker { color: var(--muted); }
-ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
-input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
-
-a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  text-underline-offset: 0.2em;
-  overflow-wrap: anywhere;
-}
-a:hover { text-decoration-color: currentColor; }
-strong { font-weight: 700; }
-mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
-del { color: var(--muted); }
-abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.15em; }
-sup, sub { font-size: 0.7em; line-height: 0; }
-
-code, kbd, samp, pre {
-  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
-  font-size: 0.82em;
-}
-code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
-pre {
-  margin: 1.6em 0;
-  padding: 1rem 1.15rem;
-  overflow-x: auto;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  background: var(--code-bg);
-  font-size: 0.78em;
-  line-height: 1.6;
-  tab-size: 2;
-}
-pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
-kbd {
-  padding: 0.05em 0.4em;
-  border: 1px solid var(--rule);
-  border-bottom-width: 2px;
-  border-radius: 3px;
-  background: var(--surface);
-  font-size: 0.75em;
-}
-
-blockquote {
-  position: relative;
-  margin: 2em 0 2em 1.25rem;
-  padding: 0;
-  font-style: italic;
-  font-size: 1.08em;
-  line-height: 1.65;
-  color: var(--ink);
-}
-blockquote::before {
-  content: "\201C";
-  position: absolute;
-  top: -0.12em;
-  left: -1.25rem;
-  font-size: 2.6em;
-  line-height: 1;
-  font-style: normal;
-  color: var(--accent);
-}
-blockquote > :last-child { margin-bottom: 0; }
-blockquote em { font-style: normal; }
-
-table {
-  display: table;
+/* Trusted-HTML reports cap their own inner wrapper (e.g. max-width:1240px).
+   Outrank it without editing the document so the report owns the full shell. */
+.planloft-plan .wrap {
   width: 100%;
-  max-width: 100%;
-  margin: 1.75em 0;
-  border-collapse: collapse;
-  table-layout: auto;
-  font-size: 0.82em;
-  line-height: 1.45;
+  max-width: none;
 }
-th, td {
-  padding: 0.5em 1em 0.5em 0;
-  border-bottom: 1px solid var(--rule);
-  text-align: left;
-  vertical-align: top;
-  overflow-wrap: anywhere;
-  word-break: normal;
-}
-th { font-weight: 700; border-bottom: 1px solid var(--ink); }
-tr > :last-child { padding-right: 0; }
-
-hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
-hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
-img { max-width: 100%; height: auto; }
-figure { margin: 1.75em 0; }
-figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
-details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
-summary { cursor: pointer; font-weight: 700; }
-
-::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
-
-/* Embedded Gantt takes the full −200px column */
-.orbit-gantt-embed {
-  width: 100%;
-  max-width: 100%;
-  margin: 2.5rem auto;
-}
-
-@media (max-width: 900px) {
-  .planloft-plan {
-    width: calc(100vw - 2.5rem);
-    max-width: calc(100vw - 2.5rem);
-    padding-block: 4.5rem 5rem;
-  }
-}
-@media (max-width: 40rem) {
-  body { font-size: 17px; }
-  .planloft-plan { width: calc(100vw - 2rem); max-width: calc(100vw - 2rem); padding-block: 4.5rem 5rem; }
-  h1 { font-size: 2.1rem; }
-  h2 { font-size: 1.4rem; }
-  blockquote { margin-left: 1rem; }
-  blockquote::before { left: -1rem; font-size: 2.2em; }
-}
-@media print {
-  body { background: #fff; color: #000; font-size: 11.5pt; }
-  .planloft-plan { width: auto; max-width: none; padding: 0; }
-  a { color: inherit; }
-  pre, code, kbd { background: #f3f3f3; }
-}
+h1, h2, h3 { line-height: 1.2; }
+h2 { margin-top: 2.25rem; padding-top: 1rem; border-top: 1px solid var(--pl-rule); }
+a { color: var(--pl-accent); text-underline-offset: 0.15em; }
+a:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 3px; }
+code { padding: 0.1em 0.3em; border-radius: 0.25rem; background: var(--pl-surface); }
+pre { overflow-x: auto; padding: 1rem; border-radius: 0.5rem; background: var(--pl-surface); }
+pre code { padding: 0; background: transparent; }
+blockquote { margin-inline: 0; padding-left: 1rem; border-left: 3px solid var(--pl-accent); color: var(--pl-muted); }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+th, td { padding: 0.5rem 0.75rem; border: 1px solid var(--pl-rule); text-align: left; }
+hr { border: 0; border-top: 1px solid var(--pl-rule); }
 
 
 :root { color-scheme: light dark; }
