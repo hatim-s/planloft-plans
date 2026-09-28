@@ -306,6 +306,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T13:20:21.809Z",
       "expiresAt": "2026-10-28T13:25:58.468Z"
+    },
+    {
+      "id": "hmfQourlnf",
+      "project": "path-71ea78",
+      "slug": "workflow-build-times-sep-2026",
+      "title": "Workflow build times Sep 2026",
+      "kind": "plan",
+      "createdAt": "2026-09-28T15:54:09.407Z",
+      "expiresAt": "2026-10-28T15:54:09.407Z"
     }
   ]
 }
