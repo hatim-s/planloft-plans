@@ -288,6 +288,15 @@
       "kind": "report",
       "createdAt": "2026-09-28T12:41:03.047Z",
       "expiresAt": "2026-10-28T12:44:45.741Z"
+    },
+    {
+      "id": "KtiePbhZY5",
+      "project": "github.com/unify-apps/www",
+      "slug": "store-operations-ai-assistant-latency",
+      "title": "Store Operations AI Assistant latency report",
+      "kind": "plan",
+      "createdAt": "2026-09-28T12:49:30.306Z",
+      "expiresAt": "2026-10-28T12:49:30.306Z"
     }
   ]
 }
