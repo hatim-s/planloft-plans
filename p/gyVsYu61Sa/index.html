@@ -1,418 +1,287 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Store Ops SOP Hub latency report</title>
-<style>/* planloft theme: editorial. A long read: one old-style serif, a drop cap, quotes that hang in the margin. */
-/* planloft-color-schemes: light dark */
-:root {
-  color-scheme: light dark;
-  --ink: #24201c;
-  --muted: #6e655d;
-  --paper: #fbf9f5;
-  --surface: #f1ede6;
-  --rule: #e2dbd1;
-  --accent: #7d2436;
-  --code-bg: #efeae2;
-  --planloft-ink: var(--ink);
-  --planloft-paper: var(--paper);
-  --planloft-rule: var(--rule);
-  --planloft-accent: var(--accent);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-planloft-color-scheme="light"]) {
-    --ink: #e2dcd3;
-    --muted: #a39a90;
-    --paper: #1a1816;
-    --surface: #24211e;
-    --rule: #393430;
-    --accent: #e39aa8;
-    --code-bg: #262320;
-  }
-}
-:root[data-planloft-color-scheme="light"] {
-  --ink: #24201c;
-  --muted: #6e655d;
-  --paper: #fbf9f5;
-  --surface: #f1ede6;
-  --rule: #e2dbd1;
-  --accent: #7d2436;
-  --code-bg: #efeae2;
-}
-:root[data-planloft-color-scheme="dark"] {
-  --ink: #e2dcd3;
-  --muted: #a39a90;
-  --paper: #1a1816;
-  --surface: #24211e;
-  --rule: #393430;
-  --accent: #e39aa8;
-  --code-bg: #262320;
-}
-
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
-  font-kerning: normal;
-  text-rendering: optimizeLegibility;
-}
-.planloft-plan {
-  width: calc(100% - 200px);
-  margin-inline: auto;
-  padding-block: 5rem 8rem;
-}
-article > :first-child { margin-top: 0; }
-
-h1, h2, h3, h4, h5, h6 {
-  color: var(--ink);
-  font-weight: 700;
-  line-height: 1.2;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-}
-h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
-h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
-h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
-h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
-h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
-h2 + h3, h3 + h4 { margin-top: 1rem; }
-h1 a, h2 a, h3 a, h4 a { color: inherit; }
-
-p { margin: 0 0 1.2em; text-wrap: pretty; }
-/* The opening paragraph carries a drop cap. It only appears when the article really
-   opens with prose, so a document that starts with a list or a table stays plain. */
-.planloft-plan > article > h1 + p::first-letter,
-.planloft-plan > article > p:first-child::first-letter {
-  float: left;
-  margin: 0.08em 0.45rem 0 0;
-  font-size: 3.6em;
-  line-height: 0.82;
-  font-weight: 700;
-}
-ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
-li { margin: 0.4em 0; }
-li > p { margin-bottom: 0.5em; }
-li ul, li ol { margin: 0.4em 0; }
-li::marker { color: var(--muted); }
-ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
-input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
-
-a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  text-underline-offset: 0.2em;
-  overflow-wrap: anywhere;
-}
-a:hover { text-decoration-color: currentColor; }
-strong { font-weight: 700; }
-mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
-del { color: var(--muted); }
-abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
-sup, sub { font-size: 0.7em; line-height: 0; }
-
-code, kbd, samp, pre {
-  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
-  font-size: 0.82em;
-}
-code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
-pre {
-  margin: 1.6em 0;
-  padding: 1rem 1.15rem;
-  overflow-x: auto;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  background: var(--code-bg);
-  font-size: 0.78em;
-  line-height: 1.6;
-  tab-size: 2;
-}
-pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
-kbd {
-  padding: 0.05em 0.4em;
-  border: 1px solid var(--rule);
-  border-bottom-width: 2px;
-  border-radius: 3px;
-  background: var(--surface);
-  font-size: 0.75em;
-}
-
-blockquote {
-  position: relative;
-  margin: 2em 0 2em 1.25rem;
-  padding: 0;
-  font-style: italic;
-  font-size: 1.08em;
-  line-height: 1.65;
-  color: var(--ink);
-}
-blockquote::before {
-  content: "\201C";
-  position: absolute;
-  top: -0.12em;
-  left: -1.25rem;
-  font-size: 2.6em;
-  line-height: 1;
-  font-style: normal;
-  color: var(--accent);
-}
-blockquote > :last-child { margin-bottom: 0; }
-blockquote em { font-style: normal; }
-
-table {
-  display: block;
-  width: max-content;
-  max-width: 100%;
-  margin: 1.75em 0;
-  overflow-x: auto;
-  border-collapse: collapse;
-  font-size: 0.9em;
-  line-height: 1.5;
-}
-th, td {
-  padding: 0.5em 1em 0.5em 0;
-  border-bottom: 1px solid var(--rule);
-  text-align: left;
-  vertical-align: top;
-}
-th { font-weight: 700; border-bottom: 1px solid var(--ink); }
-tr > :last-child { padding-right: 0; }
-
-/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
-hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
-hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
-img { max-width: 100%; height: auto; }
-figure { margin: 1.75em 0; }
-figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
-details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
-summary { cursor: pointer; font-weight: 700; }
-
-::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
-
-@media (max-width: 64rem) {
-  .planloft-plan { width: calc(100% - 100px); }
-}
-@media (max-width: 40rem) {
-  body { font-size: 17px; }
-  .planloft-plan { width: calc(100% - 50px); padding-block: 4.5rem 5rem; }
-  h1 { font-size: 2.1rem; }
-  h2 { font-size: 1.4rem; }
-  blockquote { margin-left: 1rem; }
-  blockquote::before { left: -1rem; font-size: 2.2em; }
-}
-@media print {
-  html:root,
-  html:root:not([data-planloft-color-scheme="light"]),
-  html:root[data-planloft-color-scheme="dark"] {
-    color-scheme: light;
-    --ink: #24201c;
-    --muted: #6e655d;
-    --paper: #fbf9f5;
-    --surface: #f1ede6;
-    --rule: #e2dbd1;
-    --accent: #7d2436;
-    --code-bg: #efeae2;
-  }
-  body { background: #fff; color: #000; font-size: 11.5pt; }
-  .planloft-plan { width: auto; padding: 0; }
-  a { color: inherit; }
-  pre, code, kbd { background: #f3f3f3; }
-}
-
-
-:root { color-scheme: light dark; }
-.planloft-theme-selector {
-  --planloft-control-ink: var(--planloft-ink, CanvasText);
-  --planloft-control-paper: var(--planloft-paper, Canvas);
-  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
-  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
-  position: fixed;
-  z-index: 1000;
-  top: 1rem;
-  right: 1rem;
-  display: inline-flex;
-  gap: 2px;
-  margin: 0;
-  padding: 3px;
-  border: 1px solid var(--planloft-control-rule);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: var(--planloft-control-ink);
-  line-height: 0;
-}
-.planloft-theme-option {
-  display: inline-grid;
-  width: 1.75rem;
-  height: 1.75rem;
-  place-items: center;
-  margin: 0;
-  border: 0;
-  border-radius: 999px;
-  padding: 0;
-  background: transparent;
-  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 120ms ease, color 120ms ease;
-}
-.planloft-theme-option:hover {
-  color: var(--planloft-control-ink);
-  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
-}
-.planloft-theme-option[aria-pressed="true"] {
-  background: var(--planloft-control-ink);
-  color: var(--planloft-control-paper);
-}
-.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
-.planloft-theme-option:focus-visible {
-  outline: 2px solid var(--planloft-control-accent);
-  outline-offset: 2px;
-}
-@media (max-width: 40rem) {
-  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .planloft-theme-option { transition: none; }
-}
-@media print {
-  .planloft-theme-selector { display: none; }
-}
+<title>Latency  2012b7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#f5f6f8;--panel:#ffffff;--ink:#16202c;--ink2:#4a5566;--muted:#7a8494;--line:#dfe3ea;--line2:#eceff4;
+--llm:#2a78d6;--tool:#1baf7a;--over:#d03b3b;--untr:#8f98a6;--wait:#c99a06;--disp:#7c5cd6;--good:#1a8f5c;--warn:#b7791f;--bad:#c53030;--chip:#eef1f6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#10151c;--panel:#171e27;--ink:#e6ebf2;--ink2:#b3bdca;--muted:#8792a2;--line:#2a3441;--line2:#212a35;
+--llm:#4b93ea;--tool:#2cc58d;--over:#ef5b5b;--untr:#8a94a3;--wait:#e0b52a;--disp:#9a80ee;--chip:#222c38}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#10151c;--panel:#171e27;--ink:#e6ebf2;--ink2:#b3bdca;--muted:#8792a2;--line:#2a3441;--line2:#212a35;
+--llm:#4b93ea;--tool:#2cc58d;--over:#ef5b5b;--untr:#8a94a3;--wait:#e0b52a;--disp:#9a80ee;--chip:#222c38}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 "IBM Plex Sans",system-ui,-apple-system,sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+h1{font-size:24px;margin:0 0 6px;text-wrap:balance;font-weight:600;letter-spacing:-.01em}
+h2{font-size:16px;margin:36px 0 10px;font-weight:600}
+.meta{color:var(--ink2);font-size:13px;display:flex;flex-wrap:wrap;gap:4px 18px}
+.meta b{color:var(--ink);font-weight:500}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:600}
+.pill.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-top:20px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .l{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi .v{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--ink2)}
+.kpi.red .v{color:var(--over)}
+.checks{margin:14px 0 4px;padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-size:13px}
+.checks .chk-h{font-weight:600;font-size:14px}
+.checks ul{margin:6px 0 0;padding-left:18px}.checks ul ul{margin:2px 0 4px;font-size:11.5px;color:var(--ink2)}
+.checks.chk-pass{border-color:var(--good)}.checks.chk-pass .chk-h{color:var(--good)}
+.checks.chk-warn{border-color:var(--warn)}.checks.chk-warn .chk-h{color:var(--warn)}
+.checks.chk-fail{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 8%,var(--panel))}.checks.chk-fail .chk-h{color:var(--bad)}
+.openlink{display:inline-block;margin:6px 0 4px;padding:7px 14px;border-radius:6px;background:var(--llm);color:#fff;font-weight:600;font-size:14px;text-decoration:none}
+.openlink:hover{filter:brightness(1.08)}
+.stg-row{display:grid;grid-template-columns:170px 1fr 70px;align-items:center;gap:10px;margin:6px 0;font-size:13px}
+.stg-track{position:relative;height:14px;background:var(--chip);border-radius:4px}
+.stg-track i{position:absolute;top:0;bottom:0;border-radius:4px}
+.stg-v{text-align:right;font-variant-numeric:tabular-nums}
+.stg-n{font-size:12px;color:var(--muted);margin:8px 0 0}
+@media (max-width:600px){.stg-row{grid-template-columns:100px 1fr 56px}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.scroll{overflow-x:auto}
+.scroll>.inner{min-width:960px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:500;text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:bottom}
+td{padding:8px;border-bottom:1px solid var(--line2);text-align:right;vertical-align:top;font-size:13px}
+th:first-child,td:first-child{text-align:left}
+td .sub{display:block;font-size:11.5px;color:var(--muted)}
+td.red{color:var(--over);font-weight:600}
+.bar{display:flex;height:10px;border-radius:3px;overflow:hidden;width:130px;background:var(--line2);gap:1px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink2);margin:6px 0 10px}
+.sw{display:inline-block;width:12px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.hatch{background:repeating-linear-gradient(45deg,var(--untr) 0 2px,transparent 2px 5px)}
+.cp{display:flex;height:34px;border-radius:5px;overflow:hidden;gap:1px;margin-top:6px}
+.cp div{position:relative;min-width:2px}
+.cp .hatch{background-color:var(--line2)}
+.cplab{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:4px 16px;margin-top:10px;font-size:12.5px;color:var(--ink2)}
+.cplab span b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.def{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px}
+@media (max-width:760px){.def{grid-template-columns:1fr}}
+.def p{margin:0 0 8px;color:var(--ink2);max-width:66ch}
+.def p b{color:var(--ink)}
+svg text{fill:var(--ink2);font-family:"IBM Plex Sans",sans-serif}
+.finding{margin-top:14px}
+.finding h3{margin:0 0 4px;font-size:15px;font-weight:600;text-wrap:balance}
+.finding .rec{font-size:13px;color:var(--ink)}
+.finding .rec b{color:var(--over)}
+.finding p{margin:6px 0;color:var(--ink2);max-width:90ch}
+.finding .fix{background:var(--chip);border-radius:6px;padding:8px 10px;color:var(--ink);margin:8px 0}
+.finding .conf{font-size:12px;color:var(--muted)}
+.ev td,.ev th{font-size:12px;padding:5px 8px}
+.ev td:nth-child(2),.ev th:nth-child(2){text-align:left}
+.ev td:nth-child(6),.ev th:nth-child(6){text-align:left}
+.ev td:nth-child(7),.ev th:nth-child(7){text-align:left}
+a{color:var(--llm)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--llm);outline-offset:2px}
+.tip{position:fixed;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.15);max-width:340px;z-index:9;color:var(--ink)}
+.tip .mono{font-size:11px;color:var(--muted)}
+details{margin-top:30px}
+summary{cursor:pointer;font-weight:600}
+details li{color:var(--ink2);margin:4px 0;max-width:95ch}
+.num{counter-reset:f}
+.fnum{display:inline-block;min-width:22px;color:var(--muted);font-variant-numeric:tabular-nums}
 </style>
-
-<meta name="robots" content="noindex, nofollow" />
-</head>
-<body data-planloft-kind="plan">
-<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
-  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
-  </button>
-  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
-  </button>
-  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
-  </button>
+<div class="wrap">
+  <h1 id="h1"></h1>
+  <div class="meta" id="meta"></div>
+  <div id="checks"></div>
+  <div id="stages"></div>
+  <div class="kpis" id="kpis"></div>
+  <h2>Critical path</h2>
+  <div class="panel">
+    <div class="legend"><span><i class="sw" style="background:var(--llm)"></i>Main agent</span><span><i class="sw" style="background:var(--disp)"></i>Solution Planner</span><span><i class="sw" style="background:var(--tool)"></i>Critical agent run</span><span><i class="sw" style="background:var(--over)"></i>Stall</span><span><i class="sw hatch"></i>Untraced</span><span><i class="sw" style="background:var(--wait)"></i>Intake / tail</span></div>
+    <div class="cp" id="cp"></div>
+    <div class="cplab" id="cplab"></div>
+  </div>
+  <h2>Time per agent run</h2>
+  <div class="panel scroll"><div class="inner" style="min-width:1180px">
+    <div class="legend"><span><i class="sw" style="background:var(--llm)"></i>Actual (LLM + tools)</span><span><i class="sw" style="background:var(--over)"></i>Runtime overhead</span><span><i class="sw hatch"></i>Untraced</span><span><i class="sw" style="background:var(--wait)"></i>Waiting</span></div>
+    <table id="runs"></table>
+  </div></div>
+  <h2>Runtime overhead: definition</h2>
+  <div class="panel def">
+    <div>
+      <svg viewBox="0 0 520 120" width="100%" role="img" aria-label="One agent turn: LLM span, gap A, tool span, gap B, next LLM span">
+        <rect x="10" y="40" width="150" height="26" rx="4" fill="var(--llm)"/><text x="85" y="57" text-anchor="middle" style="fill:#fff;font-size:12px">LLM span</text>
+        <rect x="160" y="40" width="40" height="26" fill="var(--over)" opacity=".85"/><text x="180" y="90" text-anchor="middle" style="font-size:12px">gap A</text>
+        <rect x="200" y="40" width="110" height="26" rx="4" fill="var(--tool)"/><text x="255" y="57" text-anchor="middle" style="fill:#fff;font-size:12px">Tool span</text>
+        <rect x="310" y="40" width="60" height="26" fill="var(--over)" opacity=".85"/><text x="340" y="90" text-anchor="middle" style="font-size:12px">gap B</text>
+        <rect x="370" y="40" width="140" height="26" rx="4" fill="var(--llm)"/><text x="440" y="57" text-anchor="middle" style="fill:#fff;font-size:12px">next LLM span</text>
+        <text x="10" y="28" style="font-size:11px">END of LLM</text><text x="200" y="28" style="font-size:11px">START of tool</text><text x="370" y="28" style="font-size:11px">START of next LLM</text>
+        <line x1="10" y1="104" x2="510" y2="104" stroke="var(--line)"/><text x="260" y="117" text-anchor="middle" style="font-size:11px">time →</text>
+      </svg>
+    </div>
+    <div>
+      <p><b>What it is.</b> Time inside one agent run when no LLM or tool span is open: LLM END → START of the tool it called (gap A), and tool END → START of the run's next LLM call (gap B). Platform time: request assembly, dispatch, result hand-back, scheduling.</p>
+      <p><b>What it is not.</b> Waiting on sub-agents or the user, dispatch spans, or a stretch with no LLM span between two tool spans (Untraced).</p>
+      <p id="measured"></p>
+      <p><b>Reproduce.</b> Open a span on the platform, note its START, and compare with the END of the previous span in the same run. Every evidence row below links to the span.</p>
+    </div>
+  </div>
+  <h2>Timeline</h2>
+  <div class="panel scroll"><div class="inner">
+    <div class="legend"><span><i class="sw" style="background:var(--llm)"></i>LLM</span><span><i class="sw" style="background:var(--tool)"></i>Tool</span><span><i class="sw" style="background:var(--over)"></i>Runtime overhead</span><span><i class="sw hatch"></i>Untraced</span><span><i class="sw" style="border:1.5px solid var(--disp)"></i>Dispatch</span><span><i class="sw" style="border:1.5px dashed var(--wait)"></i>Wait</span><span><i class="sw" style="background:var(--disp)"></i>Question to user</span><span>◆ Deploy</span><span><i class="sw" style="background:var(--tool);outline:2px solid var(--over)"></i>Failed</span></div>
+    <svg id="tl" width="100%"></svg>
+  </div></div>
+  <h2>Runtime overhead per turn</h2>
+  <div class="panel scroll"><div class="inner">
+    <div class="legend" id="tlegend"></div>
+    <svg id="turns" width="100%"></svg>
+    <div style="font-size:12px;color:var(--muted)">Gap B (tool END → next LLM START) per turn, log scale; for runs with no LLM spans, tool END → next tool START. Dashed line: 0.3 s app-builder reference.</div>
+  </div></div>
+  <h2>Test loops</h2>
+  <div class="panel scroll"><div class="inner"><table id="loops"></table></div></div>
+  <h2>Findings</h2>
+  <div id="findings"></div>
+  <details><summary>Method and caveats</summary><ul id="method"></ul></details>
+  <div id="ab"></div>
 </div>
-<script>
-(() => {
-  const root = document.documentElement;
-  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
-  const media = window.matchMedia("(prefers-color-scheme: dark)");
-  const key = "planloft-color-scheme";
-  let saved = null;
-  try { saved = localStorage.getItem(key); } catch {}
-  let selected = saved === "light" || saved === "dark" ? saved : "system";
-  const update = () => {
-    if (selected === "system") delete root.dataset.planloftColorScheme;
-    else root.dataset.planloftColorScheme = selected;
-    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
-    for (const option of options) {
-      const optionName = option.dataset.planloftThemeOption;
-      option.setAttribute("aria-pressed", String(optionName === selected));
-      if (optionName === "system") option.title = `System theme (currently ${effective})`;
-    }
-  };
-  for (const option of options) option.addEventListener("click", () => {
-    selected = option.dataset.planloftThemeOption;
-    try { localStorage.setItem(key, selected); } catch {}
-    update();
-  });
-  media.addEventListener?.("change", update);
-  update();
+<div class="tip" id="tip" hidden></div>
+<script>const D={"host":"orbit.uat.unifyapps.com","project":"0","trace":"e_6abaf1d329ecab2b072012b7","case":"e_6abaf1b429ecab2b07200fcf","selected":null,"selected_span":null,"t0":1790636499205,"t0ist":"29 Sep 2026, 04:31:39 IST","prompt":"Use Abhishek's Microsoft SharePoint","status":"success","ui_latency":784044,"last_end":783794.0,"root_time":784044,"models":["[Medium Thinking] Gemini 3.8 Flash","[Low Thinking] Gemini 3.8 Flash (Prakhar)"],"cost":1.2093735,"llm_n":66,"errors":0,"linkbase":"https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=","applink":"https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=","fetched":"2026-09-29 10:51:05","ntraces":2,"subs":[],"cp":[["Intake \u2192 main agent starts",0,1036,"untr"],["Main agent: planning",1036,304270,"llm"],["App + backend builds (parallel)",304270,762580,"app"],["Tail",762580,783794,"wait"]],"stages":{"total":{"dur":783794,"cost":1.2093735},"planning":{"start":0,"end":304270,"dur":304270,"cost":0.32103999999999994},"backend":{"start":304270,"end":438958,"dur":134688,"cost":0.41307000000000005,"n":3,"llm_n":37,"tout":17229,"slowest":"Log Assistant Feedback"},"frontend":{"start":304270,"end":762580,"dur":458310,"cost":0.35121,"n":1,"llm_n":3,"tout":324,"slowest":"Generate App"},"build":{"start":304270,"end":762580,"dur":458310},"wrapup":{"start":762580,"end":783794,"dur":21214,"cost":0.12405}},"checks":{"root_cost":1.20937,"span_cost":1.20937,"root_in":5128042,"span_in":5128042,"root_out":46532,"span_out":46532,"llm_n":66,"runs_llm":66,"unassigned":0},"findings":[{"key":"output_bound","rec_ms":122809.0,"t":"2 LLM calls write 5k+ output tokens (18,393 tokens, 123 s)","rec":"123 s of generation-bound time; ~150 tok/s","conf":"High on the measurement; savings depend on the fix","body":"These runs are bound by generation speed, not platform overhead. Main agent: 13,115 tokens in 80.1 s; Main agent: 5,278 tokens in 42.7 s.","fix":"Split large writes into parallel calls or smaller files, edit in place instead of regenerating, and stream partial results.","ev":[{"agent":"Main agent","span":"Populate_Plan","o":150633,"d":80138,"note":"","id":"6abaf2ba29ecab2b07203b67","sub":false},{"agent":"Main agent","span":"executeCodeInSandbox","o":106376,"d":42671,"note":"","id":"6abaf26829ecab2b07201e7f","sub":false}]},{"key":"slow_small","rec_ms":51069.0,"t":"2 LLM calls took over 15 s for under 300 output tokens","rec":"51 s in these calls","conf":"High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)","body":"Latency not explained by output size (similar calls in these runs take 3\u20138 s); likely provider queueing, retries inside the call, or thinking time, which the span does not separate. Worst: 35.4 s, 35,116 input tokens, 30,670 cached, 108 output. 2 such calls, 51 s in total.","fix":"Report thinking tokens and queue time per LLM span.","ev":[{"agent":"Log Assistant Feedback","span":"get_operation_schema","o":312042,"d":35409,"note":"108 out tokens","id":"6abaf32e29ecab2b0720548e","sub":false},{"agent":"Log Assistant Feedback","span":"trigger_workflow_run","o":415052,"d":15660,"note":"212 out tokens","id":"6abaf38129ecab2b07205db3","sub":false}]},{"key":"cache","rec_ms":0,"t":"12 uncached calls cost 63% of the turn","rec":"$0.76 of $1.21","conf":"High","body":"Calls that read no cached tokens: Main agent \u00d75, Sync SharePoint Documents \u00d73, Ask Store Assistant \u00d72, Log Assistant Feedback \u00d72. First calls of a new thread are expected to miss; repeated misses in the same thread are not.","fix":"Keep a stable cache prefix (brief, tools) per thread and refresh the cache across long idle gaps.","ev":[{"agent":"Main agent","span":"LLM","o":763221,"d":20573,"note":"156,067 in, 0 cached, $0.124","id":"6abaf4e329ecab2b07206014","sub":false},{"agent":"Main agent","span":"WaitForTasks","o":381031,"d":8644,"note":"155,047 in, 0 cached, $0.117","id":"6abaf35829ecab2b07205c2b","sub":false},{"agent":"Main agent","span":"WaitForTasks","o":448118,"d":5404,"note":"156,097 in, 0 cached, $0.117","id":"6abaf39829ecab2b07205f17","sub":false}]}],"verify":{"status":"WARN","checks":[{"key":"reconcile","status":"PASS","title":"Totals reconcile with the trace","detail":"cost, input and output tokens and LLM call counts match the trace root","spans":[]},{"key":"attribution","status":"PASS","title":"Every tool result belongs to the call that issued it","detail":"checked against each span's own input arguments","spans":[]},{"key":"untraced","status":"PASS","title":"Every run records LLM calls until its last tool call","detail":"","spans":[]},{"key":"uncaptured","status":"WARN","title":"5 tool results were not captured by the trace","detail":"the trace stores no output for these calls; never infer what the agent saw from them","spans":["Get Operation Schema 6abaf1de29ecab2b0720145a (+12 s, Main agent)","Run Connector Operation 6abaf22729ecab2b07201879 (+84 s, Main agent)","LoadSkill 6abaf2c929ecab2b07203fc8 (+247 s, Main agent)","Trigger Workflow Run 6abaf34429ecab2b07205987 (+368 s, Sync SharePoint Documents)","Trigger Workflow Run 6abaf35129ecab2b07205b79 (+381 s, Ask Store Assistant)"]},{"key":"duplicates","status":"WARN","title":"1 tool spans are recorded twice","detail":"counts of these calls are inflated by the duplicates","spans":["LoadSkill 6abaf30729ecab2b07204be0 repeats a call made 0.3 s earlier with identical arguments"]}]},"attribution":[{"id":"6abaf1d829ecab2b072013f0","n":"Search Operations","o":5568,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf1de29ecab2b0720145a","n":"Get Operation Schema","o":11509,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf1e429ecab2b072014b9","n":"Run Lookup","o":16324,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf1eb29ecab2b0720151c","n":"Run Lookup","o":23070,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf1f229ecab2b0720157e","n":"Run Lookup","o":30435,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf1f729ecab2b072015d9","n":"Get Operation Schema","o":36180,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf1fc29ecab2b07201634","n":"Search Operations","o":41291,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf20229ecab2b07201696","n":"Get Operation Schema","o":46744,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf20929ecab2b072016f8","n":"Run Lookup","o":53819,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf20e29ecab2b0720175a","n":"Run Connector Operation","o":59592,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf21529ecab2b072017bc","n":"Run Connector Operation","o":66197,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf22229ecab2b0720181e","n":"Run Lookup","o":78648,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf22729ecab2b07201879","n":"Run Connector Operation","o":84166,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf23729ecab2b07201a33","n":"ExecuteCodeInSandbox","o":100473,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf23d29ecab2b07201b57","n":"ExecuteCodeInSandbox","o":105839,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf26929ecab2b07201f06","n":"ExecuteCodeInSandbox","o":149560,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2ba29ecab2b07203ba7","n":"Populate Plan","o":230989,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2c329ecab2b07203e01","n":"Publish Plan AI FDE","o":239505,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2c929ecab2b07203fc8","n":"LoadSkill","o":246590,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2de29ecab2b07204499","n":"Create Or Update Object","o":266512,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2de29ecab2b072044c0","n":"Create Or Update Object","o":266519,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2de29ecab2b072044a7","n":"Create Or Update Object","o":266520,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2de29ecab2b0720448d","n":"Create Stub Automation","o":266523,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2de29ecab2b07204484","n":"Create Stub Automation","o":266524,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2de29ecab2b0720447a","n":"Create Stub Automation","o":266528,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2e629ecab2b07204543","n":"Fetch Plan","o":275187,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2ef29ecab2b072047a2","n":"Seed Solution Records","o":284402,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2f529ecab2b0720487b","n":"Read Records","o":290057,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf2fc29ecab2b07204931","n":"Bind Plan","o":296750,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf4cd29ecab2b07205fdf","n":"Generate App","o":304270,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf34d29ecab2b07205b0e","n":"Generate Workflows","o":304271,"run":"main","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30729ecab2b07204b72","n":"LoadSkill","o":308031,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30729ecab2b07204bed","n":"Open Workflow","o":308306,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30729ecab2b07204be0","n":"LoadSkill","o":308308,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30829ecab2b07204ce5","n":"LoadSkill","o":309034,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30829ecab2b07204d01","n":"Open Workflow","o":309035,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30829ecab2b07204cf4","n":"Search Operations","o":309041,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30829ecab2b07204d08","n":"Describe Storage Object","o":309046,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30a29ecab2b07204dbb","n":"Open Workflow","o":311687,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30a29ecab2b07204dcd","n":"Describe Storage Object","o":311690,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30a29ecab2b07204db9","n":"Search Operations","o":311691,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30b29ecab2b07204e54","n":"Describe Storage Object","o":312373,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30b29ecab2b07204e68","n":"Fetch Storage Records","o":312381,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30b29ecab2b07204e5e","n":"Get Operation Schema","o":312382,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30c29ecab2b07204ed5","n":"Get Operation Schema","o":312872,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf30e29ecab2b07204f31","n":"Fetch Storage Records","o":315475,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf31029ecab2b07204f8d","n":"Run Lookup","o":316409,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf31129ecab2b07205018","n":"Find Workflow Examples","o":318350,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf31329ecab2b07205074","n":"Run Lookup","o":320081,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf31529ecab2b0720510a","n":"Get Code Sandbox Restrictions","o":322506,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf31629ecab2b07205174","n":"Find Workflow Examples","o":323526,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf31929ecab2b072051d0","n":"Fetch Storage Records","o":326217,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf31d29ecab2b0720522e","n":"Run Connector Operation","o":330031,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf32029ecab2b07205289","n":"Run Connector Operation","o":333129,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf32329ecab2b072052ec","n":"Find Workflow Examples","o":336392,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf32629ecab2b0720534f","n":"Get Operation Schema","o":339541,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf32829ecab2b072053d4","n":"Compile And Save Workflow","o":341179,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf32e29ecab2b072054ca","n":"Get Operation Schema","o":347632,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf33029ecab2b07205587","n":"Compile And Save Workflow","o":349414,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf33129ecab2b07205608","n":"Find Workflow Examples","o":350525,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf33929ecab2b0720573b","n":"Get Operation Schema","o":358355,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf33a29ecab2b07205797","n":"Compile And Save Workflow","o":358636,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf33c29ecab2b07205818","n":"Fetch Storage Records","o":361182,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf34029ecab2b072058f3","n":"Compile And Save Workflow","o":362161,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf34429ecab2b07205987","n":"Trigger Workflow Run","o":368363,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf34829ecab2b07205a0b","n":"Deploy Workflow","o":373113,"run":"6abaf2de29ecab2b0720441e","by":"toolcall-args","guess_runs":[]},{"id":"6abaf34c29ecab2b07205a98","n":"Compile And Save Workflow","o":377057,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf35129ecab2b07205b79","n":"Trigger Workflow Run","o":381459,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf35c29ecab2b07205c98","n":"Deploy Workflow","o":392985,"run":"6abaf2de29ecab2b072043f3","by":"toolcall-args","guess_runs":[]},{"id":"6abaf37129ecab2b07205d84","n":"Compile And Save Workflow","o":414369,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf38229ecab2b07205de7","n":"Trigger Workflow Run","o":430901,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf38629ecab2b07205e43","n":"Run Connector Operation","o":435610,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]},{"id":"6abaf38a29ecab2b07205e9f","n":"Deploy Workflow","o":438811,"run":"6abaf2de29ecab2b072043eb","by":"toolcall-args","guess_runs":[]}],"runs":[{"run":"main","name":"Main agent","wf":"","start":1036,"end":783794,"total":782758,"actual":327667,"llm":319859,"llm_n":29,"tools":12148,"tool_n":29,"over":0,"untr":0,"waiting":455091,"userq":0,"per_gap":0,"n_gaps":0,"tout":29303,"tin":2987027,"cr":2071822,"cost":0.7963,"cr0":5,"cr0cost":0.5882099999999999,"compile":0,"trigger":0,"inspect":0,"listruns":0,"fails":0,"deploys":[{"o":762580,"ok":true,"id":"6abaf4cd29ecab2b07205fdf"}],"resumed":false,"errors":[],"items":[{"k":"llm","id":"6abaf1d829ecab2b072013c5","n":"search_operations","o":1036,"d":4357,"ti":39247,"to":185,"cr":35241,"c":0.0037,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf1d829ecab2b072013f0","n":"Search Operations","o":5568,"d":48,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf1de29ecab2b07201420","n":"get_operation_schema","o":5873,"d":5455,"ti":43401,"to":180,"cr":39300,"c":0.00375,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf1de29ecab2b0720145a","n":"Get Operation Schema","o":11509,"d":73,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf1e329ecab2b0720148e","n":"run_lookup","o":11860,"d":4252,"ti":53027,"to":195,"cr":43515,"c":0.00787,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf1e429ecab2b072014b9","n":"Run Lookup","o":16324,"d":1438,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf1ea29ecab2b072014e8","n":"run_lookup","o":18120,"d":4676,"ti":53433,"to":252,"cr":51393,"c":0.00247,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf1eb29ecab2b0720151c","n":"Run Lookup","o":23070,"d":943,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf1f129ecab2b0720154e","n":"run_lookup","o":24299,"d":5955,"ti":56774,"to":267,"cr":51427,"c":0.00501,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf1f229ecab2b0720157e","n":"Run Lookup","o":30435,"d":607,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf1f729ecab2b072015ae","n":"get_operation_schema","o":31339,"d":4655,"ti":57457,"to":184,"cr":55329,"c":0.00229,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf1f729ecab2b072015d9","n":"Get Operation Schema","o":36180,"d":45,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf1fc29ecab2b0720160c","n":"search_operations","o":36524,"d":4569,"ti":57807,"to":61,"cr":55315,"c":0.0021,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf1fc29ecab2b07201634","n":"Search Operations","o":41291,"d":42,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf20129ecab2b07201666","n":"get_operation_schema","o":41715,"d":4840,"ti":62482,"to":110,"cr":55439,"c":0.00569,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf20229ecab2b07201696","n":"Get Operation Schema","o":46744,"d":53,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf20829ecab2b072016c8","n":"run_lookup","o":47166,"d":6466,"ti":65169,"to":498,"cr":59449,"c":0.00616,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf20929ecab2b072016f8","n":"Run Lookup","o":53819,"d":127,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf20e29ecab2b07201729","n":"run_connector_operation","o":54277,"d":5112,"ti":66085,"to":253,"cr":63365,"c":0.00299,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf20e29ecab2b0720175a","n":"Run Connector Operation","o":59592,"d":167,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf21529ecab2b07201788","n":"run_connector_operation","o":60098,"d":5909,"ti":67823,"to":246,"cr":63362,"c":0.00427,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf21529ecab2b072017bc","n":"Run Connector Operation","o":66197,"d":291,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf22129ecab2b072017ea","n":"run_lookup","o":66836,"d":11607,"ti":73405,"to":1095,"cr":67438,"c":0.00858,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf22229ecab2b0720181e","n":"Run Lookup","o":78648,"d":705,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf22729ecab2b0720184f","n":"run_connector_operation","o":79704,"d":4231,"ti":75188,"to":122,"cr":71383,"c":0.00331,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf22729ecab2b07201879","n":"Run Connector Operation","o":84166,"d":482,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf23729ecab2b07201a0f","n":"executeCodeInSandbox","o":85241,"d":15034,"ti":105417,"to":1235,"cr":72012,"c":0.02969,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf23729ecab2b07201a33","n":"ExecuteCodeInSandbox","o":100473,"d":167,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf23c29ecab2b07201b33","n":"executeCodeInSandbox","o":101045,"d":4601,"ti":107775,"to":130,"cr":104042,"c":0.00329,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf23d29ecab2b07201b57","n":"ExecuteCodeInSandbox","o":105839,"d":152,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf26829ecab2b07201e7f","n":"executeCodeInSandbox","o":106376,"d":42671,"ti":109105,"to":5278,"cr":104044,"c":0.02359,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf26929ecab2b07201f06","n":"ExecuteCodeInSandbox","o":149560,"d":270,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2ba29ecab2b07203b67","n":"Populate_Plan","o":150633,"d":80138,"ti":114715,"to":13115,"cr":108140,"c":0.05411,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2ba29ecab2b07203ba7","n":"Populate Plan","o":230989,"d":157,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2c229ecab2b07203d85","n":"Publish_Plan_AI_FDE","o":231717,"d":7541,"ti":127162,"to":231,"cr":111757,"c":0.01242,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2c329ecab2b07203e01","n":"Publish Plan AI FDE","o":239505,"d":290,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2c929ecab2b07203f7b","n":"loadSkill","o":240310,"d":5914,"ti":127423,"to":289,"cr":123713,"c":0.00387,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2c929ecab2b07203fc8","n":"LoadSkill","o":246590,"d":43,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2dd29ecab2b0720430e","n":"Create_or_Update_Object,Create_or_Update_Object,Create_or_Update_Object,Create_Stub_Automation,Create_Stub_Automation,Create_Stub_Automation","o":248069,"d":18150,"ti":141461,"to":1827,"cr":0,"c":0.11295,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2de29ecab2b07204499","n":"Create Or Update Object","o":266512,"d":896,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2de29ecab2b072044c0","n":"Create Or Update Object","o":266519,"d":992,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2de29ecab2b072044a7","n":"Create Or Update Object","o":266520,"d":908,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2de29ecab2b0720448d","n":"Create Stub Automation","o":266523,"d":873,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2de29ecab2b07204484","n":"Create Stub Automation","o":266524,"d":868,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2de29ecab2b0720447a","n":"Create Stub Automation","o":266528,"d":802,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2e629ecab2b072044f3","n":"Fetch_plan","o":268164,"d":6776,"ti":145354,"to":318,"cr":139203,"c":0.00581,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2e629ecab2b07204543","n":"Fetch Plan","o":275187,"d":188,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2ef29ecab2b07204761","n":"Seed_Solution_Records","o":275904,"d":8217,"ti":153213,"to":559,"cr":143374,"c":0.00948,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2ef29ecab2b072047a2","n":"Seed Solution Records","o":284402,"d":144,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2f529ecab2b0720483c","n":"Read_Records","o":285046,"d":4799,"ti":153663,"to":69,"cr":151215,"c":0.00209,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2f529ecab2b0720487b","n":"Read Records","o":290057,"d":112,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf2fb29ecab2b072048f3","n":"Bind_Plan","o":290698,"d":5831,"ti":153732,"to":170,"cr":151190,"c":0.00254,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf2fc29ecab2b07204931","n":"Bind Plan","o":296750,"d":265,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf30329ecab2b072049b9","n":"Generate_App,Generate_Workflows","o":297536,"d":6467,"ti":153975,"to":244,"cr":151176,"c":0.00301,"note":"","err":false,"sub":false},{"k":"dispatch","id":"6abaf4cd29ecab2b07205fdf","n":"Generate App","o":304270,"d":458310,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"dispatch","id":"6abaf34d29ecab2b07205b0e","n":"Generate Workflows","o":304271,"d":74195,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf35829ecab2b07205c2b","n":"WaitForTasks","o":381031,"d":8644,"ti":155047,"to":245,"cr":0,"c":0.1172,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf36b29ecab2b07205d37","n":"WaitForTasks","o":401649,"d":7015,"ti":155523,"to":70,"cr":0,"c":0.1169,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf39829ecab2b07205f17","n":"WaitForTasks","o":448118,"d":5404,"ti":156097,"to":9,"cr":0,"c":0.11711,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf4e329ecab2b07206014","n":"","o":763221,"d":20573,"ti":156067,"to":1866,"cr":0,"c":0.12405,"note":"","err":false,"sub":false}],"gaps":[],"stalls":[]},{"run":"6abaf2de29ecab2b072043eb","name":"Log Assistant Feedback","wf":"6abaf2de29ecab2b072043eb","start":305404,"end":444953,"total":139549,"actual":134580,"llm":133123,"llm_n":11,"tools":1575,"tool_n":12,"over":0,"untr":0,"waiting":4969,"userq":0,"per_gap":0,"n_gaps":0,"tout":2342,"tin":564703,"cr":446753,"cost":0.09725,"cr0":2,"cr0cost":0.04347,"compile":1,"trigger":1,"inspect":0,"listruns":0,"fails":0,"deploys":[{"o":438958,"ok":true,"id":"6abaf38a29ecab2b07205e9f"}],"resumed":false,"errors":[],"items":[{"k":"llm","id":"6abaf30729ecab2b07204b46","n":"loadSkill","o":305404,"d":2430,"ti":26494,"to":37,"cr":0,"c":0.02001,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30729ecab2b07204b72","n":"LoadSkill","o":308031,"d":39,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf30a29ecab2b07204d65","n":"open_workflow,describe_storage_object,search_operations","o":308579,"d":2930,"ti":30749,"to":105,"cr":0,"c":0.02346,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30a29ecab2b07204dbb","n":"Open Workflow","o":311687,"d":63,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30a29ecab2b07204dcd","n":"Describe Storage Object","o":311690,"d":82,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30a29ecab2b07204db9","n":"Search Operations","o":311691,"d":58,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf32e29ecab2b0720548e","n":"get_operation_schema","o":312042,"d":35409,"ti":35116,"to":108,"cr":30670,"c":0.00374,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf32e29ecab2b072054ca","n":"Get Operation Schema","o":347632,"d":107,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf33129ecab2b072055cc","n":"find_workflow_examples","o":347987,"d":2345,"ti":44367,"to":60,"cr":34938,"c":0.0073,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf33129ecab2b07205608","n":"Find Workflow Examples","o":350525,"d":74,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf33929ecab2b0720570e","n":"get_operation_schema","o":350900,"d":7270,"ti":52876,"to":44,"cr":43039,"c":0.00754,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf33929ecab2b0720573b","n":"Get Operation Schema","o":358355,"d":47,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf33c29ecab2b072057e4","n":"fetch_storage_records","o":358682,"d":2300,"ti":56014,"to":46,"cr":50968,"c":0.00396,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf33c29ecab2b07205818","n":"Fetch Storage Records","o":361182,"d":74,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf37129ecab2b07205d58","n":"compile_and_save_workflow","o":361530,"d":52646,"ti":56250,"to":1079,"cr":50950,"c":0.00802,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf37129ecab2b07205d84","n":"Compile And Save Workflow","o":414369,"d":394,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf38129ecab2b07205db3","n":"trigger_workflow_run","o":415052,"d":15660,"ti":58853,"to":212,"cr":54949,"c":0.00372,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf38229ecab2b07205de7","n":"Trigger Workflow Run","o":430901,"d":412,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf38629ecab2b07205e18","n":"run_connector_operation","o":431601,"d":3820,"ti":67670,"to":146,"cr":55188,"c":0.00991,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf38629ecab2b07205e43","n":"Run Connector Operation","o":435610,"d":78,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf38929ecab2b07205e76","n":"deploy_workflow","o":435984,"d":2634,"ti":68023,"to":75,"cr":63034,"c":0.00402,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf38a29ecab2b07205e9f","n":"Deploy Workflow","o":438811,"d":147,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf39029ecab2b07205ecd","n":"","o":439274,"d":5679,"ti":68291,"to":430,"cr":63017,"c":0.00557,"note":"","err":false,"sub":false}],"gaps":[],"stalls":[]},{"run":"6abaf2de29ecab2b072043f3","name":"Ask Store Assistant","wf":"6abaf2de29ecab2b072043f3","start":305403,"end":398904,"total":93501,"actual":88249,"llm":86275,"llm_n":11,"tools":2208,"tool_n":13,"over":0,"untr":0,"waiting":5252,"userq":0,"per_gap":0,"n_gaps":0,"tout":9866,"tin":664784,"cr":504956,"cost":0.15687,"cr0":2,"cr0cost":0.044840000000000005,"compile":3,"trigger":1,"inspect":0,"listruns":0,"fails":0,"deploys":[{"o":393166,"ok":true,"id":"6abaf35c29ecab2b07205c98"}],"resumed":false,"errors":[],"items":[{"k":"llm","id":"6abaf30729ecab2b07204b8b","n":"loadSkill,open_workflow","o":305403,"d":2718,"ti":26645,"to":75,"cr":0,"c":0.02027,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30729ecab2b07204bed","n":"Open Workflow","o":308306,"d":73,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30729ecab2b07204be0","n":"LoadSkill","o":308308,"d":40,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf30b29ecab2b07204e01","n":"describe_storage_object,fetch_storage_records,get_operation_schema","o":308949,"d":3237,"ti":32056,"to":142,"cr":0,"c":0.02457,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30b29ecab2b07204e54","n":"Describe Storage Object","o":312373,"d":101,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30b29ecab2b07204e68","n":"Fetch Storage Records","o":312381,"d":113,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30b29ecab2b07204e5e","n":"Get Operation Schema","o":312382,"d":101,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf30e29ecab2b07204f09","n":"fetch_storage_records","o":312797,"d":2490,"ti":43781,"to":35,"cr":31042,"c":0.00969,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30e29ecab2b07204f31","n":"Fetch Storage Records","o":315475,"d":55,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf31129ecab2b07204fe5","n":"find_workflow_examples","o":315789,"d":2327,"ti":44451,"to":32,"cr":38811,"c":0.00435,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf31129ecab2b07205018","n":"Find Workflow Examples","o":318350,"d":53,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf31529ecab2b072050dd","n":"get_code_sandbox_restrictions","o":318672,"d":3650,"ti":50045,"to":24,"cr":42921,"c":0.00543,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf31529ecab2b0720510a","n":"Get Code Sandbox Restrictions","o":322506,"d":167,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf32829ecab2b0720539c","n":"compile_and_save_workflow","o":322935,"d":18039,"ti":51057,"to":2953,"cr":46846,"c":0.01423,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf32829ecab2b072053d4","n":"Compile And Save Workflow","o":341179,"d":62,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf33929ecab2b07205754","n":"compile_and_save_workflow","o":341543,"d":16889,"ti":57382,"to":2956,"cr":50990,"c":0.01588,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf33a29ecab2b07205797","n":"Compile And Save Workflow","o":358636,"d":379,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf34c29ecab2b07205a6f","n":"compile_and_save_workflow","o":359336,"d":17518,"ti":64269,"to":3013,"cr":55139,"c":0.01815,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf34c29ecab2b07205a98","n":"Compile And Save Workflow","o":377057,"d":388,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf35029ecab2b07205b41","n":"trigger_workflow_run","o":377744,"d":3492,"ti":70831,"to":244,"cr":63218,"c":0.00662,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf35129ecab2b07205b79","n":"Trigger Workflow Run","o":381459,"d":495,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf35c29ecab2b07205c6f","n":"deploy_workflow","o":382295,"d":10489,"ti":112004,"to":70,"cr":68004,"c":0.03326,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf35c29ecab2b07205c98","n":"Deploy Workflow","o":392985,"d":181,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf36229ecab2b07205cef","n":"","o":393478,"d":5426,"ti":112263,"to":322,"cr":107985,"c":0.00442,"note":"","err":false,"sub":false}],"gaps":[],"stalls":[]},{"run":"6abaf2de29ecab2b0720441e","name":"Sync SharePoint Documents","wf":"6abaf2de29ecab2b0720441e","start":305408,"end":378127,"total":72719,"actual":65104,"llm":58452,"llm_n":15,"tools":6912,"tool_n":17,"over":0,"untr":0,"waiting":7615,"userq":0,"per_gap":0,"n_gaps":0,"tout":5021,"tin":911528,"cr":724673,"cost":0.15894999999999998,"cr0":3,"cr0cost":0.08074,"compile":2,"trigger":1,"inspect":0,"listruns":0,"fails":0,"deploys":[{"o":373294,"ok":true,"id":"6abaf34829ecab2b07205a0b"}],"resumed":false,"errors":[],"items":[{"k":"llm","id":"6abaf30829ecab2b07204c81","n":"loadSkill,open_workflow,search_operations,describe_storage_object","o":305408,"d":3357,"ti":26581,"to":122,"cr":0,"c":0.02039,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30829ecab2b07204ce5","n":"LoadSkill","o":309034,"d":69,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30829ecab2b07204d01","n":"Open Workflow","o":309035,"d":114,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30829ecab2b07204cf4","n":"Search Operations","o":309041,"d":89,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30829ecab2b07204d08","n":"Describe Storage Object","o":309046,"d":110,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf30b29ecab2b07204e8a","n":"get_operation_schema","o":309651,"d":2928,"ti":35398,"to":92,"cr":0,"c":0.02689,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf30c29ecab2b07204ed5","n":"Get Operation Schema","o":312872,"d":76,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf30f29ecab2b07204f64","n":"run_lookup","o":313293,"d":2926,"ti":43993,"to":124,"cr":0,"c":0.03346,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf31029ecab2b07204f8d","n":"Run Lookup","o":316409,"d":840,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf31329ecab2b07205047","n":"run_lookup","o":317489,"d":2406,"ti":44327,"to":119,"cr":38785,"c":0.0046,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf31329ecab2b07205074","n":"Run Lookup","o":320081,"d":636,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf31629ecab2b07205138","n":"find_workflow_examples","o":320990,"d":2358,"ti":47332,"to":52,"cr":42767,"c":0.00362,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf31629ecab2b07205174","n":"Find Workflow Examples","o":323526,"d":84,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf31929ecab2b072051a3","n":"fetch_storage_records","o":323872,"d":2159,"ti":55884,"to":31,"cr":46994,"c":0.00678,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf31929ecab2b072051d0","n":"Fetch Storage Records","o":326217,"d":69,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf31d29ecab2b07205201","n":"run_connector_operation","o":326572,"d":3263,"ti":58902,"to":91,"cr":54927,"c":0.00332,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf31d29ecab2b0720522e","n":"Run Connector Operation","o":330031,"d":152,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf32029ecab2b0720525f","n":"run_connector_operation","o":330471,"d":2473,"ti":59751,"to":94,"cr":54923,"c":0.00397,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf32029ecab2b07205289","n":"Run Connector Operation","o":333129,"d":274,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf32329ecab2b072052b8","n":"find_workflow_examples","o":333701,"d":2500,"ti":62546,"to":32,"cr":58920,"c":0.00284,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf32329ecab2b072052ec","n":"Find Workflow Examples","o":336392,"d":74,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf32629ecab2b0720531a","n":"get_operation_schema","o":336777,"d":2566,"ti":66687,"to":81,"cr":59046,"c":0.00603,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf32629ecab2b0720534f","n":"Get Operation Schema","o":339541,"d":64,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf33029ecab2b07205551","n":"compile_and_save_workflow","o":339918,"d":9218,"ti":70115,"to":1386,"cr":63072,"c":0.01048,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf33029ecab2b07205587","n":"Compile And Save Workflow","o":349414,"d":46,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf33d29ecab2b07205858","n":"compile_and_save_workflow","o":349965,"d":11974,"ti":73190,"to":2211,"cr":67095,"c":0.01286,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf34029ecab2b072058f3","n":"Compile And Save Workflow","o":362161,"d":3095,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf34329ecab2b07205956","n":"trigger_workflow_run","o":365598,"d":2571,"ti":78129,"to":117,"cr":71181,"c":0.00565,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf34429ecab2b07205987","n":"Trigger Workflow Run","o":368363,"d":939,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf34829ecab2b072059e2","n":"deploy_workflow","o":369640,"d":3271,"ti":94210,"to":77,"cr":75540,"c":0.01429,"note":"","err":false,"sub":false},{"k":"tool","id":"6abaf34829ecab2b07205a0b","n":"Deploy Workflow","o":373113,"d":181,"ti":0,"to":0,"cr":0,"c":0.0,"note":"","err":false,"sub":false},{"k":"llm","id":"6abaf34d29ecab2b07205aee","n":"","o":373645,"d":4482,"ti":94483,"to":392,"cr":91423,"c":0.00377,"note":"","err":false,"sub":false}],"gaps":[],"stalls":[]}],"msgs":[{"t":784044,"text":"# Store Operations AI Assistant & SOP Document Hub\n\nThe **Store Operations AI Assistant & SOP Document Hub** is built and deployed. It provides retail store ass"}]};
+const $=s=>document.querySelector(s);
+const T0=D.t0;
+const f1=v=>(v/1000).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+const s1=ms=>f1(ms)+' s', off=ms=>'+'+f1(ms);
+const istT=ms=>new Date(T0+ms).toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour12:false});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const R=D.runs, L=Object.fromEntries(R.map(r=>[r.run,r]));
+const lk=(sub,id)=>(sub?D.applink:D.linkbase)+id;
+const wfRuns=R.filter(r=>!['main','planner'].includes(r.run));
+const lastRun=R.filter(r=>r.run!=='main').sort((a,b)=>b.end-a.end)[0]||R[0];
+$('#h1').textContent=(D.selected_span?D.selected_span.run+' · ':'')+'trace '+D.trace.slice(-8);
+document.title='Latency '+D.trace.slice(-8);
+const runUrl=String(D.linkbase||'').replace(/[?&]timelineId=$/,'');if(runUrl)$('#h1').insertAdjacentHTML('afterend',`<a class="openlink" href="${esc(runUrl)}" target="_blank" rel="noopener noreferrer">${[[/\/solutions\//,'Open solution'],[/code-builder/,'Open app builder']].find(([re])=>re.test(runUrl))?.[1]||'Open trace'} ↗</a>`);
+$('#meta').innerHTML=`<span><b>${esc(D.host)}</b> · project ${esc(D.project)}</span><span>Started <b>${esc(D.t0ist)}</b></span><span>Trace <span class="mono">${esc(D.trace)}</span>${D.subs.map(s=>` + app <span class="mono">${esc(s.app)}</span>`).join('')}</span><span>Model <b>${esc(D.models.join(', '))}</b></span><span>Input: ${esc(D.prompt.slice(0,220))}</span>${D.subs.length?D.subs.map((x,i)=>`<span><a href="#ab${i}">App builder breakdown · ${esc(x.app)} ↓</a></span>`).join(''):''}<span class="pill warn">${esc(D.status)}</span>`;
+const overAll=wfRuns.reduce((a,r)=>a+r.over,0)+(L.planner?L.planner.over:0);
+const untrAll=R.reduce((a,r)=>a+r.untr,0);
+const pick=D.cp.find(c=>c[3]==='untr'&&/main agent starts/.test(c[0]));
+const K=[['Wall clock',s1(D.last_end),'last span · UI latency '+s1(D.ui_latency||0)],
+ ['Critical path',s1(D.last_end),'via '+esc(lastRun.name)+' ('+s1(lastRun.total)+')'],
+ ['Runtime overhead',s1(overAll),'all runs · '+wfRuns.reduce((a,r)=>a+r.stalls.length,0)+' stalls >30 s',1],
+ ['On critical path',s1(lastRun.over+lastRun.untr*(lastRun.llm_n?0:1)),esc(lastRun.name),1],
+ ['Untraced',s1(untrAll+(pick?pick[2]-pick[1]:0)),pick?'incl. '+s1(pick[2]-pick[1])+' before main agent':'gaps with no span'],
+ ['LLM calls',D.llm_n,D.errors+' errors'],
+ ['Cost','$'+D.cost.toFixed(2),D.findings.find(f=>f.key==='cache')?.rec||'']];
+(function(){const V=D.verify;if(!V)return;const icon={PASS:'✓',WARN:'!',FAIL:'✕'};
+ const head={PASS:'All data checks passed',WARN:'Data checks passed with caveats — read them before sharing',FAIL:'Data checks FAILED — this report is not correct and must not be shared'}[V.status];
+ const rows=V.checks.filter(c=>c.status!=='PASS'||V.status==='PASS').map(c=>`<li class="chk-${c.status.toLowerCase()}"><b>${icon[c.status]} ${esc(c.title)}</b>${c.detail?` — ${esc(c.detail)}`:''}${c.spans.length?`<ul>${c.spans.map(x=>`<li class="mono">${esc(x)}</li>`).join('')}</ul>`:''}</li>`).join('');
+ $('#checks').innerHTML=`<div class="checks chk-${V.status.toLowerCase()}"><div class="chk-h">${icon[V.status]} ${head}</div><ul>${rows}</ul></div>`})();
+(function(){const S=D.stages;if(!S)return;const ms2=ms=>{const t=Math.round(ms/1000),m=Math.floor(t/60);return m?m+'m '+(t%60)+'s':t+'s'};const usd=v=>'$'+v.toFixed(2),pct=v=>S.total.cost?Math.round(v/S.total.cost*100)+'%':'';
+ const rows=[['Planning','var(--disp)',S.planning,'user message → first build dispatched'],
+  ['Backend · workflows','var(--tool)',S.backend,S.backend?S.backend.n+' workflow runs in parallel · slowest '+esc(S.backend.slowest):'none'],
+  ['Frontend · app','var(--llm)',S.frontend,S.frontend?'app builder · '+S.frontend.llm_n+' LLM calls':'none'],
+  ['Wrap-up','var(--wait)',S.wrapup,'last build done → final answer · cost = main agent after dispatch']];
+ const max=S.total.dur||1,x=ms=>(ms/max*100).toFixed(2)+'%';
+ const bars=rows.map(r=>r[2]?`<div class="stg-row"><span class="stg-l">${r[0]}</span><span class="stg-track"><i style="left:${x(r[2].start)};width:${x(r[2].dur)};background:${r[1]}"></i></span><span class="stg-v">${ms2(r[2].dur)}</span></div>`:'').join('');
+ const cards=[['Total',ms2(S.total.dur),usd(S.total.cost)+' total cost'],...rows.map(r=>[r[0],r[2]?ms2(r[2].dur):'—',r[2]?usd(r[2].cost)+' · '+pct(r[2].cost)+' of cost · '+r[3]:r[3]])];
+ $('#stages').innerHTML=`<h2>Stages</h2><div class="kpis">${cards.map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('')}</div><div class="panel">${bars}<p class="stg-n">Backend and frontend run in parallel, so their times overlap and do not add up to the total; costs do add up.</p></div>`})();
+$('#kpis').innerHTML=K.map(k=>`<div class="kpi ${k[3]?'red':''}"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+const cpCol={wait:'var(--wait)',llm:'var(--llm)',plan:'var(--disp)',app:'var(--tool)',over:'var(--over)'};
+$('#cp').innerHTML=D.cp.map(c=>`<div class="${c[3]==='untr'?'hatch':''}" style="flex:${Math.max(c[2]-c[1],1)};background:${c[3]==='untr'?'':cpCol[c[3]]}" data-tip="${esc(c[0])}|${off(c[1])} → ${off(c[2])} · ${s1(c[2]-c[1])}"></div>`).join('');
+const cpAgg=[];D.cp.forEach(c=>{const p=cpAgg.find(x=>x[0]===c[0]&&x[3]===c[3]);p?p[4]+=c[2]-c[1]:cpAgg.push([c[0],c[1],c[2],c[3],c[2]-c[1]])});
+$('#cplab').innerHTML=cpAgg.map(c=>`<span><i class="sw ${c[3]==='untr'?'hatch':''}" style="background:${c[3]==='untr'?'':cpCol[c[3]]}"></i>${esc(c[0])} <b>${s1(c[4])}</b></span>`).join('');
+let h=`<tr><th>Agent run</th><th>Composition</th><th>Total</th><th>Actual<br>LLM+tools</th><th>LLM<br>(calls)</th><th>Tools<br>(calls)</th><th>Runtime<br>overhead</th><th>Untraced</th><th>Waiting</th><th>compile / trigger<br>/ inspect / list</th><th>Deployed</th><th>Out tokens</th><th>Cost</th></tr>`;
+for(const l of R){const seg=(v,c,cls)=>v>0?`<div class="${cls||''}" style="flex:${v};background:${c}"></div>`:'';
+ const bar=`<div class="bar">${seg(l.actual,'var(--llm)')}${seg(l.over,'var(--over)')}${seg(l.untr,'','hatch')}${seg(l.waiting,'var(--wait)')}</div>`;
+ const st=l.stalls.reduce((a,g)=>a+g.d,0);const wf=['main','planner','app'].includes(l.run)?'':1;
+ h+=`<tr><td><b>${esc(l.name)}</b><span class="sub mono">${esc(l.wf||(l.run==='main'?'orchestrator':l.run==='app'?(D.subs[0]||{}).session||'':''))} · ${off(l.start)} → ${off(l.end)}${l.resumed?' · resumed':''}</span></td><td>${bar}</td><td><b>${s1(l.total)}</b></td><td>${s1(l.actual)}</td>
+ <td>${l.llm_n?s1(l.llm):'not recorded'}<span class="sub">${l.llm_n} calls</span></td><td>${s1(l.tools)}<span class="sub">${l.tool_n} calls</span></td>
+ <td class="${l.over>0?'red':''}">${s1(l.over)}<span class="sub">${l.stalls.length&&l.llm_n?l.stalls.length+' stalls '+s1(st)+' · ':''}${l.per_gap?(l.per_gap/1000).toFixed(2)+' s/gap otherwise':''}</span></td>
+ <td>${l.untr?s1(l.untr):'–'}${!l.llm_n&&l.tool_n&&l.run!=='main'?'<span class="sub">no LLM spans</span>':''}</td><td>${l.waiting>500?s1(l.waiting):'–'}<span class="sub">${l.run==='main'?'sub-agents':''}${l.userq>1000?' + '+s1(l.userq)+' user':''}</span></td>
+ <td>${wf?`${l.compile} / ${l.trigger} / ${l.inspect} / ${l.listruns}`:'–'}${l.fails?`<span class="sub">${l.fails} failed</span>`:''}</td>
+ <td>${l.deploys.length?l.deploys.map(d=>`<span style="color:${d.ok?'inherit':'var(--over)'}">${off(d.o)}${d.ok?'':' failed'}</span>`).join('<br>'):'–'}</td><td>${l.tout.toLocaleString()}</td><td>$${l.cost.toFixed(3)}${l.cr0?`<span class="sub">${l.cr0} uncached</span>`:''}</td></tr>`}
+$('#runs').innerHTML=h;
+$('#measured').innerHTML='<b>Measured here.</b> '+R.filter(r=>r.run!=='main'&&(r.n_gaps||r.untr)).map(r=>`${esc(r.name)}: ${s1(r.over)} over ${r.n_gaps} gaps${r.stalls.length?` (${r.stalls.length} over 30 s)`:''}${r.per_gap?`, ${(r.per_gap/1000).toFixed(2)} s per gap otherwise`:''}${!r.llm_n?' (no LLM spans; tool → tool steps are Untraced)':''}`).join('. ')+'.';
+(function(){const W=1180,left=240,right=14,rowH=38,top=24,H=top+R.length*rowH+26;const svg=$('#tl');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+ const max=D.last_end*1.01;const x=ms=>left+(W-left-right)*ms/max;let o='<defs><pattern id="hp" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="5" fill="var(--untr)"/></pattern></defs>';
+ const step=[30,60,120,300,600][[30,60,120,300,600].findIndex(s=>max/1000/s<=12)]||900;
+ for(let t=0;t<=max;t+=step*1000)o+=`<line x1="${x(t)}" x2="${x(t)}" y1="${top-4}" y2="${H-22}" stroke="var(--line2)"/><text x="${x(t)}" y="${H-8}" text-anchor="middle" style="font-size:11px">${t/1000}s</text>`;
+ R.forEach((l,i)=>{const y=top+i*rowH;
+  o+=`<text x="8" y="${y+14}" style="font-size:12px;fill:var(--ink)">${esc(l.name.length>32?l.name.slice(0,31)+'…':l.name)}</text><text x="8" y="${y+28}" class="mono" style="font-size:10px">${s1(l.total)}</text>`;
+  for(const g of l.gaps){const w=Math.max(1,x(g.o+g.d)-x(g.o));if(g.k==='wait'){o+=`<rect x="${x(g.o)}" y="${y+6}" width="${w}" height="18" fill="none" stroke="var(--wait)" stroke-dasharray="4 3" data-tip="Waiting|${off(g.o)} → ${off(g.o+g.d)} · ${s1(g.d)}"/>`;continue}
+   o+=`<rect x="${x(g.o)}" y="${y+6}" width="${w}" height="18" fill="${g.k==='over'?'var(--over)':'url(#hp)'}" data-tip="${g.k==='over'?'Runtime overhead':'Untraced'}|${off(g.o)} → ${off(g.o+g.d)} · ${s1(g.d)}|${esc(g.fa)} → ${esc(g.fb)}|${g.b}"/>`}
+  for(const it of l.items){const w=Math.max(1.5,x(it.o+it.d)-x(it.o));const bad=it.err||/FAIL|ok:false/.test(it.note||'');
+   if(it.k==='dispatch'||it.k==='wait'){o+=`<rect x="${x(it.o)}" y="${y+5}" width="${w}" height="20" fill="none" stroke="${it.k==='wait'?'var(--wait)':'var(--disp)'}" stroke-width="1.5" ${it.k==='wait'?'stroke-dasharray="4 3"':''} data-tip="${esc(it.n)}|${istT(it.o)} → ${istT(it.o+it.d)} IST · ${s1(it.d)} · ${off(it.o)}|${it.id}"/>`;continue}
+   const c=it.k==='llm'?'var(--llm)':it.k==='userq'?'var(--disp)':'var(--tool)';
+   o+=`<rect x="${x(it.o)}" y="${it.k==='llm'?y+6:y+10}" width="${w}" height="${it.k==='llm'?18:10}" fill="${c}" ${bad?'stroke="var(--over)" stroke-width="2"':''} data-tip="${esc(it.n||'LLM')}|${istT(it.o)} → ${istT(it.o+it.d)} IST · ${s1(it.d)} · ${off(it.o)}|${it.note?esc(it.note.slice(0,140))+'|':''}${it.k==='llm'?`in ${it.ti.toLocaleString()} · out ${it.to.toLocaleString()} · cached ${it.cr.toLocaleString()} · $${it.c.toFixed(4)}|`:''}${it.id}"/>`}
+  for(const d of l.deploys)o+=`<text x="${x(d.o)}" y="${y+4}" text-anchor="middle" style="font-size:11px;fill:${d.ok?'var(--ink)':'var(--over)'}">◆</text>`;
+ });svg.innerHTML=o;})();
+(function(){const W=1000,H=240,l=56,r=16,t=14,b=30;const svg=$('#turns');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+ const pal=['#2a78d6','#e07b2c','#1baf7a','#9a4fd0','#c2a100','#d03b3b','#5c6b7a'];const max=D.last_end*1.01;
+ const x=ms=>l+(W-l-r)*ms/max;const ly=v=>Math.log10(Math.max(v,30)/1000);const y=v=>t+(H-t-b)*(1-(ly(v)+1.5)/3.7);
+ let o='';for(const v of [30,100,300,1000,3000,10000,60000,150000]){o+=`<line x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line2)"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end" style="font-size:11px">${v/1000} s</text>`}
+ o+=`<line x1="${l}" x2="${W-r}" y1="${y(300)}" y2="${y(300)}" stroke="var(--ink2)" stroke-dasharray="5 4"/><text x="${W-r}" y="${y(300)-5}" text-anchor="end" style="font-size:11px">app builder ~0.3 s/turn</text>`;
+ const series=wfRuns.concat(L.planner?[L.planner]:[]).map((rr,i)=>({r:rr,c:pal[i%pal.length],pts:rr.gaps.filter(g=>rr.llm_n?(g.k==='over'&&g.nb==='llm'):g.k==='untraced')})).filter(s=>s.pts.length);
+ for(const s of series){o+=`<polyline fill="none" stroke="${s.c}" stroke-width="2" points="${s.pts.map(p=>x(p.o)+','+y(p.d)).join(' ')}"/>`;
+  for(const p of s.pts)o+=`<circle cx="${x(p.o)}" cy="${y(p.d)}" r="4" fill="${s.c}" stroke="var(--panel)" stroke-width="2" data-tip="${esc(s.r.name)}|${esc(p.fa)} → ${esc(p.fb)}|${s1(p.d)} at ${off(p.o)}|${p.b}"/>`}
+ svg.innerHTML=o;$('#tlegend').innerHTML=series.map(s=>`<span><i class="sw" style="background:${s.c}"></i>${esc(s.r.name)}</span>`).join('');})();
+(function(){const rows=wfRuns.filter(r=>r.compile+r.trigger+r.inspect);if(!rows.length){$('#loops').innerHTML='<tr><td>No compile / test cycles in this trace.</td></tr>';return}
+ const mx=Math.max(...rows.map(r=>Math.max(r.compile,r.trigger,r.inspect,r.fails)),1);const b=(v,c)=>`<div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span>${v}</span><div style="width:${v/mx*90}px;height:9px;background:${c};border-radius:0 3px 3px 0"></div></div>`;
+ $('#loops').innerHTML='<tr><th>Workflow run</th><th>Compile and save</th><th>Trigger run</th><th>Inspect run</th><th>Failed results</th><th>Deploy</th></tr>'+rows.map(r=>`<tr><td>${esc(r.name)}</td><td>${b(r.compile,'var(--llm)')}</td><td>${b(r.trigger,'var(--tool)')}</td><td>${b(r.inspect,'var(--tool)')}</td><td>${b(r.fails,'var(--over)')}</td><td>${r.deploys.length?r.deploys.map(d=>off(d.o)+(d.ok?'':' failed')).join(', '):'–'}</td></tr>`).join('');})();
+$('#findings').innerHTML=D.findings.map((f,i)=>`<div class="panel finding"><h3><span class="fnum">${i+1}.</span>${esc(f.t)}</h3><div class="rec">Recoverable: <b>${esc(f.rec)}</b></div><div class="conf">Confidence: ${esc(f.conf)}</div><p>${esc(f.body)}</p><div class="fix"><b>Fix:</b> ${esc(f.fix)}</div>
+<div class="scroll"><table class="ev" style="min-width:900px"><tr><th>Agent run</th><th>Span</th><th>Offset</th><th>IST</th><th>Duration</th><th>Note</th><th>Span id</th></tr>${f.ev.map(e=>`<tr><td>${esc(e.agent)}</td><td>${esc(e.span)}</td><td>${off(e.o)}</td><td>${istT(e.o)}</td><td>${s1(e.d)}</td><td>${esc((e.note||'').slice(0,160))}</td><td><a class="mono" href="${lk(e.sub,e.id)}" target="_blank" rel="noopener">${e.id}</a></td></tr>`).join('')}</table></div></div>`).join('')||'<p>No detector fired.</p>';
+const C=D.checks;
+$('#method').innerHTML=[
+ `Fetched headlessly from ${D.host} on ${D.fetched} UTC: trace list for case ${D.case} (${D.ntraces} traces), span tree and span input/output for every LLM and tool span${D.subs.length?', plus the app builder sub-trace'+(D.subs.length>1?'s':''):''}.`,
+ `Reconciliation with the root span: cost $${C.root_cost} vs $${C.span_cost} summed, input ${C.root_in?.toLocaleString()} vs ${C.span_in.toLocaleString()}, output ${C.root_out?.toLocaleString()} vs ${C.span_out.toLocaleString()}; ${C.llm_n} LLM calls in the parent, ${C.unassigned} tool spans unassigned.`,
+ 'LLM → run: the "Automation id (edit in place)" line in message 1 of the input; calls inside an Invoke Solution Planner span are the planner; the rest are the main agent. Tool → run: the latest LLM call (≤15 s earlier) with that function pending in its tool_calls, else the workflowId in the tool input.',
+ 'Total = first span start → last span end of the run. Actual = union of LLM + tool spans. Runtime overhead = gaps next to an LLM span. Untraced = tool → tool gaps with no LLM span. Waiting = the rest (main agent: sub-agents). Stall = overhead gap over 30 s.',
+ `T0 = trace start ${D.t0}; offsets are from T0; IST = UTC+5:30. UI latency (${s1(D.ui_latency||0)}) ends at the last message shown to the user; the root span reports ${s1(D.root_time||0)}.`,
+ 'Findings come from fixed detectors (stalls, held questions, pickup delay, late wake after dispatch, identical-context loops, compile/test failures, missing LLM spans, output-bound calls, cache misses, LLM errors, slow small calls), ranked by estimated recoverable time. Thinking tokens are not reported per span. Other traffic on the host is not visible.'
+].map(t=>`<li>${esc(t)}</li>`).join('');
+const tip=$('#tip');document.addEventListener('mousemove',e=>{const t=e.target.closest('[data-tip]');if(!t){tip.hidden=true;return}
+ const p=t.getAttribute('data-tip').split('|');tip.innerHTML=`<b>${esc(p[0])}</b>`+p.slice(1).map(s=>`<div class="${/^[0-9a-z_]{24,}$/.test(s)?'mono':''}">${esc(s)}</div>`).join('');tip.hidden=false;
+ tip.style.left=Math.min(e.clientX+14,innerWidth-tip.offsetWidth-8)+'px';tip.style.top=Math.min(e.clientY+14,innerHeight-tip.offsetHeight-8)+'px'});
+</script><script>(function(){
+const ABS=[];;
+const root=document.getElementById('ab');if(!root||!ABS.length)return;
+const f1=v=>(v/1000).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+const s1=ms=>f1(ms)+' s', off=ms=>'+'+f1(ms);
+const kk=v=>(v/1000).toLocaleString('en-US',{maximumFractionDigits:1})+'k';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const phc={'Start-up':'var(--untr)','Investigation':'var(--llm)','Editing':'var(--tool)','Editing and finish':'var(--tool)','Agent loop':'var(--llm)','Build, commit, finish':'var(--disp)','Preview and post-processing':'var(--wait)'};
+root.innerHTML=ABS.map((A,k)=>{
+ const T=A.turns, lk=id=>A.applink+id, istT=ms=>new Date(A.t0+ms).toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour12:false});
+ const wasted=T.reduce((a,t)=>a+t.wasted,0), wtok=T.reduce((a,t)=>a+t.wasted_tok,0);
+ const unc=T.filter(t=>t.cr===0&&!t.compaction), uc=unc.reduce((a,t)=>a+t.cost,0);
+ const K=[['Total',s1(A.total),'first span → last span'],['LLM',s1(A.llm),A.n_llm+' calls · '+kk(A.tout)+' out'],['Tools',s1(A.tools),A.n_tools+' calls'],
+  ['Runtime overhead',s1(A.over),A.ngap?((A.over/A.ngap/1000).toFixed(2)+' s per gap · '+A.ngap+' gaps'):''],['Rejected edits',s1(wasted),'~'+kk(wtok)+' output tokens',wasted>0],
+  ['First-call context',kk(T[0]?.tin||0),'avg '+kk(A.tin/Math.max(T.length,1))+' per call'],['Cost','$'+A.cost.toFixed(2),unc.length+' uncached calls = $'+uc.toFixed(2)]];
+ let tl='';{const W=1180,l=20,r=14,H=150,max=A.total*1.01,x=ms=>l+(W-l-r)*ms/max;const step=[30,60,120][[30,60,120].findIndex(s=>max/1000/s<=12)]||300;let o='';
+  for(let t=0;t<=max;t+=step*1000)o+=`<line x1="${x(t)}" x2="${x(t)}" y1="8" y2="${H-22}" stroke="var(--line2)"/><text x="${x(t)}" y="${H-8}" text-anchor="middle" style="font-size:11px">${t/1000}s</text>`;
+  for(const p of A.phases.filter(p=>x(p[2])-x(p[1])>p[0].length*6+10))o+=`<text x="${x(p[1])+3}" y="18" style="font-size:10.5px">${esc(p[0])}</text>`;
+  for(const q of A.runtime){const w=Math.max(1.5,x(q.o+q.d)-x(q.o));o+=`<rect x="${x(q.o)}" y="28" width="${w}" height="12" fill="var(--untr)" data-tip="${esc(q.n)}|${off(q.o)} · ${s1(q.d)}|${q.id}"/>`}
+  for(const t of T){const w=Math.max(1.5,x(t.o+t.d)-x(t.o));const tip=`App builder LLM #${t.i}${t.compaction?' · compaction':''}|${istT(t.o)} IST · ${off(t.o)} · ${s1(t.d)}|in ${t.tin.toLocaleString()} · cached ${t.cr.toLocaleString()} · out ${t.tout.toLocaleString()} · $${t.cost.toFixed(4)}|${t.calls.map(c=>c.cmd+' '+c.path+(c.ok===false?' ✗':'')).join(', ')||'no tool calls'}|${t.id}`;
+   o+=`<rect x="${x(t.o)}" y="48" width="${w}" height="30" fill="${t.compaction?'var(--disp)':'var(--llm)'}" data-tip="${esc(tip)}"/>`;
+   if(t.fail_share>0)o+=`<rect x="${x(t.o)+w*(1-t.fail_share)}" y="48" width="${w*t.fail_share}" height="30" fill="var(--over)" data-tip="${esc('Rejected edit share '+Math.round(t.fail_share*100)+'% of LLM #'+t.i+'|~'+s1(t.wasted)+'|'+t.id)}"/>`;
+   for(const c of t.calls){if(c.to==null)continue;const w2=Math.max(2,x(c.to+c.td)-x(c.to));o+=`<rect x="${x(c.to)}" y="88" width="${w2}" height="14" fill="var(--tool)" ${c.ok===false?'stroke="var(--over)" stroke-width="2"':''} data-tip="${esc(c.tool+' · '+c.cmd+' '+c.path+'|'+off(c.to)+' · '+s1(c.td)+' · '+(c.chars/1000).toFixed(1)+'k chars args|'+(c.summary||'').slice(0,120)+(c.err?'|'+c.err.slice(0,140):'')+'|'+c.id)}"/>`}}
+  o+=`<text x="${l}" y="${H-30}" style="font-size:10.5px">tools ↑</text>`;tl=`<svg viewBox="0 0 ${W} ${H}" width="100%">${o}</svg>`}
+ let cx='';{const W=1180,l=56,r=14,t0=14,b=26,H=230,n=T.length,bw=(W-l-r)/Math.max(n,1);const mx=Math.max(...T.map(t=>t.tin),1)*1.08;const y=v=>t0+(H-t0-b)*(1-v/mx);let o='';
+  const st=mx>200000?50000:mx>50000?25000:10000;for(let v=0;v<=mx;v+=st)o+=`<line x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line2)"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end" style="font-size:11px">${v/1000}k</text>`;
+  T.forEach((t,i)=>{const X=l+i*bw+bw*0.15,w=bw*0.7;const tip=esc(`App builder LLM #${t.i} · ${off(t.o)}|in ${t.tin.toLocaleString()} · cached ${t.cr.toLocaleString()}|$${t.cost.toFixed(4)}|${t.id}`);
+   if(t.compaction)o+=`<rect x="${X}" y="${y(t.tin)}" width="${w}" height="${y(0)-y(t.tin)}" fill="var(--disp)" data-tip="${tip}"/>`;
+   else o+=`<rect x="${X}" y="${y(t.cr)}" width="${w}" height="${y(0)-y(t.cr)}" fill="var(--llm)" data-tip="${tip}"/><rect x="${X}" y="${y(t.tin)}" width="${w}" height="${y(t.cr)-y(t.tin)}" fill="var(--wait)" data-tip="${tip}"/>`;
+   o+=`<text x="${X+w/2}" y="${H-8}" text-anchor="middle" style="font-size:10.5px">${t.i}</text>`});cx=`<svg viewBox="0 0 ${W} ${H}" width="100%">${o}</svg>`}
+ const turns='<tr><th>#</th><th style="text-align:left">Span</th><th>Offset</th><th>Duration</th><th>Input / cached</th><th>Out</th><th>Cost</th><th style="text-align:left">Tool calls it issued</th><th style="text-align:left">Model text (start)</th></tr>'+T.map(t=>`<tr style="${t.fail_share>0?'background:color-mix(in srgb,var(--over) 8%,transparent)':t.compaction?'background:color-mix(in srgb,var(--disp) 10%,transparent)':''}"><td>${t.i}</td><td style="text-align:left"><a class="mono" href="${lk(t.id)}" target="_blank" rel="noopener">${t.id.slice(-8)}</a></td><td>${off(t.o)}</td><td>${s1(t.d)}</td><td>${t.tin.toLocaleString()}<span class="sub" style="color:${t.cr?'inherit':'var(--over)'}">${t.cr?t.cr.toLocaleString()+' cached':'uncached'}</span></td><td>${t.tout.toLocaleString()}</td><td>$${t.cost.toFixed(3)}</td><td style="text-align:left">${t.compaction?'<b>compaction summary</b>':t.calls.map(c=>`<div><span style="color:${c.ok===false?'var(--over)':'inherit'}">${c.ok===false?'✗':'✓'} ${esc(c.cmd)} ${esc(c.path)}</span> <span style="color:var(--muted)">${(c.chars/1000).toFixed(1)}k</span>${c.id?` <a class="mono" href="${lk(c.id)}" target="_blank" rel="noopener">${c.id.slice(-6)}</a>`:''}</div>`).join('')||'–'}</td><td style="text-align:left;color:var(--ink2);max-width:280px">${esc(t.head.slice(0,110))}</td></tr>`).join('');
+ const mix='<tr><th>Tool</th><th>Calls</th></tr>'+Object.entries(A.mix).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join('');
+ const F=A.findings.map((f,i)=>`<div class="panel finding"><h3><span class="fnum">A${i+1}.</span>${esc(f.t)}</h3><div class="rec">Recoverable: <b>${esc(f.rec)}</b></div><div class="conf">Confidence: ${esc(f.conf)}</div><p>${esc(f.body)}</p><div class="fix"><b>Fix:</b> ${esc(f.fix)}</div>
+<div class="scroll"><table class="ev" style="min-width:900px"><tr><th style="text-align:left">Span</th><th>Offset</th><th>IST</th><th>Duration</th><th style="text-align:left">Note</th><th style="text-align:left">Span id</th></tr>${f.ev.map(e=>`<tr><td style="text-align:left">${esc(e.span)}</td><td>${off(e.o)}</td><td>${istT(e.o)}</td><td>${s1(e.d)}</td><td style="text-align:left">${esc((e.note||'').slice(0,170))}</td><td style="text-align:left"><a class="mono" href="${lk(e.id)}" target="_blank" rel="noopener">${e.id}</a></td></tr>`).join('')}</table></div></div>`).join('')||'<p>No detector fired.</p>';
+ const rt=A.root_tok||{};
+ const meth=[(A.self_trace?`The linked trace (${A.trace}) is itself the app builder run of session ${A.session}; no Generate App parent span.`:`App builder session id comes from the Generate App span (${A.parent_span}) output in the parent trace; its trace (${A.trace}) is the one overlapping that span.`)+` Offsets in this section are from the app builder trace start (${istT(0)} IST).`,
+  `Reconciliation with the app builder root span: cost ${A.root_cost} vs $${A.cost.toFixed(5)} summed; input ${(rt.up||0).toLocaleString()} vs ${A.tin.toLocaleString()}; output ${(rt.down||0).toLocaleString()} vs ${A.tout.toLocaleString()}; cached ${(rt.cacheRead||0).toLocaleString()} vs ${A.cr.toLocaleString()}.`,
+  'Tool calls are matched to the LLM call that issued them by summary + path (else order). A write counts as rejected when the tool output reports an error ("No replacement was performed", "File already exists", …).',
+  'Rejected-edit time = each call\'s duration × the share of its tool-argument characters that went into rejected writes (estimate; thinking inside the call is not separated).',
+  'Phases: Start-up = runtime spans before the first LLM call; Investigation = until the first call that issues a write; Editing = until the Build tool starts; Build, commit, finish = until the last tool ends; Preview = runtime spans after that.',
+  'Compaction = an LLM call with no tool calls whose input is under 20% of the previous call\'s. Runtime overhead = time inside the agent loop with no LLM or tool span open.'];
+ return `<h2 id="ab${k}" style="margin-top:48px;font-size:20px;border-top:1px solid var(--line);padding-top:28px">App builder breakdown · ${esc(A.app)}</h2>
+ <div class="meta"><span>Session <span class="mono">${esc(A.session)}</span></span><span>Trace <span class="mono">${esc(A.trace)}</span></span>${A.self_trace?'<span>This trace is the app builder run (no Generate App parent)</span>':`<span>From Generate App <a class="mono" href="${esc(A.parent_link)}" target="_blank" rel="noopener">${esc(A.parent_span)}</a></span>`}<span>Started <b>${istT(0)} IST</b></span><span>Model <b>${esc(A.model)}</b></span></div>
+ <div class="kpis">${K.map(k=>`<div class="kpi ${k[3]?'red':''}"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('')}</div>
+ <h2>Phases</h2><div class="panel"><div class="cp">${A.phases.map(p=>`<div style="flex:${Math.max(p[3],1)};background:${(phc[p[0]]||(p[0].startsWith('Waiting')?'var(--over)':'var(--untr)'))}" data-tip="${esc(p[0])}|${off(p[1])} → ${off(p[2])} · ${s1(p[3])}"></div>`).join('')}</div>
+ <div class="cplab">${A.phases.map(p=>`<span><i class="sw" style="background:${(phc[p[0]]||(p[0].startsWith('Waiting')?'var(--over)':'var(--untr)'))}"></i>${esc(p[0])} <b>${s1(p[3])}</b> <span style="color:var(--muted)">${off(p[1])} → ${off(p[2])}</span></span>`).join('')}</div></div>
+ <h2>Turns over time</h2><div class="panel scroll"><div class="inner"><div class="legend"><span><i class="sw" style="background:var(--llm)"></i>LLM call</span><span><i class="sw" style="background:var(--over)"></i>Share spent on rejected edits</span><span><i class="sw" style="background:var(--disp)"></i>Compaction</span><span><i class="sw" style="background:var(--tool)"></i>Tool ok</span><span><i class="sw" style="background:var(--tool);outline:2px solid var(--over)"></i>Tool failed</span><span><i class="sw" style="background:var(--untr)"></i>Runtime (start-up, preview)</span></div>${tl}</div></div>
+ <h2>Context per call</h2><div class="panel scroll"><div class="inner"><div class="legend"><span><i class="sw" style="background:var(--llm)"></i>Cached input</span><span><i class="sw" style="background:var(--wait)"></i>Uncached input</span><span><i class="sw" style="background:var(--disp)"></i>Compaction call</span></div>${cx}<div style="font-size:12px;color:var(--muted)">Input tokens on each app builder LLM call, in call order. Uncached input is billed at the full rate.</div></div></div>
+ <h2>Every turn</h2><div class="panel scroll"><div class="inner" style="min-width:1100px"><table class="ev">${turns}</table></div></div>
+ <h2>Tool mix</h2><div class="panel"><table style="max-width:520px">${mix}</table></div>
+ <h2>App builder findings</h2>${F}
+ <details><summary>App builder method</summary><ul>${meth.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></details>`}).join('');
 })();
 </script>
-<main class="planloft-plan">
-<article><p>The Store Ops SOP Hub solution took 13 minutes 34 seconds from the first prompt to its final response. Planning ran 5m 04s, the three backend workflows built and deployed over 2m 15s, and the app build held the critical path at 7m 38s. At $1.21 it sits in the middle of the four September 29 runs on cost.</p>
-<blockquote>
-<p>The Generate Workflows tool returns after 1m 14s, but compiles and the last deploy at 7m 19s stretch the real backend window to 2m 15s. The backend window is measured dispatch to last deploy, not by the tool span.</p>
-</blockquote>
-<h2>Case and measurement</h2>
-<p>Source: <a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf">Orbit solution and selected trace</a>. The selected trace ends <code>...012b7</code>, started September 29, 2026 at 04:31:39 IST. I read its timeline in the authenticated UnifyApps Chrome session. The separate initial request, ending <code>...200fd4</code>, began at 04:31:08 IST and took 22.580 seconds.</p>
-<table>
-<thead>
-<tr>
-<th>Measure</th>
-<th align="right">Selected trace</th>
-<th align="right">Whole case</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Elapsed time</td>
-<td align="right">13m 04.044s</td>
-<td align="right">13m 33.504s, including the initial request and gap</td>
-</tr>
-<tr>
-<td>Reported cost</td>
-<td align="right">$1.20937</td>
-<td align="right">About $1.25719</td>
-</tr>
-<tr>
-<td>Input tokens</td>
-<td align="right">5,128,042</td>
-<td align="right">Initial request adds 89,337</td>
-</tr>
-<tr>
-<td>Output tokens</td>
-<td align="right">46,532</td>
-<td align="right">Initial request adds 1,152</td>
-</tr>
-<tr>
-<td>Cached input tokens</td>
-<td align="right">3,748,204</td>
-<td align="right">Initial request reports 31,344</td>
-</tr>
-</tbody></table>
-<p>The selected trace holds 66 Gemini 3.8 Flash calls: 29 medium-thinking orchestration calls and 37 low-thinking workflow-builder calls. Their output sums exactly to the reported 46,532 tokens, and their costs sum exactly to the reported $1.20937, so the main trace accounts for the whole spend with no hidden sub-trace.</p>
-<h2>Where the wall time went</h2>
-<table>
-<thead>
-<tr>
-<th>Phase, IST</th>
-<th align="right">Wall time</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Plan and setup, 04:31:39 to 04:36:43</td>
-<td align="right">5m 04s</td>
-<td>25 orchestration calls before first dispatch, costing $0.32.</td>
-</tr>
-<tr>
-<td>Backend workflows, 04:36:43 to 04:38:58</td>
-<td align="right">2m 15s</td>
-<td>6 compile, 3 trigger, and 3 deploy calls across the 3 workflows. Builder cost $0.41.</td>
-</tr>
-<tr>
-<td>Frontend app, 04:36:43 to 04:44:22</td>
-<td align="right">7m 38s</td>
-<td>One Generate App span overlapping the backend window. Orchestration during the build costs $0.35.</td>
-</tr>
-<tr>
-<td>Wrap-up, 04:44:22 to 04:44:43</td>
-<td align="right">21s</td>
-<td>1 orchestration call after the app returns, costing $0.13.</td>
-</tr>
-</tbody></table>
-<p>Backend and frontend overlap, so their times must not be added to planning or to each other. The three deploy steps land between 6m 13s and 7m 19s into the trace, matching the deployed-version history: Log Assistant Feedback took 2m 52s V1 to V2, Ask Store Assistant 2m 06s, and Sync SharePoint Documents 1m 46s.</p>
-<h2>Workflow testing</h2>
-<p>Only three trigger calls, all short, and no inspect calls: the SharePoint-backed workflows compiled and deployed without the long test loops seen in the Outlook run. The 18-node Sync SharePoint Documents graph built in 1m 46s, faster than the 5-node Ask Store Assistant at 2m 06s, so graph size does not predict build time here.</p>
-<h2>What to change first</h2>
-<ol>
-<li>Trim the 25-call planning preamble. At 5m 04s it is the second-longest setup of the four runs; the SharePoint connection and SOP scope should not need that many rounds.</li>
-<li>Nothing in backend testing needs fixing. Short triggers, clean deploys, no stalls.</li>
-<li>The app build at 7m 38s is the lever if this solution needs to get faster, not the backend.</li>
-</ol>
-<p>The named detailed solution latency skill was not available in the installed skills or workspace when this case was reviewed. This report is based on the live trace and its timeline responses. No solution asset or workflow was changed during the investigation.</p>
-</article>
-</main>
-</body>
-</html>

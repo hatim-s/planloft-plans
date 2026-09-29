@@ -380,15 +380,6 @@
       "expiresAt": "2026-10-28T22:35:11.456Z"
     },
     {
-      "id": "gyVsYu61Sa",
-      "project": "path-71ea78",
-      "slug": "store-ops-sop-hub-latency-sep29",
-      "title": "Store Ops SOP Hub latency report",
-      "kind": "plan",
-      "createdAt": "2026-09-29T08:34:52.474Z",
-      "expiresAt": "2026-10-29T08:34:52.474Z"
-    },
-    {
       "id": "9OoZuz8Xdb",
       "project": "path-71ea78",
       "slug": "store-inventory-manager-latency",
@@ -450,6 +441,15 @@
       "kind": "plan",
       "createdAt": "2026-09-29T08:34:37.058Z",
       "expiresAt": "2026-10-29T10:55:08.569Z"
+    },
+    {
+      "id": "gyVsYu61Sa",
+      "project": "path-71ea78",
+      "slug": "store-ops-sop-hub-latency-sep29",
+      "title": "store-ops-sop-hub-latency-sep29",
+      "kind": "plan",
+      "createdAt": "2026-09-29T08:34:52.474Z",
+      "expiresAt": "2026-10-29T10:55:19.576Z"
     }
   ]
 }
