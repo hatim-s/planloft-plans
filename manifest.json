@@ -423,6 +423,15 @@
       "kind": "plan",
       "createdAt": "2026-09-29T08:34:37.058Z",
       "expiresAt": "2026-10-29T08:34:37.058Z"
+    },
+    {
+      "id": "gyVsYu61Sa",
+      "project": "path-71ea78",
+      "slug": "store-ops-sop-hub-latency-sep29",
+      "title": "Store Ops SOP Hub latency report",
+      "kind": "plan",
+      "createdAt": "2026-09-29T08:34:52.474Z",
+      "expiresAt": "2026-10-29T08:34:52.474Z"
     }
   ]
 }
