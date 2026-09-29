@@ -432,6 +432,15 @@
       "kind": "plan",
       "createdAt": "2026-09-29T08:34:52.474Z",
       "expiresAt": "2026-10-29T08:34:52.474Z"
+    },
+    {
+      "id": "9OoZuz8Xdb",
+      "project": "path-71ea78",
+      "slug": "store-inventory-manager-latency",
+      "title": "Store Inventory Manager latency report",
+      "kind": "plan",
+      "createdAt": "2026-09-29T08:35:03.482Z",
+      "expiresAt": "2026-10-29T08:35:03.482Z"
     }
   ]
 }
