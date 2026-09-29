@@ -405,6 +405,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T22:36:11.731Z",
       "expiresAt": "2026-10-29T08:07:41.309Z"
+    },
+    {
+      "id": "7qg8NtG9sA",
+      "project": "path-71ea78",
+      "slug": "network-route-sim-hub-latency",
+      "title": "Network Route Sim Hub latency report",
+      "kind": "plan",
+      "createdAt": "2026-09-29T08:34:24.660Z",
+      "expiresAt": "2026-10-29T08:34:24.660Z"
     }
   ]
 }
