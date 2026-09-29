@@ -88,6 +88,7 @@
     .summary-table th, .summary-table td { text-align: left; white-space: nowrap; padding: 13px 14px; border-bottom: 1px solid var(--line); }
     .summary-table thead { background: var(--surface-soft); }
     .summary-table th { font-size: 12px; font-weight: 650; }
+    .summary-table th small { color: var(--muted); font-size: 11px; font-weight: 400; }
     .summary-table td { font-size: 13px; }
     .summary-table tbody tr:last-child td { border-bottom: 0; }
     .summary-table td:first-child { font-weight: 650; }
@@ -178,7 +179,7 @@
       <div class="section-head"><h2 id="summary-title">Run summary</h2><p>Duration and cost for each stage.</p></div>
       <div class="table-wrap">
         <table class="summary-table">
-          <thead><tr><th scope="col">Run</th><th scope="col">Result</th><th scope="col">Total</th><th scope="col">Planning</th><th scope="col">Backend (workflows)</th><th scope="col">Workflow improvement</th><th scope="col">Frontend (app)</th><th scope="col">Wrap-up</th><th scope="col">Report</th></tr></thead>
+          <thead><tr><th scope="col">Run</th><th scope="col">Result</th><th scope="col">Total</th><th scope="col">Planning</th><th scope="col">Backend (workflows)</th><th scope="col">Workflow improvement<br><small>vs old avg 10m 13s</small></th><th scope="col">Frontend (app)</th><th scope="col">Wrap-up</th><th scope="col">Report</th></tr></thead>
           <tbody>
             <tr><td>Store Dashboard</td><td>Success</td><td>15m 1s · $2.81</td><td>6m 28s · $0.31</td><td>1m 51s · $1.05</td><td class="workflow-gain">81.9%</td><td>7m 30s · $0.48</td><td>1m 0s · $0.97</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/EGA5T71IiB/">View report</a></td></tr>
             <tr><td>Parts Finder</td><td>Success</td><td>14m 55s · $1.77</td><td>6m 18s · $0.30</td><td>1m 7s · $0.41</td><td class="workflow-gain">89.1%</td><td>7m 49s · $0.51</td><td>43s · $0.54</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/Nqqt6II65Q/">View report</a></td></tr>
