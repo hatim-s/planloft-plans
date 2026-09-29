@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Six solution runs: timing and cost</title>
+<title>Ten solution runs: timing and cost</title>
 <style>/* planloft theme: editorial. A long read: one old-style serif, a drop cap, quotes that hang in the margin. */
 /* planloft-color-schemes: light dark */
 :root {
@@ -331,7 +331,7 @@ summary { cursor: pointer; font-weight: 700; }
 })();
 </script>
 <main class="planloft-plan">
-<article><p>The six runs took 10m 42s to 17m 40s and cost $1.17 to $2.81. Planning ran over 6 minutes in three of the six runs, and the app builder set the completion time in every run. All six used Gemini 3.8 Flash and all six succeeded.</p>
+<article><p>The ten runs took 9m 23s to 17m 40s and cost $1.02 to $2.81. Planning ran over 6 minutes in three of the ten runs, and the app builder set the completion time in every run. All ten used Gemini 3.8 Flash; nine succeeded and the Store Inventory Manager run is marked partially failed.</p>
 <table>
 <thead>
 <tr>
@@ -398,16 +398,53 @@ summary { cursor: pointer; font-weight: 700; }
 <td align="right">$1.86</td>
 <td align="right">134,298</td>
 </tr>
+<tr>
+<td><a href="https://hatim-s.github.io/planloft-plans/p/oIUEZNUQSn/">Network Route Sim Hub</a></td>
+<td align="right">4m 54s</td>
+<td align="right">43s</td>
+<td align="right">6m 39s</td>
+<td align="right">12m 55s</td>
+<td align="right">$1.70</td>
+<td align="right">62,505</td>
+</tr>
+<tr>
+<td><a href="https://hatim-s.github.io/planloft-plans/p/oIUEZNUQSn/">Outlook Digest</a></td>
+<td align="right">3m 12s</td>
+<td align="right">52s</td>
+<td align="right">5m 44s</td>
+<td align="right">9m 23s</td>
+<td align="right">$1.83</td>
+<td align="right">50,405</td>
+</tr>
+<tr>
+<td><a href="https://hatim-s.github.io/planloft-plans/p/oIUEZNUQSn/">Store Ops SOP Hub</a></td>
+<td align="right">5m 04s</td>
+<td align="right">1m 14s</td>
+<td align="right">7m 38s</td>
+<td align="right">13m 04s</td>
+<td align="right">$1.21</td>
+<td align="right">46,532</td>
+</tr>
+<tr>
+<td><a href="https://hatim-s.github.io/planloft-plans/p/oIUEZNUQSn/">Store Inventory Manager</a></td>
+<td align="right">5m 10s</td>
+<td align="right">37s</td>
+<td align="right">8m 41s</td>
+<td align="right">14m 13s</td>
+<td align="right">$1.02</td>
+<td align="right">40,117</td>
+</tr>
 </tbody></table>
 <blockquote>
-<p>Master Data Sync is the longest run and the most expensive app build. Sales Explorer is the fastest and cheapest on every stage. Outlook Exec has the heaviest backend window at 5m 9s across 5 workflow runs.</p>
+<p>Master Data Sync is still the longest run and the most expensive app build. The fastest run is now Outlook Digest at 9m 23s. Outlook Exec keeps the heaviest backend window at 5m 9s across 5 workflow runs.</p>
 </blockquote>
-<p>The six runs cost <strong>$10.82</strong> and generated <strong>712,040 output tokens</strong> across their agent runs. Master Data Sync produced the most output per run build and the longest app builder session (39 LLM calls, 10m 43s). Store Dashboard cost the most overall at $2.81, driven by $0.97 of wrap-up orchestration after dispatch — the highest wrap-up of the six.</p>
-<p>Token generation and cache misses are the clearest shared cost signals. Across the six reports, 39 LLM calls that each wrote more than 5,000 tokens produced <strong>383,535 tokens</strong>, or <strong>54%</strong> of all output. Calls with no cached input accounted for <strong>$5.70</strong>, or <strong>53%</strong> of combined spend. That share ranged from 44% in Store Ops SOP to 60% in Parts Finder.</p>
-<p>Backend scope varied widely: 8 workflow runs in Store Dashboard (slowest: Store Performance List at 1m 51s of parallel window), 5 in Outlook Exec (slowest: Daily Email Triage &amp; Summary Sync), 4 in Parts Finder (slowest: Search Parts), 3 each in Store Ops SOP (slowest: Sync SharePoint Documents) and Sales Explorer (slowest: Summary Totals), and 2 in Master Data Sync (slowest: Run sync now at 3m 59s).</p>
-<p>Workflow and app durations overlap, so they should not be added to planning or to each other to reconstruct total time. Output-token totals above sum the <em>Out tokens</em> column for each agent run. All six runs succeeded with zero LLM errors. Total time ends at the last traced span; UI latency matches within a second on all six runs.</p>
+<p>The ten runs cost <strong>$16.58</strong> and generated <strong>911,599 output tokens</strong> across their agent runs. Master Data Sync still produced the most output per run build and the longest app builder session (39 LLM calls, 10m 43s). Store Dashboard still cost the most overall at $2.81, driven by $0.97 of wrap-up orchestration after dispatch — the highest wrap-up of the ten. The four new rows detail into the combined four-run report rather than individual reports.</p>
+<p>Token generation and cache misses are the clearest shared cost signals. Across the ten reports, 44 LLM calls that each wrote more than 5,000 tokens produced <strong>453,578 tokens</strong>, or <strong>50%</strong> of all output. Calls with no cached input accounted for <strong>$9.56</strong>, or <strong>58%</strong> of combined spend. That share ranged from 44% in Store Ops SOP to 74% in Network Route Sim Hub.</p>
+<p>Backend scope varied widely: 8 workflow runs in Store Dashboard (slowest: Store Performance List at 1m 51s of parallel window), 5 in Outlook Exec (slowest: Daily Email Triage &amp; Summary Sync), 4 in Parts Finder (slowest: Search Parts), 3 each in Store Ops SOP (slowest: Sync SharePoint Documents) and Sales Explorer (slowest: Summary Totals), 2 in Master Data Sync (slowest: Run sync now at 3m 59s), 6 each in Network Route Sim Hub (slowest: Get Delivery Routes and Stops at 1m 30s V1 to V2) and Outlook Digest (slowest: Generate AI Draft Reply at 4m 6s V1 to V2), 3 in Store Ops SOP Hub (slowest: Log Assistant Feedback at 2m 52s V1 to V2), and 2 in Store Inventory Manager (slowest: Refresh Inventory Data at 2m 34s V1 to V2).</p>
+<p>Workflow and app durations overlap, so they should not be added to planning or to each other to reconstruct total time. Output-token totals above sum the <em>Out tokens</em> column for each agent run. Nine of the ten runs succeeded; the Store Inventory Manager run is marked partially failed. Total time ends at the last traced span; the six original runs match UI latency within a second and the four new runs use the same convention.</p>
 <h2>Caveats</h2>
 <p>Every report verified with WARN status: between 2 and 8 tool results per trace were not captured by the trace, so no one may infer what the agent saw from those calls. The Store Ops SOP report additionally records 2 tool spans twice. Each published report opens with a panel naming these caveats and the figures they affect.</p>
+<p>The four new runs have no separate app-builder sub-trace, so their stage costs are split from the main trace: backend is the workflow-builder calls, frontend is main-agent orchestration during the build window, and the parts round so each row sums to its total. Their per-run detail lives in the combined four-run report linked above.</p>
 </article>
 </main>
 </body>
