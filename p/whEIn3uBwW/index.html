@@ -93,7 +93,7 @@
     .summary-table td:first-child { font-weight: 650; }
     .summary-table .report-link { display: inline-block; border-radius: 4px; background: color-mix(in srgb, var(--app) 13%, var(--surface)); padding: 3px 8px; text-decoration: none; }
     .summary-table .report-link:hover { text-decoration: underline; }
-    .summary-table td.workflow-gain { color: var(--success); font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+    .summary-table td.workflow-gain { color: var(--success); font-size: 13px; font-weight: 650; }
     .legend { display: flex; flex-wrap: wrap; gap: 7px 18px; align-items: center; color: var(--muted); font-size: 12px; margin: 0 0 13px; }
     .legend span { display: inline-flex; align-items: center; gap: 6px; }
     .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
@@ -193,7 +193,7 @@
           </tbody>
         </table>
       </div>
-      <p class="note">Workflow improvement compares each run with the old report's four-run average of 10m 13s: (613.25s − run time) / 613.25s. These are different workloads, so the percentages compare reported durations, not matched runs. Stage costs come from each report's stage split; planning + backend + frontend + wrap-up equals the reported total in every run.</p>
+      <p class="note">Old report workflow times: Snowflake 8m 38s, Outlook 10m 53s, SharePoint 10m 3s, and File upload 11m 19s. Their average is 10m 13.25s. Workflow improvement compares each new run with that average: (613.25s − run time) / 613.25s. The runs cover different workloads, with no direct row matches. Stage costs come from each report's stage split; planning + backend + frontend + wrap-up equals the reported total in every run. <a href="https://hatim-s.github.io/planloft-plans/p/a3ahTtJrJz/">View old report</a>.</p>
     </section>
 
     <section aria-labelledby="time-title">
