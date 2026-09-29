@@ -414,6 +414,15 @@
       "kind": "plan",
       "createdAt": "2026-09-29T08:34:24.660Z",
       "expiresAt": "2026-10-29T08:34:24.660Z"
+    },
+    {
+      "id": "Lg7GIcF8LJ",
+      "project": "path-71ea78",
+      "slug": "outlook-digest-latency-sep29",
+      "title": "Outlook Digest latency report",
+      "kind": "plan",
+      "createdAt": "2026-09-29T08:34:37.058Z",
+      "expiresAt": "2026-10-29T08:34:37.058Z"
     }
   ]
 }
