@@ -332,7 +332,7 @@ summary { cursor: pointer; font-weight: 700; }
 </script>
 <main class="planloft-plan">
 <article><p>I ran the solution latency pass over four Orbit builds from the morning of 29 Sep 2026 IST: the Network and Route Simulation Hub, the Outlook Executive Digest, the Store Operations SOP Hub, and the Store Inventory Manager. Every trace uses the same stage definitions as the earlier four-build comparison, and every workflow&#39;s build time comes from its deployed version history.</p>
-<p>The headline is that the app builder sets the completion time in all four runs. Workflow generation itself is fast this time, from 37 seconds to 74 seconds of tool time, while app generation runs 5m 44s to 8m 41s. Total trace time runs 9m 23s to 14m 13s at a combined cost of $5.76.</p>
+<p>The headline is that the app builder sets the completion time in all four runs. Backend workflow windows run 1m 09s to 3m 53s from first build dispatch to last workflow deploy, while app generation runs 5m 44s to 8m 41s. Total trace time runs 9m 23s to 14m 13s at a combined cost of $5.76.</p>
 <blockquote>
 <p>All seventeen workflows shipped a working V2 and none took longer than eight minutes. The slowest build was Generate AI Draft Reply at 4m 06s.</p>
 </blockquote>
@@ -350,36 +350,36 @@ summary { cursor: pointer; font-weight: 700; }
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477">Network and Route Sim Hub</a></td>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477">Network and Route Sim Hub</a> (<a href="https://hatim-s.github.io/planloft-plans/p/7qg8NtG9sA/">report</a>)</td>
 <td align="right">4m 54s</td>
-<td align="right">43s</td>
+<td align="right">1m 09s</td>
 <td align="right">6m 39s</td>
 <td align="right">12m 55s</td>
 <td align="right">$1.70</td>
 <td align="right">62,505</td>
 </tr>
 <tr>
-<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f">Outlook Executive Digest</a></td>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f">Outlook Executive Digest</a> (<a href="https://hatim-s.github.io/planloft-plans/p/Lg7GIcF8LJ/">report</a>)</td>
 <td align="right">3m 12s</td>
-<td align="right">52s</td>
+<td align="right">3m 53s</td>
 <td align="right">5m 44s</td>
 <td align="right">9m 23s</td>
 <td align="right">$1.83</td>
 <td align="right">50,405</td>
 </tr>
 <tr>
-<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf">Store Ops SOP Hub</a></td>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf">Store Ops SOP Hub</a> (<a href="https://hatim-s.github.io/planloft-plans/p/gyVsYu61Sa/">report</a>)</td>
 <td align="right">5m 04s</td>
-<td align="right">1m 14s</td>
+<td align="right">2m 15s</td>
 <td align="right">7m 38s</td>
 <td align="right">13m 04s</td>
 <td align="right">$1.21</td>
 <td align="right">46,532</td>
 </tr>
 <tr>
-<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6">Store Inventory Manager</a></td>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6">Store Inventory Manager</a> (<a href="https://hatim-s.github.io/planloft-plans/p/9OoZuz8Xdb/">report</a>)</td>
 <td align="right">5m 10s</td>
-<td align="right">37s</td>
+<td align="right">2m 04s</td>
 <td align="right">8m 41s</td>
 <td align="right">14m 13s</td>
 <td align="right">$1.02</td>
@@ -551,10 +551,10 @@ summary { cursor: pointer; font-weight: 700; }
 <p>Totals: 17 workflows, all 17 with a measurable V1 to V2 duration, all deployed. Zero crossed the eight minute mark, which is the inverse of the earlier six-solution set where 9 of 17 did.</p>
 <h2>What stands out</h2>
 <p>The workflow builds are uniformly quick because the graphs are small and the connectors are already warm. The longest build, Generate AI Draft Reply at 4m 06s, is still shorter than the fastest red row in the earlier set. Node count does not predict time here either: Sync SharePoint Documents has the most nodes at 18 but builds in 1m 46s, while Generate AI Draft Reply has 9 nodes and takes more than twice as long.</p>
-<p>The trace time lives almost entirely in planning plus app generation. Planning takes 3m 12s to 5m 10s across the four runs, and the app tool holds the critical path in every case. Workflow generation returning in under 74 seconds means backend scope is not the lever this round. The lever is the app build and the planning preamble before it.</p>
+<p>The trace time lives almost entirely in planning plus app generation. Planning takes 3m 12s to 5m 10s across the four runs, and the app tool holds the critical path in every case. Backend work runs 1m 09s to 3m 53s per run when compile, trigger, inspect, and deploy activity after the Generate Workflows tool returns is counted. The lever is the app build and the planning preamble before it.</p>
 <h2>Method and caveats</h2>
 <p>Trace lists come from the GetTraceDetailsNew automation against each case, and timelines come from GetTraceTimeline per selected trace. The selected traces are the long ones in each case: Network Route e_6abaf1a75 (12m 55s, success), Outlook e_6abaf1a82 (9m 23s, success), Store Ops e_6abaf1d32 (13m 04s, success), Inventory e_6abaf1a25 (14m 13s, partially failed). Each case also has a short initial trace of 22 to 30 seconds that is excluded from the stage table but included in the case&#39;s total latency roll-up.</p>
-<p>Stage math: planning is trace start to first build dispatch, backend is the Generate Workflows tool span, frontend is the Generate App tool span, and wrap-up is the tail after both return. Durations are rounded to the nearest second. Costs and token counts are the trace-level reported figures. Output token totals above are the trace output tokens, not a sum over an app builder sub-trace. All four runs used Gemini 3.8 Flash with medium thinking for orchestration and low thinking Prakhar builders inside the workflow windows.</p>
+<p>Stage math: planning is trace start to first build dispatch, backend is first build dispatch to last workflow deploy (covering compile, trigger, inspect, and deploy activity after the Generate Workflows tool returns), frontend is the Generate App tool span, and wrap-up is the tail after both return. Durations are rounded to the nearest second. Costs and token counts are the trace-level reported figures. Output token totals above are the trace output tokens, not a sum over an app builder sub-trace. All four runs used Gemini 3.8 Flash with medium thinking for orchestration and low thinking Prakhar builders inside the workflow windows.</p>
 <p>The named detailed solution latency skill was not installed in this workspace, so this report follows its usual measurement contract directly against the live trace and deployment APIs. No solution asset or workflow was changed during the investigation.</p>
 <p>The next slowdown to chase is planning plus app generation, not workflow builds.</p>
 </article>
