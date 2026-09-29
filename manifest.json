@@ -389,15 +389,6 @@
       "expiresAt": "2026-10-29T08:01:31.595Z"
     },
     {
-      "id": "gDH3ng1Jj8",
-      "project": "path-71ea78",
-      "slug": "six-solution-runs-timing-cost",
-      "title": "Ten solution runs: timing and cost",
-      "kind": "plan",
-      "createdAt": "2026-09-28T22:36:34.847Z",
-      "expiresAt": "2026-10-29T08:07:29.037Z"
-    },
-    {
       "id": "7qg8NtG9sA",
       "project": "path-71ea78",
       "slug": "network-route-sim-hub-latency",
@@ -441,6 +432,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T22:36:11.731Z",
       "expiresAt": "2026-10-29T08:37:02.072Z"
+    },
+    {
+      "id": "gDH3ng1Jj8",
+      "project": "path-71ea78",
+      "slug": "six-solution-runs-timing-cost",
+      "title": "Ten solution runs: timing and cost",
+      "kind": "plan",
+      "createdAt": "2026-09-28T22:36:34.847Z",
+      "expiresAt": "2026-10-29T08:37:12.281Z"
     }
   ]
 }
