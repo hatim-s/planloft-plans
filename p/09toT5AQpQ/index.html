@@ -1,0 +1,428 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Ten solution runs, stage by stage | Planloft</title>
+<style>
+/* planloft-color-schemes: light dark */
+:root{
+  color-scheme: light dark;
+  --page:#f6f8fa; --ink:#1d2631; --muted:#5b6875; --line:#d8e0e8; --soft:#eef2f6;
+  --head:#f6f8fa; --track:#e8edf2; --card:#fff; --border:#d8e0e8;
+  --link:#0a66c2; --onseg:#0d1117;
+  --plan:#58a6ff; --be:#d29922; --fe:#3fb950; --wrap:#a371f7;
+  --warn:#8a6100; --warnbg:#fdf4dc; --ok:#1a7f37; --okbg:#e6f4ea; --fail:#b3261e; --failbg:#fbeae9;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-planloft-color-scheme="light"]){
+    --page:#0d1117; --ink:#e6edf3; --muted:#8b949e; --line:#21262d; --soft:#151b23;
+    --head:#0d1117; --track:#12161d; --card:#151b23; --border:#21262d;
+    --link:#58a6ff; --onseg:#0d1117;
+    --plan:#58a6ff; --be:#d29922; --fe:#3fb950; --wrap:#a371f7;
+    --warn:#e3b341; --warnbg:#3a2d10; --ok:#56d364; --okbg:#12321f; --fail:#f85149; --failbg:#3d1a1a;
+  }
+}
+:root[data-planloft-color-scheme="light"]{
+  --page:#f6f8fa; --ink:#1d2631; --muted:#5b6875; --line:#d8e0e8; --soft:#eef2f6;
+  --head:#f6f8fa; --track:#e8edf2; --card:#fff; --border:#d8e0e8;
+  --link:#0a66c2; --onseg:#0d1117;
+  --plan:#58a6ff; --be:#d29922; --fe:#3fb950; --wrap:#a371f7;
+  --warn:#8a6100; --warnbg:#fdf4dc; --ok:#1a7f37; --okbg:#e6f4ea; --fail:#b3261e; --failbg:#fbeae9;
+}
+:root[data-planloft-color-scheme="dark"]{
+  --page:#0d1117; --ink:#e6edf3; --muted:#8b949e; --line:#21262d; --soft:#151b23;
+  --head:#0d1117; --track:#12161d; --card:#151b23; --border:#21262d;
+  --link:#58a6ff; --onseg:#0d1117;
+  --plan:#58a6ff; --be:#d29922; --fe:#3fb950; --wrap:#a371f7;
+  --warn:#e3b341; --warnbg:#3a2d10; --ok:#56d364; --okbg:#12321f; --fail:#f85149; --failbg:#3d1a1a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.5 ui-sans-serif,-apple-system,'Segoe UI',Roboto,sans-serif}
+.theme-control{position:sticky;top:0;z-index:9;display:flex;gap:8px;align-items:center;justify-content:flex-end;
+  padding:8px 20px;background:var(--page);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.theme-control select{background:var(--card);color:var(--ink);border:1px solid var(--border);border-radius:6px;
+  padding:3px 6px;font:inherit;font-size:12px}
+.theme-control select:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.wrap{max-width:1400px;margin:0 auto;padding:28px 28px 80px}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:17px;margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);letter-spacing:-.01em}
+h3{font-size:14px;margin:22px 0 6px}
+p.sub{color:var(--muted);margin:0 0 8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:var(--head)}
+th:first-child,td:first-child{text-align:left}
+tr:hover td{background:var(--soft)}
+td.n{color:var(--muted)}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:600}
+.b-ok{background:var(--okbg);color:var(--ok)}
+.b-warn{background:var(--warnbg);color:var(--warn)}
+.b-fail{background:var(--failbg);color:var(--fail)}
+.cards{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0 8px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;min-width:150px}
+.card .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.card .v{font-size:22px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+.card .u{color:var(--muted);font-size:12px;font-weight:400;margin-left:4px}
+.wf-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.wf-lab{width:78px;flex:none;font-size:12px;color:var(--ink);text-align:right;line-height:1.25}
+.wf-lab span{color:var(--muted);font-size:11px}
+.wf-cost{width:56px;flex:none;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wf-track{position:relative;height:34px;flex:1;min-width:0;background:var(--track);border-radius:3px}
+.seg{position:absolute;display:flex;align-items:center;justify-content:center;font-size:10px;
+     color:var(--onseg);font-weight:700;overflow:hidden;white-space:nowrap;border-radius:3px;min-width:1px}
+.seg.plan{left:0;top:0;height:34px;background:var(--plan)}
+.seg.be{top:0;height:16px;background:var(--be)}
+.seg.fe{top:18px;height:16px;background:var(--fe)}
+.seg.wr{top:0;height:34px;background:var(--wrap)}
+.axis{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin:2px 0 0 88px;
+      border-top:1px solid var(--line);padding-top:4px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 0 88px;color:var(--muted);font-size:12px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.note{background:var(--soft);border-left:3px solid var(--warn);border-radius:0 6px 6px 0;padding:10px 14px;margin:14px 0;font-size:13px;color:var(--ink)}
+.note b{color:var(--warn)}
+ul.find{list-style:none;padding:0;margin:0}
+ul.find li{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+ul.find .t{color:var(--ink)}
+ul.find .r{color:var(--muted)}
+ul.find .c{font-size:11px;color:var(--muted)}
+.mini{font-size:12px;color:var(--muted);margin:6px 0 0}
+</style></head><body>
+<div class="theme-control"><label for="theme">Theme</label><select id="theme" aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+<div class="wrap">
+<h1>Ten solution runs, stage by stage</h1>
+<p class="sub">orbit.uat.unifyapps.com &middot; project 0 &middot; fetched 2026-09-29 with <code>ua-solution-latency-report</code>. Every figure comes from the same scripts the per-trace reports use, so the tables agree with them. Each run links back to its own trace.</p>
+<div class="cards">
+<div class="card"><div class="k">Traces</div><div class="v">10<span class="u"></span></div></div>
+<div class="card"><div class="k">Total wall clock</div><div class="v">132<span class="u">min</span></div></div>
+<div class="card"><div class="k">Mean per trace</div><div class="v">13m 14s<span class="u"></span></div></div>
+<div class="card"><div class="k">Fastest</div><div class="v">9m 23s<span class="u"></span></div></div>
+<div class="card"><div class="k">Slowest</div><div class="v">17m 40s<span class="u"></span></div></div>
+<div class="card"><div class="k">Total cost</div><div class="v">$18.17<span class="u"></span></div></div>
+<div class="card"><div class="k">Mean cost</div><div class="v">$1.82<span class="u"></span></div></div>
+<div class="card"><div class="k">LLM calls</div><div class="v">983<span class="u"></span></div></div>
+</div>
+<h2>Stage waterfall</h2>
+<p class="sub">All 10 traces on one time axis, starting at the user message. Planning runs until the main agent dispatches the first build. Backend (workflows) and frontend (app builder) then run <em>side by side</em>, so they are drawn as two half-height bars stacked in the same lane at their real offsets: where they sit on top of each other, both were running. Wrap-up is everything after the last build ends. Same stage split the per-trace reports print on their <code>STAGES</code> line.</p>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abae30e29ecab2b071fca2a">t06<br><span>17m 40s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:34.310%" title="planning 6m 4s">6m 4s</div>
+<div class="seg be" style="left:34.310%;width:22.530%" title="backend, 2 workflow runs, 3m 59s">3m 59s</div>
+<div class="seg fe" style="left:34.685%;width:60.677%" title="frontend, app builder, 10m 43s">10m 43s</div>
+<div class="seg wr" style="left:95.362%;width:4.638%" title="wrap-up 49s">49s</div>
+</div>
+<div class="wf-cost">$1.86</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abacf0e29ecab2b071f1eb8">t01<br><span>15m 1s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:36.644%" title="planning 6m 28s">6m 28s</div>
+<div class="seg be" style="left:36.644%;width:10.484%" title="backend, 8 workflow runs, 1m 51s">1m 51s</div>
+<div class="seg fe" style="left:36.943%;width:42.420%" title="frontend, app builder, 7m 30s">7m 30s</div>
+<div class="seg wr" style="left:79.363%;width:5.692%" title="wrap-up 1m">1m</div>
+</div>
+<div class="wf-cost">$2.81</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abae2e25a1e5546f5e60fcf">t02<br><span>14m 55s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:35.682%" title="planning 6m 18s">6m 18s</div>
+<div class="seg be" style="left:35.682%;width:6.280%" title="backend, 4 workflow runs, 1m 7s">1m 7s</div>
+<div class="seg fe" style="left:36.094%;width:44.244%" title="frontend, app builder, 7m 49s">7m 49s</div>
+<div class="seg wr" style="left:80.338%;width:4.097%" title="wrap-up 43s">43s</div>
+</div>
+<div class="wf-cost">$1.77</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abaf1a25a1e5546f5e68bd1">t10<br><span>14m 13s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:29.328%" title="planning 5m 11s">5m 11s</div>
+<div class="seg be" style="left:29.328%;width:12.043%" title="backend, 2 workflow runs, 2m 8s">2m 8s</div>
+<div class="seg fe" style="left:29.739%;width:48.680%" title="frontend, app builder, 8m 36s">8m 36s</div>
+<div class="seg wr" style="left:78.419%;width:2.034%" title="wrap-up 22s">22s</div>
+</div>
+<div class="wf-cost">$1.50</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abaf1d329ecab2b072012b7">t09<br><span>13m 4s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:28.820%" title="planning 5m 5s">5m 5s</div>
+<div class="seg be" style="left:28.820%;width:13.169%" title="backend, 3 workflow runs, 2m 20s">2m 20s</div>
+<div class="seg fe" style="left:29.197%;width:42.754%" title="frontend, app builder, 7m 33s">7m 33s</div>
+<div class="seg wr" style="left:71.952%;width:2.012%" title="wrap-up 21s">21s</div>
+</div>
+<div class="wf-cost">$1.59</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abaf1a75a1e5546f5e68c89">t07<br><span>12m 55s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:27.866%" title="planning 4m 55s">4m 55s</div>
+<div class="seg be" style="left:27.866%;width:7.162%" title="backend, 6 workflow runs, 1m 16s">1m 16s</div>
+<div class="seg fe" style="left:28.209%;width:37.167%" title="frontend, app builder, 6m 34s">6m 34s</div>
+<div class="seg wr" style="left:65.376%;width:7.742%" title="wrap-up 1m 22s">1m 22s</div>
+</div>
+<div class="wf-cost">$2.15</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abae2fa29ecab2b071fc70f">t04<br><span>12m 50s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:29.518%" title="planning 5m 13s">5m 13s</div>
+<div class="seg be" style="left:29.518%;width:11.872%" title="backend, 3 workflow runs, 2m 6s">2m 6s</div>
+<div class="seg fe" style="left:29.884%;width:41.254%" title="frontend, app builder, 7m 17s">7m 17s</div>
+<div class="seg wr" style="left:71.138%;width:1.505%" title="wrap-up 16s">16s</div>
+</div>
+<div class="wf-cost">$1.45</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abad02529ecab2b071f2a29">t03<br><span>11m 43s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:22.820%" title="planning 4m 2s">4m 2s</div>
+<div class="seg be" style="left:22.820%;width:29.134%" title="backend, 5 workflow runs, 5m 9s">5m 9s</div>
+<div class="seg fe" style="left:23.216%;width:40.368%" title="frontend, app builder, 7m 8s">7m 8s</div>
+<div class="seg wr" style="left:63.584%;width:2.765%" title="wrap-up 29s">29s</div>
+</div>
+<div class="wf-cost">$1.77</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abae3025a1e5546f5e61443">t05<br><span>10m 42s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:21.638%" title="planning 3m 49s">3m 49s</div>
+<div class="seg be" style="left:21.638%;width:10.032%" title="backend, 3 workflow runs, 1m 46s">1m 46s</div>
+<div class="seg fe" style="left:21.971%;width:35.230%" title="frontend, app builder, 6m 13s">6m 13s</div>
+<div class="seg wr" style="left:57.200%;width:3.380%" title="wrap-up 36s">36s</div>
+</div>
+<div class="wf-cost">$1.17</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abaf1a829ecab2b07200e5a">t08<br><span>9m 23s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:18.292%" title="planning 3m 14s">3m 14s</div>
+<div class="seg be" style="left:18.292%;width:22.388%" title="backend, 6 workflow runs, 3m 57s">3m 57s</div>
+<div class="seg fe" style="left:18.576%;width:32.018%" title="frontend, app builder, 5m 39s">5m 39s</div>
+<div class="seg wr" style="left:50.594%;width:2.521%" title="wrap-up 27s">27s</div>
+</div>
+<div class="wf-cost">$2.11</div>
+</div>
+<div class="axis"><span>0</span><span>4m 25s</span><span>8m 50s</span><span>13m 15s</span><span>17m 40s</span></div>
+<div class="legend"><span><i style="background:#58a6ff"></i>Planning</span><span><i style="background:#d29922"></i>Backend, workflows (upper half)</span><span><i style="background:#3fb950"></i>Frontend, app builder (lower half)</span><span><i style="background:#a371f7"></i>Wrap-up</span></div>
+<p class="mini">The two build lanes share a row band, so a green bar covering a yellow one is real concurrency, not a stacking artifact. Every trace except t03, t08 and t09 runs the app builder and the workflows at the same time, which is why the total is close to the app builder time plus planning rather than the sum of all three.</p>
+<h2>Stage split, time and cost</h2>
+<p class="sub">Cost always adds up: planning + backend + frontend + wrap-up orchestration = total. Backend and frontend times are windows that overlap, so they do not add up to the total time.</p>
+<table><thead><tr><th>Trace</th><th>Total</th><th>Planning</th><th>Backend</th><th>Frontend</th><th>Wrap-up</th><th>Cost</th><th>Plan</th><th>Backend</th><th>Frontend</th><th>Wrap-up</th></tr></thead><tbody>
+<tr style="background:#151b23"><td><b>All 10</b></td><td><b>132m 25s</b></td><td><b>50m 19s</b></td><td><b>25m 38s</b></td><td><b>75m 2s</b></td><td><b>6m 26s</b></td><td><b>$18.17</b></td><td class="n">38%</td><td class="n">19%</td><td class="n">57%</td><td class="n">5%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a> <span class="n">Use Abhishek's Snowflake</span></td><td>17m 40s</td><td>6m 4s</td><td>3m 59s</td><td>10m 43s</td><td>49s</td><td>$1.86</td><td class="n">15%</td><td class="n">31%</td><td class="n">39%</td><td class="n">15%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a> <span class="n">Use Abhishek's Snowflake</span></td><td>15m 1s</td><td>6m 28s</td><td>1m 51s</td><td>7m 30s</td><td>1m</td><td>$2.81</td><td class="n">11%</td><td class="n">37%</td><td class="n">17%</td><td class="n">35%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a> <span class="n">Use Abhishek's Snowflake</span></td><td>14m 55s</td><td>6m 18s</td><td>1m 7s</td><td>7m 49s</td><td>43s</td><td>$1.77</td><td class="n">17%</td><td class="n">23%</td><td class="n">29%</td><td class="n">30%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a> <span class="n">Build an inventory app usi</span></td><td>14m 13s</td><td>5m 11s</td><td>2m 8s</td><td>8m 36s</td><td>22s</td><td>$1.50</td><td class="n">26%</td><td class="n">21%</td><td class="n">32%</td><td class="n">22%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a> <span class="n">Use Abhishek's Microsoft S</span></td><td>13m 4s</td><td>5m 5s</td><td>2m 20s</td><td>7m 33s</td><td>21s</td><td>$1.59</td><td class="n">20%</td><td class="n">26%</td><td class="n">24%</td><td class="n">30%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a> <span class="n">Use Abhishek's Snowflake</span></td><td>12m 55s</td><td>4m 55s</td><td>1m 16s</td><td>6m 34s</td><td>1m 22s</td><td>$2.15</td><td class="n">18%</td><td class="n">28%</td><td class="n">21%</td><td class="n">33%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a> <span class="n">Use Sindhu's Microsoft Sha</span></td><td>12m 50s</td><td>5m 13s</td><td>2m 6s</td><td>7m 17s</td><td>16s</td><td>$1.45</td><td class="n">18%</td><td class="n">30%</td><td class="n">27%</td><td class="n">25%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a> <span class="n">Use Microsoft Outlook Conn</span></td><td>11m 43s</td><td>4m 2s</td><td>5m 9s</td><td>7m 8s</td><td>29s</td><td>$1.77</td><td class="n">13%</td><td class="n">46%</td><td class="n">20%</td><td class="n">20%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a> <span class="n">Use Abhishek's Snowflake</span></td><td>10m 42s</td><td>3m 49s</td><td>1m 46s</td><td>6m 13s</td><td>36s</td><td>$1.17</td><td class="n">12%</td><td class="n">34%</td><td class="n">28%</td><td class="n">26%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a> <span class="n">Use Microsoft Outlook Conn</span></td><td>9m 23s</td><td>3m 14s</td><td>3m 57s</td><td>5m 39s</td><td>27s</td><td>$2.11</td><td class="n">11%</td><td class="n">50%</td><td class="n">13%</td><td class="n">26%</td></tr>
+</tbody></table>
+<h2>Per agent run, all traces</h2>
+<p class="sub">Total is first span start to last span end. Actual is the union of LLM and tool spans. Runtime overhead is the LLM-to-tool and tool-to-LLM gaps. Waiting is the rest, and for the main agent that is time spent on sub-agents rather than idle.</p>
+<table><thead><tr><th>Run</th><th>Trace</th><th>Total</th><th>Actual</th><th>LLM</th><th>LLM calls</th><th>Tools</th><th>Tool calls</th><th>Overhead</th><th>Untraced</th><th>Waiting</th><th>Output tok</th><th>Cost</th></tr></thead><tbody>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>15m</td><td>8m 3s</td><td>6m 47s</td><td>20</td><td>1m 21s</td><td>19</td><td>8s</td><td>0s</td><td>6m 50s</td><td>60,280</td><td>$1.29</td></tr>
+<tr><td>App builder (app-h1d3a)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>7m 30s</td><td>7m 24s</td><td>7m 23s</td><td>22</td><td>3m 6s</td><td>70</td><td>4s</td><td>1s</td><td>1s</td><td>58,497</td><td>$0.48</td></tr>
+<tr><td>Store Performance List</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>1m 51s</td><td>1m 45s</td><td>1m 40s</td><td>8</td><td>5s</td><td>10</td><td>4s</td><td>2s</td><td>0s</td><td>9,639</td><td>$0.26</td></tr>
+<tr><td>Store Detail Info</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>1m 35s</td><td>1m 28s</td><td>1m 19s</td><td>9</td><td>9s</td><td>10</td><td>6s</td><td>1s</td><td>0s</td><td>8,907</td><td>$0.13</td></tr>
+<tr><td>Bottom Stores by Comp</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>1m 17s</td><td>1m 9s</td><td>1m</td><td>10</td><td>9s</td><td>12</td><td>8s</td><td>0s</td><td>0s</td><td>8,358</td><td>$0.14</td></tr>
+<tr><td>Get Filter Options</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>1m 17s</td><td>1m 9s</td><td>1m</td><td>9</td><td>9s</td><td>10</td><td>8s</td><td>0s</td><td>0s</td><td>2,571</td><td>$0.08</td></tr>
+<tr><td>Performance KPIs</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>1m 1s</td><td>54s</td><td>48s</td><td>8</td><td>6s</td><td>10</td><td>7s</td><td>0s</td><td>0s</td><td>6,158</td><td>$0.11</td></tr>
+<tr><td>Store Detail Weekly Trend</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>57s</td><td>51s</td><td>46s</td><td>7</td><td>6s</td><td>8</td><td>6s</td><td>0s</td><td>0s</td><td>4,834</td><td>$0.10</td></tr>
+<tr><td>Weekly Sales Trend</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>52s</td><td>46s</td><td>41s</td><td>6</td><td>6s</td><td>9</td><td>5s</td><td>0s</td><td>0s</td><td>3,344</td><td>$0.12</td></tr>
+<tr><td>Top Stores by Comp</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>47s</td><td>41s</td><td>35s</td><td>7</td><td>6s</td><td>9</td><td>6s</td><td>0s</td><td>0s</td><td>3,101</td><td>$0.10</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td>14m 54s</td><td>7m 15s</td><td>6m 2s</td><td>21</td><td>1m 13s</td><td>18</td><td>10s</td><td>0s</td><td>7m 29s</td><td>41,491</td><td>$0.84</td></tr>
+<tr><td>App builder (app-vvep8)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td>7m 49s</td><td>7m 44s</td><td>7m 52s</td><td>23</td><td>1m 33s</td><td>68</td><td>4s</td><td>1s</td><td>0s</td><td>58,494</td><td>$0.51</td></tr>
+<tr><td>Search Parts</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td>1m 7s</td><td>1m 2s</td><td>50s</td><td>8</td><td>12s</td><td>10</td><td>4s</td><td>0s</td><td>0s</td><td>4,975</td><td>$0.14</td></tr>
+<tr><td>Get Store and Hub Availability</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td>57s</td><td>52s</td><td>45s</td><td>8</td><td>7s</td><td>9</td><td>5s</td><td>0s</td><td>0s</td><td>5,681</td><td>$0.10</td></tr>
+<tr><td>List Stores</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td>52s</td><td>48s</td><td>41s</td><td>8</td><td>6s</td><td>9</td><td>4s</td><td>0s</td><td>0s</td><td>2,049</td><td>$0.09</td></tr>
+<tr><td>Get Nearest Stores Availability</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td>39s</td><td>36s</td><td>30s</td><td>7</td><td>6s</td><td>9</td><td>3s</td><td>0s</td><td>0s</td><td>2,407</td><td>$0.08</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>11m 42s</td><td>4m 47s</td><td>4m 44s</td><td>20</td><td>7s</td><td>21</td><td>10s</td><td>0s</td><td>6m 46s</td><td>23,817</td><td>$0.60</td></tr>
+<tr><td>App builder (app-ua6dg)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>7m 8s</td><td>7m</td><td>6m 12s</td><td>31</td><td>6m 29s</td><td>80</td><td>7s</td><td>1s</td><td>0s</td><td>51,855</td><td>$0.36</td></tr>
+<tr><td>Daily Email Triage & Summary Sync</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>5m 9s</td><td>4m 57s</td><td>3m 41s</td><td>19</td><td>1m 16s</td><td>21</td><td>12s</td><td>0s</td><td>0s</td><td>22,354</td><td>$0.26</td></tr>
+<tr><td>Manual Email Sync</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>2m 42s</td><td>2m 33s</td><td>2m 18s</td><td>15</td><td>16s</td><td>20</td><td>9s</td><td>0s</td><td>0s</td><td>12,281</td><td>$0.22</td></tr>
+<tr><td>Mark Email Item Done</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>1m 24s</td><td>1m 12s</td><td>1m 8s</td><td>20</td><td>4s</td><td>22</td><td>11s</td><td>0s</td><td>0s</td><td>2,824</td><td>$0.11</td></tr>
+<tr><td>Create Draft Reply in Outlook</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>1m 23s</td><td>1m 14s</td><td>1m 4s</td><td>14</td><td>10s</td><td>15</td><td>9s</td><td>0s</td><td>0s</td><td>3,813</td><td>$0.13</td></tr>
+<tr><td>Snooze Email Item</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>1m 8s</td><td>1m</td><td>58s</td><td>13</td><td>2s</td><td>15</td><td>7s</td><td>0s</td><td>0s</td><td>1,854</td><td>$0.10</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a></td><td>12m 49s</td><td>5m 30s</td><td>5m 19s</td><td>25</td><td>14s</td><td>26</td><td>13s</td><td>0s</td><td>7m 5s</td><td>28,183</td><td>$0.62</td></tr>
+<tr><td>App builder (app-au2pi)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a></td><td>7m 17s</td><td>7m 11s</td><td>6m 47s</td><td>27</td><td>1m 59s</td><td>77</td><td>5s</td><td>1s</td><td>0s</td><td>55,914</td><td>$0.39</td></tr>
+<tr><td>Sync SharePoint Documents</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a></td><td>2m 6s</td><td>1m 54s</td><td>1m 37s</td><td>20</td><td>17s</td><td>21</td><td>12s</td><td>0s</td><td>0s</td><td>10,506</td><td>$0.17</td></tr>
+<tr><td>Ask SOP Assistant</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a></td><td>1m 54s</td><td>1m 41s</td><td>1m 30s</td><td>20</td><td>11s</td><td>21</td><td>13s</td><td>0s</td><td>0s</td><td>7,757</td><td>$0.19</td></tr>
+<tr><td>Log Interaction Feedback</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a></td><td>33s</td><td>29s</td><td>27s</td><td>8</td><td>2s</td><td>11</td><td>5s</td><td>0s</td><td>0s</td><td>1,775</td><td>$0.07</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a></td><td>10m 41s</td><td>4m 33s</td><td>3m 55s</td><td>14</td><td>39s</td><td>10</td><td>5s</td><td>0s</td><td>6m 3s</td><td>28,701</td><td>$0.45</td></tr>
+<tr><td>App builder (app-8ehg8)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a></td><td>6m 13s</td><td>6m 8s</td><td>5m 38s</td><td>28</td><td>3m 27s</td><td>66</td><td>4s</td><td>1s</td><td>0s</td><td>30,213</td><td>$0.32</td></tr>
+<tr><td>Sales Explorer Summary Totals</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a></td><td>1m 46s</td><td>1m 42s</td><td>1m 32s</td><td>10</td><td>10s</td><td>11</td><td>5s</td><td>0s</td><td>0s</td><td>4,635</td><td>$0.10</td></tr>
+<tr><td>Sales Explorer Pivot Matrix</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a></td><td>1m 18s</td><td>1m 14s</td><td>1m 4s</td><td>8</td><td>10s</td><td>10</td><td>4s</td><td>0s</td><td>0s</td><td>5,992</td><td>$0.13</td></tr>
+<tr><td>Sales Explorer Dimension Breakdown</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a></td><td>1m 5s</td><td>1m</td><td>44s</td><td>11</td><td>19s</td><td>11</td><td>5s</td><td>0s</td><td>0s</td><td>4,482</td><td>$0.17</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a></td><td>17m 39s</td><td>6m 56s</td><td>6m 17s</td><td>16</td><td>40s</td><td>17</td><td>8s</td><td>0s</td><td>10m 35s</td><td>32,407</td><td>$0.55</td></tr>
+<tr><td>App builder (app-mwmzr)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a></td><td>10m 43s</td><td>10m 34s</td><td>8m 29s</td><td>39</td><td>3m 19s</td><td>84</td><td>7s</td><td>1s</td><td>2s</td><td>68,897</td><td>$0.73</td></tr>
+<tr><td>Run sync now</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a></td><td>3m 59s</td><td>3m 48s</td><td>3m 6s</td><td>18</td><td>42s</td><td>20</td><td>11s</td><td>0s</td><td>0s</td><td>26,967</td><td>$0.33</td></tr>
+<tr><td>Nightly incremental sync</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a></td><td>1m 44s</td><td>1m 34s</td><td>1m 24s</td><td>16</td><td>11s</td><td>18</td><td>10s</td><td>0s</td><td>0s</td><td>6,027</td><td>$0.25</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>12m 54s</td><td>6m 31s</td><td>5m 47s</td><td>18</td><td>48s</td><td>18</td><td>10s</td><td>0s</td><td>6m 14s</td><td>39,079</td><td>$1.09</td></tr>
+<tr><td>App builder (app-05xou)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>6m 34s</td><td>6m 29s</td><td>6m 6s</td><td>32</td><td>8m 30s</td><td>79</td><td>5s</td><td>1s</td><td>0s</td><td>50,313</td><td>$0.45</td></tr>
+<tr><td>Get Delivery Routes and Stops</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>1m 16s</td><td>1m 11s</td><td>1m 3s</td><td>8</td><td>8s</td><td>10</td><td>5s</td><td>0s</td><td>0s</td><td>9,078</td><td>$0.13</td></tr>
+<tr><td>Get Hub Parts Inventory Health</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>59s</td><td>52s</td><td>43s</td><td>10</td><td>8s</td><td>11</td><td>7s</td><td>0s</td><td>0s</td><td>4,175</td><td>$0.11</td></tr>
+<tr><td>Get Market Hubs</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>48s</td><td>43s</td><td>36s</td><td>8</td><td>7s</td><td>9</td><td>5s</td><td>0s</td><td>0s</td><td>3,403</td><td>$0.10</td></tr>
+<tr><td>Get Stores by Hub</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>48s</td><td>43s</td><td>37s</td><td>7</td><td>6s</td><td>8</td><td>5s</td><td>0s</td><td>0s</td><td>2,230</td><td>$0.08</td></tr>
+<tr><td>Simulate Hub Capacity and Rerouting Impact</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>45s</td><td>39s</td><td>34s</td><td>7</td><td>6s</td><td>9</td><td>5s</td><td>0s</td><td>0s</td><td>2,522</td><td>$0.08</td></tr>
+<tr><td>Get Route Travel Matrix</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>41s</td><td>36s</td><td>30s</td><td>7</td><td>6s</td><td>8</td><td>5s</td><td>0s</td><td>0s</td><td>2,018</td><td>$0.10</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>9m 22s</td><td>3m 59s</td><td>3m 56s</td><td>20</td><td>7s</td><td>16</td><td>8s</td><td>0s</td><td>5m 15s</td><td>23,811</td><td>$0.78</td></tr>
+<tr><td>App builder (app-rfzk1)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>5m 39s</td><td>5m 33s</td><td>5m 12s</td><td>27</td><td>4m 11s</td><td>69</td><td>5s</td><td>1s</td><td>0s</td><td>34,222</td><td>$0.28</td></tr>
+<tr><td>Generate AI Draft Reply</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>3m 57s</td><td>3m 44s</td><td>2m 34s</td><td>21</td><td>2m 11s</td><td>26</td><td>13s</td><td>0s</td><td>0s</td><td>4,791</td><td>$0.31</td></tr>
+<tr><td>Sync Outlook Emails</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>3m 26s</td><td>3m 15s</td><td>1m 31s</td><td>18</td><td>1m 45s</td><td>20</td><td>11s</td><td>0s</td><td>0s</td><td>8,047</td><td>$0.19</td></tr>
+<tr><td>Daily Morning Outlook Sync</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>2m 22s</td><td>2m 10s</td><td>1m 38s</td><td>20</td><td>33s</td><td>23</td><td>13s</td><td>0s</td><td>0s</td><td>7,315</td><td>$0.25</td></tr>
+<tr><td>Create Draft in Outlook</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>1m 46s</td><td>1m 36s</td><td>1m 2s</td><td>17</td><td>35s</td><td>19</td><td>10s</td><td>0s</td><td>0s</td><td>2,154</td><td>$0.12</td></tr>
+<tr><td>Mark Email Summary Item Done</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>57s</td><td>48s</td><td>45s</td><td>14</td><td>3s</td><td>17</td><td>9s</td><td>0s</td><td>0s</td><td>2,391</td><td>$0.09</td></tr>
+<tr><td>Snooze Email Summary Item</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>50s</td><td>43s</td><td>41s</td><td>11</td><td>2s</td><td>14</td><td>7s</td><td>0s</td><td>0s</td><td>1,896</td><td>$0.08</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td>13m 3s</td><td>5m 28s</td><td>5m 20s</td><td>29</td><td>12s</td><td>29</td><td>17s</td><td>0s</td><td>7m 18s</td><td>29,303</td><td>$0.80</td></tr>
+<tr><td>App builder (app-u3xc3)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td>7m 33s</td><td>7m 27s</td><td>7m 3s</td><td>26</td><td>2m 10s</td><td>72</td><td>5s</td><td>1s</td><td>1s</td><td>52,990</td><td>$0.38</td></tr>
+<tr><td>Log Assistant Feedback</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td>2m 20s</td><td>2m 15s</td><td>2m 13s</td><td>11</td><td>2s</td><td>12</td><td>5s</td><td>0s</td><td>0s</td><td>2,342</td><td>$0.10</td></tr>
+<tr><td>Ask Store Assistant</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td>1m 34s</td><td>1m 28s</td><td>1m 26s</td><td>11</td><td>2s</td><td>13</td><td>5s</td><td>0s</td><td>0s</td><td>9,866</td><td>$0.16</td></tr>
+<tr><td>Sync SharePoint Documents</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td>1m 13s</td><td>1m 5s</td><td>58s</td><td>15</td><td>7s</td><td>17</td><td>8s</td><td>0s</td><td>0s</td><td>5,021</td><td>$0.16</td></tr>
+<tr><td>Main agent</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a></td><td>14m 12s</td><td>5m 34s</td><td>5m 31s</td><td>18</td><td>6s</td><td>18</td><td>10s</td><td>0s</td><td>8m 27s</td><td>30,264</td><td>$0.71</td></tr>
+<tr><td>App builder (app-t0diu)</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a></td><td>8m 36s</td><td>8m 30s</td><td>8m 20s</td><td>24</td><td>1m 22s</td><td>83</td><td>5s</td><td>1s</td><td>1s</td><td>55,513</td><td>$0.48</td></tr>
+<tr><td>Refresh Inventory Data</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a></td><td>2m 8s</td><td>1m 53s</td><td>1m 47s</td><td>25</td><td>6s</td><td>31</td><td>15s</td><td>0s</td><td>0s</td><td>6,986</td><td>$0.22</td></tr>
+<tr><td>Save Draft Order</td><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a></td><td>36s</td><td>32s</td><td>31s</td><td>6</td><td>2s</td><td>8</td><td>4s</td><td>0s</td><td>0s</td><td>2,867</td><td>$0.08</td></tr>
+</tbody></table>
+<table><thead><tr><th>Run kind</th><th>Runs</th><th>Sum of totals</th><th>LLM time</th><th>Tool time</th><th>Output tok</th><th>Cost</th><th>Share of cost</th></tr></thead><tbody>
+<tr><td><b>Main agent</b></td><td>10</td><td>132m 15s</td><td>53m 37s</td><td>5m 27s</td><td>337,336</td><td>$7.73</td><td class="n">43%</td></tr>
+<tr><td><b>Workflow</b></td><td>42</td><td>65m 45s</td><td>50m 19s</td><td>11m 26s</td><td>250,393</td><td>$6.06</td><td class="n">33%</td></tr>
+<tr><td><b>App builder</b></td><td>10</td><td>75m 2s</td><td>69m 1s</td><td>36m 6s</td><td>516,908</td><td>$4.39</td><td class="n">24%</td></tr>
+</tbody></table>
+<p class="mini">Main agent waiting is the dominant term in every trace, so the sum of run totals is much larger than the wall clock. Runs overlap; do not add the column.</p>
+<h2>App builder phase breakdown</h2>
+<p class="sub">One Generate App sub-trace per solution. Repeated Editing phases are merged. Await Plan is the block where the builder waits for the planning agent it runs in parallel with.</p>
+<table><thead><tr><th>Trace</th><th>App</th><th>Total</th><th>Start-up</th><th>Investigation</th><th>Await Plan</th><th>Editing</th><th>Build, commit, finish</th><th>Preview</th><th>LLM</th><th>Cost</th><th>Uncached</th></tr></thead><tbody>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td>app-h1d3a</td><td>7m 30s</td><td>1s</td><td>58s</td><td>29s</td><td>4m 11s</td><td>1m 8s</td><td>2s</td><td>7m 23s</td><td>$0.48</td><td class="n">3 uncached calls cost 35% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td>app-vvep8</td><td>7m 49s</td><td>1s</td><td>1m 19s</td><td>53s</td><td>4m 29s</td><td>46s</td><td>2s</td><td>7m 52s</td><td>$0.51</td><td class="n">4 uncached calls cost 43% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td>app-ua6dg</td><td>7m 8s</td><td>1s</td><td>34s</td><td>1s</td><td>4m 34s</td><td>1m 56s</td><td>2s</td><td>6m 12s</td><td>$0.36</td><td class="n">1 uncached calls cost 6% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a></td><td>app-au2pi</td><td>7m 17s</td><td>1s</td><td>57s</td><td>48s</td><td>3m 45s</td><td>1m 28s</td><td>2s</td><td>6m 47s</td><td>$0.39</td><td class="n">2 uncached calls cost 17% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a></td><td>app-8ehg8</td><td>6m 13s</td><td>1s</td><td>41s</td><td>58s</td><td>2m 36s</td><td>1m 32s</td><td>2s</td><td>5m 38s</td><td>$0.32</td><td class="n">4 uncached calls cost 36% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a></td><td>app-mwmzr</td><td>10m 43s</td><td>1s</td><td>43s</td><td>2m 14s</td><td>5m 55s</td><td>1m 48s</td><td>2s</td><td>8m 29s</td><td>$0.73</td><td class="n">6 uncached calls cost 50% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td>app-05xou</td><td>6m 34s</td><td>1s</td><td>1m 11s</td><td>0s</td><td>2m 55s</td><td>44s</td><td>2s</td><td>6m 6s</td><td>$0.45</td><td class="n">2 uncached calls cost 26% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>app-rfzk1</td><td>5m 39s</td><td>1s</td><td>39s</td><td>1m 28s</td><td>2m 37s</td><td>44s</td><td>2s</td><td>5m 12s</td><td>$0.28</td><td class="n">3 uncached calls cost 23% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td>app-u3xc3</td><td>7m 33s</td><td>1s</td><td>2m</td><td>6s</td><td>4m 33s</td><td>51s</td><td>2s</td><td>7m 3s</td><td>$0.38</td><td class="n">2 uncached calls cost 17% of the app builder</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a></td><td>app-t0diu</td><td>8m 36s</td><td>1s</td><td>32s</td><td>42s</td><td>4m 34s</td><td>2m 13s</td><td>2s</td><td>8m 20s</td><td>$0.48</td><td class="n">3 uncached calls cost 40% of the app builder</td></tr>
+<tr style="background:#151b23"><td><b>All 10</b></td><td></td><td><b>75m 2s</b></td><td><b>8s</b></td><td><b>9m 35s</b></td><td><b>7m 39s</b></td><td><b>40m 9s</b></td><td><b>13m 10s</b></td><td><b>22s</b></td><td><b>69m 1s</b></td><td><b>$4.39</b></td><td></td></tr>
+</tbody></table>
+<div class="note"><b>Await Plan is 7m 39s of pure waiting, 10% of app builder time.</b> The builder runs a planning agent in parallel and blocks on it, and the block ranges from 0 s to 2m 14s across the 10 traces. In 7 of them it interrupts editing, so the builder has already started writing files when it stops to wait; in the other 3 it blocks up front, right after investigation. Real editing is 40m 9s (54%) and is generation-bound, not waiting.</div>
+<div class="note"><b>Build, commit, finish is the second biggest phase</b> at 13m 10s (18%), and it is three to four <code>Build</code> tool calls per run, which are compiles and deploys, not model calls. It is the one place where wall clock is platform work rather than generation.</div>
+<h2>Findings across all 10</h2>
+<p class="sub">Detectors from <code>analyze.py</code> and <code>appbuilder.py</code>, one line per hit.</p>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a> <span class="n" style="font-weight:400">17m 40s &middot; $1.86</span></h3>
+<ul class="find">
+<li><span class="t">10 LLM calls write 5k+ output tokens (90,764 tokens, 474 s)</span> <span class="r">&mdash; 254 s of these on the critical path; ~203 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">17 uncached calls cost 54% of the turn</span> <span class="r">&mdash; $1.01 of $1.86</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (187 tok/s median)</span> <span class="r">&mdash; ~14 s over the median rate</span></li>
+<li><span class="t">[app] 6 uncached calls cost 50% of the app builder ($0.37 of $0.73)</span> <span class="r">&mdash; up to $0.28</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a> <span class="n" style="font-weight:400">15m 1s &middot; $2.81</span></h3>
+<ul class="find">
+<li><span class="t">8 LLM calls write 5k+ output tokens (83,083 tokens, 439 s)</span> <span class="r">&mdash; 185 s of these on the critical path; ~185 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">3 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 65 s in these calls</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">28 uncached calls cost 58% of the turn</span> <span class="r">&mdash; $1.63 of $2.81</span><div class="c">High</div></li>
+<li><span class="t">[app] 3 calls generated at under 60% of the run's normal speed (177 tok/s median)</span> <span class="r">&mdash; ~72 s over the median rate</span></li>
+<li><span class="t">[app] 3 uncached calls cost 35% of the app builder ($0.17 of $0.48)</span> <span class="r">&mdash; up to $0.13</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a> <span class="n" style="font-weight:400">14m 55s &middot; $1.77</span></h3>
+<ul class="find">
+<li><span class="t">5 LLM calls write 5k+ output tokens (54,594 tokens, 341 s)</span> <span class="r">&mdash; 211 s of these on the critical path; ~165 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">20 uncached calls cost 60% of the turn</span> <span class="r">&mdash; $1.06 of $1.77</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (141 tok/s median)</span> <span class="r">&mdash; ~22 s over the median rate</span></li>
+<li><span class="t">[app] 4 uncached calls cost 43% of the app builder ($0.22 of $0.51)</span> <span class="r">&mdash; up to $0.17</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a> <span class="n" style="font-weight:400">14m 13s &middot; $1.50</span></h3>
+<ul class="find">
+<li><span class="t">4 LLM calls write 5k+ output tokens (59,530 tokens, 381 s)</span> <span class="r">&mdash; 239 s of these on the critical path; ~145 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">2 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 60 s on the critical path</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">15 uncached calls cost 56% of the turn</span> <span class="r">&mdash; $0.85 of $1.50</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (155 tok/s median)</span> <span class="r">&mdash; ~12 s over the median rate</span></li>
+<li><span class="t">[app] 3 uncached calls cost 40% of the app builder ($0.19 of $0.48)</span> <span class="r">&mdash; up to $0.14</span></li>
+<li><span class="t">[app] 2 calls took over 15 s for under 400 output tokens</span> <span class="r">&mdash; 72 s in these calls</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a> <span class="n" style="font-weight:400">13m 4s &middot; $1.59</span></h3>
+<ul class="find">
+<li><span class="t">6 LLM calls write 5k+ output tokens (52,031 tokens, 286 s)</span> <span class="r">&mdash; 163 s of these on the critical path; ~199 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">2 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 51 s in these calls</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">14 uncached calls cost 52% of the turn</span> <span class="r">&mdash; $0.82 of $1.59</span><div class="c">High</div></li>
+<li><span class="t">[app] 2 calls generated at under 60% of the run's normal speed (195 tok/s median)</span> <span class="r">&mdash; ~97 s over the median rate</span></li>
+<li><span class="t">[app] 2 uncached calls cost 17% of the app builder ($0.07 of $0.38)</span> <span class="r">&mdash; up to $0.05</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a> <span class="n" style="font-weight:400">12m 55s &middot; $2.15</span></h3>
+<ul class="find">
+<li><span class="t">4 LLM calls write 5k+ output tokens (46,901 tokens, 272 s)</span> <span class="r">&mdash; 150 s of these on the critical path; ~172 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">24 uncached calls cost 64% of the turn</span> <span class="r">&mdash; $1.38 of $2.15</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (176 tok/s median)</span> <span class="r">&mdash; ~9 s over the median rate</span></li>
+<li><span class="t">[app] 2 uncached calls cost 26% of the app builder ($0.12 of $0.45)</span> <span class="r">&mdash; up to $0.09</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a> <span class="n" style="font-weight:400">12m 50s &middot; $1.45</span></h3>
+<ul class="find">
+<li><span class="t">5 LLM calls write 5k+ output tokens (55,068 tokens, 329 s)</span> <span class="r">&mdash; 204 s of these on the critical path; ~183 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">13 uncached calls cost 44% of the turn</span> <span class="r">&mdash; $0.64 of $1.45</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (179 tok/s median)</span> <span class="r">&mdash; ~18 s over the median rate</span></li>
+<li><span class="t">[app] 2 uncached calls cost 17% of the app builder ($0.06 of $0.39)</span> <span class="r">&mdash; up to $0.05</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a> <span class="n" style="font-weight:400">11m 43s &middot; $1.77</span></h3>
+<ul class="find">
+<li><span class="t">8 LLM calls write 5k+ output tokens (66,886 tokens, 441 s)</span> <span class="r">&mdash; 175 s of these on the critical path; ~170 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">2 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 42 s in these calls</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">20 uncached calls cost 45% of the turn</span> <span class="r">&mdash; $0.79 of $1.77</span><div class="c">High</div></li>
+<li><span class="t">[app] 2 file edits failed (index.ts, seed.ts); the calls that wrote them spent ~8 s on it</span> <span class="r">&mdash; ~8 s and ~0.3k of 51.9k output tokens</span></li>
+<li><span class="t">[app] 1 uncached calls cost 6% of the app builder ($0.02 of $0.36)</span> <span class="r">&mdash; up to $0.02</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a> <span class="n" style="font-weight:400">10m 42s &middot; $1.17</span></h3>
+<ul class="find">
+<li><span class="t">One LLM call took 62 s for 0 output tokens (App builder (app-8ehg8), critical path)</span> <span class="r">&mdash; 56 s on the critical path</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">3 LLM calls write 5k+ output tokens (33,140 tokens, 220 s)</span> <span class="r">&mdash; 74 s of these on the critical path; ~154 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">15 uncached calls cost 49% of the turn</span> <span class="r">&mdash; $0.57 of $1.17</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (157 tok/s median)</span> <span class="r">&mdash; ~11 s over the median rate</span></li>
+<li><span class="t">[app] 4 uncached calls cost 36% of the app builder ($0.12 of $0.32)</span> <span class="r">&mdash; up to $0.09</span></li>
+<li><span class="t">[app] 1 call took over 15 s for under 400 output tokens</span> <span class="r">&mdash; 62 s in these calls</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a> <span class="n" style="font-weight:400">9m 23s &middot; $2.11</span></h3>
+<ul class="find">
+<li><span class="t">3 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 37 s on the critical path</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">2 LLM calls write 5k+ output tokens (19,709 tokens, 118 s)</span> <span class="r">&mdash; 31 s of these on the critical path; ~178 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">29 uncached calls cost 59% of the turn</span> <span class="r">&mdash; $1.24 of $2.11</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 file edit failed (index.ts); the calls that wrote them spent ~3 s on it</span> <span class="r">&mdash; ~3 s and ~0.1k of 34.2k output tokens</span></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (171 tok/s median)</span> <span class="r">&mdash; ~21 s over the median rate</span></li>
+<li><span class="t">[app] 3 uncached calls cost 23% of the app builder ($0.06 of $0.28)</span> <span class="r">&mdash; up to $0.05</span></li>
+<li><span class="t">[app] 1 call took over 15 s for under 400 output tokens</span> <span class="r">&mdash; 43 s in these calls</span></li>
+</ul>
+<h2>Data checks</h2>
+<p class="sub">The publish gate from <code>verify.py</code>, re-proved against each <code>raw.json</code>. Totals, tool attribution, LLM coverage and duplicate detection all pass on every trace. The only warning anywhere is uncaptured tool <em>results</em>, which limits what can be said about what an agent read, not the time or cost figures.</p>
+<table><thead><tr><th>Trace</th><th>Status</th><th>Reconcile</th><th>Tool attribution</th><th>LLM coverage</th><th>Uncaptured results</th><th>Double recorded</th><th>App builder cost</th></tr></thead><tbody>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">8</td><td class="n">0</td><td class="n">$0.4825 = $0.48245 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">5</td><td class="n">0</td><td class="n">$0.5149 = $0.51485 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">5</td><td class="n">0</td><td class="n">$0.3603 = $0.36028 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">2</td><td class="n">2</td><td class="n">$0.3869 = $0.38695 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">3</td><td class="n">0</td><td class="n">$0.3242 = $0.32424 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">5</td><td class="n">0</td><td class="n">$0.7317 = $0.73166 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">8</td><td class="n">0</td><td class="n">$0.4490 = $0.44895 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">11</td><td class="n">0</td><td class="n">$0.2779 = $0.27789 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">5</td><td class="n">0</td><td class="n">$0.3805 = $0.38047 &#10003;</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a></td><td><span class="badge b-warn">WARN</span></td><td>PASS</td><td>PASS</td><td>PASS</td><td class="n">4</td><td class="n">0</td><td class="n">$0.4803 = $0.48028 &#10003;</td></tr>
+</tbody></table>
+<div class="note"><b>56 tool results were not captured and 2 spans are recorded twice, across all 10 traces.</b> Time and cost for those spans are still measured, so the tables stand. What cannot be said is what the agent read back from them, which matters for any "why did X not happen" question.</div>
+<h2>What the time goes to</h2>
+<p class="sub">Per trace, one at a time, then summed. These rows are LLM time per run and they do overlap each other inside a trace, so they add up to more than the wall clock. Cost does add up: the three costed rows are the entire $18.17. Main agent tool calls and waiting carry no cost of their own; waiting time belongs to the sub-agents already counted in the workflow and app builder rows.</p>
+<table><thead><tr><th>Bucket</th><th>Per trace</th><th>Sum of 10</th><th>Cost, 10 traces</th><th>Share of cost</th></tr></thead><tbody>
+<tr><td>Main agent LLM calls</td><td>5m 22s</td><td>53m 37s</td><td>$7.73</td><td class="n">43%</td></tr>
+<tr><td>Workflow runs, LLM time</td><td>5m 2s</td><td>50m 19s</td><td>$6.06</td><td class="n">33%</td></tr>
+<tr><td>App builder LLM time</td><td>6m 54s</td><td>69m 1s</td><td>$4.39</td><td class="n">24%</td></tr>
+<tr><td>Main agent tool calls, time no model was generating</td><td>33s</td><td>5m 27s</td><td>$0.00</td><td class="n">0%</td></tr>
+<tr><td>Main agent waiting on sub-agents</td><td>7m 12s</td><td>72m 2s</td><td>$0.00</td><td class="n">0%</td></tr>
+</tbody></table>
+<div class="note"><b>Every trace is generation-bound, not orchestration-bound.</b> A model is generating for 17m 18s inside a 13m 14s trace, more than the wall clock because the main agent and its sub-agents generate in parallel. Only 33s is the main agent sitting on tool results, and runtime overhead, the gap between an LLM call ending and the next one starting, never exceeds 17 s in any of the 62 runs. No run in this set hits the 30 s stall threshold. There is no orchestration tax to remove here.</div>
+<div class="note"><b>Throughput is the ceiling.</b> Workflow runs generate at 83 tok/s and the app builder at 173 tok/s, so a 5k-token edit costs about 30 s of generation no matter how little else the run has to do. All 10 traces hit the output-bound detector. The app builder is the largest LLM consumer in 7 of the 10, the workflow runs in the other 3, and the main agent is never the largest. Uncached calls take a further 44% to 64% of total spend in every trace, median 56%. That one is a pricing lever rather than a latency lever.</div>
+<div class="note"><b>Planning is the one stage nobody looks at.</b> 5m 2s per trace, 38% of wall clock, before a single file is written, for $2.84 across the ten. It is main agent and planner LLM work: connection setup, schema discovery, clarifications, the plan. Only 39s per trace is wrap-up after the last build, so the run is front-loaded and the tail is short.</div>
+<p class="mini" style="margin-top:36px">Built from 10 run directories under /private/var/folders/5g/3k9cdnrj5mb1l77gw9pfb2br0000gn/T/opencode/ualat. Per-trace deep dives, span ids and tool detail are in each report.html.</p>
+</div>
+<script>var t=document.getElementById('theme');t.value=localStorage.getItem('ualat-theme')||'system';if(t.value!=='system')document.documentElement.setAttribute('data-planloft-color-scheme',t.value);t.addEventListener('change',function(){if(t.value==='system')document.documentElement.removeAttribute('data-planloft-color-scheme');else document.documentElement.setAttribute('data-planloft-color-scheme',t.value);localStorage.setItem('ualat-theme',t.value);});</script>
+</body></html>
