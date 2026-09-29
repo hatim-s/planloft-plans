@@ -396,6 +396,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T22:36:34.847Z",
       "expiresAt": "2026-10-28T22:36:34.847Z"
+    },
+    {
+      "id": "oIUEZNUQSn",
+      "project": "path-71ea78",
+      "slug": "four-solution-latencies-sep29",
+      "title": "Four solution latencies: timing and cost",
+      "kind": "plan",
+      "createdAt": "2026-09-29T08:01:31.595Z",
+      "expiresAt": "2026-10-29T08:01:31.595Z"
     }
   ]
 }

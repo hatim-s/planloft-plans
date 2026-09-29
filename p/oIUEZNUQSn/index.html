@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Four solution latencies: timing and cost</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: calc(100% - 200px);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 64rem) {
+  .planloft-plan { width: calc(100% - 100px); }
+}
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: calc(100% - 50px); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --ink: #24201c;
+    --muted: #6e655d;
+    --paper: #fbf9f5;
+    --surface: #f1ede6;
+    --rule: #e2dbd1;
+    --accent: #7d2436;
+    --code-bg: #efeae2;
+  }
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>I ran the solution latency pass over four Orbit builds from the morning of 29 Sep 2026 IST: the Network and Route Simulation Hub, the Outlook Executive Digest, the Store Operations SOP Hub, and the Store Inventory Manager. Every trace uses the same stage definitions as the earlier four-build comparison, and every workflow&#39;s build time comes from its deployed version history.</p>
+<p>The headline is that the app builder sets the completion time in all four runs. Workflow generation itself is fast this time, from 37 seconds to 74 seconds of tool time, while app generation runs 5m 44s to 8m 41s. Total trace time runs 9m 23s to 14m 13s at a combined cost of $5.76.</p>
+<blockquote>
+<p>All seventeen workflows shipped a working V2 and none took longer than eight minutes. The slowest build was Generate AI Draft Reply at 4m 06s.</p>
+</blockquote>
+<h2>Run summary</h2>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th align="right">Planning</th>
+<th align="right">Workflows</th>
+<th align="right">App</th>
+<th align="right">Total</th>
+<th align="right">Cost</th>
+<th align="right">Output tokens</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477">Network and Route Sim Hub</a></td>
+<td align="right">4m 54s</td>
+<td align="right">43s</td>
+<td align="right">6m 39s</td>
+<td align="right">12m 55s</td>
+<td align="right">$1.70</td>
+<td align="right">62,505</td>
+</tr>
+<tr>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f">Outlook Executive Digest</a></td>
+<td align="right">3m 12s</td>
+<td align="right">52s</td>
+<td align="right">5m 44s</td>
+<td align="right">9m 23s</td>
+<td align="right">$1.83</td>
+<td align="right">50,405</td>
+</tr>
+<tr>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf">Store Ops SOP Hub</a></td>
+<td align="right">5m 04s</td>
+<td align="right">1m 14s</td>
+<td align="right">7m 38s</td>
+<td align="right">13m 04s</td>
+<td align="right">$1.21</td>
+<td align="right">46,532</td>
+</tr>
+<tr>
+<td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6">Store Inventory Manager</a></td>
+<td align="right">5m 10s</td>
+<td align="right">37s</td>
+<td align="right">8m 41s</td>
+<td align="right">14m 13s</td>
+<td align="right">$1.02</td>
+<td align="right">40,117</td>
+</tr>
+</tbody></table>
+<p>Planning runs from the trace start to the earlier of the Generate App and Generate Workflows dispatches. Workflows is the Generate Workflows tool duration and App is the Generate App tool duration. Wrap-up, the tail after both return, is 1m 22s for Network Route and under 30 seconds for the other three. Workflow and app work overlap, so the stage times do not add up to the total.</p>
+<p>The four runs cost <strong>$5.76</strong> and generated <strong>199,559 output tokens</strong>. Outlook is the cheapest per minute but the most expensive overall at $1.83, driven by 8.3M input tokens at a 73.7% cache read rate. Inventory Manager is the longest run at 14m 13s and the cheapest at $1.02, and it is the only run marked partially failed. Network Route carries the longest wrap-up at 1m 22s after its app build returns.</p>
+<h2>Workflow build times</h2>
+<p>Each duration measures first deployed version to last deployed version from DeployedWorkflowDefinition history. All times are IST on 29 Sep 2026. Current node counts come from the live workflow definitions. Every workflow below has two deployed versions and a real implementation, so there are no stub-only failures and nothing built but never deployed.</p>
+<table>
+<thead>
+<tr>
+<th>Solution / workflow</th>
+<th>Versions</th>
+<th>First → last deploy</th>
+<th>Nodes</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. Advance Auto Parts Network and Route Simulation Hub</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>6 workflows, build window 1m 30s</td>
+</tr>
+<tr>
+<td>Get Market Hubs</td>
+<td>2</td>
+<td>04:35:28 → 04:36:34, 1m 06s</td>
+<td>6</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Get Stores by Hub</td>
+<td>2</td>
+<td>04:35:28 → 04:36:33, 1m 04s</td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Get Delivery Routes and Stops</td>
+<td>2</td>
+<td>04:35:28 → 04:36:58, 1m 30s</td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Get Route Travel Matrix</td>
+<td>2</td>
+<td>04:35:28 → 04:36:26, 58s</td>
+<td>5</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Simulate Hub Capacity and Rerouting Impact</td>
+<td>2</td>
+<td>04:35:28 → 04:36:31, 1m 02s</td>
+<td>5</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Get Hub Parts Inventory Health</td>
+<td>2</td>
+<td>04:35:28 → 04:36:43, 1m 15s</td>
+<td>6</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td><strong>2. Outlook Executive Daily Digest and Action Assistant</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>6 workflows, build window 4m 06s</td>
+</tr>
+<tr>
+<td>Sync Outlook Emails</td>
+<td>2</td>
+<td>04:33:55 → 04:37:30, 3m 35s</td>
+<td>14</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Daily Morning Outlook Sync</td>
+<td>2</td>
+<td>04:33:55 → 04:36:19, 2m 24s</td>
+<td>13</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Snooze Email Summary Item</td>
+<td>2</td>
+<td>04:33:55 → 04:34:56, 1m 01s</td>
+<td>6</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Mark Email Summary Item Done</td>
+<td>2</td>
+<td>04:33:55 → 04:35:02, 1m 07s</td>
+<td>6</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Generate AI Draft Reply</td>
+<td>2</td>
+<td>04:33:55 → 04:38:01, 4m 06s</td>
+<td>9</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Create Draft in Outlook</td>
+<td>2</td>
+<td>04:33:55 → 04:35:52, 1m 57s</td>
+<td>4</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td><strong>3. Store Operations AI Assistant and SOP Document Hub</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>3 workflows, build window 2m 52s</td>
+</tr>
+<tr>
+<td>Ask Store Assistant</td>
+<td>2</td>
+<td>04:36:06 → 04:38:12, 2m 06s</td>
+<td>5</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Log Assistant Feedback</td>
+<td>2</td>
+<td>04:36:06 → 04:38:58, 2m 52s</td>
+<td>7</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Sync SharePoint Documents</td>
+<td>2</td>
+<td>04:36:06 → 04:37:52, 1m 46s</td>
+<td>18</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td><strong>4. Advance Auto Parts Store Inventory Manager</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td>2 workflows, build window 2m 35s</td>
+</tr>
+<tr>
+<td>Save Draft Order</td>
+<td>2</td>
+<td>04:35:29 → 04:36:32, 1m 03s</td>
+<td>5</td>
+<td>Deployed</td>
+</tr>
+<tr>
+<td>Refresh Inventory Data</td>
+<td>2</td>
+<td>04:35:29 → 04:38:04, 2m 34s</td>
+<td>6</td>
+<td>Deployed</td>
+</tr>
+</tbody></table>
+<p>Totals: 17 workflows, all 17 with a measurable V1 to V2 duration, all deployed. Zero crossed the eight minute mark, which is the inverse of the earlier six-solution set where 9 of 17 did.</p>
+<h2>What stands out</h2>
+<p>The workflow builds are uniformly quick because the graphs are small and the connectors are already warm. The longest build, Generate AI Draft Reply at 4m 06s, is still shorter than the fastest red row in the earlier set. Node count does not predict time here either: Sync SharePoint Documents has the most nodes at 18 but builds in 1m 46s, while Generate AI Draft Reply has 9 nodes and takes more than twice as long.</p>
+<p>The trace time lives almost entirely in planning plus app generation. Planning takes 3m 12s to 5m 10s across the four runs, and the app tool holds the critical path in every case. Workflow generation returning in under 74 seconds means backend scope is not the lever this round. The lever is the app build and the planning preamble before it.</p>
+<h2>Method and caveats</h2>
+<p>Trace lists come from the GetTraceDetailsNew automation against each case, and timelines come from GetTraceTimeline per selected trace. The selected traces are the long ones in each case: Network Route e_6abaf1a75 (12m 55s, success), Outlook e_6abaf1a82 (9m 23s, success), Store Ops e_6abaf1d32 (13m 04s, success), Inventory e_6abaf1a25 (14m 13s, partially failed). Each case also has a short initial trace of 22 to 30 seconds that is excluded from the stage table but included in the case&#39;s total latency roll-up.</p>
+<p>Stage math: planning is trace start to first build dispatch, backend is the Generate Workflows tool span, frontend is the Generate App tool span, and wrap-up is the tail after both return. Durations are rounded to the nearest second. Costs and token counts are the trace-level reported figures. Output token totals above are the trace output tokens, not a sum over an app builder sub-trace. All four runs used Gemini 3.8 Flash with medium thinking for orchestration and low thinking Prakhar builders inside the workflow windows.</p>
+<p>The named detailed solution latency skill was not installed in this workspace, so this report follows its usual measurement contract directly against the live trace and deployment APIs. No solution asset or workflow was changed during the investigation.</p>
+<p>The next slowdown to chase is planning plus app generation, not workflow builds.</p>
+</article>
+</main>
+</body>
+</html>
