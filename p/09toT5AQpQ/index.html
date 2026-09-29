@@ -53,6 +53,7 @@ th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);whit
 th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:var(--head)}
 th:first-child,td:first-child{text-align:left}
 tr:hover td{background:var(--soft)}
+tr.tot td{background:var(--soft);border-top:1px solid var(--border)}
 td.n{color:var(--muted)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -105,17 +106,7 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <div class="card"><div class="k">LLM calls</div><div class="v">983<span class="u"></span></div></div>
 </div>
 <h2>Stage waterfall</h2>
-<p class="sub">All 10 traces on one time axis, starting at the user message. Planning runs until the main agent dispatches the first build. Backend (workflows) and frontend (app builder) then run <em>side by side</em>, so they are drawn as two half-height bars stacked in the same lane at their real offsets: where they sit on top of each other, both were running. Wrap-up is everything after the last build ends. Same stage split the per-trace reports print on their <code>STAGES</code> line.</p>
-<div class="wf-row">
-<div class="wf-lab" title="trace e_6abae30e29ecab2b071fca2a">t06<br><span>17m 40s</span></div>
-<div class="wf-track">
-<div class="seg plan" style="width:34.310%" title="planning 6m 4s">6m 4s</div>
-<div class="seg be" style="left:34.310%;width:22.530%" title="backend, 2 workflow runs, 3m 59s">3m 59s</div>
-<div class="seg fe" style="left:34.685%;width:60.677%" title="frontend, app builder, 10m 43s">10m 43s</div>
-<div class="seg wr" style="left:95.362%;width:4.638%" title="wrap-up 49s">49s</div>
-</div>
-<div class="wf-cost">$1.86</div>
-</div>
+<p class="sub">Traces in t01 to t10 order, which is the order they were requested, not by duration. All 10 sit on one time axis starting at the user message. Planning runs until the main agent dispatches the first build. Backend (workflows) and frontend (app builder) then run <em>side by side</em>, so they are drawn as two half-height bars stacked in the same lane at their real offsets: where they sit on top of each other, both were running. Wrap-up is everything after the last build ends. Same stage split the per-trace reports print on their <code>STAGES</code> line.</p>
 <div class="wf-row">
 <div class="wf-lab" title="trace e_6abacf0e29ecab2b071f1eb8">t01<br><span>15m 1s</span></div>
 <div class="wf-track">
@@ -137,34 +128,14 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <div class="wf-cost">$1.77</div>
 </div>
 <div class="wf-row">
-<div class="wf-lab" title="trace e_6abaf1a25a1e5546f5e68bd1">t10<br><span>14m 13s</span></div>
+<div class="wf-lab" title="trace e_6abad02529ecab2b071f2a29">t03<br><span>11m 43s</span></div>
 <div class="wf-track">
-<div class="seg plan" style="width:29.328%" title="planning 5m 11s">5m 11s</div>
-<div class="seg be" style="left:29.328%;width:12.043%" title="backend, 2 workflow runs, 2m 8s">2m 8s</div>
-<div class="seg fe" style="left:29.739%;width:48.680%" title="frontend, app builder, 8m 36s">8m 36s</div>
-<div class="seg wr" style="left:78.419%;width:2.034%" title="wrap-up 22s">22s</div>
+<div class="seg plan" style="width:22.820%" title="planning 4m 2s">4m 2s</div>
+<div class="seg be" style="left:22.820%;width:29.134%" title="backend, 5 workflow runs, 5m 9s">5m 9s</div>
+<div class="seg fe" style="left:23.216%;width:40.368%" title="frontend, app builder, 7m 8s">7m 8s</div>
+<div class="seg wr" style="left:63.584%;width:2.765%" title="wrap-up 29s">29s</div>
 </div>
-<div class="wf-cost">$1.50</div>
-</div>
-<div class="wf-row">
-<div class="wf-lab" title="trace e_6abaf1d329ecab2b072012b7">t09<br><span>13m 4s</span></div>
-<div class="wf-track">
-<div class="seg plan" style="width:28.820%" title="planning 5m 5s">5m 5s</div>
-<div class="seg be" style="left:28.820%;width:13.169%" title="backend, 3 workflow runs, 2m 20s">2m 20s</div>
-<div class="seg fe" style="left:29.197%;width:42.754%" title="frontend, app builder, 7m 33s">7m 33s</div>
-<div class="seg wr" style="left:71.952%;width:2.012%" title="wrap-up 21s">21s</div>
-</div>
-<div class="wf-cost">$1.59</div>
-</div>
-<div class="wf-row">
-<div class="wf-lab" title="trace e_6abaf1a75a1e5546f5e68c89">t07<br><span>12m 55s</span></div>
-<div class="wf-track">
-<div class="seg plan" style="width:27.866%" title="planning 4m 55s">4m 55s</div>
-<div class="seg be" style="left:27.866%;width:7.162%" title="backend, 6 workflow runs, 1m 16s">1m 16s</div>
-<div class="seg fe" style="left:28.209%;width:37.167%" title="frontend, app builder, 6m 34s">6m 34s</div>
-<div class="seg wr" style="left:65.376%;width:7.742%" title="wrap-up 1m 22s">1m 22s</div>
-</div>
-<div class="wf-cost">$2.15</div>
+<div class="wf-cost">$1.77</div>
 </div>
 <div class="wf-row">
 <div class="wf-lab" title="trace e_6abae2fa29ecab2b071fc70f">t04<br><span>12m 50s</span></div>
@@ -177,16 +148,6 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <div class="wf-cost">$1.45</div>
 </div>
 <div class="wf-row">
-<div class="wf-lab" title="trace e_6abad02529ecab2b071f2a29">t03<br><span>11m 43s</span></div>
-<div class="wf-track">
-<div class="seg plan" style="width:22.820%" title="planning 4m 2s">4m 2s</div>
-<div class="seg be" style="left:22.820%;width:29.134%" title="backend, 5 workflow runs, 5m 9s">5m 9s</div>
-<div class="seg fe" style="left:23.216%;width:40.368%" title="frontend, app builder, 7m 8s">7m 8s</div>
-<div class="seg wr" style="left:63.584%;width:2.765%" title="wrap-up 29s">29s</div>
-</div>
-<div class="wf-cost">$1.77</div>
-</div>
-<div class="wf-row">
 <div class="wf-lab" title="trace e_6abae3025a1e5546f5e61443">t05<br><span>10m 42s</span></div>
 <div class="wf-track">
 <div class="seg plan" style="width:21.638%" title="planning 3m 49s">3m 49s</div>
@@ -195,6 +156,26 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <div class="seg wr" style="left:57.200%;width:3.380%" title="wrap-up 36s">36s</div>
 </div>
 <div class="wf-cost">$1.17</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abae30e29ecab2b071fca2a">t06<br><span>17m 40s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:34.310%" title="planning 6m 4s">6m 4s</div>
+<div class="seg be" style="left:34.310%;width:22.530%" title="backend, 2 workflow runs, 3m 59s">3m 59s</div>
+<div class="seg fe" style="left:34.685%;width:60.677%" title="frontend, app builder, 10m 43s">10m 43s</div>
+<div class="seg wr" style="left:95.362%;width:4.638%" title="wrap-up 49s">49s</div>
+</div>
+<div class="wf-cost">$1.86</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abaf1a75a1e5546f5e68c89">t07<br><span>12m 55s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:27.866%" title="planning 4m 55s">4m 55s</div>
+<div class="seg be" style="left:27.866%;width:7.162%" title="backend, 6 workflow runs, 1m 16s">1m 16s</div>
+<div class="seg fe" style="left:28.209%;width:37.167%" title="frontend, app builder, 6m 34s">6m 34s</div>
+<div class="seg wr" style="left:65.376%;width:7.742%" title="wrap-up 1m 22s">1m 22s</div>
+</div>
+<div class="wf-cost">$2.15</div>
 </div>
 <div class="wf-row">
 <div class="wf-lab" title="trace e_6abaf1a829ecab2b07200e5a">t08<br><span>9m 23s</span></div>
@@ -206,23 +187,43 @@ ul.find .c{font-size:11px;color:var(--muted)}
 </div>
 <div class="wf-cost">$2.11</div>
 </div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abaf1d329ecab2b072012b7">t09<br><span>13m 4s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:28.820%" title="planning 5m 5s">5m 5s</div>
+<div class="seg be" style="left:28.820%;width:13.169%" title="backend, 3 workflow runs, 2m 20s">2m 20s</div>
+<div class="seg fe" style="left:29.197%;width:42.754%" title="frontend, app builder, 7m 33s">7m 33s</div>
+<div class="seg wr" style="left:71.952%;width:2.012%" title="wrap-up 21s">21s</div>
+</div>
+<div class="wf-cost">$1.59</div>
+</div>
+<div class="wf-row">
+<div class="wf-lab" title="trace e_6abaf1a25a1e5546f5e68bd1">t10<br><span>14m 13s</span></div>
+<div class="wf-track">
+<div class="seg plan" style="width:29.328%" title="planning 5m 11s">5m 11s</div>
+<div class="seg be" style="left:29.328%;width:12.043%" title="backend, 2 workflow runs, 2m 8s">2m 8s</div>
+<div class="seg fe" style="left:29.739%;width:48.680%" title="frontend, app builder, 8m 36s">8m 36s</div>
+<div class="seg wr" style="left:78.419%;width:2.034%" title="wrap-up 22s">22s</div>
+</div>
+<div class="wf-cost">$1.50</div>
+</div>
 <div class="axis"><span>0</span><span>4m 25s</span><span>8m 50s</span><span>13m 15s</span><span>17m 40s</span></div>
 <div class="legend"><span><i style="background:#58a6ff"></i>Planning</span><span><i style="background:#d29922"></i>Backend, workflows (upper half)</span><span><i style="background:#3fb950"></i>Frontend, app builder (lower half)</span><span><i style="background:#a371f7"></i>Wrap-up</span></div>
-<p class="mini">The two build lanes share a row band, so a green bar covering a yellow one is real concurrency, not a stacking artifact. Every trace except t03, t08 and t09 runs the app builder and the workflows at the same time, which is why the total is close to the app builder time plus planning rather than the sum of all three.</p>
+<p class="mini">The two build lanes share a row band, so a green bar sitting over a yellow one is real concurrency. In all 10 traces the workflow run is dispatched first and the app builder follows 3.0 to 4.4 s later, then they overlap for 93% to 99% of the shorter window. That is why the total is close to planning plus the app builder rather than the sum of all three stages.</p>
 <h2>Stage split, time and cost</h2>
-<p class="sub">Cost always adds up: planning + backend + frontend + wrap-up orchestration = total. Backend and frontend times are windows that overlap, so they do not add up to the total time.</p>
+<p class="sub">Traces in t01 to t10 order, with the summed row on top. Cost always adds up: planning + backend + frontend + wrap-up orchestration = total. Backend and frontend times are windows that overlap, so they do not add up to the total time.</p>
 <table><thead><tr><th>Trace</th><th>Total</th><th>Planning</th><th>Backend</th><th>Frontend</th><th>Wrap-up</th><th>Cost</th><th>Plan</th><th>Backend</th><th>Frontend</th><th>Wrap-up</th></tr></thead><tbody>
-<tr style="background:#151b23"><td><b>All 10</b></td><td><b>132m 25s</b></td><td><b>50m 19s</b></td><td><b>25m 38s</b></td><td><b>75m 2s</b></td><td><b>6m 26s</b></td><td><b>$18.17</b></td><td class="n">38%</td><td class="n">19%</td><td class="n">57%</td><td class="n">5%</td></tr>
-<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a> <span class="n">Use Abhishek's Snowflake</span></td><td>17m 40s</td><td>6m 4s</td><td>3m 59s</td><td>10m 43s</td><td>49s</td><td>$1.86</td><td class="n">15%</td><td class="n">31%</td><td class="n">39%</td><td class="n">15%</td></tr>
+<tr class="tot"><td><b>All 10</b></td><td><b>132m 25s</b></td><td><b>50m 19s</b></td><td><b>25m 38s</b></td><td><b>75m 2s</b></td><td><b>6m 26s</b></td><td><b>$18.17</b></td><td class="n">38%</td><td class="n">19%</td><td class="n">57%</td><td class="n">5%</td></tr>
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a> <span class="n">Use Abhishek's Snowflake</span></td><td>15m 1s</td><td>6m 28s</td><td>1m 51s</td><td>7m 30s</td><td>1m</td><td>$2.81</td><td class="n">11%</td><td class="n">37%</td><td class="n">17%</td><td class="n">35%</td></tr>
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2880c38a03adaec10bf?chatId=e_6abae2895a1e5546f5e60be9&timelineId=">t02</a> <span class="n">Use Abhishek's Snowflake</span></td><td>14m 55s</td><td>6m 18s</td><td>1m 7s</td><td>7m 49s</td><td>43s</td><td>$1.77</td><td class="n">17%</td><td class="n">23%</td><td class="n">29%</td><td class="n">30%</td></tr>
-<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a> <span class="n">Build an inventory app usi</span></td><td>14m 13s</td><td>5m 11s</td><td>2m 8s</td><td>8m 36s</td><td>22s</td><td>$1.50</td><td class="n">26%</td><td class="n">21%</td><td class="n">32%</td><td class="n">22%</td></tr>
-<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a> <span class="n">Use Abhishek's Microsoft S</span></td><td>13m 4s</td><td>5m 5s</td><td>2m 20s</td><td>7m 33s</td><td>21s</td><td>$1.59</td><td class="n">20%</td><td class="n">26%</td><td class="n">24%</td><td class="n">30%</td></tr>
-<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a> <span class="n">Use Abhishek's Snowflake</span></td><td>12m 55s</td><td>4m 55s</td><td>1m 16s</td><td>6m 34s</td><td>1m 22s</td><td>$2.15</td><td class="n">18%</td><td class="n">28%</td><td class="n">21%</td><td class="n">33%</td></tr>
-<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a> <span class="n">Use Sindhu's Microsoft Sha</span></td><td>12m 50s</td><td>5m 13s</td><td>2m 6s</td><td>7m 17s</td><td>16s</td><td>$1.45</td><td class="n">18%</td><td class="n">30%</td><td class="n">27%</td><td class="n">25%</td></tr>
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a> <span class="n">Use Microsoft Outlook Conn</span></td><td>11m 43s</td><td>4m 2s</td><td>5m 9s</td><td>7m 8s</td><td>29s</td><td>$1.77</td><td class="n">13%</td><td class="n">46%</td><td class="n">20%</td><td class="n">20%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a> <span class="n">Use Sindhu's Microsoft Sha</span></td><td>12m 50s</td><td>5m 13s</td><td>2m 6s</td><td>7m 17s</td><td>16s</td><td>$1.45</td><td class="n">18%</td><td class="n">30%</td><td class="n">27%</td><td class="n">25%</td></tr>
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a> <span class="n">Use Abhishek's Snowflake</span></td><td>10m 42s</td><td>3m 49s</td><td>1m 46s</td><td>6m 13s</td><td>36s</td><td>$1.17</td><td class="n">12%</td><td class="n">34%</td><td class="n">28%</td><td class="n">26%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a> <span class="n">Use Abhishek's Snowflake</span></td><td>17m 40s</td><td>6m 4s</td><td>3m 59s</td><td>10m 43s</td><td>49s</td><td>$1.86</td><td class="n">15%</td><td class="n">31%</td><td class="n">39%</td><td class="n">15%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a> <span class="n">Use Abhishek's Snowflake</span></td><td>12m 55s</td><td>4m 55s</td><td>1m 16s</td><td>6m 34s</td><td>1m 22s</td><td>$2.15</td><td class="n">18%</td><td class="n">28%</td><td class="n">21%</td><td class="n">33%</td></tr>
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a> <span class="n">Use Microsoft Outlook Conn</span></td><td>9m 23s</td><td>3m 14s</td><td>3m 57s</td><td>5m 39s</td><td>27s</td><td>$2.11</td><td class="n">11%</td><td class="n">50%</td><td class="n">13%</td><td class="n">26%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a> <span class="n">Use Abhishek's Microsoft S</span></td><td>13m 4s</td><td>5m 5s</td><td>2m 20s</td><td>7m 33s</td><td>21s</td><td>$1.59</td><td class="n">20%</td><td class="n">26%</td><td class="n">24%</td><td class="n">30%</td></tr>
+<tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a> <span class="n">Build an inventory app usi</span></td><td>14m 13s</td><td>5m 11s</td><td>2m 8s</td><td>8m 36s</td><td>22s</td><td>$1.50</td><td class="n">26%</td><td class="n">21%</td><td class="n">32%</td><td class="n">22%</td></tr>
 </tbody></table>
 <h2>Per agent run, all traces</h2>
 <p class="sub">Total is first span start to last span end. Actual is the union of LLM and tool spans. Runtime overhead is the LLM-to-tool and tool-to-LLM gaps. Waiting is the rest, and for the main agent that is time spent on sub-agents rather than idle.</p>
@@ -309,19 +310,12 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a></td><td>app-rfzk1</td><td>5m 39s</td><td>1s</td><td>39s</td><td>1m 28s</td><td>2m 37s</td><td>44s</td><td>2s</td><td>5m 12s</td><td>$0.28</td><td class="n">3 uncached calls cost 23% of the app builder</td></tr>
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a></td><td>app-u3xc3</td><td>7m 33s</td><td>1s</td><td>2m</td><td>6s</td><td>4m 33s</td><td>51s</td><td>2s</td><td>7m 3s</td><td>$0.38</td><td class="n">2 uncached calls cost 17% of the app builder</td></tr>
 <tr><td><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a></td><td>app-t0diu</td><td>8m 36s</td><td>1s</td><td>32s</td><td>42s</td><td>4m 34s</td><td>2m 13s</td><td>2s</td><td>8m 20s</td><td>$0.48</td><td class="n">3 uncached calls cost 40% of the app builder</td></tr>
-<tr style="background:#151b23"><td><b>All 10</b></td><td></td><td><b>75m 2s</b></td><td><b>8s</b></td><td><b>9m 35s</b></td><td><b>7m 39s</b></td><td><b>40m 9s</b></td><td><b>13m 10s</b></td><td><b>22s</b></td><td><b>69m 1s</b></td><td><b>$4.39</b></td><td></td></tr>
+<tr class="tot"><td><b>All 10</b></td><td></td><td><b>75m 2s</b></td><td><b>8s</b></td><td><b>9m 35s</b></td><td><b>7m 39s</b></td><td><b>40m 9s</b></td><td><b>13m 10s</b></td><td><b>22s</b></td><td><b>69m 1s</b></td><td><b>$4.39</b></td><td></td></tr>
 </tbody></table>
 <div class="note"><b>Await Plan is 7m 39s of pure waiting, 10% of app builder time.</b> The builder runs a planning agent in parallel and blocks on it, and the block ranges from 0 s to 2m 14s across the 10 traces. In 7 of them it interrupts editing, so the builder has already started writing files when it stops to wait; in the other 3 it blocks up front, right after investigation. Real editing is 40m 9s (54%) and is generation-bound, not waiting.</div>
 <div class="note"><b>Build, commit, finish is the second biggest phase</b> at 13m 10s (18%), and it is three to four <code>Build</code> tool calls per run, which are compiles and deploys, not model calls. It is the one place where wall clock is platform work rather than generation.</div>
 <h2>Findings across all 10</h2>
 <p class="sub">Detectors from <code>analyze.py</code> and <code>appbuilder.py</code>, one line per hit.</p>
-<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a> <span class="n" style="font-weight:400">17m 40s &middot; $1.86</span></h3>
-<ul class="find">
-<li><span class="t">10 LLM calls write 5k+ output tokens (90,764 tokens, 474 s)</span> <span class="r">&mdash; 254 s of these on the critical path; ~203 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
-<li><span class="t">17 uncached calls cost 54% of the turn</span> <span class="r">&mdash; $1.01 of $1.86</span><div class="c">High</div></li>
-<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (187 tok/s median)</span> <span class="r">&mdash; ~14 s over the median rate</span></li>
-<li><span class="t">[app] 6 uncached calls cost 50% of the app builder ($0.37 of $0.73)</span> <span class="r">&mdash; up to $0.28</span></li>
-</ul>
 <h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abace44b0295a4f8f852751?chatId=e_6abace4529ecab2b071f1b89&timelineId=">t01</a> <span class="n" style="font-weight:400">15m 1s &middot; $2.81</span></h3>
 <ul class="find">
 <li><span class="t">8 LLM calls write 5k+ output tokens (83,083 tokens, 439 s)</span> <span class="r">&mdash; 185 s of these on the critical path; ~185 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
@@ -337,37 +331,6 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (141 tok/s median)</span> <span class="r">&mdash; ~22 s over the median rate</span></li>
 <li><span class="t">[app] 4 uncached calls cost 43% of the app builder ($0.22 of $0.51)</span> <span class="r">&mdash; up to $0.17</span></li>
 </ul>
-<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a> <span class="n" style="font-weight:400">14m 13s &middot; $1.50</span></h3>
-<ul class="find">
-<li><span class="t">4 LLM calls write 5k+ output tokens (59,530 tokens, 381 s)</span> <span class="r">&mdash; 239 s of these on the critical path; ~145 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
-<li><span class="t">2 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 60 s on the critical path</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
-<li><span class="t">15 uncached calls cost 56% of the turn</span> <span class="r">&mdash; $0.85 of $1.50</span><div class="c">High</div></li>
-<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (155 tok/s median)</span> <span class="r">&mdash; ~12 s over the median rate</span></li>
-<li><span class="t">[app] 3 uncached calls cost 40% of the app builder ($0.19 of $0.48)</span> <span class="r">&mdash; up to $0.14</span></li>
-<li><span class="t">[app] 2 calls took over 15 s for under 400 output tokens</span> <span class="r">&mdash; 72 s in these calls</span></li>
-</ul>
-<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a> <span class="n" style="font-weight:400">13m 4s &middot; $1.59</span></h3>
-<ul class="find">
-<li><span class="t">6 LLM calls write 5k+ output tokens (52,031 tokens, 286 s)</span> <span class="r">&mdash; 163 s of these on the critical path; ~199 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
-<li><span class="t">2 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 51 s in these calls</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
-<li><span class="t">14 uncached calls cost 52% of the turn</span> <span class="r">&mdash; $0.82 of $1.59</span><div class="c">High</div></li>
-<li><span class="t">[app] 2 calls generated at under 60% of the run's normal speed (195 tok/s median)</span> <span class="r">&mdash; ~97 s over the median rate</span></li>
-<li><span class="t">[app] 2 uncached calls cost 17% of the app builder ($0.07 of $0.38)</span> <span class="r">&mdash; up to $0.05</span></li>
-</ul>
-<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a> <span class="n" style="font-weight:400">12m 55s &middot; $2.15</span></h3>
-<ul class="find">
-<li><span class="t">4 LLM calls write 5k+ output tokens (46,901 tokens, 272 s)</span> <span class="r">&mdash; 150 s of these on the critical path; ~172 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
-<li><span class="t">24 uncached calls cost 64% of the turn</span> <span class="r">&mdash; $1.38 of $2.15</span><div class="c">High</div></li>
-<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (176 tok/s median)</span> <span class="r">&mdash; ~9 s over the median rate</span></li>
-<li><span class="t">[app] 2 uncached calls cost 26% of the app builder ($0.12 of $0.45)</span> <span class="r">&mdash; up to $0.09</span></li>
-</ul>
-<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a> <span class="n" style="font-weight:400">12m 50s &middot; $1.45</span></h3>
-<ul class="find">
-<li><span class="t">5 LLM calls write 5k+ output tokens (55,068 tokens, 329 s)</span> <span class="r">&mdash; 204 s of these on the critical path; ~183 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
-<li><span class="t">13 uncached calls cost 44% of the turn</span> <span class="r">&mdash; $0.64 of $1.45</span><div class="c">High</div></li>
-<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (179 tok/s median)</span> <span class="r">&mdash; ~18 s over the median rate</span></li>
-<li><span class="t">[app] 2 uncached calls cost 17% of the app builder ($0.06 of $0.39)</span> <span class="r">&mdash; up to $0.05</span></li>
-</ul>
 <h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abacfbb57c9da26bfca5254?chatId=e_6abacfbc5a1e5546f5e570e7&timelineId=">t03</a> <span class="n" style="font-weight:400">11m 43s &middot; $1.77</span></h3>
 <ul class="find">
 <li><span class="t">8 LLM calls write 5k+ output tokens (66,886 tokens, 441 s)</span> <span class="r">&mdash; 175 s of these on the critical path; ~170 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
@@ -375,6 +338,13 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <li><span class="t">20 uncached calls cost 45% of the turn</span> <span class="r">&mdash; $0.79 of $1.77</span><div class="c">High</div></li>
 <li><span class="t">[app] 2 file edits failed (index.ts, seed.ts); the calls that wrote them spent ~8 s on it</span> <span class="r">&mdash; ~8 s and ~0.3k of 51.9k output tokens</span></li>
 <li><span class="t">[app] 1 uncached calls cost 6% of the app builder ($0.02 of $0.36)</span> <span class="r">&mdash; up to $0.02</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2dfb0295a4f8f8608c3?chatId=e_6abae2df5a1e5546f5e60f1a&timelineId=">t04</a> <span class="n" style="font-weight:400">12m 50s &middot; $1.45</span></h3>
+<ul class="find">
+<li><span class="t">5 LLM calls write 5k+ output tokens (55,068 tokens, 329 s)</span> <span class="r">&mdash; 204 s of these on the critical path; ~183 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">13 uncached calls cost 44% of the turn</span> <span class="r">&mdash; $0.64 of $1.45</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (179 tok/s median)</span> <span class="r">&mdash; ~18 s over the median rate</span></li>
+<li><span class="t">[app] 2 uncached calls cost 17% of the app builder ($0.06 of $0.39)</span> <span class="r">&mdash; up to $0.05</span></li>
 </ul>
 <h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2e957c9da26bfca5254?chatId=e_6abae2ea29ecab2b071fc39b&timelineId=">t05</a> <span class="n" style="font-weight:400">10m 42s &middot; $1.17</span></h3>
 <ul class="find">
@@ -385,6 +355,20 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <li><span class="t">[app] 4 uncached calls cost 36% of the app builder ($0.12 of $0.32)</span> <span class="r">&mdash; up to $0.09</span></li>
 <li><span class="t">[app] 1 call took over 15 s for under 400 output tokens</span> <span class="r">&mdash; 62 s in these calls</span></li>
 </ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abae2efb0295a4f8f8609e2?chatId=e_6abae2ef29ecab2b071fc450&timelineId=">t06</a> <span class="n" style="font-weight:400">17m 40s &middot; $1.86</span></h3>
+<ul class="find">
+<li><span class="t">10 LLM calls write 5k+ output tokens (90,764 tokens, 474 s)</span> <span class="r">&mdash; 254 s of these on the critical path; ~203 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">17 uncached calls cost 54% of the turn</span> <span class="r">&mdash; $1.01 of $1.86</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (187 tok/s median)</span> <span class="r">&mdash; ~14 s over the median rate</span></li>
+<li><span class="t">[app] 6 uncached calls cost 50% of the app builder ($0.37 of $0.73)</span> <span class="r">&mdash; up to $0.28</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf16e57c9da26bfcbdc64?chatId=e_6abaf1705a1e5546f5e68477&timelineId=">t07</a> <span class="n" style="font-weight:400">12m 55s &middot; $2.15</span></h3>
+<ul class="find">
+<li><span class="t">4 LLM calls write 5k+ output tokens (46,901 tokens, 272 s)</span> <span class="r">&mdash; 150 s of these on the critical path; ~172 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">24 uncached calls cost 64% of the turn</span> <span class="r">&mdash; $1.38 of $2.15</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (176 tok/s median)</span> <span class="r">&mdash; ~9 s over the median rate</span></li>
+<li><span class="t">[app] 2 uncached calls cost 26% of the app builder ($0.12 of $0.45)</span> <span class="r">&mdash; up to $0.09</span></li>
+</ul>
 <h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf178b0295a4f8f86b018?chatId=e_6abaf1785a1e5546f5e6852f&timelineId=">t08</a> <span class="n" style="font-weight:400">9m 23s &middot; $2.11</span></h3>
 <ul class="find">
 <li><span class="t">3 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 37 s on the critical path</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
@@ -394,6 +378,23 @@ ul.find .c{font-size:11px;color:var(--muted)}
 <li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (171 tok/s median)</span> <span class="r">&mdash; ~21 s over the median rate</span></li>
 <li><span class="t">[app] 3 uncached calls cost 23% of the app builder ($0.06 of $0.28)</span> <span class="r">&mdash; up to $0.05</span></li>
 <li><span class="t">[app] 1 call took over 15 s for under 400 output tokens</span> <span class="r">&mdash; 43 s in these calls</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1b457c9da26bfcbdee1?chatId=e_6abaf1b429ecab2b07200fcf&timelineId=">t09</a> <span class="n" style="font-weight:400">13m 4s &middot; $1.59</span></h3>
+<ul class="find">
+<li><span class="t">6 LLM calls write 5k+ output tokens (52,031 tokens, 286 s)</span> <span class="r">&mdash; 163 s of these on the critical path; ~199 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">2 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 51 s in these calls</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">14 uncached calls cost 52% of the turn</span> <span class="r">&mdash; $0.82 of $1.59</span><div class="c">High</div></li>
+<li><span class="t">[app] 2 calls generated at under 60% of the run's normal speed (195 tok/s median)</span> <span class="r">&mdash; ~97 s over the median rate</span></li>
+<li><span class="t">[app] 2 uncached calls cost 17% of the app builder ($0.07 of $0.38)</span> <span class="r">&mdash; up to $0.05</span></li>
+</ul>
+<h3 style="font-size:14px;margin:22px 0 6px"><a href="https://orbit.uat.unifyapps.com/p/0/solutions/e_6abaf1a1b0295a4f8f86b25b?chatId=e_6abaf1a25a1e5546f5e68bb6&timelineId=">t10</a> <span class="n" style="font-weight:400">14m 13s &middot; $1.50</span></h3>
+<ul class="find">
+<li><span class="t">4 LLM calls write 5k+ output tokens (59,530 tokens, 381 s)</span> <span class="r">&mdash; 239 s of these on the critical path; ~145 tok/s</span><div class="c">High on the measurement; savings depend on the fix</div></li>
+<li><span class="t">2 LLM calls took over 15 s for under 300 output tokens</span> <span class="r">&mdash; 60 s on the critical path</span><div class="c">High on the duration; cause not visible (thinking tokens and provider timings are not reported per span)</div></li>
+<li><span class="t">15 uncached calls cost 56% of the turn</span> <span class="r">&mdash; $0.85 of $1.50</span><div class="c">High</div></li>
+<li><span class="t">[app] 1 call generated at under 60% of the run's normal speed (155 tok/s median)</span> <span class="r">&mdash; ~12 s over the median rate</span></li>
+<li><span class="t">[app] 3 uncached calls cost 40% of the app builder ($0.19 of $0.48)</span> <span class="r">&mdash; up to $0.14</span></li>
+<li><span class="t">[app] 2 calls took over 15 s for under 400 output tokens</span> <span class="r">&mdash; 72 s in these calls</span></li>
 </ul>
 <h2>Data checks</h2>
 <p class="sub">The publish gate from <code>verify.py</code>, re-proved against each <code>raw.json</code>. Totals, tool attribution, LLM coverage and duplicate detection all pass on every trace. The only warning anywhere is uncaptured tool <em>results</em>, which limits what can be said about what an agent read, not the time or cost figures.</p>
