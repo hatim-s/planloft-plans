@@ -84,7 +84,7 @@
     h2 { margin: 0; font-size: 19px; line-height: 1.25; letter-spacing: -.015em; }
     .section-head p { margin: 0; color: var(--muted); font-size: 12px; }
     .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; }
-    .summary-table { width: 100%; min-width: 1040px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    .summary-table { width: 100%; min-width: 1120px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
     .summary-table th, .summary-table td { text-align: left; white-space: nowrap; padding: 13px 14px; border-bottom: 1px solid var(--line); }
     .summary-table thead { background: var(--surface-soft); }
     .summary-table th { font-size: 12px; font-weight: 650; }
@@ -93,6 +93,7 @@
     .summary-table td:first-child { font-weight: 650; }
     .summary-table .report-link { display: inline-block; border-radius: 4px; background: color-mix(in srgb, var(--app) 13%, var(--surface)); padding: 3px 8px; text-decoration: none; }
     .summary-table .report-link:hover { text-decoration: underline; }
+    .workflow-gain { display: block; color: var(--success); font-size: 11px; }
     .legend { display: flex; flex-wrap: wrap; gap: 7px 18px; align-items: center; color: var(--muted); font-size: 12px; margin: 0 0 13px; }
     .legend span { display: inline-flex; align-items: center; gap: 6px; }
     .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
@@ -179,20 +180,20 @@
         <table class="summary-table">
           <thead><tr><th scope="col">Run</th><th scope="col">Result</th><th scope="col">Total</th><th scope="col">Planning</th><th scope="col">Backend (workflows)</th><th scope="col">Frontend (app)</th><th scope="col">Wrap-up</th><th scope="col">Report</th></tr></thead>
           <tbody>
-            <tr><td>Store Dashboard</td><td>Success</td><td>15m 1s · $2.81</td><td>6m 28s · $0.31</td><td>1m 51s · $1.05</td><td>7m 30s · $0.48</td><td>1m 0s · $0.97</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/EGA5T71IiB/">View report</a></td></tr>
-            <tr><td>Parts Finder</td><td>Success</td><td>14m 55s · $1.77</td><td>6m 18s · $0.30</td><td>1m 7s · $0.41</td><td>7m 49s · $0.51</td><td>43s · $0.54</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/Nqqt6II65Q/">View report</a></td></tr>
-            <tr><td>Outlook Exec</td><td>Success</td><td>11m 43s · $1.77</td><td>4m 2s · $0.24</td><td>5m 9s · $0.81</td><td>7m 8s · $0.36</td><td>29s · $0.36</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/gu0xF7i9s5/">View report</a></td></tr>
-            <tr><td>Store Ops SOP</td><td>Success</td><td>12m 50s · $1.45</td><td>5m 13s · $0.26</td><td>2m 6s · $0.44</td><td>7m 17s · $0.39</td><td>16s · $0.37</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/K3XnBRlCiP/">View report</a></td></tr>
-            <tr><td>Sales Explorer</td><td>Success</td><td>10m 42s · $1.17</td><td>3m 49s · $0.14</td><td>1m 46s · $0.40</td><td>6m 13s · $0.32</td><td>36s · $0.31</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/7E0uvrV0r6/">View report</a></td></tr>
-            <tr><td>Master Data Sync</td><td>Success</td><td>17m 40s · $1.86</td><td>6m 4s · $0.28</td><td>3m 59s · $0.57</td><td>10m 43s · $0.73</td><td>49s · $0.28</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/sbsnYoVBZw/">View report</a></td></tr>
-            <tr><td>Network Route Sim Hub</td><td>Success</td><td>12m 55s · $1.70</td><td>4m 54s · $0.38</td><td>1m 09s · $0.61</td><td>6m 39s · $0.45</td><td>1m 22s · $0.26</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/7qg8NtG9sA/">View report</a></td></tr>
-            <tr><td>Outlook Digest</td><td>Success</td><td>9m 23s · $1.83</td><td>3m 12s · $0.23</td><td>3m 53s · $1.05</td><td>5m 44s · $0.46</td><td>27s · $0.09</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/Lg7GIcF8LJ/">View report</a></td></tr>
-            <tr><td>Store Ops SOP Hub</td><td>Success</td><td>13m 04s · $1.21</td><td>5m 04s · $0.32</td><td>2m 15s · $0.41</td><td>7m 38s · $0.35</td><td>21s · $0.13</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/gyVsYu61Sa/">View report</a></td></tr>
-            <tr><td>Store Inventory Manager</td><td>Partially failed</td><td>14m 13s · $1.02</td><td>5m 10s · $0.39</td><td>2m 04s · $0.31</td><td>8m 41s · $0.21</td><td>21s · $0.11</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/9OoZuz8Xdb/">View report</a></td></tr>
+            <tr><td>Store Dashboard</td><td>Success</td><td>15m 1s · $2.81</td><td>6m 28s · $0.31</td><td>1m 51s · $1.05<span class="workflow-gain">81.9% faster vs old average</span></td><td>7m 30s · $0.48</td><td>1m 0s · $0.97</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/EGA5T71IiB/">View report</a></td></tr>
+            <tr><td>Parts Finder</td><td>Success</td><td>14m 55s · $1.77</td><td>6m 18s · $0.30</td><td>1m 7s · $0.41<span class="workflow-gain">89.1% faster vs old average</span></td><td>7m 49s · $0.51</td><td>43s · $0.54</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/Nqqt6II65Q/">View report</a></td></tr>
+            <tr><td>Outlook Exec</td><td>Success</td><td>11m 43s · $1.77</td><td>4m 2s · $0.24</td><td>5m 9s · $0.81<span class="workflow-gain">49.6% faster vs old average</span></td><td>7m 8s · $0.36</td><td>29s · $0.36</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/gu0xF7i9s5/">View report</a></td></tr>
+            <tr><td>Store Ops SOP</td><td>Success</td><td>12m 50s · $1.45</td><td>5m 13s · $0.26</td><td>2m 6s · $0.44<span class="workflow-gain">79.5% faster vs old average</span></td><td>7m 17s · $0.39</td><td>16s · $0.37</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/K3XnBRlCiP/">View report</a></td></tr>
+            <tr><td>Sales Explorer</td><td>Success</td><td>10m 42s · $1.17</td><td>3m 49s · $0.14</td><td>1m 46s · $0.40<span class="workflow-gain">82.7% faster vs old average</span></td><td>6m 13s · $0.32</td><td>36s · $0.31</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/7E0uvrV0r6/">View report</a></td></tr>
+            <tr><td>Master Data Sync</td><td>Success</td><td>17m 40s · $1.86</td><td>6m 4s · $0.28</td><td>3m 59s · $0.57<span class="workflow-gain">61.0% faster vs old average</span></td><td>10m 43s · $0.73</td><td>49s · $0.28</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/sbsnYoVBZw/">View report</a></td></tr>
+            <tr><td>Network Route Sim Hub</td><td>Success</td><td>12m 55s · $1.70</td><td>4m 54s · $0.38</td><td>1m 09s · $0.61<span class="workflow-gain">88.7% faster vs old average</span></td><td>6m 39s · $0.45</td><td>1m 22s · $0.26</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/7qg8NtG9sA/">View report</a></td></tr>
+            <tr><td>Outlook Digest</td><td>Success</td><td>9m 23s · $1.83</td><td>3m 12s · $0.23</td><td>3m 53s · $1.05<span class="workflow-gain">62.0% faster vs old average</span></td><td>5m 44s · $0.46</td><td>27s · $0.09</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/Lg7GIcF8LJ/">View report</a></td></tr>
+            <tr><td>Store Ops SOP Hub</td><td>Success</td><td>13m 04s · $1.21</td><td>5m 04s · $0.32</td><td>2m 15s · $0.41<span class="workflow-gain">78.0% faster vs old average</span></td><td>7m 38s · $0.35</td><td>21s · $0.13</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/gyVsYu61Sa/">View report</a></td></tr>
+            <tr><td>Store Inventory Manager</td><td>Partially failed</td><td>14m 13s · $1.02</td><td>5m 10s · $0.39</td><td>2m 04s · $0.31<span class="workflow-gain">79.8% faster vs old average</span></td><td>8m 41s · $0.21</td><td>21s · $0.11</td><td><a class="report-link" href="https://hatim-s.github.io/planloft-plans/p/9OoZuz8Xdb/">View report</a></td></tr>
           </tbody>
         </table>
       </div>
-      <p class="note">Stage costs come from each report's stage split; planning + backend + frontend + wrap-up equals the reported total in every run.</p>
+      <p class="note">Workflow improvement compares each run with the old report's four-run average of 10m 13s: (613.25s − run time) / 613.25s. These are different workloads, so the percentages compare reported durations, not matched runs. Stage costs come from each report's stage split; planning + backend + frontend + wrap-up equals the reported total in every run.</p>
     </section>
 
     <section aria-labelledby="time-title">
