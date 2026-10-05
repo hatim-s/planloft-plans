@@ -20,60 +20,6 @@
       "expiresAt": "2026-11-05T18:42:12.178Z"
     },
     {
-      "id": "gDtetrGk4Z",
-      "project": "github.com/unify-apps/uacode",
-      "slug": "uacode-onprem-security-audit",
-      "title": "UACode on-prem security audit and hardening plan",
-      "kind": "plan",
-      "createdAt": "2026-09-04T14:04:34.374Z",
-      "expiresAt": "2026-10-04T14:04:34.374Z"
-    },
-    {
-      "id": "3U65kprCEu",
-      "project": "path-71ea78",
-      "slug": "www-critical-onprem-security-audit",
-      "title": "WWW critical on-prem security audit",
-      "kind": "plan",
-      "createdAt": "2026-09-04T14:06:41.460Z",
-      "expiresAt": "2026-10-04T14:06:41.460Z"
-    },
-    {
-      "id": "Tzy0qOlyxj",
-      "project": "path-69d373",
-      "slug": "harness-atlas",
-      "title": "Agent setup by model",
-      "kind": "report",
-      "createdAt": "2026-09-04T14:23:46.639Z",
-      "expiresAt": "2026-10-04T14:23:46.639Z"
-    },
-    {
-      "id": "Hxb2gFKvoO",
-      "project": "github.com/unify-apps/ua-builder-no-prompt",
-      "slug": "text-to-workflow-hld",
-      "title": "Text to Workflow — system map",
-      "kind": "plan",
-      "createdAt": "2026-09-04T15:58:40.309Z",
-      "expiresAt": "2026-10-04T16:17:55.914Z"
-    },
-    {
-      "id": "zmYf4Zjx0u",
-      "project": "github.com/unify-apps/ua-builder-no-prompt",
-      "slug": "text-to-workflow-skills-tools",
-      "title": "Text to Workflow — skills and tools",
-      "kind": "plan",
-      "createdAt": "2026-09-04T15:59:10.632Z",
-      "expiresAt": "2026-10-04T16:18:12.453Z"
-    },
-    {
-      "id": "UgzUBgvlSq",
-      "project": "github.com/unify-apps/ua-builder-no-prompt",
-      "slug": "openai-workflow-agent-rewrite-audit",
-      "title": "Why the OpenAI workflow-agent rewrite was necessary",
-      "kind": "plan",
-      "createdAt": "2026-09-04T21:02:11.635Z",
-      "expiresAt": "2026-10-04T21:02:11.635Z"
-    },
-    {
       "id": "o7SVKftblC",
       "project": "github.com/unify-apps/www",
       "slug": "pi-paired-test-evaluation-sep8",
