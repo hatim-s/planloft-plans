@@ -378,6 +378,15 @@
       "kind": "plan",
       "createdAt": "2026-09-28T22:36:11.731Z",
       "expiresAt": "2026-10-29T12:39:12.245Z"
+    },
+    {
+      "id": "oUNmJp1lXy",
+      "project": "github.com/unify-apps/www",
+      "slug": "uac-dsl-guide",
+      "title": "UAC DSL guide",
+      "kind": "note",
+      "createdAt": "2026-10-08T10:13:02.339Z",
+      "expiresAt": "2026-11-07T10:13:02.339Z"
     }
   ]
 }
