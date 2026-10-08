@@ -287,8 +287,8 @@ summary { cursor: pointer; font-family: var(--sans); font-weight: 700; }
   padding: 1rem 1.15rem;
   max-height: calc(10lh + 2rem + 2px);
   overflow: auto;
-  overscroll-behavior: contain;
 }
+.dsl-code-example:not([data-lines]) pre { max-height: none; overflow-y: hidden; }
 .dsl-code-example details { margin-top: 0.5rem; padding: 0; border: 0; background: transparent; }
 table { display: block; max-width: 100%; overflow-x: auto; }
 :not(pre) > code { overflow-wrap: anywhere; }
@@ -368,7 +368,7 @@ table { display: block; max-width: 100%; overflow-x: auto; }
 <p>Read this guide to author an automation in TypeScript and inspect the workflow JSON it produces. The standalone project contains the compiler, DSL declarations, operation metadata, examples and this reference. Platform validation has been removed from the extraction.</p>
 <h2>Start with one compilation</h2>
 <p>Unzip <code>uac-dsl-20261008.zip</code>, open the project directory, and run:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 1, 3 lines"><code class="language-sh">npm ci
+<div class="dsl-code-example"><pre><code class="language-sh">npm ci
 npm run build
 npm run compile -- examples/callable-return.ts output.json
 </code></pre></div>
@@ -397,7 +397,7 @@ npm run compile -- examples/callable-return.ts output.json
 <p>The compiler reads the TypeScript AST. It does not execute the flow, resolve its imports, call connectors, or run scripts embedded in operation inputs. Only the syntax described here has a compilation rule. A file can be valid TypeScript and still use syntax this compiler cannot translate.</p>
 <p>This extraction includes compact connector metadata for compilation, with platform validation, server, and deployment integration removed. It accepts operation names and input payloads without checking their existence or platform schemas. Emitted JSON describes a workflow; compilation does not prove that a platform can run it.</p>
 <h2>Compile a flow</h2>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 2, 9 lines"><code class="language-ts">import { compile, compileFile, Catalogue } from &quot;uac-dsl-compiler&quot;;
+<div class="dsl-code-example"><pre><code class="language-ts">import { compile, compileFile, Catalogue } from &quot;uac-dsl-compiler&quot;;
 
 const { program, workflow } = compile(source, { fileName: &quot;flow.ts&quot; });
 const fromDisk = compileFile(&quot;examples/callable-return.ts&quot;);
@@ -409,7 +409,7 @@ const withoutMetadata = compile(source, { catalogue: false });
 </code></pre></div>
 <p><code>compile</code> accepts source text. <code>compileFile</code> reads a file; <code>build</code> is its alias. Both return <code>{ program, workflow }</code>. <code>program</code> is the nested IR, and <code>workflow</code> is the emitted JSON. The <code>fileName</code> option affects source-text diagnostics. File compilation uses the path it reads.</p>
 <p>The CLI accepts an input path and optional output path:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 3, 3 lines"><code class="language-sh">npm ci
+<div class="dsl-code-example"><pre><code class="language-sh">npm ci
 npm run build
 node dist/cli.js examples/callable-return.ts compiled/callable-return.json
 </code></pre></div>
@@ -541,13 +541,13 @@ export default automation(
 <p>Each config becomes the trigger node&#39;s <code>inputs</code>. <code>callable</code> usually carries <code>setup</code> and <code>result</code>. <code>callableApi</code> usually carries <code>endpointType</code>, <code>request</code>, and a <code>response</code> array. These are open payloads, not schemas enforced by this compiler.</p>
 <p><code>appEvent</code> requires literal string names. Its fourth argument can contain <code>connectionId</code>, which becomes <code>context.connectionId</code>. For <code>appEvent</code>, connectors <code>callables</code>, <code>schedule</code>, and <code>webhooks</code> retain their corresponding trigger types. Other connectors use <code>EVENT</code>.</p>
 <p>Inside a trigger config, <code>TRIGGER.field</code> refers to that trigger&#39;s own output. It resolves to the same node as the automation body&#39;s <code>t.field</code> parameter. This is useful for <code>triggerInputCondition</code>.</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 5, 4 lines"><code class="language-ts">trigger: callable({
+<div class="dsl-code-example"><pre><code class="language-ts">trigger: callable({
   setup: { type: &quot;object&quot;, properties: { mode: { type: &quot;string&quot; } } },
   triggerInputCondition: eq(TRIGGER.mode, &quot;active&quot;),
 })
 </code></pre></div>
 <h2>Operations</h2>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 6, 5 lines"><code class="language-ts">const result = op(&quot;connector&quot;, &quot;resource&quot;, { input: t.value }, {
+<div class="dsl-code-example"><pre><code class="language-ts">const result = op(&quot;connector&quot;, &quot;resource&quot;, { input: t.value }, {
   label: &quot;Fetch the value&quot;,
   connectionId: &quot;connection-id&quot;,
   onError: &quot;CONTINUE&quot;,
@@ -630,10 +630,10 @@ export default automation(
 </tbody></table>
 <p><code>retryConfig</code> supports <code>enabled</code>, <code>count</code>, <code>initialDelay</code>, <code>maxDelay</code>, <code>backOffFactor</code>, <code>captureRetries</code>, and <code>filter</code>. Delay fields are milliseconds. <code>rateLimitConfig</code> supports <code>enabled</code>, <code>threshold</code>, <code>duration</code>, <code>unit</code>, <code>waitForNextWindow</code>, <code>key</code>, <code>incrementParameter</code>, and <code>filter</code>. Unit declarations include <code>NANOSECONDS</code>, <code>MICROSECONDS</code>, <code>MILLISECONDS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>HOURS</code>, and <code>DAYS</code>. Both configurations pass through without range or schema checks.</p>
 <p>For an entire object-valued payload, pass a reference directly:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 7, 1 lines"><code class="language-ts">op(&quot;connector&quot;, &quot;resource&quot;, prepared.result.payload);
+<div class="dsl-code-example"><pre><code class="language-ts">op(&quot;connector&quot;, &quot;resource&quot;, prepared.result.payload);
 </code></pre></div>
 <p>The compiler emits an identity wrapper rather than inserting the pill string directly:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 8, 1 lines"><code class="language-json">{ &quot;ua:type&quot;: &quot;identity&quot;, &quot;source&quot;: &quot;{{ &lt;prepared-id&gt;.outputs.result.payload }}&quot; }
+<div class="dsl-code-example"><pre><code class="language-json">{ &quot;ua:type&quot;: &quot;identity&quot;, &quot;source&quot;: &quot;{{ &lt;prepared-id&gt;.outputs.result.payload }}&quot; }
 </code></pre></div>
 <p>It does not merge connector defaults into this payload. <code>SELF</code> substitution runs for leaf operations; do not depend on it in scope or connector-backed loop inputs. Object spreads have no compilation rule.</p>
 <h2>Values and output references</h2>
@@ -676,7 +676,7 @@ export default automation(
 </tbody></table>
 <p>Computed property indices such as <code>step.items[i]</code> are unsupported. Numeric indexing is a literal path, not JavaScript evaluation. String bracket access produces a dotted platform path, so a string key containing a dot does not receive special path escaping.</p>
 <p>Template placeholders can read node outputs or runtime roots, or interpolate an earlier module constant. They cannot perform arithmetic, call helpers, or contain a nested template literal. A plain string beginning with <code>=</code> is a platform formula. To refer to outputs inside a formula, interpolate references in a template:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 9, 1 lines"><code class="language-ts">{ value: `=SUM(${t.count},1)` }
+<div class="dsl-code-example"><pre><code class="language-ts">{ value: `=SUM(${t.count},1)` }
 </code></pre></div>
 <p>The compiler writes the formula text and pills. It does not evaluate the formula or check which functions the platform supports.</p>
 <h3>Runtime roots</h3>
@@ -712,9 +712,9 @@ export default automation(
 <p>These roots remain open references. For example, <code>RUN.userId</code> emits <code>{{ __RUN__.outputs.userId }}</code>. <code>USER</code> denotes the execution user; this compiler does not determine who that user is.</p>
 <h3>Mapped arrays</h3>
 <p>A concise <code>.map</code> on an output reference creates a platform mapped-array value:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 10, 1 lines"><code class="language-ts">{ records: t.rows.map(row =&gt; ({ id: row.id, title: row.title })) }
+<div class="dsl-code-example"><pre><code class="language-ts">{ records: t.rows.map(row =&gt; ({ id: row.id, title: row.title })) }
 </code></pre></div>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 11, 10 lines"><code class="language-json">{
+<div class="dsl-code-example"><pre><code class="language-json">{
   &quot;records&quot;: {
     &quot;ua:type&quot;: &quot;mappedArray&quot;,
     &quot;source&quot;: &quot;{{ &lt;trigger-id&gt;.outputs.rows }}&quot;,
@@ -775,10 +775,10 @@ export default automation(
 <td>property</td>
 </tr>
 </tbody></table>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 12, 1 lines"><code class="language-ts">and(eq(t.status, &quot;OPEN&quot;), or(gt(t.score, 80), exists(t.owner)))
+<div class="dsl-code-example"><pre><code class="language-ts">and(eq(t.status, &quot;OPEN&quot;), or(gt(t.score, 80), exists(t.owner)))
 </code></pre></div>
 <p>A leaf <code>eq(t.status, &quot;OPEN&quot;)</code> becomes:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 13, 4 lines"><code class="language-json">{
+<div class="dsl-code-example"><pre><code class="language-json">{
   &quot;property&quot;: &quot;{{ &lt;trigger-id&gt;.outputs.status }}&quot;,
   &quot;filter&quot;: { &quot;operator&quot;: &quot;EQUAL&quot;, &quot;value&quot;: &quot;OPEN&quot; }
 }
@@ -788,7 +788,7 @@ export default automation(
 <p>Use a runtime list output with <code>isIn</code> or <code>notIn</code> when targeting the platform. Literal list input can be emitted by this validation-free extraction, but compilation does not establish its runtime membership behavior.</p>
 <h2>Control flow</h2>
 <h3>If and else</h3>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 14, 5 lines"><code class="language-ts">if (gt(t.score, 80)) {
+<div class="dsl-code-example"><pre><code class="language-ts">if (gt(t.score, 80)) {
   op(&quot;connector&quot;, &quot;priority_action&quot;, { id: t.id });
 } else {
   op(&quot;connector&quot;, &quot;normal_action&quot;, { id: t.id });
@@ -796,19 +796,19 @@ export default automation(
 </code></pre></div>
 <p>This emits an <code>IF_ELSE</code> node using <code>if_else</code> / <code>if_else_condition</code>. Its <code>inputs</code> is the condition group itself. Its yes edge is <code>if</code> / <code>yes</code>; its no edge is <code>next</code> / <code>no</code>. The compiler wires both arms to the next statement. <code>else if</code> compiles as a nested <code>IF_ELSE</code> in the else arm.</p>
 <h3>For each</h3>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 15, 3 lines"><code class="language-ts">for (const row of t.rows) {
+<div class="dsl-code-example"><pre><code class="language-ts">for (const row of t.rows) {
   op(&quot;connector&quot;, &quot;consume&quot;, { id: row.id });
 }
 </code></pre></div>
 <p>A standard list loop emits <code>LOOP</code>, context <code>loop</code> / <code>loop_for_each</code>, and <code>inputs.listSource</code>. The loop variable reads the loop node&#39;s <code>outputs.item</code>.</p>
 <p><code>each(source, options)</code> adds inputs to the loop:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 16, 3 lines"><code class="language-ts">for (const batch of each(t.rows, { repeatMode: &quot;BATCH&quot;, batchSize: 50 })) {
+<div class="dsl-code-example"><pre><code class="language-ts">for (const batch of each(t.rows, { repeatMode: &quot;BATCH&quot;, batchSize: 50 })) {
   op(&quot;connector&quot;, &quot;consume_batch&quot;, { records: batch });
 }
 </code></pre></div>
 <p>Options such as <code>repeatMode</code>, <code>batchSize</code>, and <code>captureIterations</code> are carried as inputs. They are not checked against a connector schema. Batch syntax alone does not specify parallel execution.</p>
 <p>A named loop lets its body and later steps read the loop node&#39;s own outputs:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 17, 5 lines"><code class="language-ts">const page = each(t.rows);
+<div class="dsl-code-example"><pre><code class="language-ts">const page = each(t.rows);
 for (const row of page) {
   breakIf(eq(page.isLast, &quot;true&quot;));
 }
@@ -816,25 +816,25 @@ return { lastIndex: page.index };
 </code></pre></div>
 <p>Declared loops become nodes when consumed by <code>for...of</code> or <code>while</code>. A named loop can expose <code>index</code>, <code>isFirst</code>, <code>isLast</code>, <code>size</code>, or connector-specific outputs; actual fields come from the execution platform.</p>
 <p>For connector-backed iteration, the operation is the loop node:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 18, 3 lines"><code class="language-ts">for (const row of each(op(&quot;connector&quot;, &quot;stream_rows&quot;, { source: t.file }))) {
+<div class="dsl-code-example"><pre><code class="language-ts">for (const row of each(op(&quot;connector&quot;, &quot;stream_rows&quot;, { source: t.file }))) {
   op(&quot;connector&quot;, &quot;consume&quot;, { item: row });
 }
 </code></pre></div>
 <p>The node has type <code>LOOP</code> and the supplied operation&#39;s context and inputs. The operation&#39;s connection, retry, rate-limit, error-policy, and skip settings are retained. The outer <code>each</code> options merge into its inputs.</p>
 <h3>Counted loops</h3>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 19, 3 lines"><code class="language-ts">for (let i = 0; i &lt; 10; i++) {
+<div class="dsl-code-example"><pre><code class="language-ts">for (let i = 0; i &lt; 10; i++) {
   op(&quot;connector&quot;, &quot;consume_index&quot;, { index: i });
 }
 </code></pre></div>
 <p>This emits <code>loop</code> / <code>loop_for</code> with <code>{ start: 0, limit: 10, step: 1, captureIterations: false }</code>. The index variable reads <code>outputs.index</code>.</p>
 <p>The ordinary <code>for</code> parser reads numeric start and right-hand limit values. It always emits step <code>1</code> and does not interpret the actual comparison or increment operator. Use the shown canonical form. Use <code>range</code> for explicit step or capture settings:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 20, 3 lines"><code class="language-ts">for (const i of range({ start: 0, limit: 10, step: 2, captureIterations: true })) {
+<div class="dsl-code-example"><pre><code class="language-ts">for (const i of range({ start: 0, limit: 10, step: 2, captureIterations: true })) {
   op(&quot;connector&quot;, &quot;consume_index&quot;, { index: i });
 }
 </code></pre></div>
 <p><code>range</code> works directly in the <code>for...of</code> head. A local declaration initialized with <code>range(...)</code> is unsupported.</p>
 <h3>While loops</h3>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 21, 3 lines"><code class="language-ts">while (gt(t.remaining, 0)) {
+<div class="dsl-code-example"><pre><code class="language-ts">while (gt(t.remaining, 0)) {
   op(&quot;connector&quot;, &quot;advance&quot;, {});
 }
 </code></pre></div>
@@ -842,7 +842,7 @@ return { lastIndex: page.index };
 <h3>Break and continue</h3>
 <p><code>break</code> and <code>continue</code> emit <code>BREAK</code> and <code>CONTINUE</code> nodes with the target loop ID in <code>inputs.loop</code>. <code>breakIf(condition)</code> and <code>continueIf(condition)</code> add <code>inputs.conditions</code>. They require an enclosing loop.</p>
 <p>A labelled loop can be targeted from an inner loop:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 22, 5 lines"><code class="language-ts">outer: for (const row of t.rows) {
+<div class="dsl-code-example"><pre><code class="language-ts">outer: for (const row of t.rows) {
   for (const cell of row.cells) {
     continueIf(missing(cell.value), &quot;outer&quot;);
   }
@@ -850,7 +850,7 @@ return { lastIndex: page.index };
 </code></pre></div>
 <p>Keywords <code>break outer</code> and <code>continue outer</code> use the same label mapping. In a branch or scope callback, use <code>breakLoop(&quot;outer&quot;)</code> and <code>continueLoop(&quot;outer&quot;)</code> when no condition is needed. These helpers avoid TypeScript&#39;s restriction on keyword jumps across function boundaries. Without a label argument, the helpers target the innermost loop.</p>
 <h3>Multi-way branches</h3>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 23, 10 lines"><code class="language-ts">branch([
+<div class="dsl-code-example"><pre><code class="language-ts">branch([
   { id: &quot;priority&quot;, name: &quot;Priority&quot;, when: gt(t.score, 80), then: () =&gt; {
     op(&quot;connector&quot;, &quot;priority_action&quot;, { id: t.id });
   } },
@@ -864,7 +864,7 @@ return { lastIndex: page.index };
 <p><code>branch</code> emits <code>BRANCH</code> with arm definitions in <code>inputs.branches</code>. Arms support only <code>id</code>, <code>name</code>, <code>when</code>, and <code>then</code>; <code>then</code> must have a block body. The intended platform behavior is to run the first matching arm. An arm can omit <code>when</code>. IDs default to positional strings <code>&quot;1&quot;</code>, <code>&quot;2&quot;</code>, and so on.</p>
 <p>For each nonempty non-default arm, the compiler inserts a <code>BRANCH_CONDITION</code> node with ID <code>&lt;branch-id&gt;@&lt;arm-id&gt;</code>, unless the body already starts with that node type. Empty arms connect directly to the continuation. A <code>default</code> arm is always present in the emitted arm list; the optional second callback supplies its body. Branch edges have type <code>branch</code> and the arm ID as their name.</p>
 <h3>Scopes and error handling</h3>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 24, 9 lines"><code class="language-ts">try {
+<div class="dsl-code-example"><pre><code class="language-ts">try {
   scope(op(&quot;connector&quot;, &quot;scope_operation&quot;, {}), () =&gt; {
     op(&quot;connector&quot;, &quot;first_action&quot;, {});
     op(&quot;connector&quot;, &quot;second_action&quot;, {});
@@ -918,7 +918,7 @@ return { lastIndex: page.index };
 <p><code>let output; output = op(...)</code> reserves a node binding for a later operation. This allows references across nested blocks. If the same declared name receives multiple operation assignments, the compiler creates a workflow variable using <code>variable_by_unifyapps_create_variables</code>; each assignment emits an operation and a <code>variable_by_unifyapps_update_variables</code> node. Later reads use the shared variable rather than one branch&#39;s node.</p>
 <p>This is a compilation rule for operation results, not general mutable JavaScript. Assignments from literals, arbitrary expressions, or property writes are unsupported. For explicit mutation of scalar/list state, call the platform&#39;s variable operations through <code>op</code>.</p>
 <p>Labels can name an <code>if</code>, <code>branch</code>, or <code>scope</code> so later steps can reference that statement&#39;s outputs. For valid TypeScript, reserve the binding first:</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 25, 5 lines"><code class="language-ts">let decision;
+<div class="dsl-code-example"><pre><code class="language-ts">let decision;
 decision: if (exists(t.owner)) {
   op(&quot;connector&quot;, &quot;consume&quot;, { owner: t.owner });
 }
@@ -927,7 +927,7 @@ return { decision: decision.result };
 <p>A reserved named loop can also be initialized later with <code>page = each(...)</code>. Mixed assignments that attempt to rebind one node ID to incompatible node/loop forms have no compilation rule.</p>
 <h2>Raw values and lower-level nodes</h2>
 <p><code>raw(value)</code> reads a plain JSON value without recognizing condition helpers or mapped-array structures. References and template placeholders inside the value still resolve. Literal pill strings remain strings. Raw objects require explicit <code>key: value</code> properties; shorthand properties and spreads are unsupported there.</p>
-<div class="dsl-code-example"><pre tabindex="0" aria-label="Code example 26, 3 lines"><code class="language-ts">op(&quot;connector&quot;, &quot;resource&quot;, {
+<div class="dsl-code-example"><pre><code class="language-ts">op(&quot;connector&quot;, &quot;resource&quot;, {
   unusual: raw({ &quot;ua:type&quot;: &quot;custom&quot;, source: t.payload }),
 });
 </code></pre></div>
