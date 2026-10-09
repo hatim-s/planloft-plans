@@ -165,7 +165,8 @@ section{margin-top:88px}
 .lc-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;align-items:flex-start}
 .lc-name{font:650 14px var(--mono);color:var(--mint);display:flex;gap:10px;align-items:baseline}
 .lc-name span{font:13px var(--sans);color:var(--faint)}
-.lc h3{font:700 21px/1.25 var(--sans);letter-spacing:-.015em;margin:4px 0 8px}
+.lc h3{font:700 21px/1.25 var(--sans);letter-spacing:-.015em;margin:4px 0 6px}
+.pitch{font-size:17px;line-height:1.45;color:var(--ink);max-width:60ch;margin:0 0 12px}
 .lc-cmd{display:inline-block;color:var(--muted);background:var(--sunk);padding:5px 9px;border-radius:7px;word-break:break-word}
 .ctrl{display:flex;gap:6px;align-items:center}
 .ctrl button{font:650 13px var(--sans);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:7px 11px;cursor:pointer;min-width:36px}
@@ -180,11 +181,11 @@ section{margin-top:88px}
 .io>div{background:var(--sunk);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--muted)}
 .io b{display:block;font:650 11px var(--sans);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
 .io .i b{color:var(--slate)}.io .o b{color:var(--mint)}.io .s b{color:var(--peach)}
-.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
 .facts div{font-size:14px;color:var(--muted);line-height:1.45}
 .facts b{display:block;font:650 11px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--faint);margin-bottom:4px}
 .facts .n{font:700 22px/1.1 var(--sans);letter-spacing:-.02em;color:var(--ink)}
-@media (max-width:760px){.facts{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.facts{grid-template-columns:1fr 1fr}}
 .quote{margin-top:16px;font-size:16px;line-height:1.5;color:var(--ink);border-left:3px solid var(--peach);padding-left:14px}
 .quote span{display:block;font-size:12px;color:var(--faint);margin-top:4px}
 .lc-fig{margin:4px 0 0}
@@ -206,9 +207,8 @@ section{margin-top:88px}
 .dg .ed.k-c .ah{fill:var(--slate);opacity:.5}
 .dg .ed.k-c.done .ln,.dg .ed.k-c.done .ah{opacity:1}
 .dg .ed.k-p.done .ln,.dg .ed.k-p.done .ah{opacity:.9}
-.dg .ed.on .ln{opacity:1;animation:dash .7s linear infinite}.dg .ed.on .ah{opacity:1}
+.dg .ed.on .ln{opacity:1}.dg .ed.on .ah{opacity:1}
 .dg .ed.used .ln,.dg .ed.used .ah{opacity:.9}
-@keyframes dash{to{stroke-dashoffset:-22}}
 .dg .el{font-size:11.5px;font-weight:600;fill:var(--faint);paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
 .dg .el.k-r,.dg .el.k-p{fill:var(--peach)}
 .dg .el.k-c{fill:var(--slate)}
@@ -233,14 +233,14 @@ section{margin-top:88px}
 .dg .chip text{font-size:11px;font-weight:600;fill:var(--faint);transition:fill .3s}
 .dg .chip.on rect{fill:var(--mint)}
 .dg .chip.on text{fill:var(--surface)}
-.dg .rung rect{fill:var(--sunk);transition:fill .35s;transition-delay:calc(var(--i) * 260ms)}
+.dg .rung rect{fill:var(--sunk);transition:fill .35s;transition-delay:calc(var(--i) * 120ms)}
 .dg .rung text{font-size:11.5px;font-weight:600;fill:var(--muted)}
-.dg .rung circle{fill:var(--surface);stroke:var(--line2);stroke-width:1.5;transition:fill .35s,stroke .35s;transition-delay:calc(var(--i) * 260ms)}
+.dg .rung circle{fill:var(--surface);stroke:var(--line2);stroke-width:1.5;transition:fill .35s,stroke .35s;transition-delay:calc(var(--i) * 120ms)}
 .dg .rung.ok rect{fill:var(--mint-soft)}.dg .rung.ok circle{fill:var(--mint);stroke:var(--mint)}
 .dg .rung.bad rect{fill:var(--peach-soft)}.dg .rung.bad circle{fill:var(--peach);stroke:var(--peach)}
 .dg .rung.bad text{fill:var(--peach)}
 .dg .abl{font-size:11px;font-weight:600;fill:var(--faint)}
-.dg .abd{fill:var(--sunk);stroke:var(--line2);stroke-width:1.25;transition:fill .3s,stroke .3s;transition-delay:calc(var(--i) * 120ms)}
+.dg .abd{fill:var(--sunk);stroke:var(--line2);stroke-width:1.25;transition:fill .3s,stroke .3s;transition-delay:calc(var(--i) * 50ms)}
 .dg .scored .abd.p{fill:var(--mint);stroke:var(--mint)}
 .dg .scored .abd.f{fill:var(--peach-soft);stroke:var(--peach)}
 
@@ -258,13 +258,19 @@ section{margin-top:88px}
 .dg .nd.hit .sh{stroke:var(--amber);stroke-width:2.5;fill:var(--amber-soft)}
 .dg .nd.on .sh{stroke:var(--mint);stroke-width:2.5;fill:var(--mint-soft);stroke-dasharray:0}
 .dg .tok .core{fill:var(--peach)}
-.dg .tok .halo{fill:var(--peach);opacity:.22;animation:pulse 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.dg .tok2{fill:var(--peach)}
-@keyframes pulse{50%{transform:scale(1.35);opacity:.1}}
+.dg .tok .halo{fill:var(--peach);opacity:.18}
+.dg .tok{transition:opacity .25s}
+.dg .tok2{fill:var(--peach);transition:opacity .25s}
 .dg.snap *{transition:none!important}
 
 /* status */
 .ship{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.skills{margin-top:14px;padding:6px 22px;display:grid;grid-template-columns:repeat(3,1fr);column-gap:28px}
+@media (max-width:900px){.skills{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.skills{grid-template-columns:1fr}}
+.sk{padding:13px 0;border-bottom:1px solid var(--line)}
+.sk code{font:600 12.5px var(--mono);color:var(--mint);overflow-wrap:anywhere}
+.sk p{margin:3px 0 0;font-size:14px;color:var(--muted);line-height:1.4}
 @media (max-width:760px){.ship{grid-template-columns:1fr 1fr}}
 .ship .card{padding:18px}
 .ship .v{font:700 34px/1 var(--sans);letter-spacing:-.02em}
@@ -276,7 +282,6 @@ section{margin-top:88px}
 .prlist .no{font:650 13px var(--mono);color:var(--slate)}
 .prlist .st{margin-left:auto;font:650 11px var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--amber);white-space:nowrap}
 
-.skill-inventory{margin-top:14px}.skill-inventory summary{cursor:pointer;font-weight:650}.skill-item{padding:12px 0;border-top:1px solid var(--line)}.skill-item code{overflow-wrap:anywhere;color:var(--mint)}.skill-item p{margin:4px 0 0;font-size:14px;color:var(--muted)}
 
 /* caveats */
 .cav{padding:22px 26px}
@@ -297,24 +302,24 @@ footer code{font-size:12px;word-break:break-all}
 <header>
   <div class="eyebrow">Workflow Agent maintenance · October 9, 2026</div>
   <h1>Eight jobs kept coming back in Workflow Agent work. Each is now a written loop.</h1>
-  <p class="lead">We reread every recovered conversation from August 19 to October 8. 142 of 421 conversations are linked to one of eight recurring jobs, and those conversations hold half of all recovered prompts. Of 186 Workflow Agent PRs from the same window, 161 match a loop that can now prepare them.</p>
+  <p class="lead">From August 19 to October 8, 142 of 421 conversations kept returning to the same eight jobs. Each job is now one command.</p>
   <div class="meta">
     <span><span class="tag obs">Observed</span> counted from transcripts or GitHub</span>
-    <span><span class="tag cls">Classified</span> counted, with a rule or reviewer choosing the bucket</span>
-    <span><span class="tag est">Estimate</span> modelled from the base case below</span>
+    <span><span class="tag cls">Classified</span> counted by rule or reviewer</span>
+    <span><span class="tag est">Estimate</span> base-case model</span>
   </div>
 </header>
 
 <div class="kpis">
-  <div class="card kpi"><span class="tag obs" style="align-self:flex-start">Observed</span><div class="v num">421</div><div class="l">conversations recovered and reread, 23,113 messages over 51 days</div></div>
-  <div class="card kpi"><span class="tag cls" style="align-self:flex-start">Classified</span><div class="v num">50.7<small>%</small></div><div class="l">of recovered prompts (1,564 of 3,083) sit in the 142 loop-linked conversations</div></div>
-  <div class="card kpi"><span class="tag cls" style="align-self:flex-start">Classified</span><div class="v num">161<small>of 186</small></div><div class="l">sampled Workflow Agent PRs match a loop that can prepare them</div></div>
-  <div class="card kpi est"><span class="tag est" style="align-self:flex-start">Estimate</span><div class="v num">~9.4<small>h / week</small></div><div class="l">returned to the team in the base case, range 4.0 to 21.6</div></div>
+  <div class="card kpi"><span class="tag obs" style="align-self:flex-start">Observed</span><div class="v num">421</div><div class="l">conversations reread, 23,113 messages</div></div>
+  <div class="card kpi"><span class="tag cls" style="align-self:flex-start">Classified</span><div class="v num">50.7<small>%</small></div><div class="l">of all prompts (1,564 of 3,083) sit in loop-linked conversations</div></div>
+  <div class="card kpi"><span class="tag cls" style="align-self:flex-start">Classified</span><div class="v num">161<small>of 186</small></div><div class="l">Workflow Agent PRs fit a loop</div></div>
+  <div class="card kpi est"><span class="tag est" style="align-self:flex-start">Estimate</span><div class="v num">~9.4<small>h / week</small></div><div class="l">returned in the base case, range 4.0 to 21.6</div></div>
 </div>
 
 <section id="loops">
   <h2>The eight loops</h2>
-  <p class="sec-lead">Each loop is a written procedure with a proof gate between stages. The diagrams differ because the jobs differ. A diagnosis fans out over hypotheses, a check-in crosses the platform and GitHub, and an evaluation dispatches a batch of cases. When a gate fails, work goes back to the stage that owns the fault, within a fixed retry budget.</p>
+  <p class="sec-lead">Each loop runs stage by stage behind proof gates. A failed gate sends work back to the stage that owns it.</p>
   <nav class="loop-nav" id="loop-nav" aria-label="Jump to a loop"></nav>
   <div class="shapes" aria-hidden="true">
     <span><svg viewBox="0 0 34 22"><rect x="1" y="3" width="32" height="16" rx="5" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.5"/></svg>stage</span>
@@ -324,13 +329,24 @@ footer code{font-size:12px;word-break:break-all}
     <span><svg viewBox="0 0 34 22"><path d="M2 11 H32" stroke="var(--peach)" stroke-width="2" stroke-dasharray="5 4" fill="none"/></svg>repair path</span>
     <span><svg viewBox="0 0 34 22"><rect x="1" y="3" width="32" height="16" rx="8" fill="none" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="3 3"/></svg>early exit</span>
   </div>
-  <p class="demo">Each diagram plays one pass of the procedure, including one repair. Step through it, or let it play.</p>
   <div id="loop-cards"></div>
 </section>
 
+<section id="skills">
+  <h2>Nineteen skills behind the loops</h2>
+  <p class="sec-lead">18 specialist skills plus one router. Every loop composes them.</p>
+  <div class="ship">
+    <div class="card"><div class="v">8</div><div class="l">loop commands</div></div>
+    <div class="card"><div class="v">28</div><div class="l">modes</div></div>
+    <div class="card"><div class="v">19</div><div class="l">developer skills</div></div>
+    <div class="card"><div class="v">162</div><div class="l">real questions kept as acceptance checks</div></div>
+  </div>
+  <div class="card skills"><div class="sk"><code>workflow-agent</code><p>Routes each job to the right loop.</p></div><div class="sk"><code>workflow-agent-asset-parity</code><p>Keeps source, saved and deployed assets identical.</p></div><div class="sk"><code>workflow-agent-atlas-maintenance</code><p>Triages Atlas issues and proves each symptom.</p></div><div class="sk"><code>workflow-agent-brief-corpus</code><p>Turns briefs into a frozen evaluation corpus.</p></div><div class="sk"><code>workflow-agent-change-review</code><p>Reviews PRs against real base, head and callers.</p></div><div class="sk"><code>workflow-agent-changeset-import</code><p>Verifies exports and packages main and UAT PRs.</p></div><div class="sk"><code>workflow-agent-cohort-comparison</code><p>Compares models and revisions on matched prompts.</p></div><div class="sk"><code>workflow-agent-compile-cleanup</code><p>Traces compile and save failures to their source.</p></div><div class="sk"><code>workflow-agent-connector-discovery</code><p>Resolves connector actions, schemas and connections.</p></div><div class="sk"><code>workflow-agent-cross-layer-rca</code><p>Finds the first causal break across every layer.</p></div><div class="sk"><code>workflow-agent-evaluation-run</code><p>Launches a corpus behind one pilot and bounded batches.</p></div><div class="sk"><code>workflow-agent-example-corpus</code><p>Curates retrievable DSL examples and patterns.</p></div><div class="sk"><code>workflow-agent-mcp-contracts</code><p>Keeps MCP tool schemas and full results exact.</p></div><div class="sk"><code>workflow-agent-outcome-proof</code><p>Proves a build did what the brief asked.</p></div><div class="sk"><code>workflow-agent-run-supervision</code><p>Watches dispatched runs to a terminal result.</p></div><div class="sk"><code>workflow-agent-skill-effectiveness</code><p>Proves a prompt change reached the agent and worked.</p></div><div class="sk"><code>workflow-agent-skill-maintenance</code><p>Edits prompts and skills in their owning source.</p></div><div class="sk"><code>workflow-agent-trace-accounting</code><p>Accounts for every call, token and cost in a trace.</p></div><div class="sk"><code>workflow-agent-trace-debugger</code><p>Rebuilds a case journey and its stop cause.</p></div></div>
+</section>
+
 <section id="evidence">
-  <h2>The evidence: 694 sessions down to 142 loop-linked conversations</h2>
-  <p class="sec-lead">Raw history double-counts, because one conversation can sit in two tools. After deduplication there are 421 conversations. Ten independent reviewer agents read every message. A conversation counts as loop-linked when either audit cited it as evidence for one of the eight loops.</p>
+  <h2>694 sessions, 142 loop-linked conversations</h2>
+  <p class="sec-lead">Deduplicated across Codex, T3 and Claude, then read in full by ten reviewer agents.</p>
   <div class="card funnel">
     <div class="frow"><div class="fl"><b>694 sessions</b>Codex 292 · T3 392 · Claude 10</div><div class="track"><div class="bar c1" style="--w:100%">694</div></div></div>
     <div class="frow"><div class="fl"><b>421 conversations</b>after removing duplicates and subagent runs</div><div class="track"><div class="bar c2" style="--w:60.7%">421</div></div></div>
@@ -339,41 +355,41 @@ footer code{font-size:12px;word-break:break-all}
     <div class="fnote">
       <span><b>3,083</b> recovered prompts in all 421</span>
       <span><b>1,564</b> of them in loop-linked conversations</span>
-      <span><b>88</b> recommendations from 10 reviewers: 49 skills and 39 loops, deduplicated into 29 skill and 22 loop candidates</span>
-      <span><b>162</b> exact historical questions kept as acceptance checks</span>
+      <span><b>88</b> recommendations from 10 reviewers</span>
+      <span><b>162</b> questions kept as acceptance checks</span>
     </div>
   </div>
 </section>
 
 <section id="cases">
-  <h2>Before and after, in three jobs</h2>
-  <p class="sec-lead">Before: the request as it was typed, and how much conversation that job took across the window. After: the documented loop command and where it stops for a person.</p>
+  <h2>Before and after</h2>
+  <p class="sec-lead">The request as it was typed, and the command that replaces it.</p>
   <div class="cases">
     <div class="card case">
       <div class="half before"><div class="k">Before · check-in</div><q>sync the assets from sync-t2w-sep19 dir in the code, and raise PRs for main and uat.</q><div class="src">user prompt, Sep 19</div><div class="stat"><b>40</b> loop-linked conversations · <b>451</b> prompts</div></div>
-      <div class="half after"><div class="k">After</div><code>/workflow-agent check-in &lt;config&gt; --mode check-in</code><ul><li>exports, applies and diffs through the platform</li><li>prepares main and UAT PRs and reads them back</li><li>stops at the reviewed-diff approval; never merges</li></ul></div>
+      <div class="half after"><div class="k">After</div><code>/workflow-agent check-in &lt;config&gt; --mode check-in</code><ul><li>exports and diffs through the platform</li><li>opens main and UAT PRs, read back</li></ul></div>
     </div>
     <div class="card case">
       <div class="half before"><div class="k">Before · evaluate</div><q>compare this corpus of 6 vs the previous same prompt corpus of 6</q><div class="src">user prompt, Sep 28</div><div class="stat"><b>44</b> loop-linked conversations · <b>813</b> prompts</div></div>
-      <div class="half after"><div class="k">After</div><code>/workflow-agent evaluate &lt;corpus&gt; --mode compare</code><ul><li>compares only matched inputs and configuration</li><li>separates saved, deployed, TEST, RUN and semantic results</li><li>a new run needs explicit spend and time ceilings</li></ul></div>
+      <div class="half after"><div class="k">After</div><code>/workflow-agent evaluate &lt;corpus&gt; --mode compare</code><ul><li>compares matched inputs only</li><li>verdict per case, with cost</li></ul></div>
     </div>
     <div class="card case">
       <div class="half before"><div class="k">Before · pr</div><q>fix the tests on this PR, push and check til the PR merges.</q><div class="src">user prompt, Sep 22</div><div class="stat"><b>7</b> loop-linked conversations · <b>70</b> prompts</div></div>
-      <div class="half after"><div class="k">After</div><code>/workflow-agent pr &lt;pr-url&gt; --mode ci</code><ul><li>reproduces the failed check at its recorded head</li><li>fixes at the owning layer, rereviews the new head</li><li>an unchanged failing check stops it; merge stays with a person</li></ul></div>
+      <div class="half after"><div class="k">After</div><code>/workflow-agent pr &lt;pr-url&gt; --mode ci</code><ul><li>reproduces and fixes the failed check</li><li>green CI on the reviewed head</li></ul></div>
     </div>
   </div>
 </section>
 
 <section id="scorecard">
-  <h2>Where the work went, loop by loop</h2>
-  <p class="sec-lead">Evaluation runs and asset check-ins are the two biggest jobs by conversation volume. A conversation can be linked to two loops, so conversation and prompt columns add up to more than 142 and 1,564.</p>
+  <h2>Where the work went</h2>
+  <p class="sec-lead">Evaluation runs and asset check-ins carry the most work.</p>
   <div class="card score" id="score" role="table" aria-label="Per-loop scorecard"></div>
-  <p class="foot">Supported PRs: solid is a conversation reference, faded is a title rule. Hours use the base case below.</p>
+  <p class="foot">PRs: solid by conversation, faded by title. Hours use the base case.</p>
 </section>
 
 <section id="prs">
   <h2>161 of 186 Workflow Agent PRs fit a loop</h2>
-  <p class="sec-lead">We reviewed 186 Workflow Agent PRs opened between August 19 and October 8: 113 in www and 73 in uacode. 161 of them match one of the eight loops, which means a loop can now prepare, check and read back that kind of PR.</p>
+  <p class="sec-lead">Across www (113) and uacode (73). A loop now prepares, checks and reads back each kind.</p>
   <div class="split">
     <div class="card pad">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
@@ -384,31 +400,31 @@ footer code{font-size:12px;word-break:break-all}
         <div class="a" style="--w:65.2%">105</div><div class="b" style="--w:34.8%">56</div>
       </div>
       <div class="legend">
-        <div><i style="background:var(--peach)"></i><b>105</b> the PR URL or branch appears in a loop-linked conversation</div>
-        <div><i style="background:var(--peach);opacity:.6"></i><b>56</b> the title matches an explicit rule for one loop</div>
+        <div><i style="background:var(--peach)"></i><b>105</b> linked from a loop conversation</div>
+        <div><i style="background:var(--peach);opacity:.6"></i><b>56</b> matched by title rule</div>
       </div>
       <p class="foot" style="margin-top:14px">125 of the 161 are merged.</p>
     </div>
     <div class="card pad">
       <h3>Check-in is the largest PR bucket</h3>
-      <p style="color:var(--muted);font-size:15px">Asset syncs to main and UAT were the most common Workflow Agent PR in the window. The check-in loop now runs that job end to end through the platform.</p>
+      <p style="color:var(--muted);font-size:15px">Asset syncs were the most common PR. The check-in loop now runs them end to end.</p>
       <div class="groups">
         <div><div class="n num">71</div><div class="t">check-in PRs</div></div>
         <div><div class="n num">58</div><div class="t">of them merged</div></div>
       </div>
-      <div class="note">The loop exports, diffs and opens both the main and UAT PRs, then reads them back. A person approves the reviewed diff.</div>
+      <div class="note">Export, diff, main and UAT PRs. A person approves the diff.</div>
     </div>
   </div>
 </section>
 
 <section id="time">
   <h2>Time returned</h2>
-  <p class="sec-lead">The model starts from one observed count, the follow-up prompts in loop-linked conversations, and sizes the hours a loop hands back.</p>
+  <p class="sec-lead">One observed count, sized with base-case settings.</p>
   <div class="assume">
-    <div class="card"><span class="tag obs">Observed</span><div class="n num">1,179</div><p>prompts beyond the first three in each loop-linked conversation</p></div>
-    <div class="card"><span class="tag est">Assumption</span><div class="n">eligible</div><p>every prompt after the third is one a loop can absorb</p></div>
-    <div class="card"><span class="tag est">Assumption</span><div class="n num">70%</div><p>share a loop captures, base case</p></div>
-    <div class="card"><span class="tag est">Assumption</span><div class="n num">5 min</div><p>of human attention per prompt, base case</p></div>
+    <div class="card"><span class="tag obs">Observed</span><div class="n num">1,179</div><p>follow-up prompts in loop-linked conversations</p></div>
+    <div class="card"><span class="tag est">Assumption</span><div class="n">eligible</div><p>each follow-up is one a loop absorbs</p></div>
+    <div class="card"><span class="tag est">Assumption</span><div class="n num">70%</div><p>captured by a loop</p></div>
+    <div class="card"><span class="tag est">Assumption</span><div class="n num">5 min</div><p>of attention per prompt</p></div>
   </div>
   <div class="formula">
     hours = <u>1,179 eligible prompts</u> × <em>capture share</em> × <em>minutes per prompt</em> ÷ 60<br>
@@ -419,24 +435,13 @@ footer code{font-size:12px;word-break:break-all}
     <div class="card sc base"><div class="h">Base case</div><div class="v num">9.4 <small>h / week</small></div><div class="s"><b>70%</b> captured · <b>5 min</b> each<br>68.8 h over 51 days</div></div>
     <div class="card sc"><div class="h">High</div><div class="v num">21.6 <small>h / week</small></div><div class="s"><b>100%</b> captured · <b>8 min</b> each<br>157.2 h over 51 days</div></div>
   </div>
-  <p class="foot">At the same workload the base case is about 123 hours a quarter, with a range of 53 to 280.</p>
+  <p class="foot">About 123 hours a quarter in the base case.</p>
 </section>
 
-<section id="status">
-  <h2>What is built</h2>
-  <p class="sec-lead">Eight loop commands under <code>/workflow-agent</code>, built from nineteen developer skills. Each command starts from one line and ends with a receipt.</p>
-  <div class="ship">
-    <div class="card"><div class="v">8</div><div class="l">loop commands under <code>/workflow-agent</code></div></div>
-    <div class="card"><div class="v">28</div><div class="l">modes, from read-only audits to authorized repair</div></div>
-    <div class="card"><div class="v">19</div><div class="l">developer skills: 18 specialists plus one router</div></div>
-    <div class="card"><div class="v">162</div><div class="l">real historical questions kept as acceptance checks</div></div>
-  </div>
-  <details class="card pad skill-inventory"><summary>19 skills composing the loops</summary><p class="foot">18 specialist skills plus the workflow-agent router. Written in .agents/skills and linked into Claude.</p><div class="skill-item"><code>workflow-agent</code><p>Route Workflow Agent developer jobs to bounded loops for trace/RCA, Atlas fixes, PR ownership, guidance repair, evaluation, asset check-in, tool contracts and compiler/workflow changes.</p></div><div class="skill-item"><code>workflow-agent-asset-parity</code><p>Reconcile Workflow Agent canonical sources with generated, saved, and deployed assets, including skill identity/membership and requested promotion readback.</p></div><div class="skill-item"><code>workflow-agent-atlas-maintenance</code><p>Read assigned Atlas issues, triage the queue, prove ticket symptoms, and prepare or perform explicitly requested RCA/follow-up writeback with readback.</p></div><div class="skill-item"><code>workflow-agent-brief-corpus</code><p>Turn Workflow Agent briefs or historical prompts into a stable evaluation corpus with exact provenance, normalization, tenant preflight, and semantic acceptance.</p></div><div class="skill-item"><code>workflow-agent-change-review</code><p>Review Workflow Agent PR intent, necessity, invariant ownership, caller effects, and security evidence against exact base/head and demonstrated behavior.</p></div><div class="skill-item"><code>workflow-agent-changeset-import</code><p>Verify a Workflow Agent ChangeSet export before repository import, and package requested main/UAT PRs with exact artifact, scope, base/head, and readiness receipts.</p></div><div class="skill-item"><code>workflow-agent-cohort-comparison</code><p>Compare Workflow Agent models, tenants, reasoning modes, or revisions using exact matched prompts, observed configuration, independent outcomes, and reconciled metrics.</p></div><div class="skill-item"><code>workflow-agent-compile-cleanup</code><p>Investigate or change Workflow Agent compilation, graph lowering, cleanup validation, or compile/save failures with source-to-boundary evidence.</p></div><div class="skill-item"><code>workflow-agent-connector-discovery</code><p>Resolve Workflow Agent connector actions and tenant/dynamic schemas, then classify connection readiness and design only consequential clarification questions.</p></div><div class="skill-item"><code>workflow-agent-cross-layer-rca</code><p>Find the first causal break across Workflow Agent brief, prompt/skills, tool binding/schema, transport/auth, compiler/cleanup, and deployed runtime.</p></div><div class="skill-item"><code>workflow-agent-evaluation-run</code><p>Launch a frozen Workflow Agent corpus against a named configuration using one verified pilot, bounded cohorts, and durable case/session/artifact receipts.</p></div><div class="skill-item"><code>workflow-agent-example-corpus</code><p>Curate Workflow Agent retrievable DSL examples, connector/pagination patterns, keywords, semantic correctness, and MCP query results.</p></div><div class="skill-item"><code>workflow-agent-mcp-contracts</code><p>Maintain Automation Code MCP exposure, input/output/error schemas, caller authority, script/full-result delivery, and deterministic read-only connector guards.</p></div><div class="skill-item"><code>workflow-agent-outcome-proof</code><p>Independently verify a Workflow Agent completion or evaluation claim against the brief, saved/deployed graph, tests, execution, and business outputs.</p></div><div class="skill-item"><code>workflow-agent-run-supervision</code><p>Monitor already-dispatched Workflow Agent or child runs, handle authorized clarification/recovery, and relay terminal artifacts for every case.</p></div><div class="skill-item"><code>workflow-agent-skill-effectiveness</code><p>Verify whether a Workflow Agent prompt or runtime skill change was assigned, delivered, retained, and used to improve the intended generated behavior.</p></div><div class="skill-item"><code>workflow-agent-skill-maintenance</code><p>Audit and edit Workflow Agent prompts, runtime skill inventory, tool descriptions, and embedded examples in their canonical owning source.</p></div><div class="skill-item"><code>workflow-agent-trace-accounting</code><p>Verify trace exports and reports account for every model/tool call, payload, task assignment, token/cost total, and parent versus worker metric.</p></div><div class="skill-item"><code>workflow-agent-trace-debugger</code><p>Diagnose a Workflow Agent trace or case: reconstruct the exact task journey, call attribution, stop cause, and parent-child result handoff.</p></div></details>
-</section>
 
 
 <footer>
-  Sources: the October 9 audit (<code>coverage.json</code>, <code>opportunity-catalog.json</code>), the independent second round (<code>ranked-catalog.json</code>, its session files and question bank), the loop catalog on <code>feat/workflow-agent-loops-2</code>, and <code>gh</code> PR history for unify-apps/www and unify-apps/uacode, pulled October 9. Every number on this page traces to a source file, query or stated base case in the audit receipt.
+  Sources: both October 9 audits, the loop catalog on <code>feat/workflow-agent-loops-2</code>, and <code>gh</code> history for unify-apps/www and unify-apps/uacode.
 </footer>
 </main>
 
@@ -446,7 +451,7 @@ const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // prs = supported candidates (conv = conversation reference, title = title rule); figures from receipt-data/numbers-r2.json
 const LOOPS = [
- {id:'evaluate', title:'Run, supervise and compare a corpus', job:'Corpus runs and comparisons',
+ {id:'evaluate', pitch:'Changed a model, prompt or skill? One command gives you a pilot-gated verdict on every case, with cost, side by side.', title:'Run, supervise and compare a corpus', job:'Corpus runs and comparisons',
   cmd:'/workflow-agent evaluate <corpus> --mode run --agent <id> --host <origin>',
   stages:['Freeze corpus','Pin config','Pilot run','Dispatch batch','Semantic proof','Accounting','Rerun or compare'],
   fail:2, back:1, why:'pilot failed on binding, back to config',
@@ -456,7 +461,7 @@ const LOOPS = [
   modes:7, budget:'Stops after 3 identical startup failures. One targeted rerun.',
   conv:44, prompts:813, prs:9, prConv:9, prTitle:0, merged:7, est:40.1,
   quote:'compare this corpus of 6 vs the previous same prompt corpus of 6', qdate:'Sep 28'},
- {id:'check-in', title:'Check in assets through the platform', job:'Asset sync, main and UAT PRs',
+ {id:'check-in', pitch:'Assets drifted from the platform? One command exports, diffs and opens both main and UAT PRs, ready to approve.', title:'Check in assets through the platform', job:'Asset sync, main and UAT PRs',
   cmd:'/workflow-agent check-in <config> --mode check-in --driver-root <www>',
   stages:['Preflight','Sync assets','Trigger export','Await export','Download','Apply and review','Main PR','UAT PR'],
   fail:5, back:1, why:'diff did not match the export, back to sync',
@@ -466,7 +471,7 @@ const LOOPS = [
   modes:4, budget:'Two read retries. One reconcile repair. Never retries an export blind.',
   conv:40, prompts:451, prs:71, prConv:48, prTitle:23, merged:58, est:20.1,
   quote:'sync the assets from sync-t2w-sep19 dir in the code, and raise PRs for main and uat.', qdate:'Sep 19'},
- {id:'diagnose', title:'Diagnose a case or trace', job:'Trace reading and root cause',
+ {id:'diagnose', pitch:'A build failed and nobody knows why? Hand over the trace and get the first causal break, every claim backed by evidence.', title:'Diagnose a case or trace', job:'Trace reading and root cause',
   cmd:'/workflow-agent diagnose <case-or-export> --symptom "..."',
   stages:['Freeze export','Reconcile calls','Find first break','Check claims','Report'],
   fail:3, back:2, why:'claim lacked raw evidence, back to the break',
@@ -476,7 +481,7 @@ const LOOPS = [
   modes:2, budget:'Two retrieval retries. Two diagnostic passes.',
   conv:26, prompts:226, prs:2, prConv:2, prTitle:0, merged:1, est:8.9,
   quote:'separate out the LLM calls and tool calls per agent session', qdate:'Sep 22'},
- {id:'develop', title:'Develop compiler, examples or saved workflows', job:'Compiler, validator, examples',
+ {id:'develop', pitch:'Compiler bug, missing example or broken saved workflow? Go from a failing sample to a tested, read-back fix in one run.', title:'Develop compiler, examples or saved workflows', job:'Compiler, validator, examples',
   cmd:'/workflow-agent develop <source> --mode compiler --expected <graph>',
   stages:['Freeze baseline','Smallest repro','Implement','Local proof','Save and TEST','Deploy and RUN','Final review'],
   fail:3, back:2, why:'local proof failed, back to the implementation',
@@ -486,7 +491,7 @@ const LOOPS = [
   modes:4, budget:'Two repair cycles.',
   conv:15, prompts:266, prs:28, prConv:13, prTitle:15, merged:23, est:13.0,
   quote:'Find out the bugs in our code logic - which takes the LLM code and converts it into JSON and fix them.', qdate:'Oct 7'},
- {id:'contracts', title:'Align tools and prove their contracts', job:'MCP tool contracts',
+ {id:'contracts', pitch:'A tool returns the wrong shape or drops data? Get the broken layer fixed and proven on both caller paths.', title:'Align tools and prove their contracts', job:'MCP tool contracts',
   cmd:'/workflow-agent contracts <tool-or-pr> --mode repair',
   stages:['Pin tool route','Define fixtures','Reproduce','Repair owner','Verify callers','Target check'],
   fail:4, back:3, why:'script caller lost fields, back to the owner',
@@ -496,7 +501,7 @@ const LOOPS = [
   modes:3, budget:'Two repair cycles.',
   conv:14, prompts:171, prs:11, prConv:4, prTitle:7, merged:11, est:8.1,
   quote:'try hitting the same server and try to reproduce the issue', qdate:'Sep 14'},
- {id:'atlas', title:'Atlas issue to verified fix', job:'Issue queue to PR',
+ {id:'atlas', pitch:'Atlas queue piling up? Turn each issue into a proven fix and a ready PR, one after another.', title:'Atlas issue to verified fix', job:'Issue queue to PR',
   cmd:'/workflow-agent atlas <issue-url> --mode fix --repo <checkout>',
   stages:['Read issues','Reproduce case','Minimal fix','Same-case proof','Review and PR'],
   fail:3, back:2, why:'same case still failed, back to the fix',
@@ -506,7 +511,7 @@ const LOOPS = [
   modes:3, budget:'Checkpoint at 30 minutes per issue. Two repair cycles.',
   conv:8, prompts:77, prs:1, prConv:1, prTitle:0, merged:1, est:3.1,
   quote:'collect all the issues for workflows and spawn a Codex session', qdate:'Sep 30'},
- {id:'pr', title:'Own a Workflow Agent PR', job:'Review, fix, CI, stacks',
+ {id:'pr', pitch:'PR red or stack tangled? Get findings, fixes and green CI on the reviewed head, ready for a person to merge.', title:'Own a Workflow Agent PR', job:'Review, fix, CI, stacks',
   cmd:'/workflow-agent pr <pr-url> --mode repair --stack <prs>',
   stages:['Pin base and head','Review','Fix at owner','Repair stack','Rereview and CI'],
   fail:4, back:2, why:'CI still red, back to the owning fix',
@@ -516,7 +521,7 @@ const LOOPS = [
   modes:3, budget:'Two fix and push cycles. One stack adjustment.',
   conv:7, prompts:70, prs:26, prConv:26, prTitle:0, merged:14, est:3.0,
   quote:'fix the tests on this PR, push and check til the PR merges.', qdate:'Sep 22'},
- {id:'guidance', title:'Correct agent guidance and verify behavior', job:'Prompt and skill repair',
+ {id:'guidance', pitch:'Agent ignoring an instruction? Get the fix placed where it lands, proven delivered and scored on real cases.', title:'Correct agent guidance and verify behavior', job:'Prompt and skill repair',
   cmd:'/workflow-agent guidance <case> --behavior "..." --corpus <manifest>',
   stages:['Rule out others','Pick owner file','Edit and regenerate','Verify delivery','Score frozen cases','Keep or revert'],
   fail:3, back:1, why:'skill never reached the agent, back to placement',
@@ -573,7 +578,7 @@ const GRAPHS = {
    {via:'e1',say:'Stage 1: freeze the export and record its hash. Missing ranges are named, not skipped.'},
    {via:'e2',say:'Stage 2: reconcile every call and payload to its task. Unassigned calls stay visible.'},
    {via:'e3',say:'Stage 3: rebuild the journey, task by task.'},
-   {fan:['f1','f2','f3','f4','f5'],say:'One hypothesis per layer: brief, binding, guidance, compiler and runtime.'},
+   {fan:['f1','f2','f3','f4','f5'],main:3,say:'One hypothesis per layer: brief, binding, guidance, compiler and runtime.'},
    {mark:{h1:'out',h2:'out',h3:'out',h5:'out',h4:'hit'},say:'Four are ruled out with evidence. The compiler is the first causal break.'},
    {join:['g4'],at:'s4',say:'Stage 4: check every claim against the brief and the saved and deployed definition.'},
    {fail:'s4',say:'Gate fails: one claim does not cite a raw span.'},
@@ -770,7 +775,7 @@ const GRAPHS = {
    {via:'e1',say:'Stage 2: sync the canonical prompt and skill set, then read back the saved and deployed hashes.'},
    {via:'e2',say:'Stage 3: trigger one export and record one execution ID. Never a blind second trigger.'},
    {via:'e3',say:'Stage 4: wait for the final output, not an intermediate URL.'},
-   {poll:'p1',n:2,say:'Polling has a deadline. A terminal failed export stops the loop.'},
+   {poll:'p1',n:1,say:'Polling has a deadline. A terminal failed export stops the loop.'},
    {via:'e4',say:'Stage 5: download, hash the archive and check every path for containment.'},
    {via:'e5',fail:'p6',say:'Stage 6: the prepared diff does not match the export.'},
    {rep:'r1',at:'s2',stale:['s3','s4','s5','p6'],say:'Repair: back to sync, the stage that owns the content. One reconcile repair is allowed.'},
@@ -1056,8 +1061,8 @@ function buildDiagram(svg, spec, layoutKey){
     });
   }
   spec.nodes.forEach(def=>drawNode(nodeLayer, nodes[def.id]));
-  const token = el('g', {class:'tok', style:'display:none'}, tokenLayer);
-  el('circle', {r:13, class:'halo'}, token); el('circle', {r:6.5, class:'core'}, token);
+  const token = el('g', {class:'tok', style:'opacity:0'}, tokenLayer);
+  el('circle', {r:11, class:'halo'}, token); el('circle', {r:6.5, class:'core'}, token);
   const pad = 16;
   svg.setAttribute('viewBox', `${bounds.x0 - pad} ${bounds.y0 - pad} ${bounds.x1 - bounds.x0 + pad*2} ${bounds.y1 - bounds.y0 + pad*2}`);
   svg.style.maxWidth = Math.round(bounds.x1 - bounds.x0 + pad*2) + 'px';
@@ -1076,6 +1081,7 @@ function makeLoopCard(loop, spec, host){
       <div>
         <div class="lc-name">${loop.id}<span>${stageCount} stages, ${loop.modes} modes</span></div>
         <h3>${esc(loop.title)}</h3>
+        <p class="pitch">${esc(loop.pitch)}</p>
         <code class="lc-cmd">${esc(loop.cmd)}</code>
       </div>
       <div class="ctrl">
@@ -1088,16 +1094,10 @@ function makeLoopCard(loop, spec, host){
     </div>
     <div class="status" aria-live="off"><span class="dot"></span><span class="st"></span></div>
     <div class="lc-fig"><svg class="dg" role="img" aria-label="${esc(loop.title)}: ${esc(spec.nodes.filter(node=>node.n).map(node=>node.t.replace(/\n/g,' ')).join(', '))}"></svg></div>
-    <div class="io">
-      <div class="i"><b>Input</b>${esc(loop.input)}</div>
-      <div class="o"><b>Output</b>${esc(loop.output)}</div>
-      <div class="s"><b>Where a person decides</b>${esc(loop.stop)}</div>
-    </div>
     <div class="facts">
-      <div><b>Evidence</b><span class="n">${loop.conv}</span> loop-linked conversations, ${loop.prompts} prompts</div>
-      <div><b>Supported PRs</b><span class="n">${loop.prs}</span> ${loop.prConv} by conversation, ${loop.prTitle} by title, ${loop.merged} merged</div>
-      <div><b>Illustrative hours</b><span class="n">${loop.est.toFixed(1)}</span> base case over 51 days</div>
-      <div><b>Budget</b>${esc(loop.budget)}</div>
+      <div><b>Conversations</b><span class="n">${loop.conv}</span> ${loop.prompts} prompts</div>
+      <div><b>PRs that fit</b><span class="n">${loop.prs}</span> ${loop.merged} merged</div>
+      <div><b>Hours, base case</b><span class="n">${loop.est.toFixed(1)}</span> over 51 days</div>
     </div>
     <div class="quote">“${esc(loop.quote)}”<span>user prompt, ${loop.qdate}</span></div>`;
   host.appendChild(card);
@@ -1110,67 +1110,135 @@ function makeLoopCard(loop, spec, host){
 
   const setN = (id, state) => { const group = dia.nodes[id].g; STATES.forEach(name=>group.classList.remove(name)); if(state) group.classList.add(state); };
   const demote = () => Object.values(dia.nodes).forEach(node=>{ if(node.g.classList.contains('active')) setN(node.id, 'done'); });
-  const showTok = on => { dia.token.style.display = on ? '' : 'none'; };
-  const placeTok = point => dia.token.setAttribute('transform', `translate(${point.x} ${point.y})`);
+  let tokPos = null, parked = [];
+  const showTok = on => { dia.token.style.opacity = on ? 1 : 0; };
+  const placeTok = point => { tokPos = {x: point.x, y: point.y}; dia.token.setAttribute('transform', `translate(${point.x} ${point.y})`); };
   const atNode = id => { const node = dia.nodes[id]; placeTok({x: node.x - node.hw, y: node.y}); showTok(true); };
-  const atEnd = path => { placeTok(path.getPointAtLength(path.getTotalLength())); showTok(true); };
+  const startOf = path => path.getPointAtLength(0);
+  const endOf = path => path.getPointAtLength(path.getTotalLength());
+  const fade = dot => { dot.style.opacity = 0; setTimeout(()=>dot.remove(), 260); };
+  const clearDots = () => { parked.forEach(item=>fade(item.dot)); parked = []; };
   // 'snap' marks an instant replay, which no newer run can cancel halfway
   const gone = id => id !== 'snap' && id !== runId;
   let snapping = Promise.resolve(), snapSeq = 0;
 
-  function travel(path, duration, id, mover){
-    const move = mover || placeTok, len = path.getTotalLength();
-    if(!duration){ move(path.getPointAtLength(len)); return Promise.resolve(); }
+  // one continuous motion: a short hop from wherever the dot sits to the first path,
+  // then each path in turn, with a hop through the node between two paths
+  function buildChain(paths){
+    const parts = []; let cursor = tokPos;
+    paths.forEach(path=>{
+      const begin = startOf(path);
+      if(cursor){ const hop = Math.hypot(begin.x - cursor.x, begin.y - cursor.y); if(hop > 0.5) parts.push({from: cursor, to: begin, len: hop}); }
+      parts.push({path, len: path.getTotalLength()});
+      cursor = endOf(path);
+    });
+    return {parts, total: parts.reduce((sum, part)=>sum + part.len, 0)};
+  }
+  function pointAt(chain, dist){
+    let rest = dist;
+    for(const part of chain.parts){
+      if(rest <= part.len){
+        if(part.path) return part.path.getPointAtLength(rest);
+        const ratio = part.len ? rest/part.len : 1;
+        return {x: part.from.x + (part.to.x - part.from.x)*ratio, y: part.from.y + (part.to.y - part.from.y)*ratio};
+      }
+      rest -= part.len;
+    }
+    const last = chain.parts[chain.parts.length-1];
+    return last.path ? endOf(last.path) : last.to;
+  }
+  // constant speed, so a short edge never crawls and a long one never races
+  const durationFor = (len, max) => Math.max(300, Math.min(max || 1000, len/0.62));
+  const easeInOut = t => -(Math.cos(Math.PI*t) - 1)/2;
+  function run(duration, id, onFrame){
+    if(!duration){ onFrame(1); return Promise.resolve(); }
     return new Promise(resolve=>{
-      const start = performance.now();
+      const begin = performance.now();
       function frame(now){
         if(gone(id)) return resolve();
-        const progress = Math.min(1, (now - start)/duration), eased = progress < .5 ? 2*progress*progress : 1 - Math.pow(-2*progress + 2, 2)/2;
-        move(path.getPointAtLength(len*eased));
-        if(progress < 1) requestAnimationFrame(frame); else resolve();
+        const t = Math.min(1, (now - begin)/duration);
+        onFrame(easeInOut(t));
+        if(t < 1) requestAnimationFrame(frame); else resolve();
       }
       requestAnimationFrame(frame);
     });
   }
-  // fan-out and fan-in move one temporary dot per branch at the same time
-  async function travelMany(edgeIds, duration, id){
-    const dots = edgeIds.map(()=>el('circle', {r:5, class:'tok2'}, dia.tokenLayer));
-    await Promise.all(edgeIds.map((edgeId, dotIndex)=>travel(dia.edges[edgeId].ln, duration, id, point=>{ dots[dotIndex].setAttribute('cx', point.x); dots[dotIndex].setAttribute('cy', point.y); })));
-    dots.forEach(dot=>dot.remove());
+  async function moveAlong(edgeIds, id, animate, maxMs, onEdge){
+    const chain = buildChain(edgeIds.map(edgeId=>dia.edges[edgeId].ln));
+    const ends = []; let acc = 0;
+    chain.parts.forEach(part=>{ acc += part.len; if(part.path) ends.push(acc); });
+    let fired = 0;
+    showTok(true);
+    await run(animate ? durationFor(chain.total, maxMs) : 0, id, progress=>{
+      const dist = progress*chain.total;
+      placeTok(pointAt(chain, dist));
+      while(fired < ends.length && dist >= ends[fired] - 0.01){ if(onEdge) onEdge(edgeIds[fired]); fired++; }
+    });
   }
+  // the main dot rides one branch; the other branches get their own dots that leave the fork with it
+  async function branchOut(mainId, others, id, animate){
+    const chain = buildChain([dia.edges[mainId].ln]);
+    const hop = chain.parts.length > 1 ? chain.parts[0].len : 0;
+    showTok(true);
+    await run(animate ? durationFor(chain.total) : 0, id, progress=>{
+      const dist = progress*chain.total;
+      placeTok(pointAt(chain, dist));
+      const local = hop ? Math.max(0, (dist - hop)/(chain.total - hop)) : progress;
+      others.forEach(other=>{
+        const point = other.path.getPointAtLength(local*other.path.getTotalLength());
+        other.dot.setAttribute('cx', point.x); other.dot.setAttribute('cy', point.y);
+        other.dot.style.opacity = local > 0 ? 1 : 0;
+      });
+    });
+  }
+  const newDot = () => el('circle', {r:5, class:'tok2', style:'opacity:0'}, dia.tokenLayer);
 
   async function apply(step, animate, id){
-    const speed = animate ? 1 : 0;
     if(step.rep){
       const edge = dia.edges[step.rep];
+      clearDots();
       (step.stale || []).forEach(nodeId=>setN(nodeId, 'stale'));
-      edge.g.classList.add('on'); showTok(true);
-      await travel(edge.ln, 1200*speed, id); if(gone(id)) return;
+      edge.g.classList.add('on');
+      await moveAlong([step.rep], id, animate, 1300); if(gone(id)) return;
       edge.g.classList.remove('on'); edge.g.classList.add('used');
-      setN(step.at, 'active'); atEnd(edge.ln);
+      setN(step.at, 'active');
     }
     if(step.via){
-      const list = [].concat(step.via), each = list.length > 2 ? 380 : 600;
-      for(const edgeId of list){
+      clearDots();
+      await moveAlong([].concat(step.via), id, animate, 1400, edgeId=>{
         const edge = dia.edges[edgeId];
-        demote(); showTok(true);
-        await travel(edge.ln, each*speed, id); if(gone(id)) return;
-        edge.g.classList.add('done');
-        setN(edge.b, 'active');
-      }
-      atEnd(dia.edges[list[list.length-1]].ln);
+        demote(); edge.g.classList.add('done'); edge.g.classList.remove('used'); setN(edge.b, 'active');
+      });
+      if(gone(id)) return;
     }
     if(step.fan){
-      demote(); showTok(false);
-      await travelMany(step.fan, 750*speed, id); if(gone(id)) return;
+      clearDots(); demote();
+      const mainId = step.fan[step.main || 0];
+      const others = step.fan.filter(edgeId=>edgeId !== mainId).map(edgeId=>({edgeId, path: dia.edges[edgeId].ln, dot: newDot()}));
+      await branchOut(mainId, others, id, animate);
+      if(gone(id)){ others.forEach(other=>other.dot.remove()); return; }
+      others.forEach(other=>parked.push({node: dia.edges[other.edgeId].b, dot: other.dot}));
       step.fan.forEach(edgeId=>{ dia.edges[edgeId].g.classList.add('done'); setN(dia.edges[edgeId].b, 'done'); });
     }
     if(step.join){
-      await travelMany(step.join, 750*speed, id); if(gone(id)) return;
+      let mainId = step.join[0], best = Infinity;
+      step.join.forEach(edgeId=>{ const begin = startOf(dia.edges[edgeId].ln), dist = tokPos ? Math.hypot(begin.x - tokPos.x, begin.y - tokPos.y) : 0; if(dist < best){ best = dist; mainId = edgeId; } });
+      const others = step.join.filter(edgeId=>edgeId !== mainId).map(edgeId=>{
+        const from = dia.edges[edgeId].a, slot = parked.findIndex(item=>item.node === from);
+        return {path: dia.edges[edgeId].ln, dot: slot >= 0 ? parked.splice(slot, 1)[0].dot : newDot()};
+      });
+      clearDots();
+      await branchOut(mainId, others, id, animate);
+      others.forEach(other=>fade(other.dot));
+      if(gone(id)) return;
       step.join.forEach(edgeId=>dia.edges[edgeId].g.classList.add('done'));
-      demote(); setN(step.at, 'active'); atEnd(dia.edges[step.join[0]].ln);
+      demote(); setN(step.at, 'active');
     }
     if(step.at && !step.via && !step.rep && !step.join){ demote(); setN(step.at, 'active'); atNode(step.at); }
+    if(step.mark) Object.entries(step.mark).forEach(([nodeId, state])=>{
+      setN(nodeId, state);
+      if(state === 'out') parked = parked.filter(item=>{ if(item.node !== nodeId) return true; fade(item.dot); return false; });
+    });
     if(step.mark) Object.entries(step.mark).forEach(([nodeId, state])=>setN(nodeId, state));
     if(step.pick){ const [nodeId, chipIndex] = step.pick; dia.nodes[nodeId].chipEls.forEach((chip, index)=>chip.classList.toggle('on', index === chipIndex)); }
     if(step.pickAll) dia.nodes[step.pickAll].chipEls.forEach(chip=>chip.classList.add('on'));
@@ -1180,9 +1248,8 @@ function makeLoopCard(loop, spec, host){
     }
     if(step.ab) dia.nodes[step.ab].g.classList.add('scored');
     if(step.poll){
-      const edge = dia.edges[step.poll];
-      for(let round = 0; round < step.n; round++){ await travel(edge.ln, 950*speed, id); if(gone(id)) return; }
-      edge.g.classList.add('done'); atEnd(edge.ln);
+      await moveAlong(Array(step.n).fill(step.poll), id, animate, 1200); if(gone(id)) return;
+      dia.edges[step.poll].g.classList.add('done');
     }
     if(step.fail) setN(step.fail, 'fail');
     if(step.end){ const last = Object.values(dia.nodes).find(node=>node.g.classList.contains('active')); if(last) setN(last.id, 'on'); showTok(false); }
@@ -1203,6 +1270,7 @@ function makeLoopCard(loop, spec, host){
       node.g.classList.remove('scored');
     });
     Object.values(dia.edges).forEach(edge=>edge.g.classList.remove('done','on','used'));
+    parked.forEach(item=>item.dot.remove()); parked = []; tokPos = null;
     showTok(false);
   }
 
@@ -1223,11 +1291,11 @@ function makeLoopCard(loop, spec, host){
     const id = ++runId; playing = true; playBtn.textContent = 'Pause';
     await snapping; if(gone(id)) return;
     while(!gone(id)){
-      if(idx >= steps.length - 1){ await sleep(2800); if(gone(id)) return; idx = -1; reset(); setStatus(null); await sleep(500); if(gone(id)) return; }
+      if(idx >= steps.length - 1){ await sleep(1800); if(gone(id)) return; idx = -1; reset(); setStatus(null); await sleep(300); if(gone(id)) return; }
       idx++;
       setStatus(steps[idx]);
       await apply(steps[idx], !reduce, id); if(gone(id)) return;
-      await sleep(steps[idx].fail || steps[idx].rep ? 1500 : 1050);
+      await sleep(steps[idx].fail || steps[idx].rep ? 1000 : 650);
     }
   }
   function stop(){ runId++; playing = false; playBtn.textContent = 'Play'; if(idx >= 0) renderTo(idx); }
