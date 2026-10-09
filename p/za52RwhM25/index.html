@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Workflow Agent loops: the numbers</title>
+<style>
+:root{
+  --bg:#F7F6F2; --surface:#FFFFFF; --sunk:#EFEEE8; --ink:#1B1C1A; --muted:#575852; --faint:#85867F; --line:#E2E1DA;
+  --mint:#2C7A64; --mint-soft:#DCEFE7; --peach:#B95C38; --peach-soft:#FBE5D8; --amber:#8F5E10; --amber-soft:#F6EAD1;
+  --slate:#4F6B8A; --slate-soft:#E1E8F0; --bar-muted:#A9AAA2;
+  --shadow:0 1px 2px rgba(27,28,26,.05),0 6px 18px rgba(27,28,26,.05);
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#191A19; --surface:#222423; --sunk:#1D1F1E; --ink:#ECEDE8; --muted:#B0B2AB; --faint:#878982; --line:#353836;
+    --mint:#7FCFB3; --mint-soft:#1D2F29; --peach:#F0A27F; --peach-soft:#3A2820; --amber:#E2B566; --amber-soft:#342A17;
+    --slate:#9DB6D3; --slate-soft:#212A34; --bar-muted:#5E605B;
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:1100px;margin:0 auto;padding:64px 32px 104px}
+@media (max-width:520px){.wrap{padding:40px 18px 72px}}
+.eyebrow{font:600 12px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--mint)}
+h1{font:700 clamp(30px,4.6vw,50px)/1.08 var(--sans);letter-spacing:-.025em;margin:16px 0 20px;max-width:21ch}
+h2{font:700 clamp(23px,2.8vw,32px)/1.18 var(--sans);letter-spacing:-.018em;margin:0 0 10px}
+h3{font:650 16px/1.3 var(--sans);margin:0 0 6px}
+p{margin:0 0 12px}
+code{font:13px var(--mono)}
+.lead{font-size:clamp(17px,1.7vw,19px);color:var(--muted);max-width:64ch}
+.meta{margin-top:20px;font-size:13px;color:var(--faint);display:flex;flex-wrap:wrap;gap:8px 20px}
+section{margin-top:88px}
+.sec-lead{color:var(--muted);max-width:68ch;margin-bottom:24px}
+.num{font-variant-numeric:tabular-nums}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.foot{font-size:13px;color:var(--faint);margin-top:12px;max-width:80ch}
+.tag{display:inline-flex;align-items:center;gap:6px;font:650 11px/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;padding:5px 9px;border-radius:999px;white-space:nowrap}
+.tag.obs{background:var(--mint-soft);color:var(--mint)}
+.tag.obs::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.cls{background:var(--slate-soft);color:var(--slate)}
+.tag.cls::before{content:"";width:6px;height:6px;border-radius:2px;background:currentColor}
+.tag.est{background:var(--amber-soft);color:var(--amber);box-shadow:inset 0 0 0 1px currentColor}
+.tag.est::before{content:"≈";font-size:13px;line-height:0}
+
+/* headline metrics: rendered at final values, never counted up */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.kpi{padding:22px 20px 20px;display:flex;flex-direction:column;gap:10px}
+.kpi .v{font:700 clamp(34px,3.8vw,46px)/1 var(--sans);letter-spacing:-.03em}
+.kpi .v small{font:500 15px var(--sans);color:var(--muted);letter-spacing:0;margin-left:5px}
+.kpi .l{font-size:14px;color:var(--muted);line-height:1.45}
+.kpi.est .v{color:var(--amber)}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.kpis{grid-template-columns:1fr}}
+
+/* funnel */
+.funnel{padding:26px 26px 20px}
+.frow{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:center;margin-bottom:14px}
+.frow .fl{font-size:14px;color:var(--muted);line-height:1.35}
+.frow .fl b{display:block;color:var(--ink);font-weight:650}
+.track{height:32px;background:var(--sunk);border-radius:8px;overflow:hidden}
+.bar{height:100%;border-radius:8px;width:var(--w);display:flex;align-items:center;justify-content:flex-end;padding:0 10px;font:650 14px var(--sans);color:#fff}
+.bar.c1{background:var(--bar-muted)}.bar.c2{background:var(--slate)}.bar.c3{background:var(--mint)}.bar.c4{background:var(--peach)}
+@media (prefers-color-scheme: dark){.bar{color:#141514}.bar.c1{color:#fff}}
+.fnote{display:flex;flex-wrap:wrap;gap:10px 28px;border-top:1px solid var(--line);padding-top:14px;margin-top:6px;font-size:14px;color:var(--muted)}
+.fnote b{color:var(--ink);font-variant-numeric:tabular-nums}
+@media (max-width:640px){.frow{grid-template-columns:1fr;gap:6px}}
+
+/* before / after */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.cases{grid-template-columns:1fr}}
+.case{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.case .half{padding:18px 20px}
+.case .before{background:var(--peach-soft)}
+.case .after{border-top:1px solid var(--line);flex:1}
+.case .k{font:650 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.case .before .k{color:var(--peach)}.case .after .k{color:var(--mint)}
+.case q{display:block;font-size:15px;line-height:1.5;quotes:"\201C" "\201D"}
+.case .src{font-size:12px;color:var(--faint);margin-top:6px}
+.case .stat{font-size:14px;color:var(--muted);margin-top:10px}
+.case .stat b{color:var(--ink);font-variant-numeric:tabular-nums}
+.case code{display:block;background:var(--sunk);padding:8px 10px;border-radius:8px;word-break:break-word;color:var(--ink);margin-bottom:10px}
+.case ul{margin:0;padding-left:18px;font-size:14px;color:var(--muted)}
+
+/* scorecard: a grid, so every column survives at 728px and becomes a labelled card under 760px */
+.score{padding:6px 0}
+.srow{display:grid;grid-template-columns:minmax(150px,1.5fr) .7fr 1.4fr 1.6fr 1.3fr;gap:14px;align-items:center;padding:13px 22px;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.srow.head{font:650 11px/1.3 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--faint);padding-top:16px}
+.srow .cmd{font:650 14px var(--mono)}
+.srow .job{display:block;font:13px var(--sans);color:var(--muted);margin-top:2px}
+.cell{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.cell .lab{display:none}
+.ib{flex:1;height:9px;background:var(--sunk);border-radius:5px;overflow:hidden;display:flex}
+.ib i{display:block;height:100%}
+.ib .p{background:var(--slate)}.ib .r1{background:var(--peach)}.ib .r2{background:var(--peach);opacity:.45}.ib .h{background:var(--amber);opacity:.85}
+.cell span.v{min-width:44px;text-align:right}
+.cell small{color:var(--faint);font-size:12px;white-space:nowrap}
+@media (max-width:760px){
+  .srow.head{display:none}
+  .srow{grid-template-columns:1fr 1fr;gap:10px 18px;padding:16px 18px}
+  .srow>.name{grid-column:1/-1}
+  .cell{flex-wrap:wrap;gap:4px 8px}
+  .cell .lab{display:block;width:100%;font:650 11px var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
+  .cell span.v{min-width:0;text-align:left}
+}
+
+/* PR split */
+.split{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.pad{padding:24px}
+.stack{display:flex;height:42px;border-radius:10px;overflow:hidden;margin:18px 0 14px;background:var(--sunk)}
+.stack div{display:flex;align-items:center;justify-content:center;color:#fff;font:650 14px var(--sans);width:var(--w);white-space:nowrap;overflow:hidden}
+.stack .a{background:var(--peach)}.stack .b{background:var(--peach);opacity:.6}.stack .c{background:var(--slate)}.stack .d{background:var(--bar-muted)}
+@media (prefers-color-scheme: dark){.stack div{color:#141514}.stack .d{color:#fff}}
+.legend{display:grid;gap:9px;font-size:14px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px}
+.legend b{color:var(--ink);font-variant-numeric:tabular-nums}
+.big{font:700 54px/1 var(--sans);letter-spacing:-.03em}
+.groups{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+.groups div{background:var(--sunk);border-radius:12px;padding:14px}
+.groups .n{font:700 30px/1 var(--sans);letter-spacing:-.02em}
+.groups .t{font-size:13px;color:var(--muted);margin-top:6px}
+.note{background:var(--mint-soft);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--ink)}
+
+/* time */
+.assume{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media (max-width:900px){.assume{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.assume{grid-template-columns:1fr}}
+.assume>div{padding:16px}
+.assume .n{font:700 26px/1.1 var(--sans);letter-spacing:-.02em;margin:8px 0 4px}
+.assume p{font-size:13px;color:var(--muted);margin:0}
+.scen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:760px){.scen{grid-template-columns:1fr}}
+.sc{padding:20px}
+.sc.base{box-shadow:inset 0 0 0 2px var(--amber),var(--shadow)}
+.sc .h{font:650 12px var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.sc .v{font:700 40px/1.05 var(--sans);letter-spacing:-.03em;color:var(--amber);margin:10px 0 4px}
+.sc .v small{font:500 15px var(--sans);color:var(--muted);letter-spacing:0}
+.sc .s{font-size:14px;color:var(--muted)}
+.sc .s b{color:var(--ink)}
+.formula{font:14px/1.7 var(--mono);background:var(--sunk);border-radius:12px;padding:14px 16px;margin:0 0 18px;overflow-x:auto}
+.formula u{text-decoration:none;color:var(--mint)}
+.formula em{font-style:normal;color:var(--amber)}
+
+/* loop diagrams: one card per loop, each with its own graph */
+:root{--line2:#C9C8BF;--edge:#B3B2A9;--lane:#EFEEE8}
+@media (prefers-color-scheme: dark){:root{--line2:#4B4E4B;--edge:#5F625E;--lane:#1F2120}}
+.loop-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+.loop-nav a{display:inline-flex;gap:8px;align-items:baseline;font:650 14px var(--mono);padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+.loop-nav a span{font:12px var(--sans);color:var(--faint)}
+.loop-nav a:hover{border-color:var(--mint)}
+.loop-nav a:focus-visible,.ctrl button:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+.shapes{display:flex;flex-wrap:wrap;gap:8px 22px;margin:18px 0 8px;font-size:13px;color:var(--muted)}
+.shapes span{display:inline-flex;align-items:center;gap:8px}
+.shapes svg{width:34px;height:22px;overflow:visible}
+.demo{font-size:13px;color:var(--faint);margin:6px 0 0}
+.lc{padding:24px 26px 22px;margin-top:18px;scroll-margin-top:16px}
+@media (max-width:520px){.lc{padding:20px 14px 18px}.lc-fig{margin:0 -4px}}
+.lc-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;align-items:flex-start}
+.lc-name{font:650 14px var(--mono);color:var(--mint);display:flex;gap:10px;align-items:baseline}
+.lc-name span{font:13px var(--sans);color:var(--faint)}
+.lc h3{font:700 21px/1.25 var(--sans);letter-spacing:-.015em;margin:4px 0 8px}
+.lc-cmd{display:inline-block;color:var(--muted);background:var(--sunk);padding:5px 9px;border-radius:7px;word-break:break-word}
+.ctrl{display:flex;gap:6px;align-items:center}
+.ctrl button{font:650 13px var(--sans);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:7px 11px;cursor:pointer;min-width:36px}
+.ctrl button:hover{color:var(--ink);border-color:var(--faint)}
+.ctrl .count{font:12px var(--sans);color:var(--faint);min-width:42px;text-align:right;font-variant-numeric:tabular-nums}
+.status{font:600 14px/1.45 var(--sans);color:var(--muted);min-height:42px;margin:14px 0 4px;display:flex;align-items:flex-start;gap:9px}
+.status .dot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none;margin-top:6px}
+.status.run .dot{background:var(--slate)}.status.fail .dot{background:var(--peach)}.status.ok .dot{background:var(--mint)}
+.status.fail{color:var(--peach)}
+.io{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+@media (max-width:760px){.io{grid-template-columns:1fr}}
+.io>div{background:var(--sunk);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--muted)}
+.io b{display:block;font:650 11px var(--sans);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.io .i b{color:var(--slate)}.io .o b{color:var(--mint)}.io .s b{color:var(--peach)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
+.facts div{font-size:14px;color:var(--muted);line-height:1.45}
+.facts b{display:block;font:650 11px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--faint);margin-bottom:4px}
+.facts .n{font:700 22px/1.1 var(--sans);letter-spacing:-.02em;color:var(--ink)}
+@media (max-width:760px){.facts{grid-template-columns:1fr 1fr}}
+.quote{margin-top:16px;font-size:16px;line-height:1.5;color:var(--ink);border-left:3px solid var(--peach);padding-left:14px}
+.quote span{display:block;font-size:12px;color:var(--faint);margin-top:4px}
+.lc-fig{margin:4px 0 0}
+.lc-fig svg{display:block;width:100%;height:auto;margin:0 auto;overflow:visible}
+.lc-fig.m{max-width:430px;margin-left:auto;margin-right:auto}
+
+.dg text{font-family:var(--sans)}
+.dg .lane rect{fill:var(--lane)}
+.dg .lane text{fill:var(--faint);font-size:11.5px;font-weight:600}
+.dg .ed .ln{fill:none;stroke:var(--edge);stroke-width:2;transition:stroke .3s}
+.dg .ed .ah{fill:var(--edge);transition:fill .3s}
+.dg .ed.k-o .ln{stroke-dasharray:2 5;stroke-linecap:round}
+.dg .ed.k-q .ln{stroke:var(--slate);stroke-width:1.5;opacity:.6}
+.dg .ed.k-q .ah{fill:var(--slate);opacity:.6}
+.dg .ed.done .ln{stroke:var(--mint)}.dg .ed.done .ah{fill:var(--mint)}
+.dg .ed.k-r .ln,.dg .ed.k-p .ln{stroke:var(--peach);stroke-dasharray:6 5;opacity:.45}
+.dg .ed.k-r .ah,.dg .ed.k-p .ah{fill:var(--peach);opacity:.45}
+.dg .ed.k-c .ln{stroke:var(--slate);stroke-dasharray:6 5;opacity:.5}
+.dg .ed.k-c .ah{fill:var(--slate);opacity:.5}
+.dg .ed.k-c.done .ln,.dg .ed.k-c.done .ah{opacity:1}
+.dg .ed.k-p.done .ln,.dg .ed.k-p.done .ah{opacity:.9}
+.dg .ed.on .ln{opacity:1;animation:dash .7s linear infinite}.dg .ed.on .ah{opacity:1}
+.dg .ed.used .ln,.dg .ed.used .ah{opacity:.9}
+@keyframes dash{to{stroke-dashoffset:-22}}
+.dg .el{font-size:11.5px;font-weight:600;fill:var(--faint);paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+.dg .el.k-r,.dg .el.k-p{fill:var(--peach)}
+.dg .el.k-c{fill:var(--slate)}
+
+.dg .sh{fill:var(--surface);stroke:var(--line2);stroke-width:1.75;transition:fill .3s,stroke .3s}
+.dg .sh2{fill:none;stroke:var(--line2);stroke-width:1.5}
+.dg .tx{fill:var(--muted);font-size:13px;font-weight:600;transition:fill .3s}
+.dg .k-mini .tx,.dg .k-exit .tx,.dg .k-entry .tx{font-size:11.5px}
+.dg .k-dec .tx{font-size:12px}
+.dg .k-dec .sh,.dg .k-store .sh,.dg .k-stack .sh,.dg .k-rec .sh{fill:var(--sunk)}
+.dg .k-exit .sh{fill:none;stroke-dasharray:4 4}
+.dg .k-exit .tx{fill:var(--faint)}
+.dg .k-entry .sh{fill:none;stroke:var(--slate);stroke-dasharray:2 4;stroke-linecap:round}
+.dg .k-entry .tx{fill:var(--slate)}
+.dg .k-person .sh{fill:var(--amber-soft);stroke:var(--amber)}
+.dg .k-person .gl{fill:none;stroke:var(--amber);stroke-width:1.6}
+.dg .k-rec .sh{stroke-dasharray:4 3}
+.dg .k-stack .ghost{fill:var(--sunk);stroke:var(--line2);stroke-width:1.25;opacity:.8}
+.dg .bd circle{fill:var(--surface);stroke:var(--line2);stroke-width:1.5;transition:fill .3s,stroke .3s}
+.dg .bd text{font-size:11px;font-weight:700;fill:var(--faint)}
+.dg .chip rect{fill:var(--sunk);stroke:none;transition:fill .3s}
+.dg .chip text{font-size:11px;font-weight:600;fill:var(--faint);transition:fill .3s}
+.dg .chip.on rect{fill:var(--mint)}
+.dg .chip.on text{fill:var(--surface)}
+.dg .rung rect{fill:var(--sunk);transition:fill .35s;transition-delay:calc(var(--i) * 260ms)}
+.dg .rung text{font-size:11.5px;font-weight:600;fill:var(--muted)}
+.dg .rung circle{fill:var(--surface);stroke:var(--line2);stroke-width:1.5;transition:fill .35s,stroke .35s;transition-delay:calc(var(--i) * 260ms)}
+.dg .rung.ok rect{fill:var(--mint-soft)}.dg .rung.ok circle{fill:var(--mint);stroke:var(--mint)}
+.dg .rung.bad rect{fill:var(--peach-soft)}.dg .rung.bad circle{fill:var(--peach);stroke:var(--peach)}
+.dg .rung.bad text{fill:var(--peach)}
+.dg .abl{font-size:11px;font-weight:600;fill:var(--faint)}
+.dg .abd{fill:var(--sunk);stroke:var(--line2);stroke-width:1.25;transition:fill .3s,stroke .3s;transition-delay:calc(var(--i) * 120ms)}
+.dg .scored .abd.p{fill:var(--mint);stroke:var(--mint)}
+.dg .scored .abd.f{fill:var(--peach-soft);stroke:var(--peach)}
+
+.dg .nd.active .sh{stroke:var(--slate);stroke-width:2.5;fill:var(--slate-soft)}
+.dg .nd.active .tx,.dg .nd.done .tx,.dg .nd.on .tx,.dg .nd.fail .tx,.dg .nd.hit .tx{fill:var(--ink)}
+.dg .nd.active .bd circle{stroke:var(--slate);fill:var(--slate)}.dg .nd.active .bd text{fill:var(--surface)}
+.dg .nd.done .sh{stroke:var(--mint)}
+.dg .nd.done .bd circle{stroke:var(--mint);fill:var(--mint)}.dg .nd.done .bd text{fill:var(--surface)}
+.dg .nd.fail .sh{stroke:var(--peach);stroke-width:2.5;fill:var(--peach-soft)}
+.dg .nd.fail .bd circle{stroke:var(--peach);fill:var(--peach)}.dg .nd.fail .bd text{fill:var(--surface)}
+.dg .nd.stale .sh{stroke:var(--faint);stroke-dasharray:3 4}
+.dg .nd.stale{opacity:.7}
+.dg .nd.out{opacity:.4}
+.dg .nd.out .tx{text-decoration:line-through}
+.dg .nd.hit .sh{stroke:var(--amber);stroke-width:2.5;fill:var(--amber-soft)}
+.dg .nd.on .sh{stroke:var(--mint);stroke-width:2.5;fill:var(--mint-soft);stroke-dasharray:0}
+.dg .tok .core{fill:var(--peach)}
+.dg .tok .halo{fill:var(--peach);opacity:.22;animation:pulse 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.dg .tok2{fill:var(--peach)}
+@keyframes pulse{50%{transform:scale(1.35);opacity:.1}}
+.dg.snap *{transition:none!important}
+
+/* status */
+.ship{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:760px){.ship{grid-template-columns:1fr 1fr}}
+.ship .card{padding:18px}
+.ship .v{font:700 34px/1 var(--sans);letter-spacing:-.02em}
+.ship .l{font-size:14px;color:var(--muted);margin-top:6px}
+.prlist{margin-top:14px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (max-width:640px){.prlist{grid-template-columns:1fr}}
+.prlist a{display:flex;gap:10px;align-items:baseline;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);text-decoration:none;font-size:14px}
+.prlist a:hover{border-color:var(--slate)}
+.prlist .no{font:650 13px var(--mono);color:var(--slate)}
+.prlist .st{margin-left:auto;font:650 11px var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--amber);white-space:nowrap}
+
+.skill-inventory{margin-top:14px}.skill-inventory summary{cursor:pointer;font-weight:650}.skill-item{padding:12px 0;border-top:1px solid var(--line)}.skill-item code{overflow-wrap:anywhere;color:var(--mint)}.skill-item p{margin:4px 0 0;font-size:14px;color:var(--muted)}
+
+/* caveats */
+.cav{padding:22px 26px}
+.cav ul{margin:0;padding-left:18px;color:var(--muted)}
+.cav li{margin-bottom:9px}
+.cav li b{color:var(--ink)}
+footer{margin-top:64px;font-size:13px;color:var(--faint);border-top:1px solid var(--line);padding-top:18px}
+footer code{font-size:12px;word-break:break-all}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+  <div class="eyebrow">Workflow Agent maintenance · October 9, 2026</div>
+  <h1>Eight jobs kept coming back in Workflow Agent work. Each is now a written loop.</h1>
+  <p class="lead">We reread every recovered conversation from August 19 to October 8. 142 of 421 conversations are linked to one of eight recurring jobs, and those conversations hold half of all recovered prompts. Of 186 Workflow Agent PRs from the same window, 161 match a loop that can now prepare them.</p>
+  <div class="meta">
+    <span><span class="tag obs">Observed</span> counted from transcripts or GitHub</span>
+    <span><span class="tag cls">Classified</span> counted, with a rule or reviewer choosing the bucket</span>
+    <span><span class="tag est">Estimate</span> modelled from the base case below</span>
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="card kpi"><span class="tag obs" style="align-self:flex-start">Observed</span><div class="v num">421</div><div class="l">conversations recovered and reread, 23,113 messages over 51 days</div></div>
+  <div class="card kpi"><span class="tag cls" style="align-self:flex-start">Classified</span><div class="v num">50.7<small>%</small></div><div class="l">of recovered prompts (1,564 of 3,083) sit in the 142 loop-linked conversations</div></div>
+  <div class="card kpi"><span class="tag cls" style="align-self:flex-start">Classified</span><div class="v num">161<small>of 186</small></div><div class="l">sampled Workflow Agent PRs match a loop that can prepare them</div></div>
+  <div class="card kpi est"><span class="tag est" style="align-self:flex-start">Estimate</span><div class="v num">~9.4<small>h / week</small></div><div class="l">returned to the team in the base case, range 4.0 to 21.6</div></div>
+</div>
+
+<section id="loops">
+  <h2>The eight loops</h2>
+  <p class="sec-lead">Each loop is a written procedure with a proof gate between stages. The diagrams differ because the jobs differ. A diagnosis fans out over hypotheses, a check-in crosses the platform and GitHub, and an evaluation dispatches a batch of cases. When a gate fails, work goes back to the stage that owns the fault, within a fixed retry budget.</p>
+  <nav class="loop-nav" id="loop-nav" aria-label="Jump to a loop"></nav>
+  <div class="shapes" aria-hidden="true">
+    <span><svg viewBox="0 0 34 22"><rect x="1" y="3" width="32" height="16" rx="5" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.5"/></svg>stage</span>
+    <span><svg viewBox="0 0 34 22"><polygon points="17,1 33,11 17,21 1,11" fill="var(--sunk)" stroke="var(--line2)" stroke-width="1.5"/></svg>proof gate or decision</span>
+    <span><svg viewBox="0 0 34 22"><polygon points="6,3 28,3 33,8 33,14 28,19 6,19 1,14 1,8" fill="var(--surface)" stroke="var(--line2)" stroke-width="1.5"/></svg>writes to a tenant or GitHub</span>
+    <span><svg viewBox="0 0 34 22"><rect x="1" y="3" width="32" height="16" rx="8" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5"/></svg>a person decides</span>
+    <span><svg viewBox="0 0 34 22"><path d="M2 11 H32" stroke="var(--peach)" stroke-width="2" stroke-dasharray="5 4" fill="none"/></svg>repair path</span>
+    <span><svg viewBox="0 0 34 22"><rect x="1" y="3" width="32" height="16" rx="8" fill="none" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="3 3"/></svg>early exit</span>
+  </div>
+  <p class="demo">Each diagram plays one pass of the procedure, including one repair. Step through it, or let it play.</p>
+  <div id="loop-cards"></div>
+</section>
+
+<section id="evidence">
+  <h2>The evidence: 694 sessions down to 142 loop-linked conversations</h2>
+  <p class="sec-lead">Raw history double-counts, because one conversation can sit in two tools. After deduplication there are 421 conversations. Ten independent reviewer agents read every message. A conversation counts as loop-linked when either audit cited it as evidence for one of the eight loops.</p>
+  <div class="card funnel">
+    <div class="frow"><div class="fl"><b>694 sessions</b>Codex 292 · T3 392 · Claude 10</div><div class="track"><div class="bar c1" style="--w:100%">694</div></div></div>
+    <div class="frow"><div class="fl"><b>421 conversations</b>after removing duplicates and subagent runs</div><div class="track"><div class="bar c2" style="--w:60.7%">421</div></div></div>
+    <div class="frow"><div class="fl"><b>365 on topic</b>270 Workflow Agent work, 95 adjacent</div><div class="track"><div class="bar c3" style="--w:52.6%">365</div></div></div>
+    <div class="frow"><div class="fl"><b>142 loop-linked</b>cited as evidence for one of the eight loops</div><div class="track"><div class="bar c4" style="--w:20.5%">142</div></div></div>
+    <div class="fnote">
+      <span><b>3,083</b> recovered prompts in all 421</span>
+      <span><b>1,564</b> of them in loop-linked conversations</span>
+      <span><b>88</b> recommendations from 10 reviewers: 49 skills and 39 loops, deduplicated into 29 skill and 22 loop candidates</span>
+      <span><b>162</b> exact historical questions kept as acceptance checks</span>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <h2>Before and after, in three jobs</h2>
+  <p class="sec-lead">Before: the request as it was typed, and how much conversation that job took across the window. After: the documented loop command and where it stops for a person.</p>
+  <div class="cases">
+    <div class="card case">
+      <div class="half before"><div class="k">Before · check-in</div><q>sync the assets from sync-t2w-sep19 dir in the code, and raise PRs for main and uat.</q><div class="src">user prompt, Sep 19</div><div class="stat"><b>40</b> loop-linked conversations · <b>451</b> prompts</div></div>
+      <div class="half after"><div class="k">After</div><code>/workflow-agent check-in &lt;config&gt; --mode check-in</code><ul><li>exports, applies and diffs through the platform</li><li>prepares main and UAT PRs and reads them back</li><li>stops at the reviewed-diff approval; never merges</li></ul></div>
+    </div>
+    <div class="card case">
+      <div class="half before"><div class="k">Before · evaluate</div><q>compare this corpus of 6 vs the previous same prompt corpus of 6</q><div class="src">user prompt, Sep 28</div><div class="stat"><b>44</b> loop-linked conversations · <b>813</b> prompts</div></div>
+      <div class="half after"><div class="k">After</div><code>/workflow-agent evaluate &lt;corpus&gt; --mode compare</code><ul><li>compares only matched inputs and configuration</li><li>separates saved, deployed, TEST, RUN and semantic results</li><li>a new run needs explicit spend and time ceilings</li></ul></div>
+    </div>
+    <div class="card case">
+      <div class="half before"><div class="k">Before · pr</div><q>fix the tests on this PR, push and check til the PR merges.</q><div class="src">user prompt, Sep 22</div><div class="stat"><b>7</b> loop-linked conversations · <b>70</b> prompts</div></div>
+      <div class="half after"><div class="k">After</div><code>/workflow-agent pr &lt;pr-url&gt; --mode ci</code><ul><li>reproduces the failed check at its recorded head</li><li>fixes at the owning layer, rereviews the new head</li><li>an unchanged failing check stops it; merge stays with a person</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="scorecard">
+  <h2>Where the work went, loop by loop</h2>
+  <p class="sec-lead">Evaluation runs and asset check-ins are the two biggest jobs by conversation volume. A conversation can be linked to two loops, so conversation and prompt columns add up to more than 142 and 1,564.</p>
+  <div class="card score" id="score" role="table" aria-label="Per-loop scorecard"></div>
+  <p class="foot">Supported PRs: solid is a conversation reference, faded is a title rule. Hours use the base case below.</p>
+</section>
+
+<section id="prs">
+  <h2>161 of 186 Workflow Agent PRs fit a loop</h2>
+  <p class="sec-lead">We reviewed 186 Workflow Agent PRs opened between August 19 and October 8: 113 in www and 73 in uacode. 161 of them match one of the eight loops, which means a loop can now prepare, check and read back that kind of PR.</p>
+  <div class="split">
+    <div class="card pad">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
+        <div><span class="big num">161</span> <span style="color:var(--muted)">PRs matched to a loop</span></div>
+        <span class="tag cls">Classified</span>
+      </div>
+      <div class="stack" role="img" aria-label="161 PRs: 105 by conversation reference, 56 by title rule">
+        <div class="a" style="--w:65.2%">105</div><div class="b" style="--w:34.8%">56</div>
+      </div>
+      <div class="legend">
+        <div><i style="background:var(--peach)"></i><b>105</b> the PR URL or branch appears in a loop-linked conversation</div>
+        <div><i style="background:var(--peach);opacity:.6"></i><b>56</b> the title matches an explicit rule for one loop</div>
+      </div>
+      <p class="foot" style="margin-top:14px">125 of the 161 are merged.</p>
+    </div>
+    <div class="card pad">
+      <h3>Check-in is the largest PR bucket</h3>
+      <p style="color:var(--muted);font-size:15px">Asset syncs to main and UAT were the most common Workflow Agent PR in the window. The check-in loop now runs that job end to end through the platform.</p>
+      <div class="groups">
+        <div><div class="n num">71</div><div class="t">check-in PRs</div></div>
+        <div><div class="n num">58</div><div class="t">of them merged</div></div>
+      </div>
+      <div class="note">The loop exports, diffs and opens both the main and UAT PRs, then reads them back. A person approves the reviewed diff.</div>
+    </div>
+  </div>
+</section>
+
+<section id="time">
+  <h2>Time returned</h2>
+  <p class="sec-lead">The model starts from one observed count, the follow-up prompts in loop-linked conversations, and sizes the hours a loop hands back.</p>
+  <div class="assume">
+    <div class="card"><span class="tag obs">Observed</span><div class="n num">1,179</div><p>prompts beyond the first three in each loop-linked conversation</p></div>
+    <div class="card"><span class="tag est">Assumption</span><div class="n">eligible</div><p>every prompt after the third is one a loop can absorb</p></div>
+    <div class="card"><span class="tag est">Assumption</span><div class="n num">70%</div><p>share a loop captures, base case</p></div>
+    <div class="card"><span class="tag est">Assumption</span><div class="n num">5 min</div><p>of human attention per prompt, base case</p></div>
+  </div>
+  <div class="formula">
+    hours = <u>1,179 eligible prompts</u> × <em>capture share</em> × <em>minutes per prompt</em> ÷ 60<br>
+    per week = hours ÷ 7.29 weeks (51 days)
+  </div>
+  <div class="scen">
+    <div class="card sc"><div class="h">Low</div><div class="v num">4.0 <small>h / week</small></div><div class="s"><b>50%</b> captured · <b>3 min</b> each<br>29.5 h over 51 days</div></div>
+    <div class="card sc base"><div class="h">Base case</div><div class="v num">9.4 <small>h / week</small></div><div class="s"><b>70%</b> captured · <b>5 min</b> each<br>68.8 h over 51 days</div></div>
+    <div class="card sc"><div class="h">High</div><div class="v num">21.6 <small>h / week</small></div><div class="s"><b>100%</b> captured · <b>8 min</b> each<br>157.2 h over 51 days</div></div>
+  </div>
+  <p class="foot">At the same workload the base case is about 123 hours a quarter, with a range of 53 to 280.</p>
+</section>
+
+<section id="status">
+  <h2>What is built</h2>
+  <p class="sec-lead">Eight loop commands under <code>/workflow-agent</code>, built from nineteen developer skills. Each command starts from one line and ends with a receipt.</p>
+  <div class="ship">
+    <div class="card"><div class="v">8</div><div class="l">loop commands under <code>/workflow-agent</code></div></div>
+    <div class="card"><div class="v">28</div><div class="l">modes, from read-only audits to authorized repair</div></div>
+    <div class="card"><div class="v">19</div><div class="l">developer skills: 18 specialists plus one router</div></div>
+    <div class="card"><div class="v">162</div><div class="l">real historical questions kept as acceptance checks</div></div>
+  </div>
+  <details class="card pad skill-inventory"><summary>19 skills composing the loops</summary><p class="foot">18 specialist skills plus the workflow-agent router. Written in .agents/skills and linked into Claude.</p><div class="skill-item"><code>workflow-agent</code><p>Route Workflow Agent developer jobs to bounded loops for trace/RCA, Atlas fixes, PR ownership, guidance repair, evaluation, asset check-in, tool contracts and compiler/workflow changes.</p></div><div class="skill-item"><code>workflow-agent-asset-parity</code><p>Reconcile Workflow Agent canonical sources with generated, saved, and deployed assets, including skill identity/membership and requested promotion readback.</p></div><div class="skill-item"><code>workflow-agent-atlas-maintenance</code><p>Read assigned Atlas issues, triage the queue, prove ticket symptoms, and prepare or perform explicitly requested RCA/follow-up writeback with readback.</p></div><div class="skill-item"><code>workflow-agent-brief-corpus</code><p>Turn Workflow Agent briefs or historical prompts into a stable evaluation corpus with exact provenance, normalization, tenant preflight, and semantic acceptance.</p></div><div class="skill-item"><code>workflow-agent-change-review</code><p>Review Workflow Agent PR intent, necessity, invariant ownership, caller effects, and security evidence against exact base/head and demonstrated behavior.</p></div><div class="skill-item"><code>workflow-agent-changeset-import</code><p>Verify a Workflow Agent ChangeSet export before repository import, and package requested main/UAT PRs with exact artifact, scope, base/head, and readiness receipts.</p></div><div class="skill-item"><code>workflow-agent-cohort-comparison</code><p>Compare Workflow Agent models, tenants, reasoning modes, or revisions using exact matched prompts, observed configuration, independent outcomes, and reconciled metrics.</p></div><div class="skill-item"><code>workflow-agent-compile-cleanup</code><p>Investigate or change Workflow Agent compilation, graph lowering, cleanup validation, or compile/save failures with source-to-boundary evidence.</p></div><div class="skill-item"><code>workflow-agent-connector-discovery</code><p>Resolve Workflow Agent connector actions and tenant/dynamic schemas, then classify connection readiness and design only consequential clarification questions.</p></div><div class="skill-item"><code>workflow-agent-cross-layer-rca</code><p>Find the first causal break across Workflow Agent brief, prompt/skills, tool binding/schema, transport/auth, compiler/cleanup, and deployed runtime.</p></div><div class="skill-item"><code>workflow-agent-evaluation-run</code><p>Launch a frozen Workflow Agent corpus against a named configuration using one verified pilot, bounded cohorts, and durable case/session/artifact receipts.</p></div><div class="skill-item"><code>workflow-agent-example-corpus</code><p>Curate Workflow Agent retrievable DSL examples, connector/pagination patterns, keywords, semantic correctness, and MCP query results.</p></div><div class="skill-item"><code>workflow-agent-mcp-contracts</code><p>Maintain Automation Code MCP exposure, input/output/error schemas, caller authority, script/full-result delivery, and deterministic read-only connector guards.</p></div><div class="skill-item"><code>workflow-agent-outcome-proof</code><p>Independently verify a Workflow Agent completion or evaluation claim against the brief, saved/deployed graph, tests, execution, and business outputs.</p></div><div class="skill-item"><code>workflow-agent-run-supervision</code><p>Monitor already-dispatched Workflow Agent or child runs, handle authorized clarification/recovery, and relay terminal artifacts for every case.</p></div><div class="skill-item"><code>workflow-agent-skill-effectiveness</code><p>Verify whether a Workflow Agent prompt or runtime skill change was assigned, delivered, retained, and used to improve the intended generated behavior.</p></div><div class="skill-item"><code>workflow-agent-skill-maintenance</code><p>Audit and edit Workflow Agent prompts, runtime skill inventory, tool descriptions, and embedded examples in their canonical owning source.</p></div><div class="skill-item"><code>workflow-agent-trace-accounting</code><p>Verify trace exports and reports account for every model/tool call, payload, task assignment, token/cost total, and parent versus worker metric.</p></div><div class="skill-item"><code>workflow-agent-trace-debugger</code><p>Diagnose a Workflow Agent trace or case: reconstruct the exact task journey, call attribution, stop cause, and parent-child result handoff.</p></div></details>
+</section>
+
+
+<footer>
+  Sources: the October 9 audit (<code>coverage.json</code>, <code>opportunity-catalog.json</code>), the independent second round (<code>ranked-catalog.json</code>, its session files and question bank), the loop catalog on <code>feat/workflow-agent-loops-2</code>, and <code>gh</code> PR history for unify-apps/www and unify-apps/uacode, pulled October 9. Every number on this page traces to a source file, query or stated base case in the audit receipt.
+</footer>
+</main>
+
+<script>
+(function(){
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// prs = supported candidates (conv = conversation reference, title = title rule); figures from receipt-data/numbers-r2.json
+const LOOPS = [
+ {id:'evaluate', title:'Run, supervise and compare a corpus', job:'Corpus runs and comparisons',
+  cmd:'/workflow-agent evaluate <corpus> --mode run --agent <id> --host <origin>',
+  stages:['Freeze corpus','Pin config','Pilot run','Dispatch batch','Semantic proof','Accounting','Rerun or compare'],
+  fail:2, back:1, why:'pilot failed on binding, back to config',
+  input:'Frozen corpus, pinned agent and model versions, tenant connection map, concurrency, deadline and spend ceilings.',
+  output:'Dispatch ledger, terminal state per case, independent semantic verdicts and cost accounting.',
+  stop:'A run needs explicit ceilings before launch. Clarification mode never runs TEST or RUN. Unknown business choices stay as questions.',
+  modes:7, budget:'Stops after 3 identical startup failures. One targeted rerun.',
+  conv:44, prompts:813, prs:9, prConv:9, prTitle:0, merged:7, est:40.1,
+  quote:'compare this corpus of 6 vs the previous same prompt corpus of 6', qdate:'Sep 28'},
+ {id:'check-in', title:'Check in assets through the platform', job:'Asset sync, main and UAT PRs',
+  cmd:'/workflow-agent check-in <config> --mode check-in --driver-root <www>',
+  stages:['Preflight','Sync assets','Trigger export','Await export','Download','Apply and review','Main PR','UAT PR'],
+  fail:5, back:1, why:'diff did not match the export, back to sync',
+  input:'Config, canonical source ref, target origin, assets and bases, export automation identity.',
+  output:'Export and archive receipts, reviewed diff digest, main and UAT PRs with readback.',
+  stop:'The reviewed diff needs approval by an authorized reviewer. Never merges. Messages go only to a verified, authorized destination.',
+  modes:4, budget:'Two read retries. One reconcile repair. Never retries an export blind.',
+  conv:40, prompts:451, prs:71, prConv:48, prTitle:23, merged:58, est:20.1,
+  quote:'sync the assets from sync-t2w-sep19 dir in the code, and raise PRs for main and uat.', qdate:'Sep 19'},
+ {id:'diagnose', title:'Diagnose a case or trace', job:'Trace reading and root cause',
+  cmd:'/workflow-agent diagnose <case-or-export> --symptom "..."',
+  stages:['Freeze export','Reconcile calls','Find first break','Check claims','Report'],
+  fail:3, back:2, why:'claim lacked raw evidence, back to the break',
+  input:'Expected versus observed behavior, exact case or session IDs or a raw export, trace window.',
+  output:'Reconciled timeline, first causal break, claims checked against the saved and deployed definition.',
+  stop:'Read-only by default. A patch, reproduction or new tenant run is a separate authorized step.',
+  modes:2, budget:'Two retrieval retries. Two diagnostic passes.',
+  conv:26, prompts:226, prs:2, prConv:2, prTitle:0, merged:1, est:8.9,
+  quote:'separate out the LLM calls and tool calls per agent session', qdate:'Sep 22'},
+ {id:'develop', title:'Develop compiler, examples or saved workflows', job:'Compiler, validator, examples',
+  cmd:'/workflow-agent develop <source> --mode compiler --expected <graph>',
+  stages:['Freeze baseline','Smallest repro','Implement','Local proof','Save and TEST','Deploy and RUN','Final review'],
+  fail:3, back:2, why:'local proof failed, back to the implementation',
+  input:'Exact source sample, expected nodes and edges, the mode, and which save, TEST, deploy or RUN effects are allowed.',
+  output:'Source-to-graph proof, saved graph readback, per-test inputs and assertions, deployed version.',
+  stop:'Save, deploy and RUN happen only when authorized. Validator mode never saves or deploys.',
+  modes:4, budget:'Two repair cycles.',
+  conv:15, prompts:266, prs:28, prConv:13, prTitle:15, merged:23, est:13.0,
+  quote:'Find out the bugs in our code logic - which takes the LLM code and converts it into JSON and fix them.', qdate:'Oct 7'},
+ {id:'contracts', title:'Align tools and prove their contracts', job:'MCP tool contracts',
+  cmd:'/workflow-agent contracts <tool-or-pr> --mode repair',
+  stages:['Pin tool route','Define fixtures','Reproduce','Repair owner','Verify callers','Target check'],
+  fail:4, back:3, why:'script caller lost fields, back to the owner',
+  input:'Tool or route, sanitized failing request, success and error schemas, www and uacode revisions.',
+  output:'Route matrix, fixtures, repaired owner code, full-result proof for direct and code callers.',
+  stop:'Live calls stay off unless the invocation authorizes them. A PR is packaged only on request.',
+  modes:3, budget:'Two repair cycles.',
+  conv:14, prompts:171, prs:11, prConv:4, prTitle:7, merged:11, est:8.1,
+  quote:'try hitting the same server and try to reproduce the issue', qdate:'Sep 14'},
+ {id:'atlas', title:'Atlas issue to verified fix', job:'Issue queue to PR',
+  cmd:'/workflow-agent atlas <issue-url> --mode fix --repo <checkout>',
+  stages:['Read issues','Reproduce case','Minimal fix','Same-case proof','Review and PR'],
+  fail:3, back:2, why:'same case still failed, back to the fix',
+  input:'Issue URL or queue filter, repository and base, environment, requested proof stages.',
+  output:'Triage ledger, same-case reproduction, minimal fix, PR with a short root-cause note.',
+  stop:'Ticket writes and messages are separate named approvals. A live fix claim needs live proof.',
+  modes:3, budget:'Checkpoint at 30 minutes per issue. Two repair cycles.',
+  conv:8, prompts:77, prs:1, prConv:1, prTitle:0, merged:1, est:3.1,
+  quote:'collect all the issues for workflows and spawn a Codex session', qdate:'Sep 30'},
+ {id:'pr', title:'Own a Workflow Agent PR', job:'Review, fix, CI, stacks',
+  cmd:'/workflow-agent pr <pr-url> --mode repair --stack <prs>',
+  stages:['Pin base and head','Review','Fix at owner','Repair stack','Rereview and CI'],
+  fail:4, back:2, why:'CI still red, back to the owning fix',
+  input:'PR URLs, intended behavior, base and head, stack order, failing job IDs for CI mode.',
+  output:'Ranked findings, scoped fixes with proof, rereviewed head, current-head CI readout.',
+  stop:'Pushing needs authority. Merge is never implied. An unchanged failing check stops the loop.',
+  modes:3, budget:'Two fix and push cycles. One stack adjustment.',
+  conv:7, prompts:70, prs:26, prConv:26, prTitle:0, merged:14, est:3.0,
+  quote:'fix the tests on this PR, push and check til the PR merges.', qdate:'Sep 22'},
+ {id:'guidance', title:'Correct agent guidance and verify behavior', job:'Prompt and skill repair',
+  cmd:'/workflow-agent guidance <case> --behavior "..." --corpus <manifest>',
+  stages:['Rule out others','Pick owner file','Edit and regenerate','Verify delivery','Score frozen cases','Keep or revert'],
+  fail:3, back:1, why:'skill never reached the agent, back to placement',
+  input:'Failing case or behavior, acceptance, current prompt, skills and tools, frozen cases for scoring.',
+  output:'Owner-file edit, delivery ledger per turn, matched-case scores, keep or revert call.',
+  stop:'Keep or revert follows evidence. An unrun corpus is never reported as passing.',
+  modes:2, budget:'Two edit and proof cycles. One delivery recheck.',
+  conv:5, prompts:65, prs:13, prConv:2, prTitle:11, merged:10, est:3.0,
+  quote:'This is too much content, can we put them in a skill file teaching code mode uses and reference the skill in the agent-prompt.', qdate:'Oct 8'}
+];
+const esc = text => text.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+/* scorecard */
+const maxP = Math.max(...LOOPS.map(loop=>loop.prompts)), maxR = Math.max(...LOOPS.map(loop=>loop.prs)), maxH = Math.max(...LOOPS.map(loop=>loop.est));
+const pct = (value,max) => (value/max*100).toFixed(1)+'%';
+document.getElementById('score').innerHTML =
+  `<div class="srow head" role="row"><div role="columnheader">Loop</div><div role="columnheader">Conversations</div><div role="columnheader">Prompts</div><div role="columnheader">Supported PRs</div><div role="columnheader">Illustrative h</div></div>` +
+  LOOPS.map(loop=>`<div class="srow" role="row">
+    <div class="name" role="cell"><span class="cmd">${loop.id}</span><span class="job">${loop.job}</span></div>
+    <div class="cell" role="cell"><span class="lab">Conversations</span><span class="num">${loop.conv}</span></div>
+    <div class="cell" role="cell"><span class="lab">Prompts</span><div class="ib"><i class="p" style="width:${pct(loop.prompts,maxP)}"></i></div><span class="v">${loop.prompts}</span></div>
+    <div class="cell" role="cell"><span class="lab">Supported PRs</span><div class="ib"><i class="r1" style="width:${pct(loop.prConv,maxR)}"></i><i class="r2" style="width:${pct(loop.prTitle,maxR)}"></i></div><span class="v">${loop.prs}</span><small>${loop.prConv} conv · ${loop.prTitle} title</small></div>
+    <div class="cell" role="cell"><span class="lab">Illustrative h</span><div class="ib"><i class="h" style="width:${pct(loop.est,maxH)}"></i></div><span class="v">${loop.est.toFixed(1)}</span></div>
+  </div>`).join('');
+
+/* loop diagrams. positions are grid cells: w = wide layout, m = narrow layout.
+   each topology follows the stage list and repair rules in loops/workflow-agent/<id>.md */
+const nd = (id, k, t, w, m, extra) => Object.assign({id, k, t, w, m}, extra);
+const GRAPHS = {
+ diagnose: {
+  nodes:[
+   nd('exp','store','Raw\nexport',[0,1],[0,0]),
+   nd('s1','stage','Freeze\nevidence',[1,1],[0,1],{n:1}),
+   nd('s2','stage','Reconcile\ncalls',[2,1],[0,2],{n:2}),
+   nd('s3','stage','Rebuild the\njourney',[3,1],[0,3],{n:3}),
+   nd('h1','mini','Brief',[4.25,0.2],[1,2.3]),
+   nd('h2','mini','Binding',[4.25,0.6],[1,2.65]),
+   nd('h3','mini','Guidance',[4.25,1],[1,3]),
+   nd('h4','mini','Compiler',[4.25,1.4],[1,3.35]),
+   nd('h5','mini','Runtime',[4.25,1.8],[1,3.7]),
+   nd('s4','stage','Verify\nclaims',[3.6,2.6],[0,4.55],{n:4}),
+   nd('rep','rec','Report',[2.45,2.6],[0,5.6]),
+   nd('s5','stage','Trace Gantt\nimport',[3.6,3.45],[1,5.6],{n:5})],
+  edges:[
+   {id:'e1',a:'exp',b:'s1'},{id:'e2',a:'s1',b:'s2'},{id:'e3',a:'s2',b:'s3'},
+   ...[1,2,3,4,5].map(i=>({id:'f'+i,a:'s3',b:'h'+i,w:[[3.68,1],[3.68,[0.2,0.6,1,1.4,1.8][i-1]]],m:[[0.62,3],[0.62,[2.3,2.65,3,3.35,3.7][i-1]]]})),
+   ...[1,2,3,4,5].map(i=>({id:'g'+i,a:'h'+i,b:'s4',w:[[4.75,[0.2,0.6,1,1.4,1.8][i-1]],[4.75,2.6]],m:[[1.42,[2.3,2.65,3,3.35,3.7][i-1]],[1.42,4.55]]})),
+   {id:'e5',a:'s4',b:'rep'},
+   {id:'o1',a:'s4',b:'s5',k:'o',t:'viewer mode'},
+   {id:'r1',a:'s2',b:'s1',k:'r',t:'export range missing',w:[[2,0.42],[1,0.42]],m:[[-0.56,2],[-0.56,1]]},
+   {id:'r2',a:'s4',b:'s3',k:'r',t:'claim lacks a raw span',w:[[3.6,1.62],[3.15,1.62]],m:[[-0.56,4.55],[-0.56,3]],lw:[3.62,2.02,'start']}],
+  steps:[
+   {at:'exp',say:'Start from the raw export for the exact case and time window.'},
+   {via:'e1',say:'Stage 1: freeze the export and record its hash. Missing ranges are named, not skipped.'},
+   {via:'e2',say:'Stage 2: reconcile every call and payload to its task. Unassigned calls stay visible.'},
+   {via:'e3',say:'Stage 3: rebuild the journey, task by task.'},
+   {fan:['f1','f2','f3','f4','f5'],say:'One hypothesis per layer: brief, binding, guidance, compiler and runtime.'},
+   {mark:{h1:'out',h2:'out',h3:'out',h5:'out',h4:'hit'},say:'Four are ruled out with evidence. The compiler is the first causal break.'},
+   {join:['g4'],at:'s4',say:'Stage 4: check every claim against the brief and the saved and deployed definition.'},
+   {fail:'s4',say:'Gate fails: one claim does not cite a raw span.'},
+   {rep:'r2',at:'s3',stale:['s4'],say:'Repair: back to stage 3 for a smaller deciding check.'},
+   {via:['f4','g4'],say:'The deciding check holds, and the claim now cites its span.'},
+   {via:'e5',end:true,say:'Report: reconciled timeline, first causal break and checked claims.'}]
+ },
+ atlas: {
+  nodes:[
+   nd('q','stack','Atlas\nqueue',[0,0],[0,0]),
+   nd('s1','stage','Read and\ndedupe',[1,0],[0,1],{n:1}),
+   nd('s2','stage','Prove the\nsymptom',[2,0],[0,2],{n:2}),
+   nd('d1','dec','Real\ndefect?',[3,0],[0,3]),
+   nd('x1','exit','Close as\nstale',[4.05,0],[1,3]),
+   nd('s3','sw','Fix at the owner',[3,1.1],[0,4.15],{n:3,chips:['compiler','MCP','guidance','runtime']}),
+   nd('s4','stage','Same-case\nproof',[1.75,1.1],[0,5.3],{n:4}),
+   nd('d2','dec','Proof level\nmet?',[0.75,1.1],[0,6.3]),
+   nd('s5','fx','Review and\nopen PR',[-0.3,1.1],[0,7.3],{n:5}),
+   nd('p1','person','Approve the\nticket write',[-0.3,2.15],[1,7.3]),
+   nd('s6','fx','Comment\nand reload',[1.05,2.15],[1,8.3]),
+   nd('rec','rec','Issue\nreceipt',[2.3,2.15],[0,8.3])],
+  edges:[
+   {id:'e1',a:'q',b:'s1'},{id:'e2',a:'s1',b:'s2'},{id:'e3',a:'s2',b:'d1'},
+   {id:'x',a:'d1',b:'x1',k:'b',t:'no'},
+   {id:'e4',a:'d1',b:'s3',k:'b',t:'yes'},
+   {id:'e5',a:'s3',b:'s4'},{id:'e6',a:'s4',b:'d2'},
+   {id:'e7',a:'d2',b:'s5',k:'b',t:'yes'},
+   {id:'e8',a:'s5',b:'p1'},{id:'e9',a:'p1',b:'s6'},{id:'e10',a:'s6',b:'rec'},
+   {id:'r1',a:'d2',b:'s3',k:'r',t:'same case still fails',w:[[0.75,1.64],[3,1.64]],m:[[1,6.3],[1,4.15]]},
+   {id:'cyc',a:'rec',b:'q',k:'c',t:'queue mode: next issue',w:[[4.75,2.15],[4.75,-0.62],[0,-0.62]],m:[[-0.56,8.3],[-0.56,0]]}],
+  steps:[
+   {at:'q',say:'Read the assigned queue with its comments, parents, children and artifacts.'},
+   {via:'e1',say:'Stage 1: deduplicate and classify each selected issue. Queue counts must reconcile.'},
+   {via:'e2',say:'Stage 2: prove or contradict the symptom in its exact case.'},
+   {via:'e3',say:'Gate: only a supported defect with an owning layer goes on to a fix. Stale issues close here.'},
+   {via:'e4',pick:['s3',0],say:'Stage 3: the evidence picks the owner. Here, the compiler.'},
+   {via:'e5',say:'Stage 4: an independent check on the same acceptance case.'},
+   {via:'e6',fail:'d2',say:'Gate fails: the same case still breaks.'},
+   {rep:'r1',at:'s3',stale:['s4','d2'],say:'Repair: back to the owner with the failed artifact. Two repair cycles at most.'},
+   {via:['e5','e6'],say:'Same-case proof passes at the requested level.'},
+   {via:'e7',say:'Stage 5: review and package the PR through the pr loop.'},
+   {via:'e8',say:'Ticket writes need a named approval. Without one, the loop returns a draft.'},
+   {via:'e9',say:'Write the root-cause comment, then reload it to prove it landed once.'},
+   {via:'e10',end:true,say:'Receipt for this issue: last proved stage, PR and writeback IDs.'},
+   {via:'cyc',say:'In queue mode the cursor moves on to the next issue. Merging stays with a person.'}]
+ },
+ pr: {
+  nodes:[
+   nd('s1','stage','Pin base\nand head',[0,0],[0,0],{n:1}),
+   nd('s2','stage','Review with\nevidence',[1,0],[0,1],{n:2}),
+   nd('d1','dec','Review\nonly?',[2,0],[0,2]),
+   nd('x1','exit','Return the\nfindings',[3.05,0],[1,2]),
+   nd('s3','stage','Fix at the\nowner',[2,1],[0,3],{n:3}),
+   nd('s4','fx','Repair the\nstack',[1,1],[0,4],{n:4}),
+   nd('L1','mini','layer 1',[0.5,1.85],[0.15,4.85]),
+   nd('L2','mini','layer 2',[1.15,2.2],[0.6,5.25]),
+   nd('L3','mini','layer 3',[1.8,2.55],[1.05,5.65]),
+   nd('s5','stage','Rereview and\nread CI',[3,2.55],[0,6.6],{n:5}),
+   nd('d2','dec','Green on\nnew head?',[4.05,2.55],[0,7.6]),
+   nd('x2','exit','Stop: same\ncheck fails',[4.05,3.45],[1,7.6]),
+   nd('rec','rec','Final-head\nreceipt',[4.05,1.6],[0,8.6]),
+   nd('per','person','A person\nmerges',[4.05,0.66],[1,8.6])],
+  edges:[
+   {id:'e1',a:'s1',b:'s2'},{id:'e2',a:'s2',b:'d1'},
+   {id:'x',a:'d1',b:'x1',k:'b',t:'yes'},
+   {id:'e3',a:'d1',b:'s3',k:'b',t:'no'},
+   {id:'e4',a:'s3',b:'s4'},{id:'e5',a:'s4',b:'L1'},
+   {id:'e6',a:'L1',b:'L2',w:[[1.15,1.85]],m:[[0.6,4.85]]},
+   {id:'e7',a:'L2',b:'L3',w:[[1.8,2.2]],m:[[1.05,5.25]]},
+   {id:'e8',a:'L3',b:'s5',m:[[1.05,6.6]]},
+   {id:'e9',a:'s5',b:'d2'},
+   {id:'e10',a:'d2',b:'rec',k:'b',t:'yes'},
+   {id:'xx',a:'d2',b:'x2',k:'b',t:'unchanged'},
+   {id:'e11',a:'rec',b:'per',k:'o'},
+   {id:'r1',a:'d2',b:'s3',k:'r',t:'red, new evidence',w:[[4.78,2.55],[4.78,1]],m:[[-0.52,7.6],[-0.52,3]],lw:[4.85,1.9,'start']},
+   {id:'r2',a:'s5',b:'s1',k:'r',t:'head moved: re-pin',w:[[3,3.22],[-0.62,3.22],[-0.62,0]],m:[[-0.64,6.6],[-0.64,0]],lw:[0.4,3.14,'middle']}],
+  steps:[
+   {at:'s1',say:'Stage 1: pin local and remote base, head and stack edges. Each diff is checked against its real base.'},
+   {via:'e1',say:'Stage 2: review intent through callers and invariants. Every finding carries a file, line or case.'},
+   {via:'e2',say:'Review-only work ends here with ranked findings.'},
+   {via:'e3',say:'Stage 3: fix only at the owning layer, with a focused check per finding.'},
+   {via:'e4',say:'Stage 4: repair the stack once, in the requested order.'},
+   {via:['e5','e6','e7'],say:'Each layer gets a new base and head, and its affected proofs rerun.'},
+   {via:'e8',say:'Stage 5: rereview the final head and read current CI once.'},
+   {via:'e9',fail:'d2',say:'A required check is red on the new head.'},
+   {rep:'r1',at:'s3',stale:['s4','L1','L2','L3','s5','d2'],say:'Repair: one concrete fix at the owner. An unchanged failing check stops the loop instead.'},
+   {via:['e4','e5','e6','e7','e8','e9'],say:'The stack is rebuilt and CI is green on the reviewed head.'},
+   {via:'e10',say:'Receipt: reviewed SHA, check job IDs and PR readback.'},
+   {via:'e11',end:true,say:'Merge is never implied. A person decides.'}]
+ },
+ guidance: {
+  cw:168,
+  nodes:[
+   nd('s1','stage','Rule out\nother causes',[0,0],[0,0],{n:1}),
+   nd('d1','dec','Wording at\nfault?',[1.05,0],[0,1]),
+   nd('x1','exit','Hand to diagnose\nor develop',[1.05,-0.95],[1,1]),
+   nd('s2','sw','Pick the owner',[2.3,0],[0,2.15],{n:2,chips:['prompt','skill','tool text','example']}),
+   nd('s3','sw','Edit, regenerate',[3.5,0],[0,3.35],{n:3,chips:['source','generated','stored','deployed']}),
+   nd('lad','ladder','Verify delivery',[4.8,1.3],[0,4.95],{n:4,rungs:['assigned','delivered','followed','correct']}),
+   nd('ab','ab','Score frozen cases',[3.5,2.55],[0,6.75],{n:5}),
+   nd('d2','dec','Keep the\nchange?',[2.2,2.55],[0,7.8]),
+   nd('x2','exit','Revert, keep\nthe evidence',[2.2,3.45],[1,7.8]),
+   nd('rec','rec','Diff to the\npr loop',[1.05,2.55],[0,8.8])],
+  edges:[
+   {id:'e1',a:'s1',b:'d1'},
+   {id:'x',a:'d1',b:'x1',k:'b',t:'no'},
+   {id:'e2',a:'d1',b:'s2',k:'b',t:'yes'},
+   {id:'e3',a:'s2',b:'s3'},
+   {id:'e4',a:'s3',b:'lad',w:[[4.8,0]]},
+   {id:'e5',a:'lad',b:'ab',w:[[4.8,2.55]]},
+   {id:'e6',a:'ab',b:'d2'},
+   {id:'e7',a:'d2',b:'rec',k:'b',t:'keep'},
+   {id:'xx',a:'d2',b:'x2',k:'b',t:'revert'},
+   {id:'r1',a:'lad',b:'s2',k:'r',t:'not delivered: fix placement',w:[[5.45,1.3],[5.45,-0.68],[2.3,-0.68]],m:[[-0.58,4.95],[-0.58,2.15]],lw:[3.9,-0.76,'middle']}],
+  steps:[
+   {at:'s1',say:'Stage 1: rule out binding, missing data, compiler and evaluator faults first.'},
+   {via:'e1',say:'Only a placement or delivery problem goes on to a wording change.'},
+   {via:'e2',pick:['s2',1],say:'Stage 2: choose the smallest owner. Here, a runtime skill.'},
+   {via:'e3',pickAll:'s3',say:'Stage 3: edit the owner and regenerate its copies. The sync check must agree.'},
+   {via:'e4',climb:['lad',1,1],fail:'lad',say:'Stage 4: the skill is assigned but never delivered in the turn.'},
+   {rep:'r1',at:'s2',stale:['s3','lad'],say:'Repair: a delivery failure goes back to placement, not to more rewording.'},
+   {via:['e3','e4'],climb:['lad',4],say:'Assigned, delivered, followed, and followed correctly.'},
+   {via:'e5',ab:'ab',say:'Stage 5: score matched frozen cases, baseline against candidate.'},
+   {via:'e6',say:'Stage 6: keep or revert on the evidence.'},
+   {via:'e7',end:true,say:'Keep: the exact diff goes to the pr loop. An unrun corpus is never reported as passing.'}]
+ },
+ evaluate: {
+  nodes:[
+   nd('s1','stage','Freeze the\ncases',[0,0],[0,0],{n:1}),
+   nd('s2','stage','Pin config\nand ceilings',[1,0],[0,1],{n:2}),
+   nd('s3','fx','One pilot\nrun',[2,0],[0,2],{n:3}),
+   nd('d1','dec','Pilot\nproved?',[3,0],[0,3]),
+   nd('x1','exit','Stop all\ndispatch',[4.05,0],[1,3]),
+   nd('s4','fx','Dispatch\nbatches',[3,1],[0,4],{n:4}),
+   nd('ent1','entry','supervise\nmode',[4.1,1],[1,4]),
+   ...[1,2,3,4].map(i=>nd('c'+i,'mini','case '+i,[2.46+0.36*(i-1),1.85],[-0.36+0.34*(i-1),4.9],{sz:[54,25]})),
+   nd('s5','stage','Semantic\nproof',[3,2.75],[0,5.8],{n:5}),
+   nd('ent2','entry','inspect or\ncompare',[4.1,2.75],[1,5.8]),
+   nd('s6','stage','Reconcile\naccounting',[2,2.75],[0,6.8],{n:6}),
+   nd('s7','stage','Rerun or\ncompare',[1,2.75],[0,7.8],{n:7}),
+   nd('rec','rec','Case ledger\nand verdicts',[0,2.75],[1,7.8])],
+  edges:[
+   {id:'e1',a:'s1',b:'s2'},{id:'e2',a:'s2',b:'s3'},{id:'e3',a:'s3',b:'d1'},
+   {id:'x',a:'d1',b:'x1',k:'b',t:'no'},
+   {id:'e4',a:'d1',b:'s4',k:'b',t:'yes'},
+   {id:'n1',a:'ent1',b:'s4',k:'o'},
+   ...[1,2,3,4].map(i=>({id:'f'+i,a:'s4',b:'c'+i})),
+   ...[1,2,3,4].map(i=>({id:'j'+i,a:'c'+i,b:'s5'})),
+   {id:'n2',a:'ent2',b:'s5',k:'o'},
+   {id:'e5',a:'s5',b:'s6'},{id:'e6',a:'s6',b:'s7'},{id:'e7',a:'s7',b:'rec'},
+   {id:'r1',a:'s7',b:'s4',k:'r',t:'rerun what the fix touched',w:[[1,1]],m:[[-0.58,7.8],[-0.58,4]],lw:[1.07,1.7,'start']}],
+  steps:[
+   {at:'s1',say:'Stage 1: freeze unique cases, prompts and assertions. No tenant fact is invented.'},
+   {via:'e1',say:'Stage 2: pin the agent, model, skills and connections, plus spend and time ceilings.'},
+   {via:'e2',say:'Stage 3: one pilot runs end to end before anything else is dispatched.'},
+   {via:'e3',say:'A failed pilot stops all dispatch. This one passes.'},
+   {via:'e4',say:'Stage 4: dispatch in bounded batches, each case with a durable receipt.'},
+   {fan:['f1','f2','f3','f4'],say:'Every launched case is supervised until it is terminal or explicitly blocked.'},
+   {join:['j1','j2','j3','j4'],at:'s5',mark:{c3:'fail'},say:'Stage 5: independent semantic proof. Case 3 saved, but failed its assertion.'},
+   {via:'e5',say:'Stage 6: reconcile calls, tokens and cost. Provider spend, credits and wall time stay separate.'},
+   {via:'e6',say:'Stage 7: an owner fix has landed, so rerun only what it touched.'},
+   {rep:'r1',at:'s4',stale:['s5','s6','s7'],say:'Repair: rerun case 3 plus a fixed control slice. The original failure stays in the denominator.'},
+   {via:['f3','j3'],mark:{c3:'done'},say:'Case 3 now passes its assertion.'},
+   {via:['e5','e6','e7'],end:true,say:'Receipt: every case terminal, with formulas and exclusions.'}]
+ },
+ 'check-in': {
+  cw:170,
+  lanes:[{r:0,t:'Platform'},{r:1,t:'Repository'},{r:2,t:'Review and GitHub'}],
+  nodes:[
+   nd('s1','stage','Preflight\nand pin',[0,1],[0,0],{n:1}),
+   nd('x0','exit','Proved no\nchange',[0,2],[1,0]),
+   nd('x2','exit','Publish mode\nends here',[0,0],[1,1]),
+   nd('s2','fx','Sync prompt\nand skills',[1.25,0],[0,1],{n:2}),
+   nd('s3','fx','Trigger one\nexport',[2.35,0],[0,2],{n:3}),
+   nd('s4','stage','Await the\nfinal output',[3.45,0],[0,3],{n:4}),
+   nd('s5','stage','Download and\nverify archive',[4.55,1],[0,4],{n:5}),
+   nd('ent','entry','import mode\nenters here',[5.65,1],[1,4]),
+   nd('p6','person','Apply diff,\nhuman review',[4.55,2],[0,5],{n:6}),
+   nd('s7','fx','Open the\nmain PR',[3.45,2],[0,6],{n:7}),
+   nd('s8','fx','Open the\nUAT PR',[2.35,2],[0,7],{n:8}),
+   nd('rec','rec','Asset and\nPR ledger',[1.25,2],[1,7])],
+  edges:[
+   {id:'xa',a:'s1',b:'x0',k:'b',t:'already match',tm:''},
+   {id:'e1',a:'s1',b:'s2',w:[[0,0.5],[1.1,0.5]]},
+   {id:'xb',a:'s2',b:'x2',k:'b',t:'publish',tm:''},
+   {id:'e2',a:'s2',b:'s3'},{id:'e3',a:'s3',b:'s4'},
+   {id:'p1',a:'s4',b:'s4',k:'p',t:'bounded polling',side:{w:'top',m:'right'}},
+   {id:'e4',a:'s4',b:'s5',w:[[4.55,0]]},
+   {id:'en',a:'ent',b:'s5',k:'o'},
+   {id:'e5',a:'s5',b:'p6'},{id:'e6',a:'p6',b:'s7'},{id:'e7',a:'s7',b:'s8'},{id:'e8',a:'s8',b:'rec'},
+   {id:'r1',a:'p6',b:'s2',k:'r',t:'diff does not match the export',w:[[5.25,2],[5.25,1.55],[1.4,1.55]],m:[[-0.56,5],[-0.56,1]],lw:[2.9,1.47,'middle']}],
+  steps:[
+   {at:'s1',say:'Stage 1: pin source, environment and bases. If everything already matches, stop with a proved no-change.'},
+   {via:'e1',say:'Stage 2: sync the canonical prompt and skill set, then read back the saved and deployed hashes.'},
+   {via:'e2',say:'Stage 3: trigger one export and record one execution ID. Never a blind second trigger.'},
+   {via:'e3',say:'Stage 4: wait for the final output, not an intermediate URL.'},
+   {poll:'p1',n:2,say:'Polling has a deadline. A terminal failed export stops the loop.'},
+   {via:'e4',say:'Stage 5: download, hash the archive and check every path for containment.'},
+   {via:'e5',fail:'p6',say:'Stage 6: the prepared diff does not match the export.'},
+   {rep:'r1',at:'s2',stale:['s3','s4','s5','p6'],say:'Repair: back to sync, the stage that owns the content. One reconcile repair is allowed.'},
+   {via:['e2','e3','e4','e5'],say:'Diff and export agree. A person approves the exact reviewed digest.'},
+   {via:'e6',say:'Stage 7: open the main PR from the reviewed patch and read it back.'},
+   {via:'e7',say:'Stage 8: open the UAT PR, keeping the fields UAT owns.'},
+   {via:'e8',end:true,say:'Receipt: asset, export, diff and PR ledger. Merging and messages stay with people.'}]
+ },
+ contracts: {
+  nodes:[
+   nd('s1','stage','Pin the\ntool route',[0,0],[0,0],{n:1}),
+   nd('r1','mini','agent action',[1.1,0],[1,0]),
+   nd('r2','mini','connection',[1.85,0],[1,0.55]),
+   nd('r3','mini','registration',[2.6,0],[1,1.1]),
+   nd('r4','mini','handler',[3.35,0],[1,1.65]),
+   nd('r5','mini','adapter',[4.1,0],[1,2.2]),
+   nd('s2','sw','Define fixtures',[4.1,1.2],[0,3.3],{n:2,chips:['success','refusal','error','timeout','large'],cols:3}),
+   nd('s3','stage','Reproduce\nthe failure',[2.8,1.2],[0,4.45],{n:3}),
+   nd('s4','stage','Repair the\nowner',[1.65,1.2],[0,5.45],{n:4}),
+   nd('c1','mini','Code caller,\nfull bytes',[1.05,2.15],[0,6.45],{sz:[124,40]}),
+   nd('c2','mini','Direct caller,\npreview',[2.25,2.15],[1,6.45],{sz:[124,40]}),
+   nd('s5','stage','Verify both\ncallers',[1.65,3.05],[0,7.45],{n:5}),
+   nd('s6','fx','Live check,\nif authorized',[2.85,3.05],[0,8.45],{n:6}),
+   nd('rec','rec','Contract\nmatrix',[4.05,3.05],[1,8.45])],
+  edges:[
+   {id:'e1',a:'s1',b:'r1'},
+   {id:'q1',a:'r1',b:'r2',k:'q'},{id:'q2',a:'r2',b:'r3',k:'q'},{id:'q3',a:'r3',b:'r4',k:'q'},{id:'q4',a:'r4',b:'r5',k:'q'},
+   {id:'e2',a:'r5',b:'s2'},{id:'e3',a:'s2',b:'s3'},{id:'e4',a:'s3',b:'s4'},
+   {id:'k1',a:'s4',b:'c1'},{id:'k2',a:'s4',b:'c2'},
+   {id:'j1',a:'c1',b:'s5'},{id:'j2',a:'c2',b:'s5'},
+   {id:'e5',a:'s5',b:'s6',k:'o'},{id:'e6',a:'s6',b:'rec'},
+   {id:'rr',a:'c1',b:'s4',k:'r',t:'lost fields',w:[[0.3,2.15],[0.3,1.2]],m:[[-0.56,6.45],[-0.56,5.45]],lw:[0.24,1.7,'end']}],
+  steps:[
+   {at:'s1',say:'Stage 1: pin the live route the tool call actually takes.'},
+   {via:['e1','q1','q2','q3','q4'],say:'Agent action, connection, registration, handler, adapter. Stale tool names become findings.'},
+   {via:'e2',pickAll:'s2',say:'Stage 2: fixtures for success, refusal, error, timeout and large results.'},
+   {via:'e3',say:'Stage 3: reproduce through the registered client. An HTTP 200 alone proves nothing here.'},
+   {via:'e4',say:'Stage 4: repair only the owning code.'},
+   {fan:['k1','k2'],say:'Stage 5: verify both caller paths.'},
+   {fail:'c1',say:'The code caller lost fields from the full result.'},
+   {rep:'rr',at:'s4',stale:['c1','c2'],say:'Repair: back to the adapter that dropped them.'},
+   {fan:['k1','k2'],say:'Both callers now return the full result, with matching bytes.'},
+   {join:['j1','j2'],at:'s5',say:'Identity and full result hold on both paths.'},
+   {via:'e5',say:'Stage 6 calls the live target only if the invocation authorizes it.'},
+   {via:'e6',end:true,say:'Receipt: route, fixture and result matrix, with runtime limits stated.'}]
+ },
+ develop: {
+  nodes:[
+   nd('s1','sw','Freeze baseline',[0,0],[0,0],{n:1,chips:['compiler','validator','examples','saved']}),
+   nd('s2','stage','Smallest\nrepro',[1.15,0],[0,1.15],{n:2}),
+   nd('s3','stage','Implement\nthe change',[2.15,0],[0,2.15],{n:3}),
+   nd('s4','stage','Local\nproof',[3.15,0],[0,3.15],{n:4}),
+   nd('d1','dec','Which\nmode?',[3.15,1.05],[0,4.15]),
+   nd('s7','stage','Final\nreview',[1.15,1.05],[0,6.15],{n:7}),
+   nd('rec','rec','Proof matrix\nand PR',[0,1.05],[0,7.15]),
+   nd('s5','fx','Save and\nTEST',[3.15,2.1],[1,5.15],{n:5}),
+   nd('s6','fx','Deploy and\nRUN',[1.95,2.1],[1,6.15],{n:6})],
+  edges:[
+   {id:'e1',a:'s1',b:'s2'},{id:'e2',a:'s2',b:'s3'},{id:'e3',a:'s3',b:'s4'},{id:'e4',a:'s4',b:'d1'},
+   {id:'e5',a:'d1',b:'s5',k:'b',t:'saved workflow',m:[[1,4.15]]},
+   {id:'b1',a:'d1',b:'s7',k:'b',t:'compiler, validator, examples'},
+   {id:'e6',a:'s5',b:'s6',k:'o',t:'if asked',lw:[2.55,2.02,'middle'],lm:[1.07,5.7,'start']},
+   {id:'e7',a:'s6',b:'s7',w:[[1.15,2.1]]},
+   {id:'e8',a:'s7',b:'rec'},
+   {id:'r1',a:'s5',b:'s3',k:'r',t:'TEST assertion fails',w:[[3.85,2.1],[3.85,-0.62],[2.15,-0.62]],m:[[1.56,5.15],[1.56,2.15]],lw:[3,-0.7,'middle']}],
+  steps:[
+   {at:'s1',pick:['s1',3],say:'Stage 1: freeze source, workflow and expected behavior. This pass runs saved-workflow mode.'},
+   {via:'e1',say:'Stage 2: build the smallest reproduction and prove which layer owns it.'},
+   {via:'e2',say:'Stage 3: implement only the authorized change.'},
+   {via:'e3',say:'Stage 4: local proof with the existing unit, type and corpus checks.'},
+   {via:'e4',say:'Only saved-workflow mode goes on to save. Validator mode never saves or deploys.'},
+   {via:'e5',fail:'s5',say:'Stage 5: saved and read back, but one TEST assertion fails.'},
+   {rep:'r1',at:'s3',stale:['s4','d1','s5'],say:'Repair: back to the implementation with the failing case. Two save and test cycles at most.'},
+   {via:['e3','e4','e5'],say:'TEST passes. Inputs, node outputs and assertions are recorded per case.'},
+   {via:'e6',say:'Stage 6: deploy and RUN only when separately requested.'},
+   {via:'e7',say:'Stage 7: review owner boundaries and neighboring cases.'},
+   {via:'e8',end:true,say:'Receipt: graph, test and run proof, with unproved stages named.'}]
+ }
+};
+
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ const node = document.createElementNS(NS, tag); for(const key in attrs) node.setAttribute(key, attrs[key]); if(parent) parent.appendChild(node); return node; }
+const GRID = {w:{cw:176, ch:100}, m:{cw:170, ch:88}};
+const SIZE = {stage:[150,52], fx:[150,52], dec:[124,68], store:[118,58], stack:[122,56], exit:[132,40], entry:[118,38], rec:[122,56], person:[158,52], mini:[108,28], sw:[180,86], ladder:[180,166], ab:[196,74]};
+const SIZE_M = {stage:[148,48], fx:[148,48], dec:[118,62], person:[150,48], mini:[96,25], sw:[160,86], ladder:[168,160], ab:[172,72]};
+
+function textLines(parent, lines, x, y, cls, anchor){
+  const lead = 14.5, top = y - (lines.length-1)*lead/2 + 4.5;
+  lines.forEach((line, lineIndex)=>{ el('text', {x, y: top + lineIndex*lead, 'text-anchor': anchor || 'middle', class: cls || 'tx'}, parent).textContent = line; });
+}
+function badge(group, node){
+  if(!node.n) return;
+  const holder = el('g', {class:'bd'}, group), x = node.x - node.hw + 15, y = node.y - node.hh;
+  el('circle', {cx:x, cy:y, r:9.5}, holder);
+  el('text', {x, y: y+3.8, 'text-anchor':'middle'}, holder).textContent = node.n;
+}
+
+function drawNode(layer, node){
+  const group = el('g', {class:'nd k-'+node.k}, layer);
+  const {x, y, hw, hh} = node, left = x-hw, top = y-hh, w = hw*2, h = hh*2;
+  const lines = node.t.split('\n');
+  node.g = group;
+  switch(node.k){
+    case 'dec': el('polygon', {points:`${x},${top} ${x+hw},${y} ${x},${y+hh} ${left},${y}`, class:'sh'}, group); textLines(group, lines, x, y); break;
+    case 'fx': { const cut = 10; el('polygon', {points:`${left+cut},${top} ${left+w-cut},${top} ${left+w},${top+cut} ${left+w},${top+h-cut} ${left+w-cut},${top+h} ${left+cut},${top+h} ${left},${top+h-cut} ${left},${top+cut}`, class:'sh'}, group); textLines(group, lines, x, y); break; }
+    case 'store': { const ry = 7;
+      el('path', {d:`M${left} ${top+ry} A${hw} ${ry} 0 0 1 ${left+w} ${top+ry} V${top+h-ry} A${hw} ${ry} 0 0 1 ${left} ${top+h-ry} Z`, class:'sh'}, group);
+      el('path', {d:`M${left} ${top+ry} A${hw} ${ry} 0 0 0 ${left+w} ${top+ry}`, class:'sh2'}, group);
+      textLines(group, lines, x, y+4); break; }
+    case 'stack':
+      el('rect', {x:left+10, y:top-10, width:w, height:h, rx:10, class:'ghost'}, group);
+      el('rect', {x:left+5, y:top-5, width:w, height:h, rx:10, class:'ghost'}, group);
+      el('rect', {x:left, y:top, width:w, height:h, rx:10, class:'sh'}, group); textLines(group, lines, x, y); break;
+    case 'rec':
+      el('path', {d:`M${left} ${top} H${left+w-13} L${left+w} ${top+13} V${top+h} H${left} Z`, class:'sh'}, group);
+      el('path', {d:`M${left+w-13} ${top} V${top+13} H${left+w}`, class:'sh2'}, group);
+      textLines(group, lines, x, y); break;
+    case 'person':
+      el('rect', {x:left, y:top, width:w, height:h, rx:hh, class:'sh'}, group);
+      el('circle', {cx:left+22, cy:y-5, r:4.5, class:'gl'}, group);
+      el('path', {d:`M${left+14} ${y+11} a8 7.5 0 0 1 16 0`, class:'gl'}, group);
+      textLines(group, lines, x+10, y); break;
+    case 'exit': case 'entry':
+      el('rect', {x:left, y:top, width:w, height:h, rx:hh, class:'sh'}, group); textLines(group, lines, x, y); break;
+    case 'mini':
+      el('rect', {x:left, y:top, width:w, height:h, rx:8, class:'sh'}, group); textLines(group, lines, x, y); break;
+    case 'sw': {
+      el('rect', {x:left, y:top, width:w, height:h, rx:12, class:'sh'}, group);
+      el('text', {x, y:top+20, 'text-anchor':'middle', class:'tx'}, group).textContent = node.t;
+      const cols = node.cols || 2, gap = 5, chipW = (w - 16 - (cols-1)*gap)/cols, chipH = 21;
+      node.chipEls = node.chips.map((label, chipIndex)=>{
+        const row = Math.floor(chipIndex/cols), col = chipIndex % cols, inRow = Math.min(cols, node.chips.length - row*cols);
+        const rowLeft = left + (w - (inRow*chipW + (inRow-1)*gap))/2;
+        const chip = el('g', {class:'chip', style:`--i:${chipIndex}`}, group), cx = rowLeft + col*(chipW+gap);
+        el('rect', {x:cx, y:top+31+row*(chipH+gap), width:chipW, height:chipH, rx:6}, chip);
+        el('text', {x:cx+chipW/2, y:top+31+row*(chipH+gap)+14.5, 'text-anchor':'middle'}, chip).textContent = label;
+        return chip;
+      });
+      break; }
+    case 'ladder': {
+      el('rect', {x:left, y:top, width:w, height:h, rx:12, class:'sh'}, group);
+      el('text', {x, y:top+21, 'text-anchor':'middle', class:'tx'}, group).textContent = node.t;
+      const rungH = 25, gap = 7, start = top + 34;
+      node.rungEls = node.rungs.map((label, rungIndex)=>{
+        const rung = el('g', {class:'rung', style:`--i:${rungIndex}`}, group), ry = start + rungIndex*(rungH+gap);
+        el('rect', {x:left+10, y:ry, width:w-20, height:rungH, rx:6}, rung);
+        el('text', {x:left+22, y:ry+16.5}, rung).textContent = label;
+        el('circle', {cx:left+w-24, cy:ry+rungH/2, r:5.5}, rung);
+        return rung;
+      });
+      break; }
+    case 'ab': {
+      el('rect', {x:left, y:top, width:w, height:h, rx:12, class:'sh'}, group);
+      el('text', {x, y:top+20, 'text-anchor':'middle', class:'tx'}, group).textContent = node.t;
+      // illustrative pass/fail marks, not data
+      const rows = [['baseline','ppfpff'],['candidate','pppppf']];
+      rows.forEach(([label, marks], rowIndex)=>{
+        const ry = top + 38 + rowIndex*20;
+        el('text', {x:left+12, y:ry+4, class:'abl'}, group).textContent = label;
+        [...marks].forEach((mark, markIndex)=>{ el('circle', {cx:left+w-92+markIndex*15, cy:ry, r:5, class:'abd '+mark, style:`--i:${markIndex + rowIndex*6}`}, group); });
+      });
+      break; }
+    default:
+      el('rect', {x:left, y:top, width:w, height:h, rx:12, class:'sh'}, group); textLines(group, lines, x, y);
+  }
+  badge(group, node);
+}
+
+const sign = value => value < 0 ? -1 : 1;
+function anchor(node, toward){
+  const dx = toward.x - node.x, dy = toward.y - node.y, diamond = node.k === 'dec';
+  if(Math.abs(dy) < 1.5) return {x: node.x + sign(dx)*node.hw, y: node.y};
+  if(Math.abs(dx) < 1.5) return {x: node.x, y: node.y + sign(dy)*node.hh};
+  if(!diamond && Math.abs(dx) < node.hw - 8 && Math.abs(dy) > node.hh) return {x: toward.x, y: node.y + sign(dy)*node.hh};
+  if(!diamond && Math.abs(dy) < node.hh - 6 && Math.abs(dx) > node.hw) return {x: node.x + sign(dx)*node.hw, y: toward.y};
+  return Math.abs(dx) > Math.abs(dy) ? {x: node.x + sign(dx)*node.hw, y: node.y} : {x: node.x, y: node.y + sign(dy)*node.hh};
+}
+function routePoints(edge, from, to, waypoints){
+  if(waypoints.length) return [anchor(from, waypoints[0]), ...waypoints, anchor(to, waypoints[waypoints.length-1])];
+  if(Math.abs(from.y - to.y) < 1.5) return [anchor(from, to), anchor(to, from)];
+  if(Math.abs(from.x - to.x) < 1.5) return [anchor(from, to), anchor(to, from)];
+  const dir = sign(to.y - from.y), start = {x: from.x, y: from.y + dir*from.hh}, end = {x: to.x, y: to.y - dir*to.hh}, mid = (start.y + end.y)/2;
+  return [start, {x: start.x, y: mid}, {x: end.x, y: mid}, end];
+}
+function roundedPath(rawPoints, radius){
+  const points = rawPoints.filter((point, index)=>index === 0 || Math.hypot(point.x - rawPoints[index-1].x, point.y - rawPoints[index-1].y) > 0.5);
+  let d = `M${points[0].x} ${points[0].y}`;
+  for(let index = 1; index < points.length - 1; index++){
+    const prev = points[index-1], corner = points[index], next = points[index+1];
+    const inLen = Math.hypot(corner.x-prev.x, corner.y-prev.y), outLen = Math.hypot(next.x-corner.x, next.y-corner.y);
+    const r = Math.min(radius, inLen/2, outLen/2);
+    const before = {x: corner.x - (corner.x-prev.x)/inLen*r, y: corner.y - (corner.y-prev.y)/inLen*r};
+    const after = {x: corner.x + (next.x-corner.x)/outLen*r, y: corner.y + (next.y-corner.y)/outLen*r};
+    d += ` L${before.x} ${before.y} Q${corner.x} ${corner.y} ${after.x} ${after.y}`;
+  }
+  const last = points[points.length-1];
+  return d + ` L${last.x} ${last.y}`;
+}
+function arrowHead(tip, from){
+  const len = Math.hypot(tip.x-from.x, tip.y-from.y) || 1, ux = (tip.x-from.x)/len, uy = (tip.y-from.y)/len, size = 7.5;
+  const bx = tip.x - ux*size, by = tip.y - uy*size;
+  return `${tip.x},${tip.y} ${bx - uy*4.2},${by + ux*4.2} ${bx + uy*4.2},${by - ux*4.2}`;
+}
+function branchLabel(points){
+  const [start, next] = points, horizontal = Math.abs(next.y - start.y) < 1;
+  if(horizontal){ const dir = sign(next.x - start.x); return [start.x + dir*8, start.y - 8, dir > 0 ? 'start' : 'end']; }
+  const dir = sign(next.y - start.y); return [start.x + 8, start.y + dir*15 + (dir > 0 ? 4 : 0), 'start'];
+}
+function longestMid(points){
+  let best = null, bestLen = -1;
+  for(let index = 1; index < points.length; index++){ const a = points[index-1], b = points[index], len = Math.hypot(b.x-a.x, b.y-a.y); if(len > bestLen){ bestLen = len; best = [a,b]; } }
+  const [a, b] = best;
+  return Math.abs(a.y - b.y) < 1 ? [(a.x+b.x)/2, a.y - 8, 'middle'] : [a.x + 8, (a.y+b.y)/2 + 4, 'start'];
+}
+
+function sideRun(points){
+  let best = null;
+  for(let index = 1; index < points.length; index++){
+    const a = points[index-1], b = points[index];
+    if(Math.abs(a.x - b.x) < 1 && (!best || Math.abs(b.y - a.y) > Math.abs(best[1].y - best[0].y))) best = [a, b];
+  }
+  if(!best) return null;
+  return [best[0].x - 7, (best[0].y + best[1].y)/2, 'middle', 'up'];
+}
+function buildDiagram(svg, spec, layoutKey){
+  svg.innerHTML = '';
+  const grid = Object.assign({}, GRID[layoutKey]);
+  if(layoutKey === 'w' && spec.cw) grid.cw = spec.cw;
+  const px = ([col, row]) => ({x: col*grid.cw, y: row*grid.ch});
+  const nodes = {}, bounds = {x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity};
+  const grow = (x, y) => { bounds.x0 = Math.min(bounds.x0, x); bounds.y0 = Math.min(bounds.y0, y); bounds.x1 = Math.max(bounds.x1, x); bounds.y1 = Math.max(bounds.y1, y); };
+  spec.nodes.forEach(def=>{
+    const size = def.sz || (layoutKey === 'm' && SIZE_M[def.k]) || SIZE[def.k];
+    const width = def.sz && layoutKey === 'm' && def.k === 'mini' ? Math.min(def.sz[0], 116) : size[0];
+    let height = size[1];
+    if(def.k === 'sw'){ const cols = layoutKey === 'w' && def.cols ? def.cols : 2; height = 39 + Math.ceil(def.chips.length/cols)*26; }
+    const node = Object.assign({}, def, px(def[layoutKey]), {hw: width/2, hh: height/2, cols: layoutKey === 'w' && def.cols ? def.cols : 2});
+    nodes[def.id] = node;
+    grow(node.x - node.hw, node.y - node.hh - (def.k === 'stack' ? 10 : 0) - (def.n ? 10 : 0)); grow(node.x + node.hw + (def.k === 'stack' ? 10 : 0), node.y + node.hh);
+  });
+  const laneLayer = el('g', {}, svg), edgeLayer = el('g', {}, svg), nodeLayer = el('g', {}, svg), labelLayer = el('g', {}, svg), tokenLayer = el('g', {}, svg);
+  const edges = {};
+  spec.edges.forEach(def=>{
+    const kind = def.k || 'f', from = nodes[def.a], to = nodes[def.b];
+    const group = el('g', {class:'ed k-'+kind}, edgeLayer);
+    let d, tip, tail, labelPos;
+    if(kind === 'p'){
+      const side = def.side[layoutKey];
+      if(side === 'top'){ const top = from.y - from.hh, p0 = {x: from.x+24, y: top}, p1 = {x: from.x-24, y: top}, c1 = {x: from.x+40, y: top-50}, c2 = {x: from.x-40, y: top-50};
+        d = `M${p0.x} ${p0.y} C${c1.x} ${c1.y} ${c2.x} ${c2.y} ${p1.x} ${p1.y}`; tip = p1; tail = c2; labelPos = [from.x, top-46, 'middle']; grow(from.x, top-50); }
+      else { const right = from.x + from.hw, p0 = {x: right, y: from.y-12}, p1 = {x: right, y: from.y+12}, c1 = {x: right+52, y: from.y-30}, c2 = {x: right+52, y: from.y+30};
+        d = `M${p0.x} ${p0.y} C${c1.x} ${c1.y} ${c2.x} ${c2.y} ${p1.x} ${p1.y}`; tip = p1; tail = c2; labelPos = [right+46, from.y+4, 'start']; grow(right+48, from.y); }
+    } else {
+      const points = routePoints(def, from, to, (def[layoutKey] || []).map(px));
+      points.forEach(point=>grow(point.x, point.y));
+      d = roundedPath(points, 12); tip = points[points.length-1]; tail = points[points.length-2];
+      const custom = layoutKey === 'w' ? def.lw : def.lm;
+      // on phones a repair label runs up its side channel, where nothing else is drawn
+      const run = layoutKey === 'm' && !custom && (kind === 'r' || kind === 'c') ? sideRun(points) : null;
+      labelPos = custom ? [custom[0]*grid.cw, custom[1]*grid.ch, custom[2]] : run || (kind === 'b' ? branchLabel(points) : longestMid(points));
+    }
+    const line = el('path', {d, class:'ln'}, group);
+    el('polygon', {points: arrowHead(tip, tail), class:'ah'}, group);
+    const text = layoutKey === 'm' && 'tm' in def ? def.tm : def.t;
+    if(text && labelPos[3] === 'up'){
+      const label = el('text', {x: labelPos[0], y: labelPos[1], 'text-anchor':'middle', transform:`rotate(-90 ${labelPos[0]} ${labelPos[1]})`, class:'el k-'+kind}, labelLayer);
+      label.textContent = text;
+      grow(labelPos[0] - 10, labelPos[1] - text.length*3.2); grow(labelPos[0], labelPos[1] + text.length*3.2);
+    } else if(text){
+      const label = el('text', {x: labelPos[0], y: labelPos[1], 'text-anchor': labelPos[2], class:'el k-'+kind}, labelLayer);
+      label.textContent = text;
+      const approx = text.length * 6.2;
+      const lx = labelPos[2] === 'start' ? labelPos[0] : labelPos[2] === 'end' ? labelPos[0] - approx : labelPos[0] - approx/2;
+      grow(lx, labelPos[1] - 10); grow(lx + approx, labelPos[1] + 4);
+    }
+    edges[def.id] = Object.assign({}, def, {g: group, ln: line});
+  });
+  if(layoutKey === 'w' && spec.lanes){
+    spec.lanes.forEach(lane=>{
+      const y = lane.r*grid.ch - grid.ch/2, group = el('g', {class:'lane'}, laneLayer);
+      el('rect', {x: bounds.x0 - 14, y: y + 3, width: bounds.x1 - bounds.x0 + 28, height: grid.ch - 6, rx: 10}, group);
+      el('text', {x: bounds.x1 + 6, y: y + 18, 'text-anchor':'end'}, group).textContent = lane.t;
+    });
+  }
+  spec.nodes.forEach(def=>drawNode(nodeLayer, nodes[def.id]));
+  const token = el('g', {class:'tok', style:'display:none'}, tokenLayer);
+  el('circle', {r:13, class:'halo'}, token); el('circle', {r:6.5, class:'core'}, token);
+  const pad = 16;
+  svg.setAttribute('viewBox', `${bounds.x0 - pad} ${bounds.y0 - pad} ${bounds.x1 - bounds.x0 + pad*2} ${bounds.y1 - bounds.y0 + pad*2}`);
+  svg.style.maxWidth = Math.round(bounds.x1 - bounds.x0 + pad*2) + 'px';
+  return {nodes, edges, token, tokenLayer};
+}
+
+const sleep = ms => new Promise(resolve=>setTimeout(resolve, ms));
+const STATES = ['active','done','fail','stale','out','hit','on'];
+
+function makeLoopCard(loop, spec, host){
+  const card = document.createElement('article');
+  card.className = 'card lc'; card.id = 'loop-' + loop.id;
+  const stageCount = spec.nodes.filter(node=>node.n).length;
+  card.innerHTML = `
+    <div class="lc-head">
+      <div>
+        <div class="lc-name">${loop.id}<span>${stageCount} stages, ${loop.modes} modes</span></div>
+        <h3>${esc(loop.title)}</h3>
+        <code class="lc-cmd">${esc(loop.cmd)}</code>
+      </div>
+      <div class="ctrl">
+        <button type="button" data-act="back" aria-label="Previous step">‹</button>
+        <button type="button" data-act="play">Play</button>
+        <button type="button" data-act="next" aria-label="Next step">›</button>
+        <button type="button" data-act="replay">Replay</button>
+        <span class="count"></span>
+      </div>
+    </div>
+    <div class="status" aria-live="off"><span class="dot"></span><span class="st"></span></div>
+    <div class="lc-fig"><svg class="dg" role="img" aria-label="${esc(loop.title)}: ${esc(spec.nodes.filter(node=>node.n).map(node=>node.t.replace(/\n/g,' ')).join(', '))}"></svg></div>
+    <div class="io">
+      <div class="i"><b>Input</b>${esc(loop.input)}</div>
+      <div class="o"><b>Output</b>${esc(loop.output)}</div>
+      <div class="s"><b>Where a person decides</b>${esc(loop.stop)}</div>
+    </div>
+    <div class="facts">
+      <div><b>Evidence</b><span class="n">${loop.conv}</span> loop-linked conversations, ${loop.prompts} prompts</div>
+      <div><b>Supported PRs</b><span class="n">${loop.prs}</span> ${loop.prConv} by conversation, ${loop.prTitle} by title, ${loop.merged} merged</div>
+      <div><b>Illustrative hours</b><span class="n">${loop.est.toFixed(1)}</span> base case over 51 days</div>
+      <div><b>Budget</b>${esc(loop.budget)}</div>
+    </div>
+    <div class="quote">“${esc(loop.quote)}”<span>user prompt, ${loop.qdate}</span></div>`;
+  host.appendChild(card);
+
+  const svg = card.querySelector('svg'), fig = card.querySelector('.lc-fig');
+  const statusEl = card.querySelector('.status'), statusText = card.querySelector('.st'), countEl = card.querySelector('.count');
+  const playBtn = card.querySelector('[data-act="play"]');
+  const steps = spec.steps;
+  let dia = null, layoutKey = null, idx = -1, runId = 0, playing = false, userPaused = false, visible = false;
+
+  const setN = (id, state) => { const group = dia.nodes[id].g; STATES.forEach(name=>group.classList.remove(name)); if(state) group.classList.add(state); };
+  const demote = () => Object.values(dia.nodes).forEach(node=>{ if(node.g.classList.contains('active')) setN(node.id, 'done'); });
+  const showTok = on => { dia.token.style.display = on ? '' : 'none'; };
+  const placeTok = point => dia.token.setAttribute('transform', `translate(${point.x} ${point.y})`);
+  const atNode = id => { const node = dia.nodes[id]; placeTok({x: node.x - node.hw, y: node.y}); showTok(true); };
+  const atEnd = path => { placeTok(path.getPointAtLength(path.getTotalLength())); showTok(true); };
+  // 'snap' marks an instant replay, which no newer run can cancel halfway
+  const gone = id => id !== 'snap' && id !== runId;
+  let snapping = Promise.resolve(), snapSeq = 0;
+
+  function travel(path, duration, id, mover){
+    const move = mover || placeTok, len = path.getTotalLength();
+    if(!duration){ move(path.getPointAtLength(len)); return Promise.resolve(); }
+    return new Promise(resolve=>{
+      const start = performance.now();
+      function frame(now){
+        if(gone(id)) return resolve();
+        const progress = Math.min(1, (now - start)/duration), eased = progress < .5 ? 2*progress*progress : 1 - Math.pow(-2*progress + 2, 2)/2;
+        move(path.getPointAtLength(len*eased));
+        if(progress < 1) requestAnimationFrame(frame); else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  // fan-out and fan-in move one temporary dot per branch at the same time
+  async function travelMany(edgeIds, duration, id){
+    const dots = edgeIds.map(()=>el('circle', {r:5, class:'tok2'}, dia.tokenLayer));
+    await Promise.all(edgeIds.map((edgeId, dotIndex)=>travel(dia.edges[edgeId].ln, duration, id, point=>{ dots[dotIndex].setAttribute('cx', point.x); dots[dotIndex].setAttribute('cy', point.y); })));
+    dots.forEach(dot=>dot.remove());
+  }
+
+  async function apply(step, animate, id){
+    const speed = animate ? 1 : 0;
+    if(step.rep){
+      const edge = dia.edges[step.rep];
+      (step.stale || []).forEach(nodeId=>setN(nodeId, 'stale'));
+      edge.g.classList.add('on'); showTok(true);
+      await travel(edge.ln, 1200*speed, id); if(gone(id)) return;
+      edge.g.classList.remove('on'); edge.g.classList.add('used');
+      setN(step.at, 'active'); atEnd(edge.ln);
+    }
+    if(step.via){
+      const list = [].concat(step.via), each = list.length > 2 ? 380 : 600;
+      for(const edgeId of list){
+        const edge = dia.edges[edgeId];
+        demote(); showTok(true);
+        await travel(edge.ln, each*speed, id); if(gone(id)) return;
+        edge.g.classList.add('done');
+        setN(edge.b, 'active');
+      }
+      atEnd(dia.edges[list[list.length-1]].ln);
+    }
+    if(step.fan){
+      demote(); showTok(false);
+      await travelMany(step.fan, 750*speed, id); if(gone(id)) return;
+      step.fan.forEach(edgeId=>{ dia.edges[edgeId].g.classList.add('done'); setN(dia.edges[edgeId].b, 'done'); });
+    }
+    if(step.join){
+      await travelMany(step.join, 750*speed, id); if(gone(id)) return;
+      step.join.forEach(edgeId=>dia.edges[edgeId].g.classList.add('done'));
+      demote(); setN(step.at, 'active'); atEnd(dia.edges[step.join[0]].ln);
+    }
+    if(step.at && !step.via && !step.rep && !step.join){ demote(); setN(step.at, 'active'); atNode(step.at); }
+    if(step.mark) Object.entries(step.mark).forEach(([nodeId, state])=>setN(nodeId, state));
+    if(step.pick){ const [nodeId, chipIndex] = step.pick; dia.nodes[nodeId].chipEls.forEach((chip, index)=>chip.classList.toggle('on', index === chipIndex)); }
+    if(step.pickAll) dia.nodes[step.pickAll].chipEls.forEach(chip=>chip.classList.add('on'));
+    if(step.climb){
+      const [nodeId, reached, failedAt] = step.climb;
+      dia.nodes[nodeId].rungEls.forEach((rung, index)=>{ rung.classList.toggle('ok', index < reached); rung.classList.toggle('bad', index === failedAt); });
+    }
+    if(step.ab) dia.nodes[step.ab].g.classList.add('scored');
+    if(step.poll){
+      const edge = dia.edges[step.poll];
+      for(let round = 0; round < step.n; round++){ await travel(edge.ln, 950*speed, id); if(gone(id)) return; }
+      edge.g.classList.add('done'); atEnd(edge.ln);
+    }
+    if(step.fail) setN(step.fail, 'fail');
+    if(step.end){ const last = Object.values(dia.nodes).find(node=>node.g.classList.contains('active')); if(last) setN(last.id, 'on'); showTok(false); }
+  }
+
+  function setStatus(step){
+    if(!step){ statusEl.className = 'status'; statusText.textContent = reduce ? 'Use the arrows to step through the loop.' : 'Plays when this loop is on screen.'; countEl.textContent = `0 / ${steps.length}`; return; }
+    statusEl.className = 'status ' + (step.fail ? 'fail' : step.rep ? 'fail' : step.end ? 'ok' : 'run');
+    statusText.textContent = step.say;
+    countEl.textContent = `${steps.indexOf(step) + 1} / ${steps.length}`;
+  }
+
+  function reset(){
+    Object.values(dia.nodes).forEach(node=>{
+      setN(node.id, null);
+      (node.chipEls || []).forEach(chip=>chip.classList.remove('on'));
+      (node.rungEls || []).forEach(rung=>rung.classList.remove('ok','bad'));
+      node.g.classList.remove('scored');
+    });
+    Object.values(dia.edges).forEach(edge=>edge.g.classList.remove('done','on','used'));
+    showTok(false);
+  }
+
+  // jump straight to a step: replay every step before it without motion
+  function renderTo(target){
+    const seq = ++snapSeq;
+    snapping = (async ()=>{
+      svg.classList.add('snap'); reset();
+      for(let index = 0; index <= target; index++){ if(seq !== snapSeq) return; await apply(steps[index], false, "snap"); }
+      if(seq !== snapSeq) return;
+      setStatus(steps[target]);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>svg.classList.remove('snap')));
+    })();
+    return snapping;
+  }
+
+  async function play(){
+    const id = ++runId; playing = true; playBtn.textContent = 'Pause';
+    await snapping; if(gone(id)) return;
+    while(!gone(id)){
+      if(idx >= steps.length - 1){ await sleep(2800); if(gone(id)) return; idx = -1; reset(); setStatus(null); await sleep(500); if(gone(id)) return; }
+      idx++;
+      setStatus(steps[idx]);
+      await apply(steps[idx], !reduce, id); if(gone(id)) return;
+      await sleep(steps[idx].fail || steps[idx].rep ? 1500 : 1050);
+    }
+  }
+  function stop(){ runId++; playing = false; playBtn.textContent = 'Play'; if(idx >= 0) renderTo(idx); }
+  function speak(){ statusEl.setAttribute('aria-live', 'polite'); }
+
+  function layout(){
+    const key = fig.clientWidth >= 700 ? 'w' : 'm';
+    if(key === layoutKey) return;
+    layoutKey = key; fig.className = 'lc-fig ' + key;
+    const wasPlaying = playing; runId++;
+    dia = buildDiagram(svg, spec, key);
+    if(idx >= 0) renderTo(idx); else { reset(); setStatus(null); }
+    if(wasPlaying) play();
+  }
+
+  card.querySelector('.ctrl').addEventListener('click', event=>{
+    const button = event.target.closest('button'); if(!button) return;
+    speak();
+    const act = button.dataset.act;
+    if(act === 'play'){ if(playing){ userPaused = true; stop(); } else { userPaused = false; play(); } }
+    if(act === 'next'){ userPaused = true; stop(); idx = Math.min(idx + 1, steps.length - 1); renderTo(idx); }
+    if(act === 'back'){ userPaused = true; stop(); idx = Math.max(idx - 1, 0); renderTo(idx); }
+    if(act === 'replay'){ userPaused = false; runId++; snapSeq++; idx = -1; reset(); setStatus(null); play(); }
+  });
+
+  new ResizeObserver(layout).observe(fig);
+  layout();
+  if(reduce){ idx = steps.length - 1; renderTo(idx); }
+  // autoplay only while on screen, and never over a user's pause
+  new IntersectionObserver(entries=>entries.forEach(entry=>{
+    visible = entry.isIntersecting;
+    if(reduce || userPaused) return;
+    if(visible && !playing) play();
+    if(!visible && playing) stop();
+  }), {threshold: .35}).observe(svg);
+}
+
+const nav = document.getElementById('loop-nav'), cardsHost = document.getElementById('loop-cards');
+LOOPS.forEach(loop=>{
+  const spec = GRAPHS[loop.id];
+  const link = document.createElement('a');
+  link.href = '#loop-' + loop.id;
+  link.innerHTML = `${loop.id}<span>${spec.nodes.filter(node=>node.n).length} stages</span>`;
+  nav.appendChild(link);
+  makeLoopCard(loop, spec, cardsHost);
+});
+})();
+</script>
+</body>
+</html>

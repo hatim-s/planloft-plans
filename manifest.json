@@ -369,6 +369,15 @@
       "kind": "note",
       "createdAt": "2026-10-08T10:13:02.339Z",
       "expiresAt": "2026-11-07T10:30:45.547Z"
+    },
+    {
+      "id": "za52RwhM25",
+      "project": "path-13df78",
+      "slug": "workflow-agent-loops",
+      "title": "Workflow Agent loops: the numbers",
+      "kind": "plan",
+      "createdAt": "2026-10-09T13:03:13.409Z",
+      "expiresAt": "2026-11-08T13:03:13.409Z"
     }
   ]
 }
