@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<title>Planloft plans</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --canvas: #f7f8fa;
+  --ink: #101828;
+  --muted: #667085;
+  --rule: #d0d5dd;
+  --accent: #175cd3;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0c111d;
+    --ink: #f2f4f7;
+    --muted: #98a2b3;
+    --rule: #344054;
+    --accent: #84adff;
+  }
+}
+* { box-sizing: border-box; }
+html { background: var(--canvas); }
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background: var(--canvas);
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+a { color: inherit; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.shell {
+  width: min(calc(100% - 2rem), 72rem);
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 8vw, 7rem);
+}
+.masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: end;
+  padding-bottom: clamp(2rem, 6vw, 5rem);
+  border-bottom: 2px solid var(--ink);
+}
+.product {
+  margin: 0 0 1.25rem;
+  color: var(--accent);
+  font: 650 0.8rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+h1 {
+  max-width: 9ch;
+  margin: 0;
+  font-family: "Arial Narrow", "Aptos Display", ui-sans-serif, sans-serif;
+  font-size: clamp(3.6rem, 12vw, 8rem);
+  font-weight: 750;
+  line-height: 0.82;
+  letter-spacing: -0.075em;
+}
+.lede {
+  max-width: 36rem;
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.55;
+}
+.count {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.count-visual,
+.count-visual span {
+  display: block;
+}
+.count strong {
+  display: block;
+  font-family: "Arial Narrow", "Aptos Display", ui-sans-serif, sans-serif;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+}
+.count-visual span {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font: 600 0.85rem/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.plan { border-bottom: 1px solid var(--rule); }
+.plan-link {
+  display: grid;
+  grid-template-columns: minmax(0, 0.35fr) minmax(0, 1fr) minmax(0, 0.45fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+  padding-block: 1.5rem;
+  text-decoration: none;
+}
+.plan-link:hover h2,
+.plan-link:focus-visible h2 {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+.id,
+.project,
+.kind,
+.expiry,
+.empty p,
+footer {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.id,
+.project,
+.kind,
+.expiry {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.id {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.plan-copy { min-width: 0; }
+.plan-copy h2 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+.project {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.open {
+  display: inline-block;
+  margin-top: 0.65rem;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.plan-link:hover .open,
+.plan-link:focus-visible .open {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.meta {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-align: right;
+}
+.kind { color: var(--accent); }
+.empty {
+  padding-block: clamp(3rem, 10vw, 7rem);
+  border-bottom: 1px solid var(--rule);
+}
+.empty h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: -0.04em;
+}
+.empty p {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+}
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+@media (max-width: 46rem) {
+  .masthead { grid-template-columns: 1fr; }
+  .count { text-align: left; }
+  .plan-link { grid-template-columns: 1fr; }
+  .meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    text-align: left;
+  }
+  footer { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="masthead">
+<div>
+<p class="product">Planloft</p>
+<h1>Active plans</h1>
+<p class="lede">Published plans and documents.</p>
+</div>
+<p class="count"><span class="sr-only">30 active plans</span><span class="count-visual" aria-hidden="true"><strong>30</strong><span>active plans</span></span></p>
+</header>
+<ol class="index" role="list">
+<li class="plan"><a class="plan-link" href="./p/0CginbqZax/"><span class="id"><span class="sr-only">Plan ID: </span>0CginbqZax</span><div class="plan-copy"><h2>Sprig — Subscription Chat and Knowledge RAG Roadmap</h2><span class="project"><span class="sr-only">Project: </span>github.com/hatim-s/brain-bloom</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-11-05T18:42:12.178Z">2026-11-05</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/QfU52tNdFP/"><span class="id"><span class="sr-only">Plan ID: </span>QfU52tNdFP</span><div class="plan-copy"><h2>Automation cleanup pipeline v2 — rewrite spec</h2><span class="project"><span class="sr-only">Project: </span>github.com/unify-apps/www</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-22T03:20:58.711Z">2026-10-22</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/aj4cPsKCJg/"><span class="id"><span class="sr-only">Plan ID: </span>aj4cPsKCJg</span><div class="plan-copy"><h2>Executable workflow AI approach audit</h2><span class="project"><span class="sr-only">Project: </span>github.com/unify-apps/www</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-23T15:31:49.779Z">2026-10-23</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/Cmvvjf27LS/"><span class="id"><span class="sr-only">Plan ID: </span>Cmvvjf27LS</span><div class="plan-copy"><h2>Outlook solution latency trace 070fbfbe</h2><span class="project"><span class="sr-only">Project: </span>github.com/unify-apps/www</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T12:35:18.703Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/KtiePbhZY5/"><span class="id"><span class="sr-only">Plan ID: </span>KtiePbhZY5</span><div class="plan-copy"><h2>Store Operations AI Assistant latency report</h2><span class="project"><span class="sr-only">Project: </span>github.com/unify-apps/www</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T12:49:30.306Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/oUNmJp1lXy/"><span class="id"><span class="sr-only">Plan ID: </span>oUNmJp1lXy</span><div class="plan-copy"><h2>UAC DSL guide</h2><span class="project"><span class="sr-only">Project: </span>github.com/unify-apps/www</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>note</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-11-07T10:30:45.547Z">2026-11-07</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/H7YlF4bgNu/"><span class="id"><span class="sr-only">Plan ID: </span>H7YlF4bgNu</span><div class="plan-copy"><h2>Workflow Code Evaluation Report, 2026-09-22</h2><span class="project"><span class="sr-only">Project: </span>github.com/unify-apps/www</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-22T22:22:53.538Z">2026-10-22</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/za52RwhM25/"><span class="id"><span class="sr-only">Plan ID: </span>za52RwhM25</span><div class="plan-copy"><h2>Workflow Agent loops: the numbers</h2><span class="project"><span class="sr-only">Project: </span>path-13df78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-11-08T13:33:26.719Z">2026-11-08</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/a3ahTtJrJz/"><span class="id"><span class="sr-only">Plan ID: </span>a3ahTtJrJz</span><div class="plan-copy"><h2>Four build runs, side by side</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T13:25:58.468Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/oIUEZNUQSn/"><span class="id"><span class="sr-only">Plan ID: </span>oIUEZNUQSn</span><div class="plan-copy"><h2>Four solution latencies: timing and cost</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T08:37:23.143Z">2026-10-29</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/sbsnYoVBZw/"><span class="id"><span class="sr-only">Plan ID: </span>sbsnYoVBZw</span><div class="plan-copy"><h2>Master Data Synchronizer latency e_6abae30e</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T22:35:11.456Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/psVCPBbNnY/"><span class="id"><span class="sr-only">Plan ID: </span>psVCPBbNnY</span><div class="plan-copy"><h2>Orbit Trace Analysis - Workflow Agent Long Runs</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-22T20:19:45.847Z">2026-10-22</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/yem7rB7f8a/"><span class="id"><span class="sr-only">Plan ID: </span>yem7rB7f8a</span><div class="plan-copy"><h2>Orbit Trace Latency Gantt</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-22T20:36:20.808Z">2026-10-22</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/0O8rB3PPNP/"><span class="id"><span class="sr-only">Plan ID: </span>0O8rB3PPNP</span><div class="plan-copy"><h2>Orbit solution workflow build timings</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T16:06:46.567Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/gu0xF7i9s5/"><span class="id"><span class="sr-only">Plan ID: </span>gu0xF7i9s5</span><div class="plan-copy"><h2>Outlook Executive Assistant latency e_6abad025</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T22:34:45.181Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/Nqqt6II65Q/"><span class="id"><span class="sr-only">Plan ID: </span>Nqqt6II65Q</span><div class="plan-copy"><h2>Parts Availability Finder latency e_6abae2e2</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T22:34:35.647Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/7E0uvrV0r6/"><span class="id"><span class="sr-only">Plan ID: </span>7E0uvrV0r6</span><div class="plan-copy"><h2>Sales Explorer latency e_6abae302</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T22:35:02.280Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/Nc4L7QUA2C/"><span class="id"><span class="sr-only">Plan ID: </span>Nc4L7QUA2C</span><div class="plan-copy"><h2>Solution latency: trace e_6aba52f95a1e5546f5d4e994</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>report</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T12:44:45.741Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/ucywBTQeIA/"><span class="id"><span class="sr-only">Plan ID: </span>ucywBTQeIA</span><div class="plan-copy"><h2>Solution latency: trace e_6aba558c29ecab2b07100705</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>report</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-12-27T12:39:34.871Z">2026-12-27</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/K3XnBRlCiP/"><span class="id"><span class="sr-only">Plan ID: </span>K3XnBRlCiP</span><div class="plan-copy"><h2>Store Operations SOP Hub latency e_6abae2fa</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T22:34:53.463Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/EGA5T71IiB/"><span class="id"><span class="sr-only">Plan ID: </span>EGA5T71IiB</span><div class="plan-copy"><h2>Store Performance Dashboard latency e_6abacf0e</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T22:34:14.385Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/gDH3ng1Jj8/"><span class="id"><span class="sr-only">Plan ID: </span>gDH3ng1Jj8</span><div class="plan-copy"><h2>Ten solution runs: timing and cost</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T08:37:12.281Z">2026-10-29</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/C0oPNsQSqC/"><span class="id"><span class="sr-only">Plan ID: </span>C0oPNsQSqC</span><div class="plan-copy"><h2>Workflow agent latency e_6aba3420 - Run Sync Now + Nightly Scheduled Sync</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>report</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T10:22:08.869Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/hmfQourlnf/"><span class="id"><span class="sr-only">Plan ID: </span>hmfQourlnf</span><div class="plan-copy"><h2>Workflow build times Sep 2026</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-28T15:54:09.407Z">2026-10-28</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/7qg8NtG9sA/"><span class="id"><span class="sr-only">Plan ID: </span>7qg8NtG9sA</span><div class="plan-copy"><h2>network-route-sim-hub-latency</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T10:54:56.335Z">2026-10-29</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/Lg7GIcF8LJ/"><span class="id"><span class="sr-only">Plan ID: </span>Lg7GIcF8LJ</span><div class="plan-copy"><h2>outlook-digest-latency-sep29</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T10:55:08.569Z">2026-10-29</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/whEIn3uBwW/"><span class="id"><span class="sr-only">Plan ID: </span>whEIn3uBwW</span><div class="plan-copy"><h2>six-solution-runs-side-by-side</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T12:39:12.245Z">2026-10-29</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/9OoZuz8Xdb/"><span class="id"><span class="sr-only">Plan ID: </span>9OoZuz8Xdb</span><div class="plan-copy"><h2>store-inventory-manager-latency</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T10:55:29.817Z">2026-10-29</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/gyVsYu61Sa/"><span class="id"><span class="sr-only">Plan ID: </span>gyVsYu61Sa</span><div class="plan-copy"><h2>store-ops-sop-hub-latency-sep29</h2><span class="project"><span class="sr-only">Project: </span>path-71ea78</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T10:55:19.576Z">2026-10-29</time></span></span></a></li>
+<li class="plan"><a class="plan-link" href="./p/09toT5AQpQ/"><span class="id"><span class="sr-only">Plan ID: </span>09toT5AQpQ</span><div class="plan-copy"><h2>Ten solution runs, stage by stage</h2><span class="project"><span class="sr-only">Project: </span>path-7c4fde</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>plan</span><span class="expiry"><span class="sr-only">Expires: </span><time datetime="2026-10-29T10:36:09.208Z">2026-10-29</time></span></span></a></li>
+</ol>
+<footer><span>Live deployments from manifest.json</span><span>Expired plans leave this list automatically.</span></footer>
+</main>
+</body>
+</html>

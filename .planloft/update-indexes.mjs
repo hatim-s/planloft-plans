@@ -458,9 +458,9 @@ a:focus-visible {
 <main class="shell">
 <header class="masthead">
 <div>
-<p class="product">Planloft / GitHub Pages</p>
+<p class="product">Planloft</p>
 <h1>Active plans</h1>
-<p class="lede">Plans currently available on GitHub Pages.</p>
+<p class="lede">Published plans and documents.</p>
 </div>
 <p class="count"><span class="sr-only">${count}</span><span class="count-visual" aria-hidden="true"><strong>${plans.length}</strong><span>${plans.length === 1 ? "active plan" : "active plans"}</span></span></p>
 </header>
@@ -572,7 +572,7 @@ export function preparePlanIndexes(root, options = {}) {
     options.pagesBaseUrl ?? resolvePagesBaseUrl(root),
   );
   const readmePath = path.join(root, "README.md");
-  const htmlPath = path.join(root, "index.html");
+  const htmlPath = path.join(root, "public", "index.html");
   inspectOutput(readmePath, "README.md");
   inspectOutput(htmlPath, "index.html");
   const readme = readOutputFile(readmePath, "README.md") ?? DEFAULT_README;
@@ -586,7 +586,7 @@ export function preparePlanIndexes(root, options = {}) {
 export function writePlanIndexes(root, prepared) {
   assertPreparedIndexes(prepared);
   const readmePath = path.join(root, "README.md");
-  const htmlPath = path.join(root, "index.html");
+  const htmlPath = path.join(root, "public", "index.html");
   inspectOutput(readmePath, "README.md");
   inspectOutput(htmlPath, "index.html");
   writeOutputIfChanged(readmePath, "README.md", prepared.readme);

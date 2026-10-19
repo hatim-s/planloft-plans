@@ -1,12 +1,14 @@
 name: planloft-prune
-# Installed into <user>/planloft-plans by the github-pages adapter (ADR-0001 §D15, §D20).
-# Daily prune of expired plan folders.
 on:
   schedule:
     - cron: "17 3 * * *"
   workflow_dispatch:
 permissions:
   contents: write
+  actions: write
+concurrency:
+  group: planloft-prune
+  cancel-in-progress: false
 jobs:
   prune:
     runs-on: ubuntu-latest
@@ -14,6 +16,25 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Prune expired plans
+        id: prune
         run: node .planloft/prune.mjs
+      # GITHUB_TOKEN pushes do not trigger other workflows or Vercel Git deploys.
+      - name: Redeploy GitHub Pages
+        if: steps.prune.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run planloft-pages.yml --ref main
+      - name: Redeploy Vercel
+        if: steps.prune.outputs.changed == 'true'
+        env:
+          PLANLOFT_VERCEL_DEPLOY_HOOK: ${{ secrets.PLANLOFT_VERCEL_DEPLOY_HOOK }}
+        run: |
+          node --input-type=module <<'JS'
+          const hook = process.env.PLANLOFT_VERCEL_DEPLOY_HOOK;
+          if (hook) {
+            const response = await fetch(hook, { method: 'POST' });
+            if (!response.ok) throw new Error('Vercel deploy hook failed');
+          }
+          JS
