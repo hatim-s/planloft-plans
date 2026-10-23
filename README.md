@@ -11,13 +11,10 @@ planloft plan/doc deploys
 | [Outlook solution latency trace 070fbfbe](https://hatims-planloft.vercel.app/p/Cmvvjf27LS/) | github.com/unify-apps/www | plan | 2026-10-28 |
 | [Store Operations AI Assistant latency report](https://hatims-planloft.vercel.app/p/KtiePbhZY5/) | github.com/unify-apps/www | plan | 2026-10-28 |
 | [UAC DSL guide](https://hatims-planloft.vercel.app/p/oUNmJp1lXy/) | github.com/unify-apps/www | note | 2026-11-07 |
-| [Workflow Code Evaluation Report, 2026-09-22](https://hatims-planloft.vercel.app/p/H7YlF4bgNu/) | github.com/unify-apps/www | plan | 2026-10-22 |
 | [Workflow Agent loops: the numbers](https://hatims-planloft.vercel.app/p/za52RwhM25/) | path-13df78 | plan | 2026-11-08 |
 | [Four build runs, side by side](https://hatims-planloft.vercel.app/p/a3ahTtJrJz/) | path-71ea78 | plan | 2026-10-28 |
 | [Four solution latencies: timing and cost](https://hatims-planloft.vercel.app/p/oIUEZNUQSn/) | path-71ea78 | plan | 2026-10-29 |
 | [Master Data Synchronizer latency e\_6abae30e](https://hatims-planloft.vercel.app/p/sbsnYoVBZw/) | path-71ea78 | plan | 2026-10-28 |
-| [Orbit Trace Analysis - Workflow Agent Long Runs](https://hatims-planloft.vercel.app/p/psVCPBbNnY/) | path-71ea78 | plan | 2026-10-22 |
-| [Orbit Trace Latency Gantt](https://hatims-planloft.vercel.app/p/yem7rB7f8a/) | path-71ea78 | plan | 2026-10-22 |
 | [Orbit solution workflow build timings](https://hatims-planloft.vercel.app/p/0O8rB3PPNP/) | path-71ea78 | plan | 2026-10-28 |
 | [Outlook Executive Assistant latency e\_6abad025](https://hatims-planloft.vercel.app/p/gu0xF7i9s5/) | path-71ea78 | plan | 2026-10-28 |
 | [Parts Availability Finder latency e\_6abae2e2](https://hatims-planloft.vercel.app/p/Nqqt6II65Q/) | path-71ea78 | plan | 2026-10-28 |
