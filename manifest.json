@@ -225,6 +225,15 @@
       "kind": "plan",
       "createdAt": "2026-10-09T13:03:13.409Z",
       "expiresAt": "2026-11-08T13:33:26.719Z"
+    },
+    {
+      "id": "UyUlxVAhBp",
+      "project": "github.com/unify-apps/www",
+      "slug": "kur-post-migration-audit",
+      "title": "kur-post-migration-audit",
+      "kind": "plan",
+      "createdAt": "2026-10-24T21:17:05.815Z",
+      "expiresAt": "2026-11-23T21:17:05.815Z"
     }
   ]
 }
