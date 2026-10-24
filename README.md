@@ -7,7 +7,6 @@ planloft plan/doc deploys
 | Plan | Project | Kind | Expires |
 | --- | --- | --- | --- |
 | [Sprig — Subscription Chat and Knowledge RAG Roadmap](https://hatims-planloft.vercel.app/p/0CginbqZax/) | github.com/hatim-s/brain-bloom | plan | 2026-11-05 |
-| [Executable workflow AI approach audit](https://hatims-planloft.vercel.app/p/aj4cPsKCJg/) | github.com/unify-apps/www | plan | 2026-10-23 |
 | [Outlook solution latency trace 070fbfbe](https://hatims-planloft.vercel.app/p/Cmvvjf27LS/) | github.com/unify-apps/www | plan | 2026-10-28 |
 | [Store Operations AI Assistant latency report](https://hatims-planloft.vercel.app/p/KtiePbhZY5/) | github.com/unify-apps/www | plan | 2026-10-28 |
 | [UAC DSL guide](https://hatims-planloft.vercel.app/p/oUNmJp1lXy/) | github.com/unify-apps/www | note | 2026-11-07 |
