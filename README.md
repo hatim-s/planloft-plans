@@ -10,7 +10,7 @@ planloft plan/doc deploys
 | [Outlook solution latency trace 070fbfbe](https://hatims-planloft.vercel.app/p/Cmvvjf27LS/) | github.com/unify-apps/www | plan | 2026-10-28 |
 | [Store Operations AI Assistant latency report](https://hatims-planloft.vercel.app/p/KtiePbhZY5/) | github.com/unify-apps/www | plan | 2026-10-28 |
 | [UAC DSL guide](https://hatims-planloft.vercel.app/p/oUNmJp1lXy/) | github.com/unify-apps/www | note | 2026-11-07 |
-| [kur-post-migration-audit](https://hatims-planloft.vercel.app/p/UyUlxVAhBp/) | github.com/unify-apps/www | plan | 2026-11-23 |
+| [kur-post-migration-audit](https://hatims-planloft.vercel.app/p/UyUlxVAhBp/) | github.com/unify-apps/www | plan | 2026-11-24 |
 | [Workflow Agent loops: the numbers](https://hatims-planloft.vercel.app/p/za52RwhM25/) | path-13df78 | plan | 2026-11-08 |
 | [Four build runs, side by side](https://hatims-planloft.vercel.app/p/a3ahTtJrJz/) | path-71ea78 | plan | 2026-10-28 |
 | [Four solution latencies: timing and cost](https://hatims-planloft.vercel.app/p/oIUEZNUQSn/) | path-71ea78 | plan | 2026-10-29 |
