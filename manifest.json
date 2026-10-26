@@ -234,6 +234,15 @@
       "kind": "plan",
       "createdAt": "2026-10-24T21:17:05.815Z",
       "expiresAt": "2026-11-24T06:34:26.742Z"
+    },
+    {
+      "id": "XFUGkNWkSS",
+      "project": "path-69d373",
+      "slug": "hub-siting-brief",
+      "title": "Hub Siting: app brief and glossary",
+      "kind": "plan",
+      "createdAt": "2026-10-26T16:32:10.771Z",
+      "expiresAt": "2026-11-25T16:32:10.771Z"
     }
   ]
 }
