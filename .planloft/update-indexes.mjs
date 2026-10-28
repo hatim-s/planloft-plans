@@ -134,7 +134,7 @@ function resolvePagesBaseUrl(root) {
 
 function readmeHref(plan, pagesBaseUrl) {
   const prefix = pagesBaseUrl ? `${pagesBaseUrl}/` : "";
-  return `${prefix}p/${encodeURIComponent(plan.id)}/`;
+  return `${prefix}${encodeURIComponent(plan.slug)}/`;
 }
 
 function renderReadmeBlock(plans, pagesBaseUrl) {
@@ -212,7 +212,7 @@ function timeMarkup(expiresAt) {
 
 function renderHtml(plans) {
   const items = plans.map((plan) => {
-    const href = `./p/${encodeURIComponent(plan.id)}/`;
+    const href = `./${encodeURIComponent(plan.slug)}/`;
     return `<li class="plan"><a class="plan-link" href="${escapeHtml(href)}"><span class="id"><span class="sr-only">Plan ID: </span>${escapeHtml(plan.id)}</span><div class="plan-copy"><h2>${escapeHtml(plan.title)}</h2><span class="project"><span class="sr-only">Project: </span>${escapeHtml(plan.project || "Unnamed project")}</span><span class="open">Open plan</span></div><span class="meta"><span class="kind"><span class="sr-only">Kind: </span>${escapeHtml(plan.kind)}</span>${timeMarkup(plan.expiresAt)}</span></a></li>`;
   }).join("\n");
   const list = plans.length === 0 ? "" : `<ol class="index" role="list">\n${items}\n</ol>`;
