@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PowerBI Support: implementation plan</title>
+<style>/* planloft theme: detailed. Engineering spec: neutral sans, a section bar hanging in the margin, room for code and tables. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #1c2128;
+  --muted: #59636e;
+  --paper: #f9fafb;
+  --surface: #eff2f6;
+  --rule: #d8dee5;
+  --accent: #1d4ed8;
+  --accent-soft: #e4ecfb;
+  --code-bg: #eef1f5;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #d5dbe2;
+    --muted: #8b95a1;
+    --paper: #14181d;
+    --surface: #1b2128;
+    --rule: #2c343d;
+    --accent: #7ea6ff;
+    --accent-soft: #1c2a44;
+    --code-bg: #1a2027;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #1c2128;
+  --muted: #59636e;
+  --paper: #f9fafb;
+  --surface: #eff2f6;
+  --rule: #d8dee5;
+  --accent: #1d4ed8;
+  --accent-soft: #e4ecfb;
+  --code-bg: #eef1f5;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #d5dbe2;
+  --muted: #8b95a1;
+  --paper: #14181d;
+  --surface: #1b2128;
+  --rule: #2c343d;
+  --accent: #7ea6ff;
+  --accent-soft: #1c2a44;
+  --code-bg: #1a2027;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 17px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: calc(100% - 200px);
+  margin-inline: auto;
+  padding-block: 4.5rem 7rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  line-height: 1.25;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 1.25rem; font-size: 2.2rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+h2 { position: relative; margin: 3rem 0 0.75rem; font-size: 1.45rem; font-weight: 650; }
+/* The bar sits in the margin, so the heading text stays aligned with the prose while
+   section starts remain findable when scrolling fast. */
+h2::before {
+  content: "";
+  position: absolute;
+  top: 0.25em;
+  bottom: 0.25em;
+  left: -1.25rem;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+h3 { margin: 2rem 0 0.5rem; font-size: 1.15rem; font-weight: 650; }
+h4 { margin: 1.5rem 0 0.4rem; font-size: 1rem; font-weight: 650; }
+h5, h6 { margin: 1.25rem 0 0.3rem; font-size: 0.95rem; font-weight: 650; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.15em; text-wrap: pretty; }
+ul, ol { margin: 0 0 1.15em; padding-left: 1.5em; }
+li { margin: 0.35em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.35em 0; }
+li::marker { color: var(--muted); }
+ol > li::marker { color: var(--accent); font-weight: 650; font-variant-numeric: tabular-nums; }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.18em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 650; }
+mark { background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; }
+sup, sub { font-size: 0.75em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.875em;
+}
+code { padding: 0.1em 0.28em; border-radius: 0.3em; background: var(--code-bg); }
+pre {
+  margin: 1.35em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: var(--code-bg);
+  font-size: 0.86em;
+  line-height: 1.55;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 0.3em;
+  background: var(--surface);
+  font-size: 0.8em;
+}
+
+blockquote {
+  margin: 1.5em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--accent);
+  color: var(--ink);
+}
+blockquote > :last-child { margin-bottom: 0; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.5em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.92em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.55em 0.85em;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 650; background: var(--surface); border-bottom: 2px solid var(--rule); }
+tr > :first-child { padding-left: 0.6em; }
+
+hr { height: 1px; margin: 3rem 0; border: 0; background: var(--rule); }
+img { max-width: 100%; height: auto; border-radius: 0.4rem; }
+figure { margin: 1.5em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 0.5rem; }
+summary { cursor: pointer; font-weight: 650; }
+
+::selection { background: color-mix(in srgb, var(--accent) 25%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 64rem) {
+  .planloft-plan { width: calc(100% - 100px); }
+}
+@media (max-width: 40rem) {
+  body { font-size: 16px; }
+  .planloft-plan { width: calc(100% - 50px); padding-block: 4.25rem 5rem; }
+  h1 { font-size: 1.85rem; }
+  h2 { padding-left: 0.85rem; font-size: 1.3rem; }
+  h2::before { left: 0; width: 3px; }
+  pre { padding: 0.85rem 1rem; }
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --ink: #1c2128;
+    --muted: #59636e;
+    --paper: #f9fafb;
+    --surface: #eff2f6;
+    --rule: #d8dee5;
+    --accent: #1d4ed8;
+    --accent-soft: #e4ecfb;
+    --code-bg: #eef1f5;
+  }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>Build a native UnifyApps reporting experience from Power BI definitions, using the existing Solution Builder to provision and assemble the application. Start by retaining Power BI as the calculation engine. Add complete backend replacement only after extraction, identity, and numerical parity are established.</p>
+<p>This plan consolidates five independent Terra cross-checks of vendor documentation and platform source. It describes engineering to add, not an already working migration feature. Source was inspected and rechecked at <code>uacode/main</code> commit <code>dbee333b3483095061456383defbaa029af431df</code>, with a clean checkout. No live tenant conversion, benchmark, security test, or migration acceptance has run. Prepared 30 October 2026.</p>
+<blockquote>
+<p>A rebuilt chart is accepted only when its values, filters, access rules, and refresh behavior have an explicit source-to-target contract and supporting evidence.</p>
+</blockquote>
+<h2>Context</h2>
+<h3>Product outcome</h3>
+<p>A user selects a published Power BI report or supplies an inspectable export package. The platform inventories the report, its semantic model, and its upstream dependencies; explains what it can reproduce; and proposes a native application. The user can review conversion gaps before building. The resulting app uses authenticated backend workflows for data access and supports focused regeneration without losing unrelated edits.</p>
+<p>There are two delivery modes. <strong>Bridge mode</strong> replaces the report interface and continues querying Power BI. <strong>Native mode</strong> also replaces ingestion, transformations, semantic calculations, refresh, and security enforcement. The interface must state which mode applies. Bridge mode does not remove the Power BI dependency or establish a licensing saving.</p>
+<h3>Evidence from other products</h3>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Evidence available</th>
+<th>Lesson for this implementation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lovable</td>
+<td>Current official documentation describes reading a published report layout, rebuilding app visuals, and querying the original semantic model with DAX. No independent full-parity demonstration was established.</td>
+<td>Read structure rather than asking the user to describe every chart. Keep calculation execution in Power BI initially.</td>
+</tr>
+<tr>
+<td>Athena Intelligence</td>
+<td>The current page advertises report/PBIP/JSON imports, measures, relationships, standard visuals, and an import gap report. Older indexed text made stronger Power BI/DAX claims that the current page no longer establishes.</td>
+<td>Adopt an actionable gap report. Treat translation and performance claims as vendor claims until demonstrated.</td>
+</tr>
+<tr>
+<td>Databricks Genie Code</td>
+<td>Official guidance documents <code>.pbit</code> to dashboard plus metric views and <code>.tmdl</code> to metric views. The importer reached GA in August 2026. Public historical testing still showed conversion gaps.</td>
+<td>Separate presentation generation from metric definitions, map sources, and compare outputs iteratively.</td>
+</tr>
+</tbody></table>
+<p>Sources: <a href="https://docs.lovable.dev/integrations/power-bi">Lovable Power BI integration</a>, <a href="https://athenaintel.com/product/data/dashboards/">Athena dashboards</a>, <a href="https://docs.databricks.com/aws/en/dashboards/manage/import-bi">Databricks import guide</a>, <a href="https://docs.databricks.com/aws/en/ai-bi/release-notes/2026">Databricks release notes</a>, and <a href="https://community.databricks.com/t5/genie-hub/how-good-is-the-new-importbi-genie-skill/m-p/162083">a July 2026 import test</a>. The July findings are historical and do not establish the current importer&#39;s defect set.</p>
+<h3>Existing platform components</h3>
+<p>Paths below are relative to the pinned <code>uacode</code> checkout. Recheck the source when implementing against a newer commit.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Source entry point</th>
+<th>Reuse and limit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Solution Agent</td>
+<td><code>configs/platform-features/ai-agents/asset-repository/ai_agent/e_6ab41262199edb6c386940ae.json:8</code></td>
+<td>Plans requirements and coordinates data, app, and workflow builders. Its instructions are not runtime acceptance.</td>
+</tr>
+<tr>
+<td>Stored plan</td>
+<td><code>.../ENTITY_TYPE/solution_builder_plan.json:65</code></td>
+<td>Holds <code>objectSpecs</code>, <code>workflowBriefs</code>, <code>app_brief</code>, and a bound manifest. This is not an executable semantic model.</td>
+</tr>
+<tr>
+<td>Provision Plan Assets</td>
+<td><code>.../WORKFLOW_DEFINITION/6abaaa4d37dc8c2a365a4175.json</code></td>
+<td>Creates missing objects, handles seed work, creates stubs, and binds IDs.</td>
+</tr>
+<tr>
+<td>Bind Plan</td>
+<td><code>.../WORKFLOW_DEFINITION/6ab2c60c1adc3a4e52a31699.json:585</code></td>
+<td>Replaces placeholders and produces the asset manifest.</td>
+</tr>
+<tr>
+<td>App/workflow generation</td>
+<td><code>.../WORKFLOW_DEFINITION/6a83f38c81114226b2238595.json</code> and <code>6a9f4ef45b05a933f27e1c84.json</code></td>
+<td>Receives briefs and bindings. Attachment acceptance and multi-file delivery need verification.</td>
+</tr>
+<tr>
+<td>Power BI actions</td>
+<td><code>configs/connectors/power_bi/</code> and <code>configs/workflow-nodes/power_bi/</code></td>
+<td>Discovery, report download, metadata scans, model-definition requests, and DAX execution exist.</td>
+</tr>
+<tr>
+<td>TMDL indexing</td>
+<td><code>.../WORKFLOW_DEFINITION/69e36af3abd5811312ec446b.json</code> and <code>698f24aa3be1834aa2a6eb07.json</code></td>
+<td>Useful context extraction, with lossy regex projections. Not a complete importer.</td>
+</tr>
+<tr>
+<td>Analytical runtime</td>
+<td><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/nodes/action/analytics/</code> and <code>reporting/src/main/java/com/unifyapps/reporting/service/</code></td>
+<td>SQL queries and StarRocks ingestion exist. Arbitrary analytical provisioning through the builder is unestablished.</td>
+</tr>
+<tr>
+<td>Deployment/versioning</td>
+<td><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/solution/</code></td>
+<td>Deploys linked assets and tracks versions/commits. Partial deployments require reconciliation; transactional rollback is not established.</td>
+</tr>
+</tbody></table>
+<p>Here <code>.../</code> means <code>configs/platform-features/ai-agents/asset-repository/</code>.</p>
+<h2>Approach</h2>
+<h3>Phase 1: a bounded, verified bridge</h3>
+<p>Accept a published report through an authorized connection, or a zipped PBIP package containing PBIR and TMDL. Preserve raw definitions, normalize their meaning into a migration specification, then generate the existing Solution Builder contracts. The app calls typed backend workflows that query the original Power BI model. Dataflow definitions are inventoried and captured where authorized, but their execution remains upstream during bridge mode.</p>
+<p>Initially support explicitly mapped native visuals such as KPI cards, tables, ordinary bar/line charts, and basic slicers. Report actual supported mappings from the implemented compatibility registry. Do not promise all standard visuals merely because they share a name. Matrix semantics, Top N ties, drill-through, cross-highlighting, bookmarks, field parameters, custom visuals, calculation groups, and paginated reports require their own support decisions and checks.</p>
+<p>PBIP is a directory project; a lone <code>.pbip</code> pointer is insufficient. A live-connected report may reference a remote model instead of including it. Report exports do not include upstream dataflow definitions. PBIX download remains available as a source acquisition option, but arbitrary PBIX parsing is outside the first importer contract.</p>
+<h3>Phase 2: selected native models</h3>
+<p>Add analytical storage provisioning, original-source ingestion, a supported subset of Power Query M transformations, reusable metric definitions, server-side row/column policies, and refresh/recovery. Migrate a bounded model and compare it with Power BI before cutover. Keep unsupported constructs in bridge mode or block native conversion with an actionable reason.</p>
+<p>Do not create a Mongo object for every fact table or compute governed totals in the browser. Operational metadata and user-managed records can use Storage objects; analytical facts belong in an explicitly provisioned analytical database or the existing warehouse.</p>
+<h3>Import specification</h3>
+<p>Introduce a versioned <code>PowerBiMigrationSpec</code> schema and durable import-run record. Store raw files in the platform blob capability and retain references, hashes, source paths, source IDs, retrieval time, and the source model/report version when available. Raw source remains the authority; indexed summaries support discovery.</p>
+<p>The specification must represent:</p>
+<ul>
+<li>Reports, pages, visuals, field bindings, filters at each scope, sort order, interactions, navigation, and resources.</li>
+<li>Tables, columns, native types and precision, measures, calculated columns, partitions, M expressions, and source references.</li>
+<li>Relationships including cardinality, active state, filter direction, and security propagation; hierarchies and calculation groups when present.</li>
+<li>Roles, RLS/OLS definitions, dynamic identity usage, and the target identity/policy mapping.</li>
+<li>Upstream dataflows, connection references, refresh order, parameters, freshness, and missing dependencies.</li>
+<li>For every source element: target mapping, support state, reason, source provenance, and acceptance evidence reference.</li>
+</ul>
+<p>Use separate import and build state. A useful sequence is <code>discovered → extracted → analyzed → awaiting_review → approved → provisioned → built → validating → accepted</code>, with explicit <code>failed</code>, <code>blocked</code>, and <code>partial</code> outcomes. A builder&#39;s completion event cannot set the import to accepted.</p>
+<h3>New skill</h3>
+<p>Add <strong><code>powerbi-migration</code></strong> as a platform agent skill, registered for the Solution Agent and discoverable for Power BI import/rebuild requests. Author it in the existing <code>e_skill_ai_agent</code> asset mechanism and include it in <code>configs/platform-features/ai-agents/platform/ai-sdlc/solution-builder-assets.json</code>. Use platform-generated asset IDs rather than inventing a concrete record ID in this plan.</p>
+<p>The skill must instruct the agent to:</p>
+<ol>
+<li>Establish bridge or native scope, chosen report/package, selected connection, and permission boundary.</li>
+<li>Use verified extraction actions, preserve incomplete or stale results, and retain raw definitions.</li>
+<li>Read the normalized specification and compatibility report; never infer absent model logic from screenshots.</li>
+<li>Distinguish report-local Power Query from upstream dataflows and external SQL/API implementations.</li>
+<li>Produce requirements, source mappings, app/workflow briefs, and required objects using existing planning and approval rules.</li>
+<li>Bind real IDs before dispatch and route integration calls through managed backend connections.</li>
+<li>Require identity, numerical, interaction, freshness, and deployment evidence before accepting the conversion.</li>
+<li>Resume by import-run and task identity, preserving successful assets and reconciling uncertain writes.</li>
+</ol>
+<p>Bundle references for supported constructs, artifact inventory, exact connector operation names, specification schema, error taxonomy, and acceptance checks. The skill coordinates implemented tools; it must not describe missing actions as available. Extend the existing plan/data/app/workflow/build skills only with the routing and handoff guidance they need. The current app-brief skill should preserve the source report&#39;s requested identity instead of inventing a new palette or font system during faithful migration.</p>
+<h2>Steps</h2>
+<h3>1. Repair Power BI extraction and query contracts</h3>
+<p>Modify <code>configs/connectors/power_bi/power_bi_get_semantic_model_definition.json</code>, its workflow-node schema, the operation helpers, and the consuming extraction workflows.</p>
+<p>Return the definition on immediate HTTP 200. On HTTP 202 preserve status, operation ID, <code>Location</code>, and <code>Retry-After</code>; poll the documented operation state until terminal, with bounded retries, deadline, throttling, and explicit failure. Replace the fixed ten-second delay in <code>69e36af3abd5811312ec446b.json</code>. Do not retry an unknown external mutation as part of generic retry logic.</p>
+<p>Fix DAX result handling in <code>power_bi_execute_query.json</code> and <code>698e2e36c96e8877f249f272.json</code>. Preserve query errors even with HTTP 200; distinguish empty results, failures, and incomplete results. Do not invent API pagination. Discovery must follow available continuation and retain per-item failures, scan freshness, <code>schemaRetrievalError</code>, and <code>schemaMayNotBeUpToDate</code>.</p>
+<p>Stage a complete validated extraction before replacing the prior index. The current join workflow deletes indexed records before rebuilding, so a later parse failure can discard useful context.</p>
+<p>Acceptance: immediate and asynchronous definitions both work; timeout/throttle/failure are explicit; empty and truncated DAX results differ; incomplete scans cannot pass completeness; prior valid index survives a failed refresh. Validate API contracts with controlled fixtures, then a separately authorized tenant read.</p>
+<h3>2. Add connector actions for source capture</h3>
+<p>Names below are proposed resource names, not existing capabilities. Register both connector definitions and workflow-node schemas, expose intended agent operations, and cover lookup, authentication audience, permission requirements, and output contracts.</p>
+<table>
+<thead>
+<tr>
+<th>Proposed action</th>
+<th>API or behavior</th>
+<th>Output and acceptance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>power_bi_get_report_definition</code></td>
+<td>Fabric <code>POST /v1/workspaces/{workspaceId}/reports/{reportId}/getDefinition</code></td>
+<td>Raw PBIR/PBIR-Legacy parts, resources, model reference, and complete operation status. Handle label/permission restrictions.</td>
+</tr>
+<tr>
+<td><code>power_bi_fetch_dataflows</code></td>
+<td>Power BI workspace dataflow listing</td>
+<td>IDs, type, workspace, and completeness evidence. Gen1 listing must not imply complete Gen2 discovery.</td>
+</tr>
+<tr>
+<td><code>power_bi_export_dataflow_definition</code></td>
+<td>Power BI <code>GET /v1.0/myorg/groups/{workspaceId}/dataflows/{dataflowId}</code></td>
+<td>Gen1 JSON definition including transformation logic, not materialized rows.</td>
+</tr>
+<tr>
+<td><code>microsoft_fabric_fetch_dataflows</code></td>
+<td>Fabric item listing scoped to supported Dataflow item types</td>
+<td>Gen2 inventory with continuation and explicit inaccessible items. Confirm the live type names during implementation.</td>
+</tr>
+<tr>
+<td><code>microsoft_fabric_get_dataflow_definition</code></td>
+<td>Fabric Dataflow <code>getDefinition</code> API</td>
+<td>Definition parts such as <code>mashup.pq</code>, parameters, and destination references, with the shared immediate/asynchronous contract.</td>
+</tr>
+</tbody></table>
+<p>Reuse existing model-definition, operation-state/result, report-download, scan, and DAX actions after repair. Add any missing scan-status action only after confirming the current catalog gap. Expose connection/refresh metadata needed for inventory through narrowly scoped read actions where existing scans do not supply it. Credentials are rebound through managed connection selection and are never exported into the document or app.</p>
+<p>Acceptance: an authorized package captures the report, model, Gen1/Gen2 dependencies and resources; missing access produces a named gap. Each definition can be decoded and linked to its origin without guessing filenames or source identity.</p>
+<h3>3. Implement package validation, parsers, and the gap report</h3>
+<p>Create an importer service/module following repository ownership conventions rather than embedding the migration in prompt text. Accept bounded zipped PBIP/PBIR/TMDL packages and authorized API extraction outputs. Reject unsafe paths, excessive expansion, malformed definitions, unsupported payload types, and missing required parts. Establish and publish actual file/count/size limits before launch.</p>
+<p>Use schema-aware PBIR/PBIR-Legacy readers and a TMDL-aware parser or supported parser library. Preserve unknown constructs and original text. Replace regex-only semantic projection; extract all table measures rather than only a <code>Key Measures</code> path. Parse Gen1 JSON and Gen2 M definitions into dependency-aware transformation descriptions while retaining the original scripts.</p>
+<p>Generate a report with counts and per-element statuses <code>supported</code>, <code>manual</code>, or <code>blocked</code>. Make omissions navigable to the original source. Separate missing input from unsupported logic. The report should support reviewing bridge mode even when native translation is blocked.</p>
+<p>Acceptance: fixture packages cover remote model references, multiple tables of measures, inactive/many-to-many/bidirectional relationships, missing dataflows, unsupported custom visuals, and malformed parts. Every source element is accounted for. No silent drops or fabricated sample records.</p>
+<h3>4. Wire the migration skill into Solution Builder</h3>
+<p>Create the import entry flow: select report or upload package → capture/validate → inspect compatibility → choose mode → approve scoped plan. Persist the import ID and specification version in the solution&#39;s linked context using a declared schema extension. Do not add arbitrary undeclared fields to Populate Plan.</p>
+<p>Implement a deterministic adapter from the approved specification to <code>objectSpecs</code>, <code>workflowBriefs</code>, and <code>appBrief</code>. Include source references and exact query/visual contracts. Reuse Provision Plan Assets, Bind Plan, Generate App, and Generate Workflows. Separate plan approval, successful provisioning, workflow deployment, solution publication, and migration acceptance.</p>
+<p>For bridge mode, do not seed copies of Power BI tables. Create typed callable workflows for supported chart queries. Inputs represent allowed filters and pagination/selection behavior; outputs include typed columns, units, rows, freshness, completeness, and errors. Keep metric definitions reusable across charts rather than generating unrelated calculations per screen.</p>
+<p>Acceptance: two different attachments arrive intact through the app handoff; all asset placeholders resolve; generated app calls deployed workflows with the agreed signatures; a failed lane is resumable without recreating successful assets. Verify multi-file behavior at runtime rather than treating index-zero mapping syntax as a confirmed bug.</p>
+<h3>5. Enforce identity and serve bridge queries safely</h3>
+<p>Trace the full caller → callable workflow → selected managed connection → Power BI principal path. Use a declared per-user OAuth design when per-user Power BI RLS must apply. A service principal may query only supported models; this connector&#39;s Execute Queries endpoint excludes service-principal use for RLS/SSO models. A shared privileged account is not a per-viewer security design.</p>
+<p>Validate report/model allowlists and filter inputs server-side. Scope caches by tenant, effective identity/security context, model/version, normalized query, and filter values. Handle result limits and request quotas explicitly. UI filters cannot substitute for authorization predicates. Never expose connector credentials or arbitrary unauthenticated DAX endpoints in browser code.</p>
+<p>Acceptance: allowed users see their intended results; unauthorized and cross-user calls fail; viewers cannot select another model or remove mandatory restrictions; caches and exports cannot leak another identity&#39;s rows. Verify Viewer/Build access and elevated workspace roles separately because elevated roles can bypass RLS.</p>
+<h3>6. Add differential validation and release evidence</h3>
+<p>Reuse the existing Text2DAX comparison components where appropriate, including <code>.../WORKFLOW_DEFINITION/69f5ab465f077f7ce703af2c.json</code>, after inspecting their actual comparison semantics. Store the expected side independently from the generated implementation and bind both to the same filters, snapshot/freshness boundary, timezone, and effective identity.</p>
+<p>Compare detail rows, totals, subtotals, ratios, distinct counts, BLANK/NULL behavior, date calculations, formatting/units, slicers, ties, navigation, drill-through, cross-filtering, and role combinations for the supported scope. Use justified precision tolerances and deterministic ordering; do not hide semantic differences through loose thresholds.</p>
+<p>Require deployed workflow versions and real callable responses, successful ingestion/reconciliation counts where applicable, visible browser journeys, and negative access checks. Record blocked/failed/unverified cases. Reconcile partial publication explicitly; current linked deployment is not a transaction that automatically rolls back every earlier success.</p>
+<p>Acceptance: one representative bridge report has a signed-off compatibility inventory, numerical comparisons, user-isolation checks, working interactions, and deployment receipts. Test load/latency and refresh behavior against the chosen scope before making scale or cost claims.</p>
+<h3>7. Add native conversion as a separate capability</h3>
+<p>Provision an analytical target through supported APIs, including ownership, quotas, schema lifecycle, indexes/materialization, retention, recovery, and monitoring. Integrate this lifecycle into solution assets and deployment. Existing internal StarRocks provisioning alone does not provide this user-facing contract.</p>
+<p>Reconnect original sources. Define snapshot/backfill and incremental processing, stable keys, deduplication, deletes, schema changes, checkpointing, retries, and freshness. Stream load must reconcile total, loaded, filtered, and unselected rows; a request accepted by the platform is not proof all data landed.</p>
+<p>Implement an explicit subset of M operators and DAX semantics. Start with bounded transformations and simple aggregates; handle ratios at the correct grain. Relationship direction, inactive relationships, <code>CALCULATE</code>, time intelligence, calculation groups, dynamic identity, BLANK, and privacy/query-folding behavior require separate compatibility rules. Agents may propose SQL/workflow equivalents; execution and differential validation determine whether they are accepted.</p>
+<p>Create a reusable metric layer and mandatory server-side RLS/OLS for every query and export path. Customer database isolation is not per-user row security. Keep native conversion blocked where policy equivalence cannot be established.</p>
+<p>Acceptance: one bounded model runs from original sources without Power BI execution, meets its refresh/recovery contract, enforces mapped security, and passes differential checks before cutover. Maintain a reversible routing decision and original definitions while native acceptance remains incomplete.</p>
+<h2>Delivery backlog and Atlas tickets</h2>
+<p>Requested destination: the <strong>Text to Solution</strong> Atlas project. Every issue title begins with <strong>PowerBI Support</strong>. Team/project IDs, status, and assignments must come from Atlas discovery rather than assumptions.</p>
+<p><strong>Ticket creation is blocked as of this publication.</strong> Atlas authentication check succeeded, but <code>fetch-projects</code> returned <code>HOST_NOT_ALLOWED</code>: <code>atlas.unifyapps.com</code> does not have <code>NEBULA_MCP_TOOLS</code> enabled, or the session cannot read it. No issue was created and no ticket link is claimed. Restore module/session access, discover the exact project and team, check existing issues, then create the backlog below using schema validation and stable idempotency keys. Replace the pending link cells with verified issue URLs and republish this same document.</p>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Exact issue title</th>
+<th>Scope</th>
+<th>Depends on</th>
+<th>Ticket link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PBI-01</td>
+<td>PowerBI Support: Repair definition extraction and DAX completeness</td>
+<td>Step 1, immediate/asynchronous responses, scans, staging and query errors</td>
+<td>None</td>
+<td>Not created: Atlas access blocked</td>
+</tr>
+<tr>
+<td>PBI-02</td>
+<td>PowerBI Support: Add report and dataflow definition connector actions</td>
+<td>Step 2, report definitions and Gen1/Gen2 inventory/export</td>
+<td>PBI-01 for common operation handling</td>
+<td>Not created: Atlas access blocked</td>
+</tr>
+<tr>
+<td>PBI-03</td>
+<td>PowerBI Support: Build a versioned importer and compatibility report</td>
+<td>Step 3, raw artifacts, parsers, migration spec and gap UI</td>
+<td>PBI-01; PBI-02 for connected imports</td>
+<td>Not created: Atlas access blocked</td>
+</tr>
+<tr>
+<td>PBI-04</td>
+<td>PowerBI Support: Add migration skill and Solution Builder integration</td>
+<td>Step 4 and new skill, approved spec-to-brief adapter and resumability</td>
+<td>PBI-03</td>
+<td>Not created: Atlas access blocked</td>
+</tr>
+<tr>
+<td>PBI-05</td>
+<td>PowerBI Support: Implement identity-safe bridge queries and native report UI</td>
+<td>Step 5, typed callable contracts, security, caches and supported interactions</td>
+<td>PBI-01, PBI-03, PBI-04</td>
+<td>Not created: Atlas access blocked</td>
+</tr>
+<tr>
+<td>PBI-06</td>
+<td>PowerBI Support: Add parity validation and migration acceptance</td>
+<td>Step 6, source oracle, numerical/interaction/security checks and release evidence</td>
+<td>Begin with PBI-03; bridge acceptance needs PBI-05</td>
+<td>Not created: Atlas access blocked</td>
+</tr>
+<tr>
+<td>PBI-07</td>
+<td>PowerBI Support: Add analytical provisioning and bounded native conversion</td>
+<td>Step 7, source ingestion, metrics, M/DAX subset, policies and cutover</td>
+<td>PBI-06 bridge baseline; separate native scope approval</td>
+<td>Not created: Atlas access blocked</td>
+</tr>
+</tbody></table>
+<p>Each issue body should copy its referenced step&#39;s concrete changes and acceptance criteria, record the source pin and source-only evidence boundary, list dependencies by actual Atlas key after creation, and link back to this plan. Leave assignees, delivery dates, and priority unset unless the project&#39;s conventions or owner supplies them. PBI-07 is a separately scoped follow-on, not part of bridge completion.</p>
+<h2>Risks and mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Required handling</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A successful response contains partial data or a query error</td>
+<td>Preserve completeness/error state and block acceptance.</td>
+</tr>
+<tr>
+<td>Screenshot similarity hides different numbers</td>
+<td>Use source definitions and independent numerical oracles.</td>
+</tr>
+<tr>
+<td>A regex parser silently loses semantics</td>
+<td>Preserve raw parts, parse structurally, and account for unsupported elements.</td>
+</tr>
+<tr>
+<td>Privileged shared connections expose another viewer&#39;s data</td>
+<td>Establish effective identity and verify negative access across queries, cache and exports.</td>
+</tr>
+<tr>
+<td>A generated metric changes filter context</td>
+<td>Keep Power BI execution in bridge mode; differential checks gate native translation.</td>
+</tr>
+<tr>
+<td>Ingestion reports success after dropping rows</td>
+<td>Reconcile counts and reject unexpected filtered rows; retain diagnostics.</td>
+</tr>
+<tr>
+<td>Deployment partially succeeds</td>
+<td>Record asset versions and outcomes, resume in place, and never assume automatic global rollback.</td>
+</tr>
+<tr>
+<td>Vendor claims become product promises</td>
+<td>Label claims, define our support matrix, and publish only measured results.</td>
+</tr>
+</tbody></table>
+<h2>Open questions and implementation entry criteria</h2>
+<p>Select a representative report, its owner, permitted read access, and acceptance users. Inventory its model size, storage mode, dataflows, visual types, RLS/OLS, source topology, refresh expectations, and custom constructs before sizing delivery. Establish the target app runtime and actual chart capabilities through the generated application&#39;s source and browser evidence.</p>
+<p>Confirm the per-viewer identity strategy and tenant API settings. Confirm ownership and provisioning API for native analytical storage before committing to phase 2. Decide whether faithful layout preservation or deliberate redesign is requested; default to preserving the report&#39;s stated structure and visual identity.</p>
+<p>The first engineering milestone is a reliable extraction package and compatibility report. The first product milestone is one accepted bridge report. Native replacement is complete only when source ingestion, metric semantics, access policy, refresh/recovery, and user journeys pass their own acceptance checks.</p>
+<h2>Primary API references</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview">Power BI project format</a></li>
+<li><a href="https://learn.microsoft.com/en-us/power-bi/developer/embedded/projects-enhanced-report-format">PBIR report format</a></li>
+<li><a href="https://learn.microsoft.com/en-us/rest/api/fabric/report/items/get-report-definition">Fabric report definition API</a></li>
+<li><a href="https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/get-semantic-model-definition">Fabric semantic model definition API</a></li>
+<li><a href="https://learn.microsoft.com/en-us/rest/api/power-bi/dataflows/get-dataflow">Power BI dataflow JSON definition</a></li>
+<li><a href="https://learn.microsoft.com/en-us/rest/api/fabric/dataflow/items/get-dataflow-definition">Fabric Dataflow definition API</a></li>
+<li><a href="https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/execute-queries-in-group">Power BI Execute Queries restrictions</a></li>
+<li><a href="https://learn.microsoft.com/en-us/power-bi/service-admin-rls">Power BI row-level security</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dax/calculate-function-dax/">DAX CALCULATE semantics</a></li>
+<li><a href="https://learn.microsoft.com/en-us/power-query/privacy-levels">Power Query privacy boundaries</a></li>
+</ul>
+</article>
+</main>
+</body>
+</html>
