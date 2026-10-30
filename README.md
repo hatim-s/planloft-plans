@@ -7,6 +7,7 @@ planloft plan/doc deploys
 | Plan | Project | Kind | Expires |
 | --- | --- | --- | --- |
 | [Sprig — Subscription Chat and Knowledge RAG Roadmap](https://hatims-planloft.vercel.app/sprig-chat-knowledge-roadmap/) | github.com/hatim-s/brain-bloom | plan | 2026-11-05 |
+| [Solution runtime connections architecture](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
 | [UAC DSL guide](https://hatims-planloft.vercel.app/uac-dsl-guide/) | github.com/unify-apps/www | note | 2026-11-07 |
 | [kur-post-migration-audit](https://hatims-planloft.vercel.app/kur-post-migration-audit/) | github.com/unify-apps/www | plan | 2026-11-24 |
 | [Workflow Agent loops: the numbers](https://hatims-planloft.vercel.app/workflow-agent-loops/) | path-13df78 | plan | 2026-11-08 |

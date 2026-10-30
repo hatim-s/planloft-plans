@@ -1,0 +1,1244 @@
+<!doctype html>
+<html lang="en">
+<head><!-- planloft-render:head:start -->
+<style data-planloft-render data-planloft-sha256="4fc4d855d92b9c5ceae7e7bd75e1cbab448d5463ec30d64bdfd4d9370579542e">/* planloft theme: editorial. The long read. Baskerville at 19px on a 1.7 line, headings in
+   the same face at regular weight and a large size, so hierarchy comes from scale rather
+   than boldness. Stone white paper with the yellow kept out, espresso ink, madder red for
+   links. Dark is warm umber with the red lifted to a dusty rose. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --planloft-font-body: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-heading: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-mono: "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", ui-monospace, monospace;
+  --planloft-font-size: 19px;
+  --planloft-line-height: 1.7;
+  --planloft-code-size: 0.8em;
+  --planloft-heading-weight: 400;
+  --planloft-heading-line-height: 1.1;
+  --planloft-heading-tracking: -0.005em;
+  --planloft-h1-size: 2.9em;
+  --planloft-h2-size: 1.75em;
+  --planloft-h3-size: 1.28em;
+}
+:root,
+:root[data-planloft-color-scheme="light"] {
+  color-scheme: light;
+  --planloft-paper: #f8f7f5;
+  --planloft-ink: #2a221d;
+  --planloft-muted: #6b625b;
+  --planloft-surface: #efedea;
+  --planloft-rule: #dad6d0;
+  --planloft-accent: #8c2f39;
+  --planloft-accent-contrast: #f8f7f5;
+  --planloft-code-paper: #edebe7;
+  --planloft-code-ink: #2a221d;
+  --planloft-chart-1: #8c2f39;
+  --planloft-chart-2: #2f5f8a;
+  --planloft-chart-3: #4c7a3a;
+  --planloft-chart-4: #8d6110;
+  --planloft-chart-5: #6a4f9e;
+  --planloft-chart-6: #2c8282;
+  --planloft-chart-sequential: #8c2f39;
+  --planloft-chart-neutral: #91877d;
+  --planloft-positive: #3f7a3a;
+  --planloft-negative: #a82f38;
+  --planloft-caution: #8d6110;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    color-scheme: dark;
+    --planloft-paper: #1c1815;
+    --planloft-ink: #e6dfd6;
+    --planloft-muted: #a79c91;
+    --planloft-surface: #27221e;
+    --planloft-rule: #3f3834;
+    --planloft-accent: #e39aa4;
+    --planloft-accent-contrast: #1c1815;
+    --planloft-code-paper: #26211d;
+    --planloft-code-ink: #e9e2d9;
+    --planloft-chart-1: #e39aa4;
+    --planloft-chart-2: #7fb0dc;
+    --planloft-chart-3: #92c27b;
+    --planloft-chart-4: #d8b25a;
+    --planloft-chart-5: #b7a0e6;
+    --planloft-chart-6: #6dc1c1;
+    --planloft-chart-sequential: #e39aa4;
+    --planloft-chart-neutral: #7d746c;
+    --planloft-positive: #92c27b;
+    --planloft-negative: #ee8e94;
+    --planloft-caution: #d8b25a;
+  }
+}
+:root[data-planloft-color-scheme="dark"] {
+  color-scheme: dark;
+  --planloft-paper: #1c1815;
+  --planloft-ink: #e6dfd6;
+  --planloft-muted: #a79c91;
+  --planloft-surface: #27221e;
+  --planloft-rule: #3f3834;
+  --planloft-accent: #e39aa4;
+  --planloft-accent-contrast: #1c1815;
+  --planloft-code-paper: #26211d;
+  --planloft-code-ink: #e9e2d9;
+  --planloft-chart-1: #e39aa4;
+  --planloft-chart-2: #7fb0dc;
+  --planloft-chart-3: #92c27b;
+  --planloft-chart-4: #d8b25a;
+  --planloft-chart-5: #b7a0e6;
+  --planloft-chart-6: #6dc1c1;
+  --planloft-chart-sequential: #e39aa4;
+  --planloft-chart-neutral: #7d746c;
+  --planloft-positive: #92c27b;
+  --planloft-negative: #ee8e94;
+  --planloft-caution: #d8b25a;
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --planloft-paper: #ffffff;
+    --planloft-ink: #2a221d;
+    --planloft-muted: #6b625b;
+    --planloft-surface: #efedea;
+    --planloft-rule: #dad6d0;
+    --planloft-accent: #8c2f39;
+    --planloft-accent-contrast: #ffffff;
+    --planloft-code-paper: #edebe7;
+    --planloft-code-ink: #2a221d;
+    --planloft-chart-1: #8c2f39;
+    --planloft-chart-2: #2f5f8a;
+    --planloft-chart-3: #4c7a3a;
+    --planloft-chart-4: #8d6110;
+    --planloft-chart-5: #6a4f9e;
+    --planloft-chart-6: #2c8282;
+    --planloft-chart-sequential: #8c2f39;
+    --planloft-chart-neutral: #91877d;
+    --planloft-positive: #3f7a3a;
+    --planloft-negative: #a82f38;
+    --planloft-caution: #8d6110;
+  }
+}
+
+
+body:where(:has(> .planloft-plan > .planloft-prose)) {
+  margin: 0;
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  -webkit-text-size-adjust: 100%;
+}
+:where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.5rem 7rem; }
+:where(.planloft-prose) {
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-body, system-ui, sans-serif);
+  font-size: var(--planloft-font-size, 17px);
+  line-height: var(--planloft-line-height, 1.6);
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+:where(.planloft-prose) *, :where(.planloft-prose) *::before, :where(.planloft-prose) *::after { box-sizing: border-box; }
+:where(.planloft-prose) > :first-child { margin-top: 0; }
+:where(.planloft-prose) > :last-child { margin-bottom: 0; }
+
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-heading, var(--planloft-font-body, system-ui, sans-serif));
+  font-weight: var(--planloft-heading-weight, 650);
+  line-height: var(--planloft-heading-line-height, 1.2);
+  letter-spacing: var(--planloft-heading-tracking, 0);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+:where(.planloft-prose) h1 { margin: 0 0 0.6em; font-size: var(--planloft-h1-size, 2.2em); }
+:where(.planloft-prose) h2 { margin: 1.8em 0 0.5em; font-size: var(--planloft-h2-size, 1.5em); }
+:where(.planloft-prose) h3 { margin: 1.6em 0 0.45em; font-size: var(--planloft-h3-size, 1.18em); }
+:where(.planloft-prose) h4 { margin: 1.5em 0 0.4em; font-size: 1em; }
+:where(.planloft-prose) h5 { margin: 1.4em 0 0.35em; font-size: 1em; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) h6 { margin: 1.4em 0 0.35em; font-size: 1em; font-weight: 500; font-style: italic; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) :is(h1, h2, h3) + :is(h2, h3, h4) { margin-top: 0.8em; }
+/* A linked heading keeps the heading's colour and carries a thin accent underline, so
+   it reads as a link without hover; hover strengthens the line. */
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: color-mix(in srgb, var(--planloft-accent, LinkText) 55%, transparent);
+  text-underline-offset: 0.14em;
+}
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a:hover { text-decoration-color: var(--planloft-accent, LinkText); }
+/* The paragraph after the title is the summary; it reads a step larger and quieter. */
+:where(.planloft-prose) h1 + p { font-size: 1.12em; color: var(--planloft-muted, GrayText); }
+
+:where(.planloft-prose) p { margin: 0 0 1.2em; text-wrap: pretty; }
+:where(.planloft-prose) :is(ul, ol) { margin: 0 0 1.2em; padding-left: 1.6em; }
+:where(.planloft-prose) li { margin: 0.3em 0; }
+:where(.planloft-prose) li > p { margin-bottom: 0.6em; }
+:where(.planloft-prose) li :is(ul, ol) { margin: 0.3em 0 0.4em; }
+:where(.planloft-prose) li::marker { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.2em; }
+:where(.planloft-prose) li > input[type="checkbox"] { margin: 0 0.55em 0 0; vertical-align: -0.1em; accent-color: var(--planloft-accent, currentColor); }
+:where(.planloft-prose) dl { margin: 0 0 1.2em; }
+:where(.planloft-prose) dt { font-weight: var(--planloft-heading-weight, 650); }
+:where(.planloft-prose) dd { margin: 0 0 0.6em 1.6em; }
+
+:where(.planloft-prose) a {
+  color: var(--planloft-accent, LinkText);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+:where(.planloft-prose) a:hover { text-decoration-color: currentColor; }
+:where(.planloft-prose) strong { font-weight: 700; }
+:where(.planloft-prose) mark { padding: 0 0.15em; background: color-mix(in srgb, var(--planloft-caution, #b98100) 28%, var(--planloft-paper, Canvas)); color: inherit; }
+:where(.planloft-prose) del { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; }
+:where(.planloft-prose) :is(sup, sub) { font-size: 0.78em; line-height: 0; }
+:where(.planloft-prose) small { font-size: 0.86em; }
+
+:where(.planloft-prose) :is(code, kbd, samp, pre) {
+  font-family: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  font-size: var(--planloft-code-size, 0.88em);
+}
+:where(.planloft-prose) code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+}
+:where(.planloft-prose) pre {
+  margin: 1.4em 0;
+  padding: 0.95em 1.1em;
+  overflow-x: auto;
+  border-radius: 4px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+  line-height: 1.55;
+  tab-size: 2;
+}
+:where(.planloft-prose) pre code { padding: 0; border-radius: 0; background: transparent; color: inherit; font-size: 1em; }
+:where(.planloft-prose) kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--planloft-surface, color-mix(in srgb, CanvasText 5%, Canvas));
+  font-size: 0.82em;
+}
+
+:where(.planloft-prose) blockquote {
+  margin: 1.4em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  color: var(--planloft-muted, GrayText);
+}
+:where(.planloft-prose) blockquote > :last-child { margin-bottom: 0; }
+:where(.planloft-prose) blockquote cite { font-style: normal; }
+
+/* Tables keep their natural width and scroll sideways instead of breaking the page. */
+:where(.planloft-prose) table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  line-height: 1.45;
+  font-size: 0.94em;
+}
+:where(.planloft-prose) :is(th, td) {
+  padding: 0.45em 1.1em 0.45em 0;
+  border-bottom: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  text-align: left;
+  vertical-align: top;
+}
+:where(.planloft-prose) tr > :last-child { padding-right: 0; }
+:where(.planloft-prose) thead th { font-weight: var(--planloft-heading-weight, 650); border-bottom: 2px solid var(--planloft-ink, CanvasText); }
+:where(.planloft-prose) tbody th { font-weight: 600; }
+:where(.planloft-prose) td:has(> :is(code, kbd):only-child) { white-space: nowrap; }
+
+:where(.planloft-prose) hr { height: 0; margin: 2.8em 0; border: 0; border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas)); }
+:where(.planloft-prose) img, :where(.planloft-prose) video, :where(.planloft-prose) svg:not(.pl-chart__svg) { max-width: 100%; height: auto; }
+:where(.planloft-prose) figure { margin: 1.6em 0; }
+:where(.planloft-prose) figcaption { margin-top: 0.5em; color: var(--planloft-muted, GrayText); font-size: 0.9em; }
+:where(.planloft-prose) details {
+  margin: 1.2em 0;
+  padding: 0.6em 0.9em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-radius: 4px;
+}
+:where(.planloft-prose) summary { cursor: pointer; font-weight: 600; }
+:where(.planloft-prose) details[open] > summary { margin-bottom: 0.5em; }
+
+:where(.planloft-prose) ::selection { background: color-mix(in srgb, var(--planloft-accent, Highlight) 24%, transparent); }
+:where(.planloft-prose) :focus-visible { outline: 2px solid var(--planloft-accent, currentColor); outline-offset: 3px; }
+:where(.planloft-plan) > .planloft-comments {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+}
+
+@media (max-width: 40rem) {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.25rem 5rem; }
+  :where(.planloft-prose) { font-size: calc(var(--planloft-font-size, 17px) * 0.94); }
+  :where(.planloft-prose) h1 { font-size: calc(var(--planloft-h1-size, 2.2em) * 0.82); }
+}
+@media print {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 0; }
+  :where(.planloft-prose) { font-size: 11pt; }
+  :where(.planloft-prose) a { text-decoration-color: currentColor; }
+  :where(.planloft-prose) :is(pre, blockquote, table, figure) { break-inside: avoid; }
+}
+
+
+.pl-callout, .pl-stats, .pl-stat, .pl-status, .pl-badge, .pl-checklist, .pl-todo, .pl-timeline, .pl-milestone, .pl-chart, .pl-sparkline, .pl-table, .pl-scroll, .pl-tip {
+  --pl-ink: var(--planloft-ink, CanvasText);
+  --pl-paper: var(--planloft-paper, Canvas);
+  --pl-muted: var(--planloft-muted, color-mix(in srgb, var(--pl-ink) 62%, var(--pl-paper)));
+  --pl-surface: var(--planloft-surface, color-mix(in srgb, var(--pl-ink) 5%, var(--pl-paper)));
+  --pl-rule: var(--planloft-rule, color-mix(in srgb, var(--pl-ink) 16%, var(--pl-paper)));
+  --pl-accent: var(--planloft-accent, var(--pl-ink));
+  --pl-accent-contrast: var(--planloft-accent-contrast, var(--pl-paper));
+  --pl-series-1: var(--planloft-chart-1, #2a78d6);
+  --pl-series-2: var(--planloft-chart-2, #eb6834);
+  --pl-series-3: var(--planloft-chart-3, #1baf7a);
+  --pl-series-4: var(--planloft-chart-4, #6250d6);
+  --pl-series-5: var(--planloft-chart-5, #e87ba4);
+  --pl-series-6: var(--planloft-chart-6, #eda100);
+  --pl-sequential: var(--planloft-chart-sequential, var(--pl-series-1));
+  --pl-neutral: var(--planloft-chart-neutral, color-mix(in srgb, var(--pl-ink) 52%, var(--pl-paper)));
+  --pl-positive: var(--planloft-positive, #1f8a52);
+  --pl-negative: var(--planloft-negative, #c8412b);
+  --pl-caution: var(--planloft-caution, #b98100);
+  --pl-font-body: var(--planloft-font-body, inherit);
+  --pl-font-heading: var(--planloft-font-heading, var(--pl-font-body));
+  --pl-font-mono: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  --pl-heading-weight: var(--planloft-heading-weight, 650);
+  --pl-radius: 6px;
+}
+
+.pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Hidden chart tables must not become keyboard-focusable scroll containers. */
+.pl-chart__data table { display: table; max-width: none; overflow: visible; }
+.pl-scroll { max-width: 100%; overflow-x: auto; }
+.pl-scroll > table { display: table; width: 100%; max-width: none; margin: 0; overflow: visible; }
+.pl-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Callout */
+.pl-callout {
+  --pl-tone: var(--pl-accent);
+  margin: 1.6em 0;
+  padding: 0.85em 1.1em 0.9em;
+  border-inline-start: 3px solid var(--pl-tone);
+  border-radius: 0 var(--pl-radius) var(--pl-radius) 0;
+  background: color-mix(in srgb, var(--pl-tone) 7%, var(--pl-paper));
+}
+.pl-callout[data-tone="note"] { --pl-tone: var(--pl-muted); }
+.pl-callout[data-tone="tip"] { --pl-tone: var(--pl-positive); }
+.pl-callout[data-tone="warning"] { --pl-tone: var(--pl-caution); }
+.pl-callout[data-tone="risk"] { --pl-tone: var(--pl-negative); }
+.pl-callout[data-tone="decision"] { --pl-tone: var(--pl-accent); }
+.pl-callout__heading {
+  font-family: var(--pl-font-heading);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15em 0.6em;
+  align-items: baseline;
+  margin: 0 0 0.35em;
+  line-height: 1.35;
+}
+.pl-callout__tone { font-weight: var(--pl-heading-weight); }
+.pl-callout__title { font-weight: var(--pl-heading-weight); }
+.pl-callout__body > :first-child { margin-top: 0; }
+.pl-callout__body > :last-child { margin-bottom: 0; }
+
+/* Stat and Stats */
+.pl-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  gap: 1.25rem 2rem;
+  margin: 1.75em 0;
+}
+.pl-stat { min-width: 0; padding-top: 0.7rem; border-top: 1px solid var(--pl-rule); }
+.pl-stats > .pl-stat { margin: 0; }
+.pl-stat__label { margin: 0; color: var(--pl-muted); font-size: 0.86em; line-height: 1.35; }
+.pl-stat__value {
+  font-family: var(--pl-font-heading);
+  margin: 0.15rem 0 0.1rem;
+  font-size: 2em;
+  font-weight: var(--pl-heading-weight);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+}
+.pl-stat__change { margin: 0; font-size: 0.86em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pl-stat__change[data-assessment="good"] .pl-stat__arrow { color: var(--pl-positive); }
+.pl-stat__change[data-assessment="bad"] .pl-stat__arrow { color: var(--pl-negative); }
+.pl-stat__arrow { display: inline-block; margin-inline-end: 0.2em; }
+.pl-stat__period { color: var(--pl-muted); font-weight: 400; }
+.pl-stat .pl-sparkline { display: block; width: 6.5em; height: 1.6em; margin-top: 0.5rem; color: var(--pl-muted); }
+.pl-stat__note { margin-top: 0.4rem; color: var(--pl-muted); font-size: 0.86em; }
+.pl-stat__note > :first-child { margin-top: 0; }
+.pl-stat__note > :last-child { margin-bottom: 0; }
+
+/* Status */
+.pl-status {
+  --pl-tone: var(--pl-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.05em 0.6em 0.1em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--pl-tone) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pl-tone) 10%, var(--pl-paper));
+  color: var(--pl-ink);
+  font-size: 0.82em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: 0.08em;
+}
+.pl-status::before { color: var(--pl-tone); font-size: 0.85em; line-height: 1; }
+.pl-status[data-tone="done"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="done"]::before { content: "\2713"; }
+.pl-status[data-tone="on-track"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="on-track"]::before { content: "\25CF"; }
+.pl-status[data-tone="at-risk"] { --pl-tone: var(--pl-caution); }
+.pl-status[data-tone="at-risk"]::before { content: "\25B2"; }
+.pl-status[data-tone="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-status[data-tone="blocked"]::before { content: "\25A0"; }
+.pl-status[data-tone="not-started"]::before { content: "\25CB"; }
+
+/* Todo and Checklist */
+.pl-checklist { margin: 1.5em 0; }
+.pl-checklist__title { margin: 0 0 0.35em; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); }
+.pl-todo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 0.7em;
+  align-items: start;
+  margin: 0;
+  padding: 0.5em 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+.pl-checklist > .pl-todo:first-of-type { border-top: 1px solid var(--pl-rule); }
+/* Drawn by hand: a native disabled checkbox renders as a grey block that reads as
+   checked. Checked is a filled inset square, legible in both modes and in print. */
+.pl-todo__box {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0.25em 0 0;
+  border: 1.5px solid color-mix(in srgb, var(--pl-ink) 55%, var(--pl-paper));
+  border-radius: 4px;
+  background: var(--pl-paper);
+  font: inherit;
+}
+.pl-todo__box:checked {
+  border-color: var(--pl-accent);
+  background: var(--pl-accent);
+  box-shadow: inset 0 0 0 2.5px var(--pl-accent-contrast);
+}
+.pl-todo__box:disabled { border-style: dashed; }
+.pl-todo__box:checked:disabled { border-style: solid; }
+.pl-todo__box:not(:disabled) { cursor: pointer; }
+.pl-todo__box:not(:disabled):hover { border-color: var(--pl-accent); }
+.pl-todo__box:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 2px; }
+.pl-todo__text { display: flex; flex-wrap: wrap; gap: 0.1em 1em; align-items: baseline; min-width: 0; }
+.pl-todo__label { flex: 1 1 14em; overflow-wrap: anywhere; }
+.pl-todo__box:not(:disabled) + .pl-todo__text .pl-todo__label { cursor: pointer; }
+.pl-todo:has(.pl-todo__box:checked) .pl-todo__label {
+  color: var(--pl-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.pl-todo__meta {
+  display: inline-flex;
+  gap: 0.9em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pl-todo__owner { font-weight: 600; }
+.pl-todo__detail { flex-basis: 100%; color: var(--pl-muted); font-size: 0.92em; }
+.pl-todo__detail > :first-child { margin-top: 0.2em; }
+.pl-todo__detail > :last-child { margin-bottom: 0; }
+
+/* Timeline and Milestone */
+.pl-timeline { margin: 1.75em 0; padding: 0; list-style: none; }
+.pl-milestone {
+  --pl-tone: var(--pl-rule);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  margin: 0;
+  padding: 0 0 1.35em;
+}
+.pl-milestone::marker { content: none; }
+.pl-milestone::before {
+  content: "";
+  position: absolute;
+  top: 0.95em;
+  bottom: -0.35em;
+  left: calc(0.45rem - 0.5px);
+  width: 1px;
+  background: var(--pl-rule);
+}
+.pl-milestone:last-child { padding-bottom: 0; }
+.pl-milestone:last-child::before { display: none; }
+.pl-milestone[data-state="done"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="done"]::before { background: var(--pl-accent); }
+.pl-milestone[data-state="active"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-milestone__node {
+  position: relative;
+  z-index: 1;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.3em;
+  border: 2px solid var(--pl-tone);
+  border-radius: 50%;
+  background: var(--pl-paper);
+}
+.pl-milestone[data-state="done"] .pl-milestone__node { background: var(--pl-tone); }
+.pl-milestone[data-state="active"] .pl-milestone__node {
+  box-shadow: inset 0 0 0 2px var(--pl-paper), inset 0 0 0 5px var(--pl-tone);
+}
+.pl-milestone[data-state="blocked"] .pl-milestone__node { border-radius: 2px; background: var(--pl-tone); }
+.pl-milestone__head { display: flex; flex-wrap: wrap; gap: 0 0.75em; align-items: baseline; grid-column: 2; }
+.pl-milestone__date {
+  flex-basis: 100%;
+  color: var(--pl-muted);
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+.pl-milestone__title { font-weight: var(--pl-heading-weight); line-height: 1.4; }
+.pl-milestone__state { color: var(--pl-muted); font-size: 0.82em; }
+.pl-milestone[data-state="active"] .pl-milestone__state,
+.pl-milestone[data-state="blocked"] .pl-milestone__state { color: var(--pl-ink); font-weight: 600; }
+.pl-milestone__body { grid-column: 2; margin-top: 0.25em; color: var(--pl-muted); }
+.pl-milestone__body > :first-child { margin-top: 0; }
+.pl-milestone__body > :last-child { margin-bottom: 0; }
+@media (min-width: 48rem) {
+  .pl-milestone { grid-template-columns: 7.5rem 1.6rem minmax(0, 1fr); }
+  .pl-milestone::before { left: calc(7.5rem + 0.45rem - 0.5px); }
+  .pl-milestone__node { grid-column: 2; grid-row: 1; }
+  .pl-milestone__head { grid-column: 3; grid-row: 1; }
+  .pl-milestone__date {
+    position: absolute;
+    left: 0;
+    width: 6.75rem;
+    padding-top: 0.1em;
+    text-align: right;
+  }
+  .pl-milestone__body { grid-column: 3; }
+}
+
+/* Charts */
+.pl-chart {
+  margin: 2em 0;
+  color: var(--pl-ink);
+  font-family: var(--pl-font-body);
+}
+.pl-chart__title { margin: 0 0 0.6rem; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); line-height: 1.35; }
+.pl-chart__plot { position: relative; container: pl-plot / inline-size; }
+.pl-chart__frame { display: none; }
+.pl-chart__frame[data-frame="compact"],
+.pl-chart__frame[data-frame="fixed"] { display: block; }
+@container pl-plot (min-width: 30rem) {
+  .pl-chart__frame[data-frame="compact"] { display: none; }
+  .pl-chart__frame[data-frame="regular"] { display: block; }
+}
+@container pl-plot (min-width: 56rem) {
+  .pl-chart__frame[data-frame="regular"] { display: none; }
+  .pl-chart__frame[data-frame="wide"] { display: block; }
+}
+.pl-chart__svg { display: block; width: 100%; height: auto; font-variant-numeric: tabular-nums; }
+.pl-chart__caption {
+  margin: 0.6rem 0 0;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  line-height: 1.5;
+}
+.pl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.25rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86em;
+  line-height: 1.4;
+}
+.pl-legend__item { display: inline-flex; gap: 0.45em; align-items: center; margin: 0; }
+.pl-legend__item::marker { content: none; }
+.pl-legend__value { color: var(--pl-muted); font-variant-numeric: tabular-nums; }
+.pl-swatch { flex: none; display: inline-block; background: var(--pl-swatch); }
+.pl-swatch--block { width: 0.75em; height: 0.75em; border-radius: 2px; }
+.pl-swatch--line { width: 1.1em; height: 2px; border-radius: 1px; }
+
+/* Pointer targets stay invisible; keyboard focus keeps an outline for navigation. */
+.pl-chart__hits { fill: transparent; stroke: none; }
+.pl-hit { outline: none; }
+.pl-hit:focus-visible { stroke: var(--pl-ink); stroke-width: 1.5; }
+/* Tooltip. A hairline and a short black shadow lift it off the chart; an ink-tinted
+   shadow would glow in dark themes. A mark with its own colour gets a key swatch on
+   the first row. Column hits cover every series and carry no colour. */
+.pl-tip {
+  position: fixed;
+  z-index: 20;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 6.5rem;
+  max-width: 18rem;
+  padding: 0.4rem 0.6rem 0.45rem;
+  border: 1px solid var(--pl-rule);
+  border-radius: var(--pl-radius);
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 6px 16px -6px rgb(0 0 0 / 0.18);
+  font-family: var(--pl-font-body);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.pl-tip[hidden] { display: none; }
+.pl-tip__title { margin-bottom: 0.05rem; font-weight: 600; }
+.pl-tip__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1.25em; }
+.pl-tip__label { display: inline-flex; align-items: baseline; gap: 0.45em; min-width: 0; color: var(--pl-muted); }
+.pl-tip[data-keyed] .pl-tip__title + .pl-tip__row .pl-tip__label::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 2px;
+  background: var(--pl-tip-color);
+}
+.pl-tip__value { font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.pl-chart--donut {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 2rem;
+  align-items: center;
+}
+.pl-chart--donut > .pl-chart__plot { grid-row: 2; width: min(100%, 13.5rem); }
+.pl-chart--donut > .pl-legend {
+  grid-row: 3;
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0 0;
+}
+.pl-chart--donut .pl-legend__item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.6em; }
+.pl-chart--donut > .pl-chart__caption { grid-column: 1 / -1; }
+@media (min-width: 40rem) {
+  .pl-chart--donut { grid-template-columns: 13.5rem minmax(0, 24rem); }
+  .pl-chart--donut > .pl-chart__title { grid-column: 1 / -1; }
+  .pl-chart--donut > .pl-chart__plot { grid-row: 2; grid-column: 1; }
+  .pl-chart--donut > .pl-legend { grid-row: 2; grid-column: 2; margin: 0; }
+}
+.pl-chart__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  text-align: center;
+  line-height: 1.15;
+  pointer-events: none;
+}
+.pl-chart__center-value { font-size: 1.45em; font-weight: var(--pl-heading-weight); }
+.pl-chart__center-label { color: var(--pl-muted); font-size: 0.8em; }
+
+.pl-sparkline {
+  display: inline-block;
+  width: 4.5em;
+  height: 1.1em;
+  color: var(--pl-accent);
+  vertical-align: -0.15em;
+}
+.pl-sparkline__svg { width: 100%; height: 100%; }
+
+/* DataTable */
+.pl-table { margin: 1.75em 0; }
+.pl-table caption {
+  caption-side: bottom;
+  padding-top: 0.6em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  text-align: left;
+}
+.pl-table tbody th { font-weight: 600; }
+.pl-table th[aria-sort]::after { content: " \2193"; color: var(--pl-muted); font-weight: 400; }
+.pl-table th[aria-sort="ascending"]::after { content: " \2191"; }
+.pl-table tfoot th,
+.pl-table tfoot td { border-top: 2px solid var(--pl-ink); font-weight: var(--pl-heading-weight); }
+
+
+/* Badge */
+.pl-badge {
+  --pl-badge-hue: var(--pl-muted);
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.04em 0.6em 0.08em;
+  border: 1px solid color-mix(in oklab, var(--pl-badge-hue) 30%, var(--pl-paper));
+  border-radius: 0.8em;
+  background: color-mix(in oklab, var(--pl-badge-hue) 14%, var(--pl-paper));
+  color: color-mix(in oklab, var(--pl-badge-hue) 55%, var(--pl-ink));
+  font-family: var(--pl-font-body);
+  font-size: 0.78em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.pl-badge[data-color="red"] { --pl-badge-hue: #d1453b; }
+.pl-badge[data-color="orange"] { --pl-badge-hue: #dd7020; }
+.pl-badge[data-color="yellow"] { --pl-badge-hue: #b98d00; }
+.pl-badge[data-color="green"] { --pl-badge-hue: #2f9a4e; }
+.pl-badge[data-color="teal"] { --pl-badge-hue: #17958f; }
+.pl-badge[data-color="blue"] { --pl-badge-hue: #2f74d0; }
+.pl-badge[data-color="purple"] { --pl-badge-hue: #7a55d4; }
+.pl-badge[data-color="pink"] { --pl-badge-hue: #d24f8e; }
+.pl-badge[data-color="accent"] { --pl-badge-hue: var(--pl-accent); }
+@media (forced-colors: active) {
+  .pl-badge { border-color: CanvasText; }
+}
+
+@media print {
+  .pl-chart,
+  .pl-table,
+  .pl-callout,
+  .pl-stat,
+  .pl-milestone,
+  .pl-todo { break-inside: avoid; }
+  .pl-tip { display: none; }
+}
+@media (forced-colors: active) {
+  .pl-swatch,
+  .pl-chart__svg,
+  .pl-sparkline__svg { forced-color-adjust: none; }
+  .pl-callout { border-inline-start-color: CanvasText; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-controls {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  color: var(--planloft-control-ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 0;
+}
+.planloft-theme-selector,
+.planloft-layout-selector {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.planloft-layout-selector[hidden] { display: none; }
+.planloft-theme-option,
+.planloft-layout-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover,
+.planloft-layout-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"],
+.planloft-layout-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg,
+.planloft-layout-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible,
+.planloft-layout-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-controls { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option, .planloft-layout-option { transition: none; }
+}
+@media print {
+  .planloft-controls { display: none; }
+}
+
+:root { --planloft-gutter: clamp(1.25rem, 5vw, 3rem); }
+.planloft-plan:has(> article) {
+  container: planloft-plan / inline-size;
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-bleed, 0rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+.planloft-plan:has(> article) > article {
+  --planloft-wide: min(var(--planloft-bleed, 0rem), max(0px, (100cqw - var(--planloft-measure, 44rem)) / 2));
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) > .planloft-comments {
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) :is(article, section) > :is(pre, figure, .pl-stats) {
+  margin-inline: calc(-1 * var(--planloft-wide, 0px));
+  max-width: calc(100% + 2 * var(--planloft-wide, 0px));
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > article {
+  --planloft-wide: 0px;
+  max-width: none;
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+@media print {
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article),
+  .planloft-plan:has(> article) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > article,
+  .planloft-plan:has(> article) > article { --planloft-wide: 0px; max-width: none; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments,
+  .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+}
+</style>
+<meta name="robots" content="noindex, nofollow" />
+<!-- planloft-render:head:end -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Solution runtime connections architecture</title>
+</head>
+<body data-planloft-kind="plan"><!-- planloft-render:controls:start -->
+<div class="planloft-controls" data-planloft-ignore>
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<div class="planloft-layout-selector" role="group" aria-label="Page width" data-planloft-layout-selector hidden>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="reading" aria-label="Reading width" title="Reading width" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4.5v15M16 4.5v15M3.5 4.5h17M3.5 19.5h17"/><path d="M10.5 9h3M10.5 12h3M10.5 15h3"/></svg>
+  </button>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="full" aria-label="Full width" title="Full width" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="1.5"/><path d="M6.5 9h11M6.5 12h11M6.5 15h11"/></svg>
+  </button>
+</div>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+(() => {
+  const initialize = () => {
+    if (!document.querySelector(".planloft-plan > article")) return;
+    const root = document.documentElement;
+    const group = document.querySelector("[data-planloft-layout-selector]");
+    const options = Array.from(group.querySelectorAll("[data-planloft-layout-option]"));
+    const key = "planloft-layout";
+    let saved = null;
+    try { saved = localStorage.getItem(key); } catch {}
+    let selected = saved === "full" ? "full" : "reading";
+    const update = () => {
+      if (selected === "reading") delete root.dataset.planloftLayout;
+      else root.dataset.planloftLayout = selected;
+      for (const option of options) {
+        option.setAttribute("aria-pressed", String(option.dataset.planloftLayoutOption === selected));
+      }
+    };
+    for (const option of options) option.addEventListener("click", () => {
+      selected = option.dataset.planloftLayoutOption;
+      try { localStorage.setItem(key, selected); } catch {}
+      update();
+    });
+    update();
+    group.hidden = false;
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  else initialize();
+})();
+</script>
+<script>
+(() => {
+  const HIT = ".pl-chart__hits > *";
+  let tip = null;
+  let current = null;
+  const hitOf = (event) => (event.target instanceof Element ? event.target.closest(HIT) : null);
+  const hide = () => {
+    if (tip) tip.hidden = true;
+    current = null;
+  };
+  const show = (hit, pointerY) => {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "pl-tip";
+      tip.setAttribute("data-planloft-ignore", "");
+      tip.setAttribute("aria-hidden", "true");
+      document.body.append(tip);
+    }
+    const [title, ...rows] = (hit.getAttribute("aria-label") || "").split("\n");
+    tip.replaceChildren();
+    const heading = document.createElement("div");
+    heading.className = "pl-tip__title";
+    heading.textContent = title;
+    tip.append(heading);
+    for (const row of rows) {
+      const split = row.lastIndexOf(": ");
+      const line = document.createElement("div");
+      line.className = "pl-tip__row";
+      const label = document.createElement("span");
+      label.className = "pl-tip__label";
+      label.textContent = split < 0 ? row : row.slice(0, split);
+      const value = document.createElement("span");
+      value.className = "pl-tip__value";
+      value.textContent = split < 0 ? "" : row.slice(split + 2);
+      line.append(label, value);
+      tip.append(line);
+    }
+    const color = hit.dataset.plColor;
+    tip.toggleAttribute("data-keyed", Boolean(color) && rows.length === 1);
+    if (color) tip.style.setProperty("--pl-tip-color", color);
+    tip.hidden = false;
+    current = hit;
+    place(hit, pointerY);
+  };
+  const place = (hit, pointerY) => {
+    // Above the mark, centred, kept inside the viewport; below it when the top is cut off.
+    // A column spans the whole plot, so it anchors to the pointer instead of its top.
+    const box = hit.getBoundingClientRect();
+    const column = hit.classList.contains("pl-hit--column") && pointerY !== undefined;
+    const anchorY = column ? pointerY : box.top;
+    // Leave room for the value label above a mark.
+    const gap = column ? 10 : 24;
+    const width = tip.offsetWidth;
+    const height = tip.offsetHeight;
+    const left = Math.max(8, Math.min(box.left + box.width / 2 - width / 2, window.innerWidth - width - 8));
+    let top = anchorY - height - gap;
+    if (top < 8) top = (column ? anchorY : box.bottom) + gap;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  };
+  const start = () => {
+    const titles = document.querySelectorAll(".pl-chart__hits > * > title");
+    if (titles.length === 0) return;
+    for (const title of titles) {
+      title.parentNode.setAttribute("aria-label", title.textContent);
+      title.remove();
+    }
+    document.addEventListener("pointerover", (event) => {
+      const hit = event.pointerType === "touch" ? null : hitOf(event);
+      if (hit) show(hit, event.clientY);
+    });
+    document.addEventListener("pointerout", (event) => {
+      if (event.pointerType !== "touch" && hitOf(event) === current) hide();
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch") return;
+      const hit = hitOf(event);
+      if (hit && hit !== current) show(hit, event.clientY);
+      else hide();
+    });
+    document.addEventListener("focusin", (event) => {
+      const hit = hitOf(event);
+      if (hit) show(hit);
+    });
+    document.addEventListener("focusout", (event) => {
+      if (hitOf(event) === current) hide();
+    });
+    const STEPS = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") return hide();
+      const hit = hitOf(event);
+      const step = STEPS[event.key];
+      if (!hit || event.altKey || event.ctrlKey || event.metaKey || (!step && event.key !== "Home" && event.key !== "End")) return;
+      event.preventDefault();
+      const hits = Array.from(hit.parentNode.children);
+      const next = event.key === "Home" ? hits[0] : event.key === "End" ? hits[hits.length - 1] : hits[hits.indexOf(hit) + step];
+      if (!next || next === hit) return;
+      hit.setAttribute("tabindex", "-1");
+      next.setAttribute("tabindex", "0");
+      next.focus();
+    });
+    // Focusing a hit can scroll it into view, so a focused hit keeps its tooltip and
+    // the tooltip moves with it. Hover tooltips close on scroll.
+    window.addEventListener("scroll", () => {
+      if (current && current === document.activeElement) place(current);
+      else hide();
+    }, { passive: true });
+    window.addEventListener("resize", hide);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+</script>
+<!-- planloft-render:controls:end -->
+<main class="planloft-plan">
+<article class="planloft-prose"><p>The platform already has authentication, user connection storage, builder connection selection, and an engine that can run a workflow with substituted connections. The proposed feature should join those capabilities around a published solution. Its main new responsibility is deciding which account a particular app may use for a particular person.</p>
+<blockquote>
+<p>A connection is a reusable credential-backed account. A solution dependency, a user&#39;s link to that account, and the account selected for execution are different records of intent.</p>
+</blockquote>
+<h2>Evidence and limits</h2>
+<p>Read-only investigation on 29 October 2026. Inspected Orbit UAT in Hatim&#39;s <code>unifyapps.com</code> Chrome profile, including object schemas and the deployed workflow definitions returned while opening their builders. No Test, Run, Save, Deploy, or connection mutation was invoked. Opening the builder itself causes ordinary platform reads and automatic validation/scoring requests; this was definition inspection, not a workflow execution test.</p>
+<p>Source pins:</p>
+<ul>
+<li>WWW main: <code>262e15897097e73aa38a5ad54b8bfd53dbae6a54</code>. Existing unrelated local changes remained untouched.</li>
+<li>uacode main: <code>dbee333b3483095061456383defbaa029af431df</code>.</li>
+<li>agent-platform main: <code>d07e92b23f389ccee26f83caaaf68cb9265f974b</code>, inspected only for the code-app execution boundary.</li>
+</ul>
+<p>Live UAT configuration is ahead of local uacode snapshots. Java findings below describe this pinned checkout, not a verified deployed binary. Agent and generation workflow analysis is source-backed; the six specifically listed deployed workflows were read live. This is a scoped architecture analysis of the relevant solution and connection graph, not an inventory of every tenant agent or automation. Provider calls, effective authorization, and runtime isolation were not exercised.</p>
+<h2>Current entity model</h2>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Responsibility and relationships</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>e_solution</code></td>
+<td>Solution identity, title, status, latest and approved plan IDs, global plan, model selection and memory</td>
+<td>Live schema has eight fields and no <code>linkedEntities</code></td>
+</tr>
+<tr>
+<td><code>solution_linked_assets</code></td>
+<td>Solution-to-asset ledger. <code>solution_id</code>, <code>asset_class</code>, <code>asset_id</code>, <code>state</code>, <code>version</code>, <code>source_commit_hash</code></td>
+<td>All six fields verified live</td>
+</tr>
+<tr>
+<td><code>solution_builder_plan</code></td>
+<td>Turn-specific plan, solution ID, case ID, object specs, workflow briefs, app brief, resolved manifest and object ID mappings</td>
+<td>Source schema and generation workflows</td>
+</tr>
+<tr>
+<td><code>solution_plan_asset_map</code></td>
+<td>Maps a plan&#39;s temporary asset identifier to a real platform ID using <code>planId</code>, <code>tempId</code>, <code>type</code>, <code>originalId</code></td>
+<td>Source schema and Bind Plan</td>
+</tr>
+<tr>
+<td><code>service_hub_case</code></td>
+<td>Conversation and task context. <code>additional.runtimeContext.solutionId</code> connects the builder conversation to its solution</td>
+<td>Live Request Connection and asset resolver</td>
+</tr>
+<tr>
+<td><code>e_ai_agent_conversation_state</code>, <code>session_task_tracker</code></td>
+<td>Current agent, execution/wait state and detached task coordination</td>
+<td>Source dispatch workflows; live Request Connection</td>
+</tr>
+<tr>
+<td><code>solution_case_id_vs_text_2_ui_session_id</code></td>
+<td>Solution/case to generated app and code session association</td>
+<td>Source Generate App</td>
+</tr>
+<tr>
+<td><code>ENTITY_TYPE</code>, <code>WORKFLOW_DEFINITION</code>, <code>e_interface</code>, <code>ai_agent</code>, <code>CONNECTION</code></td>
+<td>The asset classes linked into a solution</td>
+<td>Frontend types, live asset workflows, backend handlers</td>
+</tr>
+<tr>
+<td><code>Connection</code> / <code>CONNECTION</code></td>
+<td>Actual reusable account, provider identity, owner, active state and protected authentication inputs</td>
+<td>Connector service model and connection APIs</td>
+</tr>
+<tr>
+<td><code>e_topic_app_library</code></td>
+<td>Connector catalog, labels, resources and default runtime authentication configuration</td>
+<td>Source user connector listing</td>
+</tr>
+<tr>
+<td><code>e_topic_ai_agent</code></td>
+<td>Agent connector configuration: app, connection mode and account configuration</td>
+<td>Live Fetch User Connections and source connector editor</td>
+</tr>
+<tr>
+<td><code>e_action_ai_agent</code></td>
+<td>Tool implementation, connector action or callable workflow target; fixed context connection or runtime connection settings</td>
+<td>Source tool schema and execution workflow</td>
+</tr>
+<tr>
+<td><code>run_time_connection_store</code></td>
+<td>User-to-connection binding for an agent/integration, optionally case and topic</td>
+<td>Live fields: <code>aiAgentId</code>, <code>appName</code>, <code>caseId</code>, <code>connectionId</code>, <code>userId</code>, <code>topicId</code></td>
+</tr>
+<tr>
+<td><code>knowledge</code></td>
+<td>Indexed knowledge associated with connections, including runtime-related configuration</td>
+<td>Connection deletion workflow explicitly touches it</td>
+</tr>
+</tbody></table>
+<p>The solution asset ledger describes what belongs to the solution. The runtime store describes an account binding in an agent/user context. Neither currently provides the complete published-app requirement and per-user account selection model in the PDF.</p>
+<p>Live object links: <a href="https://orbit.uat.unifyapps.com/p/0/objects/e_solution/schema">Solution</a>, <a href="https://orbit.uat.unifyapps.com/p/0/objects/solution_linked_assets/schema">solution assets</a>, <a href="https://orbit.uat.unifyapps.com/p/0/objects/run_time_connection_store/schema">runtime connection store</a>.</p>
+<h2>Build-time architecture</h2>
+<p>The source-defined AI FDE agent owns the conversation and dispatch. Solution Planner defines the data model, workflows and app brief. Workflow Agent builds TypeScript DSL workflows and compiles/saves them. Generate App crosses into the code-app engine, whose source and build lifecycle live in agent-platform. These are builder agents; they are not the identity under which a published user&#39;s Outlook operation should run.</p>
+<p>The relevant chain is:</p>
+<ol>
+<li>Create <code>e_solution</code> and associate the conversation case with it.</li>
+<li>AI FDE resolves connector keys and asks for accounts through Request Connection.</li>
+<li>Solution Planner writes a <code>solution_builder_plan</code> through Populate Plan.</li>
+<li>Publish Plan handles plan approval. This is separate from publishing the finished application.</li>
+<li>Provision Plan Assets creates objects and workflow stubs, records temporary-to-real ID mappings, and invokes Bind Plan.</li>
+<li>Bind Plan resolves references and produces the manifest and builder briefs.</li>
+<li>Generate Workflows dispatches Workflow Agent tasks. Generate App dispatches the code-app engine. Their completion paths register assets through Update Solution Record.</li>
+<li>The finished solution&#39;s deployment publishes its app/workflow assets and records a release.</li>
+</ol>
+<p>Key source workflow IDs: Populate Plan <code>6a82c5b70906b07dab2f90e5</code>; Publish Plan <code>6a82c2ce3876ea7658b2ff98</code>; Provision Plan Assets <code>6abaaa4d37dc8c2a365a4175</code>; Bind Plan <code>6ab2c60c1adc3a4e52a31699</code>; Generate Workflows <code>6a9f4ef45b05a933f27e1c84</code>; dispatch/wait <code>6aa6a062a9982c66ae9db8c0</code>; detached task <code>6aab1f3c7d2e4b5a9c0d8e41</code>; Generate App <code>6a83f38c81114226b2238595</code>; code-app wrapper <code>6a69ec7f83f0ca4b8b653fe4</code>.</p>
+<h3>Builder connection selection is already solution-aware</h3>
+<p><a href="https://orbit.uat.unifyapps.com/p/0/automations/6aac3a9da010057819cbe054/builder">Request Connection</a>, deployed V125, resolves the case and calls the solution assets resolver. It supports add, update and remove, exact named-account selection, ambiguous-account handling, and a connection picker interface. It passes <code>mode: builder</code> to that interface. Automatic selection is available for a single active account in auto mode.</p>
+<p>Its no-card paths register a selected account as a <code>CONNECTION</code> asset or mark an old link <code>REMOVED</code>. Its card path publishes the standard runtime-auth interface and returns pending state. The source Capture Connection workflow <code>67f8b9e584efea167932f811</code> separates builder mode from ordinary copilot mode: builder mode records the choice for the caller and updates solution assets; ordinary mode writes <code>run_time_connection_store</code>.</p>
+<p><a href="https://orbit.uat.unifyapps.com/p/0/automations/6ac21de28edca65e159df7d9/builder">Resolve solution assets</a>, deployed V73, reads <code>solutionId</code> from the case&#39;s runtime context, reads <code>solution_linked_assets</code>, excludes <code>REMOVED</code>, and returns assets keyed by class and ID. Its read is capped at 5,000 rows. The function label still mentions a union, but the inspected body reads only the ledger.</p>
+<p><a href="https://orbit.uat.unifyapps.com/p/0/automations/6a830d35f901b247082c31f7/builder">Update Solution Record</a>, deployed V135, upserts the asset ledger with a stable row identity, carries version and source commit hash, marks missing assets removed after appropriate existence reads, and calculates solution completion. It also inspects completed workflow nodes for literal connection IDs and links previously unknown connections. Explicitly removed connections stay removed.</p>
+<p>That literal-ID discovery is useful dependency bookkeeping. It cannot express that Outlook must use each viewer&#39;s account, nor distinguish a builder test credential from a published account requirement.</p>
+<h2>Current runtime connection behavior</h2>
+<h3>Authentication and storage</h3>
+<p>Shared frontend forms read connection schemas, test credentials, create/update connections, authorize OAuth, handle callback completion, and notify the opener. <code>/runtime-auth/new/[appName]</code> and the embedded ConnectionFormModal reuse that machinery. A completed OAuth flow produces a real Connection ID; a subsequent workflow records how it is bound.</p>
+<p><a href="https://orbit.uat.unifyapps.com/p/0/automations/697712d9f9618b5b2d12e142/builder">Create Runtime Connection | ES</a>, deployed V129, accepts integration, agent, optional topic and connection ID. In the topic-aware branch it uses the explicit connection or newest owned active account, checks integration, owner, active status and ID, replaces the previous binding for the agent/user/app/topic, and creates a runtime store row. This is an existing selection-binding mechanism, not an OAuth implementation. It models one chosen account per binding scope, not a list of app-linked candidate accounts with an independent active pointer. The current graph deletes old binding rows before its successful-connection condition; it should not be copied as an atomic selection operation.</p>
+<p><a href="https://orbit.uat.unifyapps.com/p/0/automations/69626b4eed0b4a2f7d4fb771/builder">Fetch User Connections</a>, deployed V158, reads the agent&#39;s connector topics, derives integration names, reads current-user runtime store rows, reads actual Connection records, joins active status, and excludes orphan bindings. It carries topic IDs and synthesizes topic-specific entries from older app-wide bindings for eligible personal OAuth topics. Custom OAuth registration topics are excluded from that inheritance. Default binding-page size is 30; the frontend requests 500. Connector-topic reads are capped at 100.</p>
+<p>This is agent-centric. A solution ID or published app ID is not part of the inspected runtime store schema.</p>
+<h3>Execution has several paths</h3>
+<p>The source configuration workflow Execute Custom AI Agent Action <code>66e4c220f82132609342c11f</code> reads <code>run_time_connection_store</code> by agent/user/app. It constructs a map for callable workflows and a context connection for direct actions, with clarification when a required connection is absent.</p>
+<p>The pinned Java code also contains newer native paths. <code>ConnectorToolConnections</code> resolves a per-call override first, an explicitly opted-in invoking user&#39;s account second, then an agent binding for non-runtime tools. Its runtime lookup queries owned active provider connections newest-first; it does not read the same runtime store selection. <code>LookupToolExecutorImpl</code> does read the store by agent/user/app. <code>RoutineAppTriggerBinder</code> resolves the routine principal&#39;s store row. These are distinct resolution policies. No single current resolver can be assumed to govern every call.</p>
+<p>For generated applications, the SDK&#39;s workflow mutation hook sends <code>/api/workflow/execute/node</code> with app metadata and the existing authentication/routing layer. A callable execution carries connection overrides in <code>inputs.runtimeConnections</code>, keyed by connector app name, beside <code>parameters</code>.</p>
+<p>The pinned engine&#39;s <code>DeployedWorkflowDefinitionMappingServiceImpl</code> validates that supplied IDs exist and match their app names. It derives a transient workflow mapping from workflow ID, version and the connection map; creates it with an override configuration and a seven-day lifetime; and reuses it subsequently. <code>WorkflowDefinitionServiceImpl</code> replaces node <code>context.connectionId</code> values by app mapping and resolves connection-dependent inputs again. The original saved workflow need not be rewritten for every user.</p>
+<p>There are two material limits. An invalid supplied map can be filtered to empty and use the normal deployed mapping, so Personal mode must fail before that fallback. The map is keyed by app name, so one workflow cannot use two independently chosen Outlook accounts through that map alone. Either constrain the first release to one account per integration per operation or introduce explicit node/requirement binding for that case.</p>
+<h3>Disconnect is currently broader than the requested behavior</h3>
+<p><a href="https://orbit.uat.unifyapps.com/p/0/automations/697854ce0183ce5e52a638a6/builder">Delete Runtime Connection | ES</a>, deployed V122, is not an app-only unlink. Its explicit-connection branch reads a runtime store row by current user and connection ID, calls <code>standard_entities_delete_connections</code>, deletes related knowledge, and removes current-user runtime rows for that connection ID. Those removal filters are not restricted to one solution or topic. The legacy branch also deletes the actual connection.</p>
+<p>This corrects the earlier frontend-only description of the operation as unlinking. The PDF promises that other apps keep working, so this workflow must not back that button unchanged. Disabling the connection is also too broad.</p>
+<h2>Deployment boundary and source drift</h2>
+<p>The local <code>SolutionServiceImpl</code> deploys linked assets, records their deployed versions, then deploys the solution. Its handlers publish workflows, app code and agents through their existing owners. The Connection handler is a no-op for deploy and restore, because it does not have a versioned connection release to publish.</p>
+<p>However, that Java checkout still reads <code>e_solution.linkedEntities</code>; the live object no longer has that field. The local Update Solution Record snapshot is V24 versus UAT V135, and its runtime creation snapshot is V32 versus UAT V129. The duplicated <code>configs/</code> and <code>internal/src/main/resources/configs/</code> files inspected have identical bytes for these samples. Implementation must start from a reconciled backend/configuration baseline, not those older resource snapshots. The effective deployed SolutionService binary and its ledger handling remain unverified.</p>
+<blockquote>
+<p>Reuse the workflow engine&#39;s account substitution. Add explicit published-app policy and selection before that substitution happens.</p>
+</blockquote>
+<h2>Proposed architecture</h2>
+<p>Keep actual credentials in Connection. Keep <code>solution_linked_assets</code> as the solution asset inventory. Add two narrowly scoped data models, with final names to follow platform conventions.</p>
+<h3>Versioned integration requirements</h3>
+<p><code>solution_connection_requirement</code> describes what a published solution needs. Give each requirement a stable <code>requirementId</code>, plus <code>solutionId</code>, connector <code>appName</code>, display label, purpose text, Enterprise/Personal mode, required/optional status, enterprise connection reference when applicable, and allowed execution targets. Targets identify the workflows/actions that consume the requirement, not merely any workflow the client names.</p>
+<p>Requirements must be versioned with the solution release. A publish should not silently change the account policy of an already running old release. The deployment integration needs to pin or materialize the complete requirement set with the release and restore it with that release. Merely adding an object type to the asset ledger is insufficient, because that would deploy its schema rather than its configuration records.</p>
+<p>Keep the builder test account in maker-specific preview bindings. It must not become the enterprise default, a published personal fallback, or a shared requirement field used by runtime calls.</p>
+<h3>Per-user account bindings</h3>
+<p><code>solution_user_connection_binding</code> stores one row per tenant, solution/app scope, authenticated user, requirement and execution scope. The row contains the linked Connection IDs and selected Connection ID. An array plus active pointer in one version-checked record is enough initially; separate candidate-account rows can be introduced if volume requires them. Preview bindings use a distinct scope from published bindings.</p>
+<p>The selected account must belong to the linked set and remain usable by that user for the required connector and OAuth registration. The backend derives user identity from the session/run. It must not accept arbitrary user IDs or expose stored OAuth client secrets through the requirements response.</p>
+<p>Removing an app link updates only this binding. If it was selected, the operation validates an explicit replacement or applies a documented deterministic policy atomically. With no replacement, return <code>needsConnection</code>; do not select the builder&#39;s account. Credential deletion and provider revocation remain separate account-management actions.</p>
+<h3>A shared server-side resolution step</h3>
+<p>Add one solution execution boundary that derives the solution and release from the authenticated application, verifies the requested operation is part of that release, reads requirements, and resolves Enterprise or Personal bindings. It validates account ownership/access, connector, active state and registration compatibility before delegating to the existing workflow executor with the resulting <code>runtimeConnections</code> map.</p>
+<p>The frontend should request an operation, not be the authority for which credential it may execute. App-scoped headers identify context; they do not by themselves establish the account policy. Reject missing/invalid Personal bindings before the engine can fall back onto a statically configured node credential.</p>
+<p>Most configuration, status listing and binding operations can be platform workflows. A small Java/service integration is appropriate wherever needed to enforce application identity, release ownership, fail-closed execution and atomic updates. A workflow wrapper is viable only if existing backend authorization ensures generated code cannot bypass the same policy by calling the underlying operation directly.</p>
+<p>Connect the published-app UI and generated SDK operation helper to this boundary. Agent tools used inside the same app should resolve through it as well; do not leave agent, lookup, callable and routine paths with contradictory selected-account rules. Async work needs an explicit execution principal and captured binding policy, not an assumption that a browser session still exists.</p>
+<h3>Build and publish integration</h3>
+<p>Extend planner output with structured connection requirements. Carry stable requirement IDs through Populate Plan, Bind Plan, workflow briefs and the generated app manifest. Preserve explicit Enterprise/Personal choices; do not infer the mode from the owner of whichever Connection ID was picked.</p>
+<p>The workflow builder can use the maker&#39;s test account to discover schema and verify inputs, while marking the requirement&#39;s consuming operations for runtime resolution. First publish validates completeness, pins requirements and workflow/app targets, then uses the existing deployment and Enterprise Brain flow. New-user preview uses empty synthetic binding state, not impersonation or deletion of real user bindings.</p>
+<p>The first-open screen reads a sanitized requirement/status response and blocks only on required Personal integrations. Account management reuses the same read model and binding operations. Connect reuses the existing auth form and popup protocol, then links the returned account. Selection persists an explicit account; it must not be implemented by rearranging whichever account the current row helper picks first.</p>
+<h2>Implementation sequence</h2>
+<ol>
+<li>Reconcile deployed configuration and backend source, especially ledger-based deployment and current runtime store schema. Retain deployed node IDs and semantics while making intentional changes.</li>
+<li>Define the two data contracts, requirement release snapshot and execution target mapping. Decide required/optional behavior, final-account disconnect, and explicit replacement ordering.</li>
+<li>Build read, link, select and app-only unlink operations, with current-user identity, ownership checks, unique binding identity and optimistic concurrency. Return business failures explicitly, including HTTP-200 failure envelopes.</li>
+<li>Implement the secure execution resolver and adapt one read-only callable operation. Demonstrate two users using different personal accounts with the same enterprise account, before building the whole interface.</li>
+<li>Extend planner/manifest/generation contracts and publish validation. Verify requirement snapshots restore consistently with workflow and code versions.</li>
+<li>Build builder cards, publish connection review, first-open gate, account manager and new-user preview using the shared frontend auth components.</li>
+<li>Verify the complete journey with two users and two apps, expired credentials, removal of the selected/last account, popup abandonment, stale selection writes, release changes, and nested/async workflows. Confirm that app-only disconnect leaves the Connection and other app bindings intact.</li>
+</ol>
+<h2>Main implementation references</h2>
+<p>WWW:</p>
+<ul>
+<li><code>apps/platform/src/modules/solutions/data/solutionAssets.ts</code></li>
+<li><code>apps/platform/src/modules/solutions/views/SolutionBuilder/chat/SolutionConnectionRequest.tsx</code></li>
+<li><code>packages/carbon/src/userConnectors/network/actionRequests.ts</code></li>
+<li><code>packages/carbon/src/userConnectors/utils/connectorRows.ts</code></li>
+<li><code>packages/carbon/src/userConnectors/components/hooks/useConnectFlow.ts</code></li>
+<li><code>packages/carbon/src/connections/view/CreateOrUpdateConnection/components/CreateConnectionForm/CreateConnectionForm.tsx</code></li>
+<li><code>packages/app-builder-sdk/src/hooks/workflow/index.ts</code></li>
+<li><code>apps/platform/src/modules/codeBuilder/components/BuildView/PublishPopoverContent.tsx</code></li>
+</ul>
+<p>uacode, relative to <code>/Users/hatim.shakir/work/uacode/main</code>:</p>
+<ul>
+<li><code>configs/platform-features/ai-agents/asset-repository/ENTITY_TYPE/</code> and <code>WORKFLOW_DEFINITION/</code>, with the IDs above</li>
+<li><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/service/workflow/DeployedWorkflowDefinitionMappingServiceImpl.java</code></li>
+<li><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/ms/WorkflowDefinitionServiceImpl.java</code></li>
+<li><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/agent/tool/connector/ConnectorToolConnections.java</code></li>
+<li><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/agent/tool/LookupToolExecutorImpl.java</code></li>
+<li><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/solution/SolutionServiceImpl.java</code></li>
+<li><code>workflow/rt/src/main/java/com/unifyapps/workflow/rt/solution/ConnectionSolutionHandler.java</code></li>
+</ul>
+<p>The core engine and authentication work are reusable. The remaining work is a coherent published-solution policy and account-binding lifecycle, enforced once and consumed consistently by the new UI and execution paths.</p>
+</article>
+</main>
+</body>
+</html>

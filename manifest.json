@@ -63,6 +63,15 @@
       "kind": "plan",
       "createdAt": "2026-10-29T21:14:19.245Z",
       "expiresAt": "2026-11-29T11:00:40.080Z"
+    },
+    {
+      "id": "tjEd8mt4kT",
+      "project": "github.com/unify-apps/www",
+      "slug": "runtime-connections-solution-architecture",
+      "title": "Solution runtime connections architecture",
+      "kind": "plan",
+      "createdAt": "2026-10-30T11:41:32.527Z",
+      "expiresAt": "2026-11-29T11:41:32.527Z"
     }
   ]
 }
