@@ -518,70 +518,12 @@ summary { cursor: pointer; font-weight: 650; }
 <p>Implement an explicit subset of M operators and DAX semantics. Start with bounded transformations and simple aggregates; handle ratios at the correct grain. Relationship direction, inactive relationships, <code>CALCULATE</code>, time intelligence, calculation groups, dynamic identity, BLANK, and privacy/query-folding behavior require separate compatibility rules. Agents may propose SQL/workflow equivalents; execution and differential validation determine whether they are accepted.</p>
 <p>Create a reusable metric layer and mandatory server-side RLS/OLS for every query and export path. Customer database isolation is not per-user row security. Keep native conversion blocked where policy equivalence cannot be established.</p>
 <p>Acceptance: one bounded model runs from original sources without Power BI execution, meets its refresh/recovery contract, enforces mapped security, and passes differential checks before cutover. Maintain a reversible routing decision and original definitions while native acceptance remains incomplete.</p>
-<h2>Delivery backlog and Atlas tickets</h2>
-<p>Requested destination: the <strong>Text to Solution</strong> Atlas project. Every issue title begins with <strong>PowerBI Support</strong>. Team/project IDs, status, and assignments must come from Atlas discovery rather than assumptions.</p>
-<p><strong>Ticket creation is blocked as of this publication.</strong> Atlas authentication check succeeded, but <code>fetch-projects</code> returned <code>HOST_NOT_ALLOWED</code>: <code>atlas.unifyapps.com</code> does not have <code>NEBULA_MCP_TOOLS</code> enabled, or the session cannot read it. No issue was created and no ticket link is claimed. Restore module/session access, discover the exact project and team, check existing issues, then create the backlog below using schema validation and stable idempotency keys. Replace the pending link cells with verified issue URLs and republish this same document.</p>
-<table>
-<thead>
-<tr>
-<th>Ref</th>
-<th>Exact issue title</th>
-<th>Scope</th>
-<th>Depends on</th>
-<th>Ticket link</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>PBI-01</td>
-<td>PowerBI Support: Repair definition extraction and DAX completeness</td>
-<td>Step 1, immediate/asynchronous responses, scans, staging and query errors</td>
-<td>None</td>
-<td>Not created: Atlas access blocked</td>
-</tr>
-<tr>
-<td>PBI-02</td>
-<td>PowerBI Support: Add report and dataflow definition connector actions</td>
-<td>Step 2, report definitions and Gen1/Gen2 inventory/export</td>
-<td>PBI-01 for common operation handling</td>
-<td>Not created: Atlas access blocked</td>
-</tr>
-<tr>
-<td>PBI-03</td>
-<td>PowerBI Support: Build a versioned importer and compatibility report</td>
-<td>Step 3, raw artifacts, parsers, migration spec and gap UI</td>
-<td>PBI-01; PBI-02 for connected imports</td>
-<td>Not created: Atlas access blocked</td>
-</tr>
-<tr>
-<td>PBI-04</td>
-<td>PowerBI Support: Add migration skill and Solution Builder integration</td>
-<td>Step 4 and new skill, approved spec-to-brief adapter and resumability</td>
-<td>PBI-03</td>
-<td>Not created: Atlas access blocked</td>
-</tr>
-<tr>
-<td>PBI-05</td>
-<td>PowerBI Support: Implement identity-safe bridge queries and native report UI</td>
-<td>Step 5, typed callable contracts, security, caches and supported interactions</td>
-<td>PBI-01, PBI-03, PBI-04</td>
-<td>Not created: Atlas access blocked</td>
-</tr>
-<tr>
-<td>PBI-06</td>
-<td>PowerBI Support: Add parity validation and migration acceptance</td>
-<td>Step 6, source oracle, numerical/interaction/security checks and release evidence</td>
-<td>Begin with PBI-03; bridge acceptance needs PBI-05</td>
-<td>Not created: Atlas access blocked</td>
-</tr>
-<tr>
-<td>PBI-07</td>
-<td>PowerBI Support: Add analytical provisioning and bounded native conversion</td>
-<td>Step 7, source ingestion, metrics, M/DAX subset, policies and cutover</td>
-<td>PBI-06 bridge baseline; separate native scope approval</td>
-<td>Not created: Atlas access blocked</td>
-</tr>
-</tbody></table>
-<p>Each issue body should copy its referenced step&#39;s concrete changes and acceptance criteria, record the source pin and source-only evidence boundary, list dependencies by actual Atlas key after creation, and link back to this plan. Leave assignees, delivery dates, and priority unset unless the project&#39;s conventions or owner supplies them. PBI-07 is a separately scoped follow-on, not part of bridge completion.</p>
+<h2>Atlas issue</h2>
+<p>Created exactly one issue in the <strong>Text to Solution</strong> team, as requested:</p>
+<p><a href="https://atlas.unifyapps.com/issue/TTS-3104/details"><strong>TTS-3104 — PowerBI Support: Export dataflow definitions and transformation logic</strong></a></p>
+<p>The issue covers the new connector action for exporting a dataflow definition and its Power Query M logic, its matching workflow-node contract, managed authentication, explicit Gen2 handling, failure/completeness reporting, and acceptance checks. It links back to this plan. Status at creation: Dev Todo. No priority, assignee, or due date was set.</p>
+<p>Text to Solution is the Atlas team shown in the UI; no project with that exact name was found. The issue belongs to that team and is not assigned to an unrelated project. No other issues or sub-issues were created. The broader implementation steps in this document remain a roadmap, not additional ticket commitments.</p>
+<p>Atlas CLI discovery remains blocked by <code>HOST_NOT_ALLOWED</code> for <code>NEBULA_MCP_TOOLS</code>; the issue was created and verified through the authorized Atlas UI instead.</p>
 <h2>Risks and mitigations</h2>
 <table>
 <thead>
