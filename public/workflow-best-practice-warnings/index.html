@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Saved, with room to improve</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: calc(100% - 200px);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 64rem) {
+  .planloft-plan { width: calc(100% - 100px); }
+}
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: calc(100% - 50px); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --ink: #24201c;
+    --muted: #6e655d;
+    --paper: #fbf9f5;
+    --surface: #f1ede6;
+    --rule: #e2dbd1;
+    --accent: #7d2436;
+    --code-bg: #efeae2;
+  }
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>A workflow can be valid enough to save and still deserve a second look. This integration gives the Workflow Agent that second look through best-practice lint warnings, while clearly confirming that the current version was saved.</p>
+<blockquote>
+<p>The workflow is saved. A warning is advice for a possible improvement, not a failed save or a demand to fix everything.</p>
+</blockquote>
+<h2>The change in one glance</h2>
+<table>
+<thead>
+<tr>
+<th>Before this integration</th>
+<th>With best-practice lint</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Valid workflow → saved ID and version</td>
+<td>Valid workflow → saved ID and version, plus advisory findings</td>
+</tr>
+<tr>
+<td>Agent sees that the save succeeded</td>
+<td>Agent sees that the save succeeded <strong>and</strong> which design choices deserve review</td>
+</tr>
+<tr>
+<td>Best-practice concerns may go unnoticed</td>
+<td>Findings carry a category, rule ID, impact in the message, and a source location when available</td>
+</tr>
+<tr>
+<td>Agent moves on after saving</td>
+<td>Agent can apply a relevant improvement in another save, or explain why the design is intentional</td>
+</tr>
+</tbody></table>
+<p>The four scenarios below assume that compilation, backend validation and storage requirements pass. Best-practice lint does not make an otherwise invalid workflow saveable. “Before” means a successful save without <strong>this integration&#39;s</strong> best-practice feedback; other validators may already flag some problems.</p>
+<h2>01 · An integration credential is embedded in an HTTP step</h2>
+<p><strong>Security · CHECK_39 · critical impact · warning severity</strong></p>
+<p>A nightly supplier sync sends a password as a literal input to its HTTP step. The request can be structurally valid, and the workflow may save successfully, even though changing environments now means editing that credential in the workflow.</p>
+<pre><code class="language-json">{
+  &quot;inputs&quot;: {
+    &quot;password&quot;: &quot;SYNTHETIC_EXAMPLE_ONLY&quot;
+  }
+}
+</code></pre>
+<p>Previously, the save could succeed without best-practice feedback. Now it still succeeds, with this warning title:</p>
+<blockquote>
+<p>Hardcoded critical input detected [critical]</p>
+</blockquote>
+<p>The warning explains that critical inputs appear to contain hardcoded text and recommends mapping them to variables, pills or configuration. The agent should move an actual credential to the platform&#39;s supported secure configuration or connection mechanism and save the improvement. It should not interpret the finding as evidence that the first save failed.</p>
+<p><strong>A useful judgment call:</strong> a fixed API URL can also match the evaluator&#39;s broad heuristic. If an endpoint is intentionally constant, the agent should assess that context rather than rewrite it automatically. This check is a heuristic, not proof of a leaked secret.</p>
+<h2>02 · A lookup runs, but nothing uses its result</h2>
+<p><strong>Usability · CHECK_1 · medium impact · warning severity</strong></p>
+<p>An invoice workflow fetches a customer&#39;s profile, then calculates the invoice entirely from the trigger payload. No later step reads the profile lookup&#39;s output. That extra request adds latency without contributing to the result.</p>
+<pre><code class="language-text">Invoice received
+  → Fetch customer profile
+  → Calculate total from invoice payload
+  → Return invoice total
+</code></pre>
+<p>The new warning title is:</p>
+<blockquote>
+<p>Remove unused node outputs to prevent unnecessary delays [medium]</p>
+</blockquote>
+<p>The agent can remove the lookup if it has no purpose, then save the leaner version. But unused output is not the same as an unnecessary action. A notification or write can matter for its side effect even when nothing reads its output. The agent should keep such a step when the requested behavior needs it.</p>
+<p><strong>What changed:</strong> a successful save now starts a design review. It does not authorize deleting every step with an unused return value.</p>
+<h2>03 · A connector is configured to retry too aggressively</h2>
+<p><strong>Performance · CHECK_4 · medium impact · warning severity</strong></p>
+<p>An order-export workflow retries a supplier request ten times, starting with a five-second delay. That may help a flaky endpoint occasionally, but it can also leave orders waiting much longer than intended.</p>
+<pre><code class="language-json">{
+  &quot;retryConfig&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;count&quot;: 10,
+    &quot;initialDelay&quot;: 5000,
+    &quot;maxDelay&quot;: 60000,
+    &quot;backOffFactor&quot;: 2
+  }
+}
+</code></pre>
+<p>The warning title is:</p>
+<blockquote>
+<p>Configure node level retries optimally to prevent slowdown [medium]</p>
+</blockquote>
+<p>In the inspected evaluator, enabled retries pass this check when count is 0–5, initial delay is 0–1,000 ms, maximum delay is 0–30,000 ms, and backoff factor is 1–5. The example exceeds several of those thresholds.</p>
+<p>The agent should weigh the supplier&#39;s recovery behavior against the user&#39;s latency requirements. It can reduce the retry settings in a later save. A deliberately longer retry policy may be appropriate, but the agent should explain that choice instead of changing it solely to silence lint.</p>
+<h2>04 · A status poll runs every 30 seconds</h2>
+<p><strong>Performance · CHECK_55 · high impact · warning severity</strong></p>
+<p>A shipment tracker polls a carrier every 30 seconds even though the business only needs minute-level updates. The workflow is valid, but the polling interval can waste requests and increase rate-limit pressure.</p>
+<pre><code class="language-json">{
+  &quot;cron&quot;: &quot;INTERVAL&quot;,
+  &quot;interval&quot;: 30,
+  &quot;frequency&quot;: &quot;SECONDS&quot;
+}
+</code></pre>
+<p>The new warning title is:</p>
+<blockquote>
+<p>Scheduler frequency below 1 minute [high]</p>
+</blockquote>
+<p>The evaluator flags explicit interval schedules below 60 seconds. It does not claim to analyze every custom CRON expression. The agent can move to one minute if that meets the requirement. If the user explicitly needs faster polling and the platform permits it, the agent should preserve that requirement and explain the tradeoff.</p>
+<h2>What the agent actually receives</h2>
+<p>The adapter turns evaluator results into diagnostics. This example illustrates the returned shape for the hardcoded-input scenario. The node ID, source line, saved ID and version are illustrative; the rule name and message formatting come from the implementation and platform rule metadata.</p>
+<pre><code class="language-json">{
+  &quot;ok&quot;: true,
+  &quot;workflowId&quot;: &quot;example-supplier-sync&quot;,
+  &quot;version&quot;: 7,
+  &quot;message&quot;: &quot;Workflow saved successfully at version 7. Best-practice lint warnings are advisory. The current workflow is saved. Apply relevant improvements in a later save; not every warning needs a change.&quot;,
+  &quot;warnings&quot;: [
+    {
+      &quot;severity&quot;: &quot;warn&quot;,
+      &quot;rule&quot;: &quot;bestPractices.CHECK_39&quot;,
+      &quot;stage&quot;: &quot;bestPractices/security&quot;,
+      &quot;nodeId&quot;: &quot;example-http-step&quot;,
+      &quot;line&quot;: 12,
+      &quot;message&quot;: &quot;Hardcoded critical input detected [critical]: Critical inputs (passwords, secrets, tokens, IDs, or API URLs) appear to contain hardcoded text values. This reduces scalability (hard to change environments) and poses a security risk. You should map these fields to variables, pills, or configuration objects (e.g. {{ variable }}).&quot;,
+      &quot;suggestion&quot;: &quot;Critical inputs (passwords, secrets, tokens, IDs, or API URLs) appear to contain hardcoded text values. This reduces scalability (hard to change environments) and poses a security risk. You should map these fields to variables, pills, or configuration objects (e.g. {{ variable }}).&quot;
+    }
+  ]
+}
+</code></pre>
+<p>This is an excerpt, not the entire success response. Other response fields can include the workflow summary, creation status, changes and test-case information. Line and column information come from the compiler&#39;s source map when it can locate the returned node. A workflow-level finding may have no source line.</p>
+<p><strong>Critical is the platform rule&#39;s impact label. The diagnostic severity remains <code>warn</code>.</strong> It does not become a save error because its message contains “critical.”</p>
+<h2>Three outcomes the agent must keep separate</h2>
+<table>
+<thead>
+<tr>
+<th>Tool outcome</th>
+<th>What it means</th>
+<th>What the agent should do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ok: true</code>, with lint warnings</td>
+<td>The current version was saved successfully</td>
+<td>Confirm the save. Review warnings and apply relevant improvements in another save.</td>
+</tr>
+<tr>
+<td><code>ok: false</code>, with validation errors</td>
+<td>This attempt did not save successfully</td>
+<td>Fix blocking findings. Review advisory warnings where relevant, then try again. Infrastructure or uncertain-save outcomes require their own recovery guidance.</td>
+</tr>
+<tr>
+<td>Save succeeds, but a best-practice check is unavailable</td>
+<td>Saving succeeded; lint coverage is incomplete</td>
+<td>Confirm the save and name the coverage gap. Do not claim that the unavailable check passed.</td>
+</tr>
+</tbody></table>
+<p>An appropriate agent reply is:</p>
+<blockquote>
+<p>Saved version 7 successfully. The lint check flagged a hardcoded credential in the HTTP step. I recommend replacing it with secure configuration. The saved version is available; that improvement would be a follow-up save.</p>
+</blockquote>
+<p>If the agent makes the improvement immediately, it should confirm the <strong>new</strong> save as well. The first version was already persisted; the later version records the enhancement.</p>
+<h2>What these warnings do not cover</h2>
+<p>The integration explicitly returns advisories for three skipped evaluator groups. <strong>Storage</strong> depends on index recommendations for persisted workflows. <strong>Recursion</strong> writes reports for referenced workflows. <strong>LLM</strong> can invoke paid providers, independently of the requested check IDs. Save-time lint skips those effects.</p>
+<p>A missing or failed evaluator result is also reported. For example:</p>
+<pre><code class="language-json">{
+  &quot;severity&quot;: &quot;warn&quot;,
+  &quot;rule&quot;: &quot;bestPractices.CHECK_3&quot;,
+  &quot;stage&quot;: &quot;bestPractices/performance&quot;,
+  &quot;message&quot;: &quot;Best-practice check unavailable: CHECK_3 produced no result. This advisory does not block saving.&quot;
+}
+</code></pre>
+<p>That message describes a gap in the check, not a defect the agent should try to repair in the workflow.</p>
+<h2>Evidence and scope</h2>
+<p>This guide describes <a href="https://github.com/unify-apps/www/pull/31495">PR #31495</a>, at the reviewed integration revision <code>85666bb18fd</code>. It is not a claim that this behavior is deployed everywhere today.</p>
+<p>During the October 19 integration audit, the independent Luna review inspected the 88-rule Orbit UAT catalogue and 14 deployed evaluator graphs. Live probes verified the repaired adapter&#39;s security and usability warnings, including <code>CHECK_39</code> and <code>CHECK_1</code>. The retry and scheduler examples above are grounded in evaluator source and rule metadata; they were not live-executed for this document. The original temporary probe files are no longer present, so the live findings are reported from that session&#39;s recorded results.</p>
+<p>These are representative business scenarios, not recovered customer workflows or a claim that a particular historical agent session emitted these exact messages. The examples contain synthetic values only. Local pipeline tests verified that warnings do not prevent saving; the earlier audit did not perform a live save through the combined pipeline.</p>
+<h2>A quick reading guide</h2>
+<ol>
+<li>Look at <code>ok</code>, the saved workflow ID and version first.</li>
+<li>Separate blocking errors from advisory warnings.</li>
+<li>Read the rule, category, message and available source location.</li>
+<li>Fix findings that matter for the user&#39;s requested workflow. Keep intentional choices with a reason.</li>
+<li>Treat unavailable checks as incomplete coverage, not as passed checks or required workflow edits.</li>
+</ol>
+<p>The useful outcome is a saved workflow and a better-informed agent, with room for judgment about the next improvement.</p>
+</article>
+</main>
+</body>
+</html>
