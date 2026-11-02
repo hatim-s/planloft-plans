@@ -81,6 +81,15 @@
       "kind": "plan",
       "createdAt": "2026-11-01T10:15:47.010Z",
       "expiresAt": "2026-12-01T10:15:47.010Z"
+    },
+    {
+      "id": "OzPzthgPL8",
+      "project": "github.com/unify-apps/www",
+      "slug": "powerbi-migration-wrap-up",
+      "title": "Power BI migration wrap-up",
+      "kind": "plan",
+      "createdAt": "2026-11-02T05:18:08.040Z",
+      "expiresAt": "2026-12-02T05:18:08.040Z"
     }
   ]
 }
