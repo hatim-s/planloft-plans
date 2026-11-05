@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Theo CLI proxy setup guide</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: calc(100% - 200px);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 64rem) {
+  .planloft-plan { width: calc(100% - 100px); }
+}
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: calc(100% - 50px); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --ink: #24201c;
+    --muted: #6e655d;
+    --paper: #fbf9f5;
+    --surface: #f1ede6;
+    --rule: #e2dbd1;
+    --accent: #7d2436;
+    --code-bg: #efeae2;
+  }
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>Theo&#39;s setup puts account authentication on one always-on home computer and sends requests from his other computers to that hub over Tailscale. CLIProxyAPI supplies the common endpoint. The hub, rather than each client, makes the upstream provider requests.</p>
+<p>Proxying model requests does not move agent execution. Claude Code, shell commands, repository reads and tests still run on the client or selected T3 environment host. For example, a laptop can run Claude Code against its local checkout while the home hub forwards only model requests. To execute tools on the hub, launch the agent there explicitly.</p>
+<p>This guide describes that architecture and a cautious way to reproduce it. It is a research guide, not a verified deployment. No installation, login, configuration change, or live request was performed for this document.</p>
+<blockquote>
+<p>A working proxy is not evidence that a subscription provider permits this use. Read the current provider terms before enrolling accounts.</p>
+</blockquote>
+<h2>What the hub does</h2>
+<p>The supplied local copy of <a href="https://gist.github.com/t3dotgg/59a521d2ee8d70aaf90e280c175072af">Theo&#39;s guide</a> describes a home hub running <a href="https://github.com/router-for-me/CLIProxyAPI">CLIProxyAPI</a>, with Claude and Codex accounts enrolled on the hub. Clients connect to the hub&#39;s HTTPS endpoint through Tailscale. Theo reports using multiple accounts and computers; his public sources give different counts, so treat the counts as a snapshot, not a current inventory. See his <a href="https://x.com/theo/status/2114670780403560717">post</a> and <a href="https://github.com/pingdotgg/t3code/blob/main/docs/user/faq.md#can-i-add-a-bunch-of-accounts-for-one-provider">T3 Code FAQ</a>.</p>
+<p>The proxy exposes compatible API interfaces, keeps provider credentials on the hub, and can route requests across enrolled credentials. It does not run model inference locally, create more provider quota, guarantee failover, make incompatible clients automatically compatible, or establish permission to use subscription credentials this way. A hub outage interrupts clients pointed at it. Tailnet access also makes the hub a valuable target: a caller with access to the endpoint and its client key can spend the accounts&#39; capacity.</p>
+<p>Useful cases include accessing the same endpoint from several personal machines, reducing repeated account setup, and testing multiple enrolled accounts from a supported client. A separate Claude configuration is a useful escape hatch: it keeps the normal configuration available and makes selection deliberate. This does not itself pool accounts.</p>
+<p>Theo says centralizing auth reduces login churn and changing IPs, warns against a VPS and VPN, and reports his own ban experience. These are his observations and recommendations, not verified provider enforcement rules. His claims about refresh intervals, IP-related bans, power consumption and websocket speed are not independently established here. A residential IP is not a compliance guarantee.</p>
+<h2>Policy and trust boundaries</h2>
+<p><a href="https://code.claude.com/docs/en/legal-and-compliance#authentication-and-credential-use">Anthropic&#39;s authentication and credential-use policy</a> distinguishes consumer subscription OAuth for Claude Code and native Anthropic apps from API credentials. It restricts products and services that collect, store, intermediate, or route Claude.ai credentials on behalf of users, while separately describing conditions for an end user signing into unmodified Claude Code in a product. Its text does not explicitly decide this exact single-user, self-hosted proxy arrangement. It does not approve it either. Ask Anthropic about the intended arrangement if the risk matters; enforcement may include account action. Theo himself warns of bans and says not to serve other people&#39;s traffic or use Claude subscriptions outside Claude Code.</p>
+<p>For a documented business integration, consider the Anthropic API or a supported cloud provider with its own billing and <a href="https://platform.claude.com/docs/en/api/rate-limits">API rate limits</a>. Separate subscriptions do not automatically confer a right to combine capacity. Check OpenAI&#39;s current terms separately before using Codex subscription OAuth through a proxy.</p>
+<h2>Routing is not affinity</h2>
+<p>The upstream <a href="https://github.com/router-for-me/CLIProxyAPI/blob/e6e5708e677adb2463d45accdd24bc9fd028ddd8/config.example.yaml">v8 example configuration</a> describes <code>round-robin</code>, <code>weighted-round-robin</code>, and <code>fill-first</code>. Session affinity binds a session to a credential for a configured period, with failover described when the credential becomes unavailable. This can help retain account-specific cache locality, but it does not prove behavior under every quota error or retry. Observe actual requests and cache metrics without exposing prompts or credentials.</p>
+<p>Theo says his soonest-reset-first policy required his fork. Upstream priority, weights, round robin, and affinity do not implement that policy. The supplied material does not identify a verifiable fork revision or provide an implementation. Do not claim it is enabled by the example below, or promise a particular account will be chosen next. Affinity can also keep an existing session on an account even when a different routing preference would choose another one.</p>
+<h2>Before starting</h2>
+<p>Use a personal, trusted home hub that stays awake, a private tailnet, and clients authorized to reach it. This guide assumes macOS with Homebrew on the hub, Claude Code already installed on the client, and that the user personally completes each account login. Linux is an alternative below. Choose which accounts and devices to enroll, review their terms, and decide who can access the tailnet before changing anything. Make a private backup of existing configs, never publish them, and record how to restore them.</p>
+<p>The Homebrew <a href="https://formulae.brew.sh/formula/cliproxyapi">formula</a> listed stable <strong>8.0.55</strong> on 2026-11-05 and names the executable <code>cliproxyapi</code>. The v8 config below comes from the supplied guide and the upstream example at the linked commit. The research did not prove the exact release in which each v8 field first appeared or test 8.0.55 against that example. Before use, compare the installed release&#39;s own example, help and release notes; stop if the layout or flags differ. <code>config-version: 8</code> is a schema marker, not a promise that all major-version-8 binaries accept every later field. Pin and record the exact installed version and matching config reference. Don&#39;t silently apply this YAML to an older v6/v7 layout.</p>
+<h2>Setup steps</h2>
+<h3>1. Install and inspect the macOS hub</h3>
+<p>These commands are for the reader to run, not commands executed in this research:</p>
+<pre><code class="language-sh">brew install cliproxyapi
+brew list --versions cliproxyapi
+command -v cliproxyapi
+cliproxyapi --help
+brew info cliproxyapi
+lsof -nP -iTCP:8317 -sTCP:LISTEN
+</code></pre>
+<p>Homebrew documents <code>brew services start cliproxyapi</code> and the binary at <code>$(brew --prefix)/opt/cliproxyapi/bin/cliproxyapi</code>. Its documented service config path is <code>$(brew --prefix)/etc/cliproxyapi.conf</code>; confirm it with the installed <a href="https://github.com/router-for-me/CLIProxyAPIDocs/blob/main/docs/en/introduction/quick-start.md">quick start</a> and service definition. Do not paste the Linux <code>./cli-proxy-api</code> command into a Mac shell. Check <code>pmset -g</code> and choose an appropriate sleep policy so the hub stays reachable. Check whether the port is already in use before starting.</p>
+<h3>2. Configure local listening and secrets</h3>
+<p>Back up the existing config and compare it to the version-matched example. Use two independent, long random values generated locally: one downstream access key and one management secret. Do not paste actual values into chat, shell history, screenshots, source control, or shared tickets. Protect the config and auth directory with user-only permissions. The following is a partial configuration, not a replacement for other fields in the installed example:</p>
+<pre><code class="language-yaml">config-version: 8
+server:
+  host: &quot;127.0.0.1&quot;
+  port: 8317
+  trusted-proxies: [&quot;127.0.0.1&quot;, &quot;::1&quot;]
+management:
+  allow-remote: true
+  secret-key: &quot;&lt;independent-management-secret&gt;&quot;
+access:
+  api-keys: [&quot;&lt;independent-client-access-key&gt;&quot;]
+routing:
+  strategy: &quot;round-robin&quot;
+  session-affinity: true
+  session-affinity-ttl: &quot;1h&quot;
+  retry:
+    request-retry: 3
+    max-retry-interval: 30
+</code></pre>
+<p>The local bind prevents direct LAN exposure. <code>allow-remote: true</code> is needed for the gist&#39;s remote management approach, but exposes a powerful administrative interface through the same proxy endpoint. Prefer leaving remote management off when it is unnecessary and administer locally. If enabled, constrain access with tailnet grants or ACLs and protect the management key separately. The supplied config trusts loopback proxies; verify the installed release and Tailscale forwarding behavior before relying on forwarded client identity. Tailnet membership alone is not a complete authorization policy.</p>
+<p>Before login, confirm the service&#39;s config path and effective auth directory from its definition and version-matched configuration. The gist uses <code>~/.cli-proxy-api</code>; do not assume that path if your configuration overrides it. On macOS, inspect the confirmed paths with <code>ls -ld</code> and <code>stat -f &#39;%Su %Sp %N&#39;</code>. The service user must own or have the intended access to them. For files and directories owned by your service user, use <code>chmod 600 &lt;config-file&gt;</code> and <code>chmod 700 &lt;auth-directory&gt;</code>, then restrict individual credential files to mode <code>600</code>. Replace placeholders with the confirmed paths; do not recursively change a shared Homebrew directory. Check ACLs with <code>ls -le</code> if access remains broader than expected. Apply the same restrictions to backups. Stop before login if ownership or the service&#39;s paths are unclear.</p>
+<p>Start only after reviewing the configuration:</p>
+<pre><code class="language-sh">brew services start cliproxyapi
+brew services list
+lsof -nP -iTCP:8317 -sTCP:LISTEN
+</code></pre>
+<p>Confirm the listener is on <code>127.0.0.1</code>, not <code>0.0.0.0</code> or a public interface. Service startup and config parsing must be checked in the installed service&#39;s logs. Stop and correct errors before exposing the endpoint.</p>
+<p>Before enrolling accounts, complete step 4 and test transport. This macOS service-to-Serve arrangement has not been runtime tested here. On the hub run <code>curl -i --max-time 10 http://127.0.0.1:8317/v1/models</code> without a key. From an authorized second machine run <code>curl -i --max-time 10 https://&lt;hub&gt;.&lt;tailnet&gt;.ts.net:8317/v1/models</code>. With client authentication configured, both should return an authentication rejection from CLIProxyAPI. A timeout, TLS failure, or Serve gateway error does not pass. An unauthenticated success requires checking access-key enforcement. Matching rejections establish basic forwarding only; after enrollment, perform the authenticated model-list and inference checks below.</p>
+<h3>3. Enroll accounts on the hub</h3>
+<p>The gist gives <code>-claude-login</code>, <code>-codex-device-login</code>, <code>-codex-login</code>, and <code>-no-browser</code> flags. Verify each against <code>cliproxyapi --help</code> for the installed version first. For example, if the help confirms them:</p>
+<pre><code class="language-sh">cliproxyapi -claude-login
+# Optional Codex, if permitted for your account and confirmed by --help:
+cliproxyapi -codex-device-login
+</code></pre>
+<p>Ensure the command uses the same config and auth directory as the service; check <code>--help</code> and the service definition for the supported config flag and working directory. Do not assume the CLI and service share paths. The user completes the browser login. Repeat the appropriate login flow once for <strong>each</strong> intended account, explicitly selecting the correct account in the browser. Then use the local management UI or supported management tooling to confirm each expected account is present without disclosing token contents. Repeating a login is not proof that a second distinct account was added; verify account identity in the supported UI.</p>
+<p>For a headless hub, the gist describes <code>-no-browser</code> and forwarding the Claude callback on port 54545 from a client: <code>ssh -L 54545:localhost:54545 &lt;hub-ssh-host&gt;</code>. Start the tunnel first and follow the login command&#39;s actual instructions. The gist identifies port 1455 for Codex browser login; device login avoids that callback when supported. Treat callback URLs and codes as secrets and close the tunnel after login. Validate current flags and callback ports rather than assuming they are stable.</p>
+<h3>4. Publish privately through Tailscale</h3>
+<p>Install and sign into Tailscale on the hub and each intended client, then check <code>tailscale status</code> and the tailnet&#39;s device access rules. With MagicDNS and HTTPS available, the gist uses:</p>
+<pre><code class="language-sh">tailscale serve --bg --https=8317 http://127.0.0.1:8317
+tailscale serve status
+</code></pre>
+<p>Check the actual generated hostname and port in status. The intended URL is <code>https://&lt;hub&gt;.&lt;tailnet&gt;.ts.net:8317</code>. Tailscale Serve exposes the service to authorized tailnet peers, subject to tailnet policy; it is distinct from public Funnel. Confirm HTTPS certificate and client authorization behavior using the current <a href="https://tailscale.com/kb/1242/tailscale-serve">Tailscale Serve documentation</a>. Do not enable Funnel or router port forwarding. A client key remains necessary even on a private network.</p>
+<h3>5. Configure Claude Code on the execution machine</h3>
+<p>Prefer an isolated directory. Create <code>~/.claude-hub/settings.json</code> with the following, substituting the actual hub URL and client key privately:</p>
+<pre><code class="language-json">{
+  &quot;env&quot;: {
+    &quot;ANTHROPIC_BASE_URL&quot;: &quot;https://&lt;hub&gt;.&lt;tailnet&gt;.ts.net:8317&quot;,
+    &quot;ANTHROPIC_AUTH_TOKEN&quot;: &quot;&lt;client-access-key&gt;&quot;
+  }
+}
+</code></pre>
+<p>The downstream key is stored in this client file and grants access to the hub, so protect it like other credentials. Run <code>chmod 700 &quot;$HOME/.claude-hub&quot;</code> and <code>chmod 600 &quot;$HOME/.claude-hub/settings.json&quot;</code> after creating them. Keep it out of synced public folders and source control. Then run <code>CLAUDE_CONFIG_DIR=&quot;$HOME/.claude-hub&quot; claude</code>. A separate directory may require its own onboarding or preferences; it is not a substitute for verifying credential isolation or current Claude Code behavior. Keep the normal <code>~/.claude</code> configuration intact. If the directory already exists, back it up and merge settings rather than overwriting it. See <a href="https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-claude.md#separate-accounts-or-configurations">T3&#39;s separate configuration guidance</a>.</p>
+<p>T3 Code runs providers on the selected <strong>environment&#39;s host</strong>. Configure that host, not merely the phone or browser displaying T3. The supplied gist describes a separate Claude provider instance with its own config directory, or instance environment variables with the token marked sensitive. Confirm the current UI and launch context before relying on them. A standalone terminal test on another machine does not prove the T3 provider inherited the settings.</p>
+<h3>6. Optional Codex client</h3>
+<p>Use a separate <code>CODEX_HOME</code>, preserve an existing <code>config.toml</code>, and check the installed Codex version&#39;s current configuration documentation before applying this gist-supplied example:</p>
+<pre><code class="language-toml">model_provider = &quot;cliproxy&quot;
+
+[model_providers.cliproxy]
+name = &quot;CLIProxyAPI&quot;
+base_url = &quot;https://&lt;hub&gt;.&lt;tailnet&gt;.ts.net:8317/v1&quot;
+wire_api = &quot;responses&quot;
+requires_openai_auth = false
+supports_websockets = true
+experimental_bearer_token = &quot;&lt;client-access-key&gt;&quot;
+</code></pre>
+<p>Run with <code>CODEX_HOME=&quot;$HOME/.codex-hub&quot; codex</code>. The bearer token in this file is sensitive. After creating the directory and file, use <code>chmod 700 &quot;$HOME/.codex-hub&quot;</code> and <code>chmod 600 &quot;$HOME/.codex-hub/config.toml&quot;</code>. Config field names and websocket support are version-dependent and were not tested here. Theo reports a performance benefit from websockets; no benchmark was independently verified. For T3, the gist says select <strong>Use existing CLI</strong> on the execution host; <strong>Continue with ChatGPT</strong> uses a different authentication path. The optional usage-provider integration needs a management key and therefore expands the exposure of that powerful secret. Check the current T3 version and its permissions before enabling it.</p>
+<h3>Linux alternative</h3>
+<p>The supplied gist recommends its <a href="https://github.com/router-for-me/cliproxyapi-installer">Linux installer</a> and says it creates <code>~/cliproxyapi</code>, <code>config.yaml</code>, and a user service. Inspect the installer and its version before running any remote script. On that particular installer, the gist uses <code>cd ~/cliproxyapi</code> and <code>./cli-proxy-api</code>; verify the actual installed binary and help. It suggests <code>systemctl --user enable --now cliproxyapi</code> and <code>loginctl enable-linger</code> to keep the service running without an interactive login. Service names and config locations differ for other packages, including Arch. Review sleep settings and security consequences before changing them; masking sleep targets affects the whole machine. Apply the same loopback bind, secrets, and tailnet restrictions as on macOS.</p>
+<h2>Validation, troubleshooting and rollback</h2>
+<ol>
+<li>On the hub, verify the service is healthy, the port listens only on loopback, the configured auth directory is the one used by the service, and each intended account is visible. Inspect logs without sharing tokens, prompts, or account files.</li>
+<li>From an authorized second machine, confirm MagicDNS and <code>tailscale serve status</code>. Use a client that supplies the access key privately to request <code>/v1/models</code>. A JSON model list establishes endpoint reachability and client-key acceptance only; it does not prove a particular upstream account or model request works. Avoid putting the key in shell history or a process command line.</li>
+<li>Make one small, permitted request in the isolated Claude configuration. Confirm the actual model, response and expected account in supported provider/proxy views. Test the T3 environment separately. Check logs and usage without assuming a successful response proves affinity, failover or terms compliance.</li>
+<li>A 401 can mean a wrong downstream key or expired upstream grant. Identify which layer returned it before rotating a key or repeating login. The gist says a Codex <code>token_invalidated</code> grant requires re-enrollment. Rate limits, a disabled account, a single available credential, or a model mismatch may prevent a request even when <code>/v1/models</code> works. Do not repeatedly retry an unknown failed operation as if it were free.</li>
+<li>For DNS or TLS failures, check tailnet membership, access rules, MagicDNS, Serve status and the exact hostname first. The gist proposes a macOS resolver override for a specific DNS issue; do not apply it blindly because it changes system DNS configuration. For unexpected account switching, inspect the installed version&#39;s affinity settings and safe usage metrics; cache writes alone cannot conclusively diagnose routing.</li>
+<li>To roll back, point clients back to their previous configs or stop launching with the separate config directories. Remove the hub base-URL/token overrides from any T3 provider instance and shell startup files you edited. If using isolated configs, return to your normal launcher without <code>CLAUDE_CONFIG_DIR</code> or the alternate <code>CODEX_HOME</code>; retain the isolated files privately until rollback is confirmed. If you edited normal config files, restore the private pre-change backups to those exact paths after preserving any subsequent changes. Stop and unregister the Homebrew-managed service with <code>brew services stop cliproxyapi</code>, verify it is stopped with <code>brew services list</code> and that <code>lsof -nP -iTCP:8317 -sTCP:LISTEN</code> shows no proxy listener, remove only the relevant Serve mapping using the syntax shown by <code>tailscale serve --help</code>, and verify <code>tailscale serve status</code>. Restore backed-up files if edited. Revoke or remove proxy credentials and keys through supported account and management controls if retiring the hub, and securely dispose of its auth files and backups according to your retention needs. Do not delete unrelated Serve mappings or existing configs.</li>
+</ol>
+<h2>Evidence and open checks</h2>
+<ul>
+<li><strong>Supplied source:</strong> the local gist is the evidence for Theo&#39;s specific architecture, commands, account enrollment, routing fork, T3 UI claims, and anecdotes. It was supplied by the user; its blocked remote copy was not fetched again.</li>
+<li><strong>Primary documentation:</strong> the linked upstream config, Homebrew formula, Tailscale, Anthropic and T3 documentation support the narrower claims attributed to them. Homebrew&#39;s 8.0.55 listing was read in Chrome on 2026-11-05. The prior research file records the upstream configuration and Anthropic policy inspection. These sources can change.</li>
+<li><strong>Not runtime tested:</strong> installation, exact release/schema compatibility, OAuth flags and service config path agreement, Tailscale forwarding, client compatibility, management access, account selection, retries, affinity, Codex websocket behavior, and T3 provider execution remain to be verified in the chosen environment. The exact earliest v8-compatible release and Theo&#39;s fork revision remain unresolved. Check the installed release and ask the relevant provider about policy before deployment.</li>
+</ul>
+<p>A successful setup is a privately reachable, authenticated hub with deliberately selected clients and verified account behavior, backed by a clear rollback path.</p>
+</article>
+</main>
+</body>
+</html>

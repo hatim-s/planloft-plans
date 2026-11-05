@@ -16,4 +16,5 @@ planloft plan/doc deploys
 | [Hub Siting: app brief and glossary](https://hatims-planloft.vercel.app/hub-siting-brief/) | path-69d373 | plan | 2026-11-25 |
 | [PowerBI Support: implementation plan](https://hatims-planloft.vercel.app/powerbi-support/) | path-69d373 | plan | 2026-11-29 |
 | [Solution latency: trace e\_6aba558c29ecab2b07100705](https://hatims-planloft.vercel.app/solution-latency-e-6aba558c5/) | path-71ea78 | report | 2026-12-27 |
+| [Theo CLI proxy setup guide](https://hatims-planloft.vercel.app/theo-cli-proxy-setup/) | path-f10be8 | plan | 2026-12-05 |
 <!-- planloft:active-plans:end -->

@@ -90,6 +90,15 @@
       "kind": "plan",
       "createdAt": "2026-11-02T05:18:08.040Z",
       "expiresAt": "2026-12-02T07:59:00.983Z"
+    },
+    {
+      "id": "mQkTRQA8QU",
+      "project": "path-f10be8",
+      "slug": "theo-cli-proxy-setup",
+      "title": "Theo CLI proxy setup guide",
+      "kind": "plan",
+      "createdAt": "2026-11-05T15:54:18.651Z",
+      "expiresAt": "2026-12-05T15:54:18.651Z"
     }
   ]
 }
