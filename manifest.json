@@ -2,15 +2,6 @@
   "version": 1,
   "deploys": [
     {
-      "id": "0CginbqZax",
-      "project": "github.com/hatim-s/brain-bloom",
-      "slug": "sprig-chat-knowledge-roadmap",
-      "title": "Sprig — Subscription Chat and Knowledge RAG Roadmap",
-      "kind": "plan",
-      "createdAt": "2026-08-07T18:42:12.178Z",
-      "expiresAt": "2026-11-05T18:42:12.178Z"
-    },
-    {
       "id": "ucywBTQeIA",
       "project": "path-71ea78",
       "slug": "solution-latency-e-6aba558c5",

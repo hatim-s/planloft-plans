@@ -6,7 +6,6 @@ planloft plan/doc deploys
 <!-- planloft:active-plans:start -->
 | Plan | Project | Kind | Expires |
 | --- | --- | --- | --- |
-| [Sprig — Subscription Chat and Knowledge RAG Roadmap](https://hatims-planloft.vercel.app/sprig-chat-knowledge-roadmap/) | github.com/hatim-s/brain-bloom | plan | 2026-11-05 |
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Saved, with room to improve](https://hatims-planloft.vercel.app/workflow-best-practice-warnings/) | github.com/unify-apps/www | plan | 2026-12-01 |
