@@ -90,6 +90,15 @@
       "kind": "plan",
       "createdAt": "2026-11-05T15:54:18.651Z",
       "expiresAt": "2026-12-05T15:54:18.651Z"
+    },
+    {
+      "id": "a2M0GR5bjK",
+      "project": "github.com/hatim-s/software-factory",
+      "slug": "factory-runtime-review",
+      "title": "Factory: durable runtime and T3 workflows",
+      "kind": "plan",
+      "createdAt": "2026-11-06T18:48:45.341Z",
+      "expiresAt": "2027-02-04T18:48:45.341Z"
     }
   ]
 }
