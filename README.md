@@ -10,7 +10,6 @@ planloft plan/doc deploys
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Saved, with room to improve](https://hatims-planloft.vercel.app/workflow-best-practice-warnings/) | github.com/unify-apps/www | plan | 2026-12-01 |
-| [UAC DSL guide](https://hatims-planloft.vercel.app/uac-dsl-guide/) | github.com/unify-apps/www | note | 2026-11-07 |
 | [kur-post-migration-audit](https://hatims-planloft.vercel.app/kur-post-migration-audit/) | github.com/unify-apps/www | plan | 2026-11-24 |
 | [Workflow Agent loops: the numbers](https://hatims-planloft.vercel.app/workflow-agent-loops/) | path-13df78 | plan | 2026-11-08 |
 | [Hub Siting: app brief and glossary](https://hatims-planloft.vercel.app/hub-siting-brief/) | path-69d373 | plan | 2026-11-25 |
