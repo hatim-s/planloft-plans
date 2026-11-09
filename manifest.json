@@ -11,15 +11,6 @@
       "expiresAt": "2026-12-27T12:39:34.871Z"
     },
     {
-      "id": "za52RwhM25",
-      "project": "path-13df78",
-      "slug": "workflow-agent-loops",
-      "title": "Workflow Agent loops: the numbers",
-      "kind": "plan",
-      "createdAt": "2026-10-09T13:03:13.409Z",
-      "expiresAt": "2026-11-08T13:33:26.719Z"
-    },
-    {
       "id": "UyUlxVAhBp",
       "project": "github.com/unify-apps/www",
       "slug": "kur-post-migration-audit",
