@@ -90,6 +90,15 @@
       "kind": "note",
       "createdAt": "2026-11-11T07:12:39.609Z",
       "expiresAt": "2026-12-11T07:12:39.609Z"
+    },
+    {
+      "id": "v2etdqqphF",
+      "project": "github.com/hatim-s/software-factory",
+      "slug": "software-factory-factory-services",
+      "title": "factory-services",
+      "kind": "note",
+      "createdAt": "2026-11-11T07:13:18.513Z",
+      "expiresAt": "2026-12-11T07:13:18.513Z"
     }
   ]
 }
