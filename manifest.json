@@ -99,6 +99,15 @@
       "kind": "note",
       "createdAt": "2026-11-11T07:13:18.513Z",
       "expiresAt": "2026-12-11T07:13:18.513Z"
+    },
+    {
+      "id": "ZTs3h9VCzu",
+      "project": "github.com/hatim-s/software-factory",
+      "slug": "software-factory-operations",
+      "title": "operations",
+      "kind": "note",
+      "createdAt": "2026-11-11T07:14:25.404Z",
+      "expiresAt": "2026-12-11T07:14:25.404Z"
     }
   ]
 }
