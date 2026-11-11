@@ -7,6 +7,7 @@ planloft plan/doc deploys
 | Plan | Project | Kind | Expires |
 | --- | --- | --- | --- |
 | [Factory: durable runtime and T3 workflows](https://hatims-planloft.vercel.app/factory-runtime-review/) | github.com/hatim-s/software-factory | plan | 2027-02-04 |
+| [api-handoff](https://hatims-planloft.vercel.app/software-factory-api-handoff/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [architecture](https://hatims-planloft.vercel.app/software-factory-architecture/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [factory-services](https://hatims-planloft.vercel.app/software-factory-factory-services/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [operations](https://hatims-planloft.vercel.app/software-factory-operations/) | github.com/hatim-s/software-factory | note | 2026-12-11 |

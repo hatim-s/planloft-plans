@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="en">
+<head><!-- planloft-render:head:start -->
+<style data-planloft-render data-planloft-sha256="07720fd08084a6e6cf986d518bdfaa248dcc4e165ccdc814c03072d73b001057">/* planloft theme: editorial. The long read. Baskerville at 19px on a 1.7 line, headings in
+   the same face at regular weight and a large size, so hierarchy comes from scale rather
+   than boldness. Stone white paper with the yellow kept out, espresso ink, madder red for
+   links. Dark is warm umber with the red lifted to a dusty rose. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --planloft-font-body: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-heading: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-mono: "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", ui-monospace, monospace;
+  --planloft-font-size: 19px;
+  --planloft-line-height: 1.7;
+  --planloft-code-size: 0.8em;
+  --planloft-heading-weight: 400;
+  --planloft-heading-line-height: 1.1;
+  --planloft-heading-tracking: -0.005em;
+  --planloft-h1-size: 2.9em;
+  --planloft-h2-size: 1.75em;
+  --planloft-h3-size: 1.28em;
+}
+:root,
+:root[data-planloft-color-scheme="light"] {
+  color-scheme: light;
+  --planloft-paper: #f8f7f5;
+  --planloft-ink: #2a221d;
+  --planloft-muted: #6b625b;
+  --planloft-surface: #efedea;
+  --planloft-rule: #dad6d0;
+  --planloft-accent: #8c2f39;
+  --planloft-accent-contrast: #f8f7f5;
+  --planloft-code-paper: #edebe7;
+  --planloft-code-ink: #2a221d;
+  --planloft-chart-1: #8c2f39;
+  --planloft-chart-2: #2f5f8a;
+  --planloft-chart-3: #4c7a3a;
+  --planloft-chart-4: #8d6110;
+  --planloft-chart-5: #6a4f9e;
+  --planloft-chart-6: #2c8282;
+  --planloft-chart-sequential: #8c2f39;
+  --planloft-chart-neutral: #91877d;
+  --planloft-positive: #3f7a3a;
+  --planloft-negative: #a82f38;
+  --planloft-caution: #8d6110;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    color-scheme: dark;
+    --planloft-paper: #1c1815;
+    --planloft-ink: #e6dfd6;
+    --planloft-muted: #a79c91;
+    --planloft-surface: #27221e;
+    --planloft-rule: #3f3834;
+    --planloft-accent: #e39aa4;
+    --planloft-accent-contrast: #1c1815;
+    --planloft-code-paper: #26211d;
+    --planloft-code-ink: #e9e2d9;
+    --planloft-chart-1: #e39aa4;
+    --planloft-chart-2: #7fb0dc;
+    --planloft-chart-3: #92c27b;
+    --planloft-chart-4: #d8b25a;
+    --planloft-chart-5: #b7a0e6;
+    --planloft-chart-6: #6dc1c1;
+    --planloft-chart-sequential: #e39aa4;
+    --planloft-chart-neutral: #7d746c;
+    --planloft-positive: #92c27b;
+    --planloft-negative: #ee8e94;
+    --planloft-caution: #d8b25a;
+  }
+}
+:root[data-planloft-color-scheme="dark"] {
+  color-scheme: dark;
+  --planloft-paper: #1c1815;
+  --planloft-ink: #e6dfd6;
+  --planloft-muted: #a79c91;
+  --planloft-surface: #27221e;
+  --planloft-rule: #3f3834;
+  --planloft-accent: #e39aa4;
+  --planloft-accent-contrast: #1c1815;
+  --planloft-code-paper: #26211d;
+  --planloft-code-ink: #e9e2d9;
+  --planloft-chart-1: #e39aa4;
+  --planloft-chart-2: #7fb0dc;
+  --planloft-chart-3: #92c27b;
+  --planloft-chart-4: #d8b25a;
+  --planloft-chart-5: #b7a0e6;
+  --planloft-chart-6: #6dc1c1;
+  --planloft-chart-sequential: #e39aa4;
+  --planloft-chart-neutral: #7d746c;
+  --planloft-positive: #92c27b;
+  --planloft-negative: #ee8e94;
+  --planloft-caution: #d8b25a;
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --planloft-paper: #ffffff;
+    --planloft-ink: #2a221d;
+    --planloft-muted: #6b625b;
+    --planloft-surface: #efedea;
+    --planloft-rule: #dad6d0;
+    --planloft-accent: #8c2f39;
+    --planloft-accent-contrast: #ffffff;
+    --planloft-code-paper: #edebe7;
+    --planloft-code-ink: #2a221d;
+    --planloft-chart-1: #8c2f39;
+    --planloft-chart-2: #2f5f8a;
+    --planloft-chart-3: #4c7a3a;
+    --planloft-chart-4: #8d6110;
+    --planloft-chart-5: #6a4f9e;
+    --planloft-chart-6: #2c8282;
+    --planloft-chart-sequential: #8c2f39;
+    --planloft-chart-neutral: #91877d;
+    --planloft-positive: #3f7a3a;
+    --planloft-negative: #a82f38;
+    --planloft-caution: #8d6110;
+  }
+}
+
+
+body:where(:has(> .planloft-plan > .planloft-prose)) {
+  margin: 0;
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  -webkit-text-size-adjust: 100%;
+}
+:where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.5rem 7rem; }
+:where(.planloft-prose) {
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-body, system-ui, sans-serif);
+  font-size: var(--planloft-font-size, 17px);
+  line-height: var(--planloft-line-height, 1.6);
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+:where(.planloft-prose) *, :where(.planloft-prose) *::before, :where(.planloft-prose) *::after { box-sizing: border-box; }
+:where(.planloft-prose) > :first-child { margin-top: 0; }
+:where(.planloft-prose) > :last-child { margin-bottom: 0; }
+
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-heading, var(--planloft-font-body, system-ui, sans-serif));
+  font-weight: var(--planloft-heading-weight, 650);
+  line-height: var(--planloft-heading-line-height, 1.2);
+  letter-spacing: var(--planloft-heading-tracking, 0);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+:where(.planloft-prose) h1 { margin: 0 0 0.6em; font-size: var(--planloft-h1-size, 2.2em); }
+:where(.planloft-prose) h2 { margin: 1.8em 0 0.5em; font-size: var(--planloft-h2-size, 1.5em); }
+:where(.planloft-prose) h3 { margin: 1.6em 0 0.45em; font-size: var(--planloft-h3-size, 1.18em); }
+:where(.planloft-prose) h4 { margin: 1.5em 0 0.4em; font-size: 1em; }
+:where(.planloft-prose) h5 { margin: 1.4em 0 0.35em; font-size: 1em; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) h6 { margin: 1.4em 0 0.35em; font-size: 1em; font-weight: 500; font-style: italic; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) :is(h1, h2, h3) + :is(h2, h3, h4) { margin-top: 0.8em; }
+/* A linked heading keeps the heading's colour and carries a thin accent underline, so
+   it reads as a link without hover; hover strengthens the line. */
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: color-mix(in srgb, var(--planloft-accent, LinkText) 55%, transparent);
+  text-underline-offset: 0.14em;
+}
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a:hover { text-decoration-color: var(--planloft-accent, LinkText); }
+/* The paragraph after the title is the summary; it reads a step larger and quieter. */
+:where(.planloft-prose) h1 + p { font-size: 1.12em; color: var(--planloft-muted, GrayText); }
+
+:where(.planloft-prose) p { margin: 0 0 1.2em; text-wrap: pretty; }
+:where(.planloft-prose) :is(ul, ol) { margin: 0 0 1.2em; padding-left: 1.6em; }
+:where(.planloft-prose) li { margin: 0.3em 0; }
+:where(.planloft-prose) li > p { margin-bottom: 0.6em; }
+:where(.planloft-prose) li :is(ul, ol) { margin: 0.3em 0 0.4em; }
+:where(.planloft-prose) li::marker { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.2em; }
+:where(.planloft-prose) li > input[type="checkbox"] { margin: 0 0.55em 0 0; vertical-align: -0.1em; accent-color: var(--planloft-accent, currentColor); }
+:where(.planloft-prose) dl { margin: 0 0 1.2em; }
+:where(.planloft-prose) dt { font-weight: var(--planloft-heading-weight, 650); }
+:where(.planloft-prose) dd { margin: 0 0 0.6em 1.6em; }
+
+:where(.planloft-prose) a {
+  color: var(--planloft-accent, LinkText);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+:where(.planloft-prose) a:hover { text-decoration-color: currentColor; }
+:where(.planloft-prose) strong { font-weight: 700; }
+:where(.planloft-prose) mark { padding: 0 0.15em; background: color-mix(in srgb, var(--planloft-caution, #b98100) 28%, var(--planloft-paper, Canvas)); color: inherit; }
+:where(.planloft-prose) del { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; }
+:where(.planloft-prose) :is(sup, sub) { font-size: 0.78em; line-height: 0; }
+:where(.planloft-prose) small { font-size: 0.86em; }
+
+:where(.planloft-prose) :is(code, kbd, samp, pre) {
+  font-family: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  font-size: var(--planloft-code-size, 0.88em);
+}
+:where(.planloft-prose) code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+}
+:where(.planloft-prose) pre {
+  margin: 1.4em 0;
+  padding: 0.95em 1.1em;
+  overflow-x: auto;
+  border-radius: 4px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+  line-height: 1.55;
+  tab-size: 2;
+}
+:where(.planloft-prose) pre code { padding: 0; border-radius: 0; background: transparent; color: inherit; font-size: 1em; }
+:where(.planloft-prose) kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--planloft-surface, color-mix(in srgb, CanvasText 5%, Canvas));
+  font-size: 0.82em;
+}
+
+:where(.planloft-prose) blockquote {
+  margin: 1.4em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  color: var(--planloft-muted, GrayText);
+}
+:where(.planloft-prose) blockquote > :last-child { margin-bottom: 0; }
+:where(.planloft-prose) blockquote cite { font-style: normal; }
+
+/* Tables keep their natural width and scroll sideways instead of breaking the page. */
+:where(.planloft-prose) table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  line-height: 1.45;
+  font-size: 0.94em;
+}
+:where(.planloft-prose) :is(th, td) {
+  padding: 0.45em 1.1em 0.45em 0;
+  border-bottom: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  text-align: left;
+  vertical-align: top;
+}
+:where(.planloft-prose) tr > :last-child { padding-right: 0; }
+:where(.planloft-prose) thead th { font-weight: var(--planloft-heading-weight, 650); border-bottom: 2px solid var(--planloft-ink, CanvasText); }
+:where(.planloft-prose) tbody th { font-weight: 600; }
+:where(.planloft-prose) td:has(> :is(code, kbd):only-child) { white-space: nowrap; }
+
+:where(.planloft-prose) hr { height: 0; margin: 2.8em 0; border: 0; border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas)); }
+:where(.planloft-prose) img, :where(.planloft-prose) video, :where(.planloft-prose) svg:not(.pl-chart__svg) { max-width: 100%; height: auto; }
+:where(.planloft-prose) figure { margin: 1.6em 0; }
+:where(.planloft-prose) figcaption { margin-top: 0.5em; color: var(--planloft-muted, GrayText); font-size: 0.9em; }
+:where(.planloft-prose) details {
+  margin: 1.2em 0;
+  padding: 0.6em 0.9em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-radius: 4px;
+}
+:where(.planloft-prose) summary { cursor: pointer; font-weight: 600; }
+:where(.planloft-prose) details[open] > summary { margin-bottom: 0.5em; }
+
+:where(.planloft-prose) ::selection { background: color-mix(in srgb, var(--planloft-accent, Highlight) 24%, transparent); }
+:where(.planloft-prose) :focus-visible { outline: 2px solid var(--planloft-accent, currentColor); outline-offset: 3px; }
+:where(.planloft-plan) > .planloft-comments {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+}
+
+@media (max-width: 40rem) {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.25rem 5rem; }
+  :where(.planloft-prose) { font-size: calc(var(--planloft-font-size, 17px) * 0.94); }
+  :where(.planloft-prose) h1 { font-size: calc(var(--planloft-h1-size, 2.2em) * 0.82); }
+}
+@media print {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 0; }
+  :where(.planloft-prose) { font-size: 11pt; }
+  :where(.planloft-prose) a { text-decoration-color: currentColor; }
+  :where(.planloft-prose) :is(pre, blockquote, table, figure) { break-inside: avoid; }
+}
+
+
+.pl-callout, .pl-stats, .pl-stat, .pl-status, .pl-badge, .pl-checklist, .pl-todo, .pl-timeline, .pl-milestone, .pl-chart, .pl-sparkline, .pl-table, .pl-scroll, .pl-tip {
+  --pl-ink: var(--planloft-ink, CanvasText);
+  --pl-paper: var(--planloft-paper, Canvas);
+  --pl-muted: var(--planloft-muted, color-mix(in srgb, var(--pl-ink) 62%, var(--pl-paper)));
+  --pl-surface: var(--planloft-surface, color-mix(in srgb, var(--pl-ink) 5%, var(--pl-paper)));
+  --pl-rule: var(--planloft-rule, color-mix(in srgb, var(--pl-ink) 16%, var(--pl-paper)));
+  --pl-accent: var(--planloft-accent, var(--pl-ink));
+  --pl-accent-contrast: var(--planloft-accent-contrast, var(--pl-paper));
+  --pl-series-1: var(--planloft-chart-1, #2a78d6);
+  --pl-series-2: var(--planloft-chart-2, #eb6834);
+  --pl-series-3: var(--planloft-chart-3, #1baf7a);
+  --pl-series-4: var(--planloft-chart-4, #6250d6);
+  --pl-series-5: var(--planloft-chart-5, #e87ba4);
+  --pl-series-6: var(--planloft-chart-6, #eda100);
+  --pl-sequential: var(--planloft-chart-sequential, var(--pl-series-1));
+  --pl-neutral: var(--planloft-chart-neutral, color-mix(in srgb, var(--pl-ink) 52%, var(--pl-paper)));
+  --pl-positive: var(--planloft-positive, #1f8a52);
+  --pl-negative: var(--planloft-negative, #c8412b);
+  --pl-caution: var(--planloft-caution, #b98100);
+  --pl-font-body: var(--planloft-font-body, inherit);
+  --pl-font-heading: var(--planloft-font-heading, var(--pl-font-body));
+  --pl-font-mono: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  --pl-heading-weight: var(--planloft-heading-weight, 650);
+  --pl-radius: 6px;
+}
+
+.pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Hidden chart tables must not become keyboard-focusable scroll containers. */
+.pl-chart__data table { display: table; max-width: none; overflow: visible; }
+.pl-scroll { max-width: 100%; overflow-x: auto; }
+.pl-scroll > table { display: table; width: 100%; max-width: none; margin: 0; overflow: visible; }
+.pl-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Callout */
+.pl-callout {
+  --pl-tone: var(--pl-accent);
+  margin: 1.6em 0;
+  padding: 0.85em 1.1em 0.9em;
+  border-inline-start: 3px solid var(--pl-tone);
+  border-radius: 0 var(--pl-radius) var(--pl-radius) 0;
+  background: color-mix(in srgb, var(--pl-tone) 7%, var(--pl-paper));
+}
+.pl-callout[data-tone="note"] { --pl-tone: var(--pl-muted); }
+.pl-callout[data-tone="tip"] { --pl-tone: var(--pl-positive); }
+.pl-callout[data-tone="warning"] { --pl-tone: var(--pl-caution); }
+.pl-callout[data-tone="risk"] { --pl-tone: var(--pl-negative); }
+.pl-callout[data-tone="decision"] { --pl-tone: var(--pl-accent); }
+.pl-callout__heading {
+  font-family: var(--pl-font-heading);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15em 0.6em;
+  align-items: baseline;
+  margin: 0 0 0.35em;
+  line-height: 1.35;
+}
+.pl-callout__tone { font-weight: var(--pl-heading-weight); }
+.pl-callout__title { font-weight: var(--pl-heading-weight); }
+.pl-callout__body > :first-child { margin-top: 0; }
+.pl-callout__body > :last-child { margin-bottom: 0; }
+
+/* Stat and Stats */
+.pl-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  gap: 1.25rem 2rem;
+  margin: 1.75em 0;
+}
+.pl-stat { min-width: 0; padding-top: 0.7rem; border-top: 1px solid var(--pl-rule); }
+.pl-stats > .pl-stat { margin: 0; }
+.pl-stat__label { margin: 0; color: var(--pl-muted); font-size: 0.86em; line-height: 1.35; }
+.pl-stat__value {
+  font-family: var(--pl-font-heading);
+  margin: 0.15rem 0 0.1rem;
+  font-size: 2em;
+  font-weight: var(--pl-heading-weight);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+}
+.pl-stat__change { margin: 0; font-size: 0.86em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pl-stat__change[data-assessment="good"] .pl-stat__arrow { color: var(--pl-positive); }
+.pl-stat__change[data-assessment="bad"] .pl-stat__arrow { color: var(--pl-negative); }
+.pl-stat__arrow { display: inline-block; margin-inline-end: 0.2em; }
+.pl-stat__period { color: var(--pl-muted); font-weight: 400; }
+.pl-stat .pl-sparkline { display: block; width: 6.5em; height: 1.6em; margin-top: 0.5rem; color: var(--pl-muted); }
+.pl-stat__note { margin-top: 0.4rem; color: var(--pl-muted); font-size: 0.86em; }
+.pl-stat__note > :first-child { margin-top: 0; }
+.pl-stat__note > :last-child { margin-bottom: 0; }
+
+/* Status */
+.pl-status {
+  --pl-tone: var(--pl-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.05em 0.6em 0.1em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--pl-tone) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pl-tone) 10%, var(--pl-paper));
+  color: var(--pl-ink);
+  font-size: 0.82em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: 0.08em;
+}
+.pl-status::before { color: var(--pl-tone); font-size: 0.85em; line-height: 1; }
+.pl-status[data-tone="done"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="done"]::before { content: "\2713"; }
+.pl-status[data-tone="on-track"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="on-track"]::before { content: "\25CF"; }
+.pl-status[data-tone="at-risk"] { --pl-tone: var(--pl-caution); }
+.pl-status[data-tone="at-risk"]::before { content: "\25B2"; }
+.pl-status[data-tone="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-status[data-tone="blocked"]::before { content: "\25A0"; }
+.pl-status[data-tone="not-started"]::before { content: "\25CB"; }
+
+/* Todo and Checklist */
+.pl-checklist { margin: 1.5em 0; }
+.pl-checklist__title { margin: 0 0 0.35em; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); }
+.pl-todo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 0.7em;
+  align-items: start;
+  margin: 0;
+  padding: 0.5em 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+.pl-checklist > .pl-todo:first-of-type { border-top: 1px solid var(--pl-rule); }
+/* Drawn by hand: a native disabled checkbox renders as a grey block that reads as
+   checked. Checked is a filled inset square, legible in both modes and in print. */
+.pl-todo__box {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0.25em 0 0;
+  border: 1.5px solid color-mix(in srgb, var(--pl-ink) 55%, var(--pl-paper));
+  border-radius: 4px;
+  background: var(--pl-paper);
+  font: inherit;
+}
+.pl-todo__box:checked {
+  border-color: var(--pl-accent);
+  background: var(--pl-accent);
+  box-shadow: inset 0 0 0 2.5px var(--pl-accent-contrast);
+}
+.pl-todo__box:disabled { border-style: dashed; }
+.pl-todo__box:checked:disabled { border-style: solid; }
+.pl-todo__box:not(:disabled) { cursor: pointer; }
+.pl-todo__box:not(:disabled):hover { border-color: var(--pl-accent); }
+.pl-todo__box:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 2px; }
+.pl-todo__text { display: flex; flex-wrap: wrap; gap: 0.1em 1em; align-items: baseline; min-width: 0; }
+.pl-todo__label { flex: 1 1 14em; overflow-wrap: anywhere; }
+.pl-todo__box:not(:disabled) + .pl-todo__text .pl-todo__label { cursor: pointer; }
+.pl-todo:has(.pl-todo__box:checked) .pl-todo__label {
+  color: var(--pl-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.pl-todo__meta {
+  display: inline-flex;
+  gap: 0.9em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pl-todo__owner { font-weight: 600; }
+.pl-todo__detail { flex-basis: 100%; color: var(--pl-muted); font-size: 0.92em; }
+.pl-todo__detail > :first-child { margin-top: 0.2em; }
+.pl-todo__detail > :last-child { margin-bottom: 0; }
+
+/* Timeline and Milestone */
+.pl-timeline { margin: 1.75em 0; padding: 0; list-style: none; }
+.pl-milestone {
+  --pl-tone: var(--pl-rule);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  margin: 0;
+  padding: 0 0 1.35em;
+}
+.pl-milestone::marker { content: none; }
+.pl-milestone::before {
+  content: "";
+  position: absolute;
+  top: 0.95em;
+  bottom: -0.35em;
+  left: calc(0.45rem - 0.5px);
+  width: 1px;
+  background: var(--pl-rule);
+}
+.pl-milestone:last-child { padding-bottom: 0; }
+.pl-milestone:last-child::before { display: none; }
+.pl-milestone[data-state="done"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="done"]::before { background: var(--pl-accent); }
+.pl-milestone[data-state="active"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-milestone__node {
+  position: relative;
+  z-index: 1;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.3em;
+  border: 2px solid var(--pl-tone);
+  border-radius: 50%;
+  background: var(--pl-paper);
+}
+.pl-milestone[data-state="done"] .pl-milestone__node { background: var(--pl-tone); }
+.pl-milestone[data-state="active"] .pl-milestone__node {
+  box-shadow: inset 0 0 0 2px var(--pl-paper), inset 0 0 0 5px var(--pl-tone);
+}
+.pl-milestone[data-state="blocked"] .pl-milestone__node { border-radius: 2px; background: var(--pl-tone); }
+.pl-milestone__head { display: flex; flex-wrap: wrap; gap: 0 0.75em; align-items: baseline; grid-column: 2; }
+.pl-milestone__date {
+  flex-basis: 100%;
+  color: var(--pl-muted);
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+.pl-milestone__title { font-weight: var(--pl-heading-weight); line-height: 1.4; }
+.pl-milestone__state { color: var(--pl-muted); font-size: 0.82em; }
+.pl-milestone[data-state="active"] .pl-milestone__state,
+.pl-milestone[data-state="blocked"] .pl-milestone__state { color: var(--pl-ink); font-weight: 600; }
+.pl-milestone__body { grid-column: 2; margin-top: 0.25em; color: var(--pl-muted); }
+.pl-milestone__body > :first-child { margin-top: 0; }
+.pl-milestone__body > :last-child { margin-bottom: 0; }
+@media (min-width: 48rem) {
+  .pl-milestone { grid-template-columns: 7.5rem 1.6rem minmax(0, 1fr); }
+  .pl-milestone::before { left: calc(7.5rem + 0.45rem - 0.5px); }
+  .pl-milestone__node { grid-column: 2; grid-row: 1; }
+  .pl-milestone__head { grid-column: 3; grid-row: 1; }
+  .pl-milestone__date {
+    position: absolute;
+    left: 0;
+    width: 6.75rem;
+    padding-top: 0.1em;
+    text-align: right;
+  }
+  .pl-milestone__body { grid-column: 3; }
+}
+
+/* Charts */
+.pl-chart {
+  margin: 2em 0;
+  color: var(--pl-ink);
+  font-family: var(--pl-font-body);
+}
+.pl-chart__title { margin: 0 0 0.6rem; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); line-height: 1.35; }
+.pl-chart__plot { position: relative; container: pl-plot / inline-size; }
+.pl-chart__frame { display: none; }
+.pl-chart__frame[data-frame="compact"],
+.pl-chart__frame[data-frame="fixed"] { display: block; }
+@container pl-plot (min-width: 30rem) {
+  .pl-chart__frame[data-frame="compact"] { display: none; }
+  .pl-chart__frame[data-frame="regular"] { display: block; }
+}
+@container pl-plot (min-width: 56rem) {
+  .pl-chart__frame[data-frame="regular"] { display: none; }
+  .pl-chart__frame[data-frame="wide"] { display: block; }
+}
+.pl-chart__svg { display: block; width: 100%; height: auto; font-variant-numeric: tabular-nums; }
+.pl-chart__caption {
+  margin: 0.6rem 0 0;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  line-height: 1.5;
+}
+.pl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.25rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86em;
+  line-height: 1.4;
+}
+.pl-legend__item { display: inline-flex; gap: 0.45em; align-items: center; margin: 0; }
+.pl-legend__item::marker { content: none; }
+.pl-legend__value { color: var(--pl-muted); font-variant-numeric: tabular-nums; }
+.pl-swatch { flex: none; display: inline-block; background: var(--pl-swatch); }
+.pl-swatch--block { width: 0.75em; height: 0.75em; border-radius: 2px; }
+.pl-swatch--line { width: 1.1em; height: 2px; border-radius: 1px; }
+
+/* Pointer targets stay invisible; keyboard focus keeps an outline for navigation. */
+.pl-chart__hits { fill: transparent; stroke: none; }
+.pl-hit { outline: none; }
+.pl-hit:focus-visible { stroke: var(--pl-ink); stroke-width: 1.5; }
+/* Tooltip. A hairline and a short black shadow lift it off the chart; an ink-tinted
+   shadow would glow in dark themes. A mark with its own colour gets a key swatch on
+   the first row. Column hits cover every series and carry no colour. */
+.pl-tip {
+  position: fixed;
+  z-index: 20;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 6.5rem;
+  max-width: 18rem;
+  padding: 0.4rem 0.6rem 0.45rem;
+  border: 1px solid var(--pl-rule);
+  border-radius: var(--pl-radius);
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 6px 16px -6px rgb(0 0 0 / 0.18);
+  font-family: var(--pl-font-body);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.pl-tip[hidden] { display: none; }
+.pl-tip__title { margin-bottom: 0.05rem; font-weight: 600; }
+.pl-tip__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1.25em; }
+.pl-tip__label { display: inline-flex; align-items: baseline; gap: 0.45em; min-width: 0; color: var(--pl-muted); }
+.pl-tip[data-keyed] .pl-tip__title + .pl-tip__row .pl-tip__label::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 2px;
+  background: var(--pl-tip-color);
+}
+.pl-tip__value { font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.pl-chart--donut {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 2rem;
+  align-items: center;
+}
+.pl-chart--donut > .pl-chart__plot { grid-row: 2; width: min(100%, 13.5rem); }
+.pl-chart--donut > .pl-legend {
+  grid-row: 3;
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0 0;
+}
+.pl-chart--donut .pl-legend__item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.6em; }
+.pl-chart--donut > .pl-chart__caption { grid-column: 1 / -1; }
+@media (min-width: 40rem) {
+  .pl-chart--donut { grid-template-columns: 13.5rem minmax(0, 24rem); }
+  .pl-chart--donut > .pl-chart__title { grid-column: 1 / -1; }
+  .pl-chart--donut > .pl-chart__plot { grid-row: 2; grid-column: 1; }
+  .pl-chart--donut > .pl-legend { grid-row: 2; grid-column: 2; margin: 0; }
+}
+.pl-chart__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  text-align: center;
+  line-height: 1.15;
+  pointer-events: none;
+}
+.pl-chart__center-value { font-size: 1.45em; font-weight: var(--pl-heading-weight); }
+.pl-chart__center-label { color: var(--pl-muted); font-size: 0.8em; }
+
+.pl-sparkline {
+  display: inline-block;
+  width: 4.5em;
+  height: 1.1em;
+  color: var(--pl-accent);
+  vertical-align: -0.15em;
+}
+.pl-sparkline__svg { width: 100%; height: 100%; }
+
+/* DataTable */
+.pl-table { margin: 1.75em 0; }
+.pl-table caption {
+  caption-side: bottom;
+  padding-top: 0.6em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  text-align: left;
+}
+.pl-table tbody th { font-weight: 600; }
+.pl-table th[aria-sort]::after { content: " \2193"; color: var(--pl-muted); font-weight: 400; }
+.pl-table th[aria-sort="ascending"]::after { content: " \2191"; }
+.pl-table tfoot th,
+.pl-table tfoot td { border-top: 2px solid var(--pl-ink); font-weight: var(--pl-heading-weight); }
+
+
+/* Badge */
+.pl-badge {
+  --pl-badge-hue: var(--pl-muted);
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.04em 0.6em 0.08em;
+  border: 1px solid color-mix(in oklab, var(--pl-badge-hue) 30%, var(--pl-paper));
+  border-radius: 0.8em;
+  background: color-mix(in oklab, var(--pl-badge-hue) 14%, var(--pl-paper));
+  color: color-mix(in oklab, var(--pl-badge-hue) 55%, var(--pl-ink));
+  font-family: var(--pl-font-body);
+  font-size: 0.78em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.pl-badge[data-color="red"] { --pl-badge-hue: #d1453b; }
+.pl-badge[data-color="orange"] { --pl-badge-hue: #dd7020; }
+.pl-badge[data-color="yellow"] { --pl-badge-hue: #b98d00; }
+.pl-badge[data-color="green"] { --pl-badge-hue: #2f9a4e; }
+.pl-badge[data-color="teal"] { --pl-badge-hue: #17958f; }
+.pl-badge[data-color="blue"] { --pl-badge-hue: #2f74d0; }
+.pl-badge[data-color="purple"] { --pl-badge-hue: #7a55d4; }
+.pl-badge[data-color="pink"] { --pl-badge-hue: #d24f8e; }
+.pl-badge[data-color="accent"] { --pl-badge-hue: var(--pl-accent); }
+@media (forced-colors: active) {
+  .pl-badge { border-color: CanvasText; }
+}
+
+@media print {
+  .pl-chart,
+  .pl-table,
+  .pl-callout,
+  .pl-stat,
+  .pl-milestone,
+  .pl-todo { break-inside: avoid; }
+  .pl-tip { display: none; }
+}
+@media (forced-colors: active) {
+  .pl-swatch,
+  .pl-chart__svg,
+  .pl-sparkline__svg { forced-color-adjust: none; }
+  .pl-callout { border-inline-start-color: CanvasText; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-controls {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  color: var(--planloft-control-ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 0;
+}
+.planloft-theme-selector,
+.planloft-layout-selector {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.planloft-layout-selector[hidden] { display: none; }
+.planloft-theme-option,
+.planloft-layout-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover,
+.planloft-layout-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"],
+.planloft-layout-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg,
+.planloft-layout-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible,
+.planloft-layout-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-controls { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option, .planloft-layout-option { transition: none; }
+}
+@media print {
+  .planloft-controls { display: none; }
+}
+
+:root { --planloft-gutter: clamp(1.25rem, 5vw, 3rem); }
+.planloft-plan:has(> article) {
+  container: planloft-plan / inline-size;
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-bleed, 0rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+.planloft-plan:has(> article) > article {
+  --planloft-wide: min(var(--planloft-bleed, 0rem), max(0px, (100cqw - var(--planloft-measure, 44rem)) / 2));
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) > .planloft-comments {
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) :is(article, section) > :is(pre, figure, .pl-stats) {
+  margin-inline: calc(-1 * var(--planloft-wide, 0px));
+  max-width: calc(100% + 2 * var(--planloft-wide, 0px));
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > article {
+  --planloft-wide: 0px;
+  max-width: none;
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+html > body:not(:has(.planloft-plan > article)) {
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) > :is(main, article) {
+  max-width: none;
+}
+@media print {
+  html > body:not(:has(.planloft-plan > article)),
+  :root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article),
+  .planloft-plan:has(> article) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > article,
+  .planloft-plan:has(> article) > article { --planloft-wide: 0px; max-width: none; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments,
+  .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+}
+</style>
+<meta name="robots" content="noindex, nofollow" />
+<!-- planloft-render:head:end -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Factory API handoff</title>
+</head>
+<body data-planloft-kind="note"><!-- planloft-render:controls:start -->
+<div class="planloft-controls" data-planloft-ignore>
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<div class="planloft-layout-selector" role="group" aria-label="Page width" data-planloft-layout-selector hidden>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="reading" aria-label="Reading width" title="Reading width" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4.5v15M16 4.5v15M3.5 4.5h17M3.5 19.5h17"/><path d="M10.5 9h3M10.5 12h3M10.5 15h3"/></svg>
+  </button>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="full" aria-label="Full width" title="Full width" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="1.5"/><path d="M6.5 9h11M6.5 12h11M6.5 15h11"/></svg>
+  </button>
+</div>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+(() => {
+  const initialize = () => {
+    const root = document.documentElement;
+    const group = document.querySelector("[data-planloft-layout-selector]");
+    const options = Array.from(group.querySelectorAll("[data-planloft-layout-option]"));
+    const key = "planloft-layout";
+    let saved = null;
+    try { saved = localStorage.getItem(key); } catch {}
+    let selected = saved === "full" ? "full" : "reading";
+    const update = () => {
+      if (selected === "reading") delete root.dataset.planloftLayout;
+      else root.dataset.planloftLayout = selected;
+      for (const option of options) {
+        option.setAttribute("aria-pressed", String(option.dataset.planloftLayoutOption === selected));
+      }
+    };
+    for (const option of options) option.addEventListener("click", () => {
+      selected = option.dataset.planloftLayoutOption;
+      try { localStorage.setItem(key, selected); } catch {}
+      update();
+    });
+    update();
+    group.hidden = false;
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  else initialize();
+})();
+</script>
+<script>
+(() => {
+  const HIT = ".pl-chart__hits > *";
+  let tip = null;
+  let current = null;
+  const hitOf = (event) => (event.target instanceof Element ? event.target.closest(HIT) : null);
+  const hide = () => {
+    if (tip) tip.hidden = true;
+    current = null;
+  };
+  const show = (hit, pointerY) => {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "pl-tip";
+      tip.setAttribute("data-planloft-ignore", "");
+      tip.setAttribute("aria-hidden", "true");
+      document.body.append(tip);
+    }
+    const [title, ...rows] = (hit.getAttribute("aria-label") || "").split("\n");
+    tip.replaceChildren();
+    const heading = document.createElement("div");
+    heading.className = "pl-tip__title";
+    heading.textContent = title;
+    tip.append(heading);
+    for (const row of rows) {
+      const split = row.lastIndexOf(": ");
+      const line = document.createElement("div");
+      line.className = "pl-tip__row";
+      const label = document.createElement("span");
+      label.className = "pl-tip__label";
+      label.textContent = split < 0 ? row : row.slice(0, split);
+      const value = document.createElement("span");
+      value.className = "pl-tip__value";
+      value.textContent = split < 0 ? "" : row.slice(split + 2);
+      line.append(label, value);
+      tip.append(line);
+    }
+    const color = hit.dataset.plColor;
+    tip.toggleAttribute("data-keyed", Boolean(color) && rows.length === 1);
+    if (color) tip.style.setProperty("--pl-tip-color", color);
+    tip.hidden = false;
+    current = hit;
+    place(hit, pointerY);
+  };
+  const place = (hit, pointerY) => {
+    // Above the mark, centred, kept inside the viewport; below it when the top is cut off.
+    // A column spans the whole plot, so it anchors to the pointer instead of its top.
+    const box = hit.getBoundingClientRect();
+    const column = hit.classList.contains("pl-hit--column") && pointerY !== undefined;
+    const anchorY = column ? pointerY : box.top;
+    // Leave room for the value label above a mark.
+    const gap = column ? 10 : 24;
+    const width = tip.offsetWidth;
+    const height = tip.offsetHeight;
+    const left = Math.max(8, Math.min(box.left + box.width / 2 - width / 2, window.innerWidth - width - 8));
+    let top = anchorY - height - gap;
+    if (top < 8) top = (column ? anchorY : box.bottom) + gap;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  };
+  const start = () => {
+    const titles = document.querySelectorAll(".pl-chart__hits > * > title");
+    if (titles.length === 0) return;
+    for (const title of titles) {
+      title.parentNode.setAttribute("aria-label", title.textContent);
+      title.remove();
+    }
+    document.addEventListener("pointerover", (event) => {
+      const hit = event.pointerType === "touch" ? null : hitOf(event);
+      if (hit) show(hit, event.clientY);
+    });
+    document.addEventListener("pointerout", (event) => {
+      if (event.pointerType !== "touch" && hitOf(event) === current) hide();
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch") return;
+      const hit = hitOf(event);
+      if (hit && hit !== current) show(hit, event.clientY);
+      else hide();
+    });
+    document.addEventListener("focusin", (event) => {
+      const hit = hitOf(event);
+      if (hit) show(hit);
+    });
+    document.addEventListener("focusout", (event) => {
+      if (hitOf(event) === current) hide();
+    });
+    const STEPS = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") return hide();
+      const hit = hitOf(event);
+      const step = STEPS[event.key];
+      if (!hit || event.altKey || event.ctrlKey || event.metaKey || (!step && event.key !== "Home" && event.key !== "End")) return;
+      event.preventDefault();
+      const hits = Array.from(hit.parentNode.children);
+      const next = event.key === "Home" ? hits[0] : event.key === "End" ? hits[hits.length - 1] : hits[hits.indexOf(hit) + step];
+      if (!next || next === hit) return;
+      hit.setAttribute("tabindex", "-1");
+      next.setAttribute("tabindex", "0");
+      next.focus();
+    });
+    // Focusing a hit can scroll it into view, so a focused hit keeps its tooltip and
+    // the tooltip moves with it. Hover tooltips close on scroll.
+    window.addEventListener("scroll", () => {
+      if (current && current === document.activeElement) place(current);
+      else hide();
+    }, { passive: true });
+    window.addEventListener("resize", hide);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+</script>
+<!-- planloft-render:controls:end -->
+<main class="planloft-plan">
+<article class="planloft-prose"><h1>Core API handoff</h1>
+<p>Authoritative schemas and inferred types live in <code>src/shared/contracts.ts</code>. Route handlers live in <code>src/server/http</code> behind the core request guards. Mutations require loopback access, allowed origin and JSON with bounded bodies. No route is a generic shell, gh or MCP proxy.</p>
+<h2>Project and tickets</h2>
+<p><code>GET /api/project</code> returns config, runtimeId, configPending and historicalState. <code>POST /api/project/reload</code> rereads the manifest and applies policy when ownership permits. It cannot reidentify a running project. <code>POST /api/core/config</code> is removed.</p>
+<p><code>GET /api/core/snapshot</code>, <code>POST /api/core/tickets</code>, and <code>POST /api/core/tickets/:id/cancel</code> expose ticket state and intent. Enqueue is schema-decoded once, repository-bound, with immutable specification/revision/scope and at least one required check. Unknown categories fail admission. Cancellation remains intent until ownership is confirmed ended.</p>
+<p><code>CoreStore</code> owns synchronous transitions, operation CAS and durable records. <code>CoreStorage.open</code> is scoped. <code>CoreDaemon</code> owns serialized ticks and its scoped worker. <code>OperationWorker</code> advances explicit per-kind executors. Claims, leases and named transitions are coordinator internals. A stale CAS must prevent another local send; it does not revoke remote work already dispatched.</p>
+<h2>GitHub</h2>
+<table>
+<thead>
+<tr>
+<th>Method and path</th>
+<th>Input or meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET <code>/api/github/pulls</code></td>
+<td>state, base, head, limit, cursor query</td>
+</tr>
+<tr>
+<td>GET <code>/api/github/pulls/:number</code></td>
+<td>Detailed observed PR</td>
+</tr>
+<tr>
+<td>POST <code>/api/git/pulls/:number/fetch</code></td>
+<td>Fetch local ref; response includes <code>matchesGitHubHead</code></td>
+</tr>
+<tr>
+<td>GET <code>/api/github/resolutions/draft?ticketId=ID</code></td>
+<td>Incomplete draft, no submission</td>
+</tr>
+<tr>
+<td>POST <code>/api/github/resolutions</code></td>
+<td>Completion dossier; 201 new, 200 identical existing</td>
+</tr>
+<tr>
+<td>GET <code>/api/github/resolutions</code></td>
+<td>Optional open filter</td>
+</tr>
+<tr>
+<td>GET <code>/api/github/resolutions/:id?observe=1</code></td>
+<td>Stored operation plus fresh remote observations</td>
+</tr>
+<tr>
+<td>POST <code>/api/github/resolutions/:id/retry</code></td>
+<td><code>{ expectedVersion }</code></td>
+</tr>
+<tr>
+<td>POST <code>/api/github/resolutions/:id/cancel</code></td>
+<td><code>{ expectedVersion }</code></td>
+</tr>
+</tbody></table>
+<p>Read actual schemas for dossier variants, bounds and errors. Same-repository resolution is explicit. Keep comment/close state separate. Fresh remote observations do not rewrite terminal history. Scope and full closure/reopen timeline matter after uncertainty; event absence never authorizes blind retry.</p>
+<p><code>GitHubTransport</code> uses argv through <code>runProcess</code>, without a shell. HTTP mutation classification distinguishes applied, rejected and uncertain. Keep repository/head/check/run/attempt identities in evidence. A fetched ref is local evidence. Issue body replacement stays observation-only in the host adapter because it has no remote conditional-write fence.</p>
+<h2>Documents</h2>
+<table>
+<thead>
+<tr>
+<th>Method and path</th>
+<th>Input or meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET <code>/api/docs</code></td>
+<td><code>documents</code> manifest and <code>publications</code> list</td>
+</tr>
+<tr>
+<td>POST <code>/api/docs/:id/render</code></td>
+<td><code>{ source: &quot;commit&quot; or &quot;worktree&quot;, commit? }</code></td>
+</tr>
+<tr>
+<td>POST <code>/api/docs/:id/publish</code></td>
+<td><code>{ commit? }</code>, committed source only</td>
+</tr>
+<tr>
+<td>GET <code>/api/docs/publications/:id</code></td>
+<td>Stored publication</td>
+</tr>
+<tr>
+<td>POST <code>/api/docs/publications/:id/retry</code></td>
+<td><code>{ expectedVersion }</code>, safe pre-send failures only</td>
+</tr>
+<tr>
+<td>POST <code>/api/docs/publications/:id/observe</code></td>
+<td>Fresh bounded byte observation</td>
+</tr>
+</tbody></table>
+<p>The CLI is <code>bun run factory</code>; it prints JSON and nonzero errors. Read <code>src/server/cli.ts</code> for current flags. Publication authorization is committed policy plus the configured authorized operator command. An optional host policy may restrict it. The current CLI still contains a legacy <code>docs authorize</code> branch, but no matching authorization route is mounted. Do not use that command as an operating prerequisite.</p>
+<p><code>DocPublisher</code> exports git source, computes revision identity, renders through <code>PlanloftRunner</code>, and persists publication intent before invoking the worker. Render receipts include revisionId, artifactSha256, bytes, path, dirty, commit and files. <code>planloft-worker.ts</code> calls the pinned 1.0.1 application API. MDX trust is explicit executable authorization. Render environment strips credentials. Actual MDX source dependencies are hashed conservatively across <code>.factory/docs</code>.</p>
+<p>Unknown publication blocks retry and replacement until writer settlement. Matching bytes establish presence only. The implementation currently returns <code>writer_unsettled</code> without a general remote recovery protocol. Do not infer commit ancestry from timestamps or manufacture supersession authority.</p>
+<h2>T3</h2>
+<p><code>docs/t3-connection.md</code> is the S6 operating contract. <code>T3Transport.scoped</code> initializes MCP and paginated schema discovery. <code>T3Connection.execute</code> exposes attach, read, configuration, questions, launch, send, cancel, respond and task_cancel. Writes claim durable intent through the host and CoreStore. Local fixture claims alone are not durable production evidence.</p>
+<p><code>http/t3.ts</code> provides GET <code>/api/t3/status</code>, GET <code>/api/t3/config</code> and POST <code>/api/t3/actions</code>. Current source mounts them when optional manifest <code>t3.connectionRef</code> is present and resolves machine configuration through <code>FACTORY_T3_CONNECTIONS</code>. CLI status/config/execute and shared action schemas are wired. This bootstrap omits a connection reference until the machine binding exists. Source integration is not accepted live behavior.</p>
+<p>Endpoint/auth/OAuth renewal are machine-owned. Local status is not active health. Questions can be listed and a response action is wired; permission approvals stay in T3 UI. Response behavior still needs live acceptance. Model/options are explicit and checked against returned launch configuration; catalog preflight is incomplete. No shadow transcript or automatic reconnect replay is allowed. Deduplication, authoritative absence and descendant termination remain unproven across sessions, so dependent unattended operations retain ownership or stay gated. Read-only and supported explicit operations need not be globally blocked.</p>
+<h2>Acceptance boundary</h2>
+<p>These are handoff notes for an uncommitted shared integration based on <code>5801563ef5f69a12236f03baf0b7d89ca33a067b</code>. The lead must record exact integrated checks and Chrome workflow evidence separately. No fixture, schema acceptance or child success implies live provider compatibility or completed remote cleanup.</p>
+</article>
+</main>
+</body>
+</html>
