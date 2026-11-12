@@ -1064,196 +1064,144 @@ html > body:not(:has(.planloft-plan > article)) {
 </script>
 <!-- planloft-render:controls:end -->
 <main class="planloft-plan">
-<article class="planloft-prose"><p>Tonight at 10:30pm IST we meet Chargepoint&#39;s IT/Network team to open the network path for Genesys WebRTC outbound calling from the Outreach app. The ports in Vaibhav&#39;s message are right. What&#39;s missing is the list of destinations, the Netskope and browser details, and a clear line between what IT fixes and what Shahid fixes in Genesys admin. From our side: Vaibhav, Manikya, Pratik and Hatim. The Teams link is in the Slack thread.</p>
-<h2>What&#39;s needed from you</h2>
-<ol>
-<li><strong>Join the call.</strong> Vaibhav asked you to make sure the network setup has no gaps. The agenda is his IT/Network message in the thread (ports, return traffic, Genesys destinations, VPN and proxy).</li>
-<li><strong>Check that message line by line</strong> against the table in section 2. The ports match Genesys&#39; docs. The gaps are the destinations, Netskope/proxy handling, VDI and browser policy.</li>
-<li><strong>Keep two things apart on the call.</strong> The CORS error and the missing scopes sit with Shahid in Genesys admin (section 3), not with IT. The 401 from today isn&#39;t a network problem either (section 4).</li>
-<li><strong>After the call, decide owners</strong> for the product gaps in section 4. Several of them block production even when the network is perfect.</li>
-</ol>
-<h2>1. Where things stand</h2>
+<article class="planloft-prose"><p>Prep for tonight&#39;s 10:30pm IST Teams call with Chargepoint. It covers only the frontend side of the Genesys WebRTC softphone and the Genesys admin settings we need from Chargepoint. Ports, firewall, VPN and Netskope are left to whoever owns networking on our side. Vaibhav&#39;s IT/Network message in the thread already covers them.</p>
+<h2>1. Today&#39;s two errors</h2>
+<h3>The 401 (Manikya, 2:10pm)</h3>
+<p><strong>What he did.</strong> He took the access token returned by the new <code>Get user access token from connection</code> action (uacode #58607) and called the Genesys API with it directly. He didn&#39;t go through our softphone. He retried on every Genesys region and got the same response each time:</p>
+<pre><code>401  bad.credentials  &quot;Invalid login credentials.&quot;
+correlationId 34f7dc29-21ac-405c-b780-8419a5177aa3
+</code></pre>
+<p><strong>Which route.</strong> He didn&#39;t say. Two clues:</p>
 <ul>
-<li><strong>Auth.</strong> The SAML2 bearer path worked once, but someone had to copy the assertion out of the browser by hand and it expired in about 5 minutes. The team switched to a Code Authorization OAuth sign-in with a refresh token. uacode #58607 (main, 3 Nov) and its uat and live picks #59687 and #59688 (5 Nov) add the sign-in and a <code>Get user access token from connection</code> action. Yoda QA runs internal <code>2c64192</code> plus config sync.</li>
-<li><strong>Connection.</strong> Chargepoint created the Code Authorization OAuth client on Monday. The Genesys OAuth connection on Yoda QA was set up on 11 Nov.</li>
-<li><strong>Frontend.</strong> The Genesys WebRTC softphone lives on <code>feat/genesys-integration</code> in www. It is not on main. Yoda QA runs <code>feat-genesys-integration-121126-server-6fb9419</code>, deployed today. It includes <code>dbf39e1</code>, which runs Genesys in builder preview, plus cherry-picks of #34540 and #34734 so <code>llm-tools</code> builds.</li>
-<li><strong>Testing.</strong> Nobody has run the full flow end to end yet (Manikya, 11 Nov). Today two errors came up:<ul>
-<li><code>401 bad.credentials</code> when using the token from the connection, on every Genesys domain Manikya tried.</li>
-<li>CORS block on <code>https://api.mypurecloud.de/api/v2/users/me?expand=station</code> from origin <code>https://yoda-qa.chargepoint.teleport.sh</code>.</li>
+<li>He switched between &quot;all domains provided by genesys&quot;.</li>
+<li>The error has an axios-style <code>message</code>, <code>now</code> and <code>elapsed</code> wrapper.</li>
 </ul>
-</li>
-<li><strong>Pending with the client.</strong> Vaibhav drafted a Genesys admin message for Shahid (scopes, redirect URIs, WebRTC phones, role permissions, reconnect) and an IT/Network message. Tonight&#39;s call covers the IT/Network message.</li>
+<p>Together these point to the Genesys Developer Center API Explorer, which has a region picker, rather than our app. The endpoint was most likely <code>GET /api/v2/users/me</code>, which is also the first call the SDK makes. This is an inference: ask him for the endpoint and the time he copied the token.</p>
+<p><strong>What 401 <code>bad.credentials</code> means.</strong> Genesys didn&#39;t recognise the token at all. A missing scope or role permission returns 403, so the scope list he posted afterwards doesn&#39;t explain this error. Trying every region also rules out a region mismatch, since <code>.de</code> was among them. What&#39;s left:</p>
+<ul>
+<li>The token had expired or been revoked when he used it. He asked himself whether &quot;the access token could not be refreshed&quot;. #58607 notes the action reads the stored token before refreshing, so it can return the old one if the token expires mid-call.</li>
+<li>The token got mangled on copy: stray quotes, or a doubled <code>Bearer </code>.</li>
 </ul>
-<h2>2. Network asks, checked against Genesys docs</h2>
-<p>Genesys source: &quot;Ports and services for WebRTC phones under Genesys Cloud Voice&quot;, &quot;Domains for the firewall allowlist&quot;, &quot;IP addresses for the firewall allowlist&quot; (links at the end).</p>
+<p><strong>What happened next.</strong> After his call with Uday (2:20pm), the next error was a CORS block in the builder preview, not a 401. So the browser test got past the token step and failed on CORS. Nobody confirmed whether the 401 still happens with a freshly reconnected token. Ask Manikya before the call.</p>
+<h3>The CORS block, and why CSP isn&#39;t the problem</h3>
+<p>The error Manikya posted:</p>
+<pre><code>Access to XMLHttpRequest at &#39;https://api.mypurecloud.de/api/v2/users/me?expand=station&#39;
+from origin &#39;https://yoda-qa.chargepoint.teleport.sh&#39; has been blocked by CORS policy:
+No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource.
+</code></pre>
+<p>CSP and CORS control different things, and only one of them is ours.</p>
 <table>
 <thead>
 <tr>
-<th>#</th>
-<th>Vaibhav&#39;s message</th>
-<th>Genesys docs</th>
-<th>Verdict</th>
+<th></th>
+<th>CSP (<code>connect-src</code>)</th>
+<th>CORS</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>1a</td>
-<td>TCP 443, signalling to Genesys Cloud and AWS</td>
-<td>tcp/443, &quot;VoIP signaling (dialing, ringing...)&quot;, Genesys Cloud and Amazon AWS</td>
-<td>Matches</td>
+<td>Set by</td>
+<td>Us, in the response headers of our page</td>
+<td>Genesys, in the response headers of <code>api.mypurecloud.de</code></td>
 </tr>
 <tr>
-<td>1b</td>
-<td>UDP 3478, STUN</td>
-<td>udp/3478, needed for srflx and relay candidates. Must be open &quot;for both the client and Edges&quot;. Closed ports cause &quot;a high rate of failure&quot;</td>
-<td>Matches. Stress that this one is not optional</td>
+<td>Decides</td>
+<td>Whether our page may <strong>send</strong> a request to that host</td>
+<td>Whether our page may <strong>read</strong> Genesys&#39; response</td>
 </tr>
 <tr>
-<td>1c</td>
-<td>TCP 3478, reserved</td>
-<td>tcp/3478, &quot;not currently in use, but should be open and reserved for future use&quot;</td>
-<td>Matches</td>
-</tr>
-<tr>
-<td>1d</td>
-<td>UDP 16384-65535, call audio</td>
-<td>udp/16384-65535, SRTP/TURN, Genesys Cloud Media Tier</td>
-<td>Matches. Older docs said 16384-32768. Make sure IT opens the full range</td>
-</tr>
-<tr>
-<td>1e</td>
-<td>UDP 19302, optional Google STUN</td>
-<td>udp/19302, optional, third party</td>
-<td>Matches</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Return traffic (stateful firewall)</td>
-<td>No specific guidance</td>
-<td>Fine as written</td>
-</tr>
-<tr>
-<td>3</td>
-<td>&quot;Restrict to Genesys destinations (recommended)&quot;</td>
-<td>Genesys says it &quot;does not own any of the other IP addresses it uses&quot; and recommends allowing outbound on these ports &quot;to any IP destination&quot;</td>
-<td><strong>Gap.</strong> An IP allowlist is fragile. See below</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Keep Genesys traffic off proxy, SSL inspection and VPN</td>
-<td>Docs point to split tunnelling for media. Nothing on SSL inspection</td>
-<td>Right direction. Make it concrete for Netskope. See below</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Test call with one agent</td>
-<td>n/a</td>
-<td>Add the details below</td>
+<td>Current state</td>
+<td>Allows <code>https://*.mypurecloud.de</code> and <code>wss://*.mypurecloud.de</code> (<code>packages/network/src/utils/cspHeaders.ts</code>, in the deployed tag <code>…-6fb9419</code>)</td>
+<td>Genesys doesn&#39;t send <code>Access-Control-Allow-Origin</code> for our origin</td>
 </tr>
 </tbody></table>
-<h3>Gaps to raise on the call</h3>
-<p><strong>Destinations are not named.</strong> The message says &quot;Genesys Cloud and AWS&quot; but lists no domains. For the Frankfurt org (<code>eu-central-1</code>, <code>mypurecloud.de</code>):</p>
-<ul>
-<li><code>*.mypurecloud.de</code> and <code>*.euc1.pure.cloud</code>: the regional domains. The softphone calls the Platform API at <code>api.mypurecloud.de</code> and opens a streaming WebSocket in the same region. Our CSP allows <code>wss://*.mypurecloud.de</code> and <code>https://*.mypurecloud.de</code> for this.</li>
-<li><code>*.mypurecloud.com</code>: Genesys UI for all regions. Agents and admins need it.</li>
-<li><code>dhqbrvplips7x.cloudfront.net</code> (static content) and <code>api-downloads.mypurecloud.de</code>.</li>
-<li>Only if they use BYOC: <code>*.byoc.euc1.genesys.cloud</code>.</li>
-<li>Our own hosts, which have to pass the same proxy: <code>yoda-qa.chargepoint.teleport.sh</code>, <code>yoda-qa.internalcp.com</code>, <code>matrix.unifyapps-qa.internalcp.com</code>, and <code>webhook.unifyapps-qa.internalcp.com</code> (OAuth callback).</li>
-</ul>
-<p><strong>IP allowlisting.</strong> If IT insists on IPs instead of &quot;ports to any&quot;, they need all of these:</p>
-<ul>
-<li>Genesys media ranges <code>52.129.96.0/20</code>, <code>169.150.104.0/21</code>, <code>167.234.48.0/20</code>, <code>136.245.64.0/18</code>.</li>
-<li>AWS ranges from <code>ip-ranges.amazonaws.com/ip-ranges.json</code>. Genesys says the AWS <code>GLOBAL</code> region &quot;must ALWAYS be included&quot;.</li>
-<li>Google STUN ranges from <code>gstatic.com/ipranges/goog.json</code>, if they keep UDP 19302.</li>
-</ul>
-<p>My suggestion is to open the ports to any destination and use the domain list for proxy and SSL-inspection exceptions.</p>
-<p><strong>Netskope / SSL inspection.</strong> Our <code>internalcp</code> hosts already need Netskope, so agent machines probably run the Netskope client. Ask:</p>
-<ul>
-<li>Which steering mode: web only, or all traffic? Does it tunnel UDP?</li>
-<li>Can the Genesys domains above go on the steering and SSL-decryption bypass list? I haven&#39;t seen inspection break this setup, but it&#39;s the first thing to rule out if the WebSocket fails. UDP media can&#39;t pass through a web proxy at all.</li>
-</ul>
-<p><strong>No TCP-only fallback to count on.</strong> The Genesys pages don&#39;t say that WebRTC media falls back to TURN over TCP 443 when UDP is blocked. The WebRTC phone has a TURN Behavior setting (&quot;Only use TURN when necessary&quot; by default), but the page gives no transport or port. If UDP 3478 and 16384-65535 stay closed, plan on calls failing.</p>
-<p><strong>VDI.</strong> The thread mentions VDI only as a way for Manikya to reach an internal host. We don&#39;t know whether calling agents use one. Ask where agents run the Outreach app: a local browser or a VDI session (Citrix, VMware, Azure Virtual Desktop)? If it&#39;s VDI, Genesys&#39; WebRTC phone page covers it through the WebRTC Media Helper, which falls back to streaming through VDI when it disconnects. On AVD or Windows 365 with Microsoft Multimedia Redirection, the same page says &quot;Require WebRTC Media Helper&quot; must be <strong>Disabled</strong>.</p>
-<p><strong>Browser policy.</strong> Ask whether their Chrome or Edge enterprise policy sets:</p>
-<ul>
-<li><code>WebRtcIPHandling</code> to <code>disable_non_proxied_udp</code>. That forces media over the proxy and kills UDP audio.</li>
-<li><code>AudioCaptureAllowed</code> / <code>AudioCaptureAllowedUrls</code>. These can block the microphone prompt on our origin.</li>
-</ul>
-<p>On our side, the Outreach interface&#39;s Security settings must not set microphone to <code>off</code> (the Permissions-Policy header comes from <code>properties.security.permissionsPolicy</code>).</p>
-<p><strong>Test plan for step 5.</strong> Agree on:</p>
-<ul>
-<li>One named agent who has a WebRTC phone assigned and signs in with their own Genesys user.</li>
-<li>A test from each network agents will use: office, and home on VPN.</li>
-<li>Someone on their side watching firewall and Netskope logs during the call.</li>
-<li>Check in this order, so a failure points at one layer:<ol>
-<li><code>Initialize</code> fires <code>On Ready</code>. That proves the token, the REST calls and the streaming WebSocket. The patched SDK gives up after 3 streaming connection attempts, so a blocked WebSocket shows up here as <code>On Error</code>.</li>
-<li>The agent&#39;s station is the WebRTC phone, and the browser has microphone access. Our integration leaves station and microphone handling to the Genesys SDK.</li>
-<li><code>Start Call</code> connects, with two-way audio for at least 60 seconds. This is the UDP test.</li>
-</ol>
-</li>
-</ul>
-<h2>3. Genesys admin changes (Shahid, not IT)</h2>
-<p>These should clear today&#39;s CORS error and the missing scopes. Retest with a token Genesys accepts before calling CORS fixed, because today&#39;s 401 muddies the picture. Ask on the call whether Shahid has done them. If not, the test call can&#39;t pass however the network is set up.</p>
+<p><strong>CSP is fine.</strong> If CSP were blocking, Chrome would print <code>Refused to connect to … because it violates the following Content Security Policy directive: &quot;connect-src …&quot;</code> and the request would never leave the browser. Instead we got a CORS error, which means:</p>
 <ol>
-<li><strong>OAuth client scopes</strong> (same Code Authorization client). Add <code>authorization</code>, <code>organization</code>, <code>notifications</code>, <code>user-basic-info</code>, <code>stations</code>. Keep the existing scopes, and check that <code>conversations</code> is really there: <code>Get call data</code> calls <code>/api/v2/conversations/calls/{id}</code> directly. <code>user-basic-info</code> is also what our token action&#39;s <code>GET /api/v2/tokens/me</code> needs (uacode #58607).</li>
-<li><strong>Authorized redirect URIs</strong>, needed for CORS. Add <code>https://yoda-qa.chargepoint.teleport.sh/</code>, <code>https://yoda-qa.internalcp.com/</code>, <code>https://matrix.unifyapps-qa.internalcp.com</code>. Keep <code>https://webhook.unifyapps-qa.internalcp.com/api/connector-auth-callback/oauth</code>.<ul>
-<li>The Slack draft displays the matrix host without a path, but the link behind it ends in <code>/a</code>. Confirm which value Shahid enters.</li>
-<li>I couldn&#39;t load the Genesys CORS page to confirm how they match origins. The CORS error is consistent with &quot;origin must be a redirect URI on the client that issued the token&quot;.</li>
-</ul>
-</li>
-<li><strong>WebRTC phone per agent.</strong> Base Settings with make/model &quot;Genesys Cloud WebRTC Phone&quot;, then a phone on a site that can place outbound calls, with the agent as Person. Genesys allows one WebRTC phone per user. With Genesys Cloud Voice or BYOC Cloud, don&#39;t use the &quot;PureCloud Voice - AWS&quot; site. The admin needs <code>Telephony &gt; Plugin &gt; All</code>.</li>
-<li><strong>Role permissions</strong> on the calling users&#39; role:<ul>
-<li>Already there: Conversation &gt; Call &gt; Add, Analytics &gt; Conversation Detail &gt; View, Speech and Text Analytics &gt; Data &gt; View, Recording &gt; Recording &gt; View.</li>
-<li>New: Conversation &gt; Communication &gt; View and Disconnect, Conversation &gt; Conference &gt; Add, Telephony &gt; User&#39;s phone associations &gt; View and Edit, Telephony &gt; Station &gt; Disassociate Self.</li>
-<li>Agents also need their licence&#39;s default role, e.g. &quot;Communicate - User&quot;.</li>
-</ul>
-</li>
-<li><strong>Reconnect</strong> the existing Yoda QA connection so the token carries the new scopes.</li>
-<li>Optional: <strong>Persistent connection</strong> on the WebRTC phone. It&#39;s off by default with a 600s timeout. Agents already logged in only get it after they log out and back in.</li>
+<li>The request left the browser and reached Genesys.</li>
+<li>Because it carries an <code>Authorization</code> header, the browser sent a preflight <code>OPTIONS</code> first.</li>
+<li>Genesys answered without <code>Access-Control-Allow-Origin: https://yoda-qa.chargepoint.teleport.sh</code>.</li>
+<li>The browser hid the response from our JavaScript.</li>
 </ol>
-<h2>4. Gaps on our side (internal, not for the client call)</h2>
+<p>Only Genesys can fix that. Its Platform API only returns CORS headers for origins its org allows. The only allow list mentioned in the thread is the Authorized redirect URIs on the OAuth client that issued the token. I couldn&#39;t load Genesys&#39; CORS docs page to confirm whether that is the only list.</p>
+<p><strong>Why we need it unblocked.</strong> The WebRTC SDK runs in the agent&#39;s browser and calls <code>api.mypurecloud.de</code> directly. The calls in order:</p>
 <ol>
-<li><p><strong>The 401 <code>bad.credentials</code> is unexplained.</strong> A missing scope or permission comes back as 403. A 401 means Genesys didn&#39;t accept the token at all. Rule these out before blaming the network:</p>
+<li><code>users/me?expand=station</code> (the request that failed).</li>
+<li>Org and station lookups.</li>
+<li>The notifications channel.</li>
+<li>Our own <code>Get call data</code> fetch to <code>/api/v2/conversations/calls/{id}</code>.</li>
+</ol>
+<p>Every one of them is a cross-origin request from our domain. While Genesys refuses our origin, <code>Initialize</code> fails at the first step, so <code>On Ready</code> never fires and no call can be placed. We can&#39;t proxy around it, because the SDK owns these requests and the streaming WebSocket.</p>
+<p><strong>On the call, check in DevTools:</strong> open the Network tab, select the blocked request, and look at its status code. If the code is 401 rather than 200 or 204, the token is still bad and Genesys may simply leave CORS headers off error responses. That would put us back at the 401, not at CORS.</p>
+<h2>2. What to check with Chargepoint</h2>
+<p>The Genesys admin items are for Shahid, or whoever administers Genesys at Chargepoint. Vaibhav&#39;s draft (thread, 4:32pm) already asks for items 1 to 4. Confirm on the call that each one is done, because the test call fails without them.</p>
+<ol>
+<li><p><strong>Allowed origins (CORS).</strong></p>
 <ul>
-<li>The interface&#39;s Genesys region must be <code>mypurecloud.de</code>. The code default is <code>mypurecloud.com</code> (<code>DEFAULT_GENESYS_ENVIRONMENT</code> in <code>packages/defs/src/types/interface/index.ts</code> on <code>feat/genesys-integration</code>). A token from <code>.de</code> sent to <code>.com</code> fails. Changing the region tears down the softphone, so the page has to run <code>Initialize</code> again. <code>Set Access Token</code> doesn&#39;t change region.</li>
-<li>Stale token. #58607 notes that the action reads <code>authInput</code> before the request, so if the token expires during that call it can return the old one.</li>
-<li>The connection&#39;s refresh may have failed. Check the connection&#39;s last refresh on Yoda QA.</li>
+<li>Check that the OAuth client&#39;s Authorized redirect URIs include every origin the softphone runs on:<ul>
+<li><code>https://yoda-qa.chargepoint.teleport.sh</code> (builder preview, what Manikya tested)</li>
+<li><code>https://yoda-qa.internalcp.com</code></li>
+<li><code>https://matrix.unifyapps-qa.internalcp.com</code> (published Outreach app)</li>
 </ul>
 </li>
-<li><p><strong>One connection signs in one Genesys user.</strong> The Yoda QA connection is signed in as whoever authorized it, so every call placed through it goes out as that Genesys user. Each calling agent needs their own connection, and the Outreach automation has to look up the signed-in agent&#39;s own connection. #58607 lists that lookup as out of scope (&quot;No automation step does that lookup today&quot;), and so is giving agents permission to create a connection. The thread doesn&#39;t say whether anyone built either since. Worth asking before more agents go live.</p>
-</li>
-<li><p><strong>Token expiry during a shift.</strong> The connector refreshes the connection&#39;s token on the backend, but that doesn&#39;t reach the running softphone. The softphone gets its token once at <code>Initialize</code>. Before that token expires, the page has to fetch a fresh one through the token action and pass it to <code>Set Access Token</code> (the page event&#39;s own description says &quot;call this before the current one does&quot;). The integration has no refresh timer of its own, and the thread names no owner for building this into the Outreach app. Ask Shahid what Token Duration is set to on the OAuth client. I couldn&#39;t load the Genesys page with the default.</p>
-</li>
-<li><p><strong>Raw user token in automation run history.</strong> #58607 accepts this, as the SAML2 action already did. Chargepoint&#39;s security team may ask about it.</p>
-</li>
-<li><p><strong>Production.</strong> Everything above is QA. Production needs:</p>
-<ul>
-<li>its own callback and app-origin redirect URIs, probably on a separate OAuth client;</li>
-<li>the frontend branch reviewed and merged (Manikya: test, fix, dev review, then merge).</li>
+<li>The existing callback <code>https://webhook.unifyapps-qa.internalcp.com/api/connector-auth-callback/oauth</code> must stay.</li>
+<li>CORS matches on origin only (scheme plus host), so the <code>/a</code> path in the Slack draft&#39;s matrix link doesn&#39;t matter.</li>
+<li>Ask whether their org has a separate CORS allowlist setting besides redirect URIs. If it does, add the same origins there.</li>
 </ul>
-<p>The OAuth path is already on uat and live (#59687, #59688). The live pick left out the SAML2 hunk because live doesn&#39;t carry #57161. That only matters if someone promotes the SAML2 action later.</p>
+</li>
+<li><p><strong>Scopes on the same Code Authorization client.</strong></p>
+<ul>
+<li>Add <code>authorization</code>, <code>organization</code>, <code>notifications</code>, <code>user-basic-info</code> and <code>stations</code>.</li>
+<li>Confirm <code>conversations</code> is already on the client. Our <code>Get call data</code> event needs it.</li>
+</ul>
+</li>
+<li><p><strong>A WebRTC phone per calling agent.</strong> This means a Base Settings entry with make/model &quot;Genesys Cloud WebRTC Phone&quot;, and a phone on an outbound-capable site assigned to the agent. Our integration leaves station selection to the SDK. If the agent&#39;s station isn&#39;t a WebRTC phone, <code>Start Call</code> has nothing to dial from.</p>
+</li>
+<li><p><strong>Role permissions for calling agents.</strong></p>
+<ul>
+<li>Conversation &gt; Communication &gt; View and Disconnect</li>
+<li>Conversation &gt; Conference &gt; Add</li>
+<li>Telephony &gt; User&#39;s phone associations &gt; View and Edit</li>
+<li>Telephony &gt; Station &gt; Disassociate Self</li>
+<li>The licence&#39;s default role, such as &quot;Communicate - User&quot;</li>
+</ul>
+</li>
+<li><p><strong>Reconnect after the changes.</strong> Someone has to click Reconnect on the Yoda QA Genesys connection and sign in again, so the token carries the new scopes. Ask who will do it and when.</p>
+</li>
+<li><p><strong>Token Duration on the OAuth client.</strong> Ask what it is set to. The softphone gets its token once at <code>Initialize</code> and must receive a fresh one through <code>Set Access Token</code> before that token expires. The duration decides how often the Outreach page has to refetch the token mid-shift.</p>
+</li>
+<li><p><strong>How agents sign in.</strong> One connection signs in one Genesys user, and every call made through it goes out as that user. Ask:</p>
+<ul>
+<li>Will each agent authorise their own connection?</li>
+<li>Is a shared Genesys user acceptable for QA only?</li>
+</ul>
+<p>#58607 left out both the per-agent connection lookup and the permission for agents to create connections.</p>
+</li>
+<li><p><strong>Region.</strong> Confirm the org is on <code>mypurecloud.de</code> (EU Frankfurt). Our interface setting defaults to <code>mypurecloud.com</code>, so the Outreach interface must have Genesys region set to <code>mypurecloud.de</code>.</p>
+</li>
+<li><p><strong>Where agents run the app.</strong> This is the only network-adjacent item, and it&#39;s here because it changes how the SDK behaves.</p>
+<ul>
+<li>A local Chrome or Edge, or a VDI session? VDI needs the WebRTC Media Helper.</li>
+<li>Does their browser policy allow microphone access on our origins (<code>AudioCaptureAllowedUrls</code>)? If not, the mic prompt never appears and the call has no audio.</li>
+</ul>
+</li>
+<li><p><strong>Test agent and order.</strong> Agree on one named agent who has a WebRTC phone and their own Genesys sign-in. Run the test in this order, so a failure points at one layer:</p>
+<ol>
+<li><code>Initialize</code> fires <code>On Ready</code>. This covers token, CORS and the streaming WebSocket. The patched SDK gives up after 3 streaming attempts and fires <code>On Error</code>.</li>
+<li>The agent&#39;s station is the WebRTC phone and the browser has mic access.</li>
+<li><code>Start Call</code> connects with two-way audio.</li>
+</ol>
 </li>
 </ol>
-<h2>5. Questions to ask on the call</h2>
+<h2>3. Before the call (internal)</h2>
 <ul>
-<li>Where do calling agents work: office, home on VPN, VDI?</li>
-<li>Who manages the endpoint firewall, and is it stateful?</li>
-<li>Netskope (or another proxy): steering mode, SSL inspection, can the Genesys domains and UDP bypass it?</li>
-<li>Chrome or Edge policies for WebRTC IP handling and microphone access?</li>
-<li>IP allowlist or ports to any? If IPs, will they maintain the AWS and Genesys ranges?</li>
-<li>Genesys Cloud Voice or BYOC?</li>
-<li>Has Shahid applied the Genesys admin changes in section 3?</li>
-<li>Who is the test agent, and when can we run the test call?</li>
+<li>Ask Manikya which endpoint returned the 401, and whether it still fails with a token taken right after Reconnect.</li>
+<li>Open the Outreach interface on Yoda QA and confirm the Genesys region is <code>mypurecloud.de</code>.</li>
 </ul>
 <h2>Sources</h2>
 <ul>
-<li>Thread: Slack <code>#C0B49DSL7FW</code>, parent from Vaibhav, 30 Oct; IT/Network message 12 Nov 4:54pm</li>
-<li>Genesys: <a href="https://help.genesys.cloud/articles/ports-and-services-for-webrtc-phones-under-genesys-cloud-voice/">https://help.genesys.cloud/articles/ports-and-services-for-webrtc-phones-under-genesys-cloud-voice/</a></li>
-<li>Genesys: <a href="https://help.genesys.cloud/articles/domains-for-the-firewall-allowlist/">https://help.genesys.cloud/articles/domains-for-the-firewall-allowlist/</a></li>
-<li>Genesys: <a href="https://help.genesys.cloud/articles/ip-addresses-for-the-firewall-allowlist/">https://help.genesys.cloud/articles/ip-addresses-for-the-firewall-allowlist/</a></li>
-<li>Genesys: <a href="https://help.genesys.cloud/articles/configure-the-genesys-cloud-webrtc-phone/">https://help.genesys.cloud/articles/configure-the-genesys-cloud-webrtc-phone/</a></li>
-<li>Genesys CORS and token pages (didn&#39;t render for me, worth a manual look): <a href="https://developer.genesys.cloud/authorization/platform-auth/cors">https://developer.genesys.cloud/authorization/platform-auth/cors</a>, <a href="https://developer.genesys.cloud/authorization/platform-auth/">https://developer.genesys.cloud/authorization/platform-auth/</a></li>
-<li>uacode: <a href="https://github.com/unify-apps/uacode/pull/58607">https://github.com/unify-apps/uacode/pull/58607</a>, <a href="https://github.com/unify-apps/uacode/pull/57161">https://github.com/unify-apps/uacode/pull/57161</a></li>
-<li>www: <code>feat/genesys-integration</code>, <code>packages/carbon/src/no-code/components/InterfaceAppIntegrations/component/</code> (Genesys hooks and utils), <code>packages/network/src/utils/cspHeaders.ts</code></li>
+<li>Slack thread <code>#C0B49DSL7FW</code>: Manikya&#39;s 401 at 2:10pm, CORS and scopes at 2:44pm, Vaibhav&#39;s Genesys admin draft at 4:32pm</li>
+<li>www <code>feat/genesys-integration</code>: <code>packages/network/src/utils/cspHeaders.ts</code>, <code>packages/defs/src/types/interface/index.ts</code> (<code>DEFAULT_GENESYS_ENVIRONMENT</code>), <code>packages/carbon/src/no-code/components/InterfaceAppIntegrations/component/</code> (Genesys hooks and utils)</li>
+<li>uacode: <a href="https://github.com/unify-apps/uacode/pull/58607">https://github.com/unify-apps/uacode/pull/58607</a></li>
+<li>Genesys: <a href="https://help.genesys.cloud/articles/configure-the-genesys-cloud-webrtc-phone/">https://help.genesys.cloud/articles/configure-the-genesys-cloud-webrtc-phone/</a>, <a href="https://developer.genesys.cloud/authorization/platform-auth/cors">https://developer.genesys.cloud/authorization/platform-auth/cors</a> (didn&#39;t load for me)</li>
 </ul>
 </article>
 </main>
