@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Genesys IT call prep</title>
+<style>/* planloft theme: editorial. A long read: one old-style serif, a drop cap, quotes that hang in the margin. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+  --planloft-ink: var(--ink);
+  --planloft-paper: var(--paper);
+  --planloft-rule: var(--rule);
+  --planloft-accent: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    --ink: #e2dcd3;
+    --muted: #a39a90;
+    --paper: #1a1816;
+    --surface: #24211e;
+    --rule: #393430;
+    --accent: #e39aa8;
+    --code-bg: #262320;
+  }
+}
+:root[data-planloft-color-scheme="light"] {
+  --ink: #24201c;
+  --muted: #6e655d;
+  --paper: #fbf9f5;
+  --surface: #f1ede6;
+  --rule: #e2dbd1;
+  --accent: #7d2436;
+  --code-bg: #efeae2;
+}
+:root[data-planloft-color-scheme="dark"] {
+  --ink: #e2dcd3;
+  --muted: #a39a90;
+  --paper: #1a1816;
+  --surface: #24211e;
+  --rule: #393430;
+  --accent: #e39aa8;
+  --code-bg: #262320;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/1.75 "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Charter, Georgia, serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.planloft-plan {
+  width: calc(100% - 200px);
+  margin-inline: auto;
+  padding-block: 5rem 8rem;
+}
+article > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+h1 { margin: 0 0 2rem; font-size: 2.75rem; line-height: 1.08; letter-spacing: -0.015em; }
+h2 { margin: 3.25rem 0 0.9rem; font-size: 1.6rem; }
+h3 { margin: 2.25rem 0 0.6rem; font-size: 1.25rem; }
+h4 { margin: 1.75rem 0 0.4rem; font-size: 1.05rem; }
+h5, h6 { margin: 1.5rem 0 0.3rem; font-size: 1rem; font-style: italic; font-weight: 400; color: var(--muted); }
+h2 + h3, h3 + h4 { margin-top: 1rem; }
+h1 a, h2 a, h3 a, h4 a { color: inherit; }
+
+p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* The opening paragraph carries a drop cap. It only appears when the article really
+   opens with prose, so a document that starts with a list or a table stays plain. */
+.planloft-plan > article > h1 + p::first-letter,
+.planloft-plan > article > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.45rem 0 0;
+  font-size: 3.6em;
+  line-height: 0.82;
+  font-weight: 700;
+}
+ul, ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+li { margin: 0.4em 0; }
+li > p { margin-bottom: 0.5em; }
+li ul, li ol { margin: 0.4em 0; }
+li::marker { color: var(--muted); }
+ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.25em; }
+input[type="checkbox"] { margin: 0 0.45em 0 0; vertical-align: -0.1em; accent-color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration-color: currentColor; }
+strong { font-weight: 700; }
+mark { background: color-mix(in srgb, var(--accent) 18%, transparent); color: inherit; padding: 0 0.15em; }
+del { color: var(--muted); }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.2em; }
+sup, sub { font-size: 0.7em; line-height: 0; }
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.82em;
+}
+code { padding: 0.08em 0.28em; border-radius: 3px; background: var(--code-bg); }
+pre {
+  margin: 1.6em 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 0.78em;
+  line-height: 1.6;
+  tab-size: 2;
+}
+pre code { padding: 0; border-radius: 0; background: transparent; font-size: inherit; }
+kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-size: 0.75em;
+}
+
+blockquote {
+  position: relative;
+  margin: 2em 0 2em 1.25rem;
+  padding: 0;
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.65;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.12em;
+  left: -1.25rem;
+  font-size: 2.6em;
+  line-height: 1;
+  font-style: normal;
+  color: var(--accent);
+}
+blockquote > :last-child { margin-bottom: 0; }
+blockquote em { font-style: normal; }
+
+table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.75em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+th, td {
+  padding: 0.5em 1em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+th { font-weight: 700; border-bottom: 1px solid var(--ink); }
+tr > :last-child { padding-right: 0; }
+
+/* A section break is set as a dinkus rather than a rule, the way a printed essay would. */
+hr { height: auto; margin: 3rem 0; border: 0; text-align: center; color: var(--muted); }
+hr::before { content: "*  *  *"; font-size: 1.1em; letter-spacing: 0.2em; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.75em 0; }
+figcaption { color: var(--muted); font-size: 0.9em; font-style: italic; }
+details { margin: 1em 0; padding: 0.75em 1em; border: 1px solid var(--rule); border-radius: 4px; }
+summary { cursor: pointer; font-weight: 700; }
+
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.planloft-comments { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 64rem) {
+  .planloft-plan { width: calc(100% - 100px); }
+}
+@media (max-width: 40rem) {
+  body { font-size: 17px; }
+  .planloft-plan { width: calc(100% - 50px); padding-block: 4.5rem 5rem; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  blockquote { margin-left: 1rem; }
+  blockquote::before { left: -1rem; font-size: 2.2em; }
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --ink: #24201c;
+    --muted: #6e655d;
+    --paper: #fbf9f5;
+    --surface: #f1ede6;
+    --rule: #e2dbd1;
+    --accent: #7d2436;
+    --code-bg: #efeae2;
+  }
+  body { background: #fff; color: #000; font-size: 11.5pt; }
+  .planloft-plan { width: auto; padding: 0; }
+  a { color: inherit; }
+  pre, code, kbd { background: #f3f3f3; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-theme-selector {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--planloft-control-ink);
+  line-height: 0;
+}
+.planloft-theme-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-theme-selector { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option { transition: none; }
+}
+@media print {
+  .planloft-theme-selector { display: none; }
+}
+</style>
+
+<meta name="robots" content="noindex, nofollow" />
+</head>
+<body data-planloft-kind="plan">
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+</script>
+<main class="planloft-plan">
+<article><p>Tonight at 10:30pm IST we meet Chargepoint&#39;s IT/Network team to open the network path for Genesys WebRTC outbound calling from the Outreach app. The ports in Vaibhav&#39;s message are right. What&#39;s missing is the list of destinations, the Netskope and browser details, and a clear line between what IT fixes and what Shahid fixes in Genesys admin. From our side: Vaibhav, Manikya, Pratik and Hatim. The Teams link is in the Slack thread.</p>
+<h2>What&#39;s needed from you</h2>
+<ol>
+<li><strong>Join the call.</strong> Vaibhav asked you to make sure the network setup has no gaps. The agenda is his IT/Network message in the thread (ports, return traffic, Genesys destinations, VPN and proxy).</li>
+<li><strong>Check that message line by line</strong> against the table in section 2. The ports match Genesys&#39; docs. The gaps are the destinations, Netskope/proxy handling, VDI and browser policy.</li>
+<li><strong>Keep two things apart on the call.</strong> The CORS error and the missing scopes sit with Shahid in Genesys admin (section 3), not with IT. The 401 from today isn&#39;t a network problem either (section 4).</li>
+<li><strong>After the call, decide owners</strong> for the product gaps in section 4. Several of them block production even when the network is perfect.</li>
+</ol>
+<h2>1. Where things stand</h2>
+<ul>
+<li><strong>Auth.</strong> The SAML2 bearer path worked once, but someone had to copy the assertion out of the browser by hand and it expired in about 5 minutes. The team switched to a Code Authorization OAuth sign-in with a refresh token. uacode #58607 (main, 3 Nov) and its uat and live picks #59687 and #59688 (5 Nov) add the sign-in and a <code>Get user access token from connection</code> action. Yoda QA runs internal <code>2c64192</code> plus config sync.</li>
+<li><strong>Connection.</strong> Chargepoint created the Code Authorization OAuth client on Monday. The Genesys OAuth connection on Yoda QA was set up on 11 Nov.</li>
+<li><strong>Frontend.</strong> The Genesys WebRTC softphone lives on <code>feat/genesys-integration</code> in www. It is not on main. Yoda QA runs <code>feat-genesys-integration-121126-server-6fb9419</code>, deployed today. It includes <code>dbf39e1</code>, which runs Genesys in builder preview, plus cherry-picks of #34540 and #34734 so <code>llm-tools</code> builds.</li>
+<li><strong>Testing.</strong> Nobody has run the full flow end to end yet (Manikya, 11 Nov). Today two errors came up:<ul>
+<li><code>401 bad.credentials</code> when using the token from the connection, on every Genesys domain Manikya tried.</li>
+<li>CORS block on <code>https://api.mypurecloud.de/api/v2/users/me?expand=station</code> from origin <code>https://yoda-qa.chargepoint.teleport.sh</code>.</li>
+</ul>
+</li>
+<li><strong>Pending with the client.</strong> Vaibhav drafted a Genesys admin message for Shahid (scopes, redirect URIs, WebRTC phones, role permissions, reconnect) and an IT/Network message. Tonight&#39;s call covers the IT/Network message.</li>
+</ul>
+<h2>2. Network asks, checked against Genesys docs</h2>
+<p>Genesys source: &quot;Ports and services for WebRTC phones under Genesys Cloud Voice&quot;, &quot;Domains for the firewall allowlist&quot;, &quot;IP addresses for the firewall allowlist&quot; (links at the end).</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Vaibhav&#39;s message</th>
+<th>Genesys docs</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1a</td>
+<td>TCP 443, signalling to Genesys Cloud and AWS</td>
+<td>tcp/443, &quot;VoIP signaling (dialing, ringing...)&quot;, Genesys Cloud and Amazon AWS</td>
+<td>Matches</td>
+</tr>
+<tr>
+<td>1b</td>
+<td>UDP 3478, STUN</td>
+<td>udp/3478, needed for srflx and relay candidates. Must be open &quot;for both the client and Edges&quot;. Closed ports cause &quot;a high rate of failure&quot;</td>
+<td>Matches. Stress that this one is not optional</td>
+</tr>
+<tr>
+<td>1c</td>
+<td>TCP 3478, reserved</td>
+<td>tcp/3478, &quot;not currently in use, but should be open and reserved for future use&quot;</td>
+<td>Matches</td>
+</tr>
+<tr>
+<td>1d</td>
+<td>UDP 16384-65535, call audio</td>
+<td>udp/16384-65535, SRTP/TURN, Genesys Cloud Media Tier</td>
+<td>Matches. Older docs said 16384-32768. Make sure IT opens the full range</td>
+</tr>
+<tr>
+<td>1e</td>
+<td>UDP 19302, optional Google STUN</td>
+<td>udp/19302, optional, third party</td>
+<td>Matches</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Return traffic (stateful firewall)</td>
+<td>No specific guidance</td>
+<td>Fine as written</td>
+</tr>
+<tr>
+<td>3</td>
+<td>&quot;Restrict to Genesys destinations (recommended)&quot;</td>
+<td>Genesys says it &quot;does not own any of the other IP addresses it uses&quot; and recommends allowing outbound on these ports &quot;to any IP destination&quot;</td>
+<td><strong>Gap.</strong> An IP allowlist is fragile. See below</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Keep Genesys traffic off proxy, SSL inspection and VPN</td>
+<td>Docs point to split tunnelling for media. Nothing on SSL inspection</td>
+<td>Right direction. Make it concrete for Netskope. See below</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Test call with one agent</td>
+<td>n/a</td>
+<td>Add the details below</td>
+</tr>
+</tbody></table>
+<h3>Gaps to raise on the call</h3>
+<p><strong>Destinations are not named.</strong> The message says &quot;Genesys Cloud and AWS&quot; but lists no domains. For the Frankfurt org (<code>eu-central-1</code>, <code>mypurecloud.de</code>):</p>
+<ul>
+<li><code>*.mypurecloud.de</code> and <code>*.euc1.pure.cloud</code>: the regional domains. The softphone calls the Platform API at <code>api.mypurecloud.de</code> and opens a streaming WebSocket in the same region. Our CSP allows <code>wss://*.mypurecloud.de</code> and <code>https://*.mypurecloud.de</code> for this.</li>
+<li><code>*.mypurecloud.com</code>: Genesys UI for all regions. Agents and admins need it.</li>
+<li><code>dhqbrvplips7x.cloudfront.net</code> (static content) and <code>api-downloads.mypurecloud.de</code>.</li>
+<li>Only if they use BYOC: <code>*.byoc.euc1.genesys.cloud</code>.</li>
+<li>Our own hosts, which have to pass the same proxy: <code>yoda-qa.chargepoint.teleport.sh</code>, <code>yoda-qa.internalcp.com</code>, <code>matrix.unifyapps-qa.internalcp.com</code>, and <code>webhook.unifyapps-qa.internalcp.com</code> (OAuth callback).</li>
+</ul>
+<p><strong>IP allowlisting.</strong> If IT insists on IPs instead of &quot;ports to any&quot;, they need all of these:</p>
+<ul>
+<li>Genesys media ranges <code>52.129.96.0/20</code>, <code>169.150.104.0/21</code>, <code>167.234.48.0/20</code>, <code>136.245.64.0/18</code>.</li>
+<li>AWS ranges from <code>ip-ranges.amazonaws.com/ip-ranges.json</code>. Genesys says the AWS <code>GLOBAL</code> region &quot;must ALWAYS be included&quot;.</li>
+<li>Google STUN ranges from <code>gstatic.com/ipranges/goog.json</code>, if they keep UDP 19302.</li>
+</ul>
+<p>My suggestion is to open the ports to any destination and use the domain list for proxy and SSL-inspection exceptions.</p>
+<p><strong>Netskope / SSL inspection.</strong> Our <code>internalcp</code> hosts already need Netskope, so agent machines probably run the Netskope client. Ask:</p>
+<ul>
+<li>Which steering mode: web only, or all traffic? Does it tunnel UDP?</li>
+<li>Can the Genesys domains above go on the steering and SSL-decryption bypass list? I haven&#39;t seen inspection break this setup, but it&#39;s the first thing to rule out if the WebSocket fails. UDP media can&#39;t pass through a web proxy at all.</li>
+</ul>
+<p><strong>No TCP-only fallback to count on.</strong> The Genesys pages don&#39;t say that WebRTC media falls back to TURN over TCP 443 when UDP is blocked. The WebRTC phone has a TURN Behavior setting (&quot;Only use TURN when necessary&quot; by default), but the page gives no transport or port. If UDP 3478 and 16384-65535 stay closed, plan on calls failing.</p>
+<p><strong>VDI.</strong> The thread mentions VDI only as a way for Manikya to reach an internal host. We don&#39;t know whether calling agents use one. Ask where agents run the Outreach app: a local browser or a VDI session (Citrix, VMware, Azure Virtual Desktop)? If it&#39;s VDI, Genesys&#39; WebRTC phone page covers it through the WebRTC Media Helper, which falls back to streaming through VDI when it disconnects. On AVD or Windows 365 with Microsoft Multimedia Redirection, the same page says &quot;Require WebRTC Media Helper&quot; must be <strong>Disabled</strong>.</p>
+<p><strong>Browser policy.</strong> Ask whether their Chrome or Edge enterprise policy sets:</p>
+<ul>
+<li><code>WebRtcIPHandling</code> to <code>disable_non_proxied_udp</code>. That forces media over the proxy and kills UDP audio.</li>
+<li><code>AudioCaptureAllowed</code> / <code>AudioCaptureAllowedUrls</code>. These can block the microphone prompt on our origin.</li>
+</ul>
+<p>On our side, the Outreach interface&#39;s Security settings must not set microphone to <code>off</code> (the Permissions-Policy header comes from <code>properties.security.permissionsPolicy</code>).</p>
+<p><strong>Test plan for step 5.</strong> Agree on:</p>
+<ul>
+<li>One named agent who has a WebRTC phone assigned and signs in with their own Genesys user.</li>
+<li>A test from each network agents will use: office, and home on VPN.</li>
+<li>Someone on their side watching firewall and Netskope logs during the call.</li>
+<li>Check in this order, so a failure points at one layer:<ol>
+<li><code>Initialize</code> fires <code>On Ready</code>. That proves the token, the REST calls and the streaming WebSocket. The patched SDK gives up after 3 streaming connection attempts, so a blocked WebSocket shows up here as <code>On Error</code>.</li>
+<li>The agent&#39;s station is the WebRTC phone, and the browser has microphone access. Our integration leaves station and microphone handling to the Genesys SDK.</li>
+<li><code>Start Call</code> connects, with two-way audio for at least 60 seconds. This is the UDP test.</li>
+</ol>
+</li>
+</ul>
+<h2>3. Genesys admin changes (Shahid, not IT)</h2>
+<p>These should clear today&#39;s CORS error and the missing scopes. Retest with a token Genesys accepts before calling CORS fixed, because today&#39;s 401 muddies the picture. Ask on the call whether Shahid has done them. If not, the test call can&#39;t pass however the network is set up.</p>
+<ol>
+<li><strong>OAuth client scopes</strong> (same Code Authorization client). Add <code>authorization</code>, <code>organization</code>, <code>notifications</code>, <code>user-basic-info</code>, <code>stations</code>. Keep the existing scopes, and check that <code>conversations</code> is really there: <code>Get call data</code> calls <code>/api/v2/conversations/calls/{id}</code> directly. <code>user-basic-info</code> is also what our token action&#39;s <code>GET /api/v2/tokens/me</code> needs (uacode #58607).</li>
+<li><strong>Authorized redirect URIs</strong>, needed for CORS. Add <code>https://yoda-qa.chargepoint.teleport.sh/</code>, <code>https://yoda-qa.internalcp.com/</code>, <code>https://matrix.unifyapps-qa.internalcp.com</code>. Keep <code>https://webhook.unifyapps-qa.internalcp.com/api/connector-auth-callback/oauth</code>.<ul>
+<li>The Slack draft displays the matrix host without a path, but the link behind it ends in <code>/a</code>. Confirm which value Shahid enters.</li>
+<li>I couldn&#39;t load the Genesys CORS page to confirm how they match origins. The CORS error is consistent with &quot;origin must be a redirect URI on the client that issued the token&quot;.</li>
+</ul>
+</li>
+<li><strong>WebRTC phone per agent.</strong> Base Settings with make/model &quot;Genesys Cloud WebRTC Phone&quot;, then a phone on a site that can place outbound calls, with the agent as Person. Genesys allows one WebRTC phone per user. With Genesys Cloud Voice or BYOC Cloud, don&#39;t use the &quot;PureCloud Voice - AWS&quot; site. The admin needs <code>Telephony &gt; Plugin &gt; All</code>.</li>
+<li><strong>Role permissions</strong> on the calling users&#39; role:<ul>
+<li>Already there: Conversation &gt; Call &gt; Add, Analytics &gt; Conversation Detail &gt; View, Speech and Text Analytics &gt; Data &gt; View, Recording &gt; Recording &gt; View.</li>
+<li>New: Conversation &gt; Communication &gt; View and Disconnect, Conversation &gt; Conference &gt; Add, Telephony &gt; User&#39;s phone associations &gt; View and Edit, Telephony &gt; Station &gt; Disassociate Self.</li>
+<li>Agents also need their licence&#39;s default role, e.g. &quot;Communicate - User&quot;.</li>
+</ul>
+</li>
+<li><strong>Reconnect</strong> the existing Yoda QA connection so the token carries the new scopes.</li>
+<li>Optional: <strong>Persistent connection</strong> on the WebRTC phone. It&#39;s off by default with a 600s timeout. Agents already logged in only get it after they log out and back in.</li>
+</ol>
+<h2>4. Gaps on our side (internal, not for the client call)</h2>
+<ol>
+<li><p><strong>The 401 <code>bad.credentials</code> is unexplained.</strong> A missing scope or permission comes back as 403. A 401 means Genesys didn&#39;t accept the token at all. Rule these out before blaming the network:</p>
+<ul>
+<li>The interface&#39;s Genesys region must be <code>mypurecloud.de</code>. The code default is <code>mypurecloud.com</code> (<code>DEFAULT_GENESYS_ENVIRONMENT</code> in <code>packages/defs/src/types/interface/index.ts</code> on <code>feat/genesys-integration</code>). A token from <code>.de</code> sent to <code>.com</code> fails. Changing the region tears down the softphone, so the page has to run <code>Initialize</code> again. <code>Set Access Token</code> doesn&#39;t change region.</li>
+<li>Stale token. #58607 notes that the action reads <code>authInput</code> before the request, so if the token expires during that call it can return the old one.</li>
+<li>The connection&#39;s refresh may have failed. Check the connection&#39;s last refresh on Yoda QA.</li>
+</ul>
+</li>
+<li><p><strong>One connection signs in one Genesys user.</strong> The Yoda QA connection is signed in as whoever authorized it, so every call placed through it goes out as that Genesys user. Each calling agent needs their own connection, and the Outreach automation has to look up the signed-in agent&#39;s own connection. #58607 lists that lookup as out of scope (&quot;No automation step does that lookup today&quot;), and so is giving agents permission to create a connection. The thread doesn&#39;t say whether anyone built either since. Worth asking before more agents go live.</p>
+</li>
+<li><p><strong>Token expiry during a shift.</strong> The connector refreshes the connection&#39;s token on the backend, but that doesn&#39;t reach the running softphone. The softphone gets its token once at <code>Initialize</code>. Before that token expires, the page has to fetch a fresh one through the token action and pass it to <code>Set Access Token</code> (the page event&#39;s own description says &quot;call this before the current one does&quot;). The integration has no refresh timer of its own, and the thread names no owner for building this into the Outreach app. Ask Shahid what Token Duration is set to on the OAuth client. I couldn&#39;t load the Genesys page with the default.</p>
+</li>
+<li><p><strong>Raw user token in automation run history.</strong> #58607 accepts this, as the SAML2 action already did. Chargepoint&#39;s security team may ask about it.</p>
+</li>
+<li><p><strong>Production.</strong> Everything above is QA. Production needs:</p>
+<ul>
+<li>its own callback and app-origin redirect URIs, probably on a separate OAuth client;</li>
+<li>the frontend branch reviewed and merged (Manikya: test, fix, dev review, then merge).</li>
+</ul>
+<p>The OAuth path is already on uat and live (#59687, #59688). The live pick left out the SAML2 hunk because live doesn&#39;t carry #57161. That only matters if someone promotes the SAML2 action later.</p>
+</li>
+</ol>
+<h2>5. Questions to ask on the call</h2>
+<ul>
+<li>Where do calling agents work: office, home on VPN, VDI?</li>
+<li>Who manages the endpoint firewall, and is it stateful?</li>
+<li>Netskope (or another proxy): steering mode, SSL inspection, can the Genesys domains and UDP bypass it?</li>
+<li>Chrome or Edge policies for WebRTC IP handling and microphone access?</li>
+<li>IP allowlist or ports to any? If IPs, will they maintain the AWS and Genesys ranges?</li>
+<li>Genesys Cloud Voice or BYOC?</li>
+<li>Has Shahid applied the Genesys admin changes in section 3?</li>
+<li>Who is the test agent, and when can we run the test call?</li>
+</ul>
+<h2>Sources</h2>
+<ul>
+<li>Thread: Slack <code>#C0B49DSL7FW</code>, parent from Vaibhav, 30 Oct; IT/Network message 12 Nov 4:54pm</li>
+<li>Genesys: <a href="https://help.genesys.cloud/articles/ports-and-services-for-webrtc-phones-under-genesys-cloud-voice/">https://help.genesys.cloud/articles/ports-and-services-for-webrtc-phones-under-genesys-cloud-voice/</a></li>
+<li>Genesys: <a href="https://help.genesys.cloud/articles/domains-for-the-firewall-allowlist/">https://help.genesys.cloud/articles/domains-for-the-firewall-allowlist/</a></li>
+<li>Genesys: <a href="https://help.genesys.cloud/articles/ip-addresses-for-the-firewall-allowlist/">https://help.genesys.cloud/articles/ip-addresses-for-the-firewall-allowlist/</a></li>
+<li>Genesys: <a href="https://help.genesys.cloud/articles/configure-the-genesys-cloud-webrtc-phone/">https://help.genesys.cloud/articles/configure-the-genesys-cloud-webrtc-phone/</a></li>
+<li>Genesys CORS and token pages (didn&#39;t render for me, worth a manual look): <a href="https://developer.genesys.cloud/authorization/platform-auth/cors">https://developer.genesys.cloud/authorization/platform-auth/cors</a>, <a href="https://developer.genesys.cloud/authorization/platform-auth/">https://developer.genesys.cloud/authorization/platform-auth/</a></li>
+<li>uacode: <a href="https://github.com/unify-apps/uacode/pull/58607">https://github.com/unify-apps/uacode/pull/58607</a>, <a href="https://github.com/unify-apps/uacode/pull/57161">https://github.com/unify-apps/uacode/pull/57161</a></li>
+<li>www: <code>feat/genesys-integration</code>, <code>packages/carbon/src/no-code/components/InterfaceAppIntegrations/component/</code> (Genesys hooks and utils), <code>packages/network/src/utils/cspHeaders.ts</code></li>
+</ul>
+</article>
+</main>
+</body>
+</html>

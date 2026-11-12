@@ -11,6 +11,7 @@ planloft plan/doc deploys
 | [architecture](https://hatims-planloft.vercel.app/software-factory-architecture/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [factory-services](https://hatims-planloft.vercel.app/software-factory-factory-services/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [operations](https://hatims-planloft.vercel.app/software-factory-operations/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
+| [Genesys IT call prep](https://hatims-planloft.vercel.app/genesys-it-call-prep/) | github.com/unify-apps/www | plan | 2026-12-12 |
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Saved, with room to improve](https://hatims-planloft.vercel.app/workflow-best-practice-warnings/) | github.com/unify-apps/www | plan | 2026-12-01 |
