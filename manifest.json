@@ -135,6 +135,15 @@
       "kind": "report",
       "createdAt": "2026-11-13T07:21:58.083Z",
       "expiresAt": "2026-12-13T07:21:58.083Z"
+    },
+    {
+      "id": "juEtuICgvZ",
+      "project": "github.com/unify-apps/www",
+      "slug": "uac-v2-eval",
+      "title": "uac v2: agent eval",
+      "kind": "report",
+      "createdAt": "2026-11-13T07:23:05.098Z",
+      "expiresAt": "2026-12-13T07:23:05.098Z"
     }
   ]
 }

@@ -1,0 +1,1995 @@
+<!doctype html>
+<html lang="en">
+<head><!-- planloft-render:head:start -->
+<style data-planloft-render data-planloft-sha256="07720fd08084a6e6cf986d518bdfaa248dcc4e165ccdc814c03072d73b001057">/* planloft theme: editorial. The long read. Baskerville at 19px on a 1.7 line, headings in
+   the same face at regular weight and a large size, so hierarchy comes from scale rather
+   than boldness. Stone white paper with the yellow kept out, espresso ink, madder red for
+   links. Dark is warm umber with the red lifted to a dusty rose. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --planloft-font-body: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-heading: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-mono: "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", ui-monospace, monospace;
+  --planloft-font-size: 19px;
+  --planloft-line-height: 1.7;
+  --planloft-code-size: 0.8em;
+  --planloft-heading-weight: 400;
+  --planloft-heading-line-height: 1.1;
+  --planloft-heading-tracking: -0.005em;
+  --planloft-h1-size: 2.9em;
+  --planloft-h2-size: 1.75em;
+  --planloft-h3-size: 1.28em;
+}
+:root,
+:root[data-planloft-color-scheme="light"] {
+  color-scheme: light;
+  --planloft-paper: #f8f7f5;
+  --planloft-ink: #2a221d;
+  --planloft-muted: #6b625b;
+  --planloft-surface: #efedea;
+  --planloft-rule: #dad6d0;
+  --planloft-accent: #8c2f39;
+  --planloft-accent-contrast: #f8f7f5;
+  --planloft-code-paper: #edebe7;
+  --planloft-code-ink: #2a221d;
+  --planloft-chart-1: #8c2f39;
+  --planloft-chart-2: #2f5f8a;
+  --planloft-chart-3: #4c7a3a;
+  --planloft-chart-4: #8d6110;
+  --planloft-chart-5: #6a4f9e;
+  --planloft-chart-6: #2c8282;
+  --planloft-chart-sequential: #8c2f39;
+  --planloft-chart-neutral: #91877d;
+  --planloft-positive: #3f7a3a;
+  --planloft-negative: #a82f38;
+  --planloft-caution: #8d6110;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    color-scheme: dark;
+    --planloft-paper: #1c1815;
+    --planloft-ink: #e6dfd6;
+    --planloft-muted: #a79c91;
+    --planloft-surface: #27221e;
+    --planloft-rule: #3f3834;
+    --planloft-accent: #e39aa4;
+    --planloft-accent-contrast: #1c1815;
+    --planloft-code-paper: #26211d;
+    --planloft-code-ink: #e9e2d9;
+    --planloft-chart-1: #e39aa4;
+    --planloft-chart-2: #7fb0dc;
+    --planloft-chart-3: #92c27b;
+    --planloft-chart-4: #d8b25a;
+    --planloft-chart-5: #b7a0e6;
+    --planloft-chart-6: #6dc1c1;
+    --planloft-chart-sequential: #e39aa4;
+    --planloft-chart-neutral: #7d746c;
+    --planloft-positive: #92c27b;
+    --planloft-negative: #ee8e94;
+    --planloft-caution: #d8b25a;
+  }
+}
+:root[data-planloft-color-scheme="dark"] {
+  color-scheme: dark;
+  --planloft-paper: #1c1815;
+  --planloft-ink: #e6dfd6;
+  --planloft-muted: #a79c91;
+  --planloft-surface: #27221e;
+  --planloft-rule: #3f3834;
+  --planloft-accent: #e39aa4;
+  --planloft-accent-contrast: #1c1815;
+  --planloft-code-paper: #26211d;
+  --planloft-code-ink: #e9e2d9;
+  --planloft-chart-1: #e39aa4;
+  --planloft-chart-2: #7fb0dc;
+  --planloft-chart-3: #92c27b;
+  --planloft-chart-4: #d8b25a;
+  --planloft-chart-5: #b7a0e6;
+  --planloft-chart-6: #6dc1c1;
+  --planloft-chart-sequential: #e39aa4;
+  --planloft-chart-neutral: #7d746c;
+  --planloft-positive: #92c27b;
+  --planloft-negative: #ee8e94;
+  --planloft-caution: #d8b25a;
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --planloft-paper: #ffffff;
+    --planloft-ink: #2a221d;
+    --planloft-muted: #6b625b;
+    --planloft-surface: #efedea;
+    --planloft-rule: #dad6d0;
+    --planloft-accent: #8c2f39;
+    --planloft-accent-contrast: #ffffff;
+    --planloft-code-paper: #edebe7;
+    --planloft-code-ink: #2a221d;
+    --planloft-chart-1: #8c2f39;
+    --planloft-chart-2: #2f5f8a;
+    --planloft-chart-3: #4c7a3a;
+    --planloft-chart-4: #8d6110;
+    --planloft-chart-5: #6a4f9e;
+    --planloft-chart-6: #2c8282;
+    --planloft-chart-sequential: #8c2f39;
+    --planloft-chart-neutral: #91877d;
+    --planloft-positive: #3f7a3a;
+    --planloft-negative: #a82f38;
+    --planloft-caution: #8d6110;
+  }
+}
+
+
+body:where(:has(> .planloft-plan > .planloft-prose)) {
+  margin: 0;
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  -webkit-text-size-adjust: 100%;
+}
+:where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.5rem 7rem; }
+:where(.planloft-prose) {
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-body, system-ui, sans-serif);
+  font-size: var(--planloft-font-size, 17px);
+  line-height: var(--planloft-line-height, 1.6);
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+:where(.planloft-prose) *, :where(.planloft-prose) *::before, :where(.planloft-prose) *::after { box-sizing: border-box; }
+:where(.planloft-prose) > :first-child { margin-top: 0; }
+:where(.planloft-prose) > :last-child { margin-bottom: 0; }
+
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-heading, var(--planloft-font-body, system-ui, sans-serif));
+  font-weight: var(--planloft-heading-weight, 650);
+  line-height: var(--planloft-heading-line-height, 1.2);
+  letter-spacing: var(--planloft-heading-tracking, 0);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+:where(.planloft-prose) h1 { margin: 0 0 0.6em; font-size: var(--planloft-h1-size, 2.2em); }
+:where(.planloft-prose) h2 { margin: 1.8em 0 0.5em; font-size: var(--planloft-h2-size, 1.5em); }
+:where(.planloft-prose) h3 { margin: 1.6em 0 0.45em; font-size: var(--planloft-h3-size, 1.18em); }
+:where(.planloft-prose) h4 { margin: 1.5em 0 0.4em; font-size: 1em; }
+:where(.planloft-prose) h5 { margin: 1.4em 0 0.35em; font-size: 1em; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) h6 { margin: 1.4em 0 0.35em; font-size: 1em; font-weight: 500; font-style: italic; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) :is(h1, h2, h3) + :is(h2, h3, h4) { margin-top: 0.8em; }
+/* A linked heading keeps the heading's colour and carries a thin accent underline, so
+   it reads as a link without hover; hover strengthens the line. */
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: color-mix(in srgb, var(--planloft-accent, LinkText) 55%, transparent);
+  text-underline-offset: 0.14em;
+}
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a:hover { text-decoration-color: var(--planloft-accent, LinkText); }
+/* The paragraph after the title is the summary; it reads a step larger and quieter. */
+:where(.planloft-prose) h1 + p { font-size: 1.12em; color: var(--planloft-muted, GrayText); }
+
+:where(.planloft-prose) p { margin: 0 0 1.2em; text-wrap: pretty; }
+:where(.planloft-prose) :is(ul, ol) { margin: 0 0 1.2em; padding-left: 1.6em; }
+:where(.planloft-prose) li { margin: 0.3em 0; }
+:where(.planloft-prose) li > p { margin-bottom: 0.6em; }
+:where(.planloft-prose) li :is(ul, ol) { margin: 0.3em 0 0.4em; }
+:where(.planloft-prose) li::marker { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.2em; }
+:where(.planloft-prose) li > input[type="checkbox"] { margin: 0 0.55em 0 0; vertical-align: -0.1em; accent-color: var(--planloft-accent, currentColor); }
+:where(.planloft-prose) dl { margin: 0 0 1.2em; }
+:where(.planloft-prose) dt { font-weight: var(--planloft-heading-weight, 650); }
+:where(.planloft-prose) dd { margin: 0 0 0.6em 1.6em; }
+
+:where(.planloft-prose) a {
+  color: var(--planloft-accent, LinkText);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+:where(.planloft-prose) a:hover { text-decoration-color: currentColor; }
+:where(.planloft-prose) strong { font-weight: 700; }
+:where(.planloft-prose) mark { padding: 0 0.15em; background: color-mix(in srgb, var(--planloft-caution, #b98100) 28%, var(--planloft-paper, Canvas)); color: inherit; }
+:where(.planloft-prose) del { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; }
+:where(.planloft-prose) :is(sup, sub) { font-size: 0.78em; line-height: 0; }
+:where(.planloft-prose) small { font-size: 0.86em; }
+
+:where(.planloft-prose) :is(code, kbd, samp, pre) {
+  font-family: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  font-size: var(--planloft-code-size, 0.88em);
+}
+:where(.planloft-prose) code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+}
+:where(.planloft-prose) pre {
+  margin: 1.4em 0;
+  padding: 0.95em 1.1em;
+  overflow-x: auto;
+  border-radius: 4px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+  line-height: 1.55;
+  tab-size: 2;
+}
+:where(.planloft-prose) pre code { padding: 0; border-radius: 0; background: transparent; color: inherit; font-size: 1em; }
+:where(.planloft-prose) kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--planloft-surface, color-mix(in srgb, CanvasText 5%, Canvas));
+  font-size: 0.82em;
+}
+
+:where(.planloft-prose) blockquote {
+  margin: 1.4em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  color: var(--planloft-muted, GrayText);
+}
+:where(.planloft-prose) blockquote > :last-child { margin-bottom: 0; }
+:where(.planloft-prose) blockquote cite { font-style: normal; }
+
+/* Tables keep their natural width and scroll sideways instead of breaking the page. */
+:where(.planloft-prose) table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  line-height: 1.45;
+  font-size: 0.94em;
+}
+:where(.planloft-prose) :is(th, td) {
+  padding: 0.45em 1.1em 0.45em 0;
+  border-bottom: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  text-align: left;
+  vertical-align: top;
+}
+:where(.planloft-prose) tr > :last-child { padding-right: 0; }
+:where(.planloft-prose) thead th { font-weight: var(--planloft-heading-weight, 650); border-bottom: 2px solid var(--planloft-ink, CanvasText); }
+:where(.planloft-prose) tbody th { font-weight: 600; }
+:where(.planloft-prose) td:has(> :is(code, kbd):only-child) { white-space: nowrap; }
+
+:where(.planloft-prose) hr { height: 0; margin: 2.8em 0; border: 0; border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas)); }
+:where(.planloft-prose) img, :where(.planloft-prose) video, :where(.planloft-prose) svg:not(.pl-chart__svg) { max-width: 100%; height: auto; }
+:where(.planloft-prose) figure { margin: 1.6em 0; }
+:where(.planloft-prose) figcaption { margin-top: 0.5em; color: var(--planloft-muted, GrayText); font-size: 0.9em; }
+:where(.planloft-prose) details {
+  margin: 1.2em 0;
+  padding: 0.6em 0.9em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-radius: 4px;
+}
+:where(.planloft-prose) summary { cursor: pointer; font-weight: 600; }
+:where(.planloft-prose) details[open] > summary { margin-bottom: 0.5em; }
+
+:where(.planloft-prose) ::selection { background: color-mix(in srgb, var(--planloft-accent, Highlight) 24%, transparent); }
+:where(.planloft-prose) :focus-visible { outline: 2px solid var(--planloft-accent, currentColor); outline-offset: 3px; }
+:where(.planloft-plan) > .planloft-comments {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+}
+
+@media (max-width: 40rem) {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.25rem 5rem; }
+  :where(.planloft-prose) { font-size: calc(var(--planloft-font-size, 17px) * 0.94); }
+  :where(.planloft-prose) h1 { font-size: calc(var(--planloft-h1-size, 2.2em) * 0.82); }
+}
+@media print {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 0; }
+  :where(.planloft-prose) { font-size: 11pt; }
+  :where(.planloft-prose) a { text-decoration-color: currentColor; }
+  :where(.planloft-prose) :is(pre, blockquote, table, figure) { break-inside: avoid; }
+}
+
+
+.pl-callout, .pl-stats, .pl-stat, .pl-status, .pl-badge, .pl-checklist, .pl-todo, .pl-timeline, .pl-milestone, .pl-chart, .pl-sparkline, .pl-table, .pl-scroll, .pl-tip {
+  --pl-ink: var(--planloft-ink, CanvasText);
+  --pl-paper: var(--planloft-paper, Canvas);
+  --pl-muted: var(--planloft-muted, color-mix(in srgb, var(--pl-ink) 62%, var(--pl-paper)));
+  --pl-surface: var(--planloft-surface, color-mix(in srgb, var(--pl-ink) 5%, var(--pl-paper)));
+  --pl-rule: var(--planloft-rule, color-mix(in srgb, var(--pl-ink) 16%, var(--pl-paper)));
+  --pl-accent: var(--planloft-accent, var(--pl-ink));
+  --pl-accent-contrast: var(--planloft-accent-contrast, var(--pl-paper));
+  --pl-series-1: var(--planloft-chart-1, #2a78d6);
+  --pl-series-2: var(--planloft-chart-2, #eb6834);
+  --pl-series-3: var(--planloft-chart-3, #1baf7a);
+  --pl-series-4: var(--planloft-chart-4, #6250d6);
+  --pl-series-5: var(--planloft-chart-5, #e87ba4);
+  --pl-series-6: var(--planloft-chart-6, #eda100);
+  --pl-sequential: var(--planloft-chart-sequential, var(--pl-series-1));
+  --pl-neutral: var(--planloft-chart-neutral, color-mix(in srgb, var(--pl-ink) 52%, var(--pl-paper)));
+  --pl-positive: var(--planloft-positive, #1f8a52);
+  --pl-negative: var(--planloft-negative, #c8412b);
+  --pl-caution: var(--planloft-caution, #b98100);
+  --pl-font-body: var(--planloft-font-body, inherit);
+  --pl-font-heading: var(--planloft-font-heading, var(--pl-font-body));
+  --pl-font-mono: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  --pl-heading-weight: var(--planloft-heading-weight, 650);
+  --pl-radius: 6px;
+}
+
+.pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Hidden chart tables must not become keyboard-focusable scroll containers. */
+.pl-chart__data table { display: table; max-width: none; overflow: visible; }
+.pl-scroll { max-width: 100%; overflow-x: auto; }
+.pl-scroll > table { display: table; width: 100%; max-width: none; margin: 0; overflow: visible; }
+.pl-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Callout */
+.pl-callout {
+  --pl-tone: var(--pl-accent);
+  margin: 1.6em 0;
+  padding: 0.85em 1.1em 0.9em;
+  border-inline-start: 3px solid var(--pl-tone);
+  border-radius: 0 var(--pl-radius) var(--pl-radius) 0;
+  background: color-mix(in srgb, var(--pl-tone) 7%, var(--pl-paper));
+}
+.pl-callout[data-tone="note"] { --pl-tone: var(--pl-muted); }
+.pl-callout[data-tone="tip"] { --pl-tone: var(--pl-positive); }
+.pl-callout[data-tone="warning"] { --pl-tone: var(--pl-caution); }
+.pl-callout[data-tone="risk"] { --pl-tone: var(--pl-negative); }
+.pl-callout[data-tone="decision"] { --pl-tone: var(--pl-accent); }
+.pl-callout__heading {
+  font-family: var(--pl-font-heading);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15em 0.6em;
+  align-items: baseline;
+  margin: 0 0 0.35em;
+  line-height: 1.35;
+}
+.pl-callout__tone { font-weight: var(--pl-heading-weight); }
+.pl-callout__title { font-weight: var(--pl-heading-weight); }
+.pl-callout__body > :first-child { margin-top: 0; }
+.pl-callout__body > :last-child { margin-bottom: 0; }
+
+/* Stat and Stats */
+.pl-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  gap: 1.25rem 2rem;
+  margin: 1.75em 0;
+}
+.pl-stat { min-width: 0; padding-top: 0.7rem; border-top: 1px solid var(--pl-rule); }
+.pl-stats > .pl-stat { margin: 0; }
+.pl-stat__label { margin: 0; color: var(--pl-muted); font-size: 0.86em; line-height: 1.35; }
+.pl-stat__value {
+  font-family: var(--pl-font-heading);
+  margin: 0.15rem 0 0.1rem;
+  font-size: 2em;
+  font-weight: var(--pl-heading-weight);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+}
+.pl-stat__change { margin: 0; font-size: 0.86em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pl-stat__change[data-assessment="good"] .pl-stat__arrow { color: var(--pl-positive); }
+.pl-stat__change[data-assessment="bad"] .pl-stat__arrow { color: var(--pl-negative); }
+.pl-stat__arrow { display: inline-block; margin-inline-end: 0.2em; }
+.pl-stat__period { color: var(--pl-muted); font-weight: 400; }
+.pl-stat .pl-sparkline { display: block; width: 6.5em; height: 1.6em; margin-top: 0.5rem; color: var(--pl-muted); }
+.pl-stat__note { margin-top: 0.4rem; color: var(--pl-muted); font-size: 0.86em; }
+.pl-stat__note > :first-child { margin-top: 0; }
+.pl-stat__note > :last-child { margin-bottom: 0; }
+
+/* Status */
+.pl-status {
+  --pl-tone: var(--pl-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.05em 0.6em 0.1em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--pl-tone) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pl-tone) 10%, var(--pl-paper));
+  color: var(--pl-ink);
+  font-size: 0.82em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: 0.08em;
+}
+.pl-status::before { color: var(--pl-tone); font-size: 0.85em; line-height: 1; }
+.pl-status[data-tone="done"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="done"]::before { content: "\2713"; }
+.pl-status[data-tone="on-track"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="on-track"]::before { content: "\25CF"; }
+.pl-status[data-tone="at-risk"] { --pl-tone: var(--pl-caution); }
+.pl-status[data-tone="at-risk"]::before { content: "\25B2"; }
+.pl-status[data-tone="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-status[data-tone="blocked"]::before { content: "\25A0"; }
+.pl-status[data-tone="not-started"]::before { content: "\25CB"; }
+
+/* Todo and Checklist */
+.pl-checklist { margin: 1.5em 0; }
+.pl-checklist__title { margin: 0 0 0.35em; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); }
+.pl-todo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 0.7em;
+  align-items: start;
+  margin: 0;
+  padding: 0.5em 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+.pl-checklist > .pl-todo:first-of-type { border-top: 1px solid var(--pl-rule); }
+/* Drawn by hand: a native disabled checkbox renders as a grey block that reads as
+   checked. Checked is a filled inset square, legible in both modes and in print. */
+.pl-todo__box {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0.25em 0 0;
+  border: 1.5px solid color-mix(in srgb, var(--pl-ink) 55%, var(--pl-paper));
+  border-radius: 4px;
+  background: var(--pl-paper);
+  font: inherit;
+}
+.pl-todo__box:checked {
+  border-color: var(--pl-accent);
+  background: var(--pl-accent);
+  box-shadow: inset 0 0 0 2.5px var(--pl-accent-contrast);
+}
+.pl-todo__box:disabled { border-style: dashed; }
+.pl-todo__box:checked:disabled { border-style: solid; }
+.pl-todo__box:not(:disabled) { cursor: pointer; }
+.pl-todo__box:not(:disabled):hover { border-color: var(--pl-accent); }
+.pl-todo__box:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 2px; }
+.pl-todo__text { display: flex; flex-wrap: wrap; gap: 0.1em 1em; align-items: baseline; min-width: 0; }
+.pl-todo__label { flex: 1 1 14em; overflow-wrap: anywhere; }
+.pl-todo__box:not(:disabled) + .pl-todo__text .pl-todo__label { cursor: pointer; }
+.pl-todo:has(.pl-todo__box:checked) .pl-todo__label {
+  color: var(--pl-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.pl-todo__meta {
+  display: inline-flex;
+  gap: 0.9em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pl-todo__owner { font-weight: 600; }
+.pl-todo__detail { flex-basis: 100%; color: var(--pl-muted); font-size: 0.92em; }
+.pl-todo__detail > :first-child { margin-top: 0.2em; }
+.pl-todo__detail > :last-child { margin-bottom: 0; }
+
+/* Timeline and Milestone */
+.pl-timeline { margin: 1.75em 0; padding: 0; list-style: none; }
+.pl-milestone {
+  --pl-tone: var(--pl-rule);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  margin: 0;
+  padding: 0 0 1.35em;
+}
+.pl-milestone::marker { content: none; }
+.pl-milestone::before {
+  content: "";
+  position: absolute;
+  top: 0.95em;
+  bottom: -0.35em;
+  left: calc(0.45rem - 0.5px);
+  width: 1px;
+  background: var(--pl-rule);
+}
+.pl-milestone:last-child { padding-bottom: 0; }
+.pl-milestone:last-child::before { display: none; }
+.pl-milestone[data-state="done"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="done"]::before { background: var(--pl-accent); }
+.pl-milestone[data-state="active"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-milestone__node {
+  position: relative;
+  z-index: 1;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.3em;
+  border: 2px solid var(--pl-tone);
+  border-radius: 50%;
+  background: var(--pl-paper);
+}
+.pl-milestone[data-state="done"] .pl-milestone__node { background: var(--pl-tone); }
+.pl-milestone[data-state="active"] .pl-milestone__node {
+  box-shadow: inset 0 0 0 2px var(--pl-paper), inset 0 0 0 5px var(--pl-tone);
+}
+.pl-milestone[data-state="blocked"] .pl-milestone__node { border-radius: 2px; background: var(--pl-tone); }
+.pl-milestone__head { display: flex; flex-wrap: wrap; gap: 0 0.75em; align-items: baseline; grid-column: 2; }
+.pl-milestone__date {
+  flex-basis: 100%;
+  color: var(--pl-muted);
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+.pl-milestone__title { font-weight: var(--pl-heading-weight); line-height: 1.4; }
+.pl-milestone__state { color: var(--pl-muted); font-size: 0.82em; }
+.pl-milestone[data-state="active"] .pl-milestone__state,
+.pl-milestone[data-state="blocked"] .pl-milestone__state { color: var(--pl-ink); font-weight: 600; }
+.pl-milestone__body { grid-column: 2; margin-top: 0.25em; color: var(--pl-muted); }
+.pl-milestone__body > :first-child { margin-top: 0; }
+.pl-milestone__body > :last-child { margin-bottom: 0; }
+@media (min-width: 48rem) {
+  .pl-milestone { grid-template-columns: 7.5rem 1.6rem minmax(0, 1fr); }
+  .pl-milestone::before { left: calc(7.5rem + 0.45rem - 0.5px); }
+  .pl-milestone__node { grid-column: 2; grid-row: 1; }
+  .pl-milestone__head { grid-column: 3; grid-row: 1; }
+  .pl-milestone__date {
+    position: absolute;
+    left: 0;
+    width: 6.75rem;
+    padding-top: 0.1em;
+    text-align: right;
+  }
+  .pl-milestone__body { grid-column: 3; }
+}
+
+/* Charts */
+.pl-chart {
+  margin: 2em 0;
+  color: var(--pl-ink);
+  font-family: var(--pl-font-body);
+}
+.pl-chart__title { margin: 0 0 0.6rem; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); line-height: 1.35; }
+.pl-chart__plot { position: relative; container: pl-plot / inline-size; }
+.pl-chart__frame { display: none; }
+.pl-chart__frame[data-frame="compact"],
+.pl-chart__frame[data-frame="fixed"] { display: block; }
+@container pl-plot (min-width: 30rem) {
+  .pl-chart__frame[data-frame="compact"] { display: none; }
+  .pl-chart__frame[data-frame="regular"] { display: block; }
+}
+@container pl-plot (min-width: 56rem) {
+  .pl-chart__frame[data-frame="regular"] { display: none; }
+  .pl-chart__frame[data-frame="wide"] { display: block; }
+}
+.pl-chart__svg { display: block; width: 100%; height: auto; font-variant-numeric: tabular-nums; }
+.pl-chart__caption {
+  margin: 0.6rem 0 0;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  line-height: 1.5;
+}
+.pl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.25rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86em;
+  line-height: 1.4;
+}
+.pl-legend__item { display: inline-flex; gap: 0.45em; align-items: center; margin: 0; }
+.pl-legend__item::marker { content: none; }
+.pl-legend__value { color: var(--pl-muted); font-variant-numeric: tabular-nums; }
+.pl-swatch { flex: none; display: inline-block; background: var(--pl-swatch); }
+.pl-swatch--block { width: 0.75em; height: 0.75em; border-radius: 2px; }
+.pl-swatch--line { width: 1.1em; height: 2px; border-radius: 1px; }
+
+/* Pointer targets stay invisible; keyboard focus keeps an outline for navigation. */
+.pl-chart__hits { fill: transparent; stroke: none; }
+.pl-hit { outline: none; }
+.pl-hit:focus-visible { stroke: var(--pl-ink); stroke-width: 1.5; }
+/* Tooltip. A hairline and a short black shadow lift it off the chart; an ink-tinted
+   shadow would glow in dark themes. A mark with its own colour gets a key swatch on
+   the first row. Column hits cover every series and carry no colour. */
+.pl-tip {
+  position: fixed;
+  z-index: 20;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 6.5rem;
+  max-width: 18rem;
+  padding: 0.4rem 0.6rem 0.45rem;
+  border: 1px solid var(--pl-rule);
+  border-radius: var(--pl-radius);
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 6px 16px -6px rgb(0 0 0 / 0.18);
+  font-family: var(--pl-font-body);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.pl-tip[hidden] { display: none; }
+.pl-tip__title { margin-bottom: 0.05rem; font-weight: 600; }
+.pl-tip__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1.25em; }
+.pl-tip__label { display: inline-flex; align-items: baseline; gap: 0.45em; min-width: 0; color: var(--pl-muted); }
+.pl-tip[data-keyed] .pl-tip__title + .pl-tip__row .pl-tip__label::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 2px;
+  background: var(--pl-tip-color);
+}
+.pl-tip__value { font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.pl-chart--donut {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 2rem;
+  align-items: center;
+}
+.pl-chart--donut > .pl-chart__plot { grid-row: 2; width: min(100%, 13.5rem); }
+.pl-chart--donut > .pl-legend {
+  grid-row: 3;
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0 0;
+}
+.pl-chart--donut .pl-legend__item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.6em; }
+.pl-chart--donut > .pl-chart__caption { grid-column: 1 / -1; }
+@media (min-width: 40rem) {
+  .pl-chart--donut { grid-template-columns: 13.5rem minmax(0, 24rem); }
+  .pl-chart--donut > .pl-chart__title { grid-column: 1 / -1; }
+  .pl-chart--donut > .pl-chart__plot { grid-row: 2; grid-column: 1; }
+  .pl-chart--donut > .pl-legend { grid-row: 2; grid-column: 2; margin: 0; }
+}
+.pl-chart__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  text-align: center;
+  line-height: 1.15;
+  pointer-events: none;
+}
+.pl-chart__center-value { font-size: 1.45em; font-weight: var(--pl-heading-weight); }
+.pl-chart__center-label { color: var(--pl-muted); font-size: 0.8em; }
+
+.pl-sparkline {
+  display: inline-block;
+  width: 4.5em;
+  height: 1.1em;
+  color: var(--pl-accent);
+  vertical-align: -0.15em;
+}
+.pl-sparkline__svg { width: 100%; height: 100%; }
+
+/* DataTable */
+.pl-table { margin: 1.75em 0; }
+.pl-table caption {
+  caption-side: bottom;
+  padding-top: 0.6em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  text-align: left;
+}
+.pl-table tbody th { font-weight: 600; }
+.pl-table th[aria-sort]::after { content: " \2193"; color: var(--pl-muted); font-weight: 400; }
+.pl-table th[aria-sort="ascending"]::after { content: " \2191"; }
+.pl-table tfoot th,
+.pl-table tfoot td { border-top: 2px solid var(--pl-ink); font-weight: var(--pl-heading-weight); }
+
+
+/* Badge */
+.pl-badge {
+  --pl-badge-hue: var(--pl-muted);
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.04em 0.6em 0.08em;
+  border: 1px solid color-mix(in oklab, var(--pl-badge-hue) 30%, var(--pl-paper));
+  border-radius: 0.8em;
+  background: color-mix(in oklab, var(--pl-badge-hue) 14%, var(--pl-paper));
+  color: color-mix(in oklab, var(--pl-badge-hue) 55%, var(--pl-ink));
+  font-family: var(--pl-font-body);
+  font-size: 0.78em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.pl-badge[data-color="red"] { --pl-badge-hue: #d1453b; }
+.pl-badge[data-color="orange"] { --pl-badge-hue: #dd7020; }
+.pl-badge[data-color="yellow"] { --pl-badge-hue: #b98d00; }
+.pl-badge[data-color="green"] { --pl-badge-hue: #2f9a4e; }
+.pl-badge[data-color="teal"] { --pl-badge-hue: #17958f; }
+.pl-badge[data-color="blue"] { --pl-badge-hue: #2f74d0; }
+.pl-badge[data-color="purple"] { --pl-badge-hue: #7a55d4; }
+.pl-badge[data-color="pink"] { --pl-badge-hue: #d24f8e; }
+.pl-badge[data-color="accent"] { --pl-badge-hue: var(--pl-accent); }
+@media (forced-colors: active) {
+  .pl-badge { border-color: CanvasText; }
+}
+
+@media print {
+  .pl-chart,
+  .pl-table,
+  .pl-callout,
+  .pl-stat,
+  .pl-milestone,
+  .pl-todo { break-inside: avoid; }
+  .pl-tip { display: none; }
+}
+@media (forced-colors: active) {
+  .pl-swatch,
+  .pl-chart__svg,
+  .pl-sparkline__svg { forced-color-adjust: none; }
+  .pl-callout { border-inline-start-color: CanvasText; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-controls {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  color: var(--planloft-control-ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 0;
+}
+.planloft-theme-selector,
+.planloft-layout-selector {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.planloft-layout-selector[hidden] { display: none; }
+.planloft-theme-option,
+.planloft-layout-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover,
+.planloft-layout-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"],
+.planloft-layout-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg,
+.planloft-layout-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible,
+.planloft-layout-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-controls { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option, .planloft-layout-option { transition: none; }
+}
+@media print {
+  .planloft-controls { display: none; }
+}
+
+:root { --planloft-gutter: clamp(1.25rem, 5vw, 3rem); }
+.planloft-plan:has(> article) {
+  container: planloft-plan / inline-size;
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-bleed, 0rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+.planloft-plan:has(> article) > article {
+  --planloft-wide: min(var(--planloft-bleed, 0rem), max(0px, (100cqw - var(--planloft-measure, 44rem)) / 2));
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) > .planloft-comments {
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) :is(article, section) > :is(pre, figure, .pl-stats) {
+  margin-inline: calc(-1 * var(--planloft-wide, 0px));
+  max-width: calc(100% + 2 * var(--planloft-wide, 0px));
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > article {
+  --planloft-wide: 0px;
+  max-width: none;
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+html > body:not(:has(.planloft-plan > article)) {
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) > :is(main, article) {
+  max-width: none;
+}
+@media print {
+  html > body:not(:has(.planloft-plan > article)),
+  :root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article),
+  .planloft-plan:has(> article) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > article,
+  .planloft-plan:has(> article) > article { --planloft-wide: 0px; max-width: none; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments,
+  .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+}
+</style>
+<meta name="robots" content="noindex, nofollow" />
+<!-- planloft-render:head:end -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>uac v2 agent eval</title>
+<style>
+  :root { --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --good: #0ca30c; --critical: #d03b3b; --warning: #fab219; --serious: #ec835a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; } }
+  :root[data-planloft-color-scheme="dark"] { --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; }
+  body { margin: 0; background: var(--planloft-paper); color: var(--planloft-ink); font: var(--planloft-font-size)/var(--planloft-line-height) var(--planloft-font-body); }
+  main { padding: 0 16px 64px; }
+  article { max-width: 980px; margin: 0 auto; }
+  h1 { font-family: var(--planloft-font-heading); font-weight: var(--planloft-heading-weight); font-size: 2.4em; line-height: var(--planloft-heading-line-height); margin: 2.4em 0 .3em; }
+  h2 { font-family: var(--planloft-font-heading); font-weight: var(--planloft-heading-weight); font-size: 1.55em; line-height: 1.2; margin: 2.2em 0 .5em; border-top: 1px solid var(--planloft-rule); padding-top: .9em; }
+  h3 { font-size: 1.1em; margin: 1.4em 0 .3em; }
+  p, li { max-width: 72ch; }
+  .lede { font-size: 1.12em; color: var(--planloft-muted); }
+  code { font-family: var(--planloft-font-mono); font-size: var(--planloft-code-size); background: var(--planloft-code-paper); color: var(--planloft-code-ink); padding: .08em .3em; border-radius: 4px; }
+  a { color: var(--planloft-accent); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 1.4em 0; }
+  .tile { background: var(--planloft-surface); border-radius: 10px; padding: 14px 16px; }
+  .tile .n { font-size: 2em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .tile .n small { font-size: .45em; color: var(--planloft-muted); }
+  .tile .l { color: var(--planloft-muted); font-size: .82em; line-height: 1.35; }
+  table { border-collapse: collapse; width: 100%; font-size: .86em; margin: .8em 0 1.2em; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--planloft-rule); vertical-align: top; }
+  th { color: var(--planloft-muted); font-weight: normal; font-size: .9em; }
+  td code { white-space: normal; overflow-wrap: anywhere; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .scroll { overflow-x: auto; }
+  .chart { position: relative; margin: .6em 0 1.2em; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart text { fill: var(--planloft-muted); font: 14px var(--planloft-font-body); }
+  .chart .lbl { fill: var(--planloft-ink); }
+  .tip { position: absolute; pointer-events: none; background: var(--planloft-paper); color: var(--planloft-ink); border: 1px solid var(--planloft-rule); border-radius: 8px; padding: 6px 9px; font-size: 12px; line-height: 1.45; box-shadow: 0 4px 16px rgb(0 0 0 / .12); opacity: 0; transition: opacity .08s; z-index: 2; max-width: 340px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: .82em; color: var(--planloft-muted); margin: .2em 0 .4em; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 10px; height: 10px; border-radius: 3px; display: inline-block; background: var(--c); }
+  .sw.hollow { background: transparent; border: 2px solid var(--c); width: 8px; height: 8px; }
+  .heat { border-collapse: separate; border-spacing: 2px; font-size: .8em; }
+  .heat th, .heat td { border: 0; padding: 0; }
+  .heat th { padding: 4px 6px; text-align: center; vertical-align: bottom; line-height: 1.25; }
+  .heat th.row { text-align: left; white-space: nowrap; padding-right: 10px; vertical-align: middle; }
+  .heat td { width: 64px; height: 30px; text-align: center; vertical-align: middle; border-radius: 4px; cursor: default; font-size: .95em; }
+  .heat td.pass { background: color-mix(in srgb, var(--good) 22%, transparent); }
+  .heat td.fail { background: color-mix(in srgb, var(--critical) 20%, transparent); }
+  .heat td.shape { background: color-mix(in srgb, var(--warning) 26%, transparent); }
+  .heat td .ic { font-weight: bold; }
+  .heat td.pass .ic { color: var(--good); } .heat td.fail .ic { color: var(--critical); } .heat td.shape .ic { color: var(--planloft-caution); }
+  .heat th.gap, .heat td.gap { width: 10px; background: none; }
+  details { margin: .4em 0 1em; } summary { cursor: pointer; color: var(--planloft-muted); font-size: .9em; }
+  .note { border-left: 3px solid var(--planloft-accent); padding: .3em 0 .3em 14px; }
+</style>
+</head>
+<body><!-- planloft-render:controls:start -->
+<div class="planloft-controls" data-planloft-ignore>
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<div class="planloft-layout-selector" role="group" aria-label="Page width" data-planloft-layout-selector hidden>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="reading" aria-label="Reading width" title="Reading width" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4.5v15M16 4.5v15M3.5 4.5h17M3.5 19.5h17"/><path d="M10.5 9h3M10.5 12h3M10.5 15h3"/></svg>
+  </button>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="full" aria-label="Full width" title="Full width" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="1.5"/><path d="M6.5 9h11M6.5 12h11M6.5 15h11"/></svg>
+  </button>
+</div>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+(() => {
+  const initialize = () => {
+    const root = document.documentElement;
+    const group = document.querySelector("[data-planloft-layout-selector]");
+    const options = Array.from(group.querySelectorAll("[data-planloft-layout-option]"));
+    const key = "planloft-layout";
+    let saved = null;
+    try { saved = localStorage.getItem(key); } catch {}
+    let selected = saved === "full" ? "full" : "reading";
+    const update = () => {
+      if (selected === "reading") delete root.dataset.planloftLayout;
+      else root.dataset.planloftLayout = selected;
+      for (const option of options) {
+        option.setAttribute("aria-pressed", String(option.dataset.planloftLayoutOption === selected));
+      }
+    };
+    for (const option of options) option.addEventListener("click", () => {
+      selected = option.dataset.planloftLayoutOption;
+      try { localStorage.setItem(key, selected); } catch {}
+      update();
+    });
+    update();
+    group.hidden = false;
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  else initialize();
+})();
+</script>
+<script>
+(() => {
+  const HIT = ".pl-chart__hits > *";
+  let tip = null;
+  let current = null;
+  const hitOf = (event) => (event.target instanceof Element ? event.target.closest(HIT) : null);
+  const hide = () => {
+    if (tip) tip.hidden = true;
+    current = null;
+  };
+  const show = (hit, pointerY) => {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "pl-tip";
+      tip.setAttribute("data-planloft-ignore", "");
+      tip.setAttribute("aria-hidden", "true");
+      document.body.append(tip);
+    }
+    const [title, ...rows] = (hit.getAttribute("aria-label") || "").split("\n");
+    tip.replaceChildren();
+    const heading = document.createElement("div");
+    heading.className = "pl-tip__title";
+    heading.textContent = title;
+    tip.append(heading);
+    for (const row of rows) {
+      const split = row.lastIndexOf(": ");
+      const line = document.createElement("div");
+      line.className = "pl-tip__row";
+      const label = document.createElement("span");
+      label.className = "pl-tip__label";
+      label.textContent = split < 0 ? row : row.slice(0, split);
+      const value = document.createElement("span");
+      value.className = "pl-tip__value";
+      value.textContent = split < 0 ? "" : row.slice(split + 2);
+      line.append(label, value);
+      tip.append(line);
+    }
+    const color = hit.dataset.plColor;
+    tip.toggleAttribute("data-keyed", Boolean(color) && rows.length === 1);
+    if (color) tip.style.setProperty("--pl-tip-color", color);
+    tip.hidden = false;
+    current = hit;
+    place(hit, pointerY);
+  };
+  const place = (hit, pointerY) => {
+    // Above the mark, centred, kept inside the viewport; below it when the top is cut off.
+    // A column spans the whole plot, so it anchors to the pointer instead of its top.
+    const box = hit.getBoundingClientRect();
+    const column = hit.classList.contains("pl-hit--column") && pointerY !== undefined;
+    const anchorY = column ? pointerY : box.top;
+    // Leave room for the value label above a mark.
+    const gap = column ? 10 : 24;
+    const width = tip.offsetWidth;
+    const height = tip.offsetHeight;
+    const left = Math.max(8, Math.min(box.left + box.width / 2 - width / 2, window.innerWidth - width - 8));
+    let top = anchorY - height - gap;
+    if (top < 8) top = (column ? anchorY : box.bottom) + gap;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  };
+  const start = () => {
+    const titles = document.querySelectorAll(".pl-chart__hits > * > title");
+    if (titles.length === 0) return;
+    for (const title of titles) {
+      title.parentNode.setAttribute("aria-label", title.textContent);
+      title.remove();
+    }
+    document.addEventListener("pointerover", (event) => {
+      const hit = event.pointerType === "touch" ? null : hitOf(event);
+      if (hit) show(hit, event.clientY);
+    });
+    document.addEventListener("pointerout", (event) => {
+      if (event.pointerType !== "touch" && hitOf(event) === current) hide();
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch") return;
+      const hit = hitOf(event);
+      if (hit && hit !== current) show(hit, event.clientY);
+      else hide();
+    });
+    document.addEventListener("focusin", (event) => {
+      const hit = hitOf(event);
+      if (hit) show(hit);
+    });
+    document.addEventListener("focusout", (event) => {
+      if (hitOf(event) === current) hide();
+    });
+    const STEPS = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") return hide();
+      const hit = hitOf(event);
+      const step = STEPS[event.key];
+      if (!hit || event.altKey || event.ctrlKey || event.metaKey || (!step && event.key !== "Home" && event.key !== "End")) return;
+      event.preventDefault();
+      const hits = Array.from(hit.parentNode.children);
+      const next = event.key === "Home" ? hits[0] : event.key === "End" ? hits[hits.length - 1] : hits[hits.indexOf(hit) + step];
+      if (!next || next === hit) return;
+      hit.setAttribute("tabindex", "-1");
+      next.setAttribute("tabindex", "0");
+      next.focus();
+    });
+    // Focusing a hit can scroll it into view, so a focused hit keeps its tooltip and
+    // the tooltip moves with it. Hover tooltips close on scroll.
+    window.addEventListener("scroll", () => {
+      if (current && current === document.activeElement) place(current);
+      else hide();
+    }, { passive: true });
+    window.addEventListener("resize", hide);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+</script>
+<!-- planloft-render:controls:end -->
+<main class="planloft-plan">
+<article class="planloft-prose">
+
+<h1>uac v2: agents building real workflows</h1>
+<p class="lede">Three models wrote the 20 ACM workflows from their briefs, with only the llm-tools MCP server as tools. Each saved workflow was then run on the tenant, and its output compared with what the dataset's reference automation returned for the same input.</p>
+
+<div class="tiles" id="tiles"></div>
+
+<p>Same 20 briefs, same harness, same strict scoring, same day. Only the compiler, its MCP tools and the agent prompt differ between v1 and v2. The compiler's own proof (corpus laws, gates, reviews) is the <a href="https://hatims-planloft.vercel.app/uac-v2-compiler/">companion page</a>.</p>
+
+<h2>v1 against v2, brief by brief</h2>
+<div class="chart" id="headline"></div>
+<div class="legend" id="headline-legend"></div>
+<p>Each cell is one run. <b>✓</b> means the output matches the reference's. <b>✗</b> means the run failed, nothing was saved, or the output differs. <b>~</b> means the output has the right shape with different values. Hover a cell to see the verdict, the brief and what the run cost.</p>
+<div class="scroll"><table class="heat" id="heat"></table></div>
+
+<h2>How a run is scored</h2>
+<ul>
+  <li>Each agent runs as a headless CLI in an empty directory: <code>claude -p</code> for Haiku 5.5, <code>codex exec</code> for GPT 6 Luna, <code>opencode run</code> for DeepSeek V4.1 Flash. HOME, CODEX_HOME and XDG point at empty directories, so no global skill, memory or repo doc reaches the agent. A recording proxy sits between the CLI and the MCP server.</li>
+  <li>The agent may test-run its workflow once, and never deploys. The brief's resources (objects, connections, channels) are real ones on the ACM tenant.</li>
+  <li>After the agent stops, the harness triggers the saved workflow with the dataset's input and triggers the reference automation with the same input, then compares the two outputs.</li>
+  <li><b>Pass</b> is <code>match</code> or <code>prose-match</code>. Integers must be equal; other numbers may differ by a relative 1e-9. Free text is compared loosely only at paths the corpus declares as prose (<code>$.remarks</code> on p14, <code>$.result</code> on p19). A right shape with wrong values, a failed run or no saved workflow is a fail.</li>
+  <li>A refusal by the provider (rate limit, free-tier limit) is an infrastructure error, not a fail, and the run is retried. DeepSeek ran on the OpenCode free tier first and fell back to the Go plan when the free tier refused.</li>
+</ul>
+
+<h2>Iterations</h2>
+<p>Each iteration changed the compiler, the MCP tools or the prompt, guided by the previous run's failures. The corpus changed once: after iteration 2, three briefs (p01, p14, p20) were replaced with others from the same dataset. All points are rescored with the final comparator. Muse Spark ran in iterations 3 to 8 and was then dropped to save the OpenCode limit.</p>
+<div class="chart" id="trend"></div>
+<div class="legend" id="trend-legend"></div>
+<details><summary>Iterations, as a table</summary><div class="scroll"><table id="trend-table"></table></div></details>
+
+<h2>Where the final v2 run failed</h2>
+<p>Seven of 60 runs failed. None was rejected by the compiler. Every one compiled, saved and ran, and four of the seven passed in iteration 10.</p>
+<div class="scroll"><table>
+  <thead><tr><th>Run</th><th>What happened</th><th>Whose problem</th></tr></thead>
+  <tbody>
+    <tr><td>p17, all three models</td><td>The reference skips parts with no inventory record; every agent counts them as stock 0. The brief does not say which.</td><td>Dataset: the brief is ambiguous</td></tr>
+    <tr><td>Luna p13</td><td>The dataset gives no input for this case. Luna made the calendar id a required input, so the empty-input run failed. Haiku and DeepSeek hard-coded the calendar and passed.</td><td>Dataset: no test input</td></tr>
+    <tr><td>Luna p19</td><td>The brief names the connection <code>slack | K1</code>, which does not exist. Luna picked <code>Slack_Integration</code>, which cannot see the channel (<code>channel_not_found</code>). The reference uses <code>Slack | DNT | Critical</code>.</td><td>Dataset: the named connection is missing</td></tr>
+    <tr><td>Luna p15</td><td>Took the user id from a storage record instead of the Slack user id, and returned numbers as text.</td><td>Agent</td></tr>
+    <tr><td>Haiku p16</td><td>Returned a different person's record.</td><td>Agent</td></tr>
+  </tbody>
+</table></div>
+
+<h2>Tokens and cost</h2>
+<p>Haiku's cost is the figure Claude Code reports. Luna's and DeepSeek's are computed from <code>prices.json</code> at list prices, since a subscription reports no cost. Input excludes cache reads.</p>
+<div class="scroll"><table id="cost"></table></div>
+
+<h2>The evidence in the repository</h2>
+<p>Everything on this page comes from <code>packages/uac/eval/evidence/2026-11-13/</code>:</p>
+<ul>
+  <li><code>scores.json</code>: the iteration trend and the per-brief matrix behind every chart here.</li>
+  <li><code>runs/&lt;label&gt;/&lt;model&gt;/&lt;case&gt;.json</code>: one record per final run, with the verdict, both outputs, tool calls, time and token usage.</li>
+  <li><code>code/&lt;label&gt;/&lt;model&gt;/&lt;case&gt;.ts</code>: the last source each agent compiled.</li>
+  <li><code>usage.csv</code>: tokens and cost for every run of every iteration.</li>
+</ul>
+<p>To rerun: <code>bun eval/run.ts --label &lt;name&gt; --system docs/agent-prompt.md --models haiku,luna,deepseek</code> from <code>packages/uac</code>, with the MCP server running from <code>packages/llm-tools</code> and a gitignored <code>.local-tenant.json</code> there.</p>
+
+</article>
+</main>
+
+<script type="application/json" id="data">{"v1Label":"v1-baseline-final","v2Label":"v2-final","trendLabels":["v2-iter1","v2-iter2","v2-iter3","v2-iter4","v2-iter5","v2-iter6","v2-iter7","v2-iter8-final","v2-iter9","v2-iter10","v2-final"],"trendNames":["1","2","3","4","5","6","7","8","9","10","final"],"trend":[{"label":"v2-iter1","model":"haiku","runs":20,"pass":8,"save":20,"cost":0.3238},{"label":"v2-iter1","model":"luna","runs":20,"pass":8,"save":18,"cost":0.1692},{"label":"v2-iter2","model":"haiku","runs":20,"pass":11,"save":16,"cost":0.2917},{"label":"v2-iter2","model":"luna","runs":20,"pass":11,"save":18,"cost":0.1476},{"label":"v2-iter3","model":"haiku","runs":20,"pass":17,"save":20,"cost":0.278},{"label":"v2-iter3","model":"luna","runs":20,"pass":15,"save":19,"cost":0.164},{"label":"v2-iter3","model":"deepseek","runs":20,"pass":18,"save":20,"cost":0.77},{"label":"v2-iter3","model":"muse","runs":20,"pass":18,"save":20,"cost":2.4596},{"label":"v2-iter4","model":"haiku","runs":20,"pass":16,"save":20,"cost":0.2685},{"label":"v2-iter4","model":"luna","runs":20,"pass":17,"save":20,"cost":0.1643},{"label":"v2-iter4","model":"deepseek","runs":20,"pass":17,"save":20,"cost":0.9158},{"label":"v2-iter4","model":"muse","runs":20,"pass":17,"save":20,"cost":2.0451},{"label":"v2-iter5","model":"haiku","runs":20,"pass":18,"save":20,"cost":0.288},{"label":"v2-iter5","model":"luna","runs":20,"pass":18,"save":20,"cost":0.1734},{"label":"v2-iter5","model":"deepseek","runs":20,"pass":19,"save":20,"cost":0.9095},{"label":"v2-iter5","model":"muse","runs":20,"pass":19,"save":20,"cost":2.3013},{"label":"v2-iter6","model":"haiku","runs":20,"pass":18,"save":20,"cost":0.2756},{"label":"v2-iter6","model":"luna","runs":20,"pass":17,"save":20,"cost":0.1637},{"label":"v2-iter6","model":"deepseek","runs":20,"pass":17,"save":20,"cost":0.8845},{"label":"v2-iter6","model":"muse","runs":20,"pass":17,"save":20,"cost":2.361},{"label":"v2-iter7","model":"haiku","runs":20,"pass":19,"save":20,"cost":0.3599},{"label":"v2-iter7","model":"luna","runs":20,"pass":18,"save":20,"cost":0.2212},{"label":"v2-iter7","model":"deepseek","runs":20,"pass":19,"save":20,"cost":1.0005},{"label":"v2-iter7","model":"muse","runs":20,"pass":18,"save":20,"cost":2.5386},{"label":"v2-iter8-final","model":"haiku","runs":20,"pass":19,"save":20,"cost":0.5152},{"label":"v2-iter8-final","model":"luna","runs":20,"pass":18,"save":20,"cost":0.2037},{"label":"v2-iter8-final","model":"deepseek","runs":20,"pass":18,"save":20,"cost":0.7421},{"label":"v2-iter8-final","model":"muse","runs":20,"pass":19,"save":20,"cost":2.7438},{"label":"v2-iter9","model":"haiku","runs":20,"pass":18,"save":20,"cost":0.4719},{"label":"v2-iter9","model":"luna","runs":20,"pass":18,"save":19,"cost":0.1999},{"label":"v2-iter9","model":"deepseek","runs":20,"pass":19,"save":20,"cost":0.671},{"label":"v2-iter10","model":"haiku","runs":20,"pass":19,"save":20,"cost":0.4217},{"label":"v2-iter10","model":"luna","runs":20,"pass":18,"save":20,"cost":0.188},{"label":"v2-final","model":"haiku","runs":20,"pass":18,"save":20,"cost":0.2864},{"label":"v2-final","model":"luna","runs":20,"pass":16,"save":20,"cost":0.2041},{"label":"v2-final","model":"deepseek","runs":20,"pass":19,"save":20,"cost":0.8779}],"cases":[{"key":"p01","brief":"Create a callable automation that accepts a user's first name and last name as input. Create a variable named Name, concatenate the first name and last name with a single space between them, store the result in the Name "},{"key":"p02","brief":"Create a callable automation named Fetch Google Sheets Rows. The automation should not require any input. Using the Sheet | K1 Google Sheets connection, retrieve rows from the spreadsheet with ID 1nzZsICTlcSh-iAaMQw4gW-m"},{"key":"p03","brief":"Create a callable automation named Hackathon Team Registration that accepts the team details, including the team name, theme, project details, team size, and up to six team members (name, email, employee ID, PL team, bus"},{"key":"p04","brief":"Create a callable automation with input schema {} that retrieves data by joining the order_eval and customer_eval entities using the customer ID. Process the joined records in a custom script to calculate a 10% loyalty d"},{"key":"p05","brief":"Create a callable automation named Assign Employee Project. The automation should accept the employee's name, role, and Gender as input. Based on the provided values, assign project P1 if the employee is an Intern and Fe"},{"key":"p06","brief":"Create a callable automation named Send Payment Confirmation. The automation should accept a checkout payload containing the transaction ID, customer email, payment amount, and payment status. If the payment_status is \"S"},{"key":"p07","brief":"Create a callable automation that accepts a single input parameter named `customer_id` and determines the customer's loyalty tier based on purchase history. The automation must use the **customerSpend** object as its dat"},{"key":"p08","brief":"Create an event-driven automation that triggers whenever a new email is received in the configured Gmail inbox and the email contains one or more attachments. Before processing, evaluate whether the email matches at leas"},{"key":"p09","brief":"Create a callable automation named Customer Orders Lookup that accepts a customer ID and order status as input. Use an Analytics node to retrieve all orders where the customer_id matches the provided customer ID and the "},{"key":"p10","brief":"Create a callable automation that accepts a list of warehouse inventory items and identifies products that require replenishment. The automation should process each inventory record by calculating the **Net Stock** as `q"},{"key":"p11","brief":"Create a callable automation that counts the number of PDF and Word document files stored in the system. The automation requires no inputs, accepting an empty input schema matching {}. First, use a Count Records storage "},{"key":"p12","brief":"Create a callable automation named Count Support Tickets. The automation should accept an account ID and status as input, count all records in the Support Tickets object where both the Account ID and Status match the pro"},{"key":"p13","brief":"Build a callable automation that reads events from a specified Google Calendar and identifies all conflicting and overlapping meetings. Group meetings that overlap with each other and return a structured list for each co"},{"key":"p14","brief":"\"Create a callable automation that accepts an `applicant_id` as input. use Fetch Records to Retrieve the corresponding applicant record from the **LoanDataEval** object and evaluate the applicant's loan eligibility. Calc"},{"key":"p15","brief":"Create a callable automation that retrieves and aggregates user and client information based on a specific customer ID. The automation accepts an input schema matching {\"customerId\": \"string\"}. First, query the delivery_"},{"key":"p16","brief":"Create a callable automation that fetches a patient record from the patients_name object. Retrieve the patient's full name and pass it as mandatory input to a Groovy node. In the Groovy node, trim the name, split it into"},{"key":"p17","brief":"Create a callable automation that accepts a vehicle model ID and mileage value and identifies maintenance parts that need to be ordered before servicing. The automation should fetch the vehicle's maintenance parts list f"},{"key":"p18","brief":"Create a callable automation that accepts a list of warehouse inventory items and identifies products that require replenishment. The automation should process each inventory record by calculating the **Net Stock** as `q"},{"key":"p19","brief":"Create a callable automation named Employees Missing Bonus | GoogleSheets that accepts a Google Spreadsheet ID and sheet number as input. Read the specified Google Sheet rows from A1:E161, which contains the columns Quar"},{"key":"p20","brief":"Create a callable automation that accepts an `employee_id` and `standard_hours_per_day` as input. Retrieve all shift records for the specified employee from the **employeeListEval** object. Calculate the employee's total"}],"matrix":[{"label":"v1-baseline-final","model":"haiku","key":"p01","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":7,"seconds":23,"costUsd":0.013758220000000002,"inputTokens":8,"cachedInputTokens":120912,"outputTokens":3020,"reasoningTokens":1456},{"label":"v1-baseline-final","model":"haiku","key":"p02","pass":false,"savePass":true,"verdict":"differs","compileCalls":2,"toolCalls":9,"seconds":36,"costUsd":0.01604745,"inputTokens":12,"cachedInputTokens":218075,"outputTokens":5479,"reasoningTokens":2509},{"label":"v1-baseline-final","model":"haiku","key":"p03","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":18,"seconds":121,"costUsd":0.028266850000000003,"inputTokens":16,"cachedInputTokens":494425,"outputTokens":11571,"reasoningTokens":6529},{"label":"v1-baseline-final","model":"haiku","key":"p04","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":28,"seconds":95,"costUsd":0.13039074,"inputTokens":22,"cachedInputTokens":804980,"outputTokens":18726,"reasoningTokens":9636},{"label":"v1-baseline-final","model":"haiku","key":"p05","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":9,"seconds":27,"costUsd":0.01768598,"inputTokens":8,"cachedInputTokens":141598,"outputTokens":4066,"reasoningTokens":1716},{"label":"v1-baseline-final","model":"haiku","key":"p06","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":7,"seconds":20,"costUsd":0.01242214,"inputTokens":8,"cachedInputTokens":120144,"outputTokens":2623,"reasoningTokens":1127},{"label":"v1-baseline-final","model":"haiku","key":"p07","pass":false,"savePass":true,"verdict":"shape-match","compileCalls":1,"toolCalls":18,"seconds":44,"costUsd":0.02030246,"inputTokens":14,"cachedInputTokens":365506,"outputTokens":8191,"reasoningTokens":4489},{"label":"v1-baseline-final","model":"haiku","key":"p08","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":18,"seconds":43,"costUsd":0.02075675,"inputTokens":14,"cachedInputTokens":404275,"outputTokens":7165,"reasoningTokens":3773},{"label":"v1-baseline-final","model":"haiku","key":"p09","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":16,"seconds":51,"costUsd":0.02019385,"inputTokens":16,"cachedInputTokens":386195,"outputTokens":8827,"reasoningTokens":4009},{"label":"v1-baseline-final","model":"haiku","key":"p10","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":13,"seconds":39,"costUsd":0.017410000000000002,"inputTokens":12,"cachedInputTokens":269880,"outputTokens":6789,"reasoningTokens":3315},{"label":"v1-baseline-final","model":"haiku","key":"p11","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":7,"seconds":18,"costUsd":0.01010642,"inputTokens":8,"cachedInputTokens":150402,"outputTokens":2355,"reasoningTokens":826},{"label":"v1-baseline-final","model":"haiku","key":"p12","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":10,"seconds":34,"costUsd":0.012367449999999999,"inputTokens":10,"cachedInputTokens":200205,"outputTokens":4322,"reasoningTokens":2051},{"label":"v1-baseline-final","model":"haiku","key":"p13","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":17,"seconds":99,"costUsd":0.029768720000000002,"inputTokens":22,"cachedInputTokens":643342,"outputTokens":19633,"reasoningTokens":11397},{"label":"v1-baseline-final","model":"haiku","key":"p14","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":1,"toolCalls":15,"seconds":55,"costUsd":0.023429679999999998,"inputTokens":14,"cachedInputTokens":361948,"outputTokens":10831,"reasoningTokens":5683},{"label":"v1-baseline-final","model":"haiku","key":"p15","pass":true,"savePass":true,"verdict":"match","compileCalls":4,"toolCalls":22,"seconds":105,"costUsd":0.11357834000000001,"inputTokens":24,"cachedInputTokens":875904,"outputTokens":20463,"reasoningTokens":9284},{"label":"v1-baseline-final","model":"haiku","key":"p16","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":9,"seconds":30,"costUsd":0.01287525,"inputTokens":10,"cachedInputTokens":196255,"outputTokens":5089,"reasoningTokens":2874},{"label":"v1-baseline-final","model":"haiku","key":"p17","pass":false,"savePass":true,"verdict":"differs","compileCalls":1,"toolCalls":16,"seconds":67,"costUsd":0.05349083,"inputTokens":14,"cachedInputTokens":377775,"outputTokens":13418,"reasoningTokens":9023},{"label":"v1-baseline-final","model":"haiku","key":"p18","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":13,"seconds":47,"costUsd":0.017268020000000002,"inputTokens":12,"cachedInputTokens":281092,"outputTokens":10018,"reasoningTokens":4520},{"label":"v1-baseline-final","model":"haiku","key":"p19","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":2,"toolCalls":16,"seconds":61,"costUsd":0.02287716,"inputTokens":14,"cachedInputTokens":390196,"outputTokens":11599,"reasoningTokens":5613},{"label":"v1-baseline-final","model":"haiku","key":"p20","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":15,"seconds":44,"costUsd":0.020382740000000003,"inputTokens":12,"cachedInputTokens":284794,"outputTokens":8294,"reasoningTokens":4205},{"label":"v1-baseline-final","model":"luna","key":"p01","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":3,"seconds":36,"costUsd":0.00503954,"inputTokens":31607,"cachedInputTokens":144384,"outputTokens":870,"reasoningTokens":330},{"label":"v1-baseline-final","model":"luna","key":"p02","pass":false,"savePass":false,"verdict":"not-run","compileCalls":0,"toolCalls":10,"seconds":72,"costUsd":0.00977766,"inputTokens":33770,"cachedInputTokens":543616,"outputTokens":1929,"reasoningTokens":968},{"label":"v1-baseline-final","model":"luna","key":"p03","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":15,"seconds":71,"costUsd":0.009288240000000001,"inputTokens":49252,"cachedInputTokens":306304,"outputTokens":2600,"reasoningTokens":1680},{"label":"v1-baseline-final","model":"luna","key":"p04","pass":false,"savePass":false,"verdict":"not-run","compileCalls":1,"toolCalls":28,"seconds":151,"costUsd":0.02749176,"inputTokens":150232,"cachedInputTokens":950656,"outputTokens":5924,"reasoningTokens":2726},{"label":"v1-baseline-final","model":"luna","key":"p05","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":4,"seconds":56,"costUsd":0.005803020000000001,"inputTokens":31351,"cachedInputTokens":184192,"outputTokens":1652,"reasoningTokens":585},{"label":"v1-baseline-final","model":"luna","key":"p06","pass":false,"savePass":false,"verdict":"not-run","compileCalls":0,"toolCalls":5,"seconds":59,"costUsd":0.007449120000000001,"inputTokens":34996,"cachedInputTokens":317952,"outputTokens":1540,"reasoningTokens":739},{"label":"v1-baseline-final","model":"luna","key":"p07","pass":false,"savePass":true,"verdict":"shape-match","compileCalls":3,"toolCalls":14,"seconds":142,"costUsd":0.012835460000000002,"inputTokens":53107,"cachedInputTokens":478976,"outputTokens":5470,"reasoningTokens":1630},{"label":"v1-baseline-final","model":"luna","key":"p08","pass":false,"savePass":false,"verdict":"not-run","compileCalls":0,"toolCalls":14,"seconds":172,"costUsd":0.01318826,"inputTokens":59891,"cachedInputTokens":601216,"outputTokens":2374,"reasoningTokens":1208},{"label":"v1-baseline-final","model":"luna","key":"p09","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":6,"seconds":81,"costUsd":0.00726732,"inputTokens":31200,"cachedInputTokens":306432,"outputTokens":2166,"reasoningTokens":791},{"label":"v1-baseline-final","model":"luna","key":"p10","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":88,"costUsd":0.009342139999999999,"inputTokens":45327,"cachedInputTokens":335744,"outputTokens":2904,"reasoningTokens":1040},{"label":"v1-baseline-final","model":"luna","key":"p11","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":7,"seconds":71,"costUsd":0.0112815,"inputTokens":75038,"cachedInputTokens":305920,"outputTokens":1437,"reasoningTokens":569},{"label":"v1-baseline-final","model":"luna","key":"p12","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":9,"seconds":117,"costUsd":0.0110007,"inputTokens":57103,"cachedInputTokens":400640,"outputTokens":2568,"reasoningTokens":1211},{"label":"v1-baseline-final","model":"luna","key":"p13","pass":false,"savePass":false,"verdict":"not-run","compileCalls":0,"toolCalls":10,"seconds":170,"costUsd":0.01346028,"inputTokens":70001,"cachedInputTokens":474368,"outputTokens":3433,"reasoningTokens":2390},{"label":"v1-baseline-final","model":"luna","key":"p14","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":2,"toolCalls":14,"seconds":119,"costUsd":0.01265926,"inputTokens":61411,"cachedInputTokens":450816,"outputTokens":4020,"reasoningTokens":736},{"label":"v1-baseline-final","model":"luna","key":"p15","pass":true,"savePass":true,"verdict":"match","compileCalls":7,"toolCalls":36,"seconds":421,"costUsd":0.031860099999999995,"inputTokens":88931,"cachedInputTokens":1536000,"outputTokens":15214,"reasoningTokens":4699},{"label":"v1-baseline-final","model":"luna","key":"p16","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":16,"seconds":120,"costUsd":0.01292798,"inputTokens":60014,"cachedInputTokens":535808,"outputTokens":3137,"reasoningTokens":1127},{"label":"v1-baseline-final","model":"luna","key":"p17","pass":false,"savePass":true,"verdict":"differs","compileCalls":2,"toolCalls":17,"seconds":204,"costUsd":0.015571060000000001,"inputTokens":62314,"cachedInputTokens":511616,"outputTokens":8447,"reasoningTokens":3040},{"label":"v1-baseline-final","model":"luna","key":"p18","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":102,"costUsd":0.009291200000000001,"inputTokens":43438,"cachedInputTokens":327040,"outputTokens":3354,"reasoningTokens":1066},{"label":"v1-baseline-final","model":"luna","key":"p19","pass":false,"savePass":false,"verdict":"not-run","compileCalls":2,"toolCalls":17,"seconds":146,"costUsd":0.0137893,"inputTokens":56652,"cachedInputTokens":495360,"outputTokens":6341,"reasoningTokens":2689},{"label":"v1-baseline-final","model":"luna","key":"p20","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":17,"seconds":136,"costUsd":0.014946220000000001,"inputTokens":62981,"cachedInputTokens":614912,"outputTokens":4998,"reasoningTokens":2051},{"label":"v2-final","model":"haiku","key":"p01","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":3,"seconds":15,"costUsd":0.009103940000000001,"inputTokens":8,"cachedInputTokens":93504,"outputTokens":1829,"reasoningTokens":825},{"label":"v2-final","model":"haiku","key":"p02","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":9,"seconds":21,"costUsd":0.012012249999999999,"inputTokens":12,"cachedInputTokens":179355,"outputTokens":2093,"reasoningTokens":683},{"label":"v2-final","model":"haiku","key":"p03","pass":true,"savePass":true,"verdict":"match","compileCalls":3,"toolCalls":10,"seconds":49,"costUsd":0.016924849999999998,"inputTokens":14,"cachedInputTokens":298295,"outputTokens":9492,"reasoningTokens":4131},{"label":"v2-final","model":"haiku","key":"p04","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":17,"seconds":60,"costUsd":0.02178153,"inputTokens":14,"cachedInputTokens":360483,"outputTokens":10656,"reasoningTokens":6629},{"label":"v2-final","model":"haiku","key":"p05","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":8,"seconds":25,"costUsd":0.01431971,"inputTokens":12,"cachedInputTokens":177451,"outputTokens":3056,"reasoningTokens":1016},{"label":"v2-final","model":"haiku","key":"p06","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":10,"seconds":31,"costUsd":0.01133457,"inputTokens":14,"cachedInputTokens":274167,"outputTokens":3613,"reasoningTokens":1532},{"label":"v2-final","model":"haiku","key":"p07","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":12,"seconds":42,"costUsd":0.016652840000000002,"inputTokens":14,"cachedInputTokens":290204,"outputTokens":7569,"reasoningTokens":4041},{"label":"v2-final","model":"haiku","key":"p08","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":17,"seconds":47,"costUsd":0.02079067,"inputTokens":14,"cachedInputTokens":383047,"outputTokens":8265,"reasoningTokens":5075},{"label":"v2-final","model":"haiku","key":"p09","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":13,"seconds":30,"costUsd":0.012880840000000001,"inputTokens":16,"cachedInputTokens":304234,"outputTokens":4149,"reasoningTokens":1417},{"label":"v2-final","model":"haiku","key":"p10","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":34,"costUsd":0.014173930000000001,"inputTokens":14,"cachedInputTokens":276303,"outputTokens":5268,"reasoningTokens":2312},{"label":"v2-final","model":"haiku","key":"p11","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":5,"seconds":14,"costUsd":0.0067323,"inputTokens":8,"cachedInputTokens":124440,"outputTokens":1852,"reasoningTokens":665},{"label":"v2-final","model":"haiku","key":"p12","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":10,"seconds":26,"costUsd":0.009863740000000001,"inputTokens":12,"cachedInputTokens":215574,"outputTokens":3492,"reasoningTokens":1900},{"label":"v2-final","model":"haiku","key":"p13","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":12,"seconds":44,"costUsd":0.013253409999999998,"inputTokens":18,"cachedInputTokens":358201,"outputTokens":6624,"reasoningTokens":3560},{"label":"v2-final","model":"haiku","key":"p14","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":2,"toolCalls":10,"seconds":39,"costUsd":0.01474346,"inputTokens":12,"cachedInputTokens":203166,"outputTokens":7535,"reasoningTokens":2996},{"label":"v2-final","model":"haiku","key":"p15","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":15,"seconds":55,"costUsd":0.021756619999999997,"inputTokens":18,"cachedInputTokens":442482,"outputTokens":10273,"reasoningTokens":4357},{"label":"v2-final","model":"haiku","key":"p16","pass":false,"savePass":true,"verdict":"shape-match","compileCalls":2,"toolCalls":7,"seconds":20,"costUsd":0.00878776,"inputTokens":10,"cachedInputTokens":172426,"outputTokens":2876,"reasoningTokens":944},{"label":"v2-final","model":"haiku","key":"p17","pass":false,"savePass":true,"verdict":"differs","compileCalls":1,"toolCalls":12,"seconds":45,"costUsd":0.018154629999999998,"inputTokens":12,"cachedInputTokens":230413,"outputTokens":8319,"reasoningTokens":5196},{"label":"v2-final","model":"haiku","key":"p18","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":35,"costUsd":0.01415348,"inputTokens":12,"cachedInputTokens":229648,"outputTokens":5797,"reasoningTokens":2911},{"label":"v2-final","model":"haiku","key":"p19","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":1,"toolCalls":11,"seconds":40,"costUsd":0.01550605,"inputTokens":12,"cachedInputTokens":272545,"outputTokens":6381,"reasoningTokens":3627},{"label":"v2-final","model":"haiku","key":"p20","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":12,"seconds":28,"costUsd":0.013496750000000002,"inputTokens":12,"cachedInputTokens":231855,"outputTokens":4078,"reasoningTokens":1489},{"label":"v2-final","model":"luna","key":"p01","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":2,"seconds":21,"costUsd":0.0033841200000000004,"inputTokens":23463,"cachedInputTokens":88832,"outputTokens":299,"reasoningTokens":0},{"label":"v2-final","model":"luna","key":"p02","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":7,"seconds":43,"costUsd":0.0043115,"inputTokens":22485,"cachedInputTokens":166400,"outputTokens":798,"reasoningTokens":130},{"label":"v2-final","model":"luna","key":"p03","pass":true,"savePass":true,"verdict":"match","compileCalls":3,"toolCalls":20,"seconds":134,"costUsd":0.01669522,"inputTokens":70450,"cachedInputTokens":723072,"outputTokens":4839,"reasoningTokens":850},{"label":"v2-final","model":"luna","key":"p04","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":33,"seconds":161,"costUsd":0.020060520000000002,"inputTokens":94148,"cachedInputTokens":739072,"outputTokens":6510,"reasoningTokens":3592},{"label":"v2-final","model":"luna","key":"p05","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":2,"seconds":34,"costUsd":0.00361642,"inputTokens":24950,"cachedInputTokens":91392,"outputTokens":415,"reasoningTokens":0},{"label":"v2-final","model":"luna","key":"p06","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":6,"seconds":48,"costUsd":0.00399048,"inputTokens":20254,"cachedInputTokens":155008,"outputTokens":830,"reasoningTokens":104},{"label":"v2-final","model":"luna","key":"p07","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":14,"seconds":82,"costUsd":0.010907360000000001,"inputTokens":55789,"cachedInputTokens":426496,"outputTokens":2127,"reasoningTokens":315},{"label":"v2-final","model":"luna","key":"p08","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":19,"seconds":91,"costUsd":0.013272220000000001,"inputTokens":64718,"cachedInputTokens":536192,"outputTokens":2877,"reasoningTokens":884},{"label":"v2-final","model":"luna","key":"p09","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":5,"seconds":47,"costUsd":0.006983360000000001,"inputTokens":47929,"cachedInputTokens":176896,"outputTokens":843,"reasoningTokens":104},{"label":"v2-final","model":"luna","key":"p10","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":12,"seconds":69,"costUsd":0.00972858,"inputTokens":51561,"cachedInputTokens":363648,"outputTokens":1872,"reasoningTokens":590},{"label":"v2-final","model":"luna","key":"p11","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":9,"seconds":53,"costUsd":0.00817028,"inputTokens":44316,"cachedInputTokens":317568,"outputTokens":1126,"reasoningTokens":250},{"label":"v2-final","model":"luna","key":"p12","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":10,"seconds":46,"costUsd":0.00616756,"inputTokens":37435,"cachedInputTokens":192256,"outputTokens":1003,"reasoningTokens":181},{"label":"v2-final","model":"luna","key":"p13","pass":false,"savePass":true,"verdict":"candidate-failed","compileCalls":3,"toolCalls":17,"seconds":135,"costUsd":0.01629134,"inputTokens":77000,"cachedInputTokens":598784,"outputTokens":5207,"reasoningTokens":986},{"label":"v2-final","model":"luna","key":"p14","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":5,"toolCalls":18,"seconds":149,"costUsd":0.013162240000000002,"inputTokens":49774,"cachedInputTokens":528384,"outputTokens":5802,"reasoningTokens":1256},{"label":"v2-final","model":"luna","key":"p15","pass":false,"savePass":true,"verdict":"shape-match","compileCalls":3,"toolCalls":20,"seconds":132,"costUsd":0.01912146,"inputTokens":88256,"cachedInputTokens":788736,"outputTokens":4817,"reasoningTokens":1161},{"label":"v2-final","model":"luna","key":"p16","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":11,"seconds":50,"costUsd":0.00803754,"inputTokens":47842,"cachedInputTokens":265984,"outputTokens":1187,"reasoningTokens":0},{"label":"v2-final","model":"luna","key":"p17","pass":false,"savePass":true,"verdict":"differs","compileCalls":3,"toolCalls":36,"seconds":115,"costUsd":0.014716600000000002,"inputTokens":70972,"cachedInputTokens":544640,"outputTokens":4346,"reasoningTokens":819},{"label":"v2-final","model":"luna","key":"p18","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":70,"costUsd":0.00837686,"inputTokens":41043,"cachedInputTokens":329856,"outputTokens":1948,"reasoningTokens":676},{"label":"v2-final","model":"luna","key":"p19","pass":false,"savePass":true,"verdict":"candidate-failed","compileCalls":2,"toolCalls":14,"seconds":79,"costUsd":0.008084,"inputTokens":36118,"cachedInputTokens":318720,"outputTokens":2570,"reasoningTokens":623},{"label":"v2-final","model":"luna","key":"p20","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":11,"seconds":66,"costUsd":0.0090662,"inputTokens":48206,"cachedInputTokens":309760,"outputTokens":2296,"reasoningTokens":289},{"label":"v2-final","model":"deepseek","key":"p01","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":8,"seconds":50,"costUsd":0.01497078,"inputTokens":36993,"cachedInputTokens":158080,"outputTokens":1120,"reasoningTokens":1317},{"label":"v2-final","model":"deepseek","key":"p02","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":55,"costUsd":0.015944628,"inputTokens":34131,"cachedInputTokens":175488,"outputTokens":1654,"reasoningTokens":2223},{"label":"v2-final","model":"deepseek","key":"p03","pass":true,"savePass":true,"verdict":"match","compileCalls":3,"toolCalls":28,"seconds":188,"costUsd":0.051267851999999996,"inputTokens":98241,"cachedInputTokens":971392,"outputTokens":6218,"reasoningTokens":7088},{"label":"v2-final","model":"deepseek","key":"p04","pass":true,"savePass":true,"verdict":"match","compileCalls":4,"toolCalls":35,"seconds":245,"costUsd":0.084994764,"inputTokens":178829,"cachedInputTokens":1449344,"outputTokens":9175,"reasoningTokens":9700},{"label":"v2-final","model":"deepseek","key":"p05","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":7,"seconds":61,"costUsd":0.02259816,"inputTokens":66352,"cachedInputTokens":34560,"outputTokens":1132,"reasoningTokens":939},{"label":"v2-final","model":"deepseek","key":"p06","pass":true,"savePass":true,"verdict":"match","compileCalls":2,"toolCalls":12,"seconds":61,"costUsd":0.025772987999999997,"inputTokens":69209,"cachedInputTokens":187648,"outputTokens":1812,"reasoningTokens":1425},{"label":"v2-final","model":"deepseek","key":"p07","pass":true,"savePass":true,"verdict":"match","compileCalls":4,"toolCalls":33,"seconds":191,"costUsd":0.051607655999999995,"inputTokens":94922,"cachedInputTokens":1240576,"outputTokens":6819,"reasoningTokens":6254},{"label":"v2-final","model":"deepseek","key":"p08","pass":true,"savePass":true,"verdict":"match","compileCalls":3,"toolCalls":30,"seconds":182,"costUsd":0.045950148,"inputTokens":77599,"cachedInputTokens":996608,"outputTokens":4494,"reasoningTokens":9415},{"label":"v2-final","model":"deepseek","key":"p09","pass":true,"savePass":true,"verdict":"match","compileCalls":3,"toolCalls":23,"seconds":205,"costUsd":0.040439256,"inputTokens":73326,"cachedInputTokens":638976,"outputTokens":4862,"reasoningTokens":7311},{"label":"v2-final","model":"deepseek","key":"p10","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":64,"costUsd":0.020204076,"inputTokens":44197,"cachedInputTokens":164096,"outputTokens":1923,"reasoningTokens":3044},{"label":"v2-final","model":"deepseek","key":"p11","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":9,"seconds":46,"costUsd":0.013780691999999999,"inputTokens":31919,"cachedInputTokens":178432,"outputTokens":1299,"reasoningTokens":1313},{"label":"v2-final","model":"deepseek","key":"p12","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":16,"seconds":63,"costUsd":0.01797042,"inputTokens":37467,"cachedInputTokens":283520,"outputTokens":1691,"reasoningTokens":2500},{"label":"v2-final","model":"deepseek","key":"p13","pass":true,"savePass":true,"verdict":"match","compileCalls":4,"toolCalls":29,"seconds":373,"costUsd":0.178435848,"inputTokens":461886,"cachedInputTokens":1313408,"outputTokens":9755,"reasoningTokens":16903},{"label":"v2-final","model":"deepseek","key":"p14","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":1,"toolCalls":13,"seconds":68,"costUsd":0.022131816,"inputTokens":49534,"cachedInputTokens":247936,"outputTokens":2436,"reasoningTokens":2384},{"label":"v2-final","model":"deepseek","key":"p15","pass":true,"savePass":true,"verdict":"match","compileCalls":5,"toolCalls":41,"seconds":267,"costUsd":0.10903000799999998,"inputTokens":256042,"cachedInputTokens":1072768,"outputTokens":8910,"reasoningTokens":12574},{"label":"v2-final","model":"deepseek","key":"p16","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":11,"seconds":63,"costUsd":0.015792336,"inputTokens":33852,"cachedInputTokens":144256,"outputTokens":1398,"reasoningTokens":2578},{"label":"v2-final","model":"deepseek","key":"p17","pass":false,"savePass":true,"verdict":"differs","compileCalls":4,"toolCalls":28,"seconds":197,"costUsd":0.055724291999999995,"inputTokens":94971,"cachedInputTokens":1007232,"outputTokens":8555,"reasoningTokens":9103},{"label":"v2-final","model":"deepseek","key":"p18","pass":true,"savePass":true,"verdict":"match","compileCalls":1,"toolCalls":15,"seconds":98,"costUsd":0.023906196,"inputTokens":42691,"cachedInputTokens":258816,"outputTokens":2508,"reasoningTokens":5447},{"label":"v2-final","model":"deepseek","key":"p19","pass":true,"savePass":true,"verdict":"prose-match","compileCalls":2,"toolCalls":16,"seconds":113,"costUsd":0.030029267999999998,"inputTokens":56107,"cachedInputTokens":387328,"outputTokens":3416,"reasoningTokens":5645},{"label":"v2-final","model":"deepseek","key":"p20","pass":true,"savePass":true,"verdict":"match","compileCalls":3,"toolCalls":18,"seconds":149,"costUsd":0.03734142,"inputTokens":67361,"cachedInputTokens":513920,"outputTokens":4850,"reasoningTokens":6858}]}</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (name, attrs = {}, parent) => { const n = document.createElementNS(NS, name); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); if (parent) parent.appendChild(n); return n; };
+  const MODEL = { haiku: { name: "Haiku 5.5", c: "var(--s1)" }, luna: { name: "GPT 6 Luna", c: "var(--s2)" }, deepseek: { name: "DeepSeek V4.1 Flash", c: "var(--s3)" }, muse: { name: "Muse Spark 1.3", c: "var(--s4)" } };
+  const V1 = D.v1Label, V2 = D.v2Label;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  function tip(host) {
+    const t = document.createElement("div"); t.className = "tip"; host.appendChild(t);
+    return {
+      show(html, evt) { t.innerHTML = html; t.style.opacity = 1; const r = host.getBoundingClientRect(); let x = evt.clientX - r.left + 14; if (x + t.offsetWidth > r.width) x = evt.clientX - r.left - t.offsetWidth - 14; t.style.left = Math.max(0, x) + "px"; t.style.top = evt.clientY - r.top + 14 + "px"; },
+      hide() { t.style.opacity = 0; },
+    };
+  }
+  const cells = (label, model) => D.matrix.filter((m) => m.label === label && m.model === model);
+  const passes = (label, model) => cells(label, model).filter((m) => m.pass).length;
+  const cost = (label, model) => cells(label, model).reduce((a, m) => a + (m.costUsd ?? 0), 0);
+
+  // Tiles
+  const tiles = document.getElementById("tiles");
+  for (const m of ["haiku", "luna"]) tiles.insertAdjacentHTML("beforeend", `<div class="tile"><div class="n">${passes(V2, m)}<small>/20</small> <small>v1: ${passes(V1, m)}/20</small></div><div class="l">${MODEL[m].name}: runs that match the reference, v2 against v1</div></div>`);
+  tiles.insertAdjacentHTML("beforeend", `<div class="tile"><div class="n">${passes(V2, "deepseek")}<small>/20</small></div><div class="l">${MODEL.deepseek.name} on v2 (not run on v1, to spare the OpenCode limit)</div></div>`);
+  tiles.insertAdjacentHTML("beforeend", `<div class="tile"><div class="n">60<small>/60</small></div><div class="l">v2 runs that compiled and saved a workflow (v1: ${cells(V1, "haiku").concat(cells(V1, "luna")).filter((m) => m.savePass).length}/40)</div></div>`);
+
+  // Headline grouped bars: one group per model, v1 hollow, v2 filled.
+  {
+    const host = document.getElementById("headline"); const W = 640, H = 230, left = 34, bottom = 34, top = 14; const tt = tip(host);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Runs that match the reference, v1 and v2, by model" }, host);
+    const y = (v) => top + (H - top - bottom) * (1 - v / 20);
+    for (const g of [0, 5, 10, 15, 20]) { el("line", { x1: left, x2: W, y1: y(g), y2: y(g), stroke: "var(--planloft-rule)", "stroke-dasharray": g ? "2 4" : "" }, svg); el("text", { x: left - 6, y: y(g) + 4, "text-anchor": "end" }, svg).textContent = g; }
+    const groups = ["haiku", "luna", "deepseek"]; const gw = (W - left) / groups.length; const bw = 46;
+    groups.forEach((m, i) => {
+      const cx = left + gw * i + gw / 2;
+      [[V1, -1], [V2, 1]].forEach(([label, side]) => {
+        const n = cells(label, m).length ? passes(label, m) : null; const x = cx + (side < 0 ? -bw - 2 : 2);
+        if (n === null) { el("text", { x: x + bw / 2, y: y(0) - 6, "text-anchor": "middle" }, svg).textContent = "not run"; return; }
+        const h = y(0) - y(n);
+        const path = `M${x},${y(0)} v${-(h - 4)} q0,-4 4,-4 h${bw - 8} q4,0 4,4 v${h - 4} z`;
+        el("path", side < 0 ? { d: path, fill: "transparent", stroke: MODEL[m].c, "stroke-width": 2 } : { d: path, fill: MODEL[m].c }, svg);
+        el("text", { x: x + bw / 2, y: y(n) - 6, "text-anchor": "middle", class: "lbl" }, svg).textContent = n;
+        const hit = el("rect", { x: x - 4, y: top, width: bw + 8, height: H - top - bottom, fill: "transparent" }, svg);
+        hit.addEventListener("mousemove", (e) => tt.show(`<b>${MODEL[m].name}, ${label === V1 ? "v1" : "v2"}</b><br>${n} of 20 match the reference<br>$${cost(label, m).toFixed(2)} for 20 runs`, e));
+        hit.addEventListener("mouseleave", () => tt.hide());
+      });
+      el("text", { x: cx, y: H - 10, "text-anchor": "middle", class: "lbl" }, svg).textContent = MODEL[m].name;
+    });
+    document.getElementById("headline-legend").innerHTML = `<span><i class="sw hollow" style="--c:var(--planloft-muted)"></i>v1</span><span><i class="sw" style="--c:var(--planloft-muted)"></i>v2</span>`;
+  }
+
+  // Heatmap: briefs × (v1 haiku, v1 luna | v2 haiku, v2 luna, v2 deepseek)
+  {
+    const cols = [[V1, "haiku"], [V1, "luna"], null, [V2, "haiku"], [V2, "luna"], [V2, "deepseek"]];
+    const table = document.getElementById("heat"); const host = table.parentElement; host.style.position = "relative"; const tt = tip(host);
+    let head = `<thead><tr><th></th>${cols.map((c) => (c ? `<th>${c[0] === V1 ? "v1" : "v2"}<br>${MODEL[c[1]].name.split(" ")[0] === "GPT" ? "Luna" : MODEL[c[1]].name.split(" ")[0]}</th>` : `<th class="gap"></th>`)).join("")}</tr></thead><tbody>`;
+    const byKey = new Map(D.matrix.map((m) => [`${m.label}/${m.model}/${m.key}`, m]));
+    for (const c of D.cases) {
+      head += `<tr><th class="row" title="${esc(c.brief)}">${c.key}</th>`;
+      for (const col of cols) {
+        if (!col) { head += `<td class="gap"></td>`; continue; }
+        const m = byKey.get(`${col[0]}/${col[1]}/${c.key}`);
+        if (!m) { head += `<td></td>`; continue; }
+        const cls = m.pass ? "pass" : m.verdict === "shape-match" ? "shape" : "fail";
+        const ic = m.pass ? "✓" : m.verdict === "shape-match" ? "~" : "✗";
+        head += `<td class="${cls}" data-k="${col[0]}/${col[1]}/${c.key}"><span class="ic">${ic}</span></td>`;
+      }
+      head += `</tr>`;
+    }
+    table.innerHTML = head + "</tbody>";
+    const brief = new Map(D.cases.map((c) => [c.key, c.brief]));
+    table.querySelectorAll("td[data-k]").forEach((td) => {
+      const m = byKey.get(td.dataset.k);
+      td.addEventListener("mousemove", (e) => tt.show(`<b>${m.key} · ${MODEL[m.model].name} · ${m.label === V1 ? "v1" : "v2"}</b><br>verdict: ${esc(m.verdict)}<br>${m.compileCalls} compile calls, ${m.toolCalls} tool calls, ${m.seconds}s, $${(m.costUsd ?? 0).toFixed(3)}<br><span style="color:var(--planloft-muted)">${esc(brief.get(m.key))}…</span>`, e));
+      td.addEventListener("mouseleave", () => tt.hide());
+    });
+  }
+
+  // Trend: pass by iteration per model; v1 on the current corpus as a dashed reference line.
+  {
+    const labels = D.trendLabels; const host = document.getElementById("trend"); const W = 640, H = 280, left = 34, right = 70, top = 14, bottom = 40; const tt = tip(host);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Runs that match the reference, by iteration and model" }, host);
+    const x = (i) => left + ((W - left - right) * i) / (labels.length - 1); const y = (v) => top + (H - top - bottom) * (1 - v / 20);
+    for (const g of [0, 5, 10, 15, 20]) { el("line", { x1: left, x2: W - right, y1: y(g), y2: y(g), stroke: "var(--planloft-rule)", "stroke-dasharray": g ? "2 4" : "" }, svg); el("text", { x: left - 6, y: y(g) + 4, "text-anchor": "end" }, svg).textContent = g; }
+    labels.forEach((l, i) => el("text", { x: x(i), y: H - 18, "text-anchor": "middle" }, svg).textContent = D.trendNames[i]);
+    el("line", { x1: (x(1) + x(2)) / 2, x2: (x(1) + x(2)) / 2, y1: top, y2: H - bottom, stroke: "var(--planloft-chart-neutral)", "stroke-dasharray": "4 3" }, svg);
+    el("text", { x: (x(1) + x(2)) / 2 + 4, y: top + 12 }, svg).textContent = "3 briefs replaced";
+    for (const m of ["haiku", "luna"]) {
+      const v1 = passes(V1, m); el("line", { x1: x(2), x2: W - right, y1: y(v1), y2: y(v1), stroke: MODEL[m].c, "stroke-width": 1.5, "stroke-dasharray": "6 4", opacity: 0.8 }, svg);
+      el("text", { x: W - right + 6, y: y(v1) + (m === "haiku" ? -4 : 12) }, svg).textContent = `v1 ${MODEL[m].name.split(" ").at(-1) === "Luna" ? "Luna" : "Haiku"} ${v1}`;
+    }
+    for (const m of ["haiku", "luna", "deepseek", "muse"]) {
+      const pts = labels.map((l, i) => { const r = D.trend.find((t) => t.label === l && t.model === m); return r ? [i, r.pass, r] : null; });
+      let d = ""; let pen = false;
+      for (const p of pts) { if (!p) { pen = false; continue; } d += `${pen ? "L" : "M"}${x(p[0])},${y(p[1])} `; pen = true; }
+      el("path", { d, fill: "none", stroke: MODEL[m].c, "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+      for (const p of pts) if (p) el("circle", { cx: x(p[0]), cy: y(p[1]), r: 4, fill: MODEL[m].c, stroke: "var(--planloft-paper)", "stroke-width": 2 }, svg);
+    }
+    // Crosshair: one hit column per iteration.
+    const cross = el("line", { y1: top, y2: H - bottom, stroke: "var(--planloft-muted)", opacity: 0 }, svg);
+    labels.forEach((l, i) => {
+      const w = (W - left - right) / (labels.length - 1); const hit = el("rect", { x: x(i) - w / 2, y: top, width: w, height: H - top - bottom, fill: "transparent" }, svg);
+      hit.addEventListener("mousemove", (e) => { cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("opacity", 0.5); tt.show(`<b>${D.trendNames[i]}</b><br>` + ["haiku", "luna", "deepseek", "muse"].map((m) => { const r = D.trend.find((t) => t.label === l && t.model === m); return r ? `${MODEL[m].name}: ${r.pass}/20 · $${r.cost.toFixed(2)}` : ""; }).filter(Boolean).join("<br>"), e); });
+      hit.addEventListener("mouseleave", () => { cross.setAttribute("opacity", 0); tt.hide(); });
+    });
+    document.getElementById("trend-legend").innerHTML = ["haiku", "luna", "deepseek", "muse"].map((m) => `<span><i class="sw" style="--c:${MODEL[m].c}"></i>${MODEL[m].name}</span>`).join("") + `<span>dashed: v1 on the current corpus</span>`;
+    const tbl = document.getElementById("trend-table");
+    tbl.innerHTML = `<thead><tr><th>Iteration</th>${["haiku", "luna", "deepseek", "muse"].map((m) => `<th class="num">${MODEL[m].name}</th>`).join("")}</tr></thead><tbody>` + labels.map((l, i) => `<tr><td>${D.trendNames[i]}</td>${["haiku", "luna", "deepseek", "muse"].map((m) => { const r = D.trend.find((t) => t.label === l && t.model === m); return `<td class="num">${r ? `${r.pass}/20` : "–"}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+  }
+
+  // Cost table
+  {
+    const rows = [[V1, "haiku"], [V1, "luna"], [V2, "haiku"], [V2, "luna"], [V2, "deepseek"]];
+    const k = (n) => (n >= 1e6 ? (n / 1e6).toFixed(2) + "M" : Math.round(n / 1e3) + "k");
+    let html = `<thead><tr><th>Run</th><th class="num">Pass</th><th class="num">Input</th><th class="num">Cached</th><th class="num">Output</th><th class="num">Reasoning</th><th class="num">Cost</th><th class="num">Per run</th><th class="num">Per pass</th></tr></thead><tbody>`;
+    for (const [label, m] of rows) {
+      const cs = cells(label, m); if (!cs.length) continue; const sum = (f) => cs.reduce((a, c) => a + (c[f] ?? 0), 0); const c = cost(label, m); const p = passes(label, m);
+      html += `<tr><td>${label === V1 ? "v1" : "v2"} · ${MODEL[m].name}</td><td class="num">${p}/20</td><td class="num">${k(sum("inputTokens"))}</td><td class="num">${k(sum("cachedInputTokens"))}</td><td class="num">${k(sum("outputTokens"))}</td><td class="num">${k(sum("reasoningTokens"))}</td><td class="num">$${c.toFixed(2)}</td><td class="num">$${(c / cs.length).toFixed(3)}</td><td class="num">$${p ? (c / p).toFixed(3) : "–"}</td></tr>`;
+    }
+    document.getElementById("cost").innerHTML = html + "</tbody>";
+  }
+})();
+</script>
+<!-- planloft-collaboration:start -->
+<style data-planloft-collaboration>/* Planloft collaboration runtime. Every rule is scoped to `.plc`, which also resets
+   inherited theme styles, so the UI looks the same on every theme apart from the
+   theme's own colors. Colors come from the theme's `--planloft-*` tokens, then
+   system colors. */
+
+.plc {
+  all: initial;
+  /* `all: initial` drops the host's color scheme; take it back so the Canvas and
+     CanvasText fallbacks match a page that sets its own dark scheme. */
+  color-scheme: inherit;
+  display: contents;
+  --plc-ink: var(--planloft-ink, CanvasText);
+  --plc-paper: var(--planloft-paper, Canvas);
+  --plc-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --plc-accent: var(--planloft-accent, LinkText);
+  --plc-muted: var(--planloft-muted, color-mix(in srgb, var(--plc-ink) 62%, var(--plc-paper)));
+  --plc-surface: var(--planloft-surface, color-mix(in srgb, var(--plc-ink) 5%, var(--plc-paper)));
+  /* Mixing a fixed hue with the ink keeps it legible on light and dark paper alike. */
+  --plc-danger: color-mix(in oklab, #c8372d 72%, var(--plc-ink));
+  --plc-caution: color-mix(in oklab, #b0740f 70%, var(--plc-ink));
+  --plc-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* The same tint as a comment highlight in the page. */
+  --plc-mark: color-mix(in srgb, var(--plc-accent) 18%, transparent);
+  --plc-focus: color-mix(in srgb, var(--plc-accent) 65%, var(--plc-rule));
+  --plc-focus-ring: color-mix(in srgb, var(--plc-accent) 16%, transparent);
+  --plc-radius: 8px;
+  --plc-layer: 2147483000;
+  color: var(--plc-ink);
+  font: 400 14px/1.5 var(--plc-sans);
+}
+
+.plc :not(svg, svg *) {
+  all: unset;
+  box-sizing: border-box;
+}
+.plc [hidden] { display: none !important; }
+.plc .plc-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Icons */
+.plc .plc-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Shared controls. Buttons have no outlines; only the primary action is filled. */
+.plc .plc-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: var(--plc-radius);
+  font: 500 13px/1 var(--plc-sans);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  transition: background-color 0.12s, color 0.12s;
+}
+.plc .plc-button .plc-icon { width: 16px; height: 16px; }
+.plc .plc-button-primary {
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+}
+.plc .plc-button-primary:hover { background: color-mix(in srgb, var(--plc-ink) 86%, var(--plc-paper)); }
+.plc .plc-button-quiet { color: var(--plc-ink); }
+.plc .plc-button-quiet:hover { background: var(--plc-surface); }
+.plc .plc-button[aria-disabled="true"] { opacity: 0.6; cursor: progress; }
+.plc .plc-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: var(--plc-radius);
+  color: var(--plc-muted);
+  cursor: pointer;
+  transition: background-color 0.12s, color 0.12s;
+}
+.plc .plc-icon-button:hover { color: var(--plc-ink); background: var(--plc-surface); }
+.plc .plc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.plc :is(button, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--plc-accent);
+  outline-offset: 2px;
+}
+
+/* Text fields are tinted wells without a border until they take focus. */
+.plc .plc-textarea {
+  display: block;
+  width: 100%;
+  min-height: calc(1.5em + 18px);
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--plc-surface);
+  color: var(--plc-ink);
+  font: 400 14px/1.5 var(--plc-sans);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  resize: vertical;
+  cursor: text;
+  field-sizing: content;
+  max-height: 40vh;
+  transition: border-color 0.12s, background-color 0.12s;
+}
+.plc .plc-textarea::placeholder { color: var(--plc-muted); opacity: 1; }
+.plc .plc-textarea:focus,
+.plc .plc-field:focus-within {
+  border-color: var(--plc-focus);
+  background: var(--plc-paper);
+  box-shadow: 0 0 0 3px var(--plc-focus-ring);
+  outline: none;
+}
+.plc .plc-textarea:focus-visible { outline: none; }
+
+/* A field with its submit button inside, used by the comment composer and replies. */
+.plc .plc-field {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--plc-surface);
+  transition: border-color 0.12s, background-color 0.12s;
+}
+.plc .plc-field .plc-textarea,
+.plc .plc-field .plc-textarea:focus {
+  flex: 1;
+  min-width: 0;
+  min-height: calc(1.5em + 8px);
+  padding: 4px 0 4px 8px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  resize: none;
+}
+.plc .plc-send {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+  cursor: pointer;
+  transition: opacity 0.12s, background-color 0.12s;
+}
+.plc .plc-send .plc-icon { width: 16px; height: 16px; stroke-width: 1.9; }
+.plc .plc-send:hover { background: color-mix(in srgb, var(--plc-ink) 84%, var(--plc-paper)); }
+/* Empty drafts dim the send button without disabling it; submitting empty refocuses the field. */
+.plc .plc-field:has(.plc-textarea:placeholder-shown) .plc-send { opacity: 0.35; }
+
+/* Selection toolbar */
+.plc .plc-toolbar {
+  position: fixed;
+  z-index: var(--plc-layer);
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 8px;
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+  box-shadow: 0 6px 20px color-mix(in srgb, #000 22%, transparent);
+}
+.plc .plc-toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 5px;
+  font: 500 13px/1 var(--plc-sans);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.plc .plc-toolbar-button:hover { background: color-mix(in srgb, var(--plc-paper) 16%, transparent); }
+.plc .plc-toolbar-quiet { color: color-mix(in srgb, var(--plc-paper) 75%, transparent); }
+.plc .plc-toolbar-button:focus-visible { outline-color: var(--plc-paper); outline-offset: -2px; }
+
+/* Launcher */
+.plc .plc-launcher {
+  position: fixed;
+  z-index: var(--plc-layer);
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  border: 1px solid var(--plc-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--plc-paper) 92%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--plc-ink);
+  font: 600 13px/1 var(--plc-sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px color-mix(in srgb, #000 10%, transparent);
+}
+.plc .plc-launcher:hover { background: var(--plc-surface); }
+.plc .plc-launcher[aria-expanded="true"] { background: var(--plc-ink); color: var(--plc-paper); border-color: var(--plc-ink); }
+.plc .plc-launcher[data-state="failed"] { color: var(--plc-danger); }
+.plc .plc-launcher[data-state="loading"] .plc-icon { opacity: 0.55; }
+.plc .plc-launcher-count:empty { display: none; }
+.plc .plc-launcher-status { font-weight: 400; }
+.plc .plc-launcher-status:empty { display: none; }
+
+/* A non-modal conversation popup. The document never changes width. The popup is
+   one sheet: no inner rules, spacing carries the structure. */
+.plc .plc-panel {
+  position: fixed;
+  z-index: var(--plc-layer);
+  display: flex;
+  flex-direction: column;
+  width: min(360px, calc(100vw - 24px));
+  max-height: min(600px, calc(100dvh - 24px));
+  border: 1px solid color-mix(in srgb, var(--plc-rule) 75%, transparent);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--plc-paper);
+  color: var(--plc-ink);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, #000 6%, transparent),
+    0 10px 28px -6px color-mix(in srgb, #000 18%, transparent),
+    0 28px 56px -16px color-mix(in srgb, #000 14%, transparent);
+}
+.plc .plc-panel:not([hidden]) { animation: plc-open 0.14s ease-out; }
+@keyframes plc-open {
+  from { opacity: 0; transform: translateY(3px); }
+}
+.plc .plc-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 46px;
+  padding: 8px 8px 0 14px;
+  flex-shrink: 0;
+}
+.plc .plc-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+.plc .plc-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: -8px;
+  padding: 6px 10px 6px 4px;
+  border-radius: var(--plc-radius);
+  color: var(--plc-muted);
+  font: 500 13px/1 var(--plc-sans);
+  cursor: pointer;
+  transition: background-color 0.12s, color 0.12s;
+}
+.plc .plc-back .plc-icon { width: 16px; height: 16px; }
+.plc .plc-back:hover { color: var(--plc-ink); background: var(--plc-surface); }
+.plc .plc-resolve { color: var(--plc-muted); }
+.plc .plc-resolve:hover { color: var(--plc-ink); }
+
+.plc .plc-tabs { display: flex; gap: 2px; margin-left: -8px; }
+.plc .plc-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px;
+  border-radius: var(--plc-radius);
+  color: var(--plc-muted);
+  font: 600 14px/1 var(--plc-sans);
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.plc .plc-tab:hover, .plc .plc-tab[aria-selected="true"] { color: var(--plc-ink); }
+.plc .plc-count {
+  min-width: 20px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: var(--plc-surface);
+  color: var(--plc-muted);
+  font: 600 11px/1 var(--plc-sans);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.plc .plc-tab[aria-selected="true"] .plc-count { color: var(--plc-ink); }
+.plc .plc-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-height: 0;
+  padding: 8px 14px 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--plc-rule) transparent;
+  scrollbar-width: thin;
+}
+
+/* Overview */
+.plc .plc-overview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-right: -6px;
+}
+.plc .plc-filter {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--plc-surface);
+}
+.plc .plc-filter-option {
+  padding: 5px 10px;
+  border-radius: 7px;
+  color: var(--plc-muted);
+  font: 500 12.5px/1.2 var(--plc-sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.plc .plc-filter-option:hover { color: var(--plc-ink); }
+.plc .plc-filter-option[aria-pressed="true"] {
+  background: var(--plc-paper);
+  color: var(--plc-ink);
+  box-shadow: 0 1px 2px color-mix(in srgb, #000 12%, transparent);
+}
+.plc .plc-thread-row {
+  display: block;
+  position: relative;
+  margin: -2px -8px;
+  border-radius: 10px;
+  transition: background-color 0.12s;
+}
+.plc .plc-thread-row:is(:hover, :focus-within), .plc .plc-thread-row[data-confirming="true"] { background: var(--plc-surface); }
+.plc .plc-thread-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 42px 8px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+}
+.plc .plc-summary-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  opacity: 0;
+  pointer-events: none;
+}
+.plc .plc-thread-row:is(:hover, :focus-within) .plc-summary-delete {
+  opacity: 1;
+  pointer-events: auto;
+}
+.plc .plc-summary-delete:hover { color: var(--plc-danger); background: color-mix(in srgb, var(--plc-danger) 9%, var(--plc-paper)); }
+@media (hover: none) {
+  .plc .plc-summary-delete { opacity: 1; pointer-events: auto; }
+}
+.plc .plc-summary-scope {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  font: 400 13.5px/1.6 var(--plc-document-font, Georgia, serif);
+  overflow-wrap: anywhere;
+}
+.plc .plc-thread-row[data-placement="unattached"] .plc-quote-text { background: none; color: var(--plc-muted); text-decoration-style: dotted; text-decoration-color: var(--plc-muted); }
+.plc .plc-summary-body { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.plc .plc-summary-meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--plc-muted); font-size: 12px; }
+.plc .plc-section-title {
+  display: block;
+  margin-top: 6px;
+  color: var(--plc-muted);
+  font: 600 12px/1.4 var(--plc-sans);
+}
+
+.plc .plc-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--plc-surface);
+  font-size: 13px;
+}
+.plc .plc-banner-error { color: var(--plc-danger); background: color-mix(in srgb, var(--plc-danger) 9%, var(--plc-paper)); }
+.plc .plc-banner-accent { background: color-mix(in srgb, var(--plc-accent) 12%, var(--plc-paper)); }
+/* Quiet buttons sitting on a tinted block become paper chips so they still read as buttons. */
+.plc :is(.plc-banner, .plc-placement, .plc-delete-confirm, .plc-conflict, .plc-delivery-failed) .plc-button-quiet { background: var(--plc-paper); color: var(--plc-ink); }
+.plc :is(.plc-banner, .plc-placement, .plc-delete-confirm, .plc-conflict, .plc-delivery-failed) .plc-button-quiet:hover { background: color-mix(in srgb, var(--plc-ink) 6%, var(--plc-paper)); }
+.plc .plc-hint, .plc .plc-empty, .plc .plc-meta {
+  display: block;
+  color: var(--plc-muted);
+  font-size: 13px;
+}
+.plc .plc-empty { padding: 4px 0 8px; }
+.plc .plc-scope {
+  display: block;
+  color: var(--plc-muted);
+  font: 500 12.5px/1.5 var(--plc-sans);
+}
+
+/* The quoted passage keeps the document's typeface and wears the same highlight as
+   the marked text in the page, so the popup visibly belongs to that passage. */
+.plc .plc-quote {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  color: var(--plc-ink);
+  font-family: var(--plc-document-font, Georgia, serif);
+  font-size: 14.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.plc .plc-quote-text {
+  display: inline;
+  padding: 1px 1px;
+  border-radius: 2px;
+  background: var(--plc-mark);
+  text-decoration: underline 2px color-mix(in srgb, var(--plc-accent) 55%, transparent);
+  text-underline-offset: 3px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-color 0.12s;
+}
+.plc .plc-quote-button { display: block; text-align: left; cursor: pointer; border-radius: 4px; }
+.plc .plc-quote-button:hover .plc-quote-text { background: color-mix(in srgb, var(--plc-accent) 30%, transparent); }
+.plc .plc-quote-detached .plc-quote { color: var(--plc-muted); }
+.plc .plc-quote-detached .plc-quote-text {
+  background: none;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--plc-muted);
+}
+
+.plc .plc-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plc .plc-composer .plc-actions { justify-content: flex-end; }
+/* `field-sizing: content` ignores `rows`, so new comments and notes get their two lines here. */
+.plc .plc-composer .plc-field .plc-textarea,
+.plc .plc-composer .plc-field .plc-textarea:focus { min-height: calc(3em + 8px); }
+.plc .plc-composer > .plc-textarea { min-height: calc(3em + 18px); }
+.plc .plc-composer-scope {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-right: -6px;
+}
+.plc .plc-composer-scope .plc-icon-button { width: 26px; height: 26px; }
+.plc .plc-composer-scope .plc-icon { width: 15px; height: 15px; }
+
+/* One conversation per popup. Comments are separated by space, not rules. */
+.plc .plc-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 6px;
+}
+.plc .plc-thread:focus-visible { outline-offset: 6px; }
+.plc .plc-thread[data-delivery] { padding-left: 10px; border-left: 2px solid var(--plc-rule); }
+.plc .plc-thread[data-delivery="failed"], .plc .plc-note[data-delivery="failed"] { border-left-color: var(--plc-danger); }
+.plc [data-delivery="sending"] > .plc-comments, .plc [data-delivery="sending"] > .plc-body { opacity: 0.6; }
+
+.plc .plc-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.plc .plc-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.plc .plc-body {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.plc time {
+  display: inline;
+  color: var(--plc-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.plc .plc-comment-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-height: 24px; }
+.plc .plc-delete {
+  margin-left: -2px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  color: var(--plc-muted);
+  font: 500 12px/1 var(--plc-sans);
+  cursor: pointer;
+  transition: color 0.12s, background-color 0.12s;
+}
+.plc .plc-delete:hover { color: var(--plc-danger); background: color-mix(in srgb, var(--plc-danger) 9%, var(--plc-paper)); }
+.plc .plc-delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--plc-danger) 5%, var(--plc-paper));
+  border: 1px solid color-mix(in srgb, var(--plc-danger) 18%, var(--plc-rule));
+  font-size: 13px;
+}
+.plc .plc-thread-row > .plc-delete-confirm { width: auto; margin: 0 8px 8px; }
+.plc .plc-delete-copy { display: flex; flex-direction: column; gap: 3px; }
+.plc .plc-delete-title { font-weight: 600; color: var(--plc-ink); }
+.plc .plc-delete-description { color: var(--plc-muted); font-size: 12px; line-height: 1.5; }
+.plc .plc-delete-confirm .plc-actions { justify-content: flex-end; }
+.plc .plc-delete-confirm .plc-button { min-height: 32px; }
+.plc .plc-button-danger { background: var(--plc-danger); color: var(--plc-paper); }
+.plc .plc-button-danger:hover { background: color-mix(in srgb, var(--plc-danger) 86%, var(--plc-ink)); }
+.plc button:disabled { opacity: 0.5; cursor: progress; }
+
+.plc .plc-placement {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--plc-caution) 10%, var(--plc-paper));
+  color: var(--plc-ink);
+  font-size: 13px;
+}
+.plc .plc-current {
+  font-family: var(--plc-document-font, Georgia, serif);
+  font-style: italic;
+}
+.plc .plc-current::before { content: open-quote; }
+.plc .plc-current::after { content: close-quote; }
+
+.plc .plc-reply { display: block; }
+
+.plc .plc-delivery {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--plc-muted);
+  font-size: 13px;
+}
+.plc .plc-delivery-failed { color: var(--plc-danger); }
+
+/* Notes */
+.plc .plc-note {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.plc .plc-note[data-delivery] { padding-left: 10px; border-left: 2px solid var(--plc-rule); }
+.plc .plc-note + .plc-note { padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--plc-rule) 60%, transparent); }
+.plc .plc-composer + .plc-note, .plc .plc-composer + .plc-empty { margin-top: 4px; }
+.plc .plc-note-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-right: -6px;
+}
+.plc .plc-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plc .plc-note-form .plc-actions { justify-content: flex-end; }
+.plc .plc-conflict {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--plc-caution) 10%, var(--plc-paper));
+}
+.plc .plc-conflict-text {
+  display: block;
+  max-height: 30vh;
+  overflow-y: auto;
+  padding: 8px 10px;
+  border-radius: var(--plc-radius);
+  background: var(--plc-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plc .plc-panel:not([hidden]) { animation: none; }
+  .plc * { transition: none !important; }
+}
+
+/* Notices */
+.plc .plc-notices {
+  position: fixed;
+  z-index: var(--plc-layer);
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(380px, calc(100vw - 32px));
+}
+.plc .plc-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 6px 8px 14px;
+  border-radius: 8px;
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+  box-shadow: 0 6px 20px color-mix(in srgb, #000 20%, transparent);
+}
+.plc .plc-notice-error { border-left: 4px solid var(--plc-danger); }
+.plc .plc-notice-text { display: block; flex: 1; font-size: 13px; }
+.plc .plc-notice .plc-button-quiet { color: var(--plc-paper); background: color-mix(in srgb, var(--plc-paper) 10%, transparent); }
+.plc .plc-notice .plc-button-quiet:hover { background: color-mix(in srgb, var(--plc-paper) 14%, transparent); }
+.plc .plc-notice .plc-icon-button { color: color-mix(in srgb, var(--plc-paper) 70%, transparent); }
+.plc .plc-notice .plc-icon-button:hover { color: var(--plc-paper); background: color-mix(in srgb, var(--plc-paper) 14%, transparent); }
+
+@media (max-width: 40rem) {
+  .plc .plc-launcher { right: 12px; bottom: 12px; }
+  .plc .plc-notices { left: 12px; bottom: 64px; width: calc(100vw - 24px); }
+}
+
+@media print {
+  .plc { display: none !important; }
+}
+
+/* Comment highlights in the document. These live outside `.plc` because they paint
+   the page's own text. */
+::highlight(planloft-comment) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 16%, transparent);
+  text-decoration: underline 2px color-mix(in srgb, var(--planloft-accent, Highlight) 55%, transparent);
+}
+::highlight(planloft-comment-approximate) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 10%, transparent);
+  text-decoration: underline 2px dotted color-mix(in srgb, var(--planloft-accent, Highlight) 60%, transparent);
+}
+::highlight(planloft-comment-active) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 30%, transparent);
+  text-decoration: underline 2px var(--planloft-accent, Highlight);
+}
+::highlight(planloft-comment-draft) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 24%, transparent);
+}
+@media print {
+  ::highlight(planloft-comment),
+  ::highlight(planloft-comment-approximate),
+  ::highlight(planloft-comment-active),
+  ::highlight(planloft-comment-draft) { background-color: transparent; text-decoration: none; }
+}
+
+/* Task checkboxes are page elements; only their saving and unavailable states are styled. */
+input[type="checkbox"][data-planloft-task][data-planloft-task-state="loading"],
+input[type="checkbox"][data-planloft-task][data-planloft-task-state="saving"] { cursor: progress; opacity: 0.6; }
+input[type="checkbox"][data-planloft-task][data-planloft-task-state="unavailable"] { cursor: not-allowed; opacity: 0.45; }
+</style>
+<script type="application/json" id="planloft-collaboration-config">{"documentId":"uac-v2-eval","revision":"2026-11-13-1","apiUrl":"https://planloft-collab-demo.hatimcodes.workers.dev/api","contentSelector":"article"}</script>
+<script data-planloft-collaboration>(()=>{function j(s,e,t,n={}){let i=Array.from(s);if(!Number.isInteger(e)||!Number.isInteger(t)||e<0||t<=e||t>i.length)throw new RangeError("Invalid anchor range");let o=n.contextLength??32;return{quote:i.slice(e,t).join(""),prefix:i.slice(Math.max(0,e-o),e).join(""),suffix:i.slice(t,t+o).join(""),start:e,end:t,...n.revision===void 0?{}:{revision:n.revision},...n.documentId===void 0?{}:{documentId:n.documentId}}}function fe(s,e){let t=Array.from(s),n=Array.from(e.quote);if(!n.length||e.quote.length>4096||!t.length)return{status:"unattached"};let i=Array.from(e.prefix),o=Array.from(e.suffix);if(e.end-e.start===n.length&&e.start>=0&&e.end<=t.length&&t.slice(e.start,e.end).join("")===e.quote&&t.slice(Math.max(0,e.start-i.length),e.start).join("")===e.prefix&&t.slice(e.end,e.end+o.length).join("")===e.suffix)return{status:"exact",start:e.start,end:e.end};let a=new Set,d=new Set,l=(h,b,A)=>{if(!h)return;let P=s.indexOf(h),f=0;for(;P>=0&&f++<100;)b.add(Array.from(s.slice(0,P+(A?h.length:0))).length),P=s.indexOf(h,P+h.length)};l(e.quote,a,!1),l(e.prefix,a,!0),l(e.suffix,d,!1),l(i.slice(-Math.min(i.length,12)).join(""),a,!0),l(o.slice(0,Math.min(o.length,12)).join(""),d,!1);for(let h=-8;h<=8;h++)a.add(e.start+h);let c=[...d].sort((h,b)=>Math.abs(h-e.end)-Math.abs(b-e.end)).slice(0,12);for(let h of c)a.add(h-n.length);let p=[...a].filter(h=>h>=0&&h<t.length).sort((h,b)=>Math.abs(h-e.start)-Math.abs(b-e.start)).slice(0,48),u;for(let h of p){let b=new Set([n.length]),A=Math.max(1,Math.floor(n.length*.3)),P=Math.max(1,Math.floor(A/4));for(let f=-A;f<=A;f+=P)b.add(n.length+f);for(let f of c)Math.abs(f-h-n.length)<=A&&b.add(f-h);for(let f of b){if(f<1||h+f>t.length)continue;let te=t.slice(h,h+f),ce=f===n.length&&te.every((C,k)=>C===n[k]),he=Math.max(1,Math.ceil(Math.max(n.length,te.length)/256)),ne=n.filter((C,k)=>k%he===0),q=te.filter((C,k)=>k%he===0),F=Array.from({length:q.length+1},(C,k)=>k);for(let C=0;C<ne.length;C++){let k=[C+1];for(let I=0;I<q.length;I++)k.push(Math.min(k[I]+1,F[I+1]+1,F[I]+ +(ne[C]!==q[I])));F=k}let ue=1-F[q.length]/Math.max(ne.length,q.length);if(!ce&&ue<(n.length<=4?.5:.7))continue;let M=0;for(;M<i.length&&M<h&&i[i.length-M-1]===t[h-M-1];)M++;let L=0;for(;L<o.length&&h+f+L<t.length&&o[L]===t[h+f+L];)L++;let se=i.length+o.length,pe=se?(M+L)/se:0;if(se>=4&&pe<.15)continue;let me=ue*.55+pe*.4+.05/(1+Math.abs(h-e.start)/50);(!u||me>u.score)&&(u={start:h,end:h+f,score:me,exact:ce})}}return u?{status:u.exact?"exact":"approximate",start:u.start,end:u.end}:{status:"unattached"}}var ie={bodyCharacters:4096,threads:128,comments:512,notes:64,tasks:512,creationRequests:2048,noteHistory:20},$=class extends Error{},E=(s,e)=>{throw new $(`${s} is not ${e}`)},T=(s,e)=>typeof s=="string"?s:E(e,"a string"),oe=(s,e)=>typeof s=="number"&&Number.isSafeInteger(s)?s:E(e,"an integer"),ae=(s,e)=>typeof s=="boolean"?s:E(e,"a boolean"),ge=s=>(e,t)=>e===void 0?void 0:s(e,t),Ve=s=>(e,t)=>e===null?null:s(e,t),K=s=>(e,t)=>Array.isArray(e)?e.map((n,i)=>s(n,`${t}[${i}]`)):E(t,"an array"),S=s=>(e,t)=>{if(typeof e!="object"||e===null||Array.isArray(e))return E(t,"an object");let n=e,i={};for(let o of Object.keys(s))i[o]=s[o](n[o],`${t}.${o}`);return i},D=(s,e=!1)=>(t,n)=>{let i=T(t,n);return i.length<=s&&(!e||i.trim().length>0)?i:E(n,"valid bounded text")},ye=s=>(e,t)=>{let n=oe(e,t);return n>=s?n:E(t,"a valid version")},Ue=(s,e)=>{let t=S({quote:D(4096,!0),prefix:D(1e3),suffix:D(1e3),start:ye(0),end:ye(1),revision:ge(D(1e3)),documentId:ge(D(1e3))})(s,e);return(Object.keys(Object(s)).some(n=>!["quote","prefix","suffix","start","end","revision","documentId"].includes(n))||t.end<=t.start)&&E(e,"a valid anchor"),t},ve=S({id:T,body:T,createdAt:T}),be=S({id:T,body:T,anchor:Ve(Ue),resolved:ae,createdAt:T,comments:K(ve)}),Te=S({id:T,body:T,version:oe,createdAt:T,updatedAt:T}),ke=S({key:T,checked:ae,version:oe}),We=S({threads:K(be),notes:K(Te),tasks:K(ke)}),Be=S({error:T}),y={deletion:s=>{S({deleted:ae})(s,"deletion").deleted||E("deletion.deleted","true")},state:s=>We(s,"state"),thread:s=>be(s,"thread"),comment:s=>ve(s,"comment"),note:s=>Te(s,"note"),task:s=>ke(s,"task"),errorCode:s=>Be(s,"error").error},Tt=D(ie.bodyCharacters,!0);function V(){return Array.from(crypto.getRandomValues(new Uint8Array(16)),s=>s.toString(16).padStart(2,"0")).join("")}function xe(s){let e=`${s.apiUrl.replace(/\/+$/,"")}/documents/${encodeURIComponent(s.documentId)}`;async function t(i,o,a){if(!navigator.onLine)return{ok:!1,failure:{kind:"offline"}};let d={};i.body!==void 0&&(d["Content-Type"]="application/json"),i.idempotencyKey&&(d["Idempotency-Key"]=i.idempotencyKey);let l;try{l=await fetch(`${e}${i.path}`,{method:i.method,headers:d,body:i.body===void 0?void 0:JSON.stringify(i.body),cache:"no-store"})}catch{return{ok:!1,failure:{kind:"network"}}}let c=null;try{c=await l.json()}catch{if(l.ok)return{ok:!1,failure:{kind:"invalid"}}}try{if(l.ok)return{ok:!0,value:o(c)};if(l.status===409&&a&&typeof c=="object"&&c!==null&&"current"in c)return{ok:!1,failure:{kind:"conflict",current:a(c.current)}};let p=null;try{p=y.errorCode(c)}catch{}return{ok:!1,failure:{kind:"status",status:l.status,code:p}}}catch(p){if(p instanceof $)return{ok:!1,failure:{kind:"invalid"}};throw p}}let n=(...i)=>i.map(o=>`/${encodeURIComponent(o)}`).join("");return{state:()=>t({method:"GET",path:"/state"},y.state),createThread:(i,o,a)=>t({method:"POST",path:"/threads",body:{body:i,anchor:o},idempotencyKey:a},y.thread),reply:(i,o,a)=>t({method:"POST",path:n("threads",i,"comments"),body:{body:o},idempotencyKey:a},y.comment),updateThread:(i,o)=>t({method:"PATCH",path:n("threads",i),body:o},y.thread),deleteThread:i=>t({method:"DELETE",path:n("threads",i)},y.deletion),deleteComment:(i,o)=>t({method:"DELETE",path:n("threads",i,"comments",o)},y.deletion),createNote:(i,o)=>t({method:"POST",path:"/notes",body:{body:i},idempotencyKey:o},y.note),updateNote:(i,o,a)=>t({method:"PATCH",path:n("notes",i),body:{body:o,version:a}},y.note,y.note),setTask:(i,o,a)=>t({method:"PUT",path:n("tasks",i),body:{checked:o,version:a}},y.task,y.task)}}function x(s){return s.kind==="network"||s.kind==="invalid"||s.kind==="status"&&s.status>=500}function m(s){switch(s.kind){case"offline":return"You are offline.";case"network":return"The comment server did not respond.";case"conflict":return"Someone else changed this first.";case"invalid":return"The comment server sent a response this page cannot read.";case"status":return s.code==="capacity_exceeded"?"This document has reached its limit for comments, notes or tasks.":s.status===410?"This comment was deleted.":s.status===404?"Comments are not set up for this document.":s.status===413?"That is too long to save.":`The comment server refused the change (HTTP ${s.status}${s.code?`, ${s.code}`:""}).`}}var _e=/\P{M}\p{M}*|\p{M}+/gu,ze=/^\s+$/u,Ye=/^[­​]$/u;function we(s){let e=[],t={text:"",nodes:[],nodeStart:[],nodeEnd:[],owner:[],from:[],to:[],chars:e,length:0},n=null,i=a=>{let d=t.nodes.length-1;return t.nodes[d]===a?d:(t.nodes.push(a),t.nodeStart.push(e.length),t.nodeEnd.push(e.length),d+1)},o=(a,d,l,c)=>{e.push(a),t.owner.push(d),t.from.push(l),t.to.push(c),t.nodeEnd[d]=e.length};for(let a of s){if(a==="break"){n??="break";continue}for(let d of a.data.matchAll(_e)){let l=d[0],c=d.index,p=c+l.length;if(Ye.test(l))continue;if(ze.test(l)){(n===null||n==="break")&&(n={node:a.node,from:c,to:p});continue}n!==null&&e.length>0&&(n==="break"?o(" ",i(a.node),c,c):o(" ",i(n.node),n.from,n.to)),n=null;let u=i(a.node);for(let h of l.normalize("NFC"))o(h,u,c,p)}}return t.text=e.join(""),t.length=e.length,t}function Ce(s,e,t,n){let i=s.nodeStart[e],o=s.nodeEnd[e];if(n==="start"){for(let a=i;a<o;a++)if(s.to[a]>t)return a;return o}for(let a=o-1;a>=i;a--)if(s.from[a]<t)return a+1;return i}function re(s,e,t){let n=t==="start"?e:e-1,i=s.owner[n];return{node:s.nodes[i],offset:t==="start"?s.from[n]:s.to[n]}}function Ee(s,e,t){for(;e<t&&s.chars[e]===" ";)e++;for(;t>e&&s.chars[t-1]===" ";)t--;return e<t?{start:e,end:t}:null}var Ge=new Set(["script","style","noscript","template","textarea","select","svg","math","canvas","iframe","object","video","audio","button","input"]),le="[data-planloft-collaboration], .planloft-theme-selector, .planloft-comments, [data-planloft-ignore]",Qe=new Set(["address","article","aside","blockquote","br","caption","dd","details","dialog","div","dl","dt","fieldset","figcaption","figure","footer","form","h1","h2","h3","h4","h5","h6","header","hgroup","hr","legend","li","main","nav","ol","p","pre","section","summary","table","tbody","td","tfoot","th","thead","tr","ul"]);function Se(s){return Ge.has(s.localName)||s.matches(le)}var Xe=s=>(s instanceof Element?s:s.parentElement)?.closest(le)!=null;function Ne(s){return Xe(s.target)?!1:s.type!=="childList"?!0:![...s.addedNodes,...s.removedNodes].every(e=>e instanceof Element&&e.matches(le))}function Re(s,e){for(let t=s.firstChild;t;t=t.nextSibling)if(t instanceof Text)e.push({node:t,data:t.data});else if(t instanceof Element&&!Se(t)){let n=Qe.has(t.localName);n&&e.push("break"),Re(t,e),n&&e.push("break")}}var U=class{constructor(e){this.root=e;let t=[];Se(e)||Re(e,t),this.index=we(t),this.positions=new Map(this.index.nodes.map((n,i)=>[n,i]))}root;index;positions;get text(){return this.index.text}offsetsOf(e){let t=this.offsetOf(e.startContainer,e.startOffset,"start"),n=this.offsetOf(e.endContainer,e.endOffset,"end");return Ee(this.index,t,n)}rangeOf(e,t){let n=re(this.index,e,"start"),i=re(this.index,t,"end"),o=document.createRange();return o.setStart(n.node,n.offset),o.setEnd(i.node,i.offset),o}offsetOf(e,t,n){let i=e instanceof Text?this.positions.get(e):void 0;if(i!==void 0)return Ce(this.index,i,t,n);let o=document.createRange();o.setStart(e,t);let{nodes:a,nodeStart:d,nodeEnd:l}=this.index;if(n==="start"){let u=0,h=a.length;for(;u<h;){let b=u+h>>1;o.comparePoint(a[b],0)>=0?h=b:u=b+1}return u<a.length?d[u]:this.index.length}let c=-1,p=a.length-1;for(;c<p;){let u=c+p+1>>1;o.comparePoint(a[u],a[u].length)<=0?c=u:p=u-1}return c>=0?l[c]:0}};function r(s,e={},...t){let n=document.createElement(s);for(let[i,o]of Object.entries(e))o==null||o===!1||(typeof o=="function"?n.addEventListener(i.slice(2).toLowerCase(),o):i==="value"&&n instanceof HTMLTextAreaElement?n.value=String(o):n.setAttribute(i,o===!0?"":String(o)));for(let i of t.flat())i==null||i===!1||n.append(i);return n}var Ae="http://www.w3.org/2000/svg";function v(s){let e=document.createElementNS(Ae,"svg");e.setAttribute("viewBox","0 0 20 20"),e.setAttribute("aria-hidden","true"),e.setAttribute("class","plc-icon");for(let t of s){let n=document.createElementNS(Ae,"path");n.setAttribute("d",t),e.append(n)}return e}var g={comment:["M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-3.5 3v-3H4A1.5 1.5 0 0 1 2.5 13V6A1.5 1.5 0 0 1 4 4.5z"],close:["M5 5l10 10M15 5L5 15"],check:["M4.5 10.5l3.5 3.5 7.5-8"],back:["M12 5l-5 5 5 5"],send:["M10 15.5V5","M5.5 9.5L10 5l4.5 4.5"],plus:["M10 4.5v11M4.5 10h11"],trash:["M3.5 5.5h13","M7 5.5V3.5h6v2","M5 5.5l.8 11h8.4l.8-11","M8 8.5v5M12 8.5v5"],reopen:["M4.5 10a5.5 5.5 0 1 0 1.6-3.9","M4.5 3.5v3h3"],warning:["M10 3l8 14H2z","M10 8.5v3.5M10 14.5v.01"]},Pe=new Intl.RelativeTimeFormat(void 0,{numeric:"auto"}),Je=new Intl.DateTimeFormat(void 0,{dateStyle:"medium",timeStyle:"short"}),Ze=[["second",60],["minute",60],["hour",24],["day",7],["week",4.35],["month",12],["year",1/0]];function H(s){let e=new Date(s),t=(e.getTime()-Date.now())/1e3,n="";for(let[i,o]of Ze){if(Math.abs(t)<o){n=i==="second"?Pe.format(0,"second"):Pe.format(Math.round(t),i);break}t/=o}return r("time",{datetime:s,title:Je.format(e)},n)}var W={exact:"planloft-comment",approximate:"planloft-comment-approximate",active:"planloft-comment-active",draft:"planloft-comment-draft"},et=typeof CSS<"u"&&"highlights"in CSS&&typeof Highlight=="function";function Me(s){if(!et)return;let e=(t,n,i)=>{if(!n.length)return void CSS.highlights.delete(t);let o=new Highlight(...n);o.priority=i,CSS.highlights.set(t,o)};e(W.exact,s.exact,1),e(W.approximate,s.approximate,1),e(W.active,s.active?[s.active]:[],2),e(W.draft,s.draft?[s.draft]:[],3)}function Le(s,e){if(typeof document.caretPositionFromPoint=="function"){let t=document.caretPositionFromPoint(s,e);return t?{node:t.offsetNode,offset:t.offset}:null}if(typeof document.caretRangeFromPoint=="function"){let t=document.caretRangeFromPoint(s,e);return t?{node:t.startContainer,offset:t.startOffset}:null}return null}function Ie({anchor:s,popup:e,viewport:t,anchored:n}){let o=t.left+t.width-12,a=t.top+t.height-12,d=s.left+s.width-e.width,l=s.top-e.height-12;return n&&(s.left+s.width+12+e.width<=o?(d=s.left+s.width+12,l=s.top):s.left-12-e.width>=t.left+12?(d=s.left-12-e.width,l=s.top):s.top+s.height+12+e.height<=a&&(l=s.top+s.height+12)),{left:Math.max(t.left+12,Math.min(d,o-e.width)),top:Math.max(t.top+12,Math.min(l,a-e.height))}}async function B(s,e){let t=s.delivery.status==="unknown";s.delivery={status:"sending"};let n=await e();if(n.ok)return n.value;let{failure:i}=n;return s.delivery={status:x(i)||t&&i.kind==="offline"?"unknown":"failed",failure:i},null}function N(s,e){return s.pendingReplies.some(t=>t.threadId===e&&t.delivery.status==="sending")}function De(){return{load:{status:"loading"},online:navigator.onLine,threads:[],notes:[],tasks:new Map,pendingThreads:[],pendingReplies:[],pendingNotes:[],busyThreads:new Set,deleting:null,noteEdits:new Map,placements:new Map,composer:{body:"",anchor:null},replyDrafts:new Map,noteDraft:"",notices:[],panel:{open:!1,tab:"comments",filter:"open",view:"browse"},activeThread:null,reattaching:null}}function Y(s){let e=`plc-field-${s.key}`;return[r("label",{class:"plc-visually-hidden",for:e},s.label),r("textarea",{id:e,class:"plc-textarea",rows:s.rows,placeholder:s.placeholder,maxlength:ie.bodyCharacters,value:s.value,"data-focus-key":s.key,oninput:t=>s.onInput(t.target.value),onkeydown:t=>{let n=t;n.key==="Enter"&&(n.metaKey||n.ctrlKey)&&(n.preventDefault(),t.target.form?.requestSubmit())}})]}function G(s,e,...t){return r("form",{class:e,onsubmit:n=>{n.preventDefault(),s()}},...t)}var w=(s,e,t="quiet",n={})=>r("button",{type:"button",class:`plc-button plc-button-${t}`,onclick:e,...n},s),R=s=>r("p",{class:"plc-body"},s),He=(s,e)=>r("div",{class:"plc-field"},...s,r("button",{type:"submit",class:"plc-send","aria-label":e,title:e},v(g.send)));function de(s,e,t){if(s.status==="sending")return r("p",{class:"plc-delivery"},"Sending\u2026");let{failure:n}=s,i=s.status==="unknown"?`Not confirmed. ${m(n)} It may already be ${e}. Retry checks without ${e==="saved"?"saving":"posting"} it twice${n.kind==="offline"?", and runs when you reconnect":""}.`:n.kind==="offline"?`Not ${e}. You are offline; it will send when you reconnect.`:`Not ${e}. ${m(n)}`,o=w("Retry",()=>{t.blocked||t.retry()},"quiet",{"aria-disabled":String(t.blocked??!1)});return r("div",{class:"plc-delivery plc-delivery-failed"},r("p",{},i),r("div",{class:"plc-actions"},o,s.status==="failed"&&w("Edit",t.edit)))}function tt({state:s,actions:e}){let t=[];if(s.load.status==="loading"&&t.push(r("p",{class:"plc-banner"},"Loading comments and notes\u2026")),s.load.status==="failed"){let n=s.load.failure.kind==="offline";t.push(r("div",{class:"plc-banner plc-banner-error"},r("p",{},n?"You are offline. Comments and notes load when you reconnect.":`Comments and notes could not load. ${m(s.load.failure)}`),!n&&r("div",{class:"plc-actions"},w("Try again",()=>e.retryLoad()))))}return s.load.status==="ready"&&!s.online&&t.push(r("p",{class:"plc-banner"},"You are offline. What you write stays here and sends when you reconnect.")),s.reattaching&&t.push(r("div",{class:"plc-banner plc-banner-accent"},r("p",{},"Select the text this comment belongs to, then choose Attach comment here."),r("div",{class:"plc-actions"},w("Cancel",()=>e.cancelReattach())))),t}function nt({state:s,actions:e}){let t=s.threads.filter(a=>!a.resolved).length+s.pendingThreads.length,n=s.notes.length+s.pendingNotes.length,i=[["comments","Comments",t],["notes","Notes",n]],o=r("div",{class:"plc-tabs",role:"tablist","aria-label":"Collaboration",onkeydown:a=>{let d=a.key;(d==="ArrowLeft"||d==="ArrowRight")&&e.setTab(s.panel.tab==="comments"?"notes":"comments")}});for(let[a,d,l]of i){let c=s.panel.tab===a;o.append(r("button",{type:"button",role:"tab",id:`plc-tab-${a}`,class:"plc-tab","aria-selected":String(c),"aria-controls":"plc-tabpanel",tabindex:c?0:-1,"data-focus-key":`tab-${a}`,onclick:()=>e.setTab(a)},d,s.load.status==="ready"&&r("span",{class:"plc-count"},String(l))))}return o}function Oe(s,e){let t={state:s,actions:e},n=s.panel.tab==="comments"&&(s.activeThread!==null||s.panel.view==="compose"),i=s.threads.find(a=>a.id===s.activeThread),o=s.load.status!=="ready"?[]:s.panel.tab==="notes"?ht(t):i?[lt(t,i,s.placements.get(i.id)??{status:"unattached"})]:s.panel.view==="compose"?[st(t)]:it(t);return[r("header",{class:"plc-panel-header"},n?r("button",{type:"button",class:"plc-back","data-focus-key":"back",onclick:()=>e.browseComments()},v(g.back),"All comments"):nt(t),r("div",{class:"plc-header-actions"},n&&i&&at(t,i),r("button",{type:"button",class:"plc-icon-button","aria-label":"Close comments",title:"Close","data-focus-key":"close",onclick:()=>e.closePanel()},v(g.close)))),r("div",{class:"plc-panel-body",id:"plc-tabpanel",...n?{}:{role:"tabpanel","aria-labelledby":`plc-tab-${s.panel.tab}`}},...tt(t),...o)]}function z(s){return r("span",{class:"plc-quote"},r("span",{class:"plc-quote-text"},s))}function st(s){let{state:e,actions:t}=s,n=e.composer.anchor;return G(()=>t.submitThread(),"plc-composer",n?r("div",{class:"plc-composer-scope"},z(n.quote),r("button",{type:"button",class:"plc-icon-button","aria-label":"Comment on the whole document instead",title:"Comment on the whole document instead",onclick:()=>t.clearComposerAnchor()},v(g.close))):r("p",{class:"plc-hint"},"Commenting on the whole document. To comment on a passage, select it in the document."),He(Y({key:"composer",label:n?"Comment on the selected text":"Comment on the whole document",value:e.composer.body,placeholder:"Add a comment",rows:2,onInput:i=>t.setComposer(i)}),"Comment"))}function it(s){let{state:e,actions:t}=s,n=e.threads.filter(a=>a.resolved).length,i=e.threads.length-n+e.pendingThreads.length,o=r("div",{class:"plc-filter",role:"group","aria-label":"Show threads"},...[["open",`Open ${i}`],["resolved",`Resolved ${n}`]].map(([a,d])=>r("button",{type:"button",class:"plc-filter-option","aria-pressed":String(e.panel.filter===a),onclick:()=>t.setFilter(a)},d)));return[r("div",{class:"plc-overview-bar"},o,r("button",{type:"button",class:"plc-button plc-button-quiet","data-focus-key":"new-comment",onclick:()=>t.composeComment()},v(g.plus),e.composer.body?"Continue draft":"New comment")),...ot(s)]}function ot(s){let{state:e}=s,t=l=>e.placements.get(l.id)??{status:"unattached"};if(e.panel.filter==="resolved"){let l=e.threads.filter(c=>c.resolved).reverse();return l.length?l.map(c=>_(s,c,t(c))):[r("p",{class:"plc-empty"},"No resolved threads.")]}let n=e.threads.filter(l=>!l.resolved).map(l=>({thread:l,placement:t(l)})),i=n.filter(l=>"range"in l.placement).sort((l,c)=>("start"in l.placement?l.placement.start:0)-("start"in c.placement?c.placement.start:0)),o=n.filter(l=>l.placement.status==="document"),a=n.filter(l=>l.placement.status==="unattached"),d=[...e.pendingThreads.map(l=>dt(s,l)),...i.map(l=>_(s,l.thread,l.placement)),...o.map(l=>_(s,l.thread,l.placement))];return a.length&&(d.push(r("h3",{class:"plc-section-title"},"Text no longer in the document")),d.push(...a.map(l=>_(s,l.thread,l.placement)))),d.length?d:[r("p",{class:"plc-empty"},"No open comments. Select text in the document and choose Comment, or choose New comment for the whole document.")]}function _(s,e,t){let{state:n,actions:i}=s,o=e.comments.length,a=qe(s,e.id,null);return r("div",{class:"plc-thread-row","data-placement":t.status,"data-confirming":String(a!==null)},r("button",{type:"button",class:"plc-thread-summary","data-focus-key":`summary-${e.id}`,onclick:()=>i.openThread(e.id)},e.anchor?r("span",{class:"plc-summary-scope"},r("span",{class:"plc-quote-text"},e.anchor.quote)):r("span",{class:"plc-scope"},"Whole document"),r("span",{class:"plc-summary-body"},e.body),r("span",{class:"plc-summary-meta"},H(e.createdAt),o>0&&r("span",{},`${o} ${o===1?"reply":"replies"}`),t.status==="unattached"?r("span",{},"Unattached"):e.resolved&&r("span",{},"Resolved"))),a??r("button",{type:"button",class:"plc-icon-button plc-summary-delete","aria-label":"Delete thread",title:"Delete thread","data-focus-key":O(e.id,null),disabled:n.busyThreads.has(e.id),onclick:()=>i.requestDelete(e.id,null)},v(g.trash)))}var O=(s,e)=>`delete-${s}-${e??"thread"}`;function qe(s,e,t){let{state:n,actions:i}=s;if(!(n.deleting?.threadId===e&&n.deleting.commentId===t))return null;let a=n.busyThreads.has(e),d=O(e,t),l=`plc-delete-title-${e}-${t??"thread"}`;return r("div",{class:"plc-delete-confirm",role:"group","aria-labelledby":l,"aria-busy":String(a)},r("div",{class:"plc-delete-copy"},r("p",{id:l,class:"plc-delete-title"},t===null?"Delete this thread?":"Delete this reply?"),r("p",{class:"plc-delete-description"},t===null?"This comment and all replies will be removed.":"This reply will be removed.")),r("div",{class:"plc-actions"},r("button",{type:"button",class:"plc-button plc-button-quiet","aria-disabled":String(a),"data-focus-key":d,onclick:()=>i.cancelDelete()},"Cancel"),r("button",{type:"button",class:"plc-button plc-button-danger","aria-disabled":String(a),"data-focus-key":"confirm-delete",onclick:()=>i.confirmDelete()},a?"Deleting\u2026":"Delete")))}function $e(s,e,t){let{state:n,actions:i}=s,o=n.busyThreads.has(e),a=qe(s,e,t);return a||r("button",{type:"button",class:"plc-delete",disabled:o,"aria-label":t===null?"Delete thread":"Delete reply","data-focus-key":O(e,t),onclick:()=>i.requestDelete(e,t)},"Delete")}var Fe=(s,e)=>s.busyThreads.has(e)||N(s,e);function at({state:s,actions:e},t){let n=Fe(s,t.id);return r("button",{type:"button",class:"plc-button plc-button-quiet plc-resolve","data-resolved":String(t.resolved),"aria-disabled":String(n),"data-focus-key":`resolve-${t.id}`,title:N(s,t.id)?"Available once the reply has sent":void 0,onclick:()=>{n||e.setResolved(t.id,!t.resolved)}},v(t.resolved?g.reopen:g.check),s.busyThreads.has(t.id)?"Saving\u2026":t.resolved?"Reopen":"Resolve")}function rt({state:s,actions:e},t,n){if(t.resolved)return null;let i={"aria-disabled":String(Fe(s,t.id))},o=w("Attach to other text",()=>e.startReattach(t.id),"quiet",i);return n.status==="approximate"?r("div",{class:"plc-placement"},r("p",{},"The quoted text has changed. This comment now points at the closest match: ",r("q",{class:"plc-current"},n.current)),r("div",{class:"plc-actions"},w("Keep it here",()=>e.keepPlacement(t.id),"quiet",i),o)):n.status==="unattached"?r("div",{class:"plc-placement"},r("p",{},"The quoted text is no longer in the document."),r("div",{class:"plc-actions"},o)):null}function lt(s,e,t){let{state:n,actions:i}=s,o=n.busyThreads.has(e.id),a=n.pendingReplies.filter(l=>l.threadId===e.id),d=e.anchor?"range"in t?r("button",{type:"button",class:"plc-quote-button",title:"Show in document",onclick:()=>i.showInDocument(e.id)},z(e.anchor.quote)):r("div",{class:"plc-quote-detached"},z(e.anchor.quote)):r("p",{class:"plc-scope"},"Whole document");return r("article",{class:"plc-thread",tabindex:-1,"data-focus-key":`thread-${e.id}`,"data-active":String(n.activeThread===e.id),"data-placement":t.status,"aria-label":e.anchor?`Comment on \u201C${e.anchor.quote.slice(0,80)}\u201D`:"Comment on the whole document"},d,rt(s,e,t),r("ol",{class:"plc-comments"},r("li",{class:"plc-comment"},R(e.body),r("div",{class:"plc-comment-meta"},H(e.createdAt),$e(s,e.id,null))),...e.comments.map(l=>r("li",{class:"plc-comment"},R(l.body),r("div",{class:"plc-comment-meta"},H(l.createdAt),$e(s,e.id,l.id)))),...a.map(l=>ct(s,l))),e.resolved?r("p",{class:"plc-hint"},"Resolved. Reopen the thread to reply."):!o&&G(()=>i.submitReply(e.id),"plc-reply",He(Y({key:`reply-${e.id}`,label:"Reply",value:n.replyDrafts.get(e.id)??"",placeholder:"Reply",rows:1,onInput:l=>i.setReplyDraft(e.id,l)}),"Reply")))}function dt({actions:s},e){return r("article",{class:"plc-thread","data-delivery":e.delivery.status},e.anchor?r("div",{class:"plc-quote-detached"},z(e.anchor.quote)):r("p",{class:"plc-scope"},"Whole document"),r("ol",{class:"plc-comments"},r("li",{class:"plc-comment"},R(e.body))),de(e.delivery,"posted",{retry:()=>s.retryThread(e.key),edit:()=>s.editThread(e.key)}))}function ct({state:s,actions:e},t){return r("li",{class:"plc-comment","data-delivery":t.delivery.status},R(t.body),de(t.delivery,"posted",{retry:()=>e.retryReply(t.key),edit:()=>e.editReply(t.key),blocked:s.busyThreads.has(t.threadId)}))}function ht(s){let{state:e,actions:t}=s,n=G(()=>t.submitNote(),"plc-composer",...Y({key:"note-composer",label:"New note",value:e.noteDraft,placeholder:"Write a note anyone reading can edit",rows:3,onInput:o=>t.setNoteDraft(o)}),r("div",{class:"plc-actions"},r("button",{type:"submit",class:"plc-button plc-button-primary"},"Add note"))),i=[...e.pendingNotes.map(o=>ut(s,o)),...[...e.notes].reverse().map(o=>pt(s,o))];return[n,...i.length?i:[r("p",{class:"plc-empty"},"No notes yet. Everyone who can read this document can read and edit its notes.")]]}function ut({actions:s},e){return r("article",{class:"plc-note","data-delivery":e.delivery.status},R(e.body),de(e.delivery,"saved",{retry:()=>s.retryNote(e.key),edit:()=>s.editPendingNote(e.key)}))}function pt({state:s,actions:e},t){let n=s.noteEdits.get(t.id),i=t.updatedAt!==t.createdAt;if(!n)return r("article",{class:"plc-note"},R(t.body),r("footer",{class:"plc-note-footer"},r("span",{class:"plc-meta"},i?"Edited ":"Added ",H(t.updatedAt)),w("Edit",()=>e.beginNoteEdit(t.id),"quiet",{"data-focus-key":`note-edit-${t.id}`})));let o=n.conflict;return r("article",{class:"plc-note","data-editing":"true"},G(()=>{e.saveNote(t.id)},"plc-note-form",...Y({key:`note-${t.id}`,label:"Edit note",value:n.draft,placeholder:"Note",rows:5,onInput:a=>e.setNoteEdit(t.id,a)}),o&&r("div",{class:"plc-conflict"},r("p",{},"Someone saved a newer version while you were editing. Your text is still in the editor above."),r("p",{class:"plc-meta"},"Their version, saved ",H(o.updatedAt)),r("div",{class:"plc-conflict-text"},R(o.body)),r("div",{class:"plc-actions"},w("Save my version",()=>e.overwriteNote(t.id),"primary"),w("Use their version",()=>e.takeTheirs(t.id)))),n.failure&&r("p",{class:"plc-delivery plc-delivery-failed"},n.failure.kind==="blank"?"A note needs some text. Write something, or choose Cancel to keep the saved version.":x(n.failure)?`Not confirmed. ${m(n.failure)} Save again to check.`:`Not saved. ${m(n.failure)}`),!o&&r("div",{class:"plc-actions"},r("button",{type:"submit",class:"plc-button plc-button-primary","aria-disabled":String(n.saving)},n.saving?"Saving\u2026":"Save"),w("Cancel",()=>e.cancelNoteEdit(t.id)))))}var Q=class{constructor(e){this.host=e}host;begin(e){let t=this.host.state.notes.find(n=>n.id===e);return t?(this.host.state.noteEdits.set(e,{draft:t.body,base:t,saving:!1,failure:null,conflict:null}),this.host.render(),!0):!1}setDraft(e,t){let n=this.host.state.noteEdits.get(e);n&&(n.draft=t)}close(e){this.host.state.noteEdits.delete(e),this.host.render()}async save(e){let t=this.host.state.noteEdits.get(e);if(!t||t.saving)return;if(!t.draft.trim())return t.failure={kind:"blank"},this.host.announce("A note needs some text."),this.host.render();Object.assign(t,{saving:!0,failure:null}),this.host.render();let n=t.draft,i=await this.host.api.updateNote(e,n,t.base.version);t.saving=!1;let o=this.host.state.noteEdits.get(e)===t,a=i.ok?i.value:i.failure.kind==="conflict"&&i.failure.current.body===n?i.failure.current:null;if(a)this.adopt(a),o&&t.draft===n?this.host.state.noteEdits.delete(e):o&&Object.assign(t,{base:a,conflict:null}),this.host.announce("Note saved.");else if(!i.ok&&i.failure.kind==="conflict")this.adopt(i.failure.current),o&&(t.conflict=i.failure.current,this.host.announce("Someone saved a newer version of this note. Your text is still in the editor."));else if(!i.ok)if(o)t.failure=i.failure,this.host.announce(`Note not saved. ${m(i.failure)}`);else{let d=x(i.failure)?"may not have saved":"was not saved";this.host.notify({tone:"error",message:`A note edit you closed while saving ${d}. ${m(i.failure)}`})}this.host.render()}overwrite(e){let t=this.host.state.noteEdits.get(e);!t?.conflict||t.saving||(Object.assign(t,{base:t.conflict,conflict:null}),this.save(e))}adopt(e){let t=this.host.state.notes,n=t.findIndex(i=>i.id===e.id);n<0?t.push(e):t[n].version<=e.version&&(t[n]=e)}};var X=class{constructor(e){this.host=e}host;inFlight=new Map;intents=new Map;failureNotices=new Map;nextIntent=1;saving(e){return this.inFlight.get(e)}toggle(e,t,n){return this.save(e,t,n,this.host.state.tasks.get(e)?.version??0)}async save(e,t,n,i){if(this.inFlight.has(e))return this.host.changed(e);let o=this.nextIntent++;this.intents.set(e,o);let a=this.failureNotices.get(e);a!==void 0&&(this.failureNotices.delete(e),this.host.dismiss(a)),this.inFlight.set(e,t),this.host.changed(e);let d=await this.host.api.setTask(e,t,i);if(this.inFlight.delete(e),d.ok)this.adopt(d.value);else if(d.failure.kind==="conflict"){let l=d.failure.current;this.adopt(l),l.checked!==t&&this.host.notify({tone:"info",message:`Someone else changed \u201C${n}\u201D first. It shows their change: ${l.checked?"done":"not done"}.`})}else{let l=d.failure,c=this.host.notify({tone:"error",message:x(l)?`\u201C${n}\u201D may not have saved. ${m(l)} The box shows the last confirmed state.`:`\u201C${n}\u201D was not saved. ${m(l)}`,action:{label:"Try again",run:()=>{this.intents.get(e)===o&&this.save(e,t,n,i)}}});this.failureNotices.set(e,c)}this.host.changed(e)}adopt(e){this.host.state.tasks.set(e.key,e)}};var je='input[type="checkbox"][data-planloft-task]';function mt(s){let t=(s.closest("label")?.textContent??s.labels?.[0]?.textContent??s.getAttribute("aria-label")??"").replace(/\s+/g," ").trim()||s.dataset.planloftTask||"Task";return t.length>60?`${t.slice(0,59)}\u2026`:t}var J=class{constructor(e){this.host=e;this.saves=new X({state:e.state,api:e.api,notify:t=>e.notify(t),dismiss:t=>e.dismiss(t),changed:t=>this.sync(t)}),document.addEventListener("click",this.onClick,!0),document.addEventListener("change",this.onChange)}host;saves;inputs(e){let t=Array.from(this.host.contentRoot().querySelectorAll(je));return e===void 0?t:t.filter(n=>n.dataset.planloftTask===e)}task(e){if(!(e instanceof HTMLInputElement)||!e.matches(je)||!this.host.contentRoot().contains(e))return null;let t=e.dataset.planloftTask;return t?{input:e,key:t}:null}sync(e){let{load:t,tasks:n}=this.host.state;for(let i of this.inputs(e)){let o=i.dataset.planloftTask??"";if(t.status!=="ready"){i.setAttribute("aria-disabled","true"),i.dataset.planloftTaskState=t.status==="loading"?"loading":"unavailable",i.title=t.status==="loading"?"Loading shared progress":"Shared progress could not be loaded";continue}let a=this.saves.saving(o);i.disabled=!1,i.removeAttribute("title"),i.checked=a??n.get(o)?.checked??i.defaultChecked,i.dataset.planloftTaskState=a===void 0?"ready":"saving",a===void 0?(i.removeAttribute("aria-disabled"),i.removeAttribute("aria-busy")):(i.setAttribute("aria-disabled","true"),i.setAttribute("aria-busy","true"))}}onClick=e=>{let t=this.task(e.target);t&&(this.host.state.load.status!=="ready"||this.saves.saving(t.key)!==void 0)&&e.preventDefault()};onChange=e=>{let t=this.task(e.target);t&&this.saves.toggle(t.key,t.input.checked,mt(t.input))}};var ft=matchMedia("(pointer: coarse)"),Z=class{constructor(e){this.host=e;this.element=r("div",{class:"plc-toolbar",role:"toolbar","aria-label":"Selected text",hidden:!0}),this.element.addEventListener("pointerdown",t=>t.preventDefault()),document.addEventListener("selectionchange",this.schedule),document.addEventListener("pointerdown",t=>{this.host.inUi(t.target)||(this.pointerDown=!0)}),document.addEventListener("pointerup",()=>{this.pointerDown=!1,this.schedule()}),addEventListener("scroll",this.reposition,{capture:!0,passive:!0}),addEventListener("resize",this.reposition,{passive:!0})}host;element;offsets=null;pointerDown=!1;frame=0;current(){return this.read()?.offsets??null}read(){let e=getSelection(),t=this.host.text();if(!e||e.isCollapsed||!e.rangeCount||!t)return null;let n=e.getRangeAt(0);if(this.host.inUi(n.commonAncestorContainer))return null;let i=t.offsetsOf(n);return i?{range:n,offsets:i}:null}schedule=()=>{cancelAnimationFrame(this.frame),this.frame=requestAnimationFrame(()=>this.update())};reposition=()=>{this.element.hidden||this.schedule()};update(){let e=this.pointerDown?null:this.read();if(this.offsets=e?.offsets??null,!e){this.element.hidden=!0;return}this.element.replaceChildren(...this.buttons()),this.element.hidden=!1,this.place(e.range)}hide(){this.offsets=null,this.element.hidden=!0}buttons(){let e=t=>()=>{this.offsets&&t(this.offsets),this.hide()};return this.host.reattaching()?[r("button",{type:"button",class:"plc-toolbar-button",onclick:e(t=>this.host.attach(t))},v(g.check),"Attach comment here"),r("button",{type:"button",class:"plc-toolbar-button plc-toolbar-quiet",onclick:()=>{this.host.cancelReattach(),this.hide()}},"Cancel")]:[r("button",{type:"button",class:"plc-toolbar-button","aria-keyshortcuts":"Control+Alt+M Meta+Alt+M",title:"Comment (Ctrl+Alt+M or \u2318\u2325M)",onclick:e(t=>this.host.comment(t))},v(g.comment),"Comment")]}place(e){let t=Array.from(e.getClientRects()).filter(h=>h.width>0||h.height>0),n=t[0]??e.getBoundingClientRect(),i=t.at(-1)??n,{offsetWidth:o,offsetHeight:a}=this.element,d=8,l=ft.matches||n.top-a-d<d,c=l?i:n,p=l?Math.min(c.bottom+d,innerHeight-a-d):c.top-a-d,u=Math.min(Math.max(d,c.left+c.width/2-o/2),innerWidth-o-d);this.element.style.transform=`translate(${Math.round(u)}px, ${Math.round(p)}px)`}};var gt='a[href], button, input, select, textarea, label, summary, [contenteditable]:not([contenteditable="false"])',yt=matchMedia("(max-width: 40rem)"),vt=matchMedia("(prefers-reduced-motion: reduce)"),ee=class{constructor(e){this.config=e;this.api=xe(e),this.toolbar=new Z({text:()=>this.text,reattaching:()=>this.state.reattaching!==null,inUi:t=>t instanceof Node&&this.ui.contains(t),comment:t=>this.startComment(t),attach:t=>{this.attach(t)},cancelReattach:()=>this.cancelReattach()}),this.launcher=r("button",{type:"button",class:"plc-launcher","aria-expanded":"false","aria-controls":"plc-panel",onclick:()=>this.togglePanel()}),this.panel=r("section",{id:"plc-panel",class:"plc-panel",role:"dialog","aria-modal":"false","aria-label":"Comments and notes",hidden:!0}),this.panel.addEventListener("keydown",t=>{t.key==="Escape"&&(t.preventDefault(),this.state.deleting?this.cancelDelete():this.closePanel())}),this.notices=r("div",{class:"plc-notices",role:"region","aria-label":"Comment messages"}),this.announcer=r("div",{class:"plc-visually-hidden",role:"status","aria-live":"polite"}),this.ui=r("div",{class:"plc","data-planloft-collaboration":""},this.toolbar.element,this.launcher,this.panel,this.notices,this.announcer),this.ui.style.setProperty("--plc-document-font",getComputedStyle(document.body).fontFamily),document.body.append(this.ui),this.notes=new Q({state:this.state,api:this.api,render:()=>this.render(),announce:t=>this.announce(t),notify:t=>this.notify(t)}),this.tasks=new J({state:this.state,api:this.api,contentRoot:()=>this.contentRoot(),notify:t=>this.notify(t),dismiss:t=>this.dismiss(t)}),new MutationObserver(t=>{t.some(Ne)&&this.scheduleLayout()}).observe(document.body,{childList:!0,subtree:!0,characterData:!0}),document.addEventListener("click",this.onDocumentClick),document.addEventListener("keydown",this.onShortcut),addEventListener("online",()=>this.setOnline(!0)),addEventListener("offline",()=>this.setOnline(!1)),addEventListener("scroll",this.position,{capture:!0,passive:!0}),addEventListener("resize",this.position,{passive:!0}),visualViewport?.addEventListener("resize",this.position),visualViewport?.addEventListener("scroll",this.position),new ResizeObserver(this.position).observe(this.panel),new ResizeObserver(this.position).observe(this.contentRoot()),this.layout(),this.load()}config;state=De();api;ui;panel;launcher;notices;announcer;toolbar;tasks;notes;text=null;resolutions=new WeakMap;resolvedText="";layoutFrame=0;renderQueued=!1;nextNotice=1;renderedNotices=null;contentRoot(){return this.config.contentSelector&&document.querySelector(this.config.contentSelector)||document.body}async load(){this.state.load={status:"loading"},this.tasks.sync(),this.render();let e=await this.api.state();e.ok?(this.state.threads=e.value.threads,this.state.notes=e.value.notes,this.state.tasks=new Map(e.value.tasks.map(t=>[t.key,t])),this.state.load={status:"ready"}):(this.state.load={status:"failed",failure:e.failure},this.announce(`Comments and notes could not load. ${m(e.failure)}`)),this.layout()}scheduleLayout(){cancelAnimationFrame(this.layoutFrame),this.layoutFrame=requestAnimationFrame(()=>this.layout())}layout(){this.text=new U(this.contentRoot()),this.text.text!==this.resolvedText&&(this.resolutions=new WeakMap,this.resolvedText=this.text.text),this.state.placements=new Map(this.state.threads.map(e=>[e.id,this.place(e.anchor)])),this.tasks.sync(),this.paint(),this.render()}place(e){if(!e)return{status:"document"};let t=this.text;if(!t)return{status:"unattached"};let n=this.resolutions.get(e);if(n||(n=fe(t.text,e),this.resolutions.set(e,n)),n.status==="unattached")return n;let{status:i,start:o,end:a}=n;return{status:i,start:o,end:a,range:t.rangeOf(o,a),current:t.index.chars.slice(o,a).join("")}}paint(){let e=[],t=[],n=null;for(let o of this.state.threads){let a=this.state.placements.get(o.id);if(!(!a||!("range"in a)))if(o.id===this.state.activeThread)n=a.range;else{if(o.resolved)continue;(a.status==="exact"?e:t).push(a.range)}}for(let o of this.state.pendingThreads){let a=this.place(o.anchor);"range"in a&&e.push(a.range)}let i=this.place(this.state.panel.open&&this.state.panel.view==="compose"&&this.state.panel.tab==="comments"?this.state.composer.anchor:null);Me({exact:e,approximate:t,active:n,draft:"range"in i?i.range:null})}setOnline(e){if(this.state.online=e,e){this.state.load.status==="failed"&&this.load();let t=({delivery:n})=>n.status==="unknown"||n.status==="failed"&&n.failure.kind==="offline";for(let n of this.state.pendingThreads.filter(t))this.deliverThread(n);for(let n of this.state.pendingReplies.filter(t))this.state.busyThreads.has(n.threadId)||this.deliverReply(n);for(let n of this.state.pendingNotes.filter(t))this.deliverNote(n);for(let[n,{failure:i}]of this.state.noteEdits)i&&i.kind!=="blank"&&(i.kind==="offline"||x(i))&&this.saveNote(n)}this.render()}render(){this.renderQueued||(this.renderQueued=!0,queueMicrotask(()=>{this.renderQueued=!1,this.renderNow()}))}renderNow(){let{state:e}=this,t=e.threads.filter(i=>!i.resolved).length+e.pendingThreads.length,n=e.online?e.load.status==="loading"?"Comments, loading":e.load.status==="failed"?"Comments unavailable":`Comments and notes, ${t} open ${t===1?"thread":"threads"}`:"Comments, offline";if(this.launcher.setAttribute("aria-label",n),this.launcher.setAttribute("aria-expanded",String(e.panel.open)),this.launcher.dataset.state=e.load.status,this.launcher.replaceChildren(v(e.load.status==="failed"?g.warning:g.comment),r("span",{class:"plc-launcher-label","aria-hidden":"true"},"Comments"),r("span",{class:"plc-launcher-status","aria-hidden":"true"},e.online?e.load.status==="loading"?"Loading":e.load.status==="failed"?"Unavailable":"":"Offline"),r("span",{class:"plc-launcher-count","aria-hidden":"true"},e.load.status==="ready"?String(t):"")),this.panel.hidden=!e.panel.open,e.panel.open){let i=document.activeElement instanceof HTMLElement&&this.panel.contains(document.activeElement)?document.activeElement:null,o=i?.dataset.focusKey,a=i instanceof HTMLTextAreaElement?[i.selectionStart,i.selectionEnd]:null,l=this.panel.querySelector(".plc-panel-body")?.scrollTop??0;this.panel.replaceChildren(...Oe(e,this));let c=this.panel.querySelector(".plc-panel-body");if(c&&(c.scrollTop=l),o){let p=this.panel.querySelector(`[data-focus-key="${CSS.escape(o)}"]`);p?.focus({preventScroll:!0}),p instanceof HTMLTextAreaElement&&a&&p.setSelectionRange(a[0],a[1])}}this.position(),e.notices!==this.renderedNotices&&(this.renderedNotices=e.notices,this.notices.replaceChildren(...e.notices.map(i=>r("div",{class:`plc-notice plc-notice-${i.tone}`,role:i.tone==="error"?"alert":"status"},r("p",{class:"plc-notice-text"},i.message),i.action&&r("button",{type:"button",class:"plc-button plc-button-quiet",onclick:()=>{this.dismiss(i.id),i.action?.run()}},i.action.label),r("button",{type:"button",class:"plc-icon-button","aria-label":"Dismiss",onclick:()=>this.dismiss(i.id)},v(g.close))))))}position=()=>{if(this.panel.hidden)return;let{state:e}=this,t=e.panel.tab!=="comments"?null:e.activeThread?e.placements.get(e.activeThread):e.panel.view==="compose"?this.place(e.composer.anchor):null,n=t&&"range"in t?t.range:null,i=n?Array.from(n.getClientRects()).filter(c=>c.width>0&&c.height>0):[],o=visualViewport,a={left:o?.offsetLeft??0,top:o?.offsetTop??0,width:o?.width??innerWidth,height:o?.height??innerHeight};this.panel.style.maxHeight=`${Math.max(0,Math.min(560,a.height-24))}px`,this.panel.style.width=`${Math.max(0,Math.min(360,a.width-24))}px`;let{left:d,top:l}=Ie({anchor:i.find(c=>c.bottom>a.top&&c.top<a.top+a.height)??i[0]??this.launcher.getBoundingClientRect(),popup:{width:this.panel.offsetWidth,height:this.panel.offsetHeight},viewport:a,anchored:i.length>0});this.panel.style.left=`${d}px`,this.panel.style.top=`${l}px`};focus(e){queueMicrotask(()=>this.panel.querySelector(`[data-focus-key="${CSS.escape(e)}"]`)?.focus())}announce(e){this.announcer.textContent=e}notify(e){let t=this.nextNotice++;return this.state.notices=[...this.state.notices.slice(-2),{...e,id:t}],this.render(),t}dismiss(e){this.state.notices=this.state.notices.filter(t=>t.id!==e),this.render()}togglePanel(){this.state.panel.open?this.closePanel():this.browseComments()}openPanel(e=`tab-${this.state.panel.tab}`){this.state.panel.open=!0,this.render(),this.focus(e)}closePanel(){this.state.panel.open=!1,this.state.activeThread=null,this.state.deleting=null,this.paint(),this.render(),this.launcher.focus()}browseComments(){this.state.activeThread=null,this.state.deleting=null,Object.assign(this.state.panel,{tab:"comments",view:"browse"}),this.paint(),this.openPanel("new-comment")}composeComment(){this.state.activeThread=null,this.state.deleting=null,Object.assign(this.state.panel,{tab:"comments",view:"compose"}),this.paint(),this.openPanel("composer")}setTab(e){this.state.panel.tab=e,this.state.activeThread=null,this.state.deleting=null,this.state.panel.view="browse",this.paint(),this.render(),this.focus(`tab-${e}`)}setFilter(e){this.state.panel.filter=e,this.render()}retryLoad(){this.load()}onDocumentClick=e=>{let t=e.target;if(!(t instanceof Element)||e.composedPath().includes(this.ui))return;if(t.closest(gt)){this.state.panel.open&&this.closePanelWithoutFocus();return}if(this.state.load.status!=="ready"){this.state.panel.open&&this.closePanelWithoutFocus();return}if(!getSelection()?.isCollapsed)return;let n=Le(e.clientX,e.clientY);if(!n){this.state.panel.open&&this.closePanelWithoutFocus();return}let i=null;for(let o of this.state.threads){let a=this.state.placements.get(o.id);if(o.resolved||!a||!("range"in a)||!a.range.isPointInRange(n.node,n.offset))continue;let d=a.end-a.start;(!i||d<i.length)&&(i={id:o.id,length:d})}i?this.openThread(i.id):this.state.panel.open&&this.closePanelWithoutFocus()};closePanelWithoutFocus(){this.state.panel.open=!1,this.state.activeThread=null,this.state.deleting=null,this.paint(),this.render()}onShortcut=e=>{if(e.key==="Escape"&&this.state.panel.open&&!e.defaultPrevented){e.preventDefault(),this.closePanel();return}if(!(e.metaKey||e.ctrlKey)||!e.altKey||e.code!=="KeyM")return;e.preventDefault();let t=this.toolbar.current();t&&this.state.reattaching?this.attach(t):t?this.startComment(t):this.composeComment()};openThread(e){let t=this.state.threads.find(i=>i.id===e);if(!t)return;Object.assign(this.state.panel,{open:!0,tab:"comments",filter:t.resolved?"resolved":"open"}),this.state.activeThread=e,this.state.deleting=null;let n=this.state.placements.get(e);if(n&&"range"in n){let i=n.range.getBoundingClientRect();(i.bottom<0||i.top>innerHeight)&&n.range.startContainer.parentElement?.scrollIntoView({block:"center",behavior:"instant"})}this.paint(),this.render(),queueMicrotask(()=>{this.panel.querySelector(`[data-focus-key="thread-${CSS.escape(e)}"]`)?.focus({preventScroll:!0})})}showInDocument(e){let t=this.state.placements.get(e);if(this.state.activeThread=e,this.paint(),this.render(),!t||!("range"in t))return;t.range.startContainer.parentElement?.scrollIntoView({block:"center",behavior:vt.matches?"auto":"smooth"})}startComment(e){this.text&&(this.state.composer.anchor=j(this.text.text,e.start,e.end,{revision:this.config.revision,documentId:this.config.documentId}),Object.assign(this.state.panel,{open:!0,tab:"comments",filter:"open",view:"compose"}),this.state.activeThread=null,this.state.deleting=null,getSelection()?.removeAllRanges(),this.paint(),this.openPanel("composer"))}setComposer(e){this.state.composer.body=e}clearComposerAnchor(){this.state.composer.anchor=null,this.paint(),this.render(),this.focus("composer")}submitThread(){let e=this.state.composer.body.trim();if(!e)return this.focus("composer");let t={key:V(),body:e,anchor:this.state.composer.anchor,delivery:{status:"sending"}};this.state.pendingThreads.push(t),this.state.composer={body:"",anchor:null},this.state.panel.view="browse",this.paint(),this.deliverThread(t)}async deliverThread(e){let t=B(e,()=>this.api.createThread(e.body,e.anchor,e.key));this.render();let n=await t;n?(this.state.pendingThreads=this.state.pendingThreads.filter(i=>i!==e),this.state.threads.some(i=>i.id===n.id)||this.upsertThread(n),this.state.panel.open&&this.state.panel.tab==="comments"&&this.state.panel.view==="browse"&&!this.state.activeThread&&this.openThread(n.id),this.announce("Comment posted.")):this.announceUndelivered(e.delivery,"Comment"),this.paint(),this.render()}announceUndelivered(e,t){if(e.status==="sending")return;let n=e.status==="unknown"?"not confirmed":t==="Note"?"not saved":"not posted";this.announce(`${t} ${n}. ${m(e.failure)}`)}retryThread(e){let t=this.state.pendingThreads.find(n=>n.key===e);t&&t.delivery.status!=="sending"&&this.deliverThread(t)}editThread(e){let t=this.state.pendingThreads.find(i=>i.key===e);if(t?.delivery.status!=="failed")return;this.state.pendingThreads=this.state.pendingThreads.filter(i=>i!==t);let n=this.state.composer.body.trim();this.state.composer={body:n?`${n}
+
+${t.body}`:t.body,anchor:t.anchor},this.paint(),this.render(),this.composeComment()}upsertThread(e){let t=this.state.threads.findIndex(n=>n.id===e.id);t<0?this.state.threads.push(e):this.state.threads[t]=e,this.state.placements.set(e.id,this.place(e.anchor))}setReplyDraft(e,t){this.state.replyDrafts.set(e,t)}submitReply(e){if(this.state.busyThreads.has(e))return;let t=(this.state.replyDrafts.get(e)??"").trim();if(!t)return this.focus(`reply-${e}`);let n={key:V(),threadId:e,body:t,delivery:{status:"sending"}};this.state.pendingReplies.push(n),this.state.replyDrafts.delete(e),this.deliverReply(n)}async deliverReply(e){let t=B(e,()=>this.api.reply(e.threadId,e.body,e.key));this.render();let n=await t;if(n){this.state.pendingReplies=this.state.pendingReplies.filter(o=>o!==e);let i=this.state.threads.find(o=>o.id===e.threadId);i&&!i.comments.some(o=>o.id===n.id)&&i.comments.push(n),this.announce("Reply posted.")}else this.announceUndelivered(e.delivery,"Reply");this.render()}retryReply(e){let t=this.state.pendingReplies.find(n=>n.key===e);t&&t.delivery.status!=="sending"&&!this.state.busyThreads.has(t.threadId)&&this.deliverReply(t)}editReply(e){let t=this.state.pendingReplies.find(i=>i.key===e);if(t?.delivery.status!=="failed")return;this.state.pendingReplies=this.state.pendingReplies.filter(i=>i!==t);let n=(this.state.replyDrafts.get(t.threadId)??"").trim();this.state.replyDrafts.set(t.threadId,n?`${n}
+
+${t.body}`:t.body),this.render(),this.focus(`reply-${t.threadId}`)}async updateThread(e,t,n){if(this.state.busyThreads.has(e))return!1;if(N(this.state,e))return this.notify({tone:"info",message:"Wait for the reply to finish sending, then try again."}),!1;this.state.busyThreads.add(e),this.render();let i=await this.api.updateThread(e,t);if(this.state.busyThreads.delete(e),i.ok)this.upsertThread(i.value),this.announce(n);else{let o=x(i.failure)?" It may not have saved; reload to check.":"";this.notify({tone:"error",message:`${m(i.failure)}${o}`})}return this.paint(),this.render(),i.ok}requestDelete(e,t){this.state.busyThreads.has(e)||(this.state.deleting={threadId:e,commentId:t},this.render(),this.focus(O(e,t)))}cancelDelete(){let e=this.state.deleting;!e||this.state.busyThreads.has(e.threadId)||(this.state.deleting=null,this.render(),this.focus(O(e.threadId,e.commentId)))}async confirmDelete(){let e=this.state.deleting;if(!e||this.state.busyThreads.has(e.threadId))return;if(N(this.state,e.threadId)){this.notify({tone:"info",message:"Wait for the reply to finish sending, then delete."});return}this.state.busyThreads.add(e.threadId),this.render();let t=e.commentId===null?await this.api.deleteThread(e.threadId):await this.api.deleteComment(e.threadId,e.commentId);if(this.state.busyThreads.delete(e.threadId),t.ok){let n=e.commentId!==null?`thread-${e.threadId}`:this.neighbourSummary(e.threadId)??"new-comment";if(e.commentId===null)this.state.threads=this.state.threads.filter(i=>i.id!==e.threadId),this.state.placements.delete(e.threadId),this.state.pendingReplies=this.state.pendingReplies.filter(i=>i.threadId!==e.threadId),this.state.replyDrafts.delete(e.threadId),this.state.reattaching===e.threadId&&this.cancelReattach(),this.state.activeThread===e.threadId?this.browseComments():this.focus(n);else{let i=this.state.threads.find(o=>o.id===e.threadId);i&&(i.comments=i.comments.filter(o=>o.id!==e.commentId)),this.focus(n)}this.state.deleting===e&&(this.state.deleting=null),this.announce(e.commentId===null?"Thread deleted.":"Reply deleted.")}else this.notify({tone:"error",message:`Deletion was not confirmed. ${m(t.failure)} Try deleting again to confirm it.`}),this.state.deleting===e&&this.focus("confirm-delete");this.paint(),this.render()}neighbourSummary(e){let t=Array.from(this.panel.querySelectorAll('[data-focus-key^="summary-"]'),i=>i.dataset.focusKey),n=t.indexOf(`summary-${e}`);return n<0?null:t[n+1]??t[n-1]??null}setResolved(e,t){this.updateThread(e,{resolved:t},t?"Thread resolved.":"Thread reopened.")}keepPlacement(e){let t=this.state.placements.get(e);if(!this.text||!t||t.status!=="approximate")return;let n=j(this.text.text,t.start,t.end,{revision:this.config.revision,documentId:this.config.documentId});this.updateThread(e,{anchor:n},"Comment attached to the current text.")}startReattach(e){this.state.busyThreads.has(e)||N(this.state,e)||(this.state.reattaching=e,this.state.activeThread=e,this.paint(),this.render(),this.toolbar.update(),yt.matches&&this.closePanel(),this.announce("Select the text this comment belongs to, then choose Attach comment here."))}cancelReattach(){this.state.reattaching=null,this.render(),this.toolbar.update()}async attach(e){let t=this.state.reattaching;if(!t||!this.text)return;if(this.state.busyThreads.has(t)||N(this.state,t)){this.notify({tone:"info",message:"Wait for the pending change to finish, then select the text and try again."});return}let n=j(this.text.text,e.start,e.end,{revision:this.config.revision,documentId:this.config.documentId});this.state.reattaching=null,getSelection()?.removeAllRanges(),await this.updateThread(t,{anchor:n},"Comment attached to the selected text.")&&this.openThread(t)}setNoteDraft(e){this.state.noteDraft=e}submitNote(){let e=this.state.noteDraft.trim();if(!e)return this.focus("note-composer");let t={key:V(),body:e,delivery:{status:"sending"}};this.state.pendingNotes.push(t),this.state.noteDraft="",this.deliverNote(t)}async deliverNote(e){let t=B(e,()=>this.api.createNote(e.body,e.key));this.render();let n=await t;n?(this.state.pendingNotes=this.state.pendingNotes.filter(i=>i!==e),this.notes.adopt(n),this.announce("Note added.")):this.announceUndelivered(e.delivery,"Note"),this.render()}retryNote(e){let t=this.state.pendingNotes.find(n=>n.key===e);t&&t.delivery.status!=="sending"&&this.deliverNote(t)}editPendingNote(e){let t=this.state.pendingNotes.find(i=>i.key===e);if(t?.delivery.status!=="failed")return;this.state.pendingNotes=this.state.pendingNotes.filter(i=>i!==t);let n=this.state.noteDraft.trim();this.state.noteDraft=n?`${n}
+
+${t.body}`:t.body,this.render(),this.focus("note-composer")}beginNoteEdit(e){this.notes.begin(e)&&this.focus(`note-${e}`)}setNoteEdit(e,t){this.notes.setDraft(e,t)}cancelNoteEdit(e){this.notes.close(e),this.focus(`note-edit-${e}`)}saveNote(e){return this.notes.save(e)}overwriteNote(e){this.notes.overwrite(e)}takeTheirs(e){this.notes.close(e),this.focus(`note-edit-${e}`)}};function Ke(s){if(document.querySelector(".plc[data-planloft-collaboration]"))return;let e=()=>{new ee(s)};document.readyState==="loading"?document.addEventListener("DOMContentLoaded",e,{once:!0}):e()}Ke(JSON.parse(document.currentScript.previousElementSibling.textContent));})();
+</script>
+<!-- planloft-collaboration:end -->
+</body>
+</html>
