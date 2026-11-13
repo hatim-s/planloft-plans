@@ -1119,16 +1119,30 @@ html > body:not(:has(.planloft-plan > article)) {
 <article class="planloft-prose">
 
 <h1>uac v2: the compiler</h1>
-<p class="lede">A rewrite of <code>packages/uac</code>, the TypeScript DSL agents write UnifyApps automations in, and the compiler that turns it into workflow JSON and back. It replaces v1 outright: nothing of the old DSL is kept.</p>
+<p class="lede">A rewrite of <code>packages/uac</code>, the TypeScript DSL agents write UnifyApps automations in, and the compiler that turns it into workflow JSON and back. Nothing of the old DSL is kept. It lands in five stacked PRs, and the first two can be undone by one environment variable.</p>
 
 <div class="tiles">
   <div class="tile"><div class="n">3,615 / 3,615</div><div class="l">deployed workflows lower back to byte-identical JSON after lift → print → parse</div></div>
   <div class="tile"><div class="n">59,545</div><div class="l">deployed node input values round trip, 59,343 byte for byte and 202 with pill spacing normalised</div></div>
-  <div class="tile"><div class="n">359 + 1,827</div><div class="l">uac and llm-tools tests, all passing on <code>ef95817</code></div></div>
+  <div class="tile"><div class="n">5 PRs</div><div class="l">each passing its own uac and llm-tools suites; the built server starts on every one</div></div>
   <div class="tile"><div class="n">Ship</div><div class="l">GPT 6.1 Sol's verdict in review round 14, after 13 rounds that each found something</div></div>
 </div>
 
 <p>The <a href="https://hatims-planloft.vercel.app/uac-v2-eval/">eval evidence</a> (agents building the 20 ACM workflows and running them against the reference automations) is a separate page and a separate PR. This page is the compiler's own proof.</p>
+
+<h2>How it lands</h2>
+<p><code>UAC_COMPILER</code> (<code>v1</code> or <code>v2</code>) is read once when the llm-tools server starts. It picks the compiler, the DSL reference and the examples the automation-code tools serve, together, so an agent never sees one version's guidance with the other's compiler.</p>
+<div class="scroll"><table>
+  <thead><tr><th>PR</th><th>What it does</th><th>Way back</th><th class="num">Size</th></tr></thead>
+  <tbody>
+    <tr><td>1. Add v2</td><td>v2 lands beside v1 in <code>packages/uac/v2/</code> and <code>automationCode/v2/</code>. Default <code>v1</code>.</td><td><span class="chip ship"><i></i>reversible</span> nothing runs v2 unless <code>UAC_COMPILER=v2</code></td><td class="num">+46,149 −77</td></tr>
+    <tr><td>2. Default to v2</td><td>The default flips to <code>v2</code>.</td><td><span class="chip ship"><i></i>reversible</span> <code>UAC_COMPILER=v1</code> and a restart</td><td class="num">+22 −4</td></tr>
+    <tr><td>3. References</td><td>The agent prompt, skills, Workflow Agent definition, prompt sync, developer docs and the context-graph code that writes DSL move to v2.</td><td><span class="chip block"><i></i>one way</span> agents now read v2 guidance under either compiler</td><td class="num">+558 −1,245</td></tr>
+    <tr><td>4. Examples</td><td>The v2 examples replace v1's in <code>packages/uac/examples</code>.</td><td><span class="chip block"><i></i>one way</span></td><td class="num">+3,488 −15,475</td></tr>
+    <tr><td>5. Delete v1</td><td>v1 goes; v2 moves to <code>src/</code>; the variable goes.</td><td><span class="chip block"><i></i>one way</span></td><td class="num">+4,133 −39,929</td></tr>
+  </tbody>
+</table></div>
+<p>The tree after PR 5 is the tree GPT 6.1 Sol reviewed, plus three fixes made while splitting it: a startup crash (below), three stale skill references, and the changelogs.</p>
 
 <h2>Why v1 kept breaking</h2>
 <p>Twelve agents, six GPT 6 Luna and six Claude Haiku 5.5, read the 173 commits that touched the v1 compiler and its MCP tools, two per slice. The postmortems are in <code>docs/v2/postmortem/</code>. Ranked by how many commits each cause explains:</p>
@@ -1217,18 +1231,22 @@ automation.ts:4:15 error ref-key: A reference path cannot hold this key: the pla
 <div class="chart" id="residue"></div>
 <details><summary>Residue by code, as a table</summary><div class="scroll"><table id="residue-table"><thead><tr><th>Code</th><th class="num">Errors</th></tr></thead><tbody></tbody></table></div></details>
 
-<h2>Gates run on <code>ef95817</code></h2>
+<h2>Gates on each PR</h2>
+<p>On every PR: <code>bun run ts</code> is clean in both packages, and <code>bun test src/__tests__/bundleStarts.test.ts</code> builds the server bundle and starts it.</p>
 <div class="scroll"><table>
-  <thead><tr><th>Command</th><th>Where</th><th>Result</th></tr></thead>
+  <thead><tr><th>PR</th><th>uac <code>UAC_REQUIRE_CORPUS=1 bun test</code></th><th>llm-tools <code>bun test</code></th></tr></thead>
   <tbody>
-    <tr><td><code>UAC_REQUIRE_CORPUS=1 bun test</code></td><td>packages/uac</td><td>359 pass, 0 fail, 5,230 assertions</td></tr>
-    <tr><td><code>bun run ts</code> (tsrs)</td><td>packages/uac</td><td>clean</td></tr>
-    <tr><td><code>tsc --strict --noUncheckedIndexedAccess</code> on <code>src/</code>, <code>src/checks/</code>, <code>eval/</code></td><td>packages/uac</td><td>exit 0</td></tr>
-    <tr><td><code>bun test src/tools/automationCode src/tools/workflow src/tools/workflowTest</code></td><td>packages/llm-tools</td><td>1,827 pass, 0 fail</td></tr>
-    <tr><td><code>bun run ts</code> (tsrs)</td><td>packages/llm-tools</td><td>clean</td></tr>
+    <tr><td>1. Add v2</td><td>807 pass (v1 and v2 suites)</td><td>11,619 pass; the automation-code, workflow and private-tool suites pass with <code>UAC_COMPILER</code> unset and set to <code>v2</code></td></tr>
+    <tr><td>2. Default to v2</td><td>807 pass</td><td>the same suites pass with the variable unset and set to <code>v1</code></td></tr>
+    <tr><td>3. References</td><td>807 pass</td><td>11,620 pass</td></tr>
+    <tr><td>4. Examples</td><td>562 pass</td><td>11,618 pass</td></tr>
+    <tr><td>5. Delete v1</td><td>359 pass</td><td>11,228 pass</td></tr>
   </tbody>
 </table></div>
-<p>The full output is <code>docs/v2/evidence/gates.txt</code>. Four llm-tools page-builder checks (<code>sheets</code>, <code>docs-parity</code>, <code>citations</code>, <code>style-labels</code>) and <code>prompt-nodes:check</code> fail on this tree, but none of them reads code this change touches. <code>prompt-nodes:check</code> reads a file from another checkout.</p>
+<p>Seven llm-tools tests (<code>codeBuilder/__tests__/versions.test.ts</code> and the reverse-patch tests) fail only when the whole suite runs together, and pass alone, on every PR; this change touches none of their code. <code>docs/v2/evidence/gates.txt</code> is the full output for the unsplit tree. The llm-tools page-builder checks (<code>sheets</code>, <code>docs-parity</code>, <code>citations</code>, <code>style-labels</code>) and <code>prompt-nodes:check</code> also fail, on code this change does not read.</p>
+
+<h3>Found while splitting</h3>
+<p class="note">v2's <code>workflow/network.ts</code> imported zod to read the tenant's not-found answer. <code>mcp.ts</code> loads that module early, and the built bundle then evaluated the MCP SDK before zod had started: the server crashed on start, under either compiler. The unsplit PR had the same bug; its gates never ran <code>bundleStarts.test.ts</code>. The check is a plain shape test now, and <code>UAC_COMPILER</code> is read without zod for the same reason.</p>
 
 <h2>Review history</h2>
 <p>Two design reviews shaped the proposal before any code: Claude Fable 5.2 and GPT 6 Astra (<code>docs/v2/reviews/</code>). GPT 6.1 Sol (high) then reviewed after every significant step. All fourteen reports are committed in <code>docs/v2/reviews/sol/</code>.</p>
@@ -1248,7 +1266,7 @@ automation.ts:4:15 error ref-key: A reference path cannot hold this key: the pla
 </table></div>
 
 <h2>Size of the change</h2>
-<p>Before the evidence files, the compiler PR changes 475 files: 29,915 lines added and 34,567 deleted, so it ends 4,652 lines smaller. v1's validation lived in llm-tools and moved into the compiler, which is why llm-tools shrinks by 4,520 lines.</p>
+<p>Across the five PRs, before the evidence files, the change ends about 4,650 lines smaller than v1. v1's validation lived in llm-tools and moved into the compiler, which is why llm-tools shrinks by 4,520 lines. The chart is the net change after PR 5.</p>
 <div class="chart" id="diff"></div>
 <div class="legend"><span style="--c: var(--div-pos)">lines added</span><span style="--c: var(--div-neg)">lines deleted</span></div>
 <details><summary>Diff by area, as a table</summary><div class="scroll"><table id="diff-table"><thead><tr><th>Area</th><th class="num">Files</th><th class="num">Added</th><th class="num">Deleted</th></tr></thead><tbody></tbody></table></div></details>
