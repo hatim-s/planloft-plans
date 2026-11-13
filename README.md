@@ -16,6 +16,7 @@ planloft plan/doc deploys
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Saved, with room to improve](https://hatims-planloft.vercel.app/workflow-best-practice-warnings/) | github.com/unify-apps/www | plan | 2026-12-01 |
 | [kur-post-migration-audit](https://hatims-planloft.vercel.app/kur-post-migration-audit/) | github.com/unify-apps/www | plan | 2026-11-24 |
+| [uac v2: the compiler](https://hatims-planloft.vercel.app/uac-v2-compiler/) | github.com/unify-apps/www | report | 2026-12-13 |
 | [Hub Siting: app brief and glossary](https://hatims-planloft.vercel.app/hub-siting-brief/) | path-69d373 | plan | 2026-11-25 |
 | [PowerBI Support: implementation plan](https://hatims-planloft.vercel.app/powerbi-support/) | path-69d373 | plan | 2026-11-29 |
 | [Solution latency: trace e\_6aba558c29ecab2b07100705](https://hatims-planloft.vercel.app/solution-latency-e-6aba558c5/) | path-71ea78 | report | 2026-12-27 |
