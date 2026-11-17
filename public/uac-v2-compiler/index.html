@@ -1135,14 +1135,14 @@ html > body:not(:has(.planloft-plan > article)) {
 <div class="scroll"><table>
   <thead><tr><th>PR</th><th>What it does</th><th>Way back</th><th class="num">Size</th></tr></thead>
   <tbody>
-    <tr><td>1. Add v2</td><td>v2 lands beside v1 in <code>packages/uac/v2/</code> and <code>automationCode/v2/</code>. Default <code>v1</code>.</td><td><span class="chip ship"><i></i>reversible</span> nothing runs v2 unless <code>UAC_COMPILER=v2</code></td><td class="num">+46,149 −77</td></tr>
+    <tr><td>1. Add v2</td><td>v2 lands beside v1 in <code>packages/uac/v2/</code> and <code>automationCode/v2/</code>. Default <code>v1</code>.</td><td><span class="chip ship"><i></i>reversible</span> nothing runs v2 unless <code>UAC_COMPILER=v2</code></td><td class="num">+47,378 −76</td></tr>
     <tr><td>2. Default to v2</td><td>The default flips to <code>v2</code>.</td><td><span class="chip ship"><i></i>reversible</span> <code>UAC_COMPILER=v1</code> and a restart</td><td class="num">+22 −4</td></tr>
-    <tr><td>3. References</td><td>The agent prompt, skills, Workflow Agent definition, prompt sync, developer docs and the context-graph code that writes DSL move to v2.</td><td><span class="chip block"><i></i>one way</span> agents now read v2 guidance under either compiler</td><td class="num">+558 −1,245</td></tr>
-    <tr><td>4. Examples</td><td>The v2 examples replace v1's in <code>packages/uac/examples</code>.</td><td><span class="chip block"><i></i>one way</span></td><td class="num">+3,488 −15,475</td></tr>
-    <tr><td>5. Delete v1</td><td>v1 goes; v2 moves to <code>src/</code>; the variable goes.</td><td><span class="chip block"><i></i>one way</span></td><td class="num">+4,133 −39,929</td></tr>
+    <tr><td>3. References</td><td>The agent prompt, skills, Workflow Agent definition, prompt sync, developer docs and the context-graph code that writes DSL move to v2.</td><td><span class="chip block"><i></i>one way</span> agents now read v2 guidance under either compiler</td><td class="num">+571 −1,262</td></tr>
+    <tr><td>4. Examples</td><td>The v2 examples replace v1's in <code>packages/uac/examples</code>.</td><td><span class="chip block"><i></i>one way</span></td><td class="num">+3,577 −16,171</td></tr>
+    <tr><td>5. Delete v1</td><td>v1 goes; v2 moves to <code>src/</code>; the variable goes.</td><td><span class="chip block"><i></i>one way</span></td><td class="num">+4,287 −44,884</td></tr>
   </tbody>
 </table></div>
-<p>The tree after PR 5 is the tree GPT 6.1 Sol reviewed, plus three fixes made while splitting it: a startup crash (below), three stale skill references, and the changelogs.</p>
+<p>The tree after PR 5 is the tree GPT 6.1 Sol reviewed, plus three fixes made while splitting it: a startup crash (below), three stale skill references, and the changelogs. On 2026-11-17 the stack was rebased onto main <code>cbce2085bd4</code>, and the v1 fixes main had gained since were ported into v2 (see <a href="#rebase">the rebase</a>). Sol has not reviewed those ports yet.</p>
 
 <h2>Why v1 kept breaking</h2>
 <p>Twelve agents, six GPT 6 Luna and six Claude Haiku 5.5, read the 173 commits that touched the v1 compiler and its MCP tools, two per slice. The postmortems are in <code>docs/v2/postmortem/</code>. Ranked by how many commits each cause explains:</p>
@@ -1236,14 +1236,14 @@ automation.ts:4:15 error ref-key: A reference path cannot hold this key: the pla
 <div class="scroll"><table>
   <thead><tr><th>PR</th><th>uac <code>UAC_REQUIRE_CORPUS=1 bun test</code></th><th>llm-tools <code>bun test</code></th></tr></thead>
   <tbody>
-    <tr><td>1. Add v2</td><td>807 pass (v1 and v2 suites)</td><td>11,619 pass; the automation-code, workflow and private-tool suites pass with <code>UAC_COMPILER</code> unset and set to <code>v2</code></td></tr>
-    <tr><td>2. Default to v2</td><td>807 pass</td><td>the same suites pass with the variable unset and set to <code>v1</code></td></tr>
-    <tr><td>3. References</td><td>807 pass</td><td>11,620 pass</td></tr>
-    <tr><td>4. Examples</td><td>562 pass</td><td>11,618 pass</td></tr>
-    <tr><td>5. Delete v1</td><td>359 pass</td><td>11,228 pass</td></tr>
+    <tr><td>1. Add v2</td><td>881 pass (v1 and v2 suites)</td><td>11,911 pass with <code>UAC_COMPILER</code> unset, <code>v1</code> and <code>v2</code></td></tr>
+    <tr><td>2. Default to v2</td><td>not rerun: no compiler change</td><td>11,911 pass with the variable unset, <code>v1</code> and <code>v2</code></td></tr>
+    <tr><td>3. References</td><td>881 pass</td><td>11,911 pass</td></tr>
+    <tr><td>4. Examples</td><td>619 pass</td><td>11,903 pass</td></tr>
+    <tr><td>5. Delete v1</td><td>368 pass</td><td>11,447 pass</td></tr>
   </tbody>
 </table></div>
-<p>Seven llm-tools tests (<code>codeBuilder/__tests__/versions.test.ts</code> and the reverse-patch tests) fail only when the whole suite runs together, and pass alone, on every PR; this change touches none of their code. <code>docs/v2/evidence/gates.txt</code> is the full output for the unsplit tree. The llm-tools page-builder checks (<code>sheets</code>, <code>docs-parity</code>, <code>citations</code>, <code>style-labels</code>) and <code>prompt-nodes:check</code> also fail, on code this change does not read.</p>
+<p>Seven llm-tools tests (<code>codeBuilder/__tests__/versions.test.ts</code> and the reverse-patch tests) fail when the whole suite runs together and pass alone. They fail the same way on main <code>cbce2085bd4</code>, so they are not from this change. <code>docs/v2/evidence/gates.txt</code> is the full output for the tree after PR 5. The llm-tools page-builder checks (<code>sheets</code>, <code>docs-parity</code>, <code>citations</code>, <code>style-labels</code>) and <code>prompt-nodes:check</code> also fail, on code this change does not read.</p>
 
 <h3>Found while splitting</h3>
 <p class="note">v2's <code>workflow/network.ts</code> imported zod to read the tenant's not-found answer. <code>mcp.ts</code> loads that module early, and the built bundle then evaluated the MCP SDK before zod had started: the server crashed on start, under either compiler. The unsplit PR had the same bug; its gates never ran <code>bundleStarts.test.ts</code>. The check is a plain shape test now, and <code>UAC_COMPILER</code> is read without zod for the same reason.</p>
@@ -1265,8 +1265,25 @@ automation.ts:4:15 error ref-key: A reference path cannot hold this key: the pla
   </tbody>
 </table></div>
 
+<h3 id="rebase">The rebase onto main, 2026-11-17</h3>
+<p>Between the split and the rebase, main gained about 40 more commits that touched v1 code. Each was checked against v2 the same way. Six behaviours were missing and are ported; the corpus laws did not move.</p>
+<div class="scroll"><table>
+  <thead><tr><th>Commit</th><th>What it fixed in v1</th><th>In v2</th></tr></thead>
+  <tbody>
+    <tr><td><code>d5a7cad26d8</code></td><td>Hide AGENT_TOOL operations from the workflow catalogue</td><td><span class="chip ship"><i></i>Ported</span> The catalogue hides them, and a step on one is a confirmed <code>unknown-operation</code> with a near name. No deployed workflow uses any of the 32.</td></tr>
+    <tr><td><code>fa17a50c164</code></td><td>Warn on save when a node uses an inactive connection</td><td><span class="chip ship"><i></i>Ported</span> A new deploy-stage warning, <code>connection-inactive</code>. The deploy refuses such a connection with "Connection is inactive".</td></tr>
+    <tr><td><code>31b394c93a2</code></td><td>Refuse <code>record_loader</code> as a Storage payload key</td><td><span class="chip ship"><i></i>Ported</span> v2 had accepted it: the key sits in an <code>allOf</code> branch, and only top-level loader keys were stripped. Every <code>*_loader</code> key the layout names is now <code>unknown-key</code>, and the fix names the key the loader fills, such as <code>record</code>.</td></tr>
+    <tr><td><code>be233290409</code></td><td>Recover parser errors by binding scope</td><td><span class="chip ship"><i></i>Ported</span> A refused declaration no longer causes a false <code>failed</code> error, or an <code>unknown-name</code> on every later read of the name.</td></tr>
+    <tr><td><code>74f1be7718c</code></td><td>Scope compile-and-save to the lane and name dropped ids</td><td><span class="chip ship"><i></i>Ported</span> v2's save path ignored the lane. It now refuses a workflow outside the session and says when a create replaced the id it was given.</td></tr>
+    <tr><td><code>a0cf62b4fa7</code></td><td>Spread tied example matches; omit an empty first page token</td><td><span class="chip ship"><i></i>Ported</span> <code>find_workflow_examples</code> takes ties from different folders, so "pagination" returns SQL and Storage examples, not three connector cursors. The Gmail example omits the token on the first call.</td></tr>
+    <tr><td>Nine more</td><td>Saved invisible connections, pill <code>object_type</code>, inner loops over record fields, bracket trigger keys, nullable mapped arrays, pill-valued variables, output paths</td><td><span class="chip ship"><i></i>Already covered</span> Each was checked with a compile; v2's types or checks already behave as main's fix does.</td></tr>
+    <tr><td>The rest</td><td>The 2026-11-15/16 v1 diagnostics series (registry, renderer, every parse error reported); output-path checks moved into llm-tools</td><td><span class="chip cond"><i></i>v1 only</span> v2 has its own findings with exact spans and types the outputs, so these go with v1.</td></tr>
+  </tbody>
+</table></div>
+<p>Five examples main added in the v1 DSL (OCR, OpenAI and Vertex calls, Confluence paging, whole trigger input) are rewritten in v2. The platform-tool fixes on main (<code>describe_callable_workflow</code> outputs, <code>run_connector_operation</code> conditions, <code>inspect_workflow_run</code> lanes, and others) merged into v2's tools with no change.</p>
+
 <h2>Size of the change</h2>
-<p>Across the five PRs, before the evidence files, the change ends about 4,650 lines smaller than v1. v1's validation lived in llm-tools and moved into the compiler, which is why llm-tools shrinks by 4,520 lines. The chart is the net change after PR 5.</p>
+<p>Across the five PRs, leaving out <code>docs/v2/</code> (this evidence, the reviews and postmortems) and the changelogs, the change ends 11,409 lines smaller than v1 on main. v1's validation lived in llm-tools and moved into the compiler, which is why llm-tools shrinks by 5,617 lines. The chart is the net change after PR 5.</p>
 <div class="chart" id="diff"></div>
 <div class="legend"><span style="--c: var(--div-pos)">lines added</span><span style="--c: var(--div-neg)">lines deleted</span></div>
 <details><summary>Diff by area, as a table</summary><div class="scroll"><table id="diff-table"><thead><tr><th>Area</th><th class="num">Files</th><th class="num">Added</th><th class="num">Deleted</th></tr></thead><tbody></tbody></table></div></details>
@@ -1361,8 +1378,8 @@ automation.ts:4:15 error ref-key: A reference path cannot hold this key: the pla
 
   // Diverging bars: added to the right, deleted to the left, one shared scale.
   const diff = [
-    ["uac src/ (with tests)", 107, 19568, 13750], ["uac examples/", 165, 3788, 6186], ["uac docs/", 32, 3499, 2949],
-    ["llm-tools src/", 106, 2807, 7327], ["uac skills/", 5, 73, 88], [".claude, docs, scripts", 13, 91, 415],
+    ["uac src/ (with tests)", 183, 19799, 20143], ["uac examples/", 170, 3875, 6380], ["uac docs/", 15, 653, 3255],
+    ["llm-tools src/", 116, 2933, 8550], ["uac skills/", 5, 76, 91], [".claude, docs, scripts", 16, 94, 420],
   ];
   const host = document.getElementById("diff"); const W = 640, rowH = 30, labelW = 190, mid = labelW + (W - labelW) / 2; const half = (W - labelW) / 2 - 64;
   const max = Math.max(...diff.flatMap((d) => [d[2], d[3]])); const H = diff.length * rowH + 8;
