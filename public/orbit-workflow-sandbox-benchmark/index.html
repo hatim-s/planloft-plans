@@ -1,96 +1,96 @@
 <!doctype html>
 <html lang="en">
 <head><!-- planloft-render:head:start -->
-<style data-planloft-render data-planloft-sha256="0c4cca5151eb38054e190ac891b5ffd49871a06742d6c0a5706b17fad39927d4">/* planloft theme: detailed. A datasheet: PT Sans body with PT Mono for code, DIN Alternate
-   for headings and stat values so numbers read like a drawing title block, a faint
-   blueprint-grey page and drawing-blue links. Dark is blue-black with the blue lifted. */
+<style data-planloft-render data-planloft-sha256="9c864bc9ecfdd238e5afbcc52bc5e97ce052baf1c292492d8f548052ad5a8b9b">/* planloft theme: briefing. A morning brief: Avenir Next at 17.5px on white, headlines in
+   Avenir Next Condensed Bold at newspaper size, navy ink, warm paper for callouts and
+   amber for links and the first series. Dark is a navy night page with the amber lifted. */
 /* planloft-color-schemes: light dark */
 :root {
   color-scheme: light dark;
-  --planloft-font-body: "PT Sans", "Segoe UI", "Noto Sans", "Liberation Sans", Arial, sans-serif;
-  --planloft-font-heading: "DIN Alternate", Bahnschrift, "Franklin Gothic Medium", "Roboto Condensed", "Arial Narrow", "Liberation Sans Narrow", sans-serif;
-  --planloft-font-mono: "PT Mono", ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace;
-  --planloft-font-size: 16.5px;
-  --planloft-line-height: 1.62;
-  --planloft-code-size: 0.88em;
+  --planloft-font-body: "Avenir Next", Avenir, "Segoe UI Variable Text", "Segoe UI", "Noto Sans", "Liberation Sans", sans-serif;
+  --planloft-font-heading: "Avenir Next Condensed", "Segoe UI Variable Display", "Bahnschrift SemiCondensed", "Roboto Condensed", "Arial Narrow", "Liberation Sans Narrow", sans-serif;
+  --planloft-font-mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace;
+  --planloft-font-size: 17.5px;
+  --planloft-line-height: 1.5;
+  --planloft-code-size: 0.86em;
   --planloft-heading-weight: 700;
-  --planloft-heading-line-height: 1.1;
-  --planloft-heading-tracking: 0.01em;
-  --planloft-h1-size: 2.5em;
-  --planloft-h2-size: 1.6em;
-  --planloft-h3-size: 1.22em;
+  --planloft-heading-line-height: 1;
+  --planloft-heading-tracking: -0.005em;
+  --planloft-h1-size: 3.1em;
+  --planloft-h2-size: 1.8em;
+  --planloft-h3-size: 1.28em;
 }
 :root,
 :root[data-planloft-color-scheme="light"] {
   color-scheme: light;
-  --planloft-paper: #f2f5f9;
-  --planloft-ink: #19222e;
-  --planloft-muted: #525f70;
-  --planloft-surface: #e4eaf1;
-  --planloft-rule: #c3cdd9;
-  --planloft-accent: #1a4fd6;
+  --planloft-paper: #ffffff;
+  --planloft-ink: #141a2a;
+  --planloft-muted: #565d6d;
+  --planloft-surface: #f4f1ea;
+  --planloft-rule: #d9d7d0;
+  --planloft-accent: #8a5306;
   --planloft-accent-contrast: #ffffff;
-  --planloft-code-paper: #e7edf5;
-  --planloft-code-ink: #132038;
-  --planloft-chart-1: #2457d8;
-  --planloft-chart-2: #c0561a;
-  --planloft-chart-3: #0e8767;
-  --planloft-chart-4: #8a4fc6;
-  --planloft-chart-5: #c53a62;
-  --planloft-chart-6: #0b86a9;
-  --planloft-chart-sequential: #1a4fd6;
-  --planloft-chart-neutral: #7d8898;
-  --planloft-positive: #167a4b;
-  --planloft-negative: #bf3030;
-  --planloft-caution: #9d5f00;
+  --planloft-code-paper: #f3f1ec;
+  --planloft-code-ink: #1e2634;
+  --planloft-chart-1: #b7720a;
+  --planloft-chart-2: #2e55bd;
+  --planloft-chart-3: #0f8c7b;
+  --planloft-chart-4: #bb3f6b;
+  --planloft-chart-5: #6a5ac6;
+  --planloft-chart-6: #4d8e2a;
+  --planloft-chart-sequential: #8a5306;
+  --planloft-chart-neutral: #8f9199;
+  --planloft-positive: #187a4e;
+  --planloft-negative: #b83440;
+  --planloft-caution: #9a6200;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-planloft-color-scheme="light"]) {
     color-scheme: dark;
-    --planloft-paper: #0c1118;
-    --planloft-ink: #d8e0ea;
-    --planloft-muted: #96a2b2;
-    --planloft-surface: #141b25;
-    --planloft-rule: #283341;
-    --planloft-accent: #8db0ff;
-    --planloft-accent-contrast: #0c1118;
-    --planloft-code-paper: #121922;
-    --planloft-code-ink: #dde5ef;
-    --planloft-chart-1: #729dff;
-    --planloft-chart-2: #ea8a3c;
-    --planloft-chart-3: #25b891;
-    --planloft-chart-4: #b78ee8;
-    --planloft-chart-5: #f07a95;
-    --planloft-chart-6: #2fb5dc;
-    --planloft-chart-sequential: #8db0ff;
-    --planloft-chart-neutral: #6c7889;
-    --planloft-positive: #46c389;
-    --planloft-negative: #f47a72;
-    --planloft-caution: #e8a93f;
+    --planloft-paper: #10141f;
+    --planloft-ink: #e0e3eb;
+    --planloft-muted: #9ba1b1;
+    --planloft-surface: #1a2131;
+    --planloft-rule: #303748;
+    --planloft-accent: #f3bd4f;
+    --planloft-accent-contrast: #10141f;
+    --planloft-code-paper: #171e2e;
+    --planloft-code-ink: #e3e7ee;
+    --planloft-chart-1: #ebb040;
+    --planloft-chart-2: #7093ea;
+    --planloft-chart-3: #35b8a5;
+    --planloft-chart-4: #e86f95;
+    --planloft-chart-5: #a08fe9;
+    --planloft-chart-6: #74b652;
+    --planloft-chart-sequential: #f3bd4f;
+    --planloft-chart-neutral: #6f7587;
+    --planloft-positive: #52c58c;
+    --planloft-negative: #f27f87;
+    --planloft-caution: #e5aa44;
   }
 }
 :root[data-planloft-color-scheme="dark"] {
   color-scheme: dark;
-  --planloft-paper: #0c1118;
-  --planloft-ink: #d8e0ea;
-  --planloft-muted: #96a2b2;
-  --planloft-surface: #141b25;
-  --planloft-rule: #283341;
-  --planloft-accent: #8db0ff;
-  --planloft-accent-contrast: #0c1118;
-  --planloft-code-paper: #121922;
-  --planloft-code-ink: #dde5ef;
-  --planloft-chart-1: #729dff;
-  --planloft-chart-2: #ea8a3c;
-  --planloft-chart-3: #25b891;
-  --planloft-chart-4: #b78ee8;
-  --planloft-chart-5: #f07a95;
-  --planloft-chart-6: #2fb5dc;
-  --planloft-chart-sequential: #8db0ff;
-  --planloft-chart-neutral: #6c7889;
-  --planloft-positive: #46c389;
-  --planloft-negative: #f47a72;
-  --planloft-caution: #e8a93f;
+  --planloft-paper: #10141f;
+  --planloft-ink: #e0e3eb;
+  --planloft-muted: #9ba1b1;
+  --planloft-surface: #1a2131;
+  --planloft-rule: #303748;
+  --planloft-accent: #f3bd4f;
+  --planloft-accent-contrast: #10141f;
+  --planloft-code-paper: #171e2e;
+  --planloft-code-ink: #e3e7ee;
+  --planloft-chart-1: #ebb040;
+  --planloft-chart-2: #7093ea;
+  --planloft-chart-3: #35b8a5;
+  --planloft-chart-4: #e86f95;
+  --planloft-chart-5: #a08fe9;
+  --planloft-chart-6: #74b652;
+  --planloft-chart-sequential: #f3bd4f;
+  --planloft-chart-neutral: #6f7587;
+  --planloft-positive: #52c58c;
+  --planloft-negative: #f27f87;
+  --planloft-caution: #e5aa44;
 }
 @media print {
   html:root,
@@ -98,25 +98,25 @@
   html:root[data-planloft-color-scheme="dark"] {
     color-scheme: light;
     --planloft-paper: #ffffff;
-    --planloft-ink: #19222e;
-    --planloft-muted: #525f70;
-    --planloft-surface: #e4eaf1;
-    --planloft-rule: #c3cdd9;
-    --planloft-accent: #1a4fd6;
+    --planloft-ink: #141a2a;
+    --planloft-muted: #565d6d;
+    --planloft-surface: #f4f1ea;
+    --planloft-rule: #d9d7d0;
+    --planloft-accent: #8a5306;
     --planloft-accent-contrast: #ffffff;
-    --planloft-code-paper: #e7edf5;
-    --planloft-code-ink: #132038;
-    --planloft-chart-1: #2457d8;
-    --planloft-chart-2: #c0561a;
-    --planloft-chart-3: #0e8767;
-    --planloft-chart-4: #8a4fc6;
-    --planloft-chart-5: #c53a62;
-    --planloft-chart-6: #0b86a9;
-    --planloft-chart-sequential: #1a4fd6;
-    --planloft-chart-neutral: #7d8898;
-    --planloft-positive: #167a4b;
-    --planloft-negative: #bf3030;
-    --planloft-caution: #9d5f00;
+    --planloft-code-paper: #f3f1ec;
+    --planloft-code-ink: #1e2634;
+    --planloft-chart-1: #b7720a;
+    --planloft-chart-2: #2e55bd;
+    --planloft-chart-3: #0f8c7b;
+    --planloft-chart-4: #bb3f6b;
+    --planloft-chart-5: #6a5ac6;
+    --planloft-chart-6: #4d8e2a;
+    --planloft-chart-sequential: #8a5306;
+    --planloft-chart-neutral: #8f9199;
+    --planloft-positive: #187a4e;
+    --planloft-negative: #b83440;
+    --planloft-caution: #9a6200;
   }
 }
 
