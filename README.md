@@ -13,6 +13,7 @@ planloft plan/doc deploys
 | [operations](https://hatims-planloft.vercel.app/software-factory-operations/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [CopilotVoice product guide](https://hatims-planloft.vercel.app/copilotvoice-product-guide/) | github.com/unify-apps/www | plan | 2026-12-20 |
 | [Genesys IT call prep](https://hatims-planloft.vercel.app/genesys-it-call-prep/) | github.com/unify-apps/www | plan | 2026-12-12 |
+| [How AI Solutions Builder enforces spec-driven development](https://hatims-planloft.vercel.app/ai-solutions-spec-driven-development/) | github.com/unify-apps/www | plan | 2026-12-23 |
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Saved, with room to improve](https://hatims-planloft.vercel.app/workflow-best-practice-warnings/) | github.com/unify-apps/www | plan | 2026-12-01 |
