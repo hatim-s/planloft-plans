@@ -155,15 +155,6 @@
       "expiresAt": "2026-12-20T05:46:48.218Z"
     },
     {
-      "id": "6U3AfvTy87",
-      "project": "github.com/unify-apps/www",
-      "slug": "orbit-workflow-sandbox-benchmark",
-      "title": "Workflow Agent benchmark: sandbox vs legacy",
-      "kind": "plan",
-      "createdAt": "2026-11-19T14:50:28.516Z",
-      "expiresAt": "2026-12-21T13:47:06.652Z"
-    },
-    {
       "id": "doAg0WDpMf",
       "project": "github.com/unify-apps/www",
       "slug": "ai-solutions-spec-driven-development",
@@ -171,6 +162,15 @@
       "kind": "plan",
       "createdAt": "2026-11-23T06:04:39.239Z",
       "expiresAt": "2026-12-23T06:04:39.239Z"
+    },
+    {
+      "id": "6U3AfvTy87",
+      "project": "github.com/unify-apps/www",
+      "slug": "orbit-workflow-sandbox-benchmark",
+      "title": "Workflow Agent benchmark: sandbox vs legacy",
+      "kind": "plan",
+      "createdAt": "2026-11-19T14:50:28.516Z",
+      "expiresAt": "2026-12-23T07:19:43.184Z"
     }
   ]
 }

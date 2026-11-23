@@ -17,7 +17,7 @@ planloft plan/doc deploys
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Saved, with room to improve](https://hatims-planloft.vercel.app/workflow-best-practice-warnings/) | github.com/unify-apps/www | plan | 2026-12-01 |
-| [Workflow Agent benchmark: sandbox vs legacy](https://hatims-planloft.vercel.app/orbit-workflow-sandbox-benchmark/) | github.com/unify-apps/www | plan | 2026-12-21 |
+| [Workflow Agent benchmark: sandbox vs legacy](https://hatims-planloft.vercel.app/orbit-workflow-sandbox-benchmark/) | github.com/unify-apps/www | plan | 2026-12-23 |
 | [kur-post-migration-audit](https://hatims-planloft.vercel.app/kur-post-migration-audit/) | github.com/unify-apps/www | plan | 2026-11-24 |
 | [uac v2: agent eval](https://hatims-planloft.vercel.app/uac-v2-eval/) | github.com/unify-apps/www | report | 2026-12-13 |
 | [uac v2: the compiler](https://hatims-planloft.vercel.app/uac-v2-compiler/) | github.com/unify-apps/www | report | 2026-12-17 |
