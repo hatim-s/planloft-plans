@@ -1,0 +1,1107 @@
+<!doctype html><html lang="en"><head><!-- planloft-render:head:start -->
+<style data-planloft-render data-planloft-sha256="9c864bc9ecfdd238e5afbcc52bc5e97ce052baf1c292492d8f548052ad5a8b9b">/* planloft theme: briefing. A morning brief: Avenir Next at 17.5px on white, headlines in
+   Avenir Next Condensed Bold at newspaper size, navy ink, warm paper for callouts and
+   amber for links and the first series. Dark is a navy night page with the amber lifted. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --planloft-font-body: "Avenir Next", Avenir, "Segoe UI Variable Text", "Segoe UI", "Noto Sans", "Liberation Sans", sans-serif;
+  --planloft-font-heading: "Avenir Next Condensed", "Segoe UI Variable Display", "Bahnschrift SemiCondensed", "Roboto Condensed", "Arial Narrow", "Liberation Sans Narrow", sans-serif;
+  --planloft-font-mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace;
+  --planloft-font-size: 17.5px;
+  --planloft-line-height: 1.5;
+  --planloft-code-size: 0.86em;
+  --planloft-heading-weight: 700;
+  --planloft-heading-line-height: 1;
+  --planloft-heading-tracking: -0.005em;
+  --planloft-h1-size: 3.1em;
+  --planloft-h2-size: 1.8em;
+  --planloft-h3-size: 1.28em;
+}
+:root,
+:root[data-planloft-color-scheme="light"] {
+  color-scheme: light;
+  --planloft-paper: #ffffff;
+  --planloft-ink: #141a2a;
+  --planloft-muted: #565d6d;
+  --planloft-surface: #f4f1ea;
+  --planloft-rule: #d9d7d0;
+  --planloft-accent: #8a5306;
+  --planloft-accent-contrast: #ffffff;
+  --planloft-code-paper: #f3f1ec;
+  --planloft-code-ink: #1e2634;
+  --planloft-chart-1: #b7720a;
+  --planloft-chart-2: #2e55bd;
+  --planloft-chart-3: #0f8c7b;
+  --planloft-chart-4: #bb3f6b;
+  --planloft-chart-5: #6a5ac6;
+  --planloft-chart-6: #4d8e2a;
+  --planloft-chart-sequential: #8a5306;
+  --planloft-chart-neutral: #8f9199;
+  --planloft-positive: #187a4e;
+  --planloft-negative: #b83440;
+  --planloft-caution: #9a6200;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    color-scheme: dark;
+    --planloft-paper: #10141f;
+    --planloft-ink: #e0e3eb;
+    --planloft-muted: #9ba1b1;
+    --planloft-surface: #1a2131;
+    --planloft-rule: #303748;
+    --planloft-accent: #f3bd4f;
+    --planloft-accent-contrast: #10141f;
+    --planloft-code-paper: #171e2e;
+    --planloft-code-ink: #e3e7ee;
+    --planloft-chart-1: #ebb040;
+    --planloft-chart-2: #7093ea;
+    --planloft-chart-3: #35b8a5;
+    --planloft-chart-4: #e86f95;
+    --planloft-chart-5: #a08fe9;
+    --planloft-chart-6: #74b652;
+    --planloft-chart-sequential: #f3bd4f;
+    --planloft-chart-neutral: #6f7587;
+    --planloft-positive: #52c58c;
+    --planloft-negative: #f27f87;
+    --planloft-caution: #e5aa44;
+  }
+}
+:root[data-planloft-color-scheme="dark"] {
+  color-scheme: dark;
+  --planloft-paper: #10141f;
+  --planloft-ink: #e0e3eb;
+  --planloft-muted: #9ba1b1;
+  --planloft-surface: #1a2131;
+  --planloft-rule: #303748;
+  --planloft-accent: #f3bd4f;
+  --planloft-accent-contrast: #10141f;
+  --planloft-code-paper: #171e2e;
+  --planloft-code-ink: #e3e7ee;
+  --planloft-chart-1: #ebb040;
+  --planloft-chart-2: #7093ea;
+  --planloft-chart-3: #35b8a5;
+  --planloft-chart-4: #e86f95;
+  --planloft-chart-5: #a08fe9;
+  --planloft-chart-6: #74b652;
+  --planloft-chart-sequential: #f3bd4f;
+  --planloft-chart-neutral: #6f7587;
+  --planloft-positive: #52c58c;
+  --planloft-negative: #f27f87;
+  --planloft-caution: #e5aa44;
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --planloft-paper: #ffffff;
+    --planloft-ink: #141a2a;
+    --planloft-muted: #565d6d;
+    --planloft-surface: #f4f1ea;
+    --planloft-rule: #d9d7d0;
+    --planloft-accent: #8a5306;
+    --planloft-accent-contrast: #ffffff;
+    --planloft-code-paper: #f3f1ec;
+    --planloft-code-ink: #1e2634;
+    --planloft-chart-1: #b7720a;
+    --planloft-chart-2: #2e55bd;
+    --planloft-chart-3: #0f8c7b;
+    --planloft-chart-4: #bb3f6b;
+    --planloft-chart-5: #6a5ac6;
+    --planloft-chart-6: #4d8e2a;
+    --planloft-chart-sequential: #8a5306;
+    --planloft-chart-neutral: #8f9199;
+    --planloft-positive: #187a4e;
+    --planloft-negative: #b83440;
+    --planloft-caution: #9a6200;
+  }
+}
+
+
+body:where(:has(> .planloft-plan > .planloft-prose)) {
+  margin: 0;
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  -webkit-text-size-adjust: 100%;
+}
+:where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.5rem 7rem; }
+:where(.planloft-prose) {
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-body, system-ui, sans-serif);
+  font-size: var(--planloft-font-size, 17px);
+  line-height: var(--planloft-line-height, 1.6);
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+:where(.planloft-prose) *, :where(.planloft-prose) *::before, :where(.planloft-prose) *::after { box-sizing: border-box; }
+:where(.planloft-prose) > :first-child { margin-top: 0; }
+:where(.planloft-prose) > :last-child { margin-bottom: 0; }
+
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-heading, var(--planloft-font-body, system-ui, sans-serif));
+  font-weight: var(--planloft-heading-weight, 650);
+  line-height: var(--planloft-heading-line-height, 1.2);
+  letter-spacing: var(--planloft-heading-tracking, 0);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+:where(.planloft-prose) h1 { margin: 0 0 0.6em; font-size: var(--planloft-h1-size, 2.2em); }
+:where(.planloft-prose) h2 { margin: 1.8em 0 0.5em; font-size: var(--planloft-h2-size, 1.5em); }
+:where(.planloft-prose) h3 { margin: 1.6em 0 0.45em; font-size: var(--planloft-h3-size, 1.18em); }
+:where(.planloft-prose) h4 { margin: 1.5em 0 0.4em; font-size: 1em; }
+:where(.planloft-prose) h5 { margin: 1.4em 0 0.35em; font-size: 1em; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) h6 { margin: 1.4em 0 0.35em; font-size: 1em; font-weight: 500; font-style: italic; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) :is(h1, h2, h3) + :is(h2, h3, h4) { margin-top: 0.8em; }
+/* A linked heading keeps the heading's colour and carries a thin accent underline, so
+   it reads as a link without hover; hover strengthens the line. */
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: color-mix(in srgb, var(--planloft-accent, LinkText) 55%, transparent);
+  text-underline-offset: 0.14em;
+}
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a:hover { text-decoration-color: var(--planloft-accent, LinkText); }
+/* The paragraph after the title is the summary; it reads a step larger and quieter. */
+:where(.planloft-prose) h1 + p { font-size: 1.12em; color: var(--planloft-muted, GrayText); }
+
+:where(.planloft-prose) p { margin: 0 0 1.2em; text-wrap: pretty; }
+:where(.planloft-prose) :is(ul, ol) { margin: 0 0 1.2em; padding-left: 1.6em; }
+:where(.planloft-prose) li { margin: 0.3em 0; }
+:where(.planloft-prose) li > p { margin-bottom: 0.6em; }
+:where(.planloft-prose) li :is(ul, ol) { margin: 0.3em 0 0.4em; }
+:where(.planloft-prose) li::marker { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.2em; }
+:where(.planloft-prose) li > input[type="checkbox"] { margin: 0 0.55em 0 0; vertical-align: -0.1em; accent-color: var(--planloft-accent, currentColor); }
+:where(.planloft-prose) dl { margin: 0 0 1.2em; }
+:where(.planloft-prose) dt { font-weight: var(--planloft-heading-weight, 650); }
+:where(.planloft-prose) dd { margin: 0 0 0.6em 1.6em; }
+
+:where(.planloft-prose) a {
+  color: var(--planloft-accent, LinkText);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+:where(.planloft-prose) a:hover { text-decoration-color: currentColor; }
+:where(.planloft-prose) strong { font-weight: 700; }
+:where(.planloft-prose) mark { padding: 0 0.15em; background: color-mix(in srgb, var(--planloft-caution, #b98100) 28%, var(--planloft-paper, Canvas)); color: inherit; }
+:where(.planloft-prose) del { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; }
+:where(.planloft-prose) :is(sup, sub) { font-size: 0.78em; line-height: 0; }
+:where(.planloft-prose) small { font-size: 0.86em; }
+
+:where(.planloft-prose) :is(code, kbd, samp, pre) {
+  font-family: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  font-size: var(--planloft-code-size, 0.88em);
+}
+:where(.planloft-prose) code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+}
+:where(.planloft-prose) pre {
+  margin: 1.4em 0;
+  padding: 0.95em 1.1em;
+  overflow-x: auto;
+  border-radius: 4px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+  line-height: 1.55;
+  tab-size: 2;
+}
+:where(.planloft-prose) pre code { padding: 0; border-radius: 0; background: transparent; color: inherit; font-size: 1em; }
+:where(.planloft-prose) kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--planloft-surface, color-mix(in srgb, CanvasText 5%, Canvas));
+  font-size: 0.82em;
+}
+
+:where(.planloft-prose) blockquote {
+  margin: 1.4em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  color: var(--planloft-muted, GrayText);
+}
+:where(.planloft-prose) blockquote > :last-child { margin-bottom: 0; }
+:where(.planloft-prose) blockquote cite { font-style: normal; }
+
+/* Tables keep their natural width and scroll sideways instead of breaking the page. */
+:where(.planloft-prose) table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  line-height: 1.45;
+  font-size: 0.94em;
+}
+:where(.planloft-prose) :is(th, td) {
+  padding: 0.45em 1.1em 0.45em 0;
+  border-bottom: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  text-align: left;
+  vertical-align: top;
+}
+:where(.planloft-prose) tr > :last-child { padding-right: 0; }
+:where(.planloft-prose) thead th { font-weight: var(--planloft-heading-weight, 650); border-bottom: 2px solid var(--planloft-ink, CanvasText); }
+:where(.planloft-prose) tbody th { font-weight: 600; }
+:where(.planloft-prose) td:has(> :is(code, kbd):only-child) { white-space: nowrap; }
+
+:where(.planloft-prose) hr { height: 0; margin: 2.8em 0; border: 0; border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas)); }
+:where(.planloft-prose) img, :where(.planloft-prose) video, :where(.planloft-prose) svg:not(.pl-chart__svg) { max-width: 100%; height: auto; }
+:where(.planloft-prose) figure { margin: 1.6em 0; }
+:where(.planloft-prose) figcaption { margin-top: 0.5em; color: var(--planloft-muted, GrayText); font-size: 0.9em; }
+:where(.planloft-prose) details {
+  margin: 1.2em 0;
+  padding: 0.6em 0.9em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-radius: 4px;
+}
+:where(.planloft-prose) summary { cursor: pointer; font-weight: 600; }
+:where(.planloft-prose) details[open] > summary { margin-bottom: 0.5em; }
+
+:where(.planloft-prose) ::selection { background: color-mix(in srgb, var(--planloft-accent, Highlight) 24%, transparent); }
+:where(.planloft-prose) :focus-visible { outline: 2px solid var(--planloft-accent, currentColor); outline-offset: 3px; }
+:where(.planloft-plan) > .planloft-comments {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+}
+
+@media (max-width: 40rem) {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.25rem 5rem; }
+  :where(.planloft-prose) { font-size: calc(var(--planloft-font-size, 17px) * 0.94); }
+  :where(.planloft-prose) h1 { font-size: calc(var(--planloft-h1-size, 2.2em) * 0.82); }
+}
+@media print {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 0; }
+  :where(.planloft-prose) { font-size: 11pt; }
+  :where(.planloft-prose) a { text-decoration-color: currentColor; }
+  :where(.planloft-prose) :is(pre, blockquote, table, figure) { break-inside: avoid; }
+}
+
+
+.pl-callout, .pl-stats, .pl-stat, .pl-status, .pl-badge, .pl-checklist, .pl-todo, .pl-timeline, .pl-milestone, .pl-chart, .pl-sparkline, .pl-table, .pl-scroll, .pl-tip {
+  --pl-ink: var(--planloft-ink, CanvasText);
+  --pl-paper: var(--planloft-paper, Canvas);
+  --pl-muted: var(--planloft-muted, color-mix(in srgb, var(--pl-ink) 62%, var(--pl-paper)));
+  --pl-surface: var(--planloft-surface, color-mix(in srgb, var(--pl-ink) 5%, var(--pl-paper)));
+  --pl-rule: var(--planloft-rule, color-mix(in srgb, var(--pl-ink) 16%, var(--pl-paper)));
+  --pl-accent: var(--planloft-accent, var(--pl-ink));
+  --pl-accent-contrast: var(--planloft-accent-contrast, var(--pl-paper));
+  --pl-series-1: var(--planloft-chart-1, #2a78d6);
+  --pl-series-2: var(--planloft-chart-2, #eb6834);
+  --pl-series-3: var(--planloft-chart-3, #1baf7a);
+  --pl-series-4: var(--planloft-chart-4, #6250d6);
+  --pl-series-5: var(--planloft-chart-5, #e87ba4);
+  --pl-series-6: var(--planloft-chart-6, #eda100);
+  --pl-sequential: var(--planloft-chart-sequential, var(--pl-series-1));
+  --pl-neutral: var(--planloft-chart-neutral, color-mix(in srgb, var(--pl-ink) 52%, var(--pl-paper)));
+  --pl-positive: var(--planloft-positive, #1f8a52);
+  --pl-negative: var(--planloft-negative, #c8412b);
+  --pl-caution: var(--planloft-caution, #b98100);
+  --pl-font-body: var(--planloft-font-body, inherit);
+  --pl-font-heading: var(--planloft-font-heading, var(--pl-font-body));
+  --pl-font-mono: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  --pl-heading-weight: var(--planloft-heading-weight, 650);
+  --pl-radius: 6px;
+}
+
+.pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Hidden chart tables must not become keyboard-focusable scroll containers. */
+.pl-chart__data table { display: table; max-width: none; overflow: visible; }
+.pl-scroll { max-width: 100%; overflow-x: auto; }
+.pl-scroll > table { display: table; width: 100%; max-width: none; margin: 0; overflow: visible; }
+.pl-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Callout */
+.pl-callout {
+  --pl-tone: var(--pl-accent);
+  margin: 1.6em 0;
+  padding: 0.85em 1.1em 0.9em;
+  border-inline-start: 3px solid var(--pl-tone);
+  border-radius: 0 var(--pl-radius) var(--pl-radius) 0;
+  background: color-mix(in srgb, var(--pl-tone) 7%, var(--pl-paper));
+}
+.pl-callout[data-tone="note"] { --pl-tone: var(--pl-muted); }
+.pl-callout[data-tone="tip"] { --pl-tone: var(--pl-positive); }
+.pl-callout[data-tone="warning"] { --pl-tone: var(--pl-caution); }
+.pl-callout[data-tone="risk"] { --pl-tone: var(--pl-negative); }
+.pl-callout[data-tone="decision"] { --pl-tone: var(--pl-accent); }
+.pl-callout__heading {
+  font-family: var(--pl-font-heading);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15em 0.6em;
+  align-items: baseline;
+  margin: 0 0 0.35em;
+  line-height: 1.35;
+}
+.pl-callout__tone { font-weight: var(--pl-heading-weight); }
+.pl-callout__title { font-weight: var(--pl-heading-weight); }
+.pl-callout__body > :first-child { margin-top: 0; }
+.pl-callout__body > :last-child { margin-bottom: 0; }
+
+/* Stat and Stats */
+.pl-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  gap: 1.25rem 2rem;
+  margin: 1.75em 0;
+}
+.pl-stat { min-width: 0; padding-top: 0.7rem; border-top: 1px solid var(--pl-rule); }
+.pl-stats > .pl-stat { margin: 0; }
+.pl-stat__label { margin: 0; color: var(--pl-muted); font-size: 0.86em; line-height: 1.35; }
+.pl-stat__value {
+  font-family: var(--pl-font-heading);
+  margin: 0.15rem 0 0.1rem;
+  font-size: 2em;
+  font-weight: var(--pl-heading-weight);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+}
+.pl-stat__change { margin: 0; font-size: 0.86em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pl-stat__change[data-assessment="good"] .pl-stat__arrow { color: var(--pl-positive); }
+.pl-stat__change[data-assessment="bad"] .pl-stat__arrow { color: var(--pl-negative); }
+.pl-stat__arrow { display: inline-block; margin-inline-end: 0.2em; }
+.pl-stat__period { color: var(--pl-muted); font-weight: 400; }
+.pl-stat .pl-sparkline { display: block; width: 6.5em; height: 1.6em; margin-top: 0.5rem; color: var(--pl-muted); }
+.pl-stat__note { margin-top: 0.4rem; color: var(--pl-muted); font-size: 0.86em; }
+.pl-stat__note > :first-child { margin-top: 0; }
+.pl-stat__note > :last-child { margin-bottom: 0; }
+
+/* Status */
+.pl-status {
+  --pl-tone: var(--pl-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.05em 0.6em 0.1em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--pl-tone) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pl-tone) 10%, var(--pl-paper));
+  color: var(--pl-ink);
+  font-size: 0.82em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: 0.08em;
+}
+.pl-status::before { color: var(--pl-tone); font-size: 0.85em; line-height: 1; }
+.pl-status[data-tone="done"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="done"]::before { content: "\2713"; }
+.pl-status[data-tone="on-track"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="on-track"]::before { content: "\25CF"; }
+.pl-status[data-tone="at-risk"] { --pl-tone: var(--pl-caution); }
+.pl-status[data-tone="at-risk"]::before { content: "\25B2"; }
+.pl-status[data-tone="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-status[data-tone="blocked"]::before { content: "\25A0"; }
+.pl-status[data-tone="not-started"]::before { content: "\25CB"; }
+
+/* Todo and Checklist */
+.pl-checklist { margin: 1.5em 0; }
+.pl-checklist__title { margin: 0 0 0.35em; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); }
+.pl-todo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 0.7em;
+  align-items: start;
+  margin: 0;
+  padding: 0.5em 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+.pl-checklist > .pl-todo:first-of-type { border-top: 1px solid var(--pl-rule); }
+/* Drawn by hand: a native disabled checkbox renders as a grey block that reads as
+   checked. Checked is a filled inset square, legible in both modes and in print. */
+.pl-todo__box {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0.25em 0 0;
+  border: 1.5px solid color-mix(in srgb, var(--pl-ink) 55%, var(--pl-paper));
+  border-radius: 4px;
+  background: var(--pl-paper);
+  font: inherit;
+}
+.pl-todo__box:checked {
+  border-color: var(--pl-accent);
+  background: var(--pl-accent);
+  box-shadow: inset 0 0 0 2.5px var(--pl-accent-contrast);
+}
+.pl-todo__box:disabled { border-style: dashed; }
+.pl-todo__box:checked:disabled { border-style: solid; }
+.pl-todo__box:not(:disabled) { cursor: pointer; }
+.pl-todo__box:not(:disabled):hover { border-color: var(--pl-accent); }
+.pl-todo__box:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 2px; }
+.pl-todo__text { display: flex; flex-wrap: wrap; gap: 0.1em 1em; align-items: baseline; min-width: 0; }
+.pl-todo__label { flex: 1 1 14em; overflow-wrap: anywhere; }
+.pl-todo__box:not(:disabled) + .pl-todo__text .pl-todo__label { cursor: pointer; }
+.pl-todo:has(.pl-todo__box:checked) .pl-todo__label {
+  color: var(--pl-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.pl-todo__meta {
+  display: inline-flex;
+  gap: 0.9em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pl-todo__owner { font-weight: 600; }
+.pl-todo__detail { flex-basis: 100%; color: var(--pl-muted); font-size: 0.92em; }
+.pl-todo__detail > :first-child { margin-top: 0.2em; }
+.pl-todo__detail > :last-child { margin-bottom: 0; }
+
+/* Timeline and Milestone */
+.pl-timeline { margin: 1.75em 0; padding: 0; list-style: none; }
+.pl-milestone {
+  --pl-tone: var(--pl-rule);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  margin: 0;
+  padding: 0 0 1.35em;
+}
+.pl-milestone::marker { content: none; }
+.pl-milestone::before {
+  content: "";
+  position: absolute;
+  top: 0.95em;
+  bottom: -0.35em;
+  left: calc(0.45rem - 0.5px);
+  width: 1px;
+  background: var(--pl-rule);
+}
+.pl-milestone:last-child { padding-bottom: 0; }
+.pl-milestone:last-child::before { display: none; }
+.pl-milestone[data-state="done"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="done"]::before { background: var(--pl-accent); }
+.pl-milestone[data-state="active"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-milestone__node {
+  position: relative;
+  z-index: 1;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.3em;
+  border: 2px solid var(--pl-tone);
+  border-radius: 50%;
+  background: var(--pl-paper);
+}
+.pl-milestone[data-state="done"] .pl-milestone__node { background: var(--pl-tone); }
+.pl-milestone[data-state="active"] .pl-milestone__node {
+  box-shadow: inset 0 0 0 2px var(--pl-paper), inset 0 0 0 5px var(--pl-tone);
+}
+.pl-milestone[data-state="blocked"] .pl-milestone__node { border-radius: 2px; background: var(--pl-tone); }
+.pl-milestone__head { display: flex; flex-wrap: wrap; gap: 0 0.75em; align-items: baseline; grid-column: 2; }
+.pl-milestone__date {
+  flex-basis: 100%;
+  color: var(--pl-muted);
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+.pl-milestone__title { font-weight: var(--pl-heading-weight); line-height: 1.4; }
+.pl-milestone__state { color: var(--pl-muted); font-size: 0.82em; }
+.pl-milestone[data-state="active"] .pl-milestone__state,
+.pl-milestone[data-state="blocked"] .pl-milestone__state { color: var(--pl-ink); font-weight: 600; }
+.pl-milestone__body { grid-column: 2; margin-top: 0.25em; color: var(--pl-muted); }
+.pl-milestone__body > :first-child { margin-top: 0; }
+.pl-milestone__body > :last-child { margin-bottom: 0; }
+@media (min-width: 48rem) {
+  .pl-milestone { grid-template-columns: 7.5rem 1.6rem minmax(0, 1fr); }
+  .pl-milestone::before { left: calc(7.5rem + 0.45rem - 0.5px); }
+  .pl-milestone__node { grid-column: 2; grid-row: 1; }
+  .pl-milestone__head { grid-column: 3; grid-row: 1; }
+  .pl-milestone__date {
+    position: absolute;
+    left: 0;
+    width: 6.75rem;
+    padding-top: 0.1em;
+    text-align: right;
+  }
+  .pl-milestone__body { grid-column: 3; }
+}
+
+/* Charts */
+.pl-chart {
+  margin: 2em 0;
+  color: var(--pl-ink);
+  font-family: var(--pl-font-body);
+}
+.pl-chart__title { margin: 0 0 0.6rem; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); line-height: 1.35; }
+.pl-chart__plot { position: relative; container: pl-plot / inline-size; }
+.pl-chart__frame { display: none; }
+.pl-chart__frame[data-frame="compact"],
+.pl-chart__frame[data-frame="fixed"] { display: block; }
+@container pl-plot (min-width: 30rem) {
+  .pl-chart__frame[data-frame="compact"] { display: none; }
+  .pl-chart__frame[data-frame="regular"] { display: block; }
+}
+@container pl-plot (min-width: 56rem) {
+  .pl-chart__frame[data-frame="regular"] { display: none; }
+  .pl-chart__frame[data-frame="wide"] { display: block; }
+}
+.pl-chart__svg { display: block; width: 100%; height: auto; font-variant-numeric: tabular-nums; }
+.pl-chart__caption {
+  margin: 0.6rem 0 0;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  line-height: 1.5;
+}
+.pl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.25rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86em;
+  line-height: 1.4;
+}
+.pl-legend__item { display: inline-flex; gap: 0.45em; align-items: center; margin: 0; }
+.pl-legend__item::marker { content: none; }
+.pl-legend__value { color: var(--pl-muted); font-variant-numeric: tabular-nums; }
+.pl-swatch { flex: none; display: inline-block; background: var(--pl-swatch); }
+.pl-swatch--block { width: 0.75em; height: 0.75em; border-radius: 2px; }
+.pl-swatch--line { width: 1.1em; height: 2px; border-radius: 1px; }
+
+/* Pointer targets stay invisible; keyboard focus keeps an outline for navigation. */
+.pl-chart__hits { fill: transparent; stroke: none; }
+.pl-hit { outline: none; }
+.pl-hit:focus-visible { stroke: var(--pl-ink); stroke-width: 1.5; }
+/* Tooltip. A hairline and a short black shadow lift it off the chart; an ink-tinted
+   shadow would glow in dark themes. A mark with its own colour gets a key swatch on
+   the first row. Column hits cover every series and carry no colour. */
+.pl-tip {
+  position: fixed;
+  z-index: 20;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 6.5rem;
+  max-width: 18rem;
+  padding: 0.4rem 0.6rem 0.45rem;
+  border: 1px solid var(--pl-rule);
+  border-radius: var(--pl-radius);
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 6px 16px -6px rgb(0 0 0 / 0.18);
+  font-family: var(--pl-font-body);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.pl-tip[hidden] { display: none; }
+.pl-tip__title { margin-bottom: 0.05rem; font-weight: 600; }
+.pl-tip__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1.25em; }
+.pl-tip__label { display: inline-flex; align-items: baseline; gap: 0.45em; min-width: 0; color: var(--pl-muted); }
+.pl-tip[data-keyed] .pl-tip__title + .pl-tip__row .pl-tip__label::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 2px;
+  background: var(--pl-tip-color);
+}
+.pl-tip__value { font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.pl-chart--donut {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 2rem;
+  align-items: center;
+}
+.pl-chart--donut > .pl-chart__plot { grid-row: 2; width: min(100%, 13.5rem); }
+.pl-chart--donut > .pl-legend {
+  grid-row: 3;
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0 0;
+}
+.pl-chart--donut .pl-legend__item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.6em; }
+.pl-chart--donut > .pl-chart__caption { grid-column: 1 / -1; }
+@media (min-width: 40rem) {
+  .pl-chart--donut { grid-template-columns: 13.5rem minmax(0, 24rem); }
+  .pl-chart--donut > .pl-chart__title { grid-column: 1 / -1; }
+  .pl-chart--donut > .pl-chart__plot { grid-row: 2; grid-column: 1; }
+  .pl-chart--donut > .pl-legend { grid-row: 2; grid-column: 2; margin: 0; }
+}
+.pl-chart__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  text-align: center;
+  line-height: 1.15;
+  pointer-events: none;
+}
+.pl-chart__center-value { font-size: 1.45em; font-weight: var(--pl-heading-weight); }
+.pl-chart__center-label { color: var(--pl-muted); font-size: 0.8em; }
+
+.pl-sparkline {
+  display: inline-block;
+  width: 4.5em;
+  height: 1.1em;
+  color: var(--pl-accent);
+  vertical-align: -0.15em;
+}
+.pl-sparkline__svg { width: 100%; height: 100%; }
+
+/* DataTable */
+.pl-table { margin: 1.75em 0; }
+.pl-table caption {
+  caption-side: bottom;
+  padding-top: 0.6em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  text-align: left;
+}
+.pl-table tbody th { font-weight: 600; }
+.pl-table th[aria-sort]::after { content: " \2193"; color: var(--pl-muted); font-weight: 400; }
+.pl-table th[aria-sort="ascending"]::after { content: " \2191"; }
+.pl-table tfoot th,
+.pl-table tfoot td { border-top: 2px solid var(--pl-ink); font-weight: var(--pl-heading-weight); }
+
+
+/* Badge */
+.pl-badge {
+  --pl-badge-hue: var(--pl-muted);
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.04em 0.6em 0.08em;
+  border: 1px solid color-mix(in oklab, var(--pl-badge-hue) 30%, var(--pl-paper));
+  border-radius: 0.8em;
+  background: color-mix(in oklab, var(--pl-badge-hue) 14%, var(--pl-paper));
+  color: color-mix(in oklab, var(--pl-badge-hue) 55%, var(--pl-ink));
+  font-family: var(--pl-font-body);
+  font-size: 0.78em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.pl-badge[data-color="red"] { --pl-badge-hue: #d1453b; }
+.pl-badge[data-color="orange"] { --pl-badge-hue: #dd7020; }
+.pl-badge[data-color="yellow"] { --pl-badge-hue: #b98d00; }
+.pl-badge[data-color="green"] { --pl-badge-hue: #2f9a4e; }
+.pl-badge[data-color="teal"] { --pl-badge-hue: #17958f; }
+.pl-badge[data-color="blue"] { --pl-badge-hue: #2f74d0; }
+.pl-badge[data-color="purple"] { --pl-badge-hue: #7a55d4; }
+.pl-badge[data-color="pink"] { --pl-badge-hue: #d24f8e; }
+.pl-badge[data-color="accent"] { --pl-badge-hue: var(--pl-accent); }
+@media (forced-colors: active) {
+  .pl-badge { border-color: CanvasText; }
+}
+
+@media print {
+  .pl-chart,
+  .pl-table,
+  .pl-callout,
+  .pl-stat,
+  .pl-milestone,
+  .pl-todo { break-inside: avoid; }
+  .pl-tip { display: none; }
+}
+@media (forced-colors: active) {
+  .pl-swatch,
+  .pl-chart__svg,
+  .pl-sparkline__svg { forced-color-adjust: none; }
+  .pl-callout { border-inline-start-color: CanvasText; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-controls {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  color: var(--planloft-control-ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 0;
+}
+.planloft-theme-selector,
+.planloft-layout-selector {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.planloft-layout-selector[hidden] { display: none; }
+.planloft-theme-option,
+.planloft-layout-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover,
+.planloft-layout-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"],
+.planloft-layout-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg,
+.planloft-layout-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible,
+.planloft-layout-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-controls { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option, .planloft-layout-option { transition: none; }
+}
+@media print {
+  .planloft-controls { display: none; }
+}
+
+:root { --planloft-gutter: clamp(1.25rem, 5vw, 3rem); }
+.planloft-plan:has(> article) {
+  container: planloft-plan / inline-size;
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-bleed, 0rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+.planloft-plan:has(> article) > article {
+  --planloft-wide: min(var(--planloft-bleed, 0rem), max(0px, (100cqw - var(--planloft-measure, 44rem)) / 2));
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) > .planloft-comments {
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) :is(article, section) > :is(pre, figure, .pl-stats) {
+  margin-inline: calc(-1 * var(--planloft-wide, 0px));
+  max-width: calc(100% + 2 * var(--planloft-wide, 0px));
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > article {
+  --planloft-wide: 0px;
+  max-width: none;
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+html > body:not(:has(.planloft-plan > article)) {
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) > :is(main, article) {
+  max-width: none;
+}
+@media print {
+  html > body:not(:has(.planloft-plan > article)),
+  :root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article),
+  .planloft-plan:has(> article) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > article,
+  .planloft-plan:has(> article) > article { --planloft-wide: 0px; max-width: none; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments,
+  .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+}
+</style>
+<meta name="robots" content="noindex, nofollow" />
+<!-- planloft-render:head:end --><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Workflow Agent work in AI Factory</title>
+<style>
+@layer fallback {
+:root{color-scheme:light dark;--planloft-paper:#f5f7fd;--planloft-ink:#1b2546;--planloft-muted:#58637a;--planloft-surface:#fff;--planloft-rule:#d9dfeb;--planloft-accent:#2e55bd;--planloft-chart-1:#b7720a;--planloft-chart-2:#2e55bd;--planloft-chart-3:#0f8c7b;--planloft-chart-4:#bb3f6b;--planloft-chart-5:#6a5ac6;--planloft-font-heading:"Avenir Next Condensed",system-ui,sans-serif}
+@media(prefers-color-scheme:dark){:root{--planloft-paper:#101525;--planloft-ink:#e9edfa;--planloft-muted:#aeb9d2;--planloft-surface:#1a2238;--planloft-rule:#374460;--planloft-accent:#91aafa;--planloft-chart-1:#ebb040;--planloft-chart-2:#7093ea;--planloft-chart-3:#35b8a5;--planloft-chart-4:#e86f95;--planloft-chart-5:#a08fe9}}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--planloft-paper);color:var(--planloft-ink);font:15px/1.53 system-ui,sans-serif}
+main{max-width:1140px;margin:auto;padding:clamp(18px,4vw,56px)}
+header{border-top:5px solid var(--planloft-accent);padding-top:22px;margin-bottom:20px}
+h1,h2,h3{font-family:var(--planloft-font-heading);line-height:1.02;margin:0 0 .4em}
+h1{font-size:clamp(2.9rem,7vw,5.7rem);letter-spacing:-.042em}
+h2{font-size:clamp(1.8rem,4vw,2.9rem)}
+h3{font-size:1.45rem}
+section{margin-top:28px}
+p{margin:0 0 10px} .meta,.card p,small,.note{color:var(--planloft-muted)}
+.meta{font-weight:650;font-size:.8rem;letter-spacing:.05em}
+.summary{font-size:1.12rem;max-width:760px}
+.charts,.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card,.step{background:var(--planloft-surface);border:1px solid var(--planloft-rule);padding:16px}
+.pie{margin:17px auto;width:min(100%,148px);aspect-ratio:1;border-radius:50%;background:conic-gradient(var(--slices));display:grid;place-items:center}
+.pie span{width:67%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--planloft-surface);font-weight:750;font-size:1.25rem}
+ul{padding:0;margin:0;list-style:none}li{display:grid;grid-template-columns:10px 1fr auto;gap:7px;align-items:center;padding:4px 0;border-bottom:1px solid var(--planloft-rule);font-size:.87rem}li:last-child{border:0}li b{white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%}
+a{color:var(--planloft-accent);text-underline-offset:3px}
+.note{font-size:.86rem;margin:10px 0}
+.wrap{overflow:auto}table{width:100%;text-align:left;border-collapse:collapse;font-size:.89rem}th,td{padding:8px;border-bottom:1px solid var(--planloft-rule);vertical-align:top}th{font-size:.78rem;color:var(--planloft-muted)}td:first-child{white-space:nowrap}
+details{margin-top:15px}summary{cursor:pointer;font-weight:650} .step p{margin-bottom:0}
+@media(max-width:765px){.charts,.steps{grid-template-columns:1fr}.wrap table{min-width:480px}}
+</style></head><body><!-- planloft-render:controls:start -->
+<div class="planloft-controls" data-planloft-ignore>
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<div class="planloft-layout-selector" role="group" aria-label="Page width" data-planloft-layout-selector hidden>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="reading" aria-label="Reading width" title="Reading width" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4.5v15M16 4.5v15M3.5 4.5h17M3.5 19.5h17"/><path d="M10.5 9h3M10.5 12h3M10.5 15h3"/></svg>
+  </button>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="full" aria-label="Full width" title="Full width" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="1.5"/><path d="M6.5 9h11M6.5 12h11M6.5 15h11"/></svg>
+  </button>
+</div>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+(() => {
+  const initialize = () => {
+    const root = document.documentElement;
+    const group = document.querySelector("[data-planloft-layout-selector]");
+    const options = Array.from(group.querySelectorAll("[data-planloft-layout-option]"));
+    const key = "planloft-layout";
+    let saved = null;
+    try { saved = localStorage.getItem(key); } catch {}
+    let selected = saved === "full" ? "full" : "reading";
+    const update = () => {
+      if (selected === "reading") delete root.dataset.planloftLayout;
+      else root.dataset.planloftLayout = selected;
+      for (const option of options) {
+        option.setAttribute("aria-pressed", String(option.dataset.planloftLayoutOption === selected));
+      }
+    };
+    for (const option of options) option.addEventListener("click", () => {
+      selected = option.dataset.planloftLayoutOption;
+      try { localStorage.setItem(key, selected); } catch {}
+      update();
+    });
+    update();
+    group.hidden = false;
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  else initialize();
+})();
+</script>
+<script>
+(() => {
+  const HIT = ".pl-chart__hits > *";
+  let tip = null;
+  let current = null;
+  const hitOf = (event) => (event.target instanceof Element ? event.target.closest(HIT) : null);
+  const hide = () => {
+    if (tip) tip.hidden = true;
+    current = null;
+  };
+  const show = (hit, pointerY) => {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "pl-tip";
+      tip.setAttribute("data-planloft-ignore", "");
+      tip.setAttribute("aria-hidden", "true");
+      document.body.append(tip);
+    }
+    const [title, ...rows] = (hit.getAttribute("aria-label") || "").split("\n");
+    tip.replaceChildren();
+    const heading = document.createElement("div");
+    heading.className = "pl-tip__title";
+    heading.textContent = title;
+    tip.append(heading);
+    for (const row of rows) {
+      const split = row.lastIndexOf(": ");
+      const line = document.createElement("div");
+      line.className = "pl-tip__row";
+      const label = document.createElement("span");
+      label.className = "pl-tip__label";
+      label.textContent = split < 0 ? row : row.slice(0, split);
+      const value = document.createElement("span");
+      value.className = "pl-tip__value";
+      value.textContent = split < 0 ? "" : row.slice(split + 2);
+      line.append(label, value);
+      tip.append(line);
+    }
+    const color = hit.dataset.plColor;
+    tip.toggleAttribute("data-keyed", Boolean(color) && rows.length === 1);
+    if (color) tip.style.setProperty("--pl-tip-color", color);
+    tip.hidden = false;
+    current = hit;
+    place(hit, pointerY);
+  };
+  const place = (hit, pointerY) => {
+    // Above the mark, centred, kept inside the viewport; below it when the top is cut off.
+    // A column spans the whole plot, so it anchors to the pointer instead of its top.
+    const box = hit.getBoundingClientRect();
+    const column = hit.classList.contains("pl-hit--column") && pointerY !== undefined;
+    const anchorY = column ? pointerY : box.top;
+    // Leave room for the value label above a mark.
+    const gap = column ? 10 : 24;
+    const width = tip.offsetWidth;
+    const height = tip.offsetHeight;
+    const left = Math.max(8, Math.min(box.left + box.width / 2 - width / 2, window.innerWidth - width - 8));
+    let top = anchorY - height - gap;
+    if (top < 8) top = (column ? anchorY : box.bottom) + gap;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  };
+  const start = () => {
+    const titles = document.querySelectorAll(".pl-chart__hits > * > title");
+    if (titles.length === 0) return;
+    for (const title of titles) {
+      title.parentNode.setAttribute("aria-label", title.textContent);
+      title.remove();
+    }
+    document.addEventListener("pointerover", (event) => {
+      const hit = event.pointerType === "touch" ? null : hitOf(event);
+      if (hit) show(hit, event.clientY);
+    });
+    document.addEventListener("pointerout", (event) => {
+      if (event.pointerType !== "touch" && hitOf(event) === current) hide();
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch") return;
+      const hit = hitOf(event);
+      if (hit && hit !== current) show(hit, event.clientY);
+      else hide();
+    });
+    document.addEventListener("focusin", (event) => {
+      const hit = hitOf(event);
+      if (hit) show(hit);
+    });
+    document.addEventListener("focusout", (event) => {
+      if (hitOf(event) === current) hide();
+    });
+    const STEPS = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") return hide();
+      const hit = hitOf(event);
+      const step = STEPS[event.key];
+      if (!hit || event.altKey || event.ctrlKey || event.metaKey || (!step && event.key !== "Home" && event.key !== "End")) return;
+      event.preventDefault();
+      const hits = Array.from(hit.parentNode.children);
+      const next = event.key === "Home" ? hits[0] : event.key === "End" ? hits[hits.length - 1] : hits[hits.indexOf(hit) + step];
+      if (!next || next === hit) return;
+      hit.setAttribute("tabindex", "-1");
+      next.setAttribute("tabindex", "0");
+      next.focus();
+    });
+    // Focusing a hit can scroll it into view, so a focused hit keeps its tooltip and
+    // the tooltip moves with it. Hover tooltips close on scroll.
+    window.addEventListener("scroll", () => {
+      if (current && current === document.activeElement) place(current);
+      else hide();
+    }, { passive: true });
+    window.addEventListener("resize", hide);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+</script>
+<!-- planloft-render:controls:end --><main>
+<header><p class="meta">23 November 2026 · AI Factory QA · 14:25 IST snapshot</p><h1>Workflow Agent work<br>in AI Factory</h1><p class="summary"><strong>23 probes across 9 loops. Zero passed preflight.</strong> Restore the workspace, then move review and triage first. A prior batch of 44 advisory reviews reached 41 marked Done and 3 preflight failures.</p></header>
+<section class="charts" aria-label="Work mix and adoption"><article class="card"><h3>Types of work</h3><p>29 Workflow Agent work threads</p><div class="pie" style="--slices:var(--planloft-chart-1) 0.00000000% 37.93103448%,var(--planloft-chart-2) 37.93103448% 58.62068966%,var(--planloft-chart-3) 58.62068966% 82.75862069%,var(--planloft-chart-4) 82.75862069% 96.55172414%,var(--planloft-chart-5) 96.55172414% 100.00000000%" aria-hidden="true"><span>29</span></div><ul aria-label="Types of work breakdown"><li><span class="dot" style="background:var(--planloft-chart-1)"></span><span>Compiler, tooling &amp; guidance</span><b>11 <small>· 38%</small></b></li><li><span class="dot" style="background:var(--planloft-chart-2)"></span><span>PR &amp; Atlas review</span><b>6 <small>· 21%</small></b></li><li><span class="dot" style="background:var(--planloft-chart-3)"></span><span>Evals &amp; regression analysis</span><b>7 <small>· 24%</small></b></li><li><span class="dot" style="background:var(--planloft-chart-4)"></span><span>Sync &amp; release preparation</span><b>4 <small>· 14%</small></b></li><li><span class="dot" style="background:var(--planloft-chart-5)"></span><span>Repository setup</span><b>1 <small>· 3%</small></b></li></ul></article><article class="card"><h3>Movement today</h3><p>One classification per thread</p><div class="pie" style="--slices:var(--planloft-chart-3) 0.00000000% 6.89655172%,var(--planloft-chart-1) 6.89655172% 17.24137931%,var(--planloft-rule) 17.24137931% 100.00000000%" aria-hidden="true"><span>5 / 29</span></div><ul aria-label="Movement today breakdown"><li><span class="dot" style="background:var(--planloft-chart-3)"></span><span>Moved at least one step</span><b>2 <small>· 7%</small></b></li><li><span class="dot" style="background:var(--planloft-chart-1)"></span><span>Under movement</span><b>3 <small>· 10%</small></b></li><li><span class="dot" style="background:var(--planloft-rule)"></span><span>No Factory handoff verified</span><b>24 <small>· 83%</small></b></li></ul></article><article class="card"><h3>Oracle scenario</h3><p>After blockers and rollout gates clear</p><div class="pie" style="--slices:var(--planloft-chart-3) 0.00000000% 79.31034483%,var(--planloft-rule) 79.31034483% 100.00000000%" aria-hidden="true"><span>79%</span></div><ul aria-label="Oracle scenario breakdown"><li><span class="dot" style="background:var(--planloft-chart-3)"></span><span>Factory owns the first repeatable step</span><b>23 <small>· 79%</small></b></li><li><span class="dot" style="background:var(--planloft-rule)"></span><span>Direct ownership</span><b>6 <small>· 21%</small></b></li></ul></article></section>
+<p class="note">The three pies use the same 29 Workflow Agent work threads active from 26 Oct to 23 Nov. They count threads, so each slice shows how many threads contain a handoff, regardless of how many runs or hours were involved.</p>
+<section><h2>What moved</h2>
+<div class="wrap"><table><thead><tr><th scope="col">Stage</th><th scope="col">Work</th><th scope="col">Evidence</th></tr></thead><tbody>
+<tr><td>Moved · 2</td><td>Advisory PR review and asset sync preparation.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057f6bfc3a7322c8fcda0?run=lr751ddeaa76d9216c7935253b">Review report</a> · <a href="https://github.com/unify-apps/uacode/pull/64645">Merged UAT sync PR</a></td></tr>
+<tr><td>Under movement · 3</td><td>Current-head review rollout, Automation Bench case drafting, and weekly eval / Atlas follow-ups.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03c89018c8827da894833b?run=lrf069b4ae488852e7fe4cc248">Current-head review</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b01743c3e89001c8770d23a?run=lr959f4ca498ff56649e501063">Change analysis</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0151571e871a614d49eea4?run=lra80b150b6e18063e9747326a">Eval corpus</a></td></tr>
+<tr><td>No verified handoff · 24</td><td>Of these, 18 have a repeatable step that could move. Six are primarily architecture, design, or ownership decisions.</td><td>Four-week audit cohort</td></tr>
+</tbody></table></div></section>
+<section><h2>Blockers to clear</h2><p>Clear workspace failures first. Then prove that review, dry-run and approval modes enforce their boundaries.</p>
+<div class="wrap"><table><thead><tr><th scope="col">Ticket</th><th scope="col">What it blocks</th><th scope="col">Run evidence</th></tr></thead><tbody><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1496/details">AF-1496</a></td><td><strong>Workspace secrets missing</strong><br>PR, Develop, Atlas, Triage, Diagnose, Contracts and Voice cannot pass readiness.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f78918c8827da89daf95?run=lr5b247d601c150a79ad363bed">PR review failure</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1485/details">AF-1485</a></td><td><strong>Sandbox startup timeout</strong><br>Atlas, Diagnose and Clarification lose execution time or fail before work begins.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6afffff95c8d145c95d1c330?run=lr07b9e5ecd05a09bc8d1dba56">Atlas startup failure</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1511/details">AF-1511</a></td><td><strong>Workspace path rejected</strong><br>Atlas and Guidance repair cannot start with the generated working directory.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03c85d18c8827da89480e4?run=lr559e5c54cf82d579cd0054f3">Atlas path failure</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-76/details">AF-76</a></td><td><strong>Second repository unavailable</strong><br>Contracts and cross-repo Develop work need pinned WWW and uacode checkouts.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b032fdc4b0fe237d4b48f49?run=lr05fef9d0524d7059a94e2115">Contracts stopped at inventory</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1486/details">AF-1486</a></td><td><strong>Inline PR comments missing</strong><br>Atlas follow-up cannot reliably clear review blockers.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b032f7c4b0fe237d4b4768e?run=lr6d60e531d1c58c4a9ea035a2">Follow-up stopped at Read</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1488/details">AF-1488</a></td><td><strong>Audit entered Repair</strong><br>Guidance audits need a read-only execution path before routine use.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b032f8f4b0fe237d4b47c49?run=lr899cfab74e404d6f58ed94b8">Guidance audit failure</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1372/details">AF-1372</a></td><td><strong>Dry run stalled at writeback</strong><br>Atlas dry runs need to produce a report without making a commit or asking for write approval.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b01515c1e871a614d49f0d5?run=lr3cf37b42c014405d161453e3">Dry run blocked</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1126/details">AF-1126</a></td><td><strong>Approval assigned to the wrong user</strong><br>Patterns and other gated loops need a clear approver and a working reject path.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b032fda60d4ad2ae09efb4b?run=lr43eba1fdb65464586092821b">Patterns blocked</a></td></tr></tbody></table></div>
+<details><summary>All 23 failed runs · 16 Workflow Agent, 7 Voice</summary><p class="note">Every run stopped with the required workspace tokens missing.</p><div class="wrap"><table><thead><tr><th scope="col">Loop</th><th scope="col">Session</th><th scope="col">Failed at</th></tr></thead><tbody><tr><td>voice-agent-audit-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03ee3f0976c52b28d1df9e?messageId=lred40e3ff088432f14fc268f9-start">QA Probe Overlap Test Auditwww1h ago</a></td><td>Preflight</td></tr><tr><td>voice-agent-audit-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03ee3e18c8827da899f15f?messageId=lrbf6a27e7d253c60aca1ae769-start">QA Probe Drift Auditwww1h ago</a></td><td>Preflight</td></tr><tr><td>voice-agent-audit-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03ece10976c52b28d1bde7?messageId=lr03a9c9711ed47846d1ab3b09-start">Voice Path Code Audit Reportwww1h ago</a></td><td>Preflight</td></tr><tr><td>voice-agent-build-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03ecdc18c8827da89942af?messageId=lr6d89686b0d9d3aff29d3699c-start">Voice Queue Item Designwww1h ago</a></td><td>Preflight</td></tr><tr><td>voice-agent-build-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03ecd40976c52b28d1bc96?messageId=lr97d7858f20bf7e97e9e9a012-start">QA Probe Build Loop Fixwww1h ago</a></td><td>Preflight</td></tr><tr><td>voice-agent-review-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03ee400976c52b28d1dfbd?messageId=lrb730076fb49af186cb3624c2-start">QA Probe Invalid Mode Reportwww1h ago</a></td><td>Preflight</td></tr><tr><td>voice-agent-review-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03ece00976c52b28d1bdbb?messageId=lr8835d9ecaa4ab31a946959ad-start">Voice PR Review Reportwww1h ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-atlas-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f79118c8827da89db0ec?messageId=lr6faa9037fba55edf56f3332a-start">QA Probe Dry Run IntakeTTS-2561www23m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-atlas-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7900976c52b28d47f94?messageId=lrf845be67b3b6e6bfc0c23305-start">TTS-2561 DryRun Fix ReportTTS-2561www23m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-atlas-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f78f18c8827da89db0c1?messageId=lrfdcc88d3d54d94f00d24f3e3-start">Pull Request Followup Reviewwww23m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-contracts-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7b30976c52b28d48186?messageId=lr1f283c9a5f7274ffd8b83a45-start">QA Probe Invalid Mode Reportwww22m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-contracts-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7ac0976c52b28d48161?messageId=lr753c43608779f89d1430c2db-start">QA Probe Alignment Reportwww22m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-develop-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f78e18c8827da89db0a6?messageId=lrba8f4f1850f6c1ecdc16896a-start">Workflow Report Analysiswww+123m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-develop-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f78d18c8827da89db016?messageId=lr142fc9aeeee1aadd5a39d457-start">Pagination Example Compilation Diagnosiswww+123m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-diagnose-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7ab0976c52b28d48146?messageId=lr84fc0d1db0097fba9fc80e2e-start">QA-PROBE Viewer Mode Errorwww22m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-diagnose-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7aa18c8827da89db37d?messageId=lra3990f10a35a88878e34ecd7-start">Source Level Compile Error RCAwww22m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-pr-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f78c18c8827da89daff0?messageId=lrd5fb45388a3821a5fee6f2d3-start">QA Probe Invalid Mode Valuewww23m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-pr-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f78a18c8827da89dafc6?messageId=lr8025857f9b319079afb46271-start">Nonexistent PR Reviewwww23m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-pr-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f78918c8827da89daf95?messageId=lr5b247d601c150a79ad363bed-start">QA Probe Review Mode Reportwww23m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-triage-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7a90976c52b28d48131?messageId=lr54bc5b8cf70e92f203d9c4af-start">QA Probe Draft Mode Logwww22m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-triage-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7a818c8827da89db31f?messageId=lrb1be15f30f2acddeba2feac9-start">QA Probe Invalid Date Errorwww22m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-triage-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7a70976c52b28d4810b?messageId=lrfdaf6b7961db0535cbdccfc8-start">QA Probe Intake Taskwww22m ago</a></td><td>Preflight</td></tr><tr><td>workflow-agent-triage-loop</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03f7a618c8827da89db2f4?messageId=lrf804c8b24e11c46a5e6eb706-start">QA Probe Execution Configurationwww22m ago</a></td><td>Preflight</td></tr></tbody></table></div></details></section>
+<section><h2>The oracle scenario</h2>
+<p><strong>23 of 29 threads could have a useful Factory step, up from 2 of 29 today.</strong> That is 21 additional handoffs in this sample, assuming the blockers clear and the rollout tests pass. Core ownership of architecture, merges and tenant acceptance stays with the team.</p>
+<div class="steps">
+<article class="step"><h3>Restore</h3><p>Pass three consecutive canaries with normal workspace settings. Check a dual-repo run and verify that advisory and dry-run modes produce zero writes.</p></article>
+<article class="step"><h3>Pilot</h3><p>Start with 10 work items. Aim for eight accepted review, triage or diagnosis reports. The candidate queues include 28 Workflow Agent tickets in Dev Review and 46 open PRs, with overlap.</p></article>
+<article class="step"><h3>Scale</h3><p>Add bounded fixes, contract checks and scheduled evaluations after the pilot. By week four, aim for Factory first-pass coverage of 60% of eligible new work.</p></article>
+</div>
+<p class="note">The 79% scenario describes this cohort’s potential. The 60% aim is a proposed operating target for new work. Neither measures time savings.</p></section>
+</main></body></html>

@@ -171,6 +171,15 @@
       "kind": "plan",
       "createdAt": "2026-11-19T14:50:28.516Z",
       "expiresAt": "2026-12-23T07:19:43.184Z"
+    },
+    {
+      "id": "KIlzXvlciL",
+      "project": "github.com/unify-apps/www",
+      "slug": "workflow-agent-factory-adoption-2026-11-23",
+      "title": "Workflow Agent work in AI Factory",
+      "kind": "plan",
+      "createdAt": "2026-11-23T09:04:32.477Z",
+      "expiresAt": "2026-12-23T09:04:32.477Z"
     }
   ]
 }
