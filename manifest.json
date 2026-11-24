@@ -182,15 +182,6 @@
       "expiresAt": "2026-12-24T07:24:36.225Z"
     },
     {
-      "id": "X3mLxfYEMI",
-      "project": "github.com/unify-apps/www",
-      "slug": "ai-factory-workflow-coverage",
-      "title": "AI Factory workflow coverage and rollout",
-      "kind": "plan",
-      "createdAt": "2026-11-23T09:10:08.029Z",
-      "expiresAt": "2026-12-24T11:06:46.977Z"
-    },
-    {
       "id": "KIlzXvlciL",
       "project": "github.com/unify-apps/www",
       "slug": "workflow-agent-factory-adoption-2026-11-23",
@@ -198,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-11-23T09:04:32.477Z",
       "expiresAt": "2026-12-24T11:10:19.739Z"
+    },
+    {
+      "id": "X3mLxfYEMI",
+      "project": "github.com/unify-apps/www",
+      "slug": "ai-factory-workflow-coverage",
+      "title": "AI Factory adoption report",
+      "kind": "plan",
+      "createdAt": "2026-11-23T09:10:08.029Z",
+      "expiresAt": "2026-12-24T11:13:19.823Z"
     }
   ]
 }

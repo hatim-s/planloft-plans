@@ -22,10 +22,10 @@ function isNonemptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-function isCanonicalIsoTimestamp(value) {
+function isManifestTimestamp(value) {
   if (typeof value !== "string") return false;
   const timestamp = Date.parse(value);
-  return !Number.isNaN(timestamp) && new Date(timestamp).toISOString() === value;
+  return Number.isFinite(timestamp);
 }
 
 function invalidManifest(reason) {
@@ -57,12 +57,12 @@ export function readManifest(root) {
         throw invalidManifest(`deploys[${index}].${field} must be a nonempty string`);
       }
     }
-    if (!isCanonicalIsoTimestamp(entry.createdAt)) {
-      throw invalidManifest(`deploys[${index}].createdAt must be a canonical ISO timestamp`);
+    if (!isManifestTimestamp(entry.createdAt)) {
+      throw invalidManifest(`deploys[${index}].createdAt must be a valid timestamp`);
     }
-    if (entry.expiresAt !== null && !isCanonicalIsoTimestamp(entry.expiresAt)) {
+    if (entry.expiresAt !== null && !isManifestTimestamp(entry.expiresAt)) {
       throw invalidManifest(
-        `deploys[${index}].expiresAt must be a canonical ISO timestamp or null`,
+        `deploys[${index}].expiresAt must be a valid timestamp or null`,
       );
     }
   }
@@ -115,7 +115,12 @@ function displayDate(value) {
 function normalizePagesBaseUrl(value) {
   if (value === undefined || value === null) return undefined;
   if (typeof value !== "string") throw new TypeError("pagesBaseUrl must be a string.");
-  return value.trim().replace(/\/+$/, "") || undefined;
+  if (!value.trim()) return undefined;
+  const url = new URL(value);
+  if (!["https:", "http:"].includes(url.protocol) || url.username || url.password || url.search || url.hash) {
+    throw new TypeError("Expected an HTTP or HTTPS site URL.");
+  }
+  return url.href.replace(/\/+$/, "").replaceAll("(", "%28").replaceAll(")", "%29");
 }
 
 function resolvePagesBaseUrl(root) {
@@ -134,7 +139,7 @@ function resolvePagesBaseUrl(root) {
 
 function readmeHref(plan, pagesBaseUrl) {
   const prefix = pagesBaseUrl ? `${pagesBaseUrl}/` : "";
-  return `${prefix}${encodeURIComponent(plan.slug)}/`;
+  return `${prefix || "./public/"}${encodeURIComponent(plan.slug)}/`;
 }
 
 function renderReadmeBlock(plans, pagesBaseUrl) {
@@ -568,6 +573,9 @@ export function preparePlanIndexes(root, options = {}) {
   const manifest = readManifest(root);
   const now = parseNow(options.now);
   const plans = livePlans(manifest, now);
+  const publicDirectory = fs.lstatSync(path.join(root, "public"));
+  if (!publicDirectory.isDirectory()) throw new Error("public must be a real directory.");
+
   const pagesBaseUrl = normalizePagesBaseUrl(
     options.pagesBaseUrl ?? resolvePagesBaseUrl(root),
   );

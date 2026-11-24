@@ -21,6 +21,16 @@ for (const entry of manifest.deploys) {
 for (const directory of ["public", "public/p"]) {
   if (fs.existsSync(path.join(root, directory)) && fs.lstatSync(path.join(root, directory)).isSymbolicLink()) throw new Error("Unsafe public directory");
 }
+const hasExpired = manifest.deploys.some(entry => entry.expiresAt !== null && Date.parse(entry.expiresAt) <= now);
+if (hasExpired) {
+  const generator = path.join(root, ".planloft", "update-indexes.mjs");
+  const sitePath = path.join(root, ".planloft", "site.json");
+  const site = fs.existsSync(sitePath) ? JSON.parse(fs.readFileSync(sitePath, "utf8")) : undefined;
+  execFileSync(process.execPath, [
+    generator, "--now", new Date(now).toISOString(),
+    ...(site ? ["--pages-base-url", site.url] : []),
+  ], { cwd: root, stdio: ["ignore", "ignore", "pipe"] });
+}
 for (const entry of manifest.deploys) {
   const expired = entry.expiresAt && Date.parse(entry.expiresAt) <= now;
   if (expired) {
@@ -35,10 +45,6 @@ manifest.deploys = kept;
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
 
 if (removed > 0) {
-  const generator = path.join(root, ".planloft", "update-indexes.mjs");
-  const sitePath = path.join(root, ".planloft", "site.json");
-  const site = fs.existsSync(sitePath) ? JSON.parse(fs.readFileSync(sitePath, "utf8")) : undefined;
-  if (fs.existsSync(generator)) execFileSync(process.execPath, [generator, ...(site ? ["--pages-base-url", site.url] : [])]);
   execFileSync("git", ["config", "user.name", "planloft-bot"]);
   execFileSync("git", ["config", "user.email", "bot@users.noreply.github.com"]);
   execFileSync("git", ["add", "-A"]);
