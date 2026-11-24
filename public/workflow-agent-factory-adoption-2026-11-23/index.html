@@ -914,74 +914,58 @@ body {
 main {
   max-width: 1080px;
   margin: 0 auto;
-  padding: clamp(20px, 4vw, 52px);
+  padding: clamp(16px, 3vw, 36px);
 }
-header {
-  border-top: 5px solid var(--planloft-accent);
-  padding-top: 20px;
-  margin-bottom: 18px;
+main > header {
+  margin-bottom: 10px;
 }
-h1, h2, h3 {
+main h1, main h2 {
   font-family: var(--planloft-font-heading);
   line-height: 1.04;
   margin: 0 0 .38em;
 }
-h1 {
-  font-size: clamp(2.6rem, 6.5vw, 5rem);
+main h1 {
+  font-size: clamp(2.25rem, 5vw, 3.8rem);
   letter-spacing: -.04em;
   max-width: 820px;
 }
-h2 {
+main h2 {
   font-size: clamp(1.65rem, 3.6vw, 2.5rem);
   letter-spacing: -.02em;
 }
-h3 {
-  font-size: 1.25rem;
-}
-p { margin: 0 0 10px; max-width: 74ch; }
-.meta, small, .note { color: var(--planloft-muted); }
+main p { margin: 0 0 8px; max-width: 74ch; }
+.meta, .note { color: var(--planloft-muted); }
 .meta {
   font-weight: 650;
   font-size: .78rem;
   letter-spacing: .06em;
   text-transform: uppercase;
 }
-.lede {
-  font-size: 1.08rem;
-  max-width: 72ch;
-  margin-top: 6px;
-}
-a {
+main a {
   color: var(--planloft-accent);
   text-underline-offset: 3px;
 }
 .flow-nav {
   display: flex;
-  gap: 10px 22px;
+  gap: 4px 18px;
   flex-wrap: wrap;
-  padding: 6px 0 18px;
-  border-bottom: 1px solid var(--planloft-rule);
   font-size: .9rem;
   font-weight: 550;
 }
-section {
-  margin-top: 32px;
-  padding-top: 22px;
-  border-top: 1px solid var(--planloft-rule);
-}
-section.oracle {
+main > section {
   margin-top: 24px;
-  padding: 20px 0 24px 20px;
-  border-top: 0;
-  border-left: 4px solid var(--planloft-accent);
-  border-bottom: 1px solid var(--planloft-rule);
+}
+main > section.oracle {
+  margin-top: 20px;
+  padding: 6px 0 4px 14px;
+  border-left: 3px solid var(--planloft-accent);
 }
 .oracle-grid {
   display: grid;
   grid-template-columns: minmax(210px, auto) 1fr;
-  gap: 18px 34px;
-  align-items: end;
-  margin: 14px 0 16px;
+  gap: 10px 24px;
+  align-items: center;
+  margin: 8px 0;
 }
 @media (max-width: 680px) {
   .oracle-grid { grid-template-columns: 1fr; }
@@ -999,18 +983,19 @@ section.oracle {
 }
 .threshold-viz {
   max-width: 660px;
-  margin: 14px 0 10px;
+  margin: 10px 0 6px;
 }
 .viz-row {
   display: grid;
-  grid-template-columns: 17ch minmax(140px, 1fr) 11ch;
+  grid-template-columns: 14ch minmax(80px, 1fr) 12ch;
   gap: 10px;
   align-items: center;
   margin: 10px 0;
   font-size: .88rem;
 }
 @media (max-width: 560px) {
-  .viz-row { grid-template-columns: 1fr; gap: 4px; }
+  .viz-row { grid-template-columns: 1fr auto; gap: 4px 10px; }
+  .viz-track { grid-column: 1 / -1; grid-row: 2; }
 }
 .viz-track {
   position: relative;
@@ -1052,11 +1037,8 @@ section.oracle {
 .kpi-strip {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px 32px;
-  margin: 14px 0 16px;
-  padding: 12px 0;
-  border-top: 1px solid var(--planloft-rule);
-  border-bottom: 1px solid var(--planloft-rule);
+  gap: 10px 22px;
+  margin: 10px 0;
 }
 .kpi-item {
   min-width: 110px;
@@ -1111,57 +1093,48 @@ section.oracle {
 .bar-row.done .bar-fill { background: var(--planloft-chart-3); }
 
 .wrap { overflow-x: auto; margin: 12px 0; }
-table {
+main table {
   width: 100%;
   text-align: left;
   border-collapse: collapse;
   font-size: .87rem;
 }
-th, td {
-  padding: 7px 8px;
-  border-bottom: 1px solid var(--planloft-rule);
+main th, main td {
+  padding: 5px 7px;
   vertical-align: top;
 }
-th {
+main th {
   font-size: .76rem;
   text-transform: uppercase;
   letter-spacing: .04em;
   color: var(--planloft-muted);
 }
-td:first-child { white-space: nowrap; }
+main td:first-child { white-space: nowrap; }
 .tag {
   font-size: .78rem;
   color: var(--planloft-muted);
   white-space: nowrap;
 }
-details {
-  margin-top: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--planloft-rule);
+main details {
+  margin-top: 5px;
 }
-summary {
+main summary {
   cursor: pointer;
   font-weight: 650;
   padding: 4px 0;
 }
 .evidence-list {
-  margin: 10px 0 12px;
+  margin: 4px 0 8px;
   padding: 0;
   list-style: none;
   max-width: 74ch;
 }
 .evidence-list li {
-  padding: 5px 0;
-  border-bottom: 1px solid var(--planloft-rule);
+  padding: 2px 0;
   font-size: .9rem;
 }
-.evidence-list li:last-child { border-bottom: 0; }
-footer {
-  margin-top: 34px;
-  padding-top: 14px;
-  border-top: 1px solid var(--planloft-rule);
-  font-size: .82rem;
-  color: var(--planloft-muted);
+main tbody tr:nth-child(odd) {
+  background: color-mix(in srgb, var(--planloft-rule) 16%, transparent);
 }
 </style>
 </head>
@@ -1361,26 +1334,25 @@ footer {
 <header>
   <p class="meta">AI Factory QA · 24 November 2026 IST</p>
   <h1>Workflow Agent delivery in AI Factory</h1>
-  <p class="lede">AI Factory helped re-raise work for <strong>30 of 31 tickets (96.8%)</strong>. Across the cumulative ledger of PRs linked to Factory runs, <strong>11 of 38 merged</strong>, including one newly recorded merge.</p>
 </header>
 
 <nav aria-label="Contents" class="flow-nav">
-  <a href="#oracle">Oracle scenario</a>
-  <a href="#replacement">Replacement campaign (31 tickets)</a>
-  <a href="#delivery">Strict run-linked delivery (38 PRs)</a>
-  <a href="#history">Runtime &amp; retest snapshot</a>
+  <a href="#oracle">Oracle</a>
+  <a href="#replacement">Re-raised work</a>
+  <a href="#delivery">Merged work</a>
+  <a href="#history">Runtime</a>
 </nav>
 
 <section id="oracle" class="oracle" aria-labelledby="oracle-heading">
-  <p class="meta">Oracle · Path to 90% merged coverage</p>
+  <p class="meta">Oracle</p>
   <div class="oracle-grid">
     <div>
       <p class="hero-stat">96.8%</p>
-      <p class="hero-sub">30 of 31 tickets re-raised with Factory assistance</p>
+      <p class="hero-sub">30 of 31 tickets re-raised</p>
     </div>
     <div>
-      <h2 id="oracle-heading">Re-raises cleared 90%. Merges need 28 more tickets.</h2>
-      <p>The 90% milestone is <strong>28 of 31 tickets (90.3%)</strong>. Re-raises already exceed it by two tickets. The single held ticket (<a href="https://atlas.unifyapps.com/issue/TTS-2875/details">TTS-2875</a>) would bring re-raise coverage to 31/31 if eligible. Merge-through coverage currently sits at <strong>0/31</strong>, leaving an exact gap of <strong>28 tickets</strong> whose replacement PR(s) must merge to clear the same 90% bar.</p>
+      <h2 id="oracle-heading">Path to 90% merged</h2>
+      <p>Merged replacements for <strong>28 of 31 tickets</strong> would put this campaign at <strong>90.3%</strong>.</p>
     </div>
   </div>
 
@@ -1401,52 +1373,40 @@ footer {
       </span>
       <strong>0/31 (0.0%)</strong>
     </div>
-    <div class="viz-legend">
-      <span><span class="swatch" style="background:var(--planloft-chart-3)"></span>Factory-assisted replacement open (30/31)</span>
-      <span><span class="swatch" style="background:var(--planloft-chart-2)"></span>Replacement merged (0/31; gap = 28 tickets)</span>
-      <span><span class="swatch" style="background:var(--planloft-ink)"></span>90% threshold = 28/31 (90.3%)</span>
-    </div>
+
   </div>
 
-  <p class="note">The Oracle measures this 31-ticket campaign. Organization-wide adoption remains unmeasured because the total volume of eligible work is unknown.</p>
+  <p class="note">Campaign coverage only. Organization-wide adoption is unmeasured.</p>
 </section>
 
 <section id="replacement" aria-labelledby="replacement-heading">
-  <p class="meta">Audited Replacement Cohort</p>
-  <h2 id="replacement-heading">Replacement PRs opened for 30 of 31 tickets</h2>
-  <p>Across the audited 31-ticket list, <strong>30 tickets</strong> now have <strong>31 open replacement PRs</strong> on current GitHub readback (<a href="https://atlas.unifyapps.com/issue/TTS-3132/details">TTS-3132</a> spans two replacement PRs, <a href="https://github.com/unify-apps/uacode/pull/65094">uacode #65094</a> and <a href="https://github.com/unify-apps/www/pull/36522">www #36522</a>). One ticket, <a href="https://atlas.unifyapps.com/issue/TTS-2875/details">TTS-2875</a>, has no replacement and is held pending the searchable-fields decision.</p>
+  <h2 id="replacement-heading">Re-raised work</h2>
+  <p>GitHub showed <strong>31 original PRs and 31 replacements open</strong>. <a href="https://atlas.unifyapps.com/issue/TTS-3132/details">TTS-3132</a> has two replacements (<a href="https://github.com/unify-apps/uacode/pull/65094">uacode #65094</a> and <a href="https://github.com/unify-apps/www/pull/36522">www #36522</a>). <a href="https://atlas.unifyapps.com/issue/TTS-2875/details">TTS-2875</a> awaits a searchable-fields decision.</p>
 
-  <div class="kpi-strip" aria-label="Distinct evidence layers for the 31-ticket cohort">
+  <div class="kpi-strip" aria-label="Factory involvement in replacement PRs">
     <div class="kpi-item">
       <span class="kpi-val">31 / 31</span>
-      <span class="kpi-lbl">Replacement PRs with Factory review/repair</span>
+      <span class="kpi-lbl">Factory review or repair started</span>
     </div>
     <div class="kpi-item">
       <span class="kpi-val">10 / 31</span>
-      <span class="kpi-lbl">PR bodies with Factory-origin marker</span>
-    </div>
-    <div class="kpi-item">
-      <span class="kpi-val">0 / 31</span>
-      <span class="kpi-lbl">Originals verified closed</span>
-    </div>
-    <div class="kpi-item">
-      <span class="kpi-val">0 / 31</span>
-      <span class="kpi-lbl">Replacement PRs merged</span>
+      <span class="kpi-lbl">PR descriptions with a Factory marker</span>
     </div>
   </div>
 
-  <p><strong>Evidence boundaries kept separate:</strong> The campaign records Factory review or repair submitted/accepted for all 31 replacements, which establishes Factory-assisted execution—not a Factory-only implementation or completed review in every case (some fixes moved to isolated checkouts after hosted stops or workspace, permission, or provider failures). A Factory-origin PR body marker (10/31) is distinct from a proven creation receipt. All 31 original PRs in this exact mapping still read <strong>open</strong> on GitHub, including the held ticket, and a separate recent closed-author search found no matches; original closures were not verified in the matched cohort. Replacement merges remain <strong>0/31 PRs</strong> (0/30 replacement tickets fully merged), and merge remains distinct from QA activation or live acceptance.</p>
-
-  <h3>Review and CI evidence for three open PRs</h3>
-  <ul class="evidence-list">
-    <li><a href="https://github.com/unify-apps/nebula-plugin/pull/628">nebula-plugin #628</a> (<a href="https://atlas.unifyapps.com/issue/TTS-3136/details">TTS-3136</a>) — passed 7 checks and obtained a published-head Factory review.</li>
-    <li><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a> (<a href="https://atlas.unifyapps.com/issue/TTS-2915/details">TTS-2915</a>) — received a no-blocker published-head review and both required checks passed per campaign receipt.</li>
-    <li><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> (<a href="https://atlas.unifyapps.com/issue/TTS-2632/details">TTS-2632</a>) — passed 13 checks at the campaign handoff.</li>
-  </ul>
+  <details>
+    <summary>Selected review and CI results</summary>
+    <ul class="evidence-list">
+      <li><a href="https://github.com/unify-apps/nebula-plugin/pull/628">nebula-plugin #628</a> (<a href="https://atlas.unifyapps.com/issue/TTS-3136/details">TTS-3136</a>). Factory reviewed the published head. All 7 checks passed.</li>
+      <li><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a> (<a href="https://atlas.unifyapps.com/issue/TTS-2915/details">TTS-2915</a>). Review found no blockers. Both required checks passed.</li>
+      <li><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> (<a href="https://atlas.unifyapps.com/issue/TTS-2632/details">TTS-2632</a>). All 13 checks passed at handoff.</li>
+    </ul>
+    <p class="note">Factory accepted review or repair for all 31 replacements. Some fixes continued outside the hosted session. A PR description marker records claimed Factory origin.</p>
+  </details>
 
   <details>
-    <summary>Anonymized 31-ticket old → replacement mapping (all 31 originals &amp; 31 replacements read open)</summary>
-    <p class="note">Links under <em>Factory activity</em> point to a selected attempt, task, or review run and are not presented as proof of successful PR creation.</p>
+    <summary>Ticket and PR mapping</summary>
+    <p class="note">Factory links show review or repair activity.</p>
     <div class="wrap">
       <table>
         <thead>
@@ -1460,188 +1420,188 @@ footer {
         <tbody>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3289/details">TTS-3289</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34751">www #34751</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36479">www #36479</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34751">www #34751</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36479">www #36479</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040a9d18c8827da8a01a2d?run=lraee8494bfe5ce2fe4678e328">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ec418c8827da8a12484?run=lrf2066223c955bade72fcf3db">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3253/details">TTS-3253</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34644">www #34644</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36480">www #36480</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34644">www #34644</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36480">www #36480</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ae018c8827da8a026af?run=lrf2638cb80e4b1094456aff40">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ed218c8827da8a12838?run=lrad43f0257f340c68e6bab096">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3252/details">TTS-3252</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34642">www #34642</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36492">www #36492</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34642">www #34642</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36492">www #36492</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040af218c8827da8a029a8?run=lrebe2e1446ae9291800840618">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04174718c8827da8a47e2a?run=lr37bff2775cecad7fea7c2736">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3251/details">TTS-3251</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/31885">www #31885</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36491">www #36491</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31885">www #31885</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36491">www #36491</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b0818c8827da8a02f89?run=lr86329e955d23396eaac01a8c">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04174218c8827da8a47ad5?run=lr263087b19a571b8c98c6d763">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3132/details">TTS-3132</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34350">www #34350</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/uacode/pull/65094">uacode #65094</a> <span class="tag">open</span> · <a href="https://github.com/unify-apps/www/pull/36522">www #36522</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34350">www #34350</a></td>
+            <td><a href="https://github.com/unify-apps/uacode/pull/65094">uacode #65094</a> · <a href="https://github.com/unify-apps/www/pull/36522">www #36522</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b2718c8827da8a03619?run=lr0551e27bf43eeeb1a302858b">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043110d6f7e70b547a4a17?run=lrce3229941fb20d9cf56f3947">Run 2</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0438df6846245613955903?run=lra49e0db1c9e3624ad9825d86">Run 3</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3131/details">TTS-3131</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34539">www #34539</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36486">www #36486</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34539">www #34539</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36486">www #36486</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b3d18c8827da8a03a98?run=lr08ff08beb613c9eeb5222a06">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134918c8827da8a2618e">Task 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3129/details">TTS-3129</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34348">www #34348</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36484">www #36484</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34348">www #34348</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36484">www #36484</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b4818c8827da8a03c94?run=lr59c6be74e107d5a48eda1c17">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134718c8827da8a260e9">Task 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3109/details">TTS-3109</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34256">www #34256</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36503">www #36503</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34256">www #34256</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36503">www #36503</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b4e18c8827da8a03df3?run=lr43b1a4a38e0907a14b957d7b">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b042f58d6f7e70b54798cee?run=lr795dd71578c7a393593413f6">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3106/details">TTS-3106</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34253">www #34253</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36487">www #36487</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34253">www #34253</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36487">www #36487</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b5418c8827da8a03f57?run=lrce0d3eff233e52aeb68c7a97">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134c18c8827da8a26229?run=lr6b2e6726025f22ce8ea09cb1">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3026/details">TTS-3026</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34064">www #34064</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36507">www #36507</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34064">www #34064</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36507">www #36507</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bc518c8827da8a05828?run=lr6c7ff0fe9ac47d9e7fb033be">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041d8f18c8827da8a6b4f4?run=lr45d420e50c616eb917a97ed4">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2915/details">TTS-2915</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33812">www #33812</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a> <span class="tag">open · marker · in ledger</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33812">www #33812</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a> <span class="tag">Factory marker · in ledger</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bda18c8827da8a05ca8?run=lr75ebd07e9c26bf15884a01a3">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0427c5d3c6d231aa16ed3e?run=lr6951af5a83068dd476e6eee5">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2769/details">TTS-2769</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33477">www #33477</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36504">www #36504</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33477">www #33477</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36504">www #36504</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040be218c8827da8a05f0b?run=lrf4bb428cc8c1e045aebf095d">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041def18c8827da8a6ccf2?run=lrdb1019b5d0d5406c46c42d70">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2632/details">TTS-2632</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33302">www #33302</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> <span class="tag">open · marker · in ledger</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33302">www #33302</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> <span class="tag">Factory marker · in ledger</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade617b1b2e35738a98d775/runs/lr4adaad830b75e30c5021dc84">Origin run</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041c7b18c8827da8a67e6e?run=lr50222e5a6f779997e871661b">Review run</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2601/details">TTS-2601</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33097">www #33097</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/uacode/pull/65082">uacode #65082</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33097">www #33097</a></td>
+            <td><a href="https://github.com/unify-apps/uacode/pull/65082">uacode #65082</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040beb18c8827da8a061c0?run=lr620035d09995df00d4ab1e00">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0425c818c8827da8aaaae0?run=lrc56c23fb171aaa2b79b7f1ba">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2547/details">TTS-2547</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33061">www #33061</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36512">www #36512</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33061">www #33061</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36512">www #36512</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bee18c8827da8a0630d?run=lreb64fb23357e09d59de70c22">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f5118c8827da8a764b7?run=lr174a79954f294fb557e8ca2e">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2382/details">TTS-2382</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/31940">www #31940</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36488">www #36488</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31940">www #31940</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36488">www #36488</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bf218c8827da8a06469?run=lr0506f4b7388e8a71caa753e6">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04175018c8827da8a482e3?run=lrd56968baaa6d755ddbc6f623">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2381/details">TTS-2381</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/31939">www #31939</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36510">www #36510</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31939">www #31939</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36510">www #36510</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bf618c8827da8a0654f?run=lr9a1bd1ad20dd2fbe9aad3d65">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f3318c8827da8a74f08?run=lrea54cbf732cb2a0bda7b788d">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2380/details">TTS-2380</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/31938">www #31938</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36506">www #36506</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31938">www #31938</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36506">www #36506</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c0718c8827da8a06977?run=lr0c2fa515d3e9ecc06397afaf">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041ce418c8827da8a69254?run=lr204769760c45441ecc078ceb">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3254/details">TTS-3254</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34645">www #34645</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36482">www #36482</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34645">www #34645</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36482">www #36482</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c5418c8827da8a07955?run=lreb1e91a108553b55bf6a3bd1">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041a4518c8827da8a61814?run=lr045d59780c7e78ef8427d794">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3113/details">TTS-3113</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34261">www #34261</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36490">www #36490</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34261">www #34261</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36490">www #36490</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c6d18c8827da8a07d08?run=lr2792e000b65eb723bb3f6bd9">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0416f418c8827da8a44838?run=lr8c56b18b5739e003542f4346">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3027/details">TTS-3027</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/34065">www #34065</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36494">www #36494</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34065">www #34065</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36494">www #36494</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c8d18c8827da8a084d7?run=lrc990bc30ec98d42dceb54df8">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04193b18c8827da8a5e0ff?run=lrc891c4f05974e7ea27b311a8">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2875/details">TTS-2875</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33685">www #33685</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33685">www #33685</a></td>
             <td><span class="tag">Held — pending searchable-fields decision</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ca218c8827da8a08979?run=lr10e2b4f485901d0bce9400bf">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04180270dfb219c967384e">Task 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2733/details">TTS-2733</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33453">www #33453</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36511">www #36511</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33453">www #33453</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36511">www #36511</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lrc997ab6f4d62adb8c5bcdd14">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f1a18c8827da8a7472f?run=lr898d278820155aa99b72ffac">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2636/details">TTS-2636</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33368">www #33368</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36499">www #36499</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33368">www #33368</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36499">www #36499</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lr4b5901dc66d64d4f0287fa0e">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04199318c8827da8a5f6d7?run=lr760497801352d26228e4d836">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2554/details">TTS-2554</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33000">www #33000</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36502">www #36502</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33000">www #33000</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36502">www #36502</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lr1a53c7d7b312dbc53b891730">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041c2818c8827da8a66f22?run=lr6ab05239c5b3f8239ebd4527">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2442/details">TTS-2442</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/33176">www #33176</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36520">www #36520</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33176">www #33176</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36520">www #36520</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lr7f533c5b020e3a467d42ae5a">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0429720976c52b28d6a341?run=lr1f7c19f2d9b3982784a3e8f9">Run 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2440/details">TTS-2440</a></td>
-            <td><a href="https://github.com/unify-apps/www/pull/32263">www #32263</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/www/pull/36513">www #36513</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/32263">www #32263</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36513">www #36513</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lra22210cd681298cb62b56fa0">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04164b70a09900921bf49f">Task 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-3136/details">TTS-3136</a></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/496">nebula-plugin #496</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/628">nebula-plugin #628</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/496">nebula-plugin #496</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/628">nebula-plugin #628</a></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c9b70dfb219c966dea6">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041485d562f347ab99c5c3">Task 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2556/details">TTS-2556</a></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/423">nebula-plugin #423</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/627">nebula-plugin #627</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/423">nebula-plugin #423</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/627">nebula-plugin #627</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c9a08ce23238f777403">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04138070dfb219c96708d3">Task 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2581/details">TTS-2581</a></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/422">nebula-plugin #422</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/626">nebula-plugin #626</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/422">nebula-plugin #422</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/626">nebula-plugin #626</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c96d562f347ab99690a">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04137c08ce23238f779abc">Task 2</a></td>
           </tr>
           <tr>
             <td><a href="https://atlas.unifyapps.com/issue/TTS-2446/details">TTS-2446</a></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/362">nebula-plugin #362</a> <span class="tag">open</span></td>
-            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/629">nebula-plugin #629</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/362">nebula-plugin #362</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/629">nebula-plugin #629</a> <span class="tag">Factory marker</span></td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c9470a09900921ba3f1">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0415e6d562f347ab99d588">Task 2</a></td>
           </tr>
         </tbody>
@@ -1651,9 +1611,8 @@ footer {
 </section>
 
 <section id="delivery" aria-labelledby="delivery-heading">
-  <p class="meta">Strict Run-Linked GitHub Ledger</p>
-  <h2 id="delivery-heading">Verified cumulative merges: 11 of 38 PRs (28.95%)</h2>
-  <p>The strict ledger counts unique PRs directly attributable to a specific Factory run via PR footer or creation receipt. One existing Factory-origin PR, <a href="https://github.com/unify-apps/www/pull/36401">www #36401</a>, newly merged since the prior ledger. GitHub reread all 16 previously open entries and all 16 remain open.</p>
+  <h2 id="delivery-heading">Factory delivery</h2>
+  <p><strong>11 of 38 PRs linked to Factory runs merged</strong>, including the new merge <a href="https://github.com/unify-apps/www/pull/36401">www #36401</a>.</p>
 
   <div class="seg-bar" role="img" aria-label="38 strict run-linked PRs: 11 merged (28.95%), 16 open (42.11%), 11 closed without merge (28.95%).">
     <span class="seg-merged" style="width:28.95%" title="Merged: 11"></span>
@@ -1666,10 +1625,10 @@ footer {
     <span><span class="swatch" style="background:var(--planloft-chart-1)"></span><strong>11 closed without merge</strong> (28.95%)</span>
   </div>
 
-  <p class="note"><strong>Do not sum ledgers:</strong> 11/38 (28.95%) is neither overall adoption nor a tenant deployment claim. At least two campaign replacement PRs (<a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> and <a href="https://github.com/unify-apps/www/pull/36501">www #36501</a>) already belong to this 38-PR ledger, so the 38-PR strict ledger and the 31-PR replacement cohort must never be added together.</p>
+  <p class="note">The PR ledger overlaps the replacement campaign, including <a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> and <a href="https://github.com/unify-apps/www/pull/36501">www #36501</a>.</p>
 
   <details>
-    <summary>Complete strict run-linked PR ledger (38 unique PRs)</summary>
+    <summary>38 PRs linked to Factory runs</summary>
     <div class="wrap">
       <table>
         <thead>
@@ -1721,13 +1680,12 @@ footer {
 </section>
 
 <section id="history" aria-labelledby="history-heading">
-  <p class="meta">Secondary · Dated Snapshot &amp; Retests</p>
-  <h2 id="history-heading">Runtime stability &amp; retest progress</h2>
-  <p>Preflight stability improved within the scoped 224-run window (Nov 23 14:52 – Nov 24 15:29 IST): <strong>86 preflight failures</strong> occurred during the earlier burst, followed by <strong>zero preflight failures</strong> across the subsequent 32 starts. Latest retests progressed to <strong>Trace</strong> (Contracts) and <strong>Compare</strong> (Voice, after passing its docs check).</p>
+  <h2 id="history-heading">Runtime</h2>
+  <p><strong>86 preflight failures</strong> in one burst. The next <strong>32 runs had zero</strong>.</p>
 
   <details>
-    <summary>Scoped 224-run snapshot (Nov 23 14:52 – Nov 24 15:29 IST)</summary>
-    <p class="note">143 of 224 starts came from audit probes and a single review batch. Counts reflect the dated snapshot readback.</p>
+    <summary>224 runs · 23 Nov 14:52 to 24 Nov 15:29 IST</summary>
+    <p class="note">Audit probes and one review batch accounted for 143 runs.</p>
     <div class="bars-compact" aria-label="224-run snapshot status counts">
       <div class="bar-row done"><span>Done</span><span class="bar-track"><span class="bar-fill" style="width:91.67%"></span></span><strong>99</strong></div>
       <div class="bar-row failed"><span>Failed</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><strong>108</strong></div>
@@ -1738,7 +1696,7 @@ footer {
   </details>
 
   <details>
-    <summary>Latest retest &amp; QA activation notes</summary>
+    <summary>Retests and QA activation</summary>
     <div class="wrap">
       <table>
         <thead>
@@ -1747,17 +1705,17 @@ footer {
         <tbody>
           <tr>
             <td>Contracts (<a href="https://atlas.unifyapps.com/issue/AF-1515/details">AF-1515</a>)</td>
-            <td>Fresh canary passed preflight and Inventory and reached <strong>Trace</strong> (outcome pending at last readback).</td>
+            <td>Passed preflight and Inventory. <strong>Trace</strong> pending.</td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b05660821997f6c685a72d2?run=lrdd6dbdc1bf8997b55e2ece55">Targeted rerun</a></td>
           </tr>
           <tr>
             <td>Voice (<a href="https://atlas.unifyapps.com/issue/AF-1547/details">AF-1547</a>–<a href="https://atlas.unifyapps.com/issue/AF-1549/details">1549</a>)</td>
-            <td>Passed its docs check (exit 0 for 28 docs and 40 queue entries) and reached <strong>Compare</strong> at last readback.</td>
+            <td>Docs check passed (28 docs, 40 queue entries). Reached <strong>Compare</strong>.</td>
             <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b05674021997f6c685aa3eb?run=lr62ccc486cf34ec2e139bfa0b">Post-merge rerun</a></td>
           </tr>
           <tr>
-            <td>QA activation boundary (<a href="https://atlas.unifyapps.com/issue/TTS-4555/details">TTS-4555</a>)</td>
-            <td>Source guard merged (<a href="https://github.com/unify-apps/www/pull/36564">www #36564</a>) without updating saved QA definitions; merge is distinct from QA activation.</td>
+            <td>QA activation (<a href="https://atlas.unifyapps.com/issue/TTS-4555/details">TTS-4555</a>)</td>
+            <td>Source guard merged (<a href="https://github.com/unify-apps/www/pull/36564">www #36564</a>) without updating saved QA definitions.</td>
             <td><a href="https://github.com/unify-apps/www/pull/36564">www #36564</a></td>
           </tr>
         </tbody>
@@ -1765,10 +1723,6 @@ footer {
     </div>
   </details>
 </section>
-
-<footer>
-  <p>Public Briefing · Anonymized evidence links (Factory, Atlas, GitHub) · Snapshot date: 24 November 2026 IST.</p>
-</footer>
 
 </main>
 <!-- planloft-collaboration:start -->
