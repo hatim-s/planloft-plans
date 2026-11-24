@@ -1771,5 +1771,701 @@ footer {
 </footer>
 
 </main>
+<!-- planloft-collaboration:start -->
+<style data-planloft-collaboration>/* Planloft collaboration runtime. Every rule is scoped to `.plc`, which also resets
+   inherited theme styles, so the UI looks the same on every theme apart from the
+   theme's own colors. Colors come from the theme's `--planloft-*` tokens, then
+   system colors. */
+
+.plc {
+  all: initial;
+  /* `all: initial` drops the host's color scheme; take it back so the Canvas and
+     CanvasText fallbacks match a page that sets its own dark scheme. */
+  color-scheme: inherit;
+  display: contents;
+  --plc-ink: var(--planloft-ink, CanvasText);
+  --plc-paper: var(--planloft-paper, Canvas);
+  --plc-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --plc-accent: var(--planloft-accent, LinkText);
+  --plc-muted: var(--planloft-muted, color-mix(in srgb, var(--plc-ink) 62%, var(--plc-paper)));
+  --plc-surface: var(--planloft-surface, color-mix(in srgb, var(--plc-ink) 5%, var(--plc-paper)));
+  /* Mixing a fixed hue with the ink keeps it legible on light and dark paper alike. */
+  --plc-danger: color-mix(in oklab, #c8372d 72%, var(--plc-ink));
+  --plc-caution: color-mix(in oklab, #b0740f 70%, var(--plc-ink));
+  --plc-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* The same tint as a comment highlight in the page. */
+  --plc-mark: color-mix(in srgb, var(--plc-accent) 18%, transparent);
+  --plc-focus: color-mix(in srgb, var(--plc-accent) 65%, var(--plc-rule));
+  --plc-focus-ring: color-mix(in srgb, var(--plc-accent) 16%, transparent);
+  --plc-radius: 8px;
+  --plc-layer: 2147483000;
+  color: var(--plc-ink);
+  font: 400 14px/1.5 var(--plc-sans);
+}
+
+.plc :not(svg, svg *) {
+  all: unset;
+  box-sizing: border-box;
+}
+.plc [hidden] { display: none !important; }
+.plc .plc-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Icons */
+.plc .plc-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Shared controls. Buttons have no outlines; only the primary action is filled. */
+.plc .plc-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: var(--plc-radius);
+  font: 500 13px/1 var(--plc-sans);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  transition: background-color 0.12s, color 0.12s;
+}
+.plc .plc-button .plc-icon { width: 16px; height: 16px; }
+.plc .plc-button-primary {
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+}
+.plc .plc-button-primary:hover { background: color-mix(in srgb, var(--plc-ink) 86%, var(--plc-paper)); }
+.plc .plc-button-quiet { color: var(--plc-ink); }
+.plc .plc-button-quiet:hover { background: var(--plc-surface); }
+.plc .plc-button[aria-disabled="true"] { opacity: 0.6; cursor: progress; }
+.plc .plc-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: var(--plc-radius);
+  color: var(--plc-muted);
+  cursor: pointer;
+  transition: background-color 0.12s, color 0.12s;
+}
+.plc .plc-icon-button:hover { color: var(--plc-ink); background: var(--plc-surface); }
+.plc .plc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.plc :is(button, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--plc-accent);
+  outline-offset: 2px;
+}
+
+/* Text fields are tinted wells without a border until they take focus. */
+.plc .plc-textarea {
+  display: block;
+  width: 100%;
+  min-height: calc(1.5em + 18px);
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--plc-surface);
+  color: var(--plc-ink);
+  font: 400 14px/1.5 var(--plc-sans);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  resize: vertical;
+  cursor: text;
+  field-sizing: content;
+  max-height: 40vh;
+  transition: border-color 0.12s, background-color 0.12s;
+}
+.plc .plc-textarea::placeholder { color: var(--plc-muted); opacity: 1; }
+.plc .plc-textarea:focus,
+.plc .plc-field:focus-within {
+  border-color: var(--plc-focus);
+  background: var(--plc-paper);
+  box-shadow: 0 0 0 3px var(--plc-focus-ring);
+  outline: none;
+}
+.plc .plc-textarea:focus-visible { outline: none; }
+
+/* A field with its submit button inside, used by the comment composer and replies. */
+.plc .plc-field {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--plc-surface);
+  transition: border-color 0.12s, background-color 0.12s;
+}
+.plc .plc-field .plc-textarea,
+.plc .plc-field .plc-textarea:focus {
+  flex: 1;
+  min-width: 0;
+  min-height: calc(1.5em + 8px);
+  padding: 4px 0 4px 8px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  resize: none;
+}
+.plc .plc-send {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+  cursor: pointer;
+  transition: opacity 0.12s, background-color 0.12s;
+}
+.plc .plc-send .plc-icon { width: 16px; height: 16px; stroke-width: 1.9; }
+.plc .plc-send:hover { background: color-mix(in srgb, var(--plc-ink) 84%, var(--plc-paper)); }
+/* Empty drafts dim the send button without disabling it; submitting empty refocuses the field. */
+.plc .plc-field:has(.plc-textarea:placeholder-shown) .plc-send { opacity: 0.35; }
+
+/* Selection toolbar */
+.plc .plc-toolbar {
+  position: fixed;
+  z-index: var(--plc-layer);
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 8px;
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+  box-shadow: 0 6px 20px color-mix(in srgb, #000 22%, transparent);
+}
+.plc .plc-toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 5px;
+  font: 500 13px/1 var(--plc-sans);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.plc .plc-toolbar-button:hover { background: color-mix(in srgb, var(--plc-paper) 16%, transparent); }
+.plc .plc-toolbar-quiet { color: color-mix(in srgb, var(--plc-paper) 75%, transparent); }
+.plc .plc-toolbar-button:focus-visible { outline-color: var(--plc-paper); outline-offset: -2px; }
+
+/* Launcher */
+.plc .plc-launcher {
+  position: fixed;
+  z-index: var(--plc-layer);
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  border: 1px solid var(--plc-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--plc-paper) 92%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--plc-ink);
+  font: 600 13px/1 var(--plc-sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px color-mix(in srgb, #000 10%, transparent);
+}
+.plc .plc-launcher:hover { background: var(--plc-surface); }
+.plc .plc-launcher[aria-expanded="true"] { background: var(--plc-ink); color: var(--plc-paper); border-color: var(--plc-ink); }
+.plc .plc-launcher[data-state="failed"] { color: var(--plc-danger); }
+.plc .plc-launcher[data-state="loading"] .plc-icon { opacity: 0.55; }
+.plc .plc-launcher-count:empty { display: none; }
+.plc .plc-launcher-status { font-weight: 400; }
+.plc .plc-launcher-status:empty { display: none; }
+
+/* A non-modal conversation popup. The document never changes width. The popup is
+   one sheet: no inner rules, spacing carries the structure. */
+.plc .plc-panel {
+  position: fixed;
+  z-index: var(--plc-layer);
+  display: flex;
+  flex-direction: column;
+  width: min(360px, calc(100vw - 24px));
+  max-height: min(600px, calc(100dvh - 24px));
+  border: 1px solid color-mix(in srgb, var(--plc-rule) 75%, transparent);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--plc-paper);
+  color: var(--plc-ink);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, #000 6%, transparent),
+    0 10px 28px -6px color-mix(in srgb, #000 18%, transparent),
+    0 28px 56px -16px color-mix(in srgb, #000 14%, transparent);
+}
+.plc .plc-panel:not([hidden]) { animation: plc-open 0.14s ease-out; }
+@keyframes plc-open {
+  from { opacity: 0; transform: translateY(3px); }
+}
+.plc .plc-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 46px;
+  padding: 8px 8px 0 14px;
+  flex-shrink: 0;
+}
+.plc .plc-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+.plc .plc-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: -8px;
+  padding: 6px 10px 6px 4px;
+  border-radius: var(--plc-radius);
+  color: var(--plc-muted);
+  font: 500 13px/1 var(--plc-sans);
+  cursor: pointer;
+  transition: background-color 0.12s, color 0.12s;
+}
+.plc .plc-back .plc-icon { width: 16px; height: 16px; }
+.plc .plc-back:hover { color: var(--plc-ink); background: var(--plc-surface); }
+.plc .plc-resolve { color: var(--plc-muted); }
+.plc .plc-resolve:hover { color: var(--plc-ink); }
+
+.plc .plc-tabs { display: flex; gap: 2px; margin-left: -8px; }
+.plc .plc-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px;
+  border-radius: var(--plc-radius);
+  color: var(--plc-muted);
+  font: 600 14px/1 var(--plc-sans);
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.plc .plc-tab:hover, .plc .plc-tab[aria-selected="true"] { color: var(--plc-ink); }
+.plc .plc-count {
+  min-width: 20px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: var(--plc-surface);
+  color: var(--plc-muted);
+  font: 600 11px/1 var(--plc-sans);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.plc .plc-tab[aria-selected="true"] .plc-count { color: var(--plc-ink); }
+.plc .plc-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-height: 0;
+  padding: 8px 14px 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--plc-rule) transparent;
+  scrollbar-width: thin;
+}
+
+/* Overview */
+.plc .plc-overview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-right: -6px;
+}
+.plc .plc-filter {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--plc-surface);
+}
+.plc .plc-filter-option {
+  padding: 5px 10px;
+  border-radius: 7px;
+  color: var(--plc-muted);
+  font: 500 12.5px/1.2 var(--plc-sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.plc .plc-filter-option:hover { color: var(--plc-ink); }
+.plc .plc-filter-option[aria-pressed="true"] {
+  background: var(--plc-paper);
+  color: var(--plc-ink);
+  box-shadow: 0 1px 2px color-mix(in srgb, #000 12%, transparent);
+}
+.plc .plc-thread-row {
+  display: block;
+  position: relative;
+  margin: -2px -8px;
+  border-radius: 10px;
+  transition: background-color 0.12s;
+}
+.plc .plc-thread-row:is(:hover, :focus-within), .plc .plc-thread-row[data-confirming="true"] { background: var(--plc-surface); }
+.plc .plc-thread-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 42px 8px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+}
+.plc .plc-summary-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  opacity: 0;
+  pointer-events: none;
+}
+.plc .plc-thread-row:is(:hover, :focus-within) .plc-summary-delete {
+  opacity: 1;
+  pointer-events: auto;
+}
+.plc .plc-summary-delete:hover { color: var(--plc-danger); background: color-mix(in srgb, var(--plc-danger) 9%, var(--plc-paper)); }
+@media (hover: none) {
+  .plc .plc-summary-delete { opacity: 1; pointer-events: auto; }
+}
+.plc .plc-summary-scope {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  font: 400 13.5px/1.6 var(--plc-document-font, Georgia, serif);
+  overflow-wrap: anywhere;
+}
+.plc .plc-thread-row[data-placement="unattached"] .plc-quote-text { background: none; color: var(--plc-muted); text-decoration-style: dotted; text-decoration-color: var(--plc-muted); }
+.plc .plc-summary-body { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.plc .plc-summary-meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--plc-muted); font-size: 12px; }
+.plc .plc-section-title {
+  display: block;
+  margin-top: 6px;
+  color: var(--plc-muted);
+  font: 600 12px/1.4 var(--plc-sans);
+}
+
+.plc .plc-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--plc-surface);
+  font-size: 13px;
+}
+.plc .plc-banner-error { color: var(--plc-danger); background: color-mix(in srgb, var(--plc-danger) 9%, var(--plc-paper)); }
+.plc .plc-banner-accent { background: color-mix(in srgb, var(--plc-accent) 12%, var(--plc-paper)); }
+/* Quiet buttons sitting on a tinted block become paper chips so they still read as buttons. */
+.plc :is(.plc-banner, .plc-placement, .plc-delete-confirm, .plc-conflict, .plc-delivery-failed) .plc-button-quiet { background: var(--plc-paper); color: var(--plc-ink); }
+.plc :is(.plc-banner, .plc-placement, .plc-delete-confirm, .plc-conflict, .plc-delivery-failed) .plc-button-quiet:hover { background: color-mix(in srgb, var(--plc-ink) 6%, var(--plc-paper)); }
+.plc .plc-hint, .plc .plc-empty, .plc .plc-meta {
+  display: block;
+  color: var(--plc-muted);
+  font-size: 13px;
+}
+.plc .plc-empty { padding: 4px 0 8px; }
+.plc .plc-scope {
+  display: block;
+  color: var(--plc-muted);
+  font: 500 12.5px/1.5 var(--plc-sans);
+}
+
+/* The quoted passage keeps the document's typeface and wears the same highlight as
+   the marked text in the page, so the popup visibly belongs to that passage. */
+.plc .plc-quote {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  color: var(--plc-ink);
+  font-family: var(--plc-document-font, Georgia, serif);
+  font-size: 14.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.plc .plc-quote-text {
+  display: inline;
+  padding: 1px 1px;
+  border-radius: 2px;
+  background: var(--plc-mark);
+  text-decoration: underline 2px color-mix(in srgb, var(--plc-accent) 55%, transparent);
+  text-underline-offset: 3px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-color 0.12s;
+}
+.plc .plc-quote-button { display: block; text-align: left; cursor: pointer; border-radius: 4px; }
+.plc .plc-quote-button:hover .plc-quote-text { background: color-mix(in srgb, var(--plc-accent) 30%, transparent); }
+.plc .plc-quote-detached .plc-quote { color: var(--plc-muted); }
+.plc .plc-quote-detached .plc-quote-text {
+  background: none;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--plc-muted);
+}
+
+.plc .plc-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plc .plc-composer .plc-actions { justify-content: flex-end; }
+/* `field-sizing: content` ignores `rows`, so new comments and notes get their two lines here. */
+.plc .plc-composer .plc-field .plc-textarea,
+.plc .plc-composer .plc-field .plc-textarea:focus { min-height: calc(3em + 8px); }
+.plc .plc-composer > .plc-textarea { min-height: calc(3em + 18px); }
+.plc .plc-composer-scope {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-right: -6px;
+}
+.plc .plc-composer-scope .plc-icon-button { width: 26px; height: 26px; }
+.plc .plc-composer-scope .plc-icon { width: 15px; height: 15px; }
+
+/* One conversation per popup. Comments are separated by space, not rules. */
+.plc .plc-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 6px;
+}
+.plc .plc-thread:focus-visible { outline-offset: 6px; }
+.plc .plc-thread[data-delivery] { padding-left: 10px; border-left: 2px solid var(--plc-rule); }
+.plc .plc-thread[data-delivery="failed"], .plc .plc-note[data-delivery="failed"] { border-left-color: var(--plc-danger); }
+.plc [data-delivery="sending"] > .plc-comments, .plc [data-delivery="sending"] > .plc-body { opacity: 0.6; }
+
+.plc .plc-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.plc .plc-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.plc .plc-body {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.plc time {
+  display: inline;
+  color: var(--plc-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.plc .plc-comment-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-height: 24px; }
+.plc .plc-delete {
+  margin-left: -2px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  color: var(--plc-muted);
+  font: 500 12px/1 var(--plc-sans);
+  cursor: pointer;
+  transition: color 0.12s, background-color 0.12s;
+}
+.plc .plc-delete:hover { color: var(--plc-danger); background: color-mix(in srgb, var(--plc-danger) 9%, var(--plc-paper)); }
+.plc .plc-delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--plc-danger) 5%, var(--plc-paper));
+  border: 1px solid color-mix(in srgb, var(--plc-danger) 18%, var(--plc-rule));
+  font-size: 13px;
+}
+.plc .plc-thread-row > .plc-delete-confirm { width: auto; margin: 0 8px 8px; }
+.plc .plc-delete-copy { display: flex; flex-direction: column; gap: 3px; }
+.plc .plc-delete-title { font-weight: 600; color: var(--plc-ink); }
+.plc .plc-delete-description { color: var(--plc-muted); font-size: 12px; line-height: 1.5; }
+.plc .plc-delete-confirm .plc-actions { justify-content: flex-end; }
+.plc .plc-delete-confirm .plc-button { min-height: 32px; }
+.plc .plc-button-danger { background: var(--plc-danger); color: var(--plc-paper); }
+.plc .plc-button-danger:hover { background: color-mix(in srgb, var(--plc-danger) 86%, var(--plc-ink)); }
+.plc button:disabled { opacity: 0.5; cursor: progress; }
+
+.plc .plc-placement {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--plc-caution) 10%, var(--plc-paper));
+  color: var(--plc-ink);
+  font-size: 13px;
+}
+.plc .plc-current {
+  font-family: var(--plc-document-font, Georgia, serif);
+  font-style: italic;
+}
+.plc .plc-current::before { content: open-quote; }
+.plc .plc-current::after { content: close-quote; }
+
+.plc .plc-reply { display: block; }
+
+.plc .plc-delivery {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--plc-muted);
+  font-size: 13px;
+}
+.plc .plc-delivery-failed { color: var(--plc-danger); }
+
+/* Notes */
+.plc .plc-note {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.plc .plc-note[data-delivery] { padding-left: 10px; border-left: 2px solid var(--plc-rule); }
+.plc .plc-note + .plc-note { padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--plc-rule) 60%, transparent); }
+.plc .plc-composer + .plc-note, .plc .plc-composer + .plc-empty { margin-top: 4px; }
+.plc .plc-note-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-right: -6px;
+}
+.plc .plc-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plc .plc-note-form .plc-actions { justify-content: flex-end; }
+.plc .plc-conflict {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--plc-caution) 10%, var(--plc-paper));
+}
+.plc .plc-conflict-text {
+  display: block;
+  max-height: 30vh;
+  overflow-y: auto;
+  padding: 8px 10px;
+  border-radius: var(--plc-radius);
+  background: var(--plc-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plc .plc-panel:not([hidden]) { animation: none; }
+  .plc * { transition: none !important; }
+}
+
+/* Notices */
+.plc .plc-notices {
+  position: fixed;
+  z-index: var(--plc-layer);
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(380px, calc(100vw - 32px));
+}
+.plc .plc-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 6px 8px 14px;
+  border-radius: 8px;
+  background: var(--plc-ink);
+  color: var(--plc-paper);
+  box-shadow: 0 6px 20px color-mix(in srgb, #000 20%, transparent);
+}
+.plc .plc-notice-error { border-left: 4px solid var(--plc-danger); }
+.plc .plc-notice-text { display: block; flex: 1; font-size: 13px; }
+.plc .plc-notice .plc-button-quiet { color: var(--plc-paper); background: color-mix(in srgb, var(--plc-paper) 10%, transparent); }
+.plc .plc-notice .plc-button-quiet:hover { background: color-mix(in srgb, var(--plc-paper) 14%, transparent); }
+.plc .plc-notice .plc-icon-button { color: color-mix(in srgb, var(--plc-paper) 70%, transparent); }
+.plc .plc-notice .plc-icon-button:hover { color: var(--plc-paper); background: color-mix(in srgb, var(--plc-paper) 14%, transparent); }
+
+@media (max-width: 40rem) {
+  .plc .plc-launcher { right: 12px; bottom: 12px; }
+  .plc .plc-notices { left: 12px; bottom: 64px; width: calc(100vw - 24px); }
+}
+
+@media print {
+  .plc { display: none !important; }
+}
+
+/* Comment highlights in the document. These live outside `.plc` because they paint
+   the page's own text. */
+::highlight(planloft-comment) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 16%, transparent);
+  text-decoration: underline 2px color-mix(in srgb, var(--planloft-accent, Highlight) 55%, transparent);
+}
+::highlight(planloft-comment-approximate) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 10%, transparent);
+  text-decoration: underline 2px dotted color-mix(in srgb, var(--planloft-accent, Highlight) 60%, transparent);
+}
+::highlight(planloft-comment-active) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 30%, transparent);
+  text-decoration: underline 2px var(--planloft-accent, Highlight);
+}
+::highlight(planloft-comment-draft) {
+  background-color: color-mix(in srgb, var(--planloft-accent, Highlight) 24%, transparent);
+}
+@media print {
+  ::highlight(planloft-comment),
+  ::highlight(planloft-comment-approximate),
+  ::highlight(planloft-comment-active),
+  ::highlight(planloft-comment-draft) { background-color: transparent; text-decoration: none; }
+}
+
+/* Task checkboxes are page elements; only their saving and unavailable states are styled. */
+input[type="checkbox"][data-planloft-task][data-planloft-task-state="loading"],
+input[type="checkbox"][data-planloft-task][data-planloft-task-state="saving"] { cursor: progress; opacity: 0.6; }
+input[type="checkbox"][data-planloft-task][data-planloft-task-state="unavailable"] { cursor: not-allowed; opacity: 0.45; }
+</style>
+<script type="application/json" id="planloft-collaboration-config">{"documentId":"workflow-agent-factory-adoption-2026-11-23","revision":"1","apiUrl":"https://planloft-factory-review.hatimcodes.workers.dev","contentSelector":"main"}</script>
+<script data-planloft-collaboration>(()=>{function j(s,e,t,n={}){let i=Array.from(s);if(!Number.isInteger(e)||!Number.isInteger(t)||e<0||t<=e||t>i.length)throw new RangeError("Invalid anchor range");let o=n.contextLength??32;return{quote:i.slice(e,t).join(""),prefix:i.slice(Math.max(0,e-o),e).join(""),suffix:i.slice(t,t+o).join(""),start:e,end:t,...n.revision===void 0?{}:{revision:n.revision},...n.documentId===void 0?{}:{documentId:n.documentId}}}function fe(s,e){let t=Array.from(s),n=Array.from(e.quote);if(!n.length||e.quote.length>4096||!t.length)return{status:"unattached"};let i=Array.from(e.prefix),o=Array.from(e.suffix);if(e.end-e.start===n.length&&e.start>=0&&e.end<=t.length&&t.slice(e.start,e.end).join("")===e.quote&&t.slice(Math.max(0,e.start-i.length),e.start).join("")===e.prefix&&t.slice(e.end,e.end+o.length).join("")===e.suffix)return{status:"exact",start:e.start,end:e.end};let a=new Set,d=new Set,l=(h,b,A)=>{if(!h)return;let P=s.indexOf(h),f=0;for(;P>=0&&f++<100;)b.add(Array.from(s.slice(0,P+(A?h.length:0))).length),P=s.indexOf(h,P+h.length)};l(e.quote,a,!1),l(e.prefix,a,!0),l(e.suffix,d,!1),l(i.slice(-Math.min(i.length,12)).join(""),a,!0),l(o.slice(0,Math.min(o.length,12)).join(""),d,!1);for(let h=-8;h<=8;h++)a.add(e.start+h);let c=[...d].sort((h,b)=>Math.abs(h-e.end)-Math.abs(b-e.end)).slice(0,12);for(let h of c)a.add(h-n.length);let p=[...a].filter(h=>h>=0&&h<t.length).sort((h,b)=>Math.abs(h-e.start)-Math.abs(b-e.start)).slice(0,48),u;for(let h of p){let b=new Set([n.length]),A=Math.max(1,Math.floor(n.length*.3)),P=Math.max(1,Math.floor(A/4));for(let f=-A;f<=A;f+=P)b.add(n.length+f);for(let f of c)Math.abs(f-h-n.length)<=A&&b.add(f-h);for(let f of b){if(f<1||h+f>t.length)continue;let te=t.slice(h,h+f),ce=f===n.length&&te.every((C,k)=>C===n[k]),he=Math.max(1,Math.ceil(Math.max(n.length,te.length)/256)),ne=n.filter((C,k)=>k%he===0),q=te.filter((C,k)=>k%he===0),F=Array.from({length:q.length+1},(C,k)=>k);for(let C=0;C<ne.length;C++){let k=[C+1];for(let I=0;I<q.length;I++)k.push(Math.min(k[I]+1,F[I+1]+1,F[I]+ +(ne[C]!==q[I])));F=k}let ue=1-F[q.length]/Math.max(ne.length,q.length);if(!ce&&ue<(n.length<=4?.5:.7))continue;let M=0;for(;M<i.length&&M<h&&i[i.length-M-1]===t[h-M-1];)M++;let L=0;for(;L<o.length&&h+f+L<t.length&&o[L]===t[h+f+L];)L++;let se=i.length+o.length,pe=se?(M+L)/se:0;if(se>=4&&pe<.15)continue;let me=ue*.55+pe*.4+.05/(1+Math.abs(h-e.start)/50);(!u||me>u.score)&&(u={start:h,end:h+f,score:me,exact:ce})}}return u?{status:u.exact?"exact":"approximate",start:u.start,end:u.end}:{status:"unattached"}}var ie={bodyCharacters:4096,threads:128,comments:512,notes:64,tasks:512,creationRequests:2048,noteHistory:20},$=class extends Error{},E=(s,e)=>{throw new $(`${s} is not ${e}`)},T=(s,e)=>typeof s=="string"?s:E(e,"a string"),oe=(s,e)=>typeof s=="number"&&Number.isSafeInteger(s)?s:E(e,"an integer"),ae=(s,e)=>typeof s=="boolean"?s:E(e,"a boolean"),ge=s=>(e,t)=>e===void 0?void 0:s(e,t),Ve=s=>(e,t)=>e===null?null:s(e,t),K=s=>(e,t)=>Array.isArray(e)?e.map((n,i)=>s(n,`${t}[${i}]`)):E(t,"an array"),S=s=>(e,t)=>{if(typeof e!="object"||e===null||Array.isArray(e))return E(t,"an object");let n=e,i={};for(let o of Object.keys(s))i[o]=s[o](n[o],`${t}.${o}`);return i},D=(s,e=!1)=>(t,n)=>{let i=T(t,n);return i.length<=s&&(!e||i.trim().length>0)?i:E(n,"valid bounded text")},ye=s=>(e,t)=>{let n=oe(e,t);return n>=s?n:E(t,"a valid version")},Ue=(s,e)=>{let t=S({quote:D(4096,!0),prefix:D(1e3),suffix:D(1e3),start:ye(0),end:ye(1),revision:ge(D(1e3)),documentId:ge(D(1e3))})(s,e);return(Object.keys(Object(s)).some(n=>!["quote","prefix","suffix","start","end","revision","documentId"].includes(n))||t.end<=t.start)&&E(e,"a valid anchor"),t},ve=S({id:T,body:T,createdAt:T}),be=S({id:T,body:T,anchor:Ve(Ue),resolved:ae,createdAt:T,comments:K(ve)}),Te=S({id:T,body:T,version:oe,createdAt:T,updatedAt:T}),ke=S({key:T,checked:ae,version:oe}),We=S({threads:K(be),notes:K(Te),tasks:K(ke)}),Be=S({error:T}),y={deletion:s=>{S({deleted:ae})(s,"deletion").deleted||E("deletion.deleted","true")},state:s=>We(s,"state"),thread:s=>be(s,"thread"),comment:s=>ve(s,"comment"),note:s=>Te(s,"note"),task:s=>ke(s,"task"),errorCode:s=>Be(s,"error").error},Tt=D(ie.bodyCharacters,!0);function V(){return Array.from(crypto.getRandomValues(new Uint8Array(16)),s=>s.toString(16).padStart(2,"0")).join("")}function xe(s){let e=`${s.apiUrl.replace(/\/+$/,"")}/documents/${encodeURIComponent(s.documentId)}`;async function t(i,o,a){if(!navigator.onLine)return{ok:!1,failure:{kind:"offline"}};let d={};i.body!==void 0&&(d["Content-Type"]="application/json"),i.idempotencyKey&&(d["Idempotency-Key"]=i.idempotencyKey);let l;try{l=await fetch(`${e}${i.path}`,{method:i.method,headers:d,body:i.body===void 0?void 0:JSON.stringify(i.body),cache:"no-store"})}catch{return{ok:!1,failure:{kind:"network"}}}let c=null;try{c=await l.json()}catch{if(l.ok)return{ok:!1,failure:{kind:"invalid"}}}try{if(l.ok)return{ok:!0,value:o(c)};if(l.status===409&&a&&typeof c=="object"&&c!==null&&"current"in c)return{ok:!1,failure:{kind:"conflict",current:a(c.current)}};let p=null;try{p=y.errorCode(c)}catch{}return{ok:!1,failure:{kind:"status",status:l.status,code:p}}}catch(p){if(p instanceof $)return{ok:!1,failure:{kind:"invalid"}};throw p}}let n=(...i)=>i.map(o=>`/${encodeURIComponent(o)}`).join("");return{state:()=>t({method:"GET",path:"/state"},y.state),createThread:(i,o,a)=>t({method:"POST",path:"/threads",body:{body:i,anchor:o},idempotencyKey:a},y.thread),reply:(i,o,a)=>t({method:"POST",path:n("threads",i,"comments"),body:{body:o},idempotencyKey:a},y.comment),updateThread:(i,o)=>t({method:"PATCH",path:n("threads",i),body:o},y.thread),deleteThread:i=>t({method:"DELETE",path:n("threads",i)},y.deletion),deleteComment:(i,o)=>t({method:"DELETE",path:n("threads",i,"comments",o)},y.deletion),createNote:(i,o)=>t({method:"POST",path:"/notes",body:{body:i},idempotencyKey:o},y.note),updateNote:(i,o,a)=>t({method:"PATCH",path:n("notes",i),body:{body:o,version:a}},y.note,y.note),setTask:(i,o,a)=>t({method:"PUT",path:n("tasks",i),body:{checked:o,version:a}},y.task,y.task)}}function x(s){return s.kind==="network"||s.kind==="invalid"||s.kind==="status"&&s.status>=500}function m(s){switch(s.kind){case"offline":return"You are offline.";case"network":return"The comment server did not respond.";case"conflict":return"Someone else changed this first.";case"invalid":return"The comment server sent a response this page cannot read.";case"status":return s.code==="capacity_exceeded"?"This document has reached its limit for comments, notes or tasks.":s.status===410?"This comment was deleted.":s.status===404?"Comments are not set up for this document.":s.status===413?"That is too long to save.":`The comment server refused the change (HTTP ${s.status}${s.code?`, ${s.code}`:""}).`}}var _e=/\P{M}\p{M}*|\p{M}+/gu,ze=/^\s+$/u,Ye=/^[­​]$/u;function we(s){let e=[],t={text:"",nodes:[],nodeStart:[],nodeEnd:[],owner:[],from:[],to:[],chars:e,length:0},n=null,i=a=>{let d=t.nodes.length-1;return t.nodes[d]===a?d:(t.nodes.push(a),t.nodeStart.push(e.length),t.nodeEnd.push(e.length),d+1)},o=(a,d,l,c)=>{e.push(a),t.owner.push(d),t.from.push(l),t.to.push(c),t.nodeEnd[d]=e.length};for(let a of s){if(a==="break"){n??="break";continue}for(let d of a.data.matchAll(_e)){let l=d[0],c=d.index,p=c+l.length;if(Ye.test(l))continue;if(ze.test(l)){(n===null||n==="break")&&(n={node:a.node,from:c,to:p});continue}n!==null&&e.length>0&&(n==="break"?o(" ",i(a.node),c,c):o(" ",i(n.node),n.from,n.to)),n=null;let u=i(a.node);for(let h of l.normalize("NFC"))o(h,u,c,p)}}return t.text=e.join(""),t.length=e.length,t}function Ce(s,e,t,n){let i=s.nodeStart[e],o=s.nodeEnd[e];if(n==="start"){for(let a=i;a<o;a++)if(s.to[a]>t)return a;return o}for(let a=o-1;a>=i;a--)if(s.from[a]<t)return a+1;return i}function re(s,e,t){let n=t==="start"?e:e-1,i=s.owner[n];return{node:s.nodes[i],offset:t==="start"?s.from[n]:s.to[n]}}function Ee(s,e,t){for(;e<t&&s.chars[e]===" ";)e++;for(;t>e&&s.chars[t-1]===" ";)t--;return e<t?{start:e,end:t}:null}var Ge=new Set(["script","style","noscript","template","textarea","select","svg","math","canvas","iframe","object","video","audio","button","input"]),le="[data-planloft-collaboration], .planloft-theme-selector, .planloft-comments, [data-planloft-ignore]",Qe=new Set(["address","article","aside","blockquote","br","caption","dd","details","dialog","div","dl","dt","fieldset","figcaption","figure","footer","form","h1","h2","h3","h4","h5","h6","header","hgroup","hr","legend","li","main","nav","ol","p","pre","section","summary","table","tbody","td","tfoot","th","thead","tr","ul"]);function Se(s){return Ge.has(s.localName)||s.matches(le)}var Xe=s=>(s instanceof Element?s:s.parentElement)?.closest(le)!=null;function Ne(s){return Xe(s.target)?!1:s.type!=="childList"?!0:![...s.addedNodes,...s.removedNodes].every(e=>e instanceof Element&&e.matches(le))}function Re(s,e){for(let t=s.firstChild;t;t=t.nextSibling)if(t instanceof Text)e.push({node:t,data:t.data});else if(t instanceof Element&&!Se(t)){let n=Qe.has(t.localName);n&&e.push("break"),Re(t,e),n&&e.push("break")}}var U=class{constructor(e){this.root=e;let t=[];Se(e)||Re(e,t),this.index=we(t),this.positions=new Map(this.index.nodes.map((n,i)=>[n,i]))}root;index;positions;get text(){return this.index.text}offsetsOf(e){let t=this.offsetOf(e.startContainer,e.startOffset,"start"),n=this.offsetOf(e.endContainer,e.endOffset,"end");return Ee(this.index,t,n)}rangeOf(e,t){let n=re(this.index,e,"start"),i=re(this.index,t,"end"),o=document.createRange();return o.setStart(n.node,n.offset),o.setEnd(i.node,i.offset),o}offsetOf(e,t,n){let i=e instanceof Text?this.positions.get(e):void 0;if(i!==void 0)return Ce(this.index,i,t,n);let o=document.createRange();o.setStart(e,t);let{nodes:a,nodeStart:d,nodeEnd:l}=this.index;if(n==="start"){let u=0,h=a.length;for(;u<h;){let b=u+h>>1;o.comparePoint(a[b],0)>=0?h=b:u=b+1}return u<a.length?d[u]:this.index.length}let c=-1,p=a.length-1;for(;c<p;){let u=c+p+1>>1;o.comparePoint(a[u],a[u].length)<=0?c=u:p=u-1}return c>=0?l[c]:0}};function r(s,e={},...t){let n=document.createElement(s);for(let[i,o]of Object.entries(e))o==null||o===!1||(typeof o=="function"?n.addEventListener(i.slice(2).toLowerCase(),o):i==="value"&&n instanceof HTMLTextAreaElement?n.value=String(o):n.setAttribute(i,o===!0?"":String(o)));for(let i of t.flat())i==null||i===!1||n.append(i);return n}var Ae="http://www.w3.org/2000/svg";function v(s){let e=document.createElementNS(Ae,"svg");e.setAttribute("viewBox","0 0 20 20"),e.setAttribute("aria-hidden","true"),e.setAttribute("class","plc-icon");for(let t of s){let n=document.createElementNS(Ae,"path");n.setAttribute("d",t),e.append(n)}return e}var g={comment:["M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-3.5 3v-3H4A1.5 1.5 0 0 1 2.5 13V6A1.5 1.5 0 0 1 4 4.5z"],close:["M5 5l10 10M15 5L5 15"],check:["M4.5 10.5l3.5 3.5 7.5-8"],back:["M12 5l-5 5 5 5"],send:["M10 15.5V5","M5.5 9.5L10 5l4.5 4.5"],plus:["M10 4.5v11M4.5 10h11"],trash:["M3.5 5.5h13","M7 5.5V3.5h6v2","M5 5.5l.8 11h8.4l.8-11","M8 8.5v5M12 8.5v5"],reopen:["M4.5 10a5.5 5.5 0 1 0 1.6-3.9","M4.5 3.5v3h3"],warning:["M10 3l8 14H2z","M10 8.5v3.5M10 14.5v.01"]},Pe=new Intl.RelativeTimeFormat(void 0,{numeric:"auto"}),Je=new Intl.DateTimeFormat(void 0,{dateStyle:"medium",timeStyle:"short"}),Ze=[["second",60],["minute",60],["hour",24],["day",7],["week",4.35],["month",12],["year",1/0]];function H(s){let e=new Date(s),t=(e.getTime()-Date.now())/1e3,n="";for(let[i,o]of Ze){if(Math.abs(t)<o){n=i==="second"?Pe.format(0,"second"):Pe.format(Math.round(t),i);break}t/=o}return r("time",{datetime:s,title:Je.format(e)},n)}var W={exact:"planloft-comment",approximate:"planloft-comment-approximate",active:"planloft-comment-active",draft:"planloft-comment-draft"},et=typeof CSS<"u"&&"highlights"in CSS&&typeof Highlight=="function";function Me(s){if(!et)return;let e=(t,n,i)=>{if(!n.length)return void CSS.highlights.delete(t);let o=new Highlight(...n);o.priority=i,CSS.highlights.set(t,o)};e(W.exact,s.exact,1),e(W.approximate,s.approximate,1),e(W.active,s.active?[s.active]:[],2),e(W.draft,s.draft?[s.draft]:[],3)}function Le(s,e){if(typeof document.caretPositionFromPoint=="function"){let t=document.caretPositionFromPoint(s,e);return t?{node:t.offsetNode,offset:t.offset}:null}if(typeof document.caretRangeFromPoint=="function"){let t=document.caretRangeFromPoint(s,e);return t?{node:t.startContainer,offset:t.startOffset}:null}return null}function Ie({anchor:s,popup:e,viewport:t,anchored:n}){let o=t.left+t.width-12,a=t.top+t.height-12,d=s.left+s.width-e.width,l=s.top-e.height-12;return n&&(s.left+s.width+12+e.width<=o?(d=s.left+s.width+12,l=s.top):s.left-12-e.width>=t.left+12?(d=s.left-12-e.width,l=s.top):s.top+s.height+12+e.height<=a&&(l=s.top+s.height+12)),{left:Math.max(t.left+12,Math.min(d,o-e.width)),top:Math.max(t.top+12,Math.min(l,a-e.height))}}async function B(s,e){let t=s.delivery.status==="unknown";s.delivery={status:"sending"};let n=await e();if(n.ok)return n.value;let{failure:i}=n;return s.delivery={status:x(i)||t&&i.kind==="offline"?"unknown":"failed",failure:i},null}function N(s,e){return s.pendingReplies.some(t=>t.threadId===e&&t.delivery.status==="sending")}function De(){return{load:{status:"loading"},online:navigator.onLine,threads:[],notes:[],tasks:new Map,pendingThreads:[],pendingReplies:[],pendingNotes:[],busyThreads:new Set,deleting:null,noteEdits:new Map,placements:new Map,composer:{body:"",anchor:null},replyDrafts:new Map,noteDraft:"",notices:[],panel:{open:!1,tab:"comments",filter:"open",view:"browse"},activeThread:null,reattaching:null}}function Y(s){let e=`plc-field-${s.key}`;return[r("label",{class:"plc-visually-hidden",for:e},s.label),r("textarea",{id:e,class:"plc-textarea",rows:s.rows,placeholder:s.placeholder,maxlength:ie.bodyCharacters,value:s.value,"data-focus-key":s.key,oninput:t=>s.onInput(t.target.value),onkeydown:t=>{let n=t;n.key==="Enter"&&(n.metaKey||n.ctrlKey)&&(n.preventDefault(),t.target.form?.requestSubmit())}})]}function G(s,e,...t){return r("form",{class:e,onsubmit:n=>{n.preventDefault(),s()}},...t)}var w=(s,e,t="quiet",n={})=>r("button",{type:"button",class:`plc-button plc-button-${t}`,onclick:e,...n},s),R=s=>r("p",{class:"plc-body"},s),He=(s,e)=>r("div",{class:"plc-field"},...s,r("button",{type:"submit",class:"plc-send","aria-label":e,title:e},v(g.send)));function de(s,e,t){if(s.status==="sending")return r("p",{class:"plc-delivery"},"Sending\u2026");let{failure:n}=s,i=s.status==="unknown"?`Not confirmed. ${m(n)} It may already be ${e}. Retry checks without ${e==="saved"?"saving":"posting"} it twice${n.kind==="offline"?", and runs when you reconnect":""}.`:n.kind==="offline"?`Not ${e}. You are offline; it will send when you reconnect.`:`Not ${e}. ${m(n)}`,o=w("Retry",()=>{t.blocked||t.retry()},"quiet",{"aria-disabled":String(t.blocked??!1)});return r("div",{class:"plc-delivery plc-delivery-failed"},r("p",{},i),r("div",{class:"plc-actions"},o,s.status==="failed"&&w("Edit",t.edit)))}function tt({state:s,actions:e}){let t=[];if(s.load.status==="loading"&&t.push(r("p",{class:"plc-banner"},"Loading comments and notes\u2026")),s.load.status==="failed"){let n=s.load.failure.kind==="offline";t.push(r("div",{class:"plc-banner plc-banner-error"},r("p",{},n?"You are offline. Comments and notes load when you reconnect.":`Comments and notes could not load. ${m(s.load.failure)}`),!n&&r("div",{class:"plc-actions"},w("Try again",()=>e.retryLoad()))))}return s.load.status==="ready"&&!s.online&&t.push(r("p",{class:"plc-banner"},"You are offline. What you write stays here and sends when you reconnect.")),s.reattaching&&t.push(r("div",{class:"plc-banner plc-banner-accent"},r("p",{},"Select the text this comment belongs to, then choose Attach comment here."),r("div",{class:"plc-actions"},w("Cancel",()=>e.cancelReattach())))),t}function nt({state:s,actions:e}){let t=s.threads.filter(a=>!a.resolved).length+s.pendingThreads.length,n=s.notes.length+s.pendingNotes.length,i=[["comments","Comments",t],["notes","Notes",n]],o=r("div",{class:"plc-tabs",role:"tablist","aria-label":"Collaboration",onkeydown:a=>{let d=a.key;(d==="ArrowLeft"||d==="ArrowRight")&&e.setTab(s.panel.tab==="comments"?"notes":"comments")}});for(let[a,d,l]of i){let c=s.panel.tab===a;o.append(r("button",{type:"button",role:"tab",id:`plc-tab-${a}`,class:"plc-tab","aria-selected":String(c),"aria-controls":"plc-tabpanel",tabindex:c?0:-1,"data-focus-key":`tab-${a}`,onclick:()=>e.setTab(a)},d,s.load.status==="ready"&&r("span",{class:"plc-count"},String(l))))}return o}function Oe(s,e){let t={state:s,actions:e},n=s.panel.tab==="comments"&&(s.activeThread!==null||s.panel.view==="compose"),i=s.threads.find(a=>a.id===s.activeThread),o=s.load.status!=="ready"?[]:s.panel.tab==="notes"?ht(t):i?[lt(t,i,s.placements.get(i.id)??{status:"unattached"})]:s.panel.view==="compose"?[st(t)]:it(t);return[r("header",{class:"plc-panel-header"},n?r("button",{type:"button",class:"plc-back","data-focus-key":"back",onclick:()=>e.browseComments()},v(g.back),"All comments"):nt(t),r("div",{class:"plc-header-actions"},n&&i&&at(t,i),r("button",{type:"button",class:"plc-icon-button","aria-label":"Close comments",title:"Close","data-focus-key":"close",onclick:()=>e.closePanel()},v(g.close)))),r("div",{class:"plc-panel-body",id:"plc-tabpanel",...n?{}:{role:"tabpanel","aria-labelledby":`plc-tab-${s.panel.tab}`}},...tt(t),...o)]}function z(s){return r("span",{class:"plc-quote"},r("span",{class:"plc-quote-text"},s))}function st(s){let{state:e,actions:t}=s,n=e.composer.anchor;return G(()=>t.submitThread(),"plc-composer",n?r("div",{class:"plc-composer-scope"},z(n.quote),r("button",{type:"button",class:"plc-icon-button","aria-label":"Comment on the whole document instead",title:"Comment on the whole document instead",onclick:()=>t.clearComposerAnchor()},v(g.close))):r("p",{class:"plc-hint"},"Commenting on the whole document. To comment on a passage, select it in the document."),He(Y({key:"composer",label:n?"Comment on the selected text":"Comment on the whole document",value:e.composer.body,placeholder:"Add a comment",rows:2,onInput:i=>t.setComposer(i)}),"Comment"))}function it(s){let{state:e,actions:t}=s,n=e.threads.filter(a=>a.resolved).length,i=e.threads.length-n+e.pendingThreads.length,o=r("div",{class:"plc-filter",role:"group","aria-label":"Show threads"},...[["open",`Open ${i}`],["resolved",`Resolved ${n}`]].map(([a,d])=>r("button",{type:"button",class:"plc-filter-option","aria-pressed":String(e.panel.filter===a),onclick:()=>t.setFilter(a)},d)));return[r("div",{class:"plc-overview-bar"},o,r("button",{type:"button",class:"plc-button plc-button-quiet","data-focus-key":"new-comment",onclick:()=>t.composeComment()},v(g.plus),e.composer.body?"Continue draft":"New comment")),...ot(s)]}function ot(s){let{state:e}=s,t=l=>e.placements.get(l.id)??{status:"unattached"};if(e.panel.filter==="resolved"){let l=e.threads.filter(c=>c.resolved).reverse();return l.length?l.map(c=>_(s,c,t(c))):[r("p",{class:"plc-empty"},"No resolved threads.")]}let n=e.threads.filter(l=>!l.resolved).map(l=>({thread:l,placement:t(l)})),i=n.filter(l=>"range"in l.placement).sort((l,c)=>("start"in l.placement?l.placement.start:0)-("start"in c.placement?c.placement.start:0)),o=n.filter(l=>l.placement.status==="document"),a=n.filter(l=>l.placement.status==="unattached"),d=[...e.pendingThreads.map(l=>dt(s,l)),...i.map(l=>_(s,l.thread,l.placement)),...o.map(l=>_(s,l.thread,l.placement))];return a.length&&(d.push(r("h3",{class:"plc-section-title"},"Text no longer in the document")),d.push(...a.map(l=>_(s,l.thread,l.placement)))),d.length?d:[r("p",{class:"plc-empty"},"No open comments. Select text in the document and choose Comment, or choose New comment for the whole document.")]}function _(s,e,t){let{state:n,actions:i}=s,o=e.comments.length,a=qe(s,e.id,null);return r("div",{class:"plc-thread-row","data-placement":t.status,"data-confirming":String(a!==null)},r("button",{type:"button",class:"plc-thread-summary","data-focus-key":`summary-${e.id}`,onclick:()=>i.openThread(e.id)},e.anchor?r("span",{class:"plc-summary-scope"},r("span",{class:"plc-quote-text"},e.anchor.quote)):r("span",{class:"plc-scope"},"Whole document"),r("span",{class:"plc-summary-body"},e.body),r("span",{class:"plc-summary-meta"},H(e.createdAt),o>0&&r("span",{},`${o} ${o===1?"reply":"replies"}`),t.status==="unattached"?r("span",{},"Unattached"):e.resolved&&r("span",{},"Resolved"))),a??r("button",{type:"button",class:"plc-icon-button plc-summary-delete","aria-label":"Delete thread",title:"Delete thread","data-focus-key":O(e.id,null),disabled:n.busyThreads.has(e.id),onclick:()=>i.requestDelete(e.id,null)},v(g.trash)))}var O=(s,e)=>`delete-${s}-${e??"thread"}`;function qe(s,e,t){let{state:n,actions:i}=s;if(!(n.deleting?.threadId===e&&n.deleting.commentId===t))return null;let a=n.busyThreads.has(e),d=O(e,t),l=`plc-delete-title-${e}-${t??"thread"}`;return r("div",{class:"plc-delete-confirm",role:"group","aria-labelledby":l,"aria-busy":String(a)},r("div",{class:"plc-delete-copy"},r("p",{id:l,class:"plc-delete-title"},t===null?"Delete this thread?":"Delete this reply?"),r("p",{class:"plc-delete-description"},t===null?"This comment and all replies will be removed.":"This reply will be removed.")),r("div",{class:"plc-actions"},r("button",{type:"button",class:"plc-button plc-button-quiet","aria-disabled":String(a),"data-focus-key":d,onclick:()=>i.cancelDelete()},"Cancel"),r("button",{type:"button",class:"plc-button plc-button-danger","aria-disabled":String(a),"data-focus-key":"confirm-delete",onclick:()=>i.confirmDelete()},a?"Deleting\u2026":"Delete")))}function $e(s,e,t){let{state:n,actions:i}=s,o=n.busyThreads.has(e),a=qe(s,e,t);return a||r("button",{type:"button",class:"plc-delete",disabled:o,"aria-label":t===null?"Delete thread":"Delete reply","data-focus-key":O(e,t),onclick:()=>i.requestDelete(e,t)},"Delete")}var Fe=(s,e)=>s.busyThreads.has(e)||N(s,e);function at({state:s,actions:e},t){let n=Fe(s,t.id);return r("button",{type:"button",class:"plc-button plc-button-quiet plc-resolve","data-resolved":String(t.resolved),"aria-disabled":String(n),"data-focus-key":`resolve-${t.id}`,title:N(s,t.id)?"Available once the reply has sent":void 0,onclick:()=>{n||e.setResolved(t.id,!t.resolved)}},v(t.resolved?g.reopen:g.check),s.busyThreads.has(t.id)?"Saving\u2026":t.resolved?"Reopen":"Resolve")}function rt({state:s,actions:e},t,n){if(t.resolved)return null;let i={"aria-disabled":String(Fe(s,t.id))},o=w("Attach to other text",()=>e.startReattach(t.id),"quiet",i);return n.status==="approximate"?r("div",{class:"plc-placement"},r("p",{},"The quoted text has changed. This comment now points at the closest match: ",r("q",{class:"plc-current"},n.current)),r("div",{class:"plc-actions"},w("Keep it here",()=>e.keepPlacement(t.id),"quiet",i),o)):n.status==="unattached"?r("div",{class:"plc-placement"},r("p",{},"The quoted text is no longer in the document."),r("div",{class:"plc-actions"},o)):null}function lt(s,e,t){let{state:n,actions:i}=s,o=n.busyThreads.has(e.id),a=n.pendingReplies.filter(l=>l.threadId===e.id),d=e.anchor?"range"in t?r("button",{type:"button",class:"plc-quote-button",title:"Show in document",onclick:()=>i.showInDocument(e.id)},z(e.anchor.quote)):r("div",{class:"plc-quote-detached"},z(e.anchor.quote)):r("p",{class:"plc-scope"},"Whole document");return r("article",{class:"plc-thread",tabindex:-1,"data-focus-key":`thread-${e.id}`,"data-active":String(n.activeThread===e.id),"data-placement":t.status,"aria-label":e.anchor?`Comment on \u201C${e.anchor.quote.slice(0,80)}\u201D`:"Comment on the whole document"},d,rt(s,e,t),r("ol",{class:"plc-comments"},r("li",{class:"plc-comment"},R(e.body),r("div",{class:"plc-comment-meta"},H(e.createdAt),$e(s,e.id,null))),...e.comments.map(l=>r("li",{class:"plc-comment"},R(l.body),r("div",{class:"plc-comment-meta"},H(l.createdAt),$e(s,e.id,l.id)))),...a.map(l=>ct(s,l))),e.resolved?r("p",{class:"plc-hint"},"Resolved. Reopen the thread to reply."):!o&&G(()=>i.submitReply(e.id),"plc-reply",He(Y({key:`reply-${e.id}`,label:"Reply",value:n.replyDrafts.get(e.id)??"",placeholder:"Reply",rows:1,onInput:l=>i.setReplyDraft(e.id,l)}),"Reply")))}function dt({actions:s},e){return r("article",{class:"plc-thread","data-delivery":e.delivery.status},e.anchor?r("div",{class:"plc-quote-detached"},z(e.anchor.quote)):r("p",{class:"plc-scope"},"Whole document"),r("ol",{class:"plc-comments"},r("li",{class:"plc-comment"},R(e.body))),de(e.delivery,"posted",{retry:()=>s.retryThread(e.key),edit:()=>s.editThread(e.key)}))}function ct({state:s,actions:e},t){return r("li",{class:"plc-comment","data-delivery":t.delivery.status},R(t.body),de(t.delivery,"posted",{retry:()=>e.retryReply(t.key),edit:()=>e.editReply(t.key),blocked:s.busyThreads.has(t.threadId)}))}function ht(s){let{state:e,actions:t}=s,n=G(()=>t.submitNote(),"plc-composer",...Y({key:"note-composer",label:"New note",value:e.noteDraft,placeholder:"Write a note anyone reading can edit",rows:3,onInput:o=>t.setNoteDraft(o)}),r("div",{class:"plc-actions"},r("button",{type:"submit",class:"plc-button plc-button-primary"},"Add note"))),i=[...e.pendingNotes.map(o=>ut(s,o)),...[...e.notes].reverse().map(o=>pt(s,o))];return[n,...i.length?i:[r("p",{class:"plc-empty"},"No notes yet. Everyone who can read this document can read and edit its notes.")]]}function ut({actions:s},e){return r("article",{class:"plc-note","data-delivery":e.delivery.status},R(e.body),de(e.delivery,"saved",{retry:()=>s.retryNote(e.key),edit:()=>s.editPendingNote(e.key)}))}function pt({state:s,actions:e},t){let n=s.noteEdits.get(t.id),i=t.updatedAt!==t.createdAt;if(!n)return r("article",{class:"plc-note"},R(t.body),r("footer",{class:"plc-note-footer"},r("span",{class:"plc-meta"},i?"Edited ":"Added ",H(t.updatedAt)),w("Edit",()=>e.beginNoteEdit(t.id),"quiet",{"data-focus-key":`note-edit-${t.id}`})));let o=n.conflict;return r("article",{class:"plc-note","data-editing":"true"},G(()=>{e.saveNote(t.id)},"plc-note-form",...Y({key:`note-${t.id}`,label:"Edit note",value:n.draft,placeholder:"Note",rows:5,onInput:a=>e.setNoteEdit(t.id,a)}),o&&r("div",{class:"plc-conflict"},r("p",{},"Someone saved a newer version while you were editing. Your text is still in the editor above."),r("p",{class:"plc-meta"},"Their version, saved ",H(o.updatedAt)),r("div",{class:"plc-conflict-text"},R(o.body)),r("div",{class:"plc-actions"},w("Save my version",()=>e.overwriteNote(t.id),"primary"),w("Use their version",()=>e.takeTheirs(t.id)))),n.failure&&r("p",{class:"plc-delivery plc-delivery-failed"},n.failure.kind==="blank"?"A note needs some text. Write something, or choose Cancel to keep the saved version.":x(n.failure)?`Not confirmed. ${m(n.failure)} Save again to check.`:`Not saved. ${m(n.failure)}`),!o&&r("div",{class:"plc-actions"},r("button",{type:"submit",class:"plc-button plc-button-primary","aria-disabled":String(n.saving)},n.saving?"Saving\u2026":"Save"),w("Cancel",()=>e.cancelNoteEdit(t.id)))))}var Q=class{constructor(e){this.host=e}host;begin(e){let t=this.host.state.notes.find(n=>n.id===e);return t?(this.host.state.noteEdits.set(e,{draft:t.body,base:t,saving:!1,failure:null,conflict:null}),this.host.render(),!0):!1}setDraft(e,t){let n=this.host.state.noteEdits.get(e);n&&(n.draft=t)}close(e){this.host.state.noteEdits.delete(e),this.host.render()}async save(e){let t=this.host.state.noteEdits.get(e);if(!t||t.saving)return;if(!t.draft.trim())return t.failure={kind:"blank"},this.host.announce("A note needs some text."),this.host.render();Object.assign(t,{saving:!0,failure:null}),this.host.render();let n=t.draft,i=await this.host.api.updateNote(e,n,t.base.version);t.saving=!1;let o=this.host.state.noteEdits.get(e)===t,a=i.ok?i.value:i.failure.kind==="conflict"&&i.failure.current.body===n?i.failure.current:null;if(a)this.adopt(a),o&&t.draft===n?this.host.state.noteEdits.delete(e):o&&Object.assign(t,{base:a,conflict:null}),this.host.announce("Note saved.");else if(!i.ok&&i.failure.kind==="conflict")this.adopt(i.failure.current),o&&(t.conflict=i.failure.current,this.host.announce("Someone saved a newer version of this note. Your text is still in the editor."));else if(!i.ok)if(o)t.failure=i.failure,this.host.announce(`Note not saved. ${m(i.failure)}`);else{let d=x(i.failure)?"may not have saved":"was not saved";this.host.notify({tone:"error",message:`A note edit you closed while saving ${d}. ${m(i.failure)}`})}this.host.render()}overwrite(e){let t=this.host.state.noteEdits.get(e);!t?.conflict||t.saving||(Object.assign(t,{base:t.conflict,conflict:null}),this.save(e))}adopt(e){let t=this.host.state.notes,n=t.findIndex(i=>i.id===e.id);n<0?t.push(e):t[n].version<=e.version&&(t[n]=e)}};var X=class{constructor(e){this.host=e}host;inFlight=new Map;intents=new Map;failureNotices=new Map;nextIntent=1;saving(e){return this.inFlight.get(e)}toggle(e,t,n){return this.save(e,t,n,this.host.state.tasks.get(e)?.version??0)}async save(e,t,n,i){if(this.inFlight.has(e))return this.host.changed(e);let o=this.nextIntent++;this.intents.set(e,o);let a=this.failureNotices.get(e);a!==void 0&&(this.failureNotices.delete(e),this.host.dismiss(a)),this.inFlight.set(e,t),this.host.changed(e);let d=await this.host.api.setTask(e,t,i);if(this.inFlight.delete(e),d.ok)this.adopt(d.value);else if(d.failure.kind==="conflict"){let l=d.failure.current;this.adopt(l),l.checked!==t&&this.host.notify({tone:"info",message:`Someone else changed \u201C${n}\u201D first. It shows their change: ${l.checked?"done":"not done"}.`})}else{let l=d.failure,c=this.host.notify({tone:"error",message:x(l)?`\u201C${n}\u201D may not have saved. ${m(l)} The box shows the last confirmed state.`:`\u201C${n}\u201D was not saved. ${m(l)}`,action:{label:"Try again",run:()=>{this.intents.get(e)===o&&this.save(e,t,n,i)}}});this.failureNotices.set(e,c)}this.host.changed(e)}adopt(e){this.host.state.tasks.set(e.key,e)}};var je='input[type="checkbox"][data-planloft-task]';function mt(s){let t=(s.closest("label")?.textContent??s.labels?.[0]?.textContent??s.getAttribute("aria-label")??"").replace(/\s+/g," ").trim()||s.dataset.planloftTask||"Task";return t.length>60?`${t.slice(0,59)}\u2026`:t}var J=class{constructor(e){this.host=e;this.saves=new X({state:e.state,api:e.api,notify:t=>e.notify(t),dismiss:t=>e.dismiss(t),changed:t=>this.sync(t)}),document.addEventListener("click",this.onClick,!0),document.addEventListener("change",this.onChange)}host;saves;inputs(e){let t=Array.from(this.host.contentRoot().querySelectorAll(je));return e===void 0?t:t.filter(n=>n.dataset.planloftTask===e)}task(e){if(!(e instanceof HTMLInputElement)||!e.matches(je)||!this.host.contentRoot().contains(e))return null;let t=e.dataset.planloftTask;return t?{input:e,key:t}:null}sync(e){let{load:t,tasks:n}=this.host.state;for(let i of this.inputs(e)){let o=i.dataset.planloftTask??"";if(t.status!=="ready"){i.setAttribute("aria-disabled","true"),i.dataset.planloftTaskState=t.status==="loading"?"loading":"unavailable",i.title=t.status==="loading"?"Loading shared progress":"Shared progress could not be loaded";continue}let a=this.saves.saving(o);i.disabled=!1,i.removeAttribute("title"),i.checked=a??n.get(o)?.checked??i.defaultChecked,i.dataset.planloftTaskState=a===void 0?"ready":"saving",a===void 0?(i.removeAttribute("aria-disabled"),i.removeAttribute("aria-busy")):(i.setAttribute("aria-disabled","true"),i.setAttribute("aria-busy","true"))}}onClick=e=>{let t=this.task(e.target);t&&(this.host.state.load.status!=="ready"||this.saves.saving(t.key)!==void 0)&&e.preventDefault()};onChange=e=>{let t=this.task(e.target);t&&this.saves.toggle(t.key,t.input.checked,mt(t.input))}};var ft=matchMedia("(pointer: coarse)"),Z=class{constructor(e){this.host=e;this.element=r("div",{class:"plc-toolbar",role:"toolbar","aria-label":"Selected text",hidden:!0}),this.element.addEventListener("pointerdown",t=>t.preventDefault()),document.addEventListener("selectionchange",this.schedule),document.addEventListener("pointerdown",t=>{this.host.inUi(t.target)||(this.pointerDown=!0)}),document.addEventListener("pointerup",()=>{this.pointerDown=!1,this.schedule()}),addEventListener("scroll",this.reposition,{capture:!0,passive:!0}),addEventListener("resize",this.reposition,{passive:!0})}host;element;offsets=null;pointerDown=!1;frame=0;current(){return this.read()?.offsets??null}read(){let e=getSelection(),t=this.host.text();if(!e||e.isCollapsed||!e.rangeCount||!t)return null;let n=e.getRangeAt(0);if(this.host.inUi(n.commonAncestorContainer))return null;let i=t.offsetsOf(n);return i?{range:n,offsets:i}:null}schedule=()=>{cancelAnimationFrame(this.frame),this.frame=requestAnimationFrame(()=>this.update())};reposition=()=>{this.element.hidden||this.schedule()};update(){let e=this.pointerDown?null:this.read();if(this.offsets=e?.offsets??null,!e){this.element.hidden=!0;return}this.element.replaceChildren(...this.buttons()),this.element.hidden=!1,this.place(e.range)}hide(){this.offsets=null,this.element.hidden=!0}buttons(){let e=t=>()=>{this.offsets&&t(this.offsets),this.hide()};return this.host.reattaching()?[r("button",{type:"button",class:"plc-toolbar-button",onclick:e(t=>this.host.attach(t))},v(g.check),"Attach comment here"),r("button",{type:"button",class:"plc-toolbar-button plc-toolbar-quiet",onclick:()=>{this.host.cancelReattach(),this.hide()}},"Cancel")]:[r("button",{type:"button",class:"plc-toolbar-button","aria-keyshortcuts":"Control+Alt+M Meta+Alt+M",title:"Comment (Ctrl+Alt+M or \u2318\u2325M)",onclick:e(t=>this.host.comment(t))},v(g.comment),"Comment")]}place(e){let t=Array.from(e.getClientRects()).filter(h=>h.width>0||h.height>0),n=t[0]??e.getBoundingClientRect(),i=t.at(-1)??n,{offsetWidth:o,offsetHeight:a}=this.element,d=8,l=ft.matches||n.top-a-d<d,c=l?i:n,p=l?Math.min(c.bottom+d,innerHeight-a-d):c.top-a-d,u=Math.min(Math.max(d,c.left+c.width/2-o/2),innerWidth-o-d);this.element.style.transform=`translate(${Math.round(u)}px, ${Math.round(p)}px)`}};var gt='a[href], button, input, select, textarea, label, summary, [contenteditable]:not([contenteditable="false"])',yt=matchMedia("(max-width: 40rem)"),vt=matchMedia("(prefers-reduced-motion: reduce)"),ee=class{constructor(e){this.config=e;this.api=xe(e),this.toolbar=new Z({text:()=>this.text,reattaching:()=>this.state.reattaching!==null,inUi:t=>t instanceof Node&&this.ui.contains(t),comment:t=>this.startComment(t),attach:t=>{this.attach(t)},cancelReattach:()=>this.cancelReattach()}),this.launcher=r("button",{type:"button",class:"plc-launcher","aria-expanded":"false","aria-controls":"plc-panel",onclick:()=>this.togglePanel()}),this.panel=r("section",{id:"plc-panel",class:"plc-panel",role:"dialog","aria-modal":"false","aria-label":"Comments and notes",hidden:!0}),this.panel.addEventListener("keydown",t=>{t.key==="Escape"&&(t.preventDefault(),this.state.deleting?this.cancelDelete():this.closePanel())}),this.notices=r("div",{class:"plc-notices",role:"region","aria-label":"Comment messages"}),this.announcer=r("div",{class:"plc-visually-hidden",role:"status","aria-live":"polite"}),this.ui=r("div",{class:"plc","data-planloft-collaboration":""},this.toolbar.element,this.launcher,this.panel,this.notices,this.announcer),this.ui.style.setProperty("--plc-document-font",getComputedStyle(document.body).fontFamily),document.body.append(this.ui),this.notes=new Q({state:this.state,api:this.api,render:()=>this.render(),announce:t=>this.announce(t),notify:t=>this.notify(t)}),this.tasks=new J({state:this.state,api:this.api,contentRoot:()=>this.contentRoot(),notify:t=>this.notify(t),dismiss:t=>this.dismiss(t)}),new MutationObserver(t=>{t.some(Ne)&&this.scheduleLayout()}).observe(document.body,{childList:!0,subtree:!0,characterData:!0}),document.addEventListener("click",this.onDocumentClick),document.addEventListener("keydown",this.onShortcut),addEventListener("online",()=>this.setOnline(!0)),addEventListener("offline",()=>this.setOnline(!1)),addEventListener("scroll",this.position,{capture:!0,passive:!0}),addEventListener("resize",this.position,{passive:!0}),visualViewport?.addEventListener("resize",this.position),visualViewport?.addEventListener("scroll",this.position),new ResizeObserver(this.position).observe(this.panel),new ResizeObserver(this.position).observe(this.contentRoot()),this.layout(),this.load()}config;state=De();api;ui;panel;launcher;notices;announcer;toolbar;tasks;notes;text=null;resolutions=new WeakMap;resolvedText="";layoutFrame=0;renderQueued=!1;nextNotice=1;renderedNotices=null;contentRoot(){return this.config.contentSelector&&document.querySelector(this.config.contentSelector)||document.body}async load(){this.state.load={status:"loading"},this.tasks.sync(),this.render();let e=await this.api.state();e.ok?(this.state.threads=e.value.threads,this.state.notes=e.value.notes,this.state.tasks=new Map(e.value.tasks.map(t=>[t.key,t])),this.state.load={status:"ready"}):(this.state.load={status:"failed",failure:e.failure},this.announce(`Comments and notes could not load. ${m(e.failure)}`)),this.layout()}scheduleLayout(){cancelAnimationFrame(this.layoutFrame),this.layoutFrame=requestAnimationFrame(()=>this.layout())}layout(){this.text=new U(this.contentRoot()),this.text.text!==this.resolvedText&&(this.resolutions=new WeakMap,this.resolvedText=this.text.text),this.state.placements=new Map(this.state.threads.map(e=>[e.id,this.place(e.anchor)])),this.tasks.sync(),this.paint(),this.render()}place(e){if(!e)return{status:"document"};let t=this.text;if(!t)return{status:"unattached"};let n=this.resolutions.get(e);if(n||(n=fe(t.text,e),this.resolutions.set(e,n)),n.status==="unattached")return n;let{status:i,start:o,end:a}=n;return{status:i,start:o,end:a,range:t.rangeOf(o,a),current:t.index.chars.slice(o,a).join("")}}paint(){let e=[],t=[],n=null;for(let o of this.state.threads){let a=this.state.placements.get(o.id);if(!(!a||!("range"in a)))if(o.id===this.state.activeThread)n=a.range;else{if(o.resolved)continue;(a.status==="exact"?e:t).push(a.range)}}for(let o of this.state.pendingThreads){let a=this.place(o.anchor);"range"in a&&e.push(a.range)}let i=this.place(this.state.panel.open&&this.state.panel.view==="compose"&&this.state.panel.tab==="comments"?this.state.composer.anchor:null);Me({exact:e,approximate:t,active:n,draft:"range"in i?i.range:null})}setOnline(e){if(this.state.online=e,e){this.state.load.status==="failed"&&this.load();let t=({delivery:n})=>n.status==="unknown"||n.status==="failed"&&n.failure.kind==="offline";for(let n of this.state.pendingThreads.filter(t))this.deliverThread(n);for(let n of this.state.pendingReplies.filter(t))this.state.busyThreads.has(n.threadId)||this.deliverReply(n);for(let n of this.state.pendingNotes.filter(t))this.deliverNote(n);for(let[n,{failure:i}]of this.state.noteEdits)i&&i.kind!=="blank"&&(i.kind==="offline"||x(i))&&this.saveNote(n)}this.render()}render(){this.renderQueued||(this.renderQueued=!0,queueMicrotask(()=>{this.renderQueued=!1,this.renderNow()}))}renderNow(){let{state:e}=this,t=e.threads.filter(i=>!i.resolved).length+e.pendingThreads.length,n=e.online?e.load.status==="loading"?"Comments, loading":e.load.status==="failed"?"Comments unavailable":`Comments and notes, ${t} open ${t===1?"thread":"threads"}`:"Comments, offline";if(this.launcher.setAttribute("aria-label",n),this.launcher.setAttribute("aria-expanded",String(e.panel.open)),this.launcher.dataset.state=e.load.status,this.launcher.replaceChildren(v(e.load.status==="failed"?g.warning:g.comment),r("span",{class:"plc-launcher-label","aria-hidden":"true"},"Comments"),r("span",{class:"plc-launcher-status","aria-hidden":"true"},e.online?e.load.status==="loading"?"Loading":e.load.status==="failed"?"Unavailable":"":"Offline"),r("span",{class:"plc-launcher-count","aria-hidden":"true"},e.load.status==="ready"?String(t):"")),this.panel.hidden=!e.panel.open,e.panel.open){let i=document.activeElement instanceof HTMLElement&&this.panel.contains(document.activeElement)?document.activeElement:null,o=i?.dataset.focusKey,a=i instanceof HTMLTextAreaElement?[i.selectionStart,i.selectionEnd]:null,l=this.panel.querySelector(".plc-panel-body")?.scrollTop??0;this.panel.replaceChildren(...Oe(e,this));let c=this.panel.querySelector(".plc-panel-body");if(c&&(c.scrollTop=l),o){let p=this.panel.querySelector(`[data-focus-key="${CSS.escape(o)}"]`);p?.focus({preventScroll:!0}),p instanceof HTMLTextAreaElement&&a&&p.setSelectionRange(a[0],a[1])}}this.position(),e.notices!==this.renderedNotices&&(this.renderedNotices=e.notices,this.notices.replaceChildren(...e.notices.map(i=>r("div",{class:`plc-notice plc-notice-${i.tone}`,role:i.tone==="error"?"alert":"status"},r("p",{class:"plc-notice-text"},i.message),i.action&&r("button",{type:"button",class:"plc-button plc-button-quiet",onclick:()=>{this.dismiss(i.id),i.action?.run()}},i.action.label),r("button",{type:"button",class:"plc-icon-button","aria-label":"Dismiss",onclick:()=>this.dismiss(i.id)},v(g.close))))))}position=()=>{if(this.panel.hidden)return;let{state:e}=this,t=e.panel.tab!=="comments"?null:e.activeThread?e.placements.get(e.activeThread):e.panel.view==="compose"?this.place(e.composer.anchor):null,n=t&&"range"in t?t.range:null,i=n?Array.from(n.getClientRects()).filter(c=>c.width>0&&c.height>0):[],o=visualViewport,a={left:o?.offsetLeft??0,top:o?.offsetTop??0,width:o?.width??innerWidth,height:o?.height??innerHeight};this.panel.style.maxHeight=`${Math.max(0,Math.min(560,a.height-24))}px`,this.panel.style.width=`${Math.max(0,Math.min(360,a.width-24))}px`;let{left:d,top:l}=Ie({anchor:i.find(c=>c.bottom>a.top&&c.top<a.top+a.height)??i[0]??this.launcher.getBoundingClientRect(),popup:{width:this.panel.offsetWidth,height:this.panel.offsetHeight},viewport:a,anchored:i.length>0});this.panel.style.left=`${d}px`,this.panel.style.top=`${l}px`};focus(e){queueMicrotask(()=>this.panel.querySelector(`[data-focus-key="${CSS.escape(e)}"]`)?.focus())}announce(e){this.announcer.textContent=e}notify(e){let t=this.nextNotice++;return this.state.notices=[...this.state.notices.slice(-2),{...e,id:t}],this.render(),t}dismiss(e){this.state.notices=this.state.notices.filter(t=>t.id!==e),this.render()}togglePanel(){this.state.panel.open?this.closePanel():this.browseComments()}openPanel(e=`tab-${this.state.panel.tab}`){this.state.panel.open=!0,this.render(),this.focus(e)}closePanel(){this.state.panel.open=!1,this.state.activeThread=null,this.state.deleting=null,this.paint(),this.render(),this.launcher.focus()}browseComments(){this.state.activeThread=null,this.state.deleting=null,Object.assign(this.state.panel,{tab:"comments",view:"browse"}),this.paint(),this.openPanel("new-comment")}composeComment(){this.state.activeThread=null,this.state.deleting=null,Object.assign(this.state.panel,{tab:"comments",view:"compose"}),this.paint(),this.openPanel("composer")}setTab(e){this.state.panel.tab=e,this.state.activeThread=null,this.state.deleting=null,this.state.panel.view="browse",this.paint(),this.render(),this.focus(`tab-${e}`)}setFilter(e){this.state.panel.filter=e,this.render()}retryLoad(){this.load()}onDocumentClick=e=>{let t=e.target;if(!(t instanceof Element)||e.composedPath().includes(this.ui))return;if(t.closest(gt)){this.state.panel.open&&this.closePanelWithoutFocus();return}if(this.state.load.status!=="ready"){this.state.panel.open&&this.closePanelWithoutFocus();return}if(!getSelection()?.isCollapsed)return;let n=Le(e.clientX,e.clientY);if(!n){this.state.panel.open&&this.closePanelWithoutFocus();return}let i=null;for(let o of this.state.threads){let a=this.state.placements.get(o.id);if(o.resolved||!a||!("range"in a)||!a.range.isPointInRange(n.node,n.offset))continue;let d=a.end-a.start;(!i||d<i.length)&&(i={id:o.id,length:d})}i?this.openThread(i.id):this.state.panel.open&&this.closePanelWithoutFocus()};closePanelWithoutFocus(){this.state.panel.open=!1,this.state.activeThread=null,this.state.deleting=null,this.paint(),this.render()}onShortcut=e=>{if(e.key==="Escape"&&this.state.panel.open&&!e.defaultPrevented){e.preventDefault(),this.closePanel();return}if(!(e.metaKey||e.ctrlKey)||!e.altKey||e.code!=="KeyM")return;e.preventDefault();let t=this.toolbar.current();t&&this.state.reattaching?this.attach(t):t?this.startComment(t):this.composeComment()};openThread(e){let t=this.state.threads.find(i=>i.id===e);if(!t)return;Object.assign(this.state.panel,{open:!0,tab:"comments",filter:t.resolved?"resolved":"open"}),this.state.activeThread=e,this.state.deleting=null;let n=this.state.placements.get(e);if(n&&"range"in n){let i=n.range.getBoundingClientRect();(i.bottom<0||i.top>innerHeight)&&n.range.startContainer.parentElement?.scrollIntoView({block:"center",behavior:"instant"})}this.paint(),this.render(),queueMicrotask(()=>{this.panel.querySelector(`[data-focus-key="thread-${CSS.escape(e)}"]`)?.focus({preventScroll:!0})})}showInDocument(e){let t=this.state.placements.get(e);if(this.state.activeThread=e,this.paint(),this.render(),!t||!("range"in t))return;t.range.startContainer.parentElement?.scrollIntoView({block:"center",behavior:vt.matches?"auto":"smooth"})}startComment(e){this.text&&(this.state.composer.anchor=j(this.text.text,e.start,e.end,{revision:this.config.revision,documentId:this.config.documentId}),Object.assign(this.state.panel,{open:!0,tab:"comments",filter:"open",view:"compose"}),this.state.activeThread=null,this.state.deleting=null,getSelection()?.removeAllRanges(),this.paint(),this.openPanel("composer"))}setComposer(e){this.state.composer.body=e}clearComposerAnchor(){this.state.composer.anchor=null,this.paint(),this.render(),this.focus("composer")}submitThread(){let e=this.state.composer.body.trim();if(!e)return this.focus("composer");let t={key:V(),body:e,anchor:this.state.composer.anchor,delivery:{status:"sending"}};this.state.pendingThreads.push(t),this.state.composer={body:"",anchor:null},this.state.panel.view="browse",this.paint(),this.deliverThread(t)}async deliverThread(e){let t=B(e,()=>this.api.createThread(e.body,e.anchor,e.key));this.render();let n=await t;n?(this.state.pendingThreads=this.state.pendingThreads.filter(i=>i!==e),this.state.threads.some(i=>i.id===n.id)||this.upsertThread(n),this.state.panel.open&&this.state.panel.tab==="comments"&&this.state.panel.view==="browse"&&!this.state.activeThread&&this.openThread(n.id),this.announce("Comment posted.")):this.announceUndelivered(e.delivery,"Comment"),this.paint(),this.render()}announceUndelivered(e,t){if(e.status==="sending")return;let n=e.status==="unknown"?"not confirmed":t==="Note"?"not saved":"not posted";this.announce(`${t} ${n}. ${m(e.failure)}`)}retryThread(e){let t=this.state.pendingThreads.find(n=>n.key===e);t&&t.delivery.status!=="sending"&&this.deliverThread(t)}editThread(e){let t=this.state.pendingThreads.find(i=>i.key===e);if(t?.delivery.status!=="failed")return;this.state.pendingThreads=this.state.pendingThreads.filter(i=>i!==t);let n=this.state.composer.body.trim();this.state.composer={body:n?`${n}
+
+${t.body}`:t.body,anchor:t.anchor},this.paint(),this.render(),this.composeComment()}upsertThread(e){let t=this.state.threads.findIndex(n=>n.id===e.id);t<0?this.state.threads.push(e):this.state.threads[t]=e,this.state.placements.set(e.id,this.place(e.anchor))}setReplyDraft(e,t){this.state.replyDrafts.set(e,t)}submitReply(e){if(this.state.busyThreads.has(e))return;let t=(this.state.replyDrafts.get(e)??"").trim();if(!t)return this.focus(`reply-${e}`);let n={key:V(),threadId:e,body:t,delivery:{status:"sending"}};this.state.pendingReplies.push(n),this.state.replyDrafts.delete(e),this.deliverReply(n)}async deliverReply(e){let t=B(e,()=>this.api.reply(e.threadId,e.body,e.key));this.render();let n=await t;if(n){this.state.pendingReplies=this.state.pendingReplies.filter(o=>o!==e);let i=this.state.threads.find(o=>o.id===e.threadId);i&&!i.comments.some(o=>o.id===n.id)&&i.comments.push(n),this.announce("Reply posted.")}else this.announceUndelivered(e.delivery,"Reply");this.render()}retryReply(e){let t=this.state.pendingReplies.find(n=>n.key===e);t&&t.delivery.status!=="sending"&&!this.state.busyThreads.has(t.threadId)&&this.deliverReply(t)}editReply(e){let t=this.state.pendingReplies.find(i=>i.key===e);if(t?.delivery.status!=="failed")return;this.state.pendingReplies=this.state.pendingReplies.filter(i=>i!==t);let n=(this.state.replyDrafts.get(t.threadId)??"").trim();this.state.replyDrafts.set(t.threadId,n?`${n}
+
+${t.body}`:t.body),this.render(),this.focus(`reply-${t.threadId}`)}async updateThread(e,t,n){if(this.state.busyThreads.has(e))return!1;if(N(this.state,e))return this.notify({tone:"info",message:"Wait for the reply to finish sending, then try again."}),!1;this.state.busyThreads.add(e),this.render();let i=await this.api.updateThread(e,t);if(this.state.busyThreads.delete(e),i.ok)this.upsertThread(i.value),this.announce(n);else{let o=x(i.failure)?" It may not have saved; reload to check.":"";this.notify({tone:"error",message:`${m(i.failure)}${o}`})}return this.paint(),this.render(),i.ok}requestDelete(e,t){this.state.busyThreads.has(e)||(this.state.deleting={threadId:e,commentId:t},this.render(),this.focus(O(e,t)))}cancelDelete(){let e=this.state.deleting;!e||this.state.busyThreads.has(e.threadId)||(this.state.deleting=null,this.render(),this.focus(O(e.threadId,e.commentId)))}async confirmDelete(){let e=this.state.deleting;if(!e||this.state.busyThreads.has(e.threadId))return;if(N(this.state,e.threadId)){this.notify({tone:"info",message:"Wait for the reply to finish sending, then delete."});return}this.state.busyThreads.add(e.threadId),this.render();let t=e.commentId===null?await this.api.deleteThread(e.threadId):await this.api.deleteComment(e.threadId,e.commentId);if(this.state.busyThreads.delete(e.threadId),t.ok){let n=e.commentId!==null?`thread-${e.threadId}`:this.neighbourSummary(e.threadId)??"new-comment";if(e.commentId===null)this.state.threads=this.state.threads.filter(i=>i.id!==e.threadId),this.state.placements.delete(e.threadId),this.state.pendingReplies=this.state.pendingReplies.filter(i=>i.threadId!==e.threadId),this.state.replyDrafts.delete(e.threadId),this.state.reattaching===e.threadId&&this.cancelReattach(),this.state.activeThread===e.threadId?this.browseComments():this.focus(n);else{let i=this.state.threads.find(o=>o.id===e.threadId);i&&(i.comments=i.comments.filter(o=>o.id!==e.commentId)),this.focus(n)}this.state.deleting===e&&(this.state.deleting=null),this.announce(e.commentId===null?"Thread deleted.":"Reply deleted.")}else this.notify({tone:"error",message:`Deletion was not confirmed. ${m(t.failure)} Try deleting again to confirm it.`}),this.state.deleting===e&&this.focus("confirm-delete");this.paint(),this.render()}neighbourSummary(e){let t=Array.from(this.panel.querySelectorAll('[data-focus-key^="summary-"]'),i=>i.dataset.focusKey),n=t.indexOf(`summary-${e}`);return n<0?null:t[n+1]??t[n-1]??null}setResolved(e,t){this.updateThread(e,{resolved:t},t?"Thread resolved.":"Thread reopened.")}keepPlacement(e){let t=this.state.placements.get(e);if(!this.text||!t||t.status!=="approximate")return;let n=j(this.text.text,t.start,t.end,{revision:this.config.revision,documentId:this.config.documentId});this.updateThread(e,{anchor:n},"Comment attached to the current text.")}startReattach(e){this.state.busyThreads.has(e)||N(this.state,e)||(this.state.reattaching=e,this.state.activeThread=e,this.paint(),this.render(),this.toolbar.update(),yt.matches&&this.closePanel(),this.announce("Select the text this comment belongs to, then choose Attach comment here."))}cancelReattach(){this.state.reattaching=null,this.render(),this.toolbar.update()}async attach(e){let t=this.state.reattaching;if(!t||!this.text)return;if(this.state.busyThreads.has(t)||N(this.state,t)){this.notify({tone:"info",message:"Wait for the pending change to finish, then select the text and try again."});return}let n=j(this.text.text,e.start,e.end,{revision:this.config.revision,documentId:this.config.documentId});this.state.reattaching=null,getSelection()?.removeAllRanges(),await this.updateThread(t,{anchor:n},"Comment attached to the selected text.")&&this.openThread(t)}setNoteDraft(e){this.state.noteDraft=e}submitNote(){let e=this.state.noteDraft.trim();if(!e)return this.focus("note-composer");let t={key:V(),body:e,delivery:{status:"sending"}};this.state.pendingNotes.push(t),this.state.noteDraft="",this.deliverNote(t)}async deliverNote(e){let t=B(e,()=>this.api.createNote(e.body,e.key));this.render();let n=await t;n?(this.state.pendingNotes=this.state.pendingNotes.filter(i=>i!==e),this.notes.adopt(n),this.announce("Note added.")):this.announceUndelivered(e.delivery,"Note"),this.render()}retryNote(e){let t=this.state.pendingNotes.find(n=>n.key===e);t&&t.delivery.status!=="sending"&&this.deliverNote(t)}editPendingNote(e){let t=this.state.pendingNotes.find(i=>i.key===e);if(t?.delivery.status!=="failed")return;this.state.pendingNotes=this.state.pendingNotes.filter(i=>i!==t);let n=this.state.noteDraft.trim();this.state.noteDraft=n?`${n}
+
+${t.body}`:t.body,this.render(),this.focus("note-composer")}beginNoteEdit(e){this.notes.begin(e)&&this.focus(`note-${e}`)}setNoteEdit(e,t){this.notes.setDraft(e,t)}cancelNoteEdit(e){this.notes.close(e),this.focus(`note-edit-${e}`)}saveNote(e){return this.notes.save(e)}overwriteNote(e){this.notes.overwrite(e)}takeTheirs(e){this.notes.close(e),this.focus(`note-edit-${e}`)}};function Ke(s){if(document.querySelector(".plc[data-planloft-collaboration]"))return;let e=()=>{new ee(s)};document.readyState==="loading"?document.addEventListener("DOMContentLoaded",e,{once:!0}):e()}Ke(JSON.parse(document.currentScript.previousElementSibling.textContent));})();
+</script>
+<!-- planloft-collaboration:end -->
 </body>
 </html>
