@@ -182,15 +182,6 @@
       "expiresAt": "2026-12-23T09:33:02.436Z"
     },
     {
-      "id": "X3mLxfYEMI",
-      "project": "github.com/unify-apps/www",
-      "slug": "ai-factory-workflow-coverage",
-      "title": "AI Factory workflow coverage and rollout",
-      "kind": "plan",
-      "createdAt": "2026-11-23T09:10:08.029Z",
-      "expiresAt": "2026-12-23T11:23:19.693Z"
-    },
-    {
       "id": "5rMaiAR9Kr",
       "project": "github.com/unify-apps/www",
       "slug": "salesforce-c360-collaborative",
@@ -198,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-11-24T07:18:50.747Z",
       "expiresAt": "2026-12-24T07:24:36.225Z"
+    },
+    {
+      "id": "X3mLxfYEMI",
+      "project": "github.com/unify-apps/www",
+      "slug": "ai-factory-workflow-coverage",
+      "title": "AI Factory workflow coverage and rollout",
+      "kind": "plan",
+      "createdAt": "2026-11-23T09:10:08.029Z",
+      "expiresAt": "2026-12-24T10:40:11.631Z"
     }
   ]
 }
