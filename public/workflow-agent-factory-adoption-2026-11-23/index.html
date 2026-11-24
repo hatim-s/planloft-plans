@@ -1,4 +1,6 @@
-<!doctype html><html lang="en"><head><!-- planloft-render:head:start -->
+<!doctype html>
+<html lang="en">
+<head><!-- planloft-render:head:start -->
 <style data-planloft-render data-planloft-sha256="9c864bc9ecfdd238e5afbcc52bc5e97ce052baf1c292492d8f548052ad5a8b9b">/* planloft theme: briefing. A morning brief: Avenir Next at 17.5px on white, headlines in
    Avenir Next Condensed Bold at newspaper size, navy ink, warm paper for callouts and
    amber for links and the first series. Dark is a navy night page with the amber lifted. */
@@ -864,46 +866,306 @@ html > body:not(:has(.planloft-plan > article)) {
 }
 </style>
 <meta name="robots" content="noindex, nofollow" />
-<!-- planloft-render:head:end --><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Workflow Agent delivery in AI Factory</title>
+<!-- planloft-render:head:end -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow Agent delivery in AI Factory</title>
 <style>
 @layer fallback {
-:root{color-scheme:light dark;--planloft-paper:#f5f7fd;--planloft-ink:#1b2546;--planloft-muted:#58637a;--planloft-surface:#fff;--planloft-rule:#d9dfeb;--planloft-accent:#2e55bd;--planloft-chart-1:#b7720a;--planloft-chart-2:#2e55bd;--planloft-chart-3:#0f8c7b;--planloft-chart-4:#bb3f6b;--planloft-chart-5:#6a5ac6;--planloft-font-heading:"Avenir Next Condensed",system-ui,sans-serif}
-@media(prefers-color-scheme:dark){:root{--planloft-paper:#101525;--planloft-ink:#e9edfa;--planloft-muted:#aeb9d2;--planloft-surface:#1a2238;--planloft-rule:#374460;--planloft-accent:#91aafa;--planloft-chart-1:#ebb040;--planloft-chart-2:#7093ea;--planloft-chart-3:#35b8a5;--planloft-chart-4:#e86f95;--planloft-chart-5:#a08fe9}}
+  :root {
+    color-scheme: light dark;
+    --planloft-paper: #f5f7fd;
+    --planloft-ink: #1b2546;
+    --planloft-muted: #58637a;
+    --planloft-surface: #ffffff;
+    --planloft-rule: #d9dfeb;
+    --planloft-accent: #2e55bd;
+    --planloft-chart-1: #b7720a;
+    --planloft-chart-2: #2e55bd;
+    --planloft-chart-3: #0f8c7b;
+    --planloft-chart-4: #bb3f6b;
+    --planloft-chart-5: #6a5ac6;
+    --planloft-font-heading: "Avenir Next Condensed", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --planloft-paper: #101525;
+      --planloft-ink: #e9edfa;
+      --planloft-muted: #aeb9d2;
+      --planloft-surface: #1a2238;
+      --planloft-rule: #374460;
+      --planloft-accent: #91aafa;
+      --planloft-chart-1: #ebb040;
+      --planloft-chart-2: #7093ea;
+      --planloft-chart-3: #35b8a5;
+      --planloft-chart-4: #e86f95;
+      --planloft-chart-5: #a08fe9;
+    }
+  }
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--planloft-paper);color:var(--planloft-ink);font:15px/1.53 system-ui,sans-serif}
-main{max-width:1140px;margin:auto;padding:clamp(18px,4vw,56px)}
-header{border-top:5px solid var(--planloft-accent);padding-top:22px;margin-bottom:20px}
-h1,h2,h3{font-family:var(--planloft-font-heading);line-height:1.02;margin:0 0 .4em}
-h1{font-size:clamp(2.9rem,7vw,5.7rem);letter-spacing:-.042em}
-h2{font-size:clamp(1.8rem,4vw,2.9rem)}
-h3{font-size:1.45rem}
-section{margin-top:28px}
-p{margin:0 0 10px} .meta,small,.note{color:var(--planloft-muted)}
-.meta{font-weight:650;font-size:.8rem;letter-spacing:.05em}
-.summary{font-size:1.12rem;max-width:760px}
 
-ul{padding:0;margin:0;list-style:none}li{display:grid;grid-template-columns:10px 1fr auto;gap:7px;align-items:center;padding:4px 0;border-bottom:1px solid var(--planloft-rule);font-size:.87rem}li:last-child{border:0}li b{white-space:nowrap}
-.dot{width:8px;height:8px;border-radius:50%}
-a{color:var(--planloft-accent);text-underline-offset:3px}
-.note{font-size:.86rem;margin:10px 0}
-.wrap{overflow:auto}table{width:100%;text-align:left;border-collapse:collapse;font-size:.89rem}th,td{padding:8px;border-bottom:1px solid var(--planloft-rule);vertical-align:top}th{font-size:.78rem;color:var(--planloft-muted)}td:first-child{white-space:nowrap}
-details{margin-top:15px}summary{cursor:pointer;font-weight:650}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--planloft-paper);
+  color: var(--planloft-ink);
+  font: 15px/1.55 system-ui, -apple-system, sans-serif;
+}
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 52px);
+}
+header {
+  border-top: 5px solid var(--planloft-accent);
+  padding-top: 20px;
+  margin-bottom: 18px;
+}
+h1, h2, h3 {
+  font-family: var(--planloft-font-heading);
+  line-height: 1.04;
+  margin: 0 0 .38em;
+}
+h1 {
+  font-size: clamp(2.6rem, 6.5vw, 5rem);
+  letter-spacing: -.04em;
+  max-width: 820px;
+}
+h2 {
+  font-size: clamp(1.65rem, 3.6vw, 2.5rem);
+  letter-spacing: -.02em;
+}
+h3 {
+  font-size: 1.25rem;
+}
+p { margin: 0 0 10px; max-width: 74ch; }
+.meta, small, .note { color: var(--planloft-muted); }
+.meta {
+  font-weight: 650;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.lede {
+  font-size: 1.08rem;
+  max-width: 72ch;
+  margin-top: 6px;
+}
+a {
+  color: var(--planloft-accent);
+  text-underline-offset: 3px;
+}
+.flow-nav {
+  display: flex;
+  gap: 10px 22px;
+  flex-wrap: wrap;
+  padding: 6px 0 18px;
+  border-bottom: 1px solid var(--planloft-rule);
+  font-size: .9rem;
+  font-weight: 550;
+}
+section {
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--planloft-rule);
+}
+section.oracle {
+  margin-top: 24px;
+  padding: 20px 0 24px 20px;
+  border-top: 0;
+  border-left: 4px solid var(--planloft-accent);
+  border-bottom: 1px solid var(--planloft-rule);
+}
+.oracle-grid {
+  display: grid;
+  grid-template-columns: minmax(210px, auto) 1fr;
+  gap: 18px 34px;
+  align-items: end;
+  margin: 14px 0 16px;
+}
+@media (max-width: 680px) {
+  .oracle-grid { grid-template-columns: 1fr; }
+}
+.hero-stat {
+  font: 750 clamp(3.6rem, 10vw, 6.4rem)/.86 var(--planloft-font-heading);
+  letter-spacing: -.05em;
+  color: var(--planloft-accent);
+  margin: 4px 0;
+}
+.hero-sub {
+  font-size: .95rem;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+.threshold-viz {
+  max-width: 660px;
+  margin: 14px 0 10px;
+}
+.viz-row {
+  display: grid;
+  grid-template-columns: 17ch minmax(140px, 1fr) 11ch;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0;
+  font-size: .88rem;
+}
+@media (max-width: 560px) {
+  .viz-row { grid-template-columns: 1fr; gap: 4px; }
+}
+.viz-track {
+  position: relative;
+  height: 12px;
+  background: var(--planloft-rule);
+  border-radius: 2px;
+}
+.viz-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+}
+.viz-fill.reraise { background: var(--planloft-chart-3); }
+.viz-fill.merge { background: var(--planloft-chart-2); }
+.viz-mark {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  left: 90.32%;
+  width: 2px;
+  background: var(--planloft-ink);
+}
+.viz-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: .82rem;
+  color: var(--planloft-muted);
+  margin-top: 8px;
+}
+.swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+.kpi-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 32px;
+  margin: 14px 0 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--planloft-rule);
+  border-bottom: 1px solid var(--planloft-rule);
+}
+.kpi-item {
+  min-width: 110px;
+}
+.kpi-val {
+  display: block;
+  font: 700 1.85rem/1 var(--planloft-font-heading);
+  letter-spacing: -.03em;
+}
+.kpi-lbl {
+  font-size: .8rem;
+  color: var(--planloft-muted);
+}
+.seg-bar {
+  display: flex;
+  height: 12px;
+  max-width: 660px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--planloft-rule);
+  margin: 12px 0 8px;
+}
+.seg-merged { background: var(--planloft-chart-3); }
+.seg-open { background: var(--planloft-chart-2); }
+.seg-closed { background: var(--planloft-chart-1); }
 
-h1{max-width:870px}
-.coverage{margin-top:10px}
-</style><style>
-.hero-stat{font:750 clamp(3.9rem,12vw,8rem)/.82 var(--planloft-font-heading);letter-spacing:-.055em;color:var(--planloft-accent);margin:12px 0}
-.observed{margin:6px 0 26px;padding:16px 0 25px;border-bottom:1px solid var(--planloft-rule)}
-.observed h2{font-size:clamp(1.6rem,4vw,2.5rem)}
-.flow-nav{display:flex;gap:12px 22px;flex-wrap:wrap;padding:5px 0 12px;font-size:.9rem}
-.bars24{display:grid;gap:7px;max-width:600px;margin:14px 0}
-.bar24{display:grid;grid-template-columns:8ch minmax(80px,1fr) 4ch;gap:9px;align-items:center}
-.bar24-track{height:9px;border-radius:4px;background:var(--planloft-rule);overflow:hidden}
-.bar24-fill{display:block;height:100%;background:var(--planloft-chart-2)}
-.bar24:nth-child(2) .bar24-fill{background:var(--planloft-chart-1)}
-details{border-bottom:1px solid var(--planloft-rule);padding-bottom:12px}
-</style></head><body><!-- planloft-render:controls:start -->
+.bars-compact {
+  display: grid;
+  gap: 6px;
+  max-width: 560px;
+  margin: 12px 0;
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: 9ch minmax(80px, 1fr) 5ch;
+  gap: 10px;
+  align-items: center;
+  font-size: .87rem;
+}
+.bar-track {
+  height: 8px;
+  background: var(--planloft-rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--planloft-chart-2);
+}
+.bar-row.failed .bar-fill { background: var(--planloft-chart-1); }
+.bar-row.done .bar-fill { background: var(--planloft-chart-3); }
+
+.wrap { overflow-x: auto; margin: 12px 0; }
+table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: .87rem;
+}
+th, td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--planloft-rule);
+  vertical-align: top;
+}
+th {
+  font-size: .76rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--planloft-muted);
+}
+td:first-child { white-space: nowrap; }
+.tag {
+  font-size: .78rem;
+  color: var(--planloft-muted);
+  white-space: nowrap;
+}
+details {
+  margin-top: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--planloft-rule);
+}
+summary {
+  cursor: pointer;
+  font-weight: 650;
+  padding: 4px 0;
+}
+.evidence-list {
+  margin: 10px 0 12px;
+  padding: 0;
+  list-style: none;
+  max-width: 74ch;
+}
+.evidence-list li {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--planloft-rule);
+  font-size: .9rem;
+}
+.evidence-list li:last-child { border-bottom: 0; }
+footer {
+  margin-top: 34px;
+  padding-top: 14px;
+  border-top: 1px solid var(--planloft-rule);
+  font-size: .82rem;
+  color: var(--planloft-muted);
+}
+</style>
+</head>
+<body><!-- planloft-render:controls:start -->
 <div class="planloft-controls" data-planloft-ignore>
 <div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
   <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
@@ -1093,18 +1355,421 @@ details{border-bottom:1px solid var(--planloft-rule);padding-bottom:12px}
   else start();
 })();
 </script>
-<!-- planloft-render:controls:end --><main><header><p class="meta">AI Factory QA · 24 November 2026</p><h1>Workflow Agent delivery<br>in AI Factory</h1></header>
-<section class="observed" aria-labelledby="delivery"><p class="meta">FACTORY PR HISTORY</p><p class="hero-stat">11</p><h2 id="delivery">run-linked PRs merged</h2><p><strong>29% of 38 tracked run-linked PRs</strong> in the audit history. 1 new merge since the prior ledger, from a run that started before this window. Runs started in this window opened <strong>four PRs</strong>. All four were open at readback, including one opened outside the advisory brief.</p></section>
-<nav aria-label="Contents" class="flow-nav"><a href="#runs">Run audit</a><a href="#merges">PR merges</a><a href="#retests">Fix status</a><a href="#sessions">Direct sessions</a></nav>
-<section id="runs"><h2>Run audit</h2><p>Runs started after 23 Nov 14:52 IST, through the last observed start at 24 Nov 15:29 IST. Histories were read at 24 Nov, about 15:56 IST. The scope is the 18 Workflow Agent routes, three Voice routes and Automation Bench. Main Sync was checked separately and had no new start in this window.</p><div class="bars24" aria-label="Factory run status counts"><div class="bar24"><span>Done</span><span class="bar24-track" aria-hidden="true"><span class="bar24-fill" style="width:91.6667%"></span></span><strong>99</strong></div><div class="bar24"><span>Failed</span><span class="bar24-track" aria-hidden="true"><span class="bar24-fill" style="width:100.0000%"></span></span><strong>108</strong></div><div class="bar24"><span>Stopped</span><span class="bar24-track" aria-hidden="true"><span class="bar24-fill" style="width:7.4074%"></span></span><strong>8</strong></div><div class="bar24"><span>Waiting</span><span class="bar24-track" aria-hidden="true"><span class="bar24-fill" style="width:6.4815%"></span></span><strong>7</strong></div><div class="bar24"><span>Running</span><span class="bar24-track" aria-hidden="true"><span class="bar24-fill" style="width:1.8519%"></span></span><strong>2</strong></div></div>
-<p>At least <strong>73 of 224 runs</strong> were audit probes. Another 70 were one review batch spanning 69 PRs. Together they account for 143 runs (64%). These are run starts, and the selected examples below are verification outputs.</p><p><strong>86 preflight failures</strong> clustered between 15:49 and 21:38 IST on 23 Nov. The review batch accounted for 51 and the audit probes for 28. The following 32 starts showed zero preflight failures. Of the 99 Done records, 39 display a <em>Stopped at</em> title, including valid review-only stops.</p>
-<div class="wrap"><table><thead><tr><th scope="col">Loop</th><th scope="col">Observed output</th><th scope="col">Evidence</th></tr></thead><tbody><tr><td>Diagnose</td><td>Source RCA confirmed with a 22-row Bun reproduction.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046b5ad6f7e70b547c75cf?run=lr72cbf78ea12ad7252dbd5985&amp;messageId=lr72cbf78ea12ad7252dbd5985-start">Source RCA</a></td></tr><tr><td>Clarification</td><td>Reviewed a two-question transcript. Live dispatch stayed disabled.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0486c2d6f7e70b547e311f?run=lr049ace0342c10789bc9f2597&amp;messageId=01447598-da7d-403c-b759-5d377f7de8b3">Transcript audit</a></td></tr><tr><td>Develop</td><td>215 example tests and 23 pagination tests passed. The requested diagnosis found no defect to fix.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0557e821997f6c6858f0cc?run=lrc71269c6e76a785d059aa29e&amp;messageId=lrc71269c6e76a785d059aa29e-start">Pagination diagnosis</a></td></tr><tr><td>Eval Review</td><td>Accounted for four seeded rows with offline analysis receipts.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0464fa3323da0720566f2c?run=lrbd43ca9296f419cc654b0226&amp;messageId=lrbd43ca9296f419cc654b0226-start">Synthetic corpus</a></td></tr><tr><td>Import &amp; Promote</td><td>Review-only dry run verified a pinned base, a single-value diff and matching hashes.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b048b7c68462456139c2c7e?run=lr6b17acbab380054e20f2f88e&amp;messageId=dcc93af8-fa90-430a-81b3-21ecaac54460">Entity import review</a></td></tr><tr><td>Voice audit</td><td>Code audit compared against the queue and reported six known findings and zero new findings.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b054d3d21997f6c685714aa?run=lr46f78179617c0a8247c457b8&amp;messageId=lr46f78179617c0a8247c457b8-start">Queue baseline audit</a></td></tr></tbody></table></div>
-<details><summary>Counts by loop</summary><div class="wrap"><table><thead><tr><th scope="col">Loop</th><th scope="col">Runs</th><th scope="col">Done</th><th scope="col">Failed</th><th scope="col">Stopped</th><th scope="col">Waiting on you</th><th scope="col">Running</th></tr></thead><tbody><tr><td>diagnose</td><td>8</td><td>5</td><td>3</td><td>0</td><td>0</td><td>0</td></tr><tr><td>atlas</td><td>36</td><td>16</td><td>11</td><td>1</td><td>7</td><td>1</td></tr><tr><td>pr</td><td>113</td><td>40</td><td>73</td><td>0</td><td>0</td><td>0</td></tr><tr><td>guidance</td><td>3</td><td>3</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>evaluate</td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>compare</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>clarification</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>eval-review</td><td>2</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>contracts</td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>0</td></tr><tr><td>develop</td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>0</td></tr><tr><td>publish</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>reconcile</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>import-promote</td><td>3</td><td>2</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>test-authoring</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>triage</td><td>7</td><td>0</td><td>3</td><td>4</td><td>0</td><td>0</td></tr><tr><td>eval-corpus</td><td>2</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr><tr><td>nightly</td><td>2</td><td>0</td><td>0</td><td>2</td><td>0</td><td>0</td></tr><tr><td>patterns</td><td>2</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>Automation Bench</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>voice-agent-audit-loop</td><td>10</td><td>8</td><td>2</td><td>0</td><td>0</td><td>0</td></tr><tr><td>voice-agent-build-loop</td><td>9</td><td>5</td><td>4</td><td>0</td><td>0</td><td>0</td></tr><tr><td>voice-agent-review-loop</td><td>12</td><td>7</td><td>5</td><td>0</td><td>0</td><td>0</td></tr></tbody></table></div></details>
-<details><summary>All 224 new run records</summary><div class="wrap"><table><thead><tr><th scope="col">Loop</th><th scope="col">Started IST</th><th scope="col">Factory state</th><th scope="col">Stage note</th></tr></thead><tbody><tr><td>atlas</td><td>24/11/2026, 15:29:14</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b055fb5a35b5154a5fb9262?run=lrc902294caec1f1c4c623fc1b">Running</a></td><td></td></tr><tr><td>guidance</td><td>24/11/2026, 14:55:59</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b055827eba5835794a1648d?run=lr66e5d23cb76ad866e9073303">Done</a></td><td>Stopped at named stage</td></tr><tr><td>develop</td><td>24/11/2026, 14:54:56</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0557e821997f6c6858f0cc?run=lrc71269c6e76a785d059aa29e">Done</a></td><td>Stopped at named stage</td></tr><tr><td>contracts</td><td>24/11/2026, 14:53:55</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0557abeba5835794a155d7?run=lr47912c8c982f20e0fc2646f6">Done</a></td><td>Stopped at named stage</td></tr><tr><td>triage</td><td>24/11/2026, 14:50:51</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0556f3eba5835794a1476e?run=lrbf6d2b574efa5e68f43113e8">Stopped</a></td><td></td></tr><tr><td>pr</td><td>24/11/2026, 14:48:48</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0556785117aa3564d2cd9e?run=lrefbfad350e35aa5a7fa7caab">Done</a></td><td></td></tr><tr><td>eval-corpus</td><td>24/11/2026, 14:47:47</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b05563b5117aa3564d2c2a9?run=lrb53faf029672c9720b2f7628">Running</a></td><td></td></tr><tr><td>voice-agent-audit-loop</td><td>24/11/2026, 14:09:25</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b054d3d21997f6c685714aa?run=lr46f78179617c0a8247c457b8">Done</a></td><td></td></tr><tr><td>voice-agent-build-loop</td><td>24/11/2026, 14:09:11</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b054d2f21997f6c6857103b?run=lr394e1635aede6d1037e419ae">Done</a></td><td>Stopped at named stage</td></tr><tr><td>voice-agent-audit-loop</td><td>24/11/2026, 14:08:27</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b054d07eba5835794a063f4?run=lrb08096b259544f7b38add8ea">Done</a></td><td></td></tr><tr><td>atlas</td><td>24/11/2026, 13:32:40</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0544141612f266ace2a4d0?run=lrb7adbd571f276e9460c726ad">Done</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>24/11/2026, 12:27:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b053569f888511082dcdd19?run=lrbb691c6394754d435b636d5b">Failed</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>24/11/2026, 12:27:42</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0535667d4e7e3070bbccce?run=lr20e745c517baca9b43064cfc">Done</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>24/11/2026, 12:27:40</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0535647d4e7e3070bbcc60?run=lr667b0450ebf818a2d0f4f327">Done</a></td><td></td></tr><tr><td>atlas</td><td>24/11/2026, 12:08:59</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0530637d4e7e3070baab72?run=lr677f97b7c776a68c2c2ab05e">Failed</a></td><td></td></tr><tr><td>import-promote</td><td>24/11/2026, 00:22:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b048b7c68462456139c2c7e?run=lr6b17acbab380054e20f2f88e">Done</a></td><td>Stopped at named stage</td></tr><tr><td>clarification</td><td>24/11/2026, 00:02:34</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0486c2d6f7e70b547e311f?run=lr049ace0342c10789bc9f2597">Done</a></td><td></td></tr><tr><td>contracts</td><td>23/11/2026, 22:42:31</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0473ff3323da072057e588?run=lr07df49235c6e1c78b9a0e793">Done</a></td><td></td></tr><tr><td>diagnose</td><td>23/11/2026, 22:42:29</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0473fd3323da072057e555?run=lr66c42548a99a62b89e522c9f">Done</a></td><td>Stopped at named stage</td></tr><tr><td>triage</td><td>23/11/2026, 22:42:28</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0473fc3323da072057e52f?run=lr32835d40963efbaac65d74fd">Stopped</a></td><td></td></tr><tr><td>triage</td><td>23/11/2026, 22:33:46</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0471f23323da072057b94f?run=lre32d7e08e2017b524d5be724">Stopped</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 22:33:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0471f13323da072057b90f?run=lrd2a11521943537b31086a56b">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 22:33:43</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0471ef3323da072057b8e6?run=lr455465c87d6848d5f5264ab5">Done</a></td><td>Stopped at named stage</td></tr><tr><td>develop</td><td>23/11/2026, 22:23:52</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046fa03323da07205793fb?run=lr189604753b3a030480632490">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 22:23:51</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046f9fd6f7e70b547cb4a5?run=lr3dbccd8829d9205c26a41663">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 22:23:49</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046f9e3323da0720579397?run=lr4b26ff8b7bc91b3d18f27e0c">Done</a></td><td>Stopped at named stage</td></tr><tr><td>triage</td><td>23/11/2026, 22:13:08</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046d1cd6f7e70b547c88ce?run=lr0f2474e652231adf5afebd58">Stopped</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 22:13:07</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046d1b684624561398dc4f?run=lr568372f511d916a77e1f6ae8">Done</a></td><td>Stopped at named stage</td></tr><tr><td>develop</td><td>23/11/2026, 22:13:06</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046d1a684624561398dc13?run=lr131942c9d8d899a0ae480dcc">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 22:05:41</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046b5dd6f7e70b547c75e2?run=lr7bf15edeab8a60f86514f5d5">Done</a></td><td></td></tr><tr><td>contracts</td><td>23/11/2026, 22:05:40</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046b5c684624561398b8ec?run=lr8d551a723bb0eb9160bb75ad">Done</a></td><td></td></tr><tr><td>diagnose</td><td>23/11/2026, 22:05:38</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046b5ad6f7e70b547c75cf?run=lr72cbf78ea12ad7252dbd5985">Done</a></td><td></td></tr><tr><td>import-promote</td><td>23/11/2026, 21:38:57</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0465196846245613985655?run=lr32707b1d88eabfab0e5eb7c0">Failed</a></td><td>Preflight failure</td></tr><tr><td>evaluate</td><td>23/11/2026, 21:38:27</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0464fb6846245613985303?run=lr58aee409aa101c6379923a8c">Done</a></td><td>Stopped at named stage</td></tr><tr><td>eval-review</td><td>23/11/2026, 21:38:26</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0464fa3323da0720566f2c?run=lrbd43ca9296f419cc654b0226">Done</a></td><td>Stopped at named stage</td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 21:29:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0462f068462456139818a7?run=lr4c4d208112b75419dc7ada27">Done</a></td><td></td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 21:29:42</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0462ee6846245613981869?run=lrf91e790e343441001a13bfe1">Done</a></td><td></td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 21:29:41</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0462ed684624561398184c?run=lrf286b1f0aa272ffaa9fe6c2c">Done</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 21:29:40</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0462ec6846245613981839?run=lrbf624f47aa608db870f21b9c">Done</a></td><td>Stopped at named stage</td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 21:29:39</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0462eb3323da072056395b?run=lr918307dd420a940c986d6101">Done</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 21:18:57</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0460693323da072055f1fe?run=lrdcf09f491878a4216531df78">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 21:18:56</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046068684624561397e5c6?run=lrea721e550dcea03b0fd87b23">Done</a></td><td>Stopped at named stage</td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 21:18:55</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046067684624561397e5b7?run=lrc93ab9c8002ff8e95330cf01">Done</a></td><td>Stopped at named stage</td></tr><tr><td>nightly</td><td>23/11/2026, 20:42:21</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0457d53323da0720532844?run=lrf62160c96322743c85e68ce8">Stopped</a></td><td></td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 20:36:25</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0456713323da072052c047?run=lr8f8751801f18e04acd192389">Done</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 20:36:23</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04566f3323da072052bfee?run=lr988ba50f0c9978ac1641e51e">Done</a></td><td></td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 20:25:52</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0453f83323da07205265a6?run=lr9d3ad0280051707d27c3c1e0">Done</a></td><td></td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 20:25:51</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0453f73323da0720526563?run=lr4be22f0e970c164cfb9e0a35">Done</a></td><td></td></tr><tr><td>import-promote</td><td>23/11/2026, 20:21:17</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0452e53323da0720524c25?run=lrb9ce4dc32e7d5acddc32a63b">Done</a></td><td>Stopped at named stage</td></tr><tr><td>nightly</td><td>23/11/2026, 20:21:16</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0452e43323da0720524bfa?run=lr051041c2be3d5bf8ee57d81b">Stopped</a></td><td></td></tr><tr><td>diagnose</td><td>23/11/2026, 20:08:12</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044fd43323da07205204b1?run=lra64e032536b3d1ebcb2fae4e">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 20:06:42</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044f7a3323da072051fa76?run=lr5b998b1cf79e006e55930046">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 19:58:47</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044d9f3323da072051d4ef?run=lr1f064f5e054942109385476f">Done</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 19:58:46</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044d9e3323da072051d4cb?run=lr292e01e90dd471b950414330">Done</a></td><td></td></tr><tr><td>contracts</td><td>23/11/2026, 19:48:21</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b2d3323da0720519dd4?run=lr8bdd4e8312819ef9a062464d">Failed</a></td><td>Preflight failure</td></tr><tr><td>contracts</td><td>23/11/2026, 19:48:19</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b2b3323da0720519d8f?run=lrb94a240a63eb9c952cc57c9d">Failed</a></td><td>Preflight failure</td></tr><tr><td>diagnose</td><td>23/11/2026, 19:48:18</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b2a3323da0720519d73?run=lr0b1720ec9c630dbad5d5caae">Failed</a></td><td>Preflight failure</td></tr><tr><td>diagnose</td><td>23/11/2026, 19:48:18</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b2a3323da0720519d4e?run=lrc4daa51ccb13b1af2090d659">Failed</a></td><td>Preflight failure</td></tr><tr><td>triage</td><td>23/11/2026, 19:48:16</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b283323da0720519d21?run=lr445e1382fdadcb6a8a5b4765">Failed</a></td><td>Preflight failure</td></tr><tr><td>triage</td><td>23/11/2026, 19:48:15</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b273323da0720519cd8?run=lrbd0be04b2b090d3e3624433e">Failed</a></td><td>Preflight failure</td></tr><tr><td>triage</td><td>23/11/2026, 19:48:14</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b263323da0720519c9f?run=lr7d5a0aa96a375a6f1a6f1ad9">Failed</a></td><td>Preflight failure</td></tr><tr><td>atlas</td><td>23/11/2026, 19:48:13</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b253323da0720519c75?run=lr52c106e94a25a49fd1271bea">Failed</a></td><td>Preflight failure</td></tr><tr><td>atlas</td><td>23/11/2026, 19:48:12</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b243323da0720519c4f?run=lr92820e8fe327d1998bfae012">Failed</a></td><td>Preflight failure</td></tr><tr><td>atlas</td><td>23/11/2026, 19:48:11</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b233323da0720519c2a?run=lr69c77b36e2162cfd0ba3a508">Failed</a></td><td>Preflight failure</td></tr><tr><td>develop</td><td>23/11/2026, 19:48:09</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b213323da0720519bf2?run=lr4afef6ee58d3d33b5bf90a27">Failed</a></td><td>Preflight failure</td></tr><tr><td>develop</td><td>23/11/2026, 19:48:07</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b1f3323da0720519bae?run=lrcabf09316d7dea069bd3583d">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:48:06</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b1e3323da0720519b82?run=lr7c07773e92a1e18deb76bad3">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:48:05</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b1d3323da0720519b5c?run=lr1743801bec37602e5ec8b68a">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:48:04</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b1c3323da0720519b2b?run=lr17ad94f54caaf24a0e7a885e">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 19:47:39</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b033323da072051991e?run=lrecbec58f7199292bf9fe0b19">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-audit-loop</td><td>23/11/2026, 19:47:38</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b023323da07205198ff?run=lr50acabc0fa7c78759cb01bfa">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 19:47:37</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b013323da07205198d6?run=lreca13e74b4ee096daf497db4">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 19:47:36</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044b003323da07205198ba?run=lr340afd498876768392570eb4">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 19:47:35</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044aff3323da072051989e?run=lr17b921bf0e751793428faf2b">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 19:47:34</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044afe3323da072051984e?run=lr324b90706cf38a11899d7388">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 19:47:33</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044afd3323da072051980d?run=lrc0d00b8ab7b62d3fb470a050">Failed</a></td><td>Preflight failure</td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 19:47:32</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044afc3323da07205197eb?run=lrbec24a9120ff048d5d2cae35">Done</a></td><td></td></tr><tr><td>voice-agent-build-loop</td><td>23/11/2026, 19:47:31</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044afb3323da07205197bf?run=lr28a02493f76250e8494d9a3f">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:18:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044446ea8d6518afc08e9e?run=lrd34b6259b88c5bfe95205b05">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:18:28</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04442cea8d6518afc08d90?run=lr6d74e456a6b3fdf094d02841">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:18:14</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04441e0ef1662ec7919dab?run=lr0da7f2d31a6605ef735dc324">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:18:07</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0444170ef1662ec7919ce8?run=lrce83534e2de40cff03b34e87">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:17:57</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04440d6846245613963e77?run=lrb4df0e1f48fed87d9e672832">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:17:57</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04440d0ef1662ec7919be9?run=lr518b81c2951c1a5c3e3a6666">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:17:57</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04440dea8d6518afc08ba3?run=lr34c867ced7724c25f3901295">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 19:17:51</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044407ea8d6518afc08b20?run=lr90b6c9b6957d9453343f8389">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 19:17:42</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0443feea8d6518afc08a54?run=lr87e6aab629a566fd71f9c641">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:17:42</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0443feea8d6518afc08a51?run=lr31b605733c0fec64b07cc04a">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:16:55</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0443cf68462456139635af?run=lr4b1c5e7f9773934de3113a70">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:15:23</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044373d862a62c0ec4304c?run=lr9b94f729e8a2715187e1a344">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:13:42</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04430eea8d6518afc07857?run=lr9163f5f05353cb1942e0fc38">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:09:34</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0442160ef1662ec7917587?run=lr296e1524cb13d28638685c3c">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:09:29</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044211ea8d6518afc06e16?run=lrfad4b03fa3194693ed39c003">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:09:28</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b044210ea8d6518afc06dff?run=lr98c69f4e30473f3cedb10278">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 19:08:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441ee0ef1662ec791738d?run=lr3abc2b33fac0b496cdf9a163">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:08:47</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441e7ea8d6518afc06c46?run=lrd81dc989ef2443e4c847bfe7">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:08:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441e4ea8d6518afc06ba1?run=lrcb30e1e014f84719bbf008b3">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:08:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441e4ea8d6518afc06b9e?run=lra4b60a7ca8ec2492b22bf4ce">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:08:43</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441e36846245613961558?run=lr2b72bcd2ab063bb3ac596337">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:08:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441d60ef1662ec79172b4?run=lr0d78020513599602016a7820">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 19:08:29</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441d50ef1662ec7917293?run=lreb0bec6e52cd9edd9473da7a">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 19:07:43</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441a70ef1662ec7917016?run=lrb8ee2f83dee8dc002be35e91">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 19:07:41</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0441a50ef1662ec7916fdd?run=lr763b8ee2187f49724aafb352">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 19:06:59</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04417b0ef1662ec7916bcb?run=lrd298d90e1530c31e99924f81">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 19:03:42</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0440b6ea8d6518afc05dc7?run=lrd41b184c419328768b77f823">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:02:15</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04405f0ef1662ec791520a?run=lr4c0ba18f2ba90e6d3118b8f3">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 19:02:09</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0440590ef1662ec7915124?run=lr004930aebdd030db7c18ec62">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:57</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f99ea8d6518afc052d5?run=lr1604a6cb37936212d6f247fe">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f96ea8d6518afc052b4?run=lr9f3bd80cb4b8122b1b0a275f">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:49</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f910ef1662ec7913ca9?run=lr4bf69a5ab6c7f6a99ba5c15b">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:41</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f89684624561395ee96?run=lr48e966a8c9530e9267c7f24c">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:36</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f84ea8d6518afc051ee?run=lre4683cd0b92c111e37bf3e4f">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f7eea8d6518afc05194?run=lr0dbc5fc516b556a20dc43ebc">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:29</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f7dea8d6518afc0516a?run=lr4d944aea6d053ce6a51922b1">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:58:09</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f690ef1662ec79138b2?run=lr02c0af70c9a13dc12803b56c">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:57:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043f5a0ef1662ec791372b?run=lrc1292bf749500fafff2320d4">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:56:18</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043efa0ef1662ec791292a?run=lr927dbadaf94b1f1e2b10764c">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:53:40</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043e5cea8d6518afc03e86?run=lr722860e3062324d78a03931f">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:47:27</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043ce7684624561395c458?run=lr2e93a802f980030d716ebb44">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:42:17</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043bb13323da0720505447?run=lr68e37347e7e2b08dc6157de1">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:42:02</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043ba23323da0720505233?run=lrac735b0ced656db4baae4b87">Failed</a></td><td>Preflight failure</td></tr><tr><td>eval-review</td><td>23/11/2026, 18:41:51</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b973323da0720505138?run=lra0cf35bd07f6f5f1fdf3a3d7">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959f46?run=lrc7df797673da7a1f3ff269a1">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959f3a?run=lr99abe90a29bd89c5fafed730">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959f2e?run=lr0a9e3cc43f4de86d9fd9491d">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959f28?run=lr8c58823f4fbffffab44f6b08">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959eeb?run=lrce3d729c368f48f0ffec5881">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959ee0?run=lra2fc486a348be2ea19727071">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959ed6?run=lr2f9038940fa6a06aea89435c">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959ecf?run=lrb3f44196d84228d154c20625">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959ecc?run=lr41fef455cd18e02aa46c506e">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959ec7?run=lr386789813f57351e6612b6a9">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b826846245613959ec6?run=lr6143ecce37710b12b82d2f6a">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:41:16</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043b743323da0720504c73?run=lr9e2d40c061454be14fb87cf0">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:36:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043a8468462456139582fc?run=lr18db7a2415357a02e655fb9a">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:32:21</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04395d3323da072050005b?run=lr35f527945df8a979ef7321dc">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:31:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439423323da07204ffdf9?run=lr600498be523ca2b52e3ca165">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:52</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439403323da07204ffd81?run=lr8d2d274a8aded903c3ab7421">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:34</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04392e3323da07204ffbd6?run=lrb2be593b8f6b59ac509ebc97">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:31:29</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043929684624561395609b?run=lr58aa1edd6260d9378292570e">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:26</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043926684624561395603a?run=lr2f5de07117ae4f3c1c6f952e">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:22</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439223323da07204ffa53?run=lr59991acfe7a5f075914f563d">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:31:19</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04391f6846245613955f66?run=lrc3c4ba9527939186d8dbd8a2">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:15</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04391c6846245613955f12?run=lrd846c352b1cd794d9978b16f">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:12</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439186846245613955e82?run=lraffa657382d2e2d7309871dd">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:09</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439153323da07204ff8dc?run=lr276e077bbad8538ee6fa0f44">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:06</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439123323da07204ff873?run=lrb2743e495506ee0b7e6caffe">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 18:31:02</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04390e6846245613955d9d?run=lr86651361e602eb80d9da0afe">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:30:59</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04390b3323da07204ff7d5?run=lr243750150aa4606ec39aac12">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 18:30:56</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439086846245613955cf3?run=lrbbe2344027cea0b73a2fb506">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:30:52</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0439046846245613955c88?run=lr0384349635c2f706d0cd0b2c">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:30:29</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0438ed3323da07204ff327?run=lrfe3a2ab197852deb00adef71">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:30:15</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0438df6846245613955903?run=lra49e0db1c9e3624ad9825d86">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 18:29:27</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0438af3323da07204feb61?run=lr7108f37033d66dd94a7f6738">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 18:27:46</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04384ad6f7e70b547adfc8?run=lr5147bcc9740e1b95f8e473ba">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 17:58:24</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0431686846245613940365?run=lr4adaad830b75e30c5021dc84">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 17:56:56</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043110d6f7e70b547a4a17?run=lrce3229941fb20d9cf56f3947">Done</a></td><td></td></tr><tr><td>voice-agent-review-loop</td><td>23/11/2026, 17:55:17</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04305bd6f7e70b547a2497?run=lre2dd91be83c5714efe90ce48">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 17:49:36</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b042f58d6f7e70b54798cee?run=lr795dd71578c7a393593413f6">Failed</a></td><td></td></tr><tr><td>guidance</td><td>23/11/2026, 17:42:55</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b042dc80976c52b28d82fed?run=lrf802418823b73fb2710256a9">Done</a></td><td>Stopped at named stage</td></tr><tr><td>patterns</td><td>23/11/2026, 17:34:04</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b042bb50976c52b28d723f2?run=lr74b738c7692d684c463c46e6">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 17:24:26</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0429720976c52b28d6a341?run=lr1f7c19f2d9b3982784a3e8f9">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 17:17:17</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0427c5d3c6d231aa16ed3e?run=lr6951af5a83068dd476e6eee5">Done</a></td><td></td></tr><tr><td>evaluate</td><td>23/11/2026, 17:08:47</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0425c718c8827da8aaaa80?run=lr287e50379bce5e49caf0a036">Stopped</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:58:38</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04236818c8827da8a9e087?run=lr4966b0e668414615ba71c827">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 16:50:02</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04214408ce23238f77f85e?run=lrf0457349660534123343a0f8">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:41:10</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f5118c8827da8a764b7?run=lr174a79954f294fb557e8ca2e">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:40:41</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f3318c8827da8a74f08?run=lrea54cbf732cb2a0bda7b788d">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:40:18</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f1a18c8827da8a7472f?run=lr898d278820155aa99b72ffac">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:35:19</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041def18c8827da8a6ccf2?run=lrdb1019b5d0d5406c46c42d70">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 16:33:49</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041d9518c8827da8a6b684?run=lreeace8e8ddc2027a8d66ca5e">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:33:43</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041d8f18c8827da8a6b4f4?run=lr45d420e50c616eb917a97ed4">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:30:52</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041ce418c8827da8a69254?run=lr204769760c45441ecc078ceb">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:29:02</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041c7b18c8827da8a67e6e?run=lr50222e5a6f779997e871661b">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:27:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041c2818c8827da8a66f22?run=lr6ab05239c5b3f8239ebd4527">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:24:23</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041b5f18c8827da8a64d23?run=lrebe5806b50e3576253585ef4">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:19:41</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041a4518c8827da8a61814?run=lr045d59780c7e78ef8427d794">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:16:43</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04199318c8827da8a5f6d7?run=lr760497801352d26228e4d836">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:15:15</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04193b18c8827da8a5e0ff?run=lrc891c4f05974e7ea27b311a8">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:07:04</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04175018c8827da8a482e3?run=lrd56968baaa6d755ddbc6f623">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 16:06:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04174718c8827da8a47e2a?run=lr37bff2775cecad7fea7c2736">Done</a></td><td>Stopped at named stage</td></tr><tr><td>pr</td><td>23/11/2026, 16:06:50</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04174218c8827da8a47ad5?run=lr263087b19a571b8c98c6d763">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 16:05:31</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0416f418c8827da8a44838?run=lr8c56b18b5739e003542f4346">Done</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 15:49:55</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134c18c8827da8a26229?run=lr6b2e6726025f22ce8ea09cb1">Failed</a></td><td>Preflight failure</td></tr><tr><td>pr</td><td>23/11/2026, 15:49:53</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134918c8827da8a2618e?run=lr9fecba4f52e0ecb583633f58">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 15:49:51</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134718c8827da8a260e9?run=lrdcd24fb83c4fc8fc13a263c3">Failed</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:39:50</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0410ee18c8827da8a1b072?run=lra22210cd681298cb62b56fa0">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:39:21</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0410d118c8827da8a1a7af?run=lr7f533c5b020e3a467d42ae5a">Waiting on you</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:39:13</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0410c918c8827da8a1a60d?run=lr1a53c7d7b312dbc53b891730">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 15:34:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040fc718c8827da8a163fe?run=lr8bc73d891ec173ca59183d5a">Done</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:34:48</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040fc018c8827da8a16267?run=lr4b5901dc66d64d4f0287fa0e">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 15:30:49</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ed218c8827da8a12838?run=lrad43f0257f340c68e6bab096">Failed</a></td><td></td></tr><tr><td>pr</td><td>23/11/2026, 15:30:35</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ec418c8827da8a12484?run=lrf2066223c955bade72fcf3db">Done</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:25:07</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040d7b18c8827da8a0c429?run=lrc997ab6f4d62adb8c5bcdd14">Waiting on you</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:21:29</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ca218c8827da8a08979?run=lr10e2b4f485901d0bce9400bf">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:21:09</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c8d18c8827da8a084d7?run=lrc990bc30ec98d42dceb54df8">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:20:36</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c6d18c8827da8a07d08?run=lr2792e000b65eb723bb3f6bd9">Failed</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:20:12</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c5418c8827da8a07955?run=lreb1e91a108553b55bf6a3bd1">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:54</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c0718c8827da8a06977?run=lr0c2fa515d3e9ecc06397afaf">Waiting on you</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:37</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bf618c8827da8a0654f?run=lr9a1bd1ad20dd2fbe9aad3d65">Waiting on you</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:34</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bf218c8827da8a06469?run=lr0506f4b7388e8a71caa753e6">Stopped</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:30</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bee18c8827da8a0630d?run=lreb64fb23357e09d59de70c22">Waiting on you</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:26</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040beb18c8827da8a061c0?run=lr620035d09995df00d4ab1e00">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:22</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040be718c8827da8a06087?run=lre1a58388552fbb557329f88b">Waiting on you</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:18</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040be218c8827da8a05f0b?run=lrf4bb428cc8c1e045aebf095d">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:18:10</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bda18c8827da8a05ca8?run=lr75ebd07e9c26bf15884a01a3">Waiting on you</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:17:49</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bc518c8827da8a05828?run=lr6c7ff0fe9ac47d9e7fb033be">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:15:56</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b5418c8827da8a03f57?run=lrce0d3eff233e52aeb68c7a97">Done</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:15:50</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b4e18c8827da8a03df3?run=lr43b1a4a38e0907a14b957d7b">Done</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:15:44</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b4818c8827da8a03c94?run=lr59c6be74e107d5a48eda1c17">Failed</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:15:32</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b3d18c8827da8a03a98?run=lr08ff08beb613c9eeb5222a06">Done</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:15:11</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b2718c8827da8a03619?run=lr0551e27bf43eeeb1a302858b">Failed</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:14:40</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b0818c8827da8a02f89?run=lr86329e955d23396eaac01a8c">Failed</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:14:18</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040af218c8827da8a029a8?run=lrebe2e1446ae9291800840618">Done</a></td><td></td></tr><tr><td>atlas</td><td>23/11/2026, 15:14:00</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ae018c8827da8a026af?run=lrf2638cb80e4b1094456aff40">Done</a></td><td>Stopped at named stage</td></tr><tr><td>atlas</td><td>23/11/2026, 15:12:53</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040a9d18c8827da8a01a2d?run=lraee8494bfe5ce2fe4678e328">Failed</a></td><td></td></tr><tr><td>eval-corpus</td><td>23/11/2026, 15:08:50</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0409aa18c8827da89ffe9d?run=lr3d1770f6e2509ff5a1ce8ad3">Done</a></td><td>Stopped at named stage</td></tr><tr><td>diagnose</td><td>23/11/2026, 15:05:12</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0408d018c8827da89feb31?run=lr1038b636b27d90c4e2ccd83e">Done</a></td><td></td></tr><tr><td>diagnose</td><td>23/11/2026, 15:03:34</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04086e18c8827da89fe181?run=lr2e9df891ee2856d6a77c5952">Done</a></td><td></td></tr><tr><td>diagnose</td><td>23/11/2026, 15:03:34</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04086e18c8827da89fe16e?run=lr6cb414de55a510713755c994">Done</a></td><td></td></tr><tr><td>patterns</td><td>23/11/2026, 14:58:08</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040728d3c6d231aa15ea11?run=lr17035df8c47b6d99dbb5b2bf">Done</a></td><td>Stopped at named stage</td></tr><tr><td>guidance</td><td>23/11/2026, 14:58:07</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040727d3c6d231aa15e9f0?run=lr211bd4108c45426d97210527">Done</a></td><td></td></tr><tr><td>reconcile</td><td>23/11/2026, 14:58:06</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040726d3c6d231aa15e9da?run=lr3efa923cbc48b07ecbcca69a">Done</a></td><td></td></tr><tr><td>compare</td><td>23/11/2026, 14:58:05</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040725d3c6d231aa15e9c4?run=lrde3399ed7c8169e7ef52c5dc">Done</a></td><td></td></tr></tbody></table></div></details>
+<!-- planloft-render:controls:end -->
+<main>
+
+<header>
+  <p class="meta">AI Factory QA · 24 November 2026 IST</p>
+  <h1>Workflow Agent delivery in AI Factory</h1>
+  <p class="lede">AI Factory helped re-raise work for <strong>30 of 31 tickets (96.8%)</strong>. Across the cumulative ledger of PRs linked to Factory runs, <strong>11 of 38 merged</strong>, including one newly recorded merge.</p>
+</header>
+
+<nav aria-label="Contents" class="flow-nav">
+  <a href="#oracle">Oracle scenario</a>
+  <a href="#replacement">Replacement campaign (31 tickets)</a>
+  <a href="#delivery">Strict run-linked delivery (38 PRs)</a>
+  <a href="#history">Runtime &amp; retest snapshot</a>
+</nav>
+
+<section id="oracle" class="oracle" aria-labelledby="oracle-heading">
+  <p class="meta">Oracle · Path to 90% merged coverage</p>
+  <div class="oracle-grid">
+    <div>
+      <p class="hero-stat">96.8%</p>
+      <p class="hero-sub">30 of 31 tickets re-raised with Factory assistance</p>
+    </div>
+    <div>
+      <h2 id="oracle-heading">Re-raises cleared 90%. Merges need 28 more tickets.</h2>
+      <p>The 90% milestone is <strong>28 of 31 tickets (90.3%)</strong>. Re-raises already exceed it by two tickets. The single held ticket (<a href="https://atlas.unifyapps.com/issue/TTS-2875/details">TTS-2875</a>) would bring re-raise coverage to 31/31 if eligible. Merge-through coverage currently sits at <strong>0/31</strong>, leaving an exact gap of <strong>28 tickets</strong> whose replacement PR(s) must merge to clear the same 90% bar.</p>
+    </div>
+  </div>
+
+  <div class="threshold-viz" role="img" aria-label="Comparison of 31-ticket cohort against 90% threshold (28 of 31 tickets): 30 of 31 re-raised (96.8%) versus 0 of 31 merged through (0%).">
+    <div class="viz-row">
+      <span>Re-raise coverage</span>
+      <span class="viz-track">
+        <span class="viz-fill reraise" style="width:96.77%"></span>
+        <span class="viz-mark" title="90% threshold: 28/31 (90.3%)"></span>
+      </span>
+      <strong>30/31 (96.8%)</strong>
+    </div>
+    <div class="viz-row">
+      <span>Merge-through</span>
+      <span class="viz-track">
+        <span class="viz-fill merge" style="width:0%"></span>
+        <span class="viz-mark" title="90% threshold: 28/31 (90.3%)"></span>
+      </span>
+      <strong>0/31 (0.0%)</strong>
+    </div>
+    <div class="viz-legend">
+      <span><span class="swatch" style="background:var(--planloft-chart-3)"></span>Factory-assisted replacement open (30/31)</span>
+      <span><span class="swatch" style="background:var(--planloft-chart-2)"></span>Replacement merged (0/31; gap = 28 tickets)</span>
+      <span><span class="swatch" style="background:var(--planloft-ink)"></span>90% threshold = 28/31 (90.3%)</span>
+    </div>
+  </div>
+
+  <p class="note">The Oracle measures this 31-ticket campaign. Organization-wide adoption remains unmeasured because the total volume of eligible work is unknown.</p>
 </section>
-<section id="merges"><h2>PR merges</h2><p>The ledger counts PRs opened by a specific Factory run, based on the PR footer or a directly attributable creation receipt. Tracked run-linked PRs are <strong>11 merged, 16 open and 11 closed without merge</strong>. A merge records delivery to its target branch.</p>
-<div class="wrap"><table><thead><tr><th scope="col">PR</th><th scope="col">What changed</th><th scope="col">GitHub readback</th></tr></thead><tbody><tr><td><a href="https://github.com/unify-apps/www/pull/36401">www #36401</a></td><td>Develop opened a focused automation save fix.</td><td>Merged · run-linked</td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36589">www #36589</a></td><td>The PR footer attributes creation of the connection-selection fix to the Atlas run.</td><td>Open · run-linked</td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36598">www #36598</a></td><td>The PR footer attributes creation to a run that requested advisory review only.</td><td>Open · scope violation</td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36523">www #36523</a> · <a href="https://github.com/unify-apps/uacode/pull/64991">uacode #64991</a></td><td>Atlas inline-comment acquisition and a Voice SIP UAT carry. Both carry a Factory marker without a run joined in this ledger.</td><td>Merged · outside run-linked count</td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/64645">uacode #64645</a></td><td>Asset sync companion merged to uat and was previously verified in a Factory chat.</td><td>Merged · outside run-linked count</td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36500">www #36500</a> · <a href="https://github.com/unify-apps/www/pull/36497">www #36497</a></td><td>Entity import and Orbit nightly.</td><td>Merged · supporting changes</td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36536">www #36536</a> · <a href="https://github.com/unify-apps/www/pull/36377">www #36377</a></td><td>QA Git origin handling merged into the feature branch for #36377.</td><td>Feature branch only · parent PR open</td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/64356">uacode #64356</a> · <a href="https://github.com/unify-apps/uacode/pull/64884">uacode #64884</a></td><td>Workflow Agent message/tool limits and Factory runtime/workspace fixes.</td><td>Merged · supporting changes</td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/62944">uacode #62944</a> · <a href="https://github.com/unify-apps/uacode/pull/65168">uacode #65168</a> · <a href="https://github.com/unify-apps/uacode/pull/65167">uacode #65167</a></td><td>Voice SIP, LiveKit audio output and session-start MCP failure reporting.</td><td>Merged · supporting changes</td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/64861">uacode #64861</a></td><td>Main Sync draft.</td><td>Open · no new run in the audit window</td></tr></tbody></table></div>
-<details><summary>Complete run-linked PR ledger</summary><div class="wrap"><table><thead><tr><th scope="col">PR</th><th scope="col">State</th><th scope="col">Run</th></tr></thead><tbody><tr><td><a href="https://github.com/unify-apps/www/pull/35377">www #35377</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af56323631cca5de53145a2?run=lr6bf75ca9b736706279eb848a">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36328">www #36328</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b005a3ebfc3a7322c8feb58?run=lr8338ba53d52baaebbf59acc3">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36326">www #36326</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b005850bfc3a7322c8fd177?run=lr980eea4925fb745ace8ee96f">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36316">www #36316</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b00582ecaab920b04dea96a?run=lra111c6c394cfdbeb6f0a582f">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36322">www #36322</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b00580ccaab920b04dea808?run=lraeaa8004a8018fab4b20fbbf">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36314">www #36314</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057ffcaab920b04dea76d?run=lr9a9e8b6bb6a7b7a626c7a0ca">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36323">www #36323</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057f6bfc3a7322c8fcda0?run=lr751ddeaa76d9216c7935253b">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36320">www #36320</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057a6caab920b04dea2d2?run=lr870f69945382bf3a1aa4a7d9">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/34384">www #34384</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6ae5be1386a6b62c73ce22ed?run=lr8c97d5f9538c9471674ff5b6">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35757">www #35757</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af9b2fe830b445983ae94eb?run=lr9ac5cbd742f0319f68331504">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35480">www #35480</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af68e2c23c730631098ab44?run=lrdeba33c6014832fead550c14">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35415">www #35415</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af5e05b19ed8f37b01f3046?run=lrcd504dd6c146c68ffef961c8">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/33737">www #33737</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adf462dccbbd30244e88e5e?run=lr087ef25230bb28884a9b096d">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36401">www #36401</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0187cc695aa3077898e988?run=lr521d033a2f77e63f8c88a61d">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/63729">uacode #63729</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6afe8af474df516ba0675458?run=lr44cc26549780bafcd49188e1">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35928">www #35928</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6afb223a6eb88d550878384b?run=lrd481ff9284129d041ce05e47">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35924">www #35924</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6afb25baa7e5fe4ad4245606?run=lrb470b58bc6aba01fd0e2704d">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/62123">uacode #62123</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af94e2f25a4e324ebf8aff1?run=lrc4b75488c61b1e3161fc086e">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35703">www #35703</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af94977b46492614c4b71cc?run=lr1bbe71442caa419aa7bd8263">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/61736">uacode #61736</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af730dfdfe456029cddecf5?run=lr6cee9b38f9ca9b86cda4133d">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35478">www #35478</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af68b8423c730631096fc62?run=lrc659a0d93f46752bd297fa60">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/34991">www #34991</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed975017b88d59a91164c8?run=lr61a7079ed8d7363c42977c58">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/34988">www #34988</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed890a1fbbdf22b6fe9bdf?run=lr0d90e323b817441c796b30f1">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/34982">www #34982</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed7b031fbbdf22b6fe89f8?run=lr182e69c2e53e4f55d7403658">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/34807">www #34807</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aeb2cb0aad08654ab058c6a?run=lr7b01b021f3ec243bdaf53dc4">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/33675">www #33675</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adec39ef300a874a417437f?run=lr03a6511423c4c4cfeb3242e5">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/33676">www #33676</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adeca46bccbcd04875bda52?run=lr2244355f6113a3bfc4b4b7cb">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35076">www #35076</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af2ae81f9650f52d2a0a605?run=lr163da42eb6202085786b0e23">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35200">www #35200</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed7b021fbbdf22b6fe8985?run=lrb513e2512c48918cb5554720">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/33763">www #33763</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adf6fbcccbbd30244f6a40c?run=lrafce07f798e43bfbe703b66b">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/35188">www #35188</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af37686f6dc7d19327d0907?run=lr8b2389bd9619a9f340665010">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36453">www #36453</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b032fc74b0fe237d4b4898e?run=lrb50e484236e92e61e6975b98">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36324">www #36324</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057dcbfc3a7322c8fcc90?run=lra065ae3f07fe7ee211be6086">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/uacode/pull/64861">uacode #64861</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03409718c8827da87eaa34?run=lr5d6777e3f8d7a5c4c87cbddd">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36589">www #36589</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0544141612f266ace2a4d0?run=lrb7adbd571f276e9460c726ad&amp;messageId=2cfb7fea-9175-4a42-9848-42c65ae7dd1e">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36598">www #36598</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0556785117aa3564d2cd9e?run=lrefbfad350e35aa5a7fa7caab&amp;messageId=b65c4c30-b07d-4cdb-950e-5773a343c1b7">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0431686846245613940365?run=lr4adaad830b75e30c5021dc84">Factory run</a></td></tr><tr><td><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041b5f18c8827da8a64d23?run=lrebe5806b50e3576253585ef4">Factory run</a></td></tr></tbody></table></div></details></section>
-<section id="retests"><h2>Fix status</h2><p>Atlas status, source merges and runtime observations are separate. Neither follow-up run had finished at readback. Both started after the history snapshot and are outside the 224-run count.</p><div class="wrap"><table><thead><tr><th scope="col">Ticket</th><th scope="col">Status</th><th scope="col">Observed result</th><th scope="col">Evidence</th></tr></thead><tbody><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1515/details">AF-1515</a></td><td>Done</td><td>Earlier runs reached Trace and returned contract evidence. One report-only run also made a local code commit. Fresh canary: passed preflight and Inventory, and reached Trace. The Trace outcome was pending at readback.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b046b5c684624561398b8ec?run=lr8d551a723bb0eb9160bb75ad&amp;messageId=6a597643-763c-437c-b733-5b2b590a7599">Earlier Trace receipt</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b05660821997f6c685a72d2?run=lrdd6dbdc1bf8997b55e2ece55">Targeted rerun</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-752/details">AF-752</a></td><td>Done</td><td>Historic capacity incident. The original work had already completed in another run. The audit did not induce quota saturation.</td><td><a href="https://atlas.unifyapps.com/issue/AF-752/details">AF-752</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1547/details">AF-1547</a>, <a href="https://atlas.unifyapps.com/issue/AF-1548/details">AF-1548</a>, <a href="https://atlas.unifyapps.com/issue/AF-1549/details">AF-1549</a></td><td>Dev Todo · In QA · In QA</td><td>Three source PRs merged. Queue comparison returned six known findings. The exact merged-revision check for the docs command and queue-item resolution: the Factory docs check returned exit 0 for 28 docs and 40 queue entries. Local readback at 557eab86042b5a5840aacc8388343fe89ed17b7e showed all three merge commits and queue item 5 in the resolved list. All 14 ledger tests at that source revision passed. The QA run reached Compare and remained open.</td><td><a href="https://github.com/unify-apps/www/pull/36561">www #36561</a> · <a href="https://github.com/unify-apps/www/pull/36562">www #36562</a> · <a href="https://github.com/unify-apps/www/pull/36563">www #36563</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b05674021997f6c685aa3eb?run=lr62ccc486cf34ec2e139bfa0b">Post-merge rerun</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/TTS-4555/details">TTS-4555</a>, <a href="https://atlas.unifyapps.com/issue/TTS-4557/details">TTS-4557</a>, <a href="https://atlas.unifyapps.com/issue/TTS-4558/details">TTS-4558</a></td><td>In QA</td><td>The source guard merged. The PR explicitly says it did not update the saved QA definitions. An advisory run after the source merge opened #36598, reproducing TTS-4555 in QA.</td><td><a href="https://github.com/unify-apps/www/pull/36564">www #36564</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0556785117aa3564d2cd9e?run=lrefbfad350e35aa5a7fa7caab&amp;messageId=b65c4c30-b07d-4cdb-950e-5773a343c1b7">Advisory run</a> · <a href="https://github.com/unify-apps/www/pull/36598">www #36598</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1486/details">AF-1486</a></td><td>In QA</td><td>The merged change scopes how the Atlas maintenance skill reads inline comments. The audit found no end-to-end Atlas follow-up receipt for the new path.</td><td><a href="https://github.com/unify-apps/www/pull/36523">www #36523</a></td></tr><tr><td><a href="https://atlas.unifyapps.com/issue/AF-1485/details">AF-1485</a> · <a href="https://atlas.unifyapps.com/issue/AF-1496/details">AF-1496</a></td><td>In Dev · QA Rejected</td><td>The failure burst subsided in the measured window. Atlas still showed both tickets open.</td><td><a href="https://atlas.unifyapps.com/issue/AF-1485/details">AF-1485</a> · <a href="https://atlas.unifyapps.com/issue/AF-1496/details">AF-1496</a></td></tr></tbody></table></div></section>
-<section id="sessions"><h2>Direct session readback</h2><p>Earlier direct sessions were read again and are outside the new loop-start counts. Read-only execution and workspace interruptions limited the artifacts they could return.</p><div class="wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">Outcome</th><th scope="col">Evidence</th></tr></thead><tbody><tr><td>Compiler fixture</td><td>Ended without a tested patch or fixture.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0402f8caf0c7710249be8e?messageId=5bb66636-57db-4e9c-b395-799c1a8e32a2">Compiler session</a></td></tr><tr><td>Clarification fixture</td><td>Script execution and expected/observed classifications were absent.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04035df1b4ec327283292c?messageId=bafda277-a6a0-476b-a928-72d2f89bad9e">Clarification session</a></td></tr><tr><td>Import archive fixture</td><td>Ended before an archive or reviewable diff was produced.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040377caf0c7710249c01a?messageId=f5cbd8eb-c6e0-435f-8f8d-ca0ed4bd0c11">Import session</a></td></tr><tr><td>Test authoring</td><td>Waiting on input. The session returned no offline-validated test cases.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04035d23c9163268cd7021?mode=chat&amp;messageId=0d5aca6a-0646-4b90-87e2-9575f9bc6a40">Authoring session</a></td></tr><tr><td>Live Orbit retrospective</td><td>No authenticated in-window trace or saved/deployed readback. The named Nightly retry also stopped before delivering historical analysis.</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0402f84c3bc86cac69206a?messageId=35f7f373-58aa-436e-9535-8e132933e81b">Direct Orbit session</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0457d53323da0720532844?run=lrf62160c96322743c85e68ce8&amp;messageId=716744e4-3f9c-4817-bc29-28cfa4bf2623">Nightly retry</a></td></tr></tbody></table></div></section>
-</main></body></html>
+
+<section id="replacement" aria-labelledby="replacement-heading">
+  <p class="meta">Audited Replacement Cohort</p>
+  <h2 id="replacement-heading">Replacement PRs opened for 30 of 31 tickets</h2>
+  <p>Across the audited 31-ticket list, <strong>30 tickets</strong> now have <strong>31 open replacement PRs</strong> on current GitHub readback (<a href="https://atlas.unifyapps.com/issue/TTS-3132/details">TTS-3132</a> spans two replacement PRs, <a href="https://github.com/unify-apps/uacode/pull/65094">uacode #65094</a> and <a href="https://github.com/unify-apps/www/pull/36522">www #36522</a>). One ticket, <a href="https://atlas.unifyapps.com/issue/TTS-2875/details">TTS-2875</a>, has no replacement and is held pending the searchable-fields decision.</p>
+
+  <div class="kpi-strip" aria-label="Distinct evidence layers for the 31-ticket cohort">
+    <div class="kpi-item">
+      <span class="kpi-val">31 / 31</span>
+      <span class="kpi-lbl">Replacement PRs with Factory review/repair</span>
+    </div>
+    <div class="kpi-item">
+      <span class="kpi-val">10 / 31</span>
+      <span class="kpi-lbl">PR bodies with Factory-origin marker</span>
+    </div>
+    <div class="kpi-item">
+      <span class="kpi-val">0 / 31</span>
+      <span class="kpi-lbl">Originals verified closed</span>
+    </div>
+    <div class="kpi-item">
+      <span class="kpi-val">0 / 31</span>
+      <span class="kpi-lbl">Replacement PRs merged</span>
+    </div>
+  </div>
+
+  <p><strong>Evidence boundaries kept separate:</strong> The campaign records Factory review or repair submitted/accepted for all 31 replacements, which establishes Factory-assisted execution—not a Factory-only implementation or completed review in every case (some fixes moved to isolated checkouts after hosted stops or workspace, permission, or provider failures). A Factory-origin PR body marker (10/31) is distinct from a proven creation receipt. All 31 original PRs in this exact mapping still read <strong>open</strong> on GitHub, including the held ticket, and a separate recent closed-author search found no matches; original closures were not verified in the matched cohort. Replacement merges remain <strong>0/31 PRs</strong> (0/30 replacement tickets fully merged), and merge remains distinct from QA activation or live acceptance.</p>
+
+  <h3>Review and CI evidence for three open PRs</h3>
+  <ul class="evidence-list">
+    <li><a href="https://github.com/unify-apps/nebula-plugin/pull/628">nebula-plugin #628</a> (<a href="https://atlas.unifyapps.com/issue/TTS-3136/details">TTS-3136</a>) — passed 7 checks and obtained a published-head Factory review.</li>
+    <li><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a> (<a href="https://atlas.unifyapps.com/issue/TTS-2915/details">TTS-2915</a>) — received a no-blocker published-head review and both required checks passed per campaign receipt.</li>
+    <li><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> (<a href="https://atlas.unifyapps.com/issue/TTS-2632/details">TTS-2632</a>) — passed 13 checks at the campaign handoff.</li>
+  </ul>
+
+  <details>
+    <summary>Anonymized 31-ticket old → replacement mapping (all 31 originals &amp; 31 replacements read open)</summary>
+    <p class="note">Links under <em>Factory activity</em> point to a selected attempt, task, or review run and are not presented as proof of successful PR creation.</p>
+    <div class="wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Ticket</th>
+            <th scope="col">Original PR</th>
+            <th scope="col">Replacement PR(s)</th>
+            <th scope="col">Factory activity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3289/details">TTS-3289</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34751">www #34751</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36479">www #36479</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040a9d18c8827da8a01a2d?run=lraee8494bfe5ce2fe4678e328">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ec418c8827da8a12484?run=lrf2066223c955bade72fcf3db">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3253/details">TTS-3253</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34644">www #34644</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36480">www #36480</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ae018c8827da8a026af?run=lrf2638cb80e4b1094456aff40">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ed218c8827da8a12838?run=lrad43f0257f340c68e6bab096">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3252/details">TTS-3252</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34642">www #34642</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36492">www #36492</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040af218c8827da8a029a8?run=lrebe2e1446ae9291800840618">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04174718c8827da8a47e2a?run=lr37bff2775cecad7fea7c2736">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3251/details">TTS-3251</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31885">www #31885</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36491">www #36491</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b0818c8827da8a02f89?run=lr86329e955d23396eaac01a8c">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04174218c8827da8a47ad5?run=lr263087b19a571b8c98c6d763">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3132/details">TTS-3132</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34350">www #34350</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/uacode/pull/65094">uacode #65094</a> <span class="tag">open</span> · <a href="https://github.com/unify-apps/www/pull/36522">www #36522</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b2718c8827da8a03619?run=lr0551e27bf43eeeb1a302858b">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b043110d6f7e70b547a4a17?run=lrce3229941fb20d9cf56f3947">Run 2</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0438df6846245613955903?run=lra49e0db1c9e3624ad9825d86">Run 3</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3131/details">TTS-3131</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34539">www #34539</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36486">www #36486</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b3d18c8827da8a03a98?run=lr08ff08beb613c9eeb5222a06">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134918c8827da8a2618e">Task 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3129/details">TTS-3129</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34348">www #34348</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36484">www #36484</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b4818c8827da8a03c94?run=lr59c6be74e107d5a48eda1c17">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134718c8827da8a260e9">Task 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3109/details">TTS-3109</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34256">www #34256</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36503">www #36503</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b4e18c8827da8a03df3?run=lr43b1a4a38e0907a14b957d7b">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b042f58d6f7e70b54798cee?run=lr795dd71578c7a393593413f6">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3106/details">TTS-3106</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34253">www #34253</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36487">www #36487</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040b5418c8827da8a03f57?run=lrce0d3eff233e52aeb68c7a97">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04134c18c8827da8a26229?run=lr6b2e6726025f22ce8ea09cb1">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3026/details">TTS-3026</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34064">www #34064</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36507">www #36507</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bc518c8827da8a05828?run=lr6c7ff0fe9ac47d9e7fb033be">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041d8f18c8827da8a6b4f4?run=lr45d420e50c616eb917a97ed4">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2915/details">TTS-2915</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33812">www #33812</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a> <span class="tag">open · marker · in ledger</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bda18c8827da8a05ca8?run=lr75ebd07e9c26bf15884a01a3">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0427c5d3c6d231aa16ed3e?run=lr6951af5a83068dd476e6eee5">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2769/details">TTS-2769</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33477">www #33477</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36504">www #36504</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040be218c8827da8a05f0b?run=lrf4bb428cc8c1e045aebf095d">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041def18c8827da8a6ccf2?run=lrdb1019b5d0d5406c46c42d70">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2632/details">TTS-2632</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33302">www #33302</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> <span class="tag">open · marker · in ledger</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade617b1b2e35738a98d775/runs/lr4adaad830b75e30c5021dc84">Origin run</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041c7b18c8827da8a67e6e?run=lr50222e5a6f779997e871661b">Review run</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2601/details">TTS-2601</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33097">www #33097</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/uacode/pull/65082">uacode #65082</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040beb18c8827da8a061c0?run=lr620035d09995df00d4ab1e00">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0425c818c8827da8aaaae0?run=lrc56c23fb171aaa2b79b7f1ba">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2547/details">TTS-2547</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33061">www #33061</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36512">www #36512</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bee18c8827da8a0630d?run=lreb64fb23357e09d59de70c22">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f5118c8827da8a764b7?run=lr174a79954f294fb557e8ca2e">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2382/details">TTS-2382</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31940">www #31940</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36488">www #36488</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bf218c8827da8a06469?run=lr0506f4b7388e8a71caa753e6">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04175018c8827da8a482e3?run=lrd56968baaa6d755ddbc6f623">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2381/details">TTS-2381</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31939">www #31939</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36510">www #36510</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040bf618c8827da8a0654f?run=lr9a1bd1ad20dd2fbe9aad3d65">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f3318c8827da8a74f08?run=lrea54cbf732cb2a0bda7b788d">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2380/details">TTS-2380</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/31938">www #31938</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36506">www #36506</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c0718c8827da8a06977?run=lr0c2fa515d3e9ecc06397afaf">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041ce418c8827da8a69254?run=lr204769760c45441ecc078ceb">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3254/details">TTS-3254</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34645">www #34645</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36482">www #36482</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c5418c8827da8a07955?run=lreb1e91a108553b55bf6a3bd1">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041a4518c8827da8a61814?run=lr045d59780c7e78ef8427d794">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3113/details">TTS-3113</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34261">www #34261</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36490">www #36490</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c6d18c8827da8a07d08?run=lr2792e000b65eb723bb3f6bd9">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0416f418c8827da8a44838?run=lr8c56b18b5739e003542f4346">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3027/details">TTS-3027</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/34065">www #34065</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36494">www #36494</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c8d18c8827da8a084d7?run=lrc990bc30ec98d42dceb54df8">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04193b18c8827da8a5e0ff?run=lrc891c4f05974e7ea27b311a8">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2875/details">TTS-2875</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33685">www #33685</a> <span class="tag">open</span></td>
+            <td><span class="tag">Held — pending searchable-fields decision</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040ca218c8827da8a08979?run=lr10e2b4f485901d0bce9400bf">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04180270dfb219c967384e">Task 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2733/details">TTS-2733</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33453">www #33453</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36511">www #36511</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lrc997ab6f4d62adb8c5bcdd14">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041f1a18c8827da8a7472f?run=lr898d278820155aa99b72ffac">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2636/details">TTS-2636</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33368">www #33368</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36499">www #36499</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lr4b5901dc66d64d4f0287fa0e">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04199318c8827da8a5f6d7?run=lr760497801352d26228e4d836">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2554/details">TTS-2554</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33000">www #33000</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36502">www #36502</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lr1a53c7d7b312dbc53b891730">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041c2818c8827da8a66f22?run=lr6ab05239c5b3f8239ebd4527">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2442/details">TTS-2442</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/33176">www #33176</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36520">www #36520</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lr7f533c5b020e3a467d42ae5a">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0429720976c52b28d6a341?run=lr1f7c19f2d9b3982784a3e8f9">Run 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2440/details">TTS-2440</a></td>
+            <td><a href="https://github.com/unify-apps/www/pull/32263">www #32263</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/www/pull/36513">www #36513</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/loops/e_6ade61561b2e35738a98d61d/runs/lra22210cd681298cb62b56fa0">Run 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04164b70a09900921bf49f">Task 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-3136/details">TTS-3136</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/496">nebula-plugin #496</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/628">nebula-plugin #628</a> <span class="tag">open</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c9b70dfb219c966dea6">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041485d562f347ab99c5c3">Task 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2556/details">TTS-2556</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/423">nebula-plugin #423</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/627">nebula-plugin #627</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c9a08ce23238f777403">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04138070dfb219c96708d3">Task 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2581/details">TTS-2581</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/422">nebula-plugin #422</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/626">nebula-plugin #626</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c96d562f347ab99690a">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b04137c08ce23238f779abc">Task 2</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://atlas.unifyapps.com/issue/TTS-2446/details">TTS-2446</a></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/362">nebula-plugin #362</a> <span class="tag">open</span></td>
+            <td><a href="https://github.com/unify-apps/nebula-plugin/pull/629">nebula-plugin #629</a> <span class="tag">open · marker</span></td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b040c9470a09900921ba3f1">Task 1</a> · <a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0415e6d562f347ab99d588">Task 2</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<section id="delivery" aria-labelledby="delivery-heading">
+  <p class="meta">Strict Run-Linked GitHub Ledger</p>
+  <h2 id="delivery-heading">Verified cumulative merges: 11 of 38 PRs (28.95%)</h2>
+  <p>The strict ledger counts unique PRs directly attributable to a specific Factory run via PR footer or creation receipt. One existing Factory-origin PR, <a href="https://github.com/unify-apps/www/pull/36401">www #36401</a>, newly merged since the prior ledger. GitHub reread all 16 previously open entries and all 16 remain open.</p>
+
+  <div class="seg-bar" role="img" aria-label="38 strict run-linked PRs: 11 merged (28.95%), 16 open (42.11%), 11 closed without merge (28.95%).">
+    <span class="seg-merged" style="width:28.95%" title="Merged: 11"></span>
+    <span class="seg-open" style="width:42.11%" title="Open: 16"></span>
+    <span class="seg-closed" style="width:28.95%" title="Closed without merge: 11"></span>
+  </div>
+  <div class="viz-legend">
+    <span><span class="swatch" style="background:var(--planloft-chart-3)"></span><strong>11 merged</strong> (28.95%)</span>
+    <span><span class="swatch" style="background:var(--planloft-chart-2)"></span><strong>16 open</strong> (42.11%)</span>
+    <span><span class="swatch" style="background:var(--planloft-chart-1)"></span><strong>11 closed without merge</strong> (28.95%)</span>
+  </div>
+
+  <p class="note"><strong>Do not sum ledgers:</strong> 11/38 (28.95%) is neither overall adoption nor a tenant deployment claim. At least two campaign replacement PRs (<a href="https://github.com/unify-apps/www/pull/36498">www #36498</a> and <a href="https://github.com/unify-apps/www/pull/36501">www #36501</a>) already belong to this 38-PR ledger, so the 38-PR strict ledger and the 31-PR replacement cohort must never be added together.</p>
+
+  <details>
+    <summary>Complete strict run-linked PR ledger (38 unique PRs)</summary>
+    <div class="wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">PR</th><th scope="col">State</th><th scope="col">Factory run</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36401">www #36401</a></td><td>merged <span class="tag">new</span></td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0187cc695aa3077898e988?run=lr521d033a2f77e63f8c88a61d">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35928">www #35928</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6afb223a6eb88d550878384b?run=lrd481ff9284129d041ce05e47">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35703">www #35703</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af94977b46492614c4b71cc?run=lr1bbe71442caa419aa7bd8263">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35480">www #35480</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af68e2c23c730631098ab44?run=lrdeba33c6014832fead550c14">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35478">www #35478</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af68b8423c730631096fc62?run=lrc659a0d93f46752bd297fa60">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35415">www #35415</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af5e05b19ed8f37b01f3046?run=lrcd504dd6c146c68ffef961c8">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35377">www #35377</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af56323631cca5de53145a2?run=lr6bf75ca9b736706279eb848a">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/33763">www #33763</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adf6fbcccbbd30244f6a40c?run=lrafce07f798e43bfbe703b66b">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/33737">www #33737</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adf462dccbbd30244e88e5e?run=lr087ef25230bb28884a9b096d">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/33676">www #33676</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adeca46bccbcd04875bda52?run=lr2244355f6113a3bfc4b4b7cb">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/33675">www #33675</a></td><td>merged</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6adec39ef300a874a417437f?run=lr03a6511423c4c4cfeb3242e5">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36598">www #36598</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0556785117aa3564d2cd9e?run=lrefbfad350e35aa5a7fa7caab&amp;messageId=b65c4c30-b07d-4cdb-950e-5773a343c1b7">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36589">www #36589</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0544141612f266ace2a4d0?run=lrb7adbd571f276e9460c726ad&amp;messageId=2cfb7fea-9175-4a42-9848-42c65ae7dd1e">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36501">www #36501</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b041b5f18c8827da8a64d23?run=lrebe5806b50e3576253585ef4">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36498">www #36498</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0431686846245613940365?run=lr4adaad830b75e30c5021dc84">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36453">www #36453</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b032fc74b0fe237d4b4898e?run=lrb50e484236e92e61e6975b98">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/uacode/pull/64861">uacode #64861</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b03409718c8827da87eaa34?run=lr5d6777e3f8d7a5c4c87cbddd">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36326">www #36326</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b005850bfc3a7322c8fd177?run=lr980eea4925fb745ace8ee96f">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36324">www #36324</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057dcbfc3a7322c8fcc90?run=lra065ae3f07fe7ee211be6086">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36322">www #36322</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b00580ccaab920b04dea808?run=lraeaa8004a8018fab4b20fbbf">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36320">www #36320</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057a6caab920b04dea2d2?run=lr870f69945382bf3a1aa4a7d9">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36316">www #36316</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b00582ecaab920b04dea96a?run=lra111c6c394cfdbeb6f0a582f">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36314">www #36314</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057ffcaab920b04dea76d?run=lr9a9e8b6bb6a7b7a626c7a0ca">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/uacode/pull/63729">uacode #63729</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6afe8af474df516ba0675458?run=lr44cc26549780bafcd49188e1">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35924">www #35924</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6afb25baa7e5fe4ad4245606?run=lrb470b58bc6aba01fd0e2704d">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35076">www #35076</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af2ae81f9650f52d2a0a605?run=lr163da42eb6202085786b0e23">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/34807">www #34807</a></td><td>open</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aeb2cb0aad08654ab058c6a?run=lr7b01b021f3ec243bdaf53dc4">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36328">www #36328</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b005a3ebfc3a7322c8feb58?run=lr8338ba53d52baaebbf59acc3">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/36323">www #36323</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b0057f6bfc3a7322c8fcda0?run=lr751ddeaa76d9216c7935253b">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35757">www #35757</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af9b2fe830b445983ae94eb?run=lr9ac5cbd742f0319f68331504">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/uacode/pull/62123">uacode #62123</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af94e2f25a4e324ebf8aff1?run=lrc4b75488c61b1e3161fc086e">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/uacode/pull/61736">uacode #61736</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af730dfdfe456029cddecf5?run=lr6cee9b38f9ca9b86cda4133d">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35200">www #35200</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed7b021fbbdf22b6fe8985?run=lrb513e2512c48918cb5554720">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/35188">www #35188</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6af37686f6dc7d19327d0907?run=lr8b2389bd9619a9f340665010">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/34991">www #34991</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed975017b88d59a91164c8?run=lr61a7079ed8d7363c42977c58">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/34988">www #34988</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed890a1fbbdf22b6fe9bdf?run=lr0d90e323b817441c796b30f1">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/34982">www #34982</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6aed7b031fbbdf22b6fe89f8?run=lr182e69c2e53e4f55d7403658">Factory run</a></td></tr>
+          <tr><td><a href="https://github.com/unify-apps/www/pull/34384">www #34384</a></td><td>closed</td><td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6ae5be1386a6b62c73ce22ed?run=lr8c97d5f9538c9471674ff5b6">Factory run</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<section id="history" aria-labelledby="history-heading">
+  <p class="meta">Secondary · Dated Snapshot &amp; Retests</p>
+  <h2 id="history-heading">Runtime stability &amp; retest progress</h2>
+  <p>Preflight stability improved within the scoped 224-run window (Nov 23 14:52 – Nov 24 15:29 IST): <strong>86 preflight failures</strong> occurred during the earlier burst, followed by <strong>zero preflight failures</strong> across the subsequent 32 starts. Latest retests progressed to <strong>Trace</strong> (Contracts) and <strong>Compare</strong> (Voice, after passing its docs check).</p>
+
+  <details>
+    <summary>Scoped 224-run snapshot (Nov 23 14:52 – Nov 24 15:29 IST)</summary>
+    <p class="note">143 of 224 starts came from audit probes and a single review batch. Counts reflect the dated snapshot readback.</p>
+    <div class="bars-compact" aria-label="224-run snapshot status counts">
+      <div class="bar-row done"><span>Done</span><span class="bar-track"><span class="bar-fill" style="width:91.67%"></span></span><strong>99</strong></div>
+      <div class="bar-row failed"><span>Failed</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><strong>108</strong></div>
+      <div class="bar-row"><span>Stopped</span><span class="bar-track"><span class="bar-fill" style="width:7.41%"></span></span><strong>8</strong></div>
+      <div class="bar-row"><span>Waiting</span><span class="bar-track"><span class="bar-fill" style="width:6.48%"></span></span><strong>7</strong></div>
+      <div class="bar-row"><span>Running</span><span class="bar-track"><span class="bar-fill" style="width:1.85%"></span></span><strong>2</strong></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Latest retest &amp; QA activation notes</summary>
+    <div class="wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Area</th><th scope="col">Observed retest status</th><th scope="col">Evidence</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Contracts (<a href="https://atlas.unifyapps.com/issue/AF-1515/details">AF-1515</a>)</td>
+            <td>Fresh canary passed preflight and Inventory and reached <strong>Trace</strong> (outcome pending at last readback).</td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b05660821997f6c685a72d2?run=lrdd6dbdc1bf8997b55e2ece55">Targeted rerun</a></td>
+          </tr>
+          <tr>
+            <td>Voice (<a href="https://atlas.unifyapps.com/issue/AF-1547/details">AF-1547</a>–<a href="https://atlas.unifyapps.com/issue/AF-1549/details">1549</a>)</td>
+            <td>Passed its docs check (exit 0 for 28 docs and 40 queue entries) and reached <strong>Compare</strong> at last readback.</td>
+            <td><a href="https://ai-factory.qa.unifyapps.com/tasks/e_6b05674021997f6c685aa3eb?run=lr62ccc486cf34ec2e139bfa0b">Post-merge rerun</a></td>
+          </tr>
+          <tr>
+            <td>QA activation boundary (<a href="https://atlas.unifyapps.com/issue/TTS-4555/details">TTS-4555</a>)</td>
+            <td>Source guard merged (<a href="https://github.com/unify-apps/www/pull/36564">www #36564</a>) without updating saved QA definitions; merge is distinct from QA activation.</td>
+            <td><a href="https://github.com/unify-apps/www/pull/36564">www #36564</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<footer>
+  <p>Public Briefing · Anonymized evidence links (Factory, Atlas, GitHub) · Snapshot date: 24 November 2026 IST.</p>
+</footer>
+
+</main>
+</body>
+</html>
