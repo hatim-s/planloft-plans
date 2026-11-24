@@ -173,15 +173,6 @@
       "expiresAt": "2026-12-23T07:19:43.184Z"
     },
     {
-      "id": "KIlzXvlciL",
-      "project": "github.com/unify-apps/www",
-      "slug": "workflow-agent-factory-adoption-2026-11-23",
-      "title": "Workflow Agent work in AI Factory",
-      "kind": "plan",
-      "createdAt": "2026-11-23T09:04:32.477Z",
-      "expiresAt": "2026-12-23T09:33:02.436Z"
-    },
-    {
       "id": "5rMaiAR9Kr",
       "project": "github.com/unify-apps/www",
       "slug": "salesforce-c360-collaborative",
@@ -198,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-11-23T09:10:08.029Z",
       "expiresAt": "2026-12-24T10:40:11.631Z"
+    },
+    {
+      "id": "KIlzXvlciL",
+      "project": "github.com/unify-apps/www",
+      "slug": "workflow-agent-factory-adoption-2026-11-23",
+      "title": "Workflow Agent delivery in AI Factory",
+      "kind": "plan",
+      "createdAt": "2026-11-23T09:04:32.477Z",
+      "expiresAt": "2026-12-24T10:48:41.112Z"
     }
   ]
 }
