@@ -11,6 +11,7 @@ planloft plan/doc deploys
 | [architecture](https://hatims-planloft.vercel.app/software-factory-architecture/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [factory-services](https://hatims-planloft.vercel.app/software-factory-factory-services/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
 | [operations](https://hatims-planloft.vercel.app/software-factory-operations/) | github.com/hatim-s/software-factory | note | 2026-12-11 |
+| [AI Factory adoption &amp; reliability dashboard](https://hatims-planloft.vercel.app/ai-factory-adoption-dashboard/) | github.com/unify-apps/www | plan | 2026-12-24 |
 | [AI Factory adoption report](https://hatims-planloft.vercel.app/ai-factory-workflow-coverage/) | github.com/unify-apps/www | plan | 2026-12-24 |
 | [CopilotVoice product guide](https://hatims-planloft.vercel.app/copilotvoice-product-guide/) | github.com/unify-apps/www | plan | 2026-12-20 |
 | [Genesys IT call prep](https://hatims-planloft.vercel.app/genesys-it-call-prep/) | github.com/unify-apps/www | plan | 2026-12-12 |
