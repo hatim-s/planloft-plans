@@ -189,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-11-23T09:10:08.029Z",
       "expiresAt": "2026-12-23T11:23:19.693Z"
+    },
+    {
+      "id": "5rMaiAR9Kr",
+      "project": "github.com/unify-apps/www",
+      "slug": "salesforce-c360-collaborative",
+      "title": "Salesforce C360 embedding plan",
+      "kind": "plan",
+      "createdAt": "2026-11-24T07:18:50.747Z",
+      "expiresAt": "2026-12-24T07:18:50.747Z"
     }
   ]
 }
