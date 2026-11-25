@@ -1372,7 +1372,7 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 .dark .fkey .k-out { background: #8CF5C0; } .dark .fkey .k-in { background: #FFB27A; } .dark .fkey .k-both { background: #FFFFFF; }
 .dark .e { stroke-opacity: 0.12; }
 .rh-cell-in { fill-opacity: 0.72; }
-.mock-read { color: var(--muted); font-size: 0.82rem; max-width: 160ch; margin: 0; line-height: 1.45; }
+.mock-read { color: var(--muted); font-size: 0.82rem; max-width: none; margin: 0; line-height: 1.45; }
 .mock-read b { color: var(--ink); font-weight: 600; }
 
 /* Product node colours (packages/style default tokens) */
@@ -1753,7 +1753,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const W = w - 2 * pad, H = h - top - 2 * pad;
     const sx = W / Math.max(1, x1 - x0), sy = H / Math.max(1, y1 - y0);
     const out = []; gs.forEach(g => { out[g.id] = [pad + (g.x - x0) * sx, top + pad + (g.y - y0) * sy]; });
-    gsAll.forEach(g => { if (isolatedGroup[g.id]) out[g.id] = [w - 70, h - 40]; });
+    gsAll.forEach(g => { if (isolatedGroup[g.id]) out[g.id] = [w - 90, h - 100]; });
     return out;
   }
   function layout(ns, links, w, h, A, o = {}) {
@@ -1988,7 +1988,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   mock({
     short: 'Similarity map', title: 'Near means connected the same way', from: 'new, from round 1 · 01',
     answers: 'Which types play the same role, even when they are not linked to each other?',
-    read: 'Position comes from how alike two types’ connections are: each type is pulled towards the few types that link to the most of the same things, whether or not they link to each other. Hover a type to see its most alike types and the share of links they have in common. Colour is the group from the links. Direct relationships stay hidden until you hover or switch them on, so the two kinds of closeness never mix.',
+    read: 'Each type is pulled towards the few types that link to the most of the same things, whether or not they link to each other. Hover a type for its most alike types and how much they share. Colour is the group. Direct relationships stay hidden until you hover or switch them on.',
     render(stage, w, h) {
       const st = this.st || (this.st = { links: false });
       const R = R1;
@@ -2013,15 +2013,19 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       const gE = el('g', {}, svg), gN = el('g', {}, svg);
       const E = drawPairs(gE, R, by, { extra: () => st.links ? '' : 'hid', path: (a, b) => qpath(a, b, 0.14) });
       const map = drawNodes(gN, ns);
-      const lc = labelControl(svg, ns, map, [], w, h);
+      const ex = kl.filter(l => l.source.rep.deg >= 12 && l.target.rep.deg >= 12).sort((x, y) => y.v - x.v)[0];
+      const noteBoxes = [];
+      if (ex) {
+        const a = ex.source, b = ex.target, mx = (a.x + b.x) / 2, my = Math.max(54, Math.min(a.y, b.y) - 34);
+        const txt = `${a.rep.short} and ${b.rep.short} link to ${Math.round(ex.v * 100)}% of the same types`, tw = txt.length * 6.1;
+        el('path', { d: `M${a.x},${a.y}L${mx},${my}L${b.x},${b.y}`, class: 'sim-note-line' }, svg);
+        const nx = clamp(mx, tw / 2 + 8, w - tw / 2 - 8);
+        el('text', { x: nx, y: my - 6, 'text-anchor': 'middle', class: 'sim-note' }, svg, txt);
+        noteBoxes.push([nx - tw / 2 - 4, my - 20, nx + tw / 2 + 4, my - 1]);
+      }
+      const lc = labelControl(svg, ns, map, noteBoxes, w, h);
       const simInfo = id => repInfo(R, id) + (near.get(id).length ? `<br><b>Most alike:</b> ${near.get(id).slice(0, 3).map(([b, v]) => `${esc(R.byId.get(b).short)} ${Math.round(v * 100)}%`).join(', ')}` : '');
       const f = focusable(svg, map, E, simInfo, lc);
-      const ex = kl.filter(l => { const a = l.source, b = l.target; return a.rep.deg >= 12 && b.rep.deg >= 12; }).sort((x, y) => y.v - x.v)[0];
-      if (ex) {
-        const a = ex.source, b = ex.target, mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - 34;
-        el('path', { d: `M${a.x},${a.y}L${mx},${my}L${b.x},${b.y}`, class: 'sim-note-line' }, svg);
-        el('text', { x: mx, y: my - 6, 'text-anchor': 'middle', class: 'sim-note' }, svg, `${a.rep.short} and ${b.rep.short} link to ${Math.round(ex.v * 100)}% of the same types`);
-      }
       const tools = mk('div', 'mtools', stage);
       toggleBtn(tools, 'Show direct links', st.links, v => { st.links = v; rerender(this); });
       searchBox(tools, R, id => f.pin(id));
@@ -2064,7 +2068,11 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
           const ra = rOf(x.a) + 4, rb = rOf(x.b) + 4;
           const a = { x: ca[0] + dx / dl * ra, y: ca[1] + dy / dl * ra }, b = { x: cb[0] - dx / dl * rb, y: cb[1] - dy / dl * rb };
           const p = el('path', { d: qpath(a, b, 0.08), class: 'glink', 'stroke-width': (1 + Math.sqrt(x.n) * 1.2).toFixed(1) }, gL);
-          const t = el('text', { x: (a.x + b.x) / 2 - (b.y - a.y) * 0.04, y: (a.y + b.y) / 2 + (b.x - a.x) * 0.04 + 4, class: 'glink-n' }, gL, String(x.n));
+          const len = Math.hypot(b.x - a.x, b.y - a.y) || 1, nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;
+          const clear = (px, py) => groups.every((_, k) => Math.hypot(px - A[k][0], py - A[k][1]) > rOf(k) + 12);
+          let lp = [(a.x + b.x) / 2, (a.y + b.y) / 2];
+          search: for (const tt of [0.5, 0.4, 0.6, 0.3, 0.7]) for (const off of [0, 14, -14, 28, -28]) { const px = a.x + (b.x - a.x) * tt + nx * off, py = a.y + (b.y - a.y) * tt + ny * off; if (clear(px, py)) { lp = [px, py]; break search; } }
+          const t = el('text', { x: lp[0], y: lp[1] + 4, class: 'glink-n' }, gL, String(x.n));
           const html = `<b>${esc(groups[x.a].name)} ↔ ${esc(groups[x.b].name)}</b> · ${x.n}<br>${topLabels(x.labels, 5)}`;
           p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip); void t;
         }
@@ -2324,7 +2332,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         const row = mk('div', '', side); const nm = mk('span', '', row); nm.style.cssText = 'display:inline-flex;gap:6px;align-items:center;min-width:0';
         mk('i', 'dot gb' + gc(u.grp), nm); const tx = mk('span', '', nm, u.name); tx.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
         mk('span', 'n', row, `${outN[i]} out · ${inN[i]} in`);
-        row.addEventListener('pointerenter', () => isoOf(i)); row.addEventListener('pointerleave', () => { if (pinnedIso == null) rib.forEach(r => r.p.classList.remove('off')); else isoOf(pinnedIso); });
+        row.addEventListener('pointerenter', () => isoOf(i)); row.addEventListener('pointerleave', () => { if (pinnedIso != null) { isoOf(pinnedIso); return; } rib.forEach(r => r.p.classList.toggle('off', st.open != null && units[r.s].id[0] === 'g' && units[r.t].id[0] === 'g')); });
         if (u.id[0] === 'g' && u.grp !== st.open) { row.style.cursor = 'pointer'; row.title = 'Open this group'; row.addEventListener('click', () => { st.open = u.grp; rerender(this); }); }
       });
       hint(stage, st.open == null ? 'Click a group arc or list row to open it · hover a ribbon' : 'Click a type arc to keep it highlighted · click another group to open it').style.right = (sideW + 10) + 'px';
@@ -2349,7 +2357,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       groups.forEach((g, k) => { const cnt = order.filter(r => r.grp === k).length; if (!cnt) return;
         el('rect', { x: L + start * C, y: T - 8, width: cnt * C - 1, height: 5, class: 'gf' + gc(k) }, svg); el('rect', { x: L - 8, y: T + start * C, width: 5, height: cnt * C - 1, class: 'gf' + gc(k) }, svg);
         el('text', { x: L - 14, y: T + (start + cnt / 2) * C + 3, 'text-anchor': 'end', class: 'mx-dom mx-gname' }, svg, g.name);
-        { const nm = g.name.replace(/ group$/, ''); if (cnt * C > nm.length * 6.2) el('text', { x: L + (start + cnt / 2) * C, y: T - 12 - (k % 2) * 12, 'text-anchor': 'middle', class: 'mx-dom mx-gname' }, svg, nm); }
+        { const nm = g.name.replace(/ group$/, ''); el('text', { x: L + (start + cnt / 2) * C, y: T - 12 - (k % 3) * 11, 'text-anchor': 'middle', class: 'mx-dom mx-gname' }, svg, nm); }
         if (start > 0) { el('line', { x1: L + start * C, y1: T, x2: L + start * C, y2: T + S, class: 'm-sep' }, svg); el('line', { x1: L, y1: T + start * C, x2: L + S, y2: T + start * C, class: 'm-sep' }, svg); }
         start += cnt; });
       const rawV = d => hasInst ? d.inst : d.labels.length;
@@ -2448,7 +2456,11 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const ft = mk('p', 'mock-read', art); mk('b', '', ft, 'Read it: '); ft.appendChild(document.createTextNode(m.read));
     m.stage = mk('div', 'mstage', art); m.stage.setAttribute('role', 'region'); m.stage.setAttribute('aria-label', `Mock ${i + 1}: ${m.title}`);
   });
-  const setNavH = () => document.documentElement.style.setProperty('--navh', (nav.offsetHeight || 40) + 'px'); setNavH(); window.addEventListener('resize', setNavH);
+  const sizeStages = () => {
+    const navH = nav.offsetHeight || 40; document.documentElement.style.setProperty('--navh', navH + 'px');
+    for (const m of MOCKS) { const art = m.stage.parentNode; const chrome = navH + art.querySelector('.mock-head').offsetHeight + art.querySelector('.mock-read').offsetHeight + 26; m.stage.style.height = Math.max(560, Math.min(1100, innerHeight - Math.max(120, chrome))) + 'px'; }
+  };
+  sizeStages(); window.addEventListener('resize', sizeStages);
   if (typeof IntersectionObserver !== 'undefined') {
     const io = new IntersectionObserver(entries => { for (const e of entries) { const m = e.target.__mock; m.near = e.isIntersecting; if (m.near) { m.visible = true; renderMock(m); } } }, { rootMargin: '60% 0px' });
     MOCKS.forEach(m => { m.stage.__mock = m; io.observe(m.stage); });
