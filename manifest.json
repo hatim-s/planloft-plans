@@ -234,6 +234,15 @@
       "kind": "report",
       "createdAt": "2026-11-25T13:32:55.300Z",
       "expiresAt": "2026-12-25T13:32:55.300Z"
+    },
+    {
+      "id": "IVgQ5Za7dr",
+      "project": "github.com/unify-apps/www",
+      "slug": "ecg-graph-exploration-log",
+      "title": "ECG graph exploration log",
+      "kind": "report",
+      "createdAt": "2026-11-25T13:34:23.037Z",
+      "expiresAt": "2026-12-25T13:34:23.037Z"
     }
   ]
 }
