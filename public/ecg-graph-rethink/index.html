@@ -1769,7 +1769,7 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 <tr>
 <td>5. Prototype, second pass (26 Nov)</td>
 <td>Draft PR #236 with a Vercel preview. Rendering switched to mock 03 (constellation lines); families open in place once they have room; pan by drag, scroll or swipe without re-rendering; pinch zooms once per frame; node list header pinned; Edit removed.</td>
-<td>111 lines at the default view instead of 326. Pinch zoom at 9 ms a frame on the dev server.</td>
+<td>111 lines at the default view instead of 326. Pinch zoom at 8.3 ms a frame on the deployed preview.</td>
 </tr>
 </tbody></table>
 <h2>Round 1: fifteen ways to draw the same graph</h2>
@@ -2244,7 +2244,7 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 <p>Hatim&#39;s five asks after the first build, and what changed (details in the prototype&#39;s <code>docs/decisions.md</code>):</p>
 <ol>
 <li><strong>Laggy, broken pan and scroll.</strong> Pan was disabled at the default zoom and every move re-rendered the whole scene. Now a drag or scroll moves one SVG group&#39;s transform with no render, names refit 140 ms after it stops, pinch and Ctrl/⌘ + scroll zoom at the pointer with one render per frame, and buttons glide.</li>
-<li><strong>Nested detail appearing while zoomed out.</strong> All types used to switch on at a fixed zoom, opening the 18 MSA types as a ring with every link between them. Now each family opens on its own once its members are 26 px apart on screen, into spots precomputed with every other type pinned, and zoom stops once the last one opens (2.3× at 1440 × 900).</li>
+<li><strong>Nested detail appearing while zoomed out.</strong> All types used to switch on at a fixed zoom, opening the 18 MSA types as a ring with every link between them. Now each family opens on its own once its members are 26 px apart on screen, into spots precomputed with every other type pinned, and zoom stops once the last one opens (about 2× at 1440 × 900, more when the app sidebar is open).</li>
 <li><strong>Edit removed.</strong></li>
 <li><strong>Node list header pinned.</strong> The list never scrolled itself (its wrapper did), so the sticky header had nothing to stick to.</li>
 <li><strong>Rendering as mock 02 or 03.</strong> Mock 03, constellation lines: a skeleton of 111 links at the default view, every link of a type on hover.</li>
