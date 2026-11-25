@@ -1345,6 +1345,35 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 .ring-group text { font-weight: 700; }
 .mtools .crumb { font-size: 0.8rem; color: var(--muted); align-self: center; }
 .dark .mtools .crumb { color: #9AA6BF; }
+/* round 2 review fixes */
+.mstage .e.hid:not(.out):not(.in):not(.both) { stroke-opacity: 0 !important; }
+.mstage .e.cross { stroke-opacity: 0.32; }
+.dark .e.cross { stroke-opacity: 0.12; }
+.backbone.bridge { stroke: #FFD9A8; stroke-dasharray: 4 3; stroke-opacity: 0.7; }
+.bubble circle.b { stroke: none !important; fill-opacity: 0.16; }
+.bubble:focus-visible circle.b, .ring-group:focus-visible circle.dot-c { outline: none; stroke: var(--accent) !important; stroke-width: 2px; }
+.mx-axis { font-size: 10px; font-family: var(--font-mono); fill: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.mx-scale { display: flex; align-items: center; gap: 6px; font-size: 0.74rem; color: var(--muted); }
+.mx-scale i { display: inline-block; width: 12px; height: 12px; background: var(--ink); }
+.sim-note { font-size: 11px; font-family: var(--font-text); fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; }
+.sim-note-line { stroke: var(--accent); stroke-width: 1; fill: none; stroke-dasharray: 3 2; }
+.ring-label { cursor: pointer; font-size: 12px; font-weight: 600; font-family: var(--font-text); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; }
+.chord-side { position: absolute; right: 12px; top: 52px; bottom: 44px; width: 240px; overflow: auto; font-size: 0.78rem; display: grid; align-content: start; gap: 2px; }
+.chord-side div { display: flex; gap: 6px; align-items: center; justify-content: space-between; padding: 2px 4px; border-radius: 4px; cursor: default; }
+.chord-side div:hover { background: var(--sunk); }
+.chord-side .n { font-family: var(--font-mono); color: var(--muted); font-size: 0.72rem; white-space: nowrap; }
+.mpin { font: inherit; font-size: 0.74rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 1px 8px; cursor: pointer; justify-self: start; }
+.mstage svg.smartlabels.focus .n.nb text.lbl-off, .mstage svg.smartlabels.focus .n.on text.lbl-off { display: none; }
+.fkey { position: absolute; left: 50%; transform: translateX(-50%); bottom: 10px; z-index: 4; display: flex; gap: 12px; font-size: 0.72rem; color: var(--muted); background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; pointer-events: none; }
+.fkey span { display: inline-flex; align-items: center; gap: 5px; }
+.fkey i { display: inline-block; width: 16px; height: 2.5px; border-radius: 2px; }
+.fkey .k-out { background: var(--hi-out); } .fkey .k-in { background: var(--hi-in); } .fkey .k-both { background: var(--ink); }
+.dark .fkey { background: rgba(10, 13, 20, 0.8); border-color: #2A3348; color: #C9D2E6; }
+.dark .fkey .k-out { background: #8CF5C0; } .dark .fkey .k-in { background: #FFB27A; } .dark .fkey .k-both { background: #FFFFFF; }
+.dark .e { stroke-opacity: 0.12; }
+.rh-cell-in { fill-opacity: 0.72; }
+.mock-read { color: var(--muted); font-size: 0.82rem; max-width: 160ch; margin: 0; line-height: 1.45; }
+.mock-read b { color: var(--ink); font-weight: 600; }
 
 /* Product node colours (packages/style default tokens) */
 :root { --graph-node-terracotta-400: #C0624A; --graph-node-pigeon-blue-300: #7B91B0; --graph-node-rose-300: #D47886; --graph-node-royal-violet-400: #684D82; --graph-node-lime-300: #96B460; --graph-node-gray-500: #9F9993; --graph-node-plum-300: #9E659E; --graph-node-magenta-400: #D13060; --graph-node-teal-500: #14A7B8; --graph-node-royal-violet-300: #8D75A8; --graph-node-mulberry-300: #D068A8; --graph-node-jade-green-300: #4D8547; --graph-node-steel-blue-400: #3870A8; --graph-node-orange-300: #FB803A; --graph-node-brand-300: #5E6E62; }
@@ -1589,7 +1618,7 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
     <h2>Ten takes on the directions you kept</h2>
     <div class="prose" style="display:block" id="round2-intro"></div>
   </div>
-  <div class="review-sum" id="review-sum"></div>
+  <div class="review-sum" id="review-sum" hidden></div>
   <nav class="mock-nav" id="mock-nav" aria-label="Jump to a mock"></nav>
   <div class="mock-list" id="mock-list"></div>
 </section>
@@ -1599,7 +1628,7 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
     <div class="prose">
       <p class="eyebrow">4 · Where the groups come from</p>
       <h2>No hand-made categories</h2>
-      <p>Every grouping on this page is computed from the exported relationships. <b>Groups</b> are communities found by the Louvain method on the type-to-type links, and each is named after its most connected type. <b>Similar types</b> are types whose relationships overlap by at least 60%, and they merge into one node when "Merge similar types" is on. In this export every type has the category Core, so category cannot separate anything.</p>
+      <p>Every grouping on this page is computed from the exported relationships. <b>Groups</b> are communities found by the Louvain method on the type-to-type links, and each is named after its most connected type. <b>Similar types</b> are types whose relationships overlap by at least 60%; most mocks draw each set as one node, and the tooltip lists its members. In this export every type has the category Core, and the API gives no link between types and source systems, so neither can separate anything.</p>
     </div>
     <div class="tbl-wrap"><table><thead><tr><th>Group</th><th style="text-align:right">Types</th><th>Most connected types</th></tr></thead><tbody id="groups-body"></tbody></table></div>
     <div class="tbl-wrap"><table><thead><tr><th>Similar types</th><th style="text-align:right">Types</th><th>Members</th></tr></thead><tbody id="families-body"></tbody></table></div>
@@ -1705,8 +1734,10 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
 
   /* ---------- Layout helpers ---------- */
   // Places groups by their own links (strongly linked groups sit closer), sized to fill the stage.
+  const isolatedGroup = groups.map(g => g.members.every(i => deg[i] === 0));
   function groupAnchors(R, w, h, pad = 60, top = 0) {
-    const gs = groups.map((g, k) => ({ id: k, r: 16 * Math.sqrt(g.members.length) }));
+    const gsAll = groups.map((g, k) => ({ id: k, r: 16 * Math.sqrt(g.members.length) }));
+    const gs = gsAll.filter(g => !isolatedGroup[g.id]);
     const gl = new Map();
     for (const p of R.pairs.values()) { const a = R.byId.get(p.a).grp, b = R.byId.get(p.b).grp; if (a === b) continue; const k = a < b ? a + '|' + b : b + '|' + a; gl.set(k, (gl.get(k) || 0) + p.ab + p.ba); }
     const links = [...gl].map(([k, wt]) => { const [a, b] = k.split('|').map(Number); return { source: a, target: b, w: wt }; });
@@ -1721,7 +1752,9 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const x0 = d3.min(gs, g => g.x - g.r), x1 = d3.max(gs, g => g.x + g.r), y0 = d3.min(gs, g => g.y - g.r), y1 = d3.max(gs, g => g.y + g.r);
     const W = w - 2 * pad, H = h - top - 2 * pad;
     const sx = W / Math.max(1, x1 - x0), sy = H / Math.max(1, y1 - y0);
-    return gs.map(g => [pad + (g.x - x0) * sx, top + pad + (g.y - y0) * sy]);
+    const out = []; gs.forEach(g => { out[g.id] = [pad + (g.x - x0) * sx, top + pad + (g.y - y0) * sy]; });
+    gsAll.forEach(g => { if (isolatedGroup[g.id]) out[g.id] = [w - 70, h - 40]; });
+    return out;
   }
   function layout(ns, links, w, h, A, o = {}) {
     ns.forEach((d, i) => { const [ax, ay] = A[d.grp]; const ang = i * 2.399963; const rr = 5 * Math.sqrt((i % 40) + 1); d.x = ax + rr * Math.cos(ang); d.y = ay + rr * Math.sin(ang); });
@@ -1732,7 +1765,9 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       .force('collide', d3.forceCollide(o.collide ?? (d => d.r + 4)).iterations(2)).stop();
     if (links.length) sim.force('link', d3.forceLink(links).id(d => d.id).strength(o.linkStrength ?? 0.02).distance(o.linkDistance ?? 50));
     for (let i = 0; i < 320; i++) sim.tick();
-    fit(ns, w, h, o.pad ?? 40, o.top ?? 0, Object.assign({ l: 0, r: 0, t: 0, b: 0 }, o.margin));
+    const lone = ns.filter(d => isolatedGroup[d.grp]), rest = ns.filter(d => !isolatedGroup[d.grp]);
+    fit(rest, w, h, o.pad ?? 40, o.top ?? 0, Object.assign({ l: 0, r: 0, t: 0, b: 0 }, o.margin, { b: (o.margin?.b ?? 0) + (lone.length ? 30 : 0) }));
+    lone.forEach((d, i) => { d.x = w - 150 - i * 22; d.y = h - 34; });
   }
   function fit(ns, w, h, pad, top, m) {
     const x0 = d3.min(ns, d => d.x), x1 = d3.max(ns, d => d.x), y0 = d3.min(ns, d => d.y), y1 = d3.max(ns, d => d.y);
@@ -1767,8 +1802,12 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
           e.el.classList.add(out && inn ? 'both' : out ? 'out' : 'in'); e.el.parentNode.appendChild(e.el);
         }
       }
-      if (onFocus) onFocus(id);
+      if (onFocus) onFocus(id, id ? new Set((adj.get(id) || []).map(e => e.a === id ? e.b : e.a)) : null);
+      if (fkey) fkey.hidden = !id;
     }
+    const stage = svg.parentNode;
+    const fkey = stage && !stage.querySelector('.fkey') ? mk('div', 'fkey', stage) : null;
+    if (fkey) { fkey.hidden = true; fkey.innerHTML = '<span><i class="k-out"></i>points out</span><span><i class="k-in"></i>points in</span><span><i class="k-both"></i>both ways</span>'; }
     for (const [id, g] of nodeMap) {
       g.addEventListener('pointerenter', ev => { if (!sticky) set(id); const html = infoFn(id); if (html) showTip(html, ev); });
       g.addEventListener('pointermove', moveTip);
@@ -1793,18 +1832,42 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   function fitLabels(items, obstacles, W, H) {
     const placed = obstacles.slice(); items.sort((a, b) => b.prio - a.prio);
     for (const it of items) {
-      const r = [it.cx - it.w / 2 - 2, it.cy - it.h / 2, it.cx + it.w / 2 + 2, it.cy + it.h / 2];
-      const inside = W == null || (r[0] >= 2 && r[2] <= W - 2 && r[1] >= 2 && r[3] <= H - 2);
-      const ok = inside && !placed.some(p => p[0] < r[2] && p[2] > r[0] && p[1] < r[3] && p[3] > r[1]);
-      it.t.classList.toggle('lbl-off', !ok); if (ok) placed.push(r);
+      const cands = it.cands || [{ cx: it.cx, cy: it.cy }];
+      let ok = false;
+      for (const c of cands) {
+        const r = [c.cx - it.w / 2 - 2, c.cy - it.h / 2, c.cx + it.w / 2 + 2, c.cy + it.h / 2];
+        const inside = W == null || (r[0] >= 2 && r[2] <= W - 2 && r[1] >= 2 && r[3] <= H - 2);
+        if (inside && !placed.some(p => p[0] < r[2] && p[2] > r[0] && p[1] < r[3] && p[3] > r[1])) { placed.push(r); if (c.apply) c.apply(); ok = true; break; }
+      }
+      it.t.classList.toggle('lbl-off', !ok);
     }
   }
   const circleBoxes = ns => ns.map(d => [d.x - d.r, d.y - d.r, d.x + d.r, d.y + d.r]);
-  function labelItems(ns, map, side = 'right') {
+  function labelItems(ns, map, side = 'right', only) {
     const boost = new Set();
-    groups.forEach((_, k) => ns.filter(d => d.grp === k).sort((a, b) => score(b.rep) - score(a.rep)).slice(0, 2).forEach(d => boost.add(d.id)));
-    return ns.map(d => { const w = lw(d.rep.short); const pr = score(d.rep) + (boost.has(d.id) ? 1000 : 0); const t = map.get(d.id).querySelector('text');
-      return side === 'below' ? { t, cx: d.x, cy: d.y + d.r + 6.5, w, h: 13, prio: pr } : { t, cx: d.x + d.r + 3 + w / 2, cy: d.y, w, h: 13, prio: pr }; });
+    groups.forEach((_, k) => ns.filter(d => d.grp === k).sort((a, b) => b.rep.deg - a.rep.deg || score(b.rep) - score(a.rep)).slice(0, 2).forEach(d => boost.add(d.id)));
+    const set = (t, x, y, anchor, dy) => () => { t.setAttribute('x', x); t.setAttribute('y', y); t.setAttribute('text-anchor', anchor); t.setAttribute('dy', dy); };
+    return ns.filter(d => !only || only.has(d.id)).map(d => {
+      const w = lw(d.rep.short); const pr = score(d.rep) + (boost.has(d.id) ? 1000 : 0) + (only && only.top === d.id ? 1e6 : 0); const t = map.get(d.id).querySelector('text');
+      const right = { cx: d.x + d.r + 3 + w / 2, cy: d.y, apply: set(t, d.r + 3, 0, 'start', '0.32em') };
+      const left = { cx: d.x - d.r - 3 - w / 2, cy: d.y, apply: set(t, -d.r - 3, 0, 'end', '0.32em') };
+      const below = { cx: d.x, cy: d.y + d.r + 6.5, apply: set(t, 0, d.r + 10, 'middle', '0') };
+      const above = { cx: d.x, cy: d.y - d.r - 7, apply: set(t, 0, -d.r - 4, 'middle', '0') };
+      return { t, w, h: 13, prio: pr, cands: side === 'below' ? [below, above, right, left] : [right, left, below, above] };
+    });
+  }
+  // Names at rest, and on focus only the focused type and the neighbours that fit.
+  function labelControl(svg, ns, map, obstacles, w, h, side) {
+    svg.classList.add('smartlabels');
+    const boxes = [...circleBoxes(ns), ...obstacles];
+    const rest = () => fitLabels(labelItems(ns, map, side), boxes, w, h);
+    rest();
+    return (id, nb) => {
+      if (!id) { rest(); return; }
+      const only = new Set([id, ...(nb || [])]); only.top = id;
+      for (const d of ns) if (!only.has(d.id)) map.get(d.id).querySelector('text').classList.add('lbl-off');
+      fitLabels(labelItems(ns, map, side, only), circleBoxes(ns), w, h);
+    };
   }
   function groupLabels(parent, ns, cls = 'glabel') {
     const boxes = [];
@@ -1825,15 +1888,20 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const pick = () => { const q = inp.value.trim().toLowerCase(); if (!q) { onPick(null); return; }
       const hit = r => r.name.toLowerCase() === q || r.members.some(m => NAME(m).toLowerCase() === q);
       const near = r => r.name.toLowerCase().includes(q) || r.members.some(m => NAME(m).toLowerCase().includes(q));
-      const r = R.list.find(hit) || R.list.find(near); if (r) onPick(r.id); };
+      const r = R.list.find(hit) || R.list.find(near); if (!r) { note.textContent = 'No match'; return; }
+      const member = r.members.map(NAME).find(nm => nm.toLowerCase() === q) || r.members.map(NAME).find(nm => nm.toLowerCase().includes(q));
+      note.textContent = r.members.length > 1 && member && member !== r.name ? `${member} is in ${r.name}` : '';
+      onPick(r.id); };
+    const note = mk('span', 'crumb', parent);
     inp.addEventListener('change', pick); inp.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); });
   }
   // Edges for rep pairs, styled by meaning: inside a group takes the group colour, unused relationships are dashed.
   function drawPairs(parent, R, by, o = {}) {
     return [...R.pairs.values()].map(p => {
       const a = by.get(p.a), b = by.get(p.b); if (!a || !b) return null;
+      if (o.skip && o.skip(p)) return null;
       const inside = R.byId.get(p.a).grp === R.byId.get(p.b).grp;
-      let cls = 'e' + (o.colorInside && inside ? ' ing' + gc(R.byId.get(p.a).grp) : '') + (pairUnused(p) ? ' zero' : '') + (o.extra ? ' ' + o.extra(p) : '');
+      let cls = 'e' + (o.colorInside ? (inside ? ' ing' + gc(R.byId.get(p.a).grp) : ' cross') : '') + (pairUnused(p) ? ' zero' : '') + (o.extra ? ' ' + o.extra(p) : '');
       if (o.hideUnused && pairUnused(p)) cls += ' gone';
       const d = o.path ? o.path(a, b, p) : `M${a.x.toFixed(1)},${a.y.toFixed(1)}L${b.x.toFixed(1)},${b.y.toFixed(1)}`;
       return { el: el('path', { d, class: cls, 'stroke-width': pairWidth(p).toFixed(2) }, parent), ...p };
@@ -1861,6 +1929,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     if (hasInst) li(`${fmt(unusedEdges)} of the ${fmt(edges.length)} relationships have no records behind them, yet they are drawn exactly like the busiest ones.`);
     li('At fit-to-view, names render at roughly 6px. A reader has to hover to learn what any node is.');
     li('The legend filters Core, Secondary and Derived. Every type in this graph is Core, so the only grouping control does nothing.');
+    if (!hasInst) { document.getElementById('inst-head').remove(); }
     const svg = document.getElementById('today-svg');
     const has = D.nodes.filter(n => n[3] != null).length;
     const xs = D.nodes.map(n => n[3] ?? 0), ys = D.nodes.map(n => n[4] ?? 0);
@@ -1872,20 +1941,19 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     D.nodes.forEach((n, i) => el('circle', { cx: xs[i], cy: ys[i], r, style: `fill: ${n[2] || 'var(--edge)'}` }, svg));
     document.getElementById('today-cap').textContent = `Redrawn from the export: ${has} of ${N} types at their saved canvas positions, in their product colours, with every relationship.`;
     const body = document.getElementById('why-body');
-    if (!hasInst) document.getElementById('inst-head').textContent = 'Records';
     for (const x of labelStats.slice(0, 10)) {
       const tr = mk('tr', '', body); mk('td', 'mono', tr, x.label);
       const same = x.S.size === x.T.size && [...x.S].every(i => x.T.has(i));
       mk('td', '', tr, same ? `${x.S.size} types, each to each` : `${x.S.size} types → ${x.T.size} types`);
       mk('td', 'num', tr, Math.round(100 * x.count / (x.S.size * x.T.size)) + '%');
-      mk('td', 'num', tr, fmt(x.count)); mk('td', 'num', tr, x.instKnown ? fmt(x.inst) : '—');
+      mk('td', 'num', tr, fmt(x.count)); if (hasInst) mk('td', 'num', tr, x.instKnown ? fmt(x.inst) : '—');
     }
     document.getElementById('why-callout').textContent = `Merge the ${families.length} sets of types that share a relationship signature and the ${fmt(edges.length)} relationships become ${R1.pairs.size} lines. At the level of the ${NG} groups found in the links, ${(() => { const s = new Set(); for (const p of R1.pairs.values()) { const a = R1.byId.get(p.a).grp, b = R1.byId.get(p.b).grp; if (a !== b) s.add(a < b ? a + '|' + b : b + '|' + a); } return s.size; })()} links connect them.`;
     const gb = document.getElementById('groups-body');
     groups.forEach((g, k) => { const tr = mk('tr', '', gb); const td = mk('td', '', tr); const s = mk('span', 't', td); s.style.cssText = 'display:inline-flex;gap:6px;align-items:center'; mk('i', 'dot gb' + gc(k), s); mk('span', '', s, g.name); mk('td', 'num', tr, String(g.members.length)); mk('td', '', tr, g.lead.join(', ')); });
     const fb = document.getElementById('families-body');
     families.forEach(f => { const tr = mk('tr', '', fb); mk('td', '', tr, f.name); mk('td', 'num', tr, String(f.members.length)); mk('td', '', tr, f.members.map(NAME).join(', ')); });
-    document.getElementById('round2-intro').innerHTML = `<p>From round 1 you liked <b>1</b> (similar types pulled close, clusters joined by edges) and <b>2</b> (constellation), and the heatmap. <b>6</b>, <b>8</b>, <b>9</b> and <b>11</b> were okay, and you asked for something new in place of <b>10</b>. Everything else is gone. Each mock below is sized to the space the Graph tab canvas would get: full width, window height minus about 120px. Feedback by number works best.</p>`;
+    document.getElementById('round2-intro').innerHTML = `<p>From round 1 you liked <b>1</b> (similar types pulled close, clusters joined by edges), <b>2</b> (constellation) and the heatmap (<b>11</b>). <b>6</b>, <b>8</b> and <b>9</b> were okay, and you asked for something new in place of <b>10</b>. Everything else is gone. Each mock below is sized to the space the Graph tab canvas would get: full width, window height minus about 120px. Feedback by number works best.</p>`;
     document.getElementById('footer').innerHTML = `<p>Data: export of "${esc(D.graph.name)}" from es.prod${D.graph.capturedAt ? ', captured ' + esc(String(D.graph.capturedAt).slice(0, 10)) : ''}: ${N} types, ${fmt(edges.length)} relationships, ${D.sources.length} sources. Groups: Louvain communities on the type links. Similar types: relationship signatures overlapping by at least 60%. Similarity map: classical MDS on neighbour overlap.</p>`;
   })();
 
@@ -1908,8 +1976,8 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       const E = drawPairs(gE, R, by, { colorInside: true, hideUnused: st.hideUnused });
       const gl = groupLabels(gL, ns);
       const map = drawNodes(gN, ns);
-      fitLabels(labelItems(ns, map), [...circleBoxes(ns), ...gl], w, h);
-      const f = focusable(svg, map, E, id => repInfo(R, id));
+      const lc = labelControl(svg, ns, map, gl, w, h);
+      const f = focusable(svg, map, E, id => repInfo(R, id), lc);
       const tools = mk('div', 'mtools', stage);
       if (hasInst) toggleBtn(tools, 'Hide unused relationships', st.hideUnused, v => { st.hideUnused = v; rerender(this); });
       searchBox(tools, R, id => f.pin(id));
@@ -1920,26 +1988,44 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   mock({
     short: 'Similarity map', title: 'Near means connected the same way', from: 'new, from round 1 · 01',
     answers: 'Which types play the same role, even when they are not linked to each other?',
-    read: 'Position comes from how similar two types’ connections are: types that link to the same things sit close, whether or not they link to each other. Colour is the group from the links. Direct relationships are hidden until you hover a type or switch them on, so the two kinds of closeness never mix.',
+    read: 'Position comes from how alike two types’ connections are: each type is pulled towards the few types that link to the most of the same things, whether or not they link to each other. Hover a type to see its most alike types and the share of links they have in common. Colour is the group from the links. Direct relationships stay hidden until you hover or switch them on, so the two kinds of closeness never mix.',
     render(stage, w, h) {
       const st = this.st || (this.st = { links: false });
       const R = R1;
-      const ns = R.list.map(r => { const xs = r.members.map(m => D.sim[m][0]), ys = r.members.map(m => D.sim[m][1]); return { id: r.id, grp: r.grp, r: rad(r.rec), rep: r, tx: d3.mean(xs), ty: d3.mean(ys) }; });
-      const pad = 50, mr = 110;
-      const x0 = d3.min(ns, d => d.tx), x1 = d3.max(ns, d => d.tx), y0 = d3.min(ns, d => d.ty), y1 = d3.max(ns, d => d.ty);
-      ns.forEach(d => { d.tx = pad + (d.tx - x0) / (x1 - x0 || 1) * (w - 2 * pad - mr); d.ty = pad + 30 + (d.ty - y0) / (y1 - y0 || 1) * (h - 2 * pad - 30); d.x = d.tx; d.y = d.ty; });
-      const sim = d3.forceSimulation(ns).randomSource(d3.randomLcg(5)).force('x', d3.forceX(d => d.tx).strength(0.35)).force('y', d3.forceY(d => d.ty).strength(0.35)).force('collide', d3.forceCollide(d => d.r + 9).iterations(3)).stop();
-      for (let i = 0; i < 160; i++) sim.tick();
+      const ns = R.list.map(r => ({ id: r.id, grp: r.grp, r: rad(r.rec), rep: r }));
+      const nbr = new Map(R.list.map(r => [r.id, new Set()]));
+      for (const p of R.pairs.values()) { nbr.get(p.a).add(p.b); nbr.get(p.b).add(p.a); }
+      const simOf = (a, b) => { const A = nbr.get(a), B = nbr.get(b); let i = 0; for (const x of A) if (B.has(x)) i++; const u = A.size + B.size - i; return u ? i / u : 0; };
+      const near = new Map(); const kl = [];
+      for (const a of ns) {
+        const best = ns.filter(b => b !== a).map(b => [b.id, simOf(a.id, b.id)]).filter(x => x[1] > 0.15).sort((x, y) => y[1] - x[1]).slice(0, 4);
+        near.set(a.id, best);
+        for (const [b, v] of best) if (a.id < b || !near.get(b)?.some(x => x[0] === a.id)) kl.push({ source: a.id, target: b, v });
+      }
+      ns.forEach((d, i) => { const a = i * 2.399963; d.x = w / 2 + Math.cos(a) * 9 * Math.sqrt(i + 1); d.y = h / 2 + Math.sin(a) * 9 * Math.sqrt(i + 1); });
+      const sim = d3.forceSimulation(ns).randomSource(d3.randomLcg(5))
+        .force('link', d3.forceLink(kl).id(d => d.id).distance(l => 18 + (1 - l.v) * 70).strength(l => 0.25 + 0.6 * l.v))
+        .force('charge', d3.forceManyBody().strength(-70).distanceMax(320)).force('collide', d3.forceCollide(d => d.r + 10).iterations(3))
+        .force('x', d3.forceX(w / 2).strength(0.03)).force('y', d3.forceY(h / 2).strength(0.05)).stop();
+      for (let i = 0; i < 360; i++) sim.tick();
+      fit(ns, w, h, 44, 0, { l: 0, r: 110, t: 46, b: 0 });
       const svg = mkSvg(stage, w, h); const by = new Map(ns.map(d => [d.id, d]));
       const gE = el('g', {}, svg), gN = el('g', {}, svg);
       const E = drawPairs(gE, R, by, { extra: () => st.links ? '' : 'hid', path: (a, b) => qpath(a, b, 0.14) });
       const map = drawNodes(gN, ns);
-      fitLabels(labelItems(ns, map), circleBoxes(ns), w, h);
-      const f = focusable(svg, map, E, id => repInfo(R, id));
+      const lc = labelControl(svg, ns, map, [], w, h);
+      const simInfo = id => repInfo(R, id) + (near.get(id).length ? `<br><b>Most alike:</b> ${near.get(id).slice(0, 3).map(([b, v]) => `${esc(R.byId.get(b).short)} ${Math.round(v * 100)}%`).join(', ')}` : '');
+      const f = focusable(svg, map, E, simInfo, lc);
+      const ex = kl.filter(l => { const a = l.source, b = l.target; return a.rep.deg >= 12 && b.rep.deg >= 12; }).sort((x, y) => y.v - x.v)[0];
+      if (ex) {
+        const a = ex.source, b = ex.target, mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - 34;
+        el('path', { d: `M${a.x},${a.y}L${mx},${my}L${b.x},${b.y}`, class: 'sim-note-line' }, svg);
+        el('text', { x: mx, y: my - 6, 'text-anchor': 'middle', class: 'sim-note' }, svg, `${a.rep.short} and ${b.rep.short} link to ${Math.round(ex.v * 100)}% of the same types`);
+      }
       const tools = mk('div', 'mtools', stage);
       toggleBtn(tools, 'Show direct links', st.links, v => { st.links = v; rerender(this); });
       searchBox(tools, R, id => f.pin(id));
-      legend(stage); hint(stage, 'Distance = how differently two types connect · hover for direct links');
+      legend(stage); hint(stage, 'Close together = link to the same types · hover for direct links and most alike types');
     },
   });
 
@@ -1955,9 +2041,15 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       const bubble = (parent, k, x, y, r, small) => {
         const g = el('g', { class: 'bubble', transform: `translate(${x},${y})` }, parent);
         el('circle', { r, class: `b gf${gc(k)} st${gc(k)}`, style: `stroke: var(--g${gc(k)})` }, g);
-        el('text', { y: small ? r + 14 : -4, class: 'bn' }, g, truncate(groups[k].name, small ? 22 : 30));
-        if (!small) { el('text', { y: 12, class: 'bm' }, g, `${groups[k].members.length} types · ${compact(groups[k].members.reduce((a, i) => a + REC(i), 0))} records`); el('text', { y: 26, class: 'bm' }, g, truncate(groups[k].lead.slice(0, 3).join(', '), Math.max(12, Math.floor(r / 3)))); }
+        const outside = small || r < 52; const nT = groups[k].members.length;
+        el('text', { y: outside ? r + 15 : -4, class: 'bn' }, g, truncate(groups[k].name, outside ? 24 : 30));
+        if (!small) {
+          el('text', { y: outside ? r + 29 : 12, class: 'bm' }, g, `${nT} type${nT === 1 ? '' : 's'} · ${compact(groups[k].members.reduce((a, i) => a + REC(i), 0))} records`);
+          if (!outside) el('text', { y: 26, class: 'bm' }, g, truncate(groups[k].lead.slice(0, 3).join(', '), Math.max(12, Math.floor(r / 3))));
+        }
         g.addEventListener('click', ev => { ev.stopPropagation(); st.open = k; rerender(this); });
+        g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', `Open ${groups[k].name}`);
+        g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); st.open = k; rerender(this); } });
         g.addEventListener('pointermove', ev => showTip(`<b>${esc(groups[k].name)}</b><br>${groups[k].members.length} types: ${esc(groups[k].members.slice(0, 14).map(NAME).join(', '))}${groups[k].members.length > 14 ? '…' : ''}<br><span class="k">Click to open</span>`, ev));
         g.addEventListener('pointerleave', hideTip);
         return g;
@@ -1965,17 +2057,20 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       if (st.open == null) {
         const A = groupAnchors(R1, w, h, 110, 10);
         const maxN = d3.max(groups, g => g.members.length);
-        const rOf = k => clamp(Math.sqrt(groups[k].members.length / maxN) * Math.min(w, h) * 0.13, 26, 130);
+        const rOf = k => clamp(Math.sqrt(groups[k].members.length / maxN) * Math.min(w, h) * 0.13, 30, 130);
         const gL = el('g', {}, svg), gB = el('g', {}, svg);
         for (const x of gl.values()) {
-          const a = { x: A[x.a][0], y: A[x.a][1] }, b = { x: A[x.b][0], y: A[x.b][1] };
+          const ca = A[x.a], cb = A[x.b], dx = cb[0] - ca[0], dy = cb[1] - ca[1], dl = Math.hypot(dx, dy) || 1;
+          const ra = rOf(x.a) + 4, rb = rOf(x.b) + 4;
+          const a = { x: ca[0] + dx / dl * ra, y: ca[1] + dy / dl * ra }, b = { x: cb[0] - dx / dl * rb, y: cb[1] - dy / dl * rb };
           const p = el('path', { d: qpath(a, b, 0.08), class: 'glink', 'stroke-width': (1 + Math.sqrt(x.n) * 1.2).toFixed(1) }, gL);
           const t = el('text', { x: (a.x + b.x) / 2 - (b.y - a.y) * 0.04, y: (a.y + b.y) / 2 + (b.x - a.x) * 0.04 + 4, class: 'glink-n' }, gL, String(x.n));
           const html = `<b>${esc(groups[x.a].name)} ↔ ${esc(groups[x.b].name)}</b> · ${x.n}<br>${topLabels(x.labels, 5)}`;
           p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip); void t;
         }
         groups.forEach((g, k) => bubble(gB, k, A[k][0], A[k][1], rOf(k), false));
-        hint(stage, 'Click a bubble to open it');
+        searchBox(tools, R1, id => { if (!id) return; st.open = R1.byId.get(id).grp; st.pin = id; rerender(this); });
+        hint(stage, 'Click a bubble to open it, or find a type');
         return;
       }
       const k0 = st.open;
@@ -1997,12 +2092,14 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       const gNodes = others.map(k => ({ id: 'g' + k, grp: k, r: clamp(6 + Math.sqrt(groups[k].members.length) * 3, 10, 26), rep: R.byId.get('g' + k), x: pos.get(k)[0], y: pos.get(k)[1] }));
       const by = new Map([...ns, ...gNodes].map(d => [d.id, d]));
       const gE = el('g', {}, svg), gG = el('g', {}, svg), gN = el('g', {}, svg);
-      const E = drawPairs(gE, R, by, { colorInside: true, path: (a, b) => qpath(a, b, 0.1) });
+      const E = drawPairs(gE, R, by, { colorInside: true, skip: p => p.a[0] === 'g' && p.b[0] === 'g', path: (a, b) => qpath(a, b, 0.1) });
       for (const d of gNodes) { const b = bubble(gG, d.grp, d.x, d.y, d.r, true); void b; }
       const map = drawNodes(gN, ns);
       for (const d of gNodes) { const g = el('g', { class: 'n', transform: `translate(${d.x},${d.y})` }, gN); el('circle', { r: d.r, class: 'hit' }, g); el('text', { class: 'lbl-off' }, g, ''); map.set(d.id, g); g.style.pointerEvents = 'none'; }
-      fitLabels(labelItems(ns, map), [...circleBoxes(ns), ...gNodes.map(d => [d.x - 80, d.y - d.r, d.x + 80, d.y + d.r + 18])], w, h);
-      focusable(svg, map, E, id => id[0] === 'g' ? null : repInfo(R, id));
+      const lc = labelControl(svg, ns, map, gNodes.map(d => [d.x - 80, d.y - d.r, d.x + 80, d.y + d.r + 18]), w, h);
+      const f3 = focusable(svg, map, E, id => id[0] === 'g' ? null : repInfo(R, id), (id, nb) => lc(id && id[0] === 'g' ? null : id, nb));
+      searchBox(tools, R1, id => { if (!id) return; const k = R1.byId.get(id).grp; if (k !== k0) { st.open = k; st.pin = id; rerender(this); } else if (R.byId.has(id)) f3.pin(id); });
+      if (st.pin && R.byId.has(st.pin)) { f3.pin(st.pin); } st.pin = null;
       hint(stage, 'Hover a type for its links · click a group on the edge to open it');
     },
   });
@@ -2026,26 +2123,33 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       for (const p of sorted) { if (R.byId.get(p.a).grp !== R.byId.get(p.b).grp) continue; const ra = find(p.a), rb = find(p.b); if (ra !== rb) { parent.set(ra, rb); bbSet.add(p); } }
       const best = new Map(); for (const p of sorted) { const a = R.byId.get(p.a).grp, b = R.byId.get(p.b).grp; if (a === b) continue; const k = a < b ? a + '|' + b : b + '|' + a; if (!best.has(k)) best.set(k, p); }
       for (const p of best.values()) bbSet.add(p);
-      for (const p of bbSet) el('path', { d: `M${by.get(p.a).x},${by.get(p.a).y}L${by.get(p.b).x},${by.get(p.b).y}`, class: 'backbone' }, gB);
+      for (const p of bbSet) el('path', { d: `M${by.get(p.a).x},${by.get(p.a).y}L${by.get(p.b).x},${by.get(p.b).y}`, class: 'backbone' + (R.byId.get(p.a).grp !== R.byId.get(p.b).grp ? ' bridge' : '') }, gB);
     }
     const E = drawPairs(gE, R, by, { path: (a, b) => qpath(a, b, 0.14), extra: () => backbone ? 'hid' : '' });
-    groups.forEach((g, k) => { const m = ns.filter(n => n.grp === k); if (!m.length) return; el('text', { x: d3.mean(m, n => n.x), y: d3.min(m, n => n.y) - 16, class: 'dlab', fill: STAR[gc(k)] }, gD, g.name.toUpperCase()); });
+    const heads = [];
+    groups.forEach((g, k) => { const m = ns.filter(n => n.grp === k); if (!m.length) return; const tw = g.name.length * 9.4 + 10; const x = clamp(d3.mean(m, n => n.x), tw / 2 + 8, w - tw / 2 - 8), y = Math.max(22, d3.min(m, n => n.y) - 16);
+      el('text', { x, y, class: 'dlab', fill: STAR[gc(k)] }, gD, g.name.toUpperCase()); heads.push({ x, y, tw }); });
     const map = drawNodes(gN, ns, { fill: d => STAR[gc(d.grp)], text: d => ({ x: 0, y: d.r + 11, 'text-anchor': 'middle' }) });
-    const f = focusable(svg, map, E, id => repInfo(R, id));
+    svg.classList.add('smartlabels');
+    let focusSet = null;
+    const f = focusable(svg, map, E, id => repInfo(R, id), (id, nb) => { focusSet = id ? new Set([id, ...nb]) : null; if (focusSet) focusSet.top = id; relabel(); });
     let raf = 0, T = d3.zoomIdentity;
     const relabel = () => {
       raf = 0; const k = T.k, sk = Math.sqrt(k);
       const boost = new Set(); groups.forEach((_, g) => ns.filter(d => d.grp === g).sort((a, b) => b.rep.rec - a.rep.rec).slice(0, 2).forEach(d => boost.add(d.id)));
       for (const d of ns) { const c = map.get(d.id).querySelector('.dot-c'); c.setAttribute('r', (d.r / sk).toFixed(2)); c.style.filter = k > 2 ? 'none' : `drop-shadow(0 0 ${(4 + d.r).toFixed(0)}px ${STAR[gc(d.grp)]})`; }
-      const items = ns.map(d => { const t = map.get(d.id).querySelector('text'); t.setAttribute('y', (d.r / sk + 11 / k).toFixed(2)); return { t, cx: d.x * k + T.x, cy: d.y * k + T.y + d.r * sk + 7, w: lw(d.rep.short) * 1.05, h: 13, prio: d.rep.rec + (boost.has(d.id) ? 1e9 : 0) }; });
-      fitLabels(items, ns.map(d => { const x = d.x * k + T.x, y = d.y * k + T.y, r = d.r * sk; return [x - r, y - r, x + r, y + r]; }), w, h);
+      const items = ns.map(d => { const t = map.get(d.id).querySelector('text'); t.setAttribute('y', (d.r / sk + 11 / k).toFixed(2)); if (focusSet && !focusSet.has(d.id)) { t.classList.add('lbl-off'); return null; } return { t, cx: d.x * k + T.x, cy: d.y * k + T.y + d.r * sk + 7, w: lw(d.rep.short) * 1.05, h: 13, prio: d.rep.rec + (boost.has(d.id) ? 1e9 : 0) + (focusSet && focusSet.top === d.id ? 1e12 : 0) }; }).filter(Boolean);
+      const lgEl = stage.querySelector('.legend'); const lgBox = lgEl ? [0, 0, (lgEl.offsetWidth || 0) + 14, (lgEl.offsetHeight || 0) + 14] : [0, 0, 0, 0];
+      const hb = T.k < 1.7 ? heads.map(hd => { const x = hd.x * k + T.x, y = hd.y * k + T.y; return [x - hd.tw / 2, y - 14, x + hd.tw / 2, y + 4]; }) : [];
+      fitLabels(items, [...ns.map(d => { const x = d.x * k + T.x, y = d.y * k + T.y, r = d.r * sk; return [x - r, y - r, x + r, y + r]; }), ...hb, lgBox], w, h);
     };
     const zoom = d3.zoom().scaleExtent([0.7, 8]).filter(ev => (ev.type === 'wheel' ? (ev.ctrlKey || ev.metaKey) : !ev.button))
       .on('zoom', ev => { T = ev.transform; root.setAttribute('transform', T); root.style.setProperty('--k', T.k); svg.classList.toggle('z2', T.k >= 1.7); if (!raf) raf = requestAnimationFrame(relabel); });
+    const centreOn = id => { const d = by.get(id); if (!d) return; d3.select(svg).transition().duration(400).call(zoom.transform, d3.zoomIdentity.translate(w / 2, h / 2).scale(Math.max(T.k, 1.8)).translate(-d.x, -d.y)); };
     d3.select(svg).call(zoom).on('dblclick.zoom', null);
     relabel();
     const tools = mk('div', 'mtools', stage);
-    searchBox(tools, R, id => f.pin(id));
+    searchBox(tools, R, id => { f.pin(id); if (id) centreOn(id); });
     button(tools, '+', () => d3.select(svg).transition().duration(250).call(zoom.scaleBy, 1.6)).setAttribute('aria-label', 'Zoom in');
     button(tools, '−', () => d3.select(svg).transition().duration(250).call(zoom.scaleBy, 1 / 1.6)).setAttribute('aria-label', 'Zoom out');
     button(tools, 'Reset', () => d3.select(svg).transition().duration(300).call(zoom.transform, d3.zoomIdentity));
@@ -2090,8 +2194,8 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         path: (a, b, p) => { if (!(hubSet.has(p.a) || hubSet.has(p.b))) return `M${a.x},${a.y}L${b.x},${b.y}`; const [lo, hi] = hubSet.has(p.a) ? [b, a] : [a, b]; return `M${lo.x},${lo.y}C${lo.x},${(lo.y + hi.y) / 2} ${hi.x},${hi.y + 60} ${hi.x},${hi.y}`; } });
       const gl = groupLabels(gL, rest);
       const map = drawNodes(gN, all, { cls: d => hubSet.has(d.id) ? 'hub' : '', text: d => hubSet.has(d.id) ? { x: 0, y: d.r + 13, 'text-anchor': 'middle' } : { x: d.r + 3, dy: '0.32em' } });
-      fitLabels(labelItems(rest, map), [...circleBoxes(all), ...gl, [0, 0, w, bandH]], w, h);
-      const f = focusable(svg, map, E, id => repInfo(R, id));
+      const lc = labelControl(svg, rest, map, [...circleBoxes(hubNodes), ...gl, [0, 0, w, bandH]], w, h);
+      const f = focusable(svg, map, E, id => repInfo(R, id), lc);
       const tools = mk('div', 'mtools', stage); tools.style.top = (bandH + 8) + 'px';
       toggleBtn(tools, 'Show context links', st.ctx, v => { st.ctx = v; rerender(this); });
       searchBox(tools, R, id => f.pin(id));
@@ -2103,13 +2207,13 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   mock({
     short: 'Ring', title: 'A ring you open one group at a time', from: 'round 1 · 08',
     answers: 'Can the bundled ring scale, and can I find my way around it?',
-    read: 'The ring starts with one node per group, so it stays readable at any size. Click a group to open it into its types; the rest stay closed. Links bend through their group. Hover a type for its links. "Open all" shows every type at once.',
+    read: 'The ring starts with one node per group, so it stays readable at any size. Click a group name to open that group into its types; the others stay closed, and opening another group closes the first. Links bend through their group. Hover a type for its links. "Open all groups" shows every group at once, with similar types still merged.',
     render(stage, w, h) {
       const st = this.st || (this.st = { open: new Set(), all: false });
       const key = st.all ? 'ringall' : 'ring' + [...st.open].sort().join(',');
       const R = repsBy(key, i => (st.all || st.open.has(GRP(i))) ? (FAM(i) >= 0 ? 'f' + FAM(i) : 'n' + i) : 'g' + GRP(i));
       const tools = mk('div', 'mtools', stage);
-      toggleBtn(tools, 'Open all', st.all, v => { st.all = v; st.open.clear(); rerender(this); });
+      toggleBtn(tools, 'Open all groups', st.all, v => { st.all = v; st.open.clear(); rerender(this); });
       if (st.open.size && !st.all) button(tools, 'Close all', () => { st.open.clear(); rerender(this); });
       const panel = mk('div', 'mpanel', stage); panel.hidden = true;
       const RR = Math.max(140, Math.min(w, h) / 2 - 186);
@@ -2125,7 +2229,8 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       const E2 = [...R.pairs.values()].map(p => ({ el: el('path', { d: line(leafById.get(p.a).path(leafById.get(p.b))), class: 'e' + (pairUnused(p) ? ' zero' : ''), 'stroke-width': pairWidth(p).toFixed(2) }, gE), ...p }));
       void E;
       for (const dn of hier.children) {
-        const ls = dn.leaves(); const a0 = d3.min(ls, l => l.x) - 0.012, a1 = d3.max(ls, l => l.x) + 0.012;
+        const ls = dn.leaves(); if (ls.length === 1 && ls[0].data.kind === 'g') continue;
+        const a0 = d3.min(ls, l => l.x) - 0.012, a1 = d3.max(ls, l => l.x) + 0.012;
         el('path', { d: d3.arc().innerRadius(RR + 146).outerRadius(RR + 150).startAngle(a0).endAngle(a1)(), class: 'gf' + gc(dn.data.grp) }, g);
         if (ls.length > 1) { const mid = (a0 + a1) / 2; el('text', { x: Math.sin(mid) * (RR + 162), y: -Math.cos(mid) * (RR + 162) + 4, class: 'hull-name gf' + gc(dn.data.grp), 'text-anchor': Math.abs(Math.sin(mid)) < 0.2 ? 'middle' : (mid < Math.PI ? 'start' : 'end') }, g, groups[dn.data.grp].name); }
       }
@@ -2136,10 +2241,16 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         el('circle', { r: 10, class: 'hit' }, n);
         el('circle', { r: isG ? (4 + Math.sqrt(r.members.length)).toFixed(1) : (2 + Math.log10(1 + r.rec) * 0.9).toFixed(2), class: 'dot-c gf' + gc(r.grp) }, n);
         const flip = l.x >= Math.PI;
-        const t = el('text', { x: flip ? -9 : 9, dy: '0.32em', 'text-anchor': flip ? 'end' : 'start', transform: flip ? 'rotate(180)' : null }, n, isG ? `${truncate(groups[r.grp].name, 20)} (${r.members.length}) ▸` : truncate(r.name, 22));
+        const t = el('text', { x: flip ? -9 : 9, dy: '0.32em', 'text-anchor': flip ? 'end' : 'start', transform: flip ? 'rotate(180)' : null }, n, isG ? '' : truncate(r.name, 22));
         if (r.members.length > 1 && !isG) t.style.fontWeight = 600;
         map.set(r.id, n);
-        if (isG) n.addEventListener('click', ev => { ev.stopPropagation(); st.open.add(r.grp); rerender(this); });
+        if (isG) {
+          const open = ev => { ev.stopPropagation(); st.open = new Set([r.grp]); st.all = false; rerender(this); };
+          n.addEventListener('click', open);
+          const lx = Math.sin(l.x) * (RR + 26), ly = -Math.cos(l.x) * (RR + 26);
+          const lab = el('text', { x: lx, y: ly + 4, class: 'ring-label gf' + gc(r.grp), 'text-anchor': Math.abs(Math.sin(l.x)) < 0.2 ? 'middle' : (l.x < Math.PI ? 'start' : 'end'), tabindex: 0, role: 'button', 'aria-label': `Open ${groups[r.grp].name}` }, g, `${groups[r.grp].name} (${r.members.length}) ▸`);
+          lab.addEventListener('click', open); lab.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(ev); } });
+        }
       }
       for (const dn of hier.children) if (dn.children.length && dn.children[0].data.kind !== 'g' && !st.all) {
         const ls = dn.leaves(); const mid = (d3.min(ls, l => l.x) + d3.max(ls, l => l.x)) / 2;
@@ -2153,7 +2264,9 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         if (r.kind === 'g') mk('div', 'lbls', panel, 'Click to open this group');
         for (const dir of ['out', 'in']) for (const [lab, set] of [...rr[dir]].sort((a, b) => b[1].size - a[1].size).slice(0, 14)) { const row = mk('div', '', panel); mk('span', 'lbls', row, `${dir === 'out' ? '→' : '←'} ${lab}  `); mk('span', '', row, [...set].map(x => x === id ? 'itself' : R.byId.get(x).short).join(', ')); }
       });
-      hint(stage, `${R.list.length} nodes · ${E2.length} lines · click a group to open it`);
+      searchBox(tools, R1, id => { if (!id) return; const k = R1.byId.get(id).grp; st.all = false; st.open = new Set([k]); rerender(this); });
+      const closed = R.list.filter(r => r.kind === 'g').length;
+      hint(stage, `${R.list.length} nodes · ${E2.length} lines` + (closed ? ' · click a group name to open it' : ' · hover a type for its links'));
     },
   });
 
@@ -2165,39 +2278,56 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       const st = this.st || (this.st = { open: null });
       const tools = mk('div', 'mtools', stage);
       let units, unitOf;
-      if (st.open == null) { units = groups.map((g, k) => ({ id: 'g' + k, name: g.name, grp: k })); unitOf = i => GRP(i); }
+      if (st.open == null) { units = groups.map((g, k) => ({ id: 'g' + k, name: g.name, grp: k })).filter(u => !isolatedGroup[u.grp]); const gp = new Map(units.map((u, i) => [u.grp, i])); unitOf = i => gp.get(GRP(i)); }
       else {
         const k0 = st.open; button(tools, '← All groups', () => { st.open = null; rerender(this); }); mk('span', 'crumb', tools, groups[k0].name);
         const inner = R1.list.filter(r => r.grp === k0).sort((a, b) => b.deg - a.deg);
-        units = [...inner.map(r => ({ id: r.id, name: r.short, grp: k0, rep: r })), ...groups.map((g, k) => ({ id: 'g' + k, name: g.name, grp: k })).filter(u => u.grp !== k0)];
+        units = [...inner.map(r => ({ id: r.id, name: r.short, grp: k0, rep: r })), ...groups.map((g, k) => ({ id: 'g' + k, name: g.name, grp: k })).filter(u => u.grp !== k0 && !isolatedGroup[u.grp])];
         const pos = new Map(units.map((u, i) => [u.id, i]));
         unitOf = i => GRP(i) === k0 ? pos.get(R1.byId.has('f' + FAM(i)) && FAM(i) >= 0 && R1.byId.get('f' + FAM(i)).grp === k0 ? 'f' + FAM(i) : 'n' + i) : pos.get('g' + GRP(i));
       }
       const n = units.length; const M = Array.from({ length: n }, () => new Array(n).fill(0)); const lab = Array.from({ length: n }, () => Array.from({ length: n }, () => new Map()));
       for (const [s, t, l] of edges) { const a = unitOf(s), b = unitOf(t); if (a == null || b == null || a === b) continue; M[a][b]++; lab[a][b].set(labels[l], (lab[a][b].get(labels[l]) || 0) + 1); }
-      const outer = Math.min(w * 0.5 - 230, h / 2 - 70), inner = outer - 14;
+      const sideW = 260, cxw = (w - sideW) / 2;
+      const outer = Math.min(cxw - 190, h / 2 - 70), inner = outer - 14;
       const chords = d3.chordDirected().padAngle(n > 20 ? 0.012 : 0.03).sortSubgroups(d3.descending)(M);
-      const svg = mkSvg(stage, w, h); const g = el('g', { transform: `translate(${w / 2},${h / 2 + 10})` }, svg);
+      const svg = mkSvg(stage, w - sideW, h); const g = el('g', { transform: `translate(${cxw},${h / 2 + 10})` }, svg);
+      const side = mk('div', 'chord-side', stage);
+      const outN = units.map((_, i) => d3.sum(M[i])), inN = units.map((_, i) => d3.sum(M, r => r[i]));
+      let pinnedIso = null;
       const ribbon = d3.ribbonArrow().radius(inner - 2).padAngle(1 / inner).headRadius(inner * 0.05);
       const arc = d3.arc().innerRadius(inner).outerRadius(outer);
       const gR = el('g', {}, g);
-      const rib = chords.map(c => { const s = c.source.index, t = c.target.index; const p = el('path', { d: ribbon(c), class: 'ribbon gf' + gc(units[s].grp) }, gR); const html = `<b>${esc(units[s].name)} → ${esc(units[t].name)}</b> · ${M[s][t]}<br>${topLabels(lab[s][t], 6)}`; p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip); return { p, s, t }; });
-      const callouts = [];
+      const rib = chords.map(c => { const s = c.source.index, t = c.target.index; const p = el('path', { d: ribbon(c), class: 'ribbon gf' + gc(units[s].grp) + (st.open != null && units[s].id[0] === 'g' && units[t].id[0] === 'g' ? ' off' : '') }, gR); const html = `<b>${esc(units[s].name)} → ${esc(units[t].name)}</b> · ${M[s][t]}<br>${topLabels(lab[s][t], 6)}`; p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip); return { p, s, t }; });
+      const callouts = [], isoFns = [];
+      const isoOf = i => isoFns[i] && isoFns[i]();
       chords.groups.forEach(gr => {
         const u = units[gr.index]; const a = el('path', { d: arc(gr), class: 'garc gf' + gc(u.grp) }, g);
         if (u.rep) a.style.fillOpacity = 0.75;
+        a.addEventListener('pointermove', ev => showTip(`<b>${esc(u.rep ? u.rep.name : u.name)}</b><br>${outN[gr.index]} out · ${inN[gr.index]} in` + (u.id[0] === 'g' && u.grp !== st.open ? '<br><span class="k">Click to open</span>' : ''), ev));
+        a.addEventListener('pointerleave', hideTip);
         const mid = (gr.startAngle + gr.endAngle) / 2, tx = Math.sin(mid) * (outer + 12), ty = -Math.cos(mid) * (outer + 12);
         const anchor = Math.abs(Math.sin(mid)) < 0.15 ? 'middle' : (mid < Math.PI ? 'start' : 'end');
         const t = el('text', { x: tx, y: ty + 4, class: 'glab', 'text-anchor': anchor }, g, gr.value > 0 || n <= 20 ? truncate(u.name, 26) : '');
         if (gr.endAngle - gr.startAngle < 0.03 && n > 20) t.textContent = '';
         const wl = t.textContent.length * 6.6; const x0 = anchor === 'start' ? tx : anchor === 'end' ? tx - wl : tx - wl / 2; if (wl) callouts.push({ t, x0, x1: x0 + wl, y: ty + 4 });
-        const iso = () => rib.forEach(r => r.p.classList.toggle('off', r.s !== gr.index && r.t !== gr.index)); const un = () => rib.forEach(r => r.p.classList.remove('off'));
-        for (const target of [a, t]) { target.addEventListener('pointerenter', iso); target.addEventListener('pointerleave', un); target.style.cursor = 'pointer';
-          target.addEventListener('click', () => { if (u.id[0] === 'g') { st.open = u.grp; rerender(this); } }); }
+        const iso = () => rib.forEach(r => r.p.classList.toggle('off', r.s !== gr.index && r.t !== gr.index)); const un = () => { if (pinnedIso != null) { isoOf(pinnedIso); return; } rib.forEach(r => r.p.classList.toggle('off', st.open != null && units[r.s].id[0] === 'g' && units[r.t].id[0] === 'g')); };
+        isoFns[gr.index] = iso;
+        const act = () => { if (u.id[0] === 'g' && !(st.open != null && u.grp === st.open)) { st.open = u.grp; rerender(this); } else { pinnedIso = pinnedIso === gr.index ? null : gr.index; un(); } };
+        for (const target of [a, t]) { target.addEventListener('pointerenter', iso); target.addEventListener('pointerleave', un); target.style.cursor = 'pointer'; target.addEventListener('click', act); }
+        a.setAttribute('tabindex', '0'); a.setAttribute('role', 'button'); a.setAttribute('aria-label', u.id[0] === 'g' ? `Open ${u.name}` : u.name);
+        a.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); act(); } });
       });
       callouts.sort((p, q) => p.y - q.y);
       for (let i = 1; i < callouts.length; i++) for (let j = 0; j < i; j++) { const a = callouts[j], b = callouts[i]; if (a.x0 < b.x1 && b.x0 < a.x1 && b.y < a.y + 15) { b.y = a.y + 15; b.t.setAttribute('y', b.y); } }
-      hint(stage, st.open == null ? 'Click a group arc to open it · hover a ribbon' : 'Hover a ribbon · click another group arc to open it');
+      units.map((u, i) => ({ u, i, tot: outN[i] + inN[i] })).sort((a, b) => b.tot - a.tot).forEach(({ u, i }) => {
+        const row = mk('div', '', side); const nm = mk('span', '', row); nm.style.cssText = 'display:inline-flex;gap:6px;align-items:center;min-width:0';
+        mk('i', 'dot gb' + gc(u.grp), nm); const tx = mk('span', '', nm, u.name); tx.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+        mk('span', 'n', row, `${outN[i]} out · ${inN[i]} in`);
+        row.addEventListener('pointerenter', () => isoOf(i)); row.addEventListener('pointerleave', () => { if (pinnedIso == null) rib.forEach(r => r.p.classList.remove('off')); else isoOf(pinnedIso); });
+        if (u.id[0] === 'g' && u.grp !== st.open) { row.style.cursor = 'pointer'; row.title = 'Open this group'; row.addEventListener('click', () => { st.open = u.grp; rerender(this); }); }
+      });
+      hint(stage, st.open == null ? 'Click a group arc or list row to open it · hover a ribbon' : 'Click a type arc to keep it highlighted · click another group to open it').style.right = (sideW + 10) + 'px';
     },
   });
 
@@ -2209,58 +2339,70 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     read: 'Rows point to columns, grouped by group and ordered so similar types sit together, which turns rules applied to many types into solid blocks. ' + (hasInst ? 'Shade is the number of records behind the link (log scale). ' : 'Shade is the number of relationships. ') + 'Hover any cell for both names and every relationship; click to pin; search lights up a type’s row and column.',
     render(stage, w, h) {
       const R = R1; const order = orderReps(R); const n = order.length, pos = new Map(order.map((r, i) => [r.id, i]));
-      const panelW = clamp(w * 0.26, 240, 380), L = 160, T = 44;
-      const C = Math.max(4, Math.floor(Math.min((h - T - 16) / n, (w - panelW - L - 40) / n))); const S = n * C;
+      const panelW = clamp(w * 0.24, 240, 360), L = 170, T = 60;
+      const C = Math.max(4, Math.min((h - T - 18) / n, (w - panelW - L - 40) / n)); const S = n * C;
       const svg = mkSvg(stage, w - panelW - 20, h);
       el('rect', { x: L, y: T, width: S, height: S, class: 'mx-bg' }, svg);
+      el('text', { x: L, y: 12, class: 'mx-axis' }, svg, 'Target →');
+      el('text', { x: 12, y: T + 4, class: 'mx-axis' }, svg, 'Source ↓');
       let start = 0;
       groups.forEach((g, k) => { const cnt = order.filter(r => r.grp === k).length; if (!cnt) return;
         el('rect', { x: L + start * C, y: T - 8, width: cnt * C - 1, height: 5, class: 'gf' + gc(k) }, svg); el('rect', { x: L - 8, y: T + start * C, width: 5, height: cnt * C - 1, class: 'gf' + gc(k) }, svg);
-        el('text', { x: L - 14, y: T + (start + cnt / 2) * C + 3, 'text-anchor': 'end', class: 'mx-dom' }, svg, g.name);
+        el('text', { x: L - 14, y: T + (start + cnt / 2) * C + 3, 'text-anchor': 'end', class: 'mx-dom mx-gname' }, svg, g.name);
+        { const nm = g.name.replace(/ group$/, ''); if (cnt * C > nm.length * 6.2) el('text', { x: L + (start + cnt / 2) * C, y: T - 12 - (k % 2) * 12, 'text-anchor': 'middle', class: 'mx-dom mx-gname' }, svg, nm); }
         if (start > 0) { el('line', { x1: L + start * C, y1: T, x2: L + start * C, y2: T + S, class: 'm-sep' }, svg); el('line', { x1: L, y1: T + start * C, x2: L + S, y2: T + start * C, class: 'm-sep' }, svg); }
         start += cnt; });
-      const maxI = d3.max([...R.dir.values()], d => hasInst ? Math.log10(1 + d.inst) : d.labels.length) || 1;
+      const rawV = d => hasInst ? d.inst : d.labels.length;
+      const cap = Math.max(2, d3.quantile([...R.dir.values()].map(rawV).sort((a, b) => a - b), 0.95));
+      const shade = d => 0.4 + 0.6 * Math.log1p(Math.min(rawV(d), cap)) / Math.log1p(cap);
+      const maxI = cap;
       const crossR = el('rect', { x: L, y: 0, width: S, height: C, class: 'mx-cross' }, svg), crossC = el('rect', { x: 0, y: T, width: C, height: S, class: 'mx-cross' }, svg);
       const rowLab = el('text', { class: 'mx-lab', 'text-anchor': 'end' }, svg), colLab = el('text', { class: 'mx-lab' }, svg);
-      const hideCross = () => { crossR.style.display = crossC.style.display = 'none'; rowLab.textContent = colLab.textContent = ''; }; hideCross();
+      const hideCross = () => { crossR.style.display = crossC.style.display = 'none'; rowLab.textContent = colLab.textContent = ''; svg.querySelectorAll('.mx-gname').forEach(x => { x.style.opacity = 1; }); }; hideCross();
       const gC = el('g', {}, svg);
-      for (const [k, d] of R.dir) { const [a, b] = k.split('>'); const v = hasInst ? Math.log10(1 + d.inst) : d.labels.length;
-        el('rect', { x: L + pos.get(b) * C + 0.4, y: T + pos.get(a) * C + 0.4, width: C - 0.8, height: C - 0.8, class: 'mx-cell', 'fill-opacity': (0.18 + 0.82 * v / maxI).toFixed(2), 'pointer-events': 'none' }, gC); }
+      for (const [k, d] of R.dir) { const [a, b] = k.split('>'); el('rect', { x: L + pos.get(b) * C + 0.4, y: T + pos.get(a) * C + 0.4, width: C - 0.8, height: C - 0.8, class: 'mx-cell', 'fill-opacity': shade(d).toFixed(2), 'pointer-events': 'none' }, gC); }
       const read = mk('div', 'mx-read', stage); read.style.width = panelW + 'px';
       const search = mk('input', '', read); search.type = 'search'; search.placeholder = 'Find a type'; search.setAttribute('aria-label', 'Find a type in the heatmap');
       Object.assign(search.style, { font: 'inherit', fontSize: '0.8rem', padding: '5px 9px', border: '1px solid var(--line)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--ink)' });
+      const scale = mk('div', 'mx-scale', read);
+      [1, 2, Math.round(cap)].forEach((k, j) => { const i = mk('i', '', scale); i.style.opacity = shade({ labels: { length: k }, inst: k }).toFixed(2); mk('span', '', scale, j === 2 ? `${k}+` : String(k)); });
+      mk('span', '', scale, hasInst ? 'records (log)' : 'relationships per pair');
+      const unpin = mk('button', 'mpin', read, 'Unpin'); unpin.type = 'button'; unpin.hidden = true;
       const out = mk('div', '', read); out.style.cssText = 'display:grid;gap:8px';
-      const idle = () => { out.innerHTML = `<span class="big">${R.dir.size} linked pairs</span><span class="muted">Hover a cell; click to pin. ${hasInst ? 'Stronger cells have more records behind them.' : 'Stronger cells carry more relationships.'}</span>`; }; idle();
-      const cross = (ia, ib) => { crossR.style.display = crossC.style.display = ''; crossR.setAttribute('y', T + ia * C); crossC.setAttribute('x', L + ib * C);
+      const idle = () => { out.innerHTML = `<span class="big">${R.dir.size} linked pairs</span><span class="muted">Hover a cell; click to pin it. Rows are sources, columns are targets.</span>`; }; idle();
+      const cross = (ia, ib) => { crossR.style.display = crossC.style.display = ''; svg.querySelectorAll('.mx-gname').forEach(x => { x.style.opacity = 0.15; }); crossR.setAttribute('y', T + ia * C); crossC.setAttribute('x', L + ib * C);
         rowLab.setAttribute('x', L - 16); rowLab.setAttribute('y', T + ia * C + C / 2 + 3); rowLab.textContent = order[ia].short + ' →';
         colLab.setAttribute('x', L + ib * C); colLab.setAttribute('y', T - 14); colLab.textContent = '↓ ' + order[ib].short; colLab.setAttribute('text-anchor', ib > n * 0.6 ? 'end' : 'start'); };
       let pinned = false;
-      svg.addEventListener('click', () => { pinned = !pinned; });
+      const setPin = v => { pinned = v; unpin.hidden = !v; };
+      unpin.addEventListener('click', () => { setPin(false); hideCross(); idle(); });
+      svg.addEventListener('click', () => setPin(!pinned));
       svg.addEventListener('pointermove', ev => { if (pinned) return; const r = svg.getBoundingClientRect(); const ib = Math.floor((ev.clientX - r.left - L) / C), ia = Math.floor((ev.clientY - r.top - T) / C); if (ia < 0 || ib < 0 || ia >= n || ib >= n) return;
         cross(ia, ib); const ra = order[ia], rb = order[ib], d = R.dir.get(ra.id + '>' + rb.id), back = R.dir.get(rb.id + '>' + ra.id);
         out.innerHTML = `<span class="big">${esc(ra.name)} → ${esc(rb.name)}</span>` + (d ? `<span class="k mono">${d.labels.map((l, j) => esc(l) + (d.keys[j] ? ` <span class="muted">(${esc(d.keys[j])})</span>` : '')).join('<br>')}</span>${hasInst ? `<span class="muted">${fmt(d.inst)} records behind it</span>` : ''}` : '<span class="muted">0 relationships this way.</span>') + (back && ra.id !== rb.id ? `<span class="muted">Back the other way:</span><span class="k mono">${back.labels.map(esc).join('<br>')}</span>` : ''); });
       svg.addEventListener('pointerleave', () => { if (!pinned) { hideCross(); idle(); } });
-      search.addEventListener('input', () => { const q = search.value.trim().toLowerCase(); if (!q) { hideCross(); idle(); return; }
+      search.addEventListener('input', () => { setPin(false); const q = search.value.trim().toLowerCase(); if (!q) { hideCross(); idle(); return; }
         const i = order.findIndex(r => r.name.toLowerCase().includes(q) || r.members.some(m => NAME(m).toLowerCase().includes(q))); if (i < 0) return;
         cross(i, i); const r = order[i], rr = R.rels.get(r.id);
         const list = (m, arrow) => [...m].sort((a, b) => b[1].size - a[1].size).map(([lab, set]) => `${arrow} ${esc(lab)} ${[...set].map(x => esc(R.byId.get(x).short)).join(', ')}`).join('<br>');
         out.innerHTML = `<span class="big">${esc(r.name)}</span><span class="muted">Its row and column are lit. ${r.deg} relationships.</span><span class="k mono">${list(rr.out, '→')}${rr.out.size && rr.in.size ? '<br>' : ''}${list(rr.in, '←')}</span>`; });
+      hint(stage, 'Hover a cell · click to pin · search lights up a type').style.right = (panelW + 30) + 'px';
     },
   });
 
   mock({
     short: 'Relationship heatmap', title: 'Types against relationship names', from: 'new, replaces round 1 · 10',
     answers: 'Which relationships does each type take part in, and which are rules shared by many types?',
-    read: 'Rows are types, grouped by group. Columns are relationship names, most used first. A dark cell means the type is the source of that relationship, a tinted cell means it is the target, a strong cell means both. A tall stripe is a rule declared across many types at once. Hover for details.',
+    read: 'Rows are types, grouped by group. Columns are relationship names used more than once, most used first. An ink-coloured cell means the type is the source of that relationship, a light accent cell means it is the target, and a full accent cell means both (see the key in the panel). A tall stripe is a rule declared across many types at once. Hover any cell for the full name and who is on each side.',
     render(stage, w, h) {
       const R = R1; const order = orderReps(R); const nR = order.length;
-      const L = 190, T = 120, panelW = clamp(w * 0.22, 220, 320);
+      const L = 190, T = 150, panelW = clamp(w * 0.22, 220, 320);
       const cols = labelStats.filter(x => x.count >= 2); const one = labelStats.filter(x => x.count < 2);
-      const nC = cols.length + (one.length ? 1 : 0);
+      const nC = cols.length;
       const cw = Math.max(5, Math.floor((w - L - panelW - 40) / nC)), ch = Math.max(4, Math.floor((h - T - 16) / nR));
       const svg = mkSvg(stage, w - panelW - 10, h);
       const role = new Map();
-      for (const [s, t, l] of edges) { const a = R1.byId.has('f' + FAM(s)) && FAM(s) >= 0 ? 'f' + FAM(s) : 'n' + s, b = FAM(t) >= 0 ? 'f' + FAM(t) : 'n' + t; const ci = cols.findIndex(x => x.label === labels[l]); const c = ci >= 0 ? ci : cols.length;
+      for (const [s, t, l] of edges) { const a = R1.byId.has('f' + FAM(s)) && FAM(s) >= 0 ? 'f' + FAM(s) : 'n' + s, b = FAM(t) >= 0 ? 'f' + FAM(t) : 'n' + t; const c = cols.findIndex(x => x.label === labels[l]); if (c < 0) continue;
         for (const [id, r] of [[a, 1], [b, 2]]) { const k = id + '|' + c; role.set(k, (role.get(k) || 0) | r); } }
       const rowOf = new Map(order.map((r, i) => [r.id, i]));
       let start = 0;
@@ -2268,24 +2410,27 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       el('rect', { x: L, y: T, width: nC * cw, height: nR * ch, class: 'mx-bg' }, svg);
       const gC = el('g', {}, svg);
       for (const [k, v] of role) { const [id, c] = k.split('|'); const i = rowOf.get(id); if (i == null) continue; el('rect', { x: L + (+c) * cw + 0.5, y: T + i * ch + 0.5, width: cw - 1, height: ch - 1, class: v === 3 ? 'rh-cell-both' : v === 1 ? 'rh-cell-out' : 'rh-cell-in', 'pointer-events': 'none' }, gC); }
-      [...cols.map(x => `${x.label} · ${x.count}`), ...(one.length ? [`${one.length} used once`] : [])].forEach((t, c) => { if (cw < 7 && c % 2) return; el('text', { x: 0, y: 0, class: 'rh-col', transform: `translate(${L + c * cw + cw / 2 + 3},${T - 6}) rotate(-60)` }, svg, truncate(t, 26)); });
+      cols.map(x => `${x.label} · ${x.count}`).forEach((t, c) => { if (cw < 7 && c % 2) return; el('text', { x: 0, y: 0, class: 'rh-col', transform: `translate(${L + c * cw + cw / 2 + 3},${T - 6}) rotate(-60)` }, svg, truncate(t, 24)); });
       const crossR = el('rect', { x: L, y: 0, width: nC * cw, height: ch, class: 'mx-cross' }, svg), crossC = el('rect', { x: 0, y: T, width: cw, height: nR * ch, class: 'mx-cross' }, svg); crossR.style.display = crossC.style.display = 'none';
       const read = mk('div', 'mx-read', stage); read.style.width = panelW + 'px';
       const key = mk('div', '', read); key.innerHTML = '<span class="rh-key"><i class="gb-ink" style="background:var(--ink)"></i>source</span><span class="rh-key"><i style="background:var(--accent);opacity:.55"></i>target</span><span class="rh-key"><i style="background:var(--accent)"></i>both</span>';
       const out = mk('div', '', read); out.style.cssText = 'display:grid;gap:8px';
-      const idle = () => { out.innerHTML = `<span class="big">${cols.length} shared relationship names</span><span class="muted">${one.length} more names are used by a single pair and share the last column. Hover a cell.</span>`; }; idle();
+      const idle = () => { out.innerHTML = `<span class="big">${cols.length} relationship names used more than once</span><span class="muted">${one.length} names used by a single pair are left out. Hover a cell or column for the full name.</span>`; }; idle();
       svg.addEventListener('pointermove', ev => { const r = svg.getBoundingClientRect(); const c = Math.floor((ev.clientX - r.left - L) / cw), i = Math.floor((ev.clientY - r.top - T) / ch); if (i < 0 || c < 0 || i >= nR || c >= nC) return;
         crossR.style.display = crossC.style.display = ''; crossR.setAttribute('y', T + i * ch); crossC.setAttribute('x', L + c * cw);
         const rep = order[i]; const x = cols[c]; const v = role.get(rep.id + '|' + c) || 0;
-        if (!x) { out.innerHTML = `<span class="big">${esc(rep.name)}</span><span class="muted">${v ? 'Takes part in at least one relationship used only once.' : 'No one-off relationships.'}</span>`; return; }
         const S = [...x.S].map(NAME), T2 = [...x.T].map(NAME);
         out.innerHTML = `<span class="big">${esc(rep.name)}</span><span class="k mono">${esc(x.label)} · ${x.count} edges</span><span>${v === 0 ? 'Not part of it.' : v === 1 ? 'Source.' : v === 2 ? 'Target.' : 'Source and target.'}</span><span class="muted">From ${x.S.size} types: ${esc(S.slice(0, 8).join(', '))}${S.length > 8 ? '…' : ''}</span><span class="muted">To ${x.T.size} types: ${esc(T2.slice(0, 8).join(', '))}${T2.length > 8 ? '…' : ''}</span>`; });
       svg.addEventListener('pointerleave', () => { crossR.style.display = crossC.style.display = 'none'; idle(); });
+      hint(stage, 'Hover a cell for the relationship and both sides').style.right = (panelW + 20) + 'px';
     },
   });
 
   /* ---------- Gallery shell ---------- */
   const list = document.getElementById('mock-list'), nav = document.getElementById('mock-nav');
+  const VERDICTS = [['keep', 'keep'], ['fix', 'drop'], ['fix', 'fix'], ['fix', 'fix'], ['keep', 'fix'], ['drop', 'fix'], ['fix', 'fix'], ['fix', 'drop'], ['keep', 'fix'], ['drop', 'fix']];
+  { const rs = document.getElementById('review-sum'); rs.hidden = false;
+    rs.innerHTML = '<p><b>First-cut review.</b> Gemini 4 Neon and GPT-6.2 Sol each tried every mock in a real browser at 1440×900 and 1672×976, light and dark. Both put <a href="#m1">1</a>, <a href="#m5">5</a> and <a href="#m4">4</a> in their top four; Sol ranked <a href="#m3">3</a> first and Gemini ranked it fifth. Neither agreed on dropping anything: Sol would drop 6 and 10, Gemini would drop 2 and 8. Every fixable issue they raised has been fixed, including mock 2, which was rebuilt. The verdict by each title is from before those fixes.</p>'; }
   function rerender(m) { m.w = m.h = 0; renderMock(m); }
   function renderMock(m) {
     if (!m.visible) return;
@@ -2298,17 +2443,18 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const num = String(i + 1).padStart(2, '0');
     const a = mk('a', '', nav); a.href = '#m' + (i + 1); mk('b', '', a, String(i + 1)); a.appendChild(document.createTextNode(m.short));
     const art = mk('article', 'mock', list); art.id = 'm' + (i + 1);
-    const hd = mk('div', 'mock-head', art); mk('span', 'num', hd, num); mk('h3', '', hd, m.title); mk('p', 'ans', hd, m.answers); mk('span', 'mock-verdict', hd, m.from);
+    const hd = mk('div', 'mock-head', art); mk('span', 'num', hd, num); mk('h3', '', hd, m.title); mk('p', 'ans', hd, m.answers);
+    { const vs = mk('span', 'mock-verdict', hd); vs.append(m.from + ' · Sol '); const v = VERDICTS[i]; mk('b', 'v-' + v[0], vs, v[0]); vs.append(' · Gemini '); mk('b', 'v-' + v[1], vs, v[1]); }
+    const ft = mk('p', 'mock-read', art); mk('b', '', ft, 'Read it: '); ft.appendChild(document.createTextNode(m.read));
     m.stage = mk('div', 'mstage', art); m.stage.setAttribute('role', 'region'); m.stage.setAttribute('aria-label', `Mock ${i + 1}: ${m.title}`);
-    const ft = mk('p', 'mock-foot', art); mk('b', '', ft, 'Read it: '); ft.appendChild(document.createTextNode(m.read));
   });
   const setNavH = () => document.documentElement.style.setProperty('--navh', (nav.offsetHeight || 40) + 'px'); setNavH(); window.addEventListener('resize', setNavH);
   if (typeof IntersectionObserver !== 'undefined') {
-    const io = new IntersectionObserver(entries => { for (const e of entries) if (e.isIntersecting) { const m = e.target.__mock; io.unobserve(e.target); m.visible = true; renderMock(m); } }, { rootMargin: '100% 0px' });
+    const io = new IntersectionObserver(entries => { for (const e of entries) { const m = e.target.__mock; m.near = e.isIntersecting; if (m.near) { m.visible = true; renderMock(m); } } }, { rootMargin: '60% 0px' });
     MOCKS.forEach(m => { m.stage.__mock = m; io.observe(m.stage); });
-  } else MOCKS.forEach(m => { m.visible = true; renderMock(m); });
+  } else MOCKS.forEach(m => { m.visible = true; m.near = true; renderMock(m); });
   let rt = 0;
-  if (typeof ResizeObserver !== 'undefined') { const ro = new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => MOCKS.forEach(m => renderMock(m)), 160); }); MOCKS.forEach(m => ro.observe(m.stage)); }
+  if (typeof ResizeObserver !== 'undefined') { const ro = new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => MOCKS.forEach(m => { if (m.near) renderMock(m); }), 160); }); MOCKS.forEach(m => ro.observe(m.stage)); }
 
   /* ---------- References ---------- */
   const refs = [
