@@ -1908,14 +1908,15 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   }
   const qpath = (a, b, bend = 0.12) => { const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y; return `M${a.x.toFixed(1)},${a.y.toFixed(1)}Q${(mx - dy * bend).toFixed(1)},${(my + dx * bend).toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`; };
   function fitLabels(items, obstacles, W, H) {
-    const placed = obstacles.slice(); items.sort((a, b) => b.prio - a.prio);
+    const placed = obstacles.slice(), nObs = obstacles.length; items.sort((a, b) => b.prio - a.prio);
     for (const it of items) {
       const cands = it.cands || [{ cx: it.cx, cy: it.cy }];
+      const against = it.prio >= 5e4 ? () => placed.slice(nObs) : () => placed;
       let ok = false;
       for (const c of cands) {
         const r = [c.cx - it.w / 2 - 2, c.cy - it.h / 2, c.cx + it.w / 2 + 2, c.cy + it.h / 2];
         const inside = W == null || (r[0] >= 2 && r[2] <= W - 2 && r[1] >= 2 && r[3] <= H - 2);
-        if (inside && !placed.some(p => p[0] < r[2] && p[2] > r[0] && p[1] < r[3] && p[3] > r[1])) { placed.push(r); if (c.apply) c.apply(); ok = true; break; }
+        if (inside && !against().some(p => p[0] < r[2] && p[2] > r[0] && p[1] < r[3] && p[3] > r[1])) { placed.push(r); if (c.apply) c.apply(); ok = true; break; }
       }
       it.t.classList.toggle('lbl-off', !ok);
     }
@@ -1957,7 +1958,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     });
     return boxes;
   }
-  function searchBox(parent, R, onPick) {
+  function searchBox(parent, R, onPick, initialNote) {
     const wrap = mk('span', 'msearch', parent);
     const inp = mk('input', '', wrap); inp.type = 'search'; inp.placeholder = 'Find a type'; inp.setAttribute('aria-label', 'Find a type');
     const dl = mk('datalist', '', wrap); dl.id = 'dl-' + Math.random().toString(36).slice(2, 9); inp.setAttribute('list', dl.id);
@@ -1973,6 +1974,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const note = mk('span', 'crumb', parent);
     inp.addEventListener('change', pick); inp.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); });
     inp.addEventListener('input', () => { if (!inp.value) note.textContent = ''; });
+    if (initialNote) note.textContent = initialNote;
   }
   // Edges for rep pairs, styled by meaning: inside a group takes the group colour, unused relationships are dashed.
   function drawPairs(parent, R, by, o = {}) {
@@ -2042,7 +2044,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   // 1.4×, so the whole graph stays in view, and nodes and lines keep their size on screen.
   const LEVELS = ['Groups', 'Types', 'All types'];
   const levelOf = k => (k < 0.9 ? 0 : k < 1.8 ? 1 : 2);
-  const scaleOf = k => (k < 1 ? 1 : 1 + 0.4 * Math.min(1, (k - 1) / 2));
+  const scaleOf = (k, cap = 1.4) => (k < 1 ? 1 : 1 + (cap - 1) * Math.min(1, (k - 1) / 2));
   const famIndex = new Map(); families.forEach((f, fi) => f.members.forEach((m, j) => famIndex.set(m, j)));
   const RG = buildReps(i => 'g' + GRP(i), typeName);
   function semantic(stage, w, h, self, spec) {
@@ -2054,7 +2056,8 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const svg = mkSvg(stage, w, h); svg.classList.add('smartlabels');
     const gDeco = el('g', {}, svg), gE = el('g', {}, svg), gTop = el('g', {}, svg), gN = el('g', {}, svg), gG = el('g', {}, svg), gFx = el('g', {}, svg);
     const c = { x: w / 2, y: h / 2 };
-    const S = () => scaleOf(st.k);
+    const cap = clamp(d3.min(P1, d => Math.min((w / 2 - 70) / Math.max(1, Math.abs(d.x - c.x)), (h / 2 - 52) / Math.max(1, Math.abs(d.y - c.y)))), 1, 1.4);
+    const S = () => scaleOf(st.k, cap);
     const sx = x => (x - c.x) * S() + c.x + st.tx, sy = y => (y - c.y) * S() + c.y + st.ty;
     const tools = mk('div', 'mtools', stage);
     let level = -1, key = '', cur = null, raf = 0, focusSet = null, hop2Set = null;
@@ -2117,11 +2120,12 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       if (hop2Set) only = new Set([...(only || []), ...hop2Set]);
       for (const d of cur.nodes) if (only && !only.has(d.id)) cur.map.get(d.id).querySelector('text').classList.add('lbl-off');
       const box = elx => { if (!elx || elx.hidden) return [0, 0, 0, 0]; const r = elx.getBoundingClientRect(), sr = stage.getBoundingClientRect(); return [r.left - sr.left - 4, r.top - sr.top - 4, r.right - sr.left + 4, r.bottom - sr.top + 4]; };
-      fitLabels(labelItems(cur.nodes, cur.map, L === 0 ? 'below' : spec.labelSide || 'right', only, spec.labelPrio), [...circleBoxes(cur.nodes), ...gBoxes, box(lg), box(tools), box(hintEl), ...(spec.obstacles ? spec.obstacles(view) : [])], w, h);
+      const prio = d => (spec.labelPrio ? spec.labelPrio(d) : 0) + (hop2Set && hop2Set.has(d.id) ? 6e4 : 0);
+      fitLabels(labelItems(cur.nodes, cur.map, L === 0 ? 'below' : spec.labelSide || 'right', only, prio), [...circleBoxes(cur.nodes), ...gBoxes, box(lg), box(tools), box(hintEl), ...(spec.obstacles ? spec.obstacles(view) : [])], w, h);
       lvl.textContent = LEVELS[L];
     }
     const request = () => { if (!raf) raf = requestAnimationFrame(frame); };
-    const zoomAt = (mx, my, f) => { const s0 = S(); const k2 = clamp(st.k * f, 0.6, 3); const s1 = scaleOf(k2); const wx = (mx - c.x - st.tx) / s0 + c.x, wy = (my - c.y - st.ty) / s0 + c.y; st.k = k2; st.tx = mx - c.x - (wx - c.x) * s1; st.ty = my - c.y - (wy - c.y) * s1; if (k2 <= 1) { st.tx = 0; st.ty = 0; } request(); };
+    const zoomAt = (mx, my, f) => { const s0 = S(); const k2 = clamp(st.k * f, 0.6, 3); const s1 = scaleOf(k2, cap); const wx = (mx - c.x - st.tx) / s0 + c.x, wy = (my - c.y - st.ty) / s0 + c.y; st.k = k2; st.tx = mx - c.x - (wx - c.x) * s1; st.ty = my - c.y - (wy - c.y) * s1; if (k2 <= 1) { st.tx = 0; st.ty = 0; } request(); };
     function find(id, member) {
       const r = R1.byId.get(id); if (!r) return;
       if (levelOf(st.k) === 0) st.k = 1;
@@ -2136,7 +2140,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const lvl = mk('span', 'crumb lvl', tools);
     button(tools, '+', () => zoomAt(c.x, c.y, 1.5)).setAttribute('aria-label', 'Show more detail');
     const closeBtn = button(tools, 'Close opened', () => { st.open.clear(); request(); }); closeBtn.hidden = true;
-    button(tools, 'Reset', () => { st.k = 1; st.tx = 0; st.ty = 0; st.open.clear(); tools.querySelectorAll('.msearch input').forEach(i => { i.value = ''; }); tools.querySelectorAll('.crumb:not(.lvl)').forEach(n => { n.textContent = ''; }); if (cur) cur.f.pin(null); request(); });
+    button(tools, 'Reset', () => { stopFire(); st.k = 1; st.tx = 0; st.ty = 0; st.open.clear(); tools.querySelectorAll('.msearch input').forEach(i => { i.value = ''; }); tools.querySelectorAll('.crumb:not(.lvl)').forEach(n => { n.textContent = ''; }); if (cur) cur.f.pin(null); request(); });
     svg.addEventListener('wheel', ev => { if (!(ev.ctrlKey || ev.metaKey)) return; ev.preventDefault(); const r = svg.getBoundingClientRect(); zoomAt(ev.clientX - r.left, ev.clientY - r.top, Math.exp(-ev.deltaY * 0.0035)); }, { passive: false });
     let drag = null, moved = false;
     svg.addEventListener('pointerdown', ev => { if (ev.button !== 0 || ev.target.closest('.n') || S() <= 1) return; drag = { x: ev.clientX, y: ev.clientY, tx: st.tx, ty: st.ty }; moved = false; });
@@ -2144,8 +2148,10 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     window.addEventListener('pointerup', () => { drag = null; });
     svg.addEventListener('click', ev => { if (moved) { ev.stopPropagation(); moved = false; } }, true);
     // Fire: a pulse runs out along each link of the clicked type, then the types two steps away light up and get names.
+    let fireToken = 0, fireTimer = 0;
+    function stopFire() { fireToken++; clearTimeout(fireTimer); gFx.textContent = ''; if (hop2Set && cur) for (const n of hop2Set) cur.map.get(n)?.classList.remove('hop2'); hop2Set = null; hintEl.textContent = baseHint; }
     function fire(id) {
-      gFx.textContent = '';
+      stopFire(); const token = fireToken;
       const inc = cur.E.filter(e => e.a === id || e.b === id); const me = cur.by.get(id); if (!me) return;
       const hop1 = new Set(inc.map(e => e.a === id ? e.b : e.a));
       const hop2 = new Set(); for (const e of cur.E) { if (hop1.has(e.a) && e.b !== id && !hop1.has(e.b)) hop2.add(e.b); if (hop1.has(e.b) && e.a !== id && !hop1.has(e.a)) hop2.add(e.a); }
@@ -2153,16 +2159,17 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       hintEl.textContent = msg;
       const t0 = performance.now(), dur = 650;
       const dots = inc.map(e => { const p = e.el; if (!p.getTotalLength) return null; const L2 = p.getTotalLength(); const s0 = p.getPointAtLength(0); return { p, L2, fromStart: Math.hypot(s0.x - me.x, s0.y - me.y) < 14, dot: el('circle', { r: 3.2, class: 'pulse' }, gFx) }; }).filter(Boolean);
-      const done = () => { gFx.textContent = ''; for (const n of hop2) cur.map.get(n)?.classList.add('hop2'); hop2Set = hop2; request();
-        setTimeout(() => { for (const n of hop2) cur.map.get(n)?.classList.remove('hop2'); hop2Set = null; request(); hintEl.textContent = baseHint; }, 2200); };
+      const done = () => { if (token !== fireToken) return; gFx.textContent = ''; for (const n of hop2) cur.map.get(n)?.classList.add('hop2'); hop2Set = hop2; request();
+        fireTimer = setTimeout(() => { if (token !== fireToken) return; stopFire(); request(); }, 2600); };
       if (!dots.length) { done(); return; }
-      const step = now => { const t = Math.min(1, (now - t0) / dur);
+      const step = now => { if (token !== fireToken) return; const t = Math.min(1, (now - t0) / dur);
         for (const d of dots) { const q = d.p.getPointAtLength(d.L2 * (d.fromStart ? t : 1 - t)); d.dot.setAttribute('cx', q.x); d.dot.setAttribute('cy', q.y); d.dot.setAttribute('opacity', (1 - t * 0.5).toFixed(2)); }
         if (t < 1) requestAnimationFrame(step); else done(); };
       requestAnimationFrame(step);
     }
     const baseHint = spec.hint || (spec.fire ? 'Click a type to fire it · + / − change the detail · Ctrl/⌘ + scroll works too' : 'Hover a type for its links · + / − change the detail · Ctrl/⌘ + scroll works too');
     const hintEl = hint(stage, baseHint);
+    if (spec.hintTop) { hintEl.style.bottom = 'auto'; hintEl.style.top = '50px'; }
     frame();
     return view;
   }
@@ -2179,7 +2186,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   const CHORD_RENDER = function (stage, w, h) {
       const st = this.st || (this.st = { open: null, find: null });
       const tools = mk('div', 'mtools', stage);
-      searchBox(tools, R1, id => { if (!id) return; st.open = R1.byId.get(id).grp; st.find = id; rerender(this); });
+      searchBox(tools, R1, (id, member) => { if (!id) { st.note = ''; return; } st.open = R1.byId.get(id).grp; st.find = id; st.note = member != null ? `${NAME(member)} is in ${R1.byId.get(id).name}` : ''; rerender(this); }, st.note);
       button(tools, '−', () => { if (st.open != null) { st.open = null; rerender(this); } }).setAttribute('aria-label', 'Back to all groups');
       mk('span', 'crumb lvl', tools, st.open == null ? 'Groups' : 'Types');
       button(tools, '+', () => { if (st.open == null) { st.open = groups.map((g, k) => [k, g.members.length]).sort((a, b) => b[1] - a[1])[0][0]; rerender(this); } }).setAttribute('aria-label', 'Open the largest group');
@@ -2309,7 +2316,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         const off = () => { if (!viewRef) return; delete viewRef.svg.dataset.hub; const cur = viewRef.cur(); cur.f.pin(null); };
         s.addEventListener('pointerenter', on); s.addEventListener('pointerleave', off); s.addEventListener('focus', on); s.addEventListener('blur', off); });
       viewRef = semantic(stage, w, h, this, {
-        layout: forceLayout(w, h, { mb: 44 }),
+        layout: forceLayout(w, h, { mb: 44 }), hintTop: true,
         nodeClass: d => hubOf(d.id) != null ? 'hub hub' + hubOf(d.id) : '',
         radius: (r, base) => hubOf(r.id) != null ? base.r + 4 : (base.r ?? rad(r.rec) * 0.85),
         edgeClass: p => (hubOf(p.a) != null) !== (hubOf(p.b) != null) ? 'hid' : '',
