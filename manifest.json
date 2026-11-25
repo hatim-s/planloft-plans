@@ -155,15 +155,6 @@
       "expiresAt": "2026-12-23T06:04:39.239Z"
     },
     {
-      "id": "6U3AfvTy87",
-      "project": "github.com/unify-apps/www",
-      "slug": "orbit-workflow-sandbox-benchmark",
-      "title": "Workflow Agent benchmark: sandbox vs legacy",
-      "kind": "plan",
-      "createdAt": "2026-11-19T14:50:28.516Z",
-      "expiresAt": "2026-12-23T07:19:43.184Z"
-    },
-    {
       "id": "5rMaiAR9Kr",
       "project": "github.com/unify-apps/www",
       "slug": "salesforce-c360-collaborative",
@@ -198,6 +189,15 @@
       "kind": "plan",
       "createdAt": "2026-11-24T12:36:19.146Z",
       "expiresAt": "2026-12-24T13:29:08.994Z"
+    },
+    {
+      "id": "6U3AfvTy87",
+      "project": "github.com/unify-apps/www",
+      "slug": "orbit-workflow-sandbox-benchmark",
+      "title": "Workflow Agent benchmark: sandbox vs legacy",
+      "kind": "plan",
+      "createdAt": "2026-11-19T14:50:28.516Z",
+      "expiresAt": "2026-12-25T04:49:37.736Z"
     }
   ]
 }

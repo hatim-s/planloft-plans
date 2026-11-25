@@ -20,7 +20,7 @@ planloft plan/doc deploys
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Salesforce C360 embedding plan](https://hatims-planloft.vercel.app/salesforce-c360-collaborative/) | github.com/unify-apps/www | plan | 2026-12-24 |
 | [Saved, with room to improve](https://hatims-planloft.vercel.app/workflow-best-practice-warnings/) | github.com/unify-apps/www | plan | 2026-12-01 |
-| [Workflow Agent benchmark: sandbox vs legacy](https://hatims-planloft.vercel.app/orbit-workflow-sandbox-benchmark/) | github.com/unify-apps/www | plan | 2026-12-23 |
+| [Workflow Agent benchmark: sandbox vs legacy](https://hatims-planloft.vercel.app/orbit-workflow-sandbox-benchmark/) | github.com/unify-apps/www | plan | 2026-12-25 |
 | [Workflow Agent delivery in AI Factory](https://hatims-planloft.vercel.app/workflow-agent-factory-adoption-2026-11-23/) | github.com/unify-apps/www | plan | 2026-12-24 |
 | [uac v2: agent eval](https://hatims-planloft.vercel.app/uac-v2-eval/) | github.com/unify-apps/www | report | 2026-12-13 |
 | [uac v2: the compiler](https://hatims-planloft.vercel.app/uac-v2-compiler/) | github.com/unify-apps/www | report | 2026-12-17 |
