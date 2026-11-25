@@ -1069,7 +1069,7 @@ html > body:not(:has(.planloft-plan > article)) {
 <h2>Where things stand</h2>
 <ul>
 <li><strong>Direction chosen:</strong> &quot;Groups pull together&quot; with semantic zoom (round 3, mock 1). Types in the same group sit close; lines inside a group are tinted; links between groups are combined into one band per pair; zoom changes detail (Groups, Types, All types) instead of spreading nodes apart.</li>
-<li><strong>Now:</strong> building it as a platform prototype in <code>unify-prototypes</code> (branch <code>proto/ecg-grouped-graph</code>), inside the real shell: sidebar, page header, tabs, node navigator, canvas.</li>
+<li><strong>Now:</strong> built as a platform prototype in <code>unify-prototypes</code> (branch <code>proto/ecg-grouped-graph</code>, not committed yet), inside the real shell: sidebar, page header, tabs, node navigator, canvas. Run it with <code>pnpm dev</code> and open <code>/prototypes/ecg-grouped-graph</code>.</li>
 <li><strong>Still on the table from round 3:</strong> constellation layout and constellation lines in the platform look, hub stubs, neurons and axons, fibre tracts, and the chord at the bottom. Hatim has not given round 3 verdicts yet.</li>
 </ul>
 <h2>Links</h2>
@@ -1157,8 +1157,8 @@ html > body:not(:has(.planloft-plan > article)) {
 </tr>
 <tr>
 <td>4. Prototype</td>
-<td>Grouped view built in <code>unify-prototypes</code> inside the platform shell.</td>
-<td>In progress.</td>
+<td>Grouped view built in <code>unify-prototypes</code> on branch <code>proto/ecg-grouped-graph</code>, inside the platform shell, from the precomputed layout in <code>ecg-grouped-layout.json</code>.</td>
+<td>Built and passing the repo&#39;s composition, fidelity, typecheck and lint checks. Not committed yet; four layout questions open for Hatim.</td>
 </tr>
 </tbody></table>
 <h2>Round 1: fifteen ways to draw the same graph</h2>
@@ -1600,6 +1600,17 @@ html > body:not(:has(.planloft-plan > article)) {
 </ul>
 <h2>How each round was run</h2>
 <p>Each round followed the same loop: build on real data, deploy with planloft, review by Gemini 4 Neon and GPT-6.2 Sol in a real browser at 1440×900 and 1672×976 in light and dark, fix everything fixable, have Sol re-check, then hand over to Hatim. Hatim&#39;s own verdicts decide what survives; reviewer verdicts are recorded for comparison.</p>
+<h2>Prototype (round 4)</h2>
+<p>Built in <code>~/work/unify-prototypes/apps/prototypes/src/app/prototypes/ecg-grouped-graph/</code> from the repo&#39;s <code>details-canvas-aside</code> template, using only design-system components and tokens.</p>
+<ul>
+<li><strong>Shell:</strong> app sidebar (with an Enterprise Context Graph entry under AI Ontology &amp; Data), breadcrumb, serif title with &quot;124 types · 1,077 relationships · 9 groups&quot;, Graph / Nodes / Edges / Sources / Records tabs, Share and Publish, the node list inside the canvas card as in production.</li>
+<li><strong>Canvas:</strong> the round 3 grouped view: three zoom levels, magnification capped so nothing leaves the canvas, bands with counts between groups, one search box that filters the list and finds a type (opening its family in place), a legend of groups instead of Core / Secondary / Derived.</li>
+<li><strong>Colours:</strong> group colours use the design system&#39;s <code>utility</code> palette steps that match the product&#39;s <code>--graph-node-*</code> hexes, with a dark-mode step that keeps each group&#39;s light hue.</li>
+<li><strong>Deviations from the frame:</strong> the node list sits inside the canvas card, and the frame&#39;s 480px side panel is dropped; both are recorded in the prototype&#39;s <code>docs/decisions.md</code>.</li>
+<li><strong>Open questions:</strong> node list inside the card or a rail variant; the template&#39;s tab row or production&#39;s centred switcher; one merged search box; whether the first + from Types should only magnify before the second opens All types.</li>
+<li><strong>Design-system gaps found:</strong> no graph-node colour classes, <code>Dot</code> and <code>ChartLegend</code> limited to chart colours, a nearly invisible selected segment in dark mode, several chart colours with no dark value, no <code>stroke-bg-workspace</code>, and no canvas template with a rail inside the card.</li>
+<li><strong>Screenshots:</strong> <code>~/work/ecg-graph-lab/reviews/proto/</code> (27 captures: both sizes, both themes, every zoom level, hover, search, opened family).</li>
+</ul>
 </article>
 </main>
 </body>
