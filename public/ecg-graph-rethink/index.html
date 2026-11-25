@@ -1312,8 +1312,6 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
   --g0: var(--planloft-chart-2); --g1: var(--planloft-chart-1); --g2: var(--planloft-chart-5); --g3: var(--planloft-chart-6);
   --g4: var(--planloft-chart-3); --g5: var(--planloft-chart-4); --g6: #B8642A; --g7: #B03A7A; --g8: #6B645C; --g9: #7C8B99;
 }
-@media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { --g6: #E9A06A; --g7: #E58AB0; --g8: #B9B0A5; --g9: #9FB0C0; } }
-:root[data-planloft-color-scheme="dark"] { --g6: #E9A06A; --g7: #E58AB0; --g8: #B9B0A5; --g9: #9FB0C0; }
 .gf0 { fill: var(--g0); } .gf1 { fill: var(--g1); } .gf2 { fill: var(--g2); } .gf3 { fill: var(--g3); } .gf4 { fill: var(--g4); }
 .gf5 { fill: var(--g5); } .gf6 { fill: var(--g6); } .gf7 { fill: var(--g7); } .gf8 { fill: var(--g8); } .gf9 { fill: var(--g9); }
 .gb0 { background: var(--g0); } .gb1 { background: var(--g1); } .gb2 { background: var(--g2); } .gb3 { background: var(--g3); } .gb4 { background: var(--g4); }
@@ -1409,14 +1407,55 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 .pf svg.focus .stub { opacity: 0.15; }
 .pf .pulse { fill: var(--accent); pointer-events: none; }
 .pf .n.hop2 .dot-c { stroke: var(--accent); stroke-width: 3px; }
-.pf .n.hop2 text { display: inline !important; }
 .hubkey { position: absolute; left: 10px; top: 10px; z-index: 3; display: grid; gap: 3px; font-size: 0.72rem; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); pointer-events: none; max-width: 300px; }
 .hubkey span { display: flex; align-items: center; gap: 6px; } .hubkey i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+/* ---------- Round 3b ---------- */
+.pf .glabel { fill: var(--pf-ink); }
+.pf .gband { fill: none; stroke: var(--pf-edge); stroke-opacity: 0.28; stroke-linecap: round; }
+.pf .gband:hover { stroke-opacity: 0.5; }
+.pf svg.focus .gband { stroke-opacity: 0.06; }
+.pf .gband-n { font-family: var(--pf-font); font-size: 10.5px; fill: var(--pf-muted); text-anchor: middle; paint-order: stroke; stroke: var(--pf-canvas); stroke-width: 3px; pointer-events: none; }
+.pf svg.focus .gband-n { opacity: 0.2; }
+.pf .e.gagg { stroke: var(--pf-edge); stroke-opacity: 0.3; stroke-linecap: round; }
+.pf .n.gmark text { font-weight: 700; font-size: 12px; }
+.pf .n.fam .dot-c { stroke-width: 2.5px; stroke-dasharray: 2 2; cursor: zoom-in; }
+.pf .n.fam text { font-weight: 600; }
+.mstage svg.focus .n.hop2 { opacity: 1; }
+.pf .n.hop2 text { display: inline; }
+.fkey { top: 10px; bottom: auto; }
+.pf .hubkey { top: auto; left: 50%; transform: translateX(-50%); bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; max-width: 76%; pointer-events: auto; }
+.pf .hubkey b { width: 100%; font-weight: 600; }
+.pf .hubrow { cursor: pointer; padding: 1px 4px; border-radius: 4px; }
+.pf .hubrow:hover, .pf .hubrow:focus-visible { background: color-mix(in srgb, var(--pf-ink) 8%, transparent); outline: none; }
+.pf svg[data-hub] .stub { opacity: 0.1; }
+.pf svg[data-hub="0"] .stub.h0 { opacity: 1; }
+.pf svg[data-hub="1"] .stub.h1 { opacity: 1; }
+.pf svg[data-hub="2"] .stub.h2 { opacity: 1; }
+.pf svg[data-hub="3"] .stub.h3 { opacity: 1; }
+.pf svg[data-hub="4"] .stub.h4 { opacity: 1; }
+.pf svg[data-hub="5"] .stub.h5 { opacity: 1; }
+.chord-head { font-weight: 600; font-size: 0.78rem; padding: 2px 4px 6px; }
+@media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { } }
+@media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) .pf .e.ing0 { stroke: color-mix(in srgb, var(--g0) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing1 { stroke: color-mix(in srgb, var(--g1) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing2 { stroke: color-mix(in srgb, var(--g2) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing3 { stroke: color-mix(in srgb, var(--g3) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing4 { stroke: color-mix(in srgb, var(--g4) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing5 { stroke: color-mix(in srgb, var(--g5) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing6 { stroke: color-mix(in srgb, var(--g6) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing7 { stroke: color-mix(in srgb, var(--g7) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing8 { stroke: color-mix(in srgb, var(--g8) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .e.ing9 { stroke: color-mix(in srgb, var(--g9) 55%, #ffffff);} :root:not([data-planloft-color-scheme="light"]) .pf .n .dot-c { stroke: rgba(255,255,255,0.5); stroke-width: 1px;} :root:not([data-planloft-color-scheme="light"]) .pf .glabel tspan[class^='gf'] { filter: brightness(1.6);} }
+:root[data-planloft-color-scheme="dark"] .pf .e.ing0 { stroke: color-mix(in srgb, var(--g0) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing1 { stroke: color-mix(in srgb, var(--g1) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing2 { stroke: color-mix(in srgb, var(--g2) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing3 { stroke: color-mix(in srgb, var(--g3) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing4 { stroke: color-mix(in srgb, var(--g4) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing5 { stroke: color-mix(in srgb, var(--g5) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing6 { stroke: color-mix(in srgb, var(--g6) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing7 { stroke: color-mix(in srgb, var(--g7) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing8 { stroke: color-mix(in srgb, var(--g8) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .e.ing9 { stroke: color-mix(in srgb, var(--g9) 55%, #ffffff);} :root[data-planloft-color-scheme="dark"] .pf .n .dot-c { stroke: rgba(255,255,255,0.5); stroke-width: 1px;} :root[data-planloft-color-scheme="dark"] .pf .glabel tspan[class^='gf'] { filter: brightness(1.6);}
+/* round 3c */
+.pf svg.focus .hubring { opacity: 0.15; }
+.chord-side { width: 270px; }
+.chord-side div > span:first-child { min-width: 0; }
+.chord-side .n { flex-shrink: 0; }
+.chord-note { font-size: 0.72rem; color: var(--pf-muted, var(--muted)); padding: 0 4px 6px; }
+.pf .chord-side, .pf .glab { font-family: var(--pf-font); }
+.pf .glab { fill: var(--pf-ink); }
 
 /* Product node colours (packages/style default tokens) */
 :root { --graph-node-terracotta-400: #C0624A; --graph-node-pigeon-blue-300: #7B91B0; --graph-node-rose-300: #D47886; --graph-node-royal-violet-400: #684D82; --graph-node-lime-300: #96B460; --graph-node-gray-500: #9F9993; --graph-node-plum-300: #9E659E; --graph-node-magenta-400: #D13060; --graph-node-teal-500: #14A7B8; --graph-node-royal-violet-300: #8D75A8; --graph-node-mulberry-300: #D068A8; --graph-node-jade-green-300: #4D8547; --graph-node-steel-blue-400: #3870A8; --graph-node-orange-300: #FB803A; --graph-node-brand-300: #5E6E62; }
 @media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { --graph-node-terracotta-400: #8E3E2C; --graph-node-pigeon-blue-300: #313C61; --graph-node-rose-300: #702C3A; --graph-node-royal-violet-400: #453059; --graph-node-lime-300: #415F0B; --graph-node-gray-500: #B4ADA7; --graph-node-plum-300: #3D183D; --graph-node-magenta-400: #970C34; --graph-node-teal-500: #14A7B8; --graph-node-royal-violet-300: #372747; --graph-node-mulberry-300: #601840; --graph-node-jade-green-300: #1E361C; --graph-node-steel-blue-400: #22456C; --graph-node-orange-300: #9E3C02; --graph-node-brand-300: #0C2011; } }
 :root[data-planloft-color-scheme="dark"] { --graph-node-terracotta-400: #8E3E2C; --graph-node-pigeon-blue-300: #313C61; --graph-node-rose-300: #702C3A; --graph-node-royal-violet-400: #453059; --graph-node-lime-300: #415F0B; --graph-node-gray-500: #B4ADA7; --graph-node-plum-300: #3D183D; --graph-node-magenta-400: #970C34; --graph-node-teal-500: #14A7B8; --graph-node-royal-violet-300: #372747; --graph-node-mulberry-300: #601840; --graph-node-jade-green-300: #1E361C; --graph-node-steel-blue-400: #22456C; --graph-node-orange-300: #9E3C02; --graph-node-brand-300: #0C2011; }
+
+/* Group and hub colours: product tokens in light mode, their light-mode hues in dark mode */
+:root { --g0: var(--graph-node-teal-500); --g1: var(--graph-node-orange-300); --g2: var(--graph-node-royal-violet-400); --g3: var(--graph-node-lime-300); --g4: var(--graph-node-magenta-400); --g5: var(--graph-node-pigeon-blue-300); --g6: var(--graph-node-terracotta-400); --g7: var(--graph-node-jade-green-300); --g8: var(--graph-node-gray-500); --g9: var(--graph-node-gray-500); --h0: var(--graph-node-steel-blue-400); --h1: var(--graph-node-orange-300); --h2: var(--graph-node-jade-green-300); --h3: var(--graph-node-magenta-400); --h4: var(--graph-node-brand-300); --h5: var(--graph-node-royal-violet-400); }
+@media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { --g0: #14A7B8; --g1: #FB803A; --g2: #684D82; --g3: #96B460; --g4: #D13060; --g5: #7B91B0; --g6: #C0624A; --g7: #4D8547; --g8: #9F9993; --g9: #9F9993; --h0: #3870A8; --h1: #FB803A; --h2: #4D8547; --h3: #D13060; --h4: #5E6E62; --h5: #684D82; } }
+:root[data-planloft-color-scheme="dark"] { --g0: #14A7B8; --g1: #FB803A; --g2: #684D82; --g3: #96B460; --g4: #D13060; --g5: #7B91B0; --g6: #C0624A; --g7: #4D8547; --g8: #9F9993; --g9: #9F9993; --h0: #3870A8; --h1: #FB803A; --h2: #4D8547; --h3: #D13060; --h4: #5E6E62; --h5: #684D82; }
 
 </style>
 </head>
@@ -1653,7 +1692,7 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 <section class="gallery" id="mocks">
   <div class="gallery-head">
     <p class="eyebrow">3 · Round 3 mocks</p>
-    <h2>Seven takes, all with semantic zoom</h2>
+    <h2>Six canvases with semantic zoom, plus a drill-down chord</h2>
     <div class="prose" style="display:block" id="round2-intro"></div>
   </div>
   <div class="review-sum" id="review-sum" hidden></div>
@@ -1791,7 +1830,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const W = w - 2 * pad, H = h - top - 2 * pad;
     const sx = W / Math.max(1, x1 - x0), sy = H / Math.max(1, y1 - y0);
     const out = []; gs.forEach(g => { out[g.id] = [pad + (g.x - x0) * sx, top + pad + (g.y - y0) * sy]; });
-    gsAll.forEach(g => { if (isolatedGroup[g.id]) out[g.id] = [w - 90, h - 100]; });
+    gsAll.forEach(g => { if (isolatedGroup[g.id]) out[g.id] = [60, h - 60]; });
     return out;
   }
   function layout(ns, links, w, h, A, o = {}) {
@@ -1805,7 +1844,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     for (let i = 0; i < 320; i++) sim.tick();
     const lone = ns.filter(d => isolatedGroup[d.grp]), rest = ns.filter(d => !isolatedGroup[d.grp]);
     fit(rest, w, h, o.pad ?? 40, o.top ?? 0, Object.assign({ l: 0, r: 0, t: 0, b: 0 }, o.margin, { b: (o.margin?.b ?? 0) + (lone.length ? 30 : 0) }));
-    lone.forEach((d, i) => { d.x = w - 150 - i * 22; d.y = h - 34; });
+    lone.forEach((d, i) => { d.x = 40 + i * 22; d.y = h - 40; });
   }
   function fit(ns, w, h, pad, top, m) {
     const x0 = d3.min(ns, d => d.x), x1 = d3.max(ns, d => d.x), y0 = d3.min(ns, d => d.y), y1 = d3.max(ns, d => d.y);
@@ -1844,8 +1883,9 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       if (fkey) fkey.hidden = !id;
     }
     const stage = svg.parentNode;
-    const fkey = stage && !stage.querySelector('.fkey') ? mk('div', 'fkey', stage) : null;
-    if (fkey) { fkey.hidden = true; fkey.innerHTML = '<span><i class="k-out"></i>points out</span><span><i class="k-in"></i>points in</span><span><i class="k-both"></i>both ways</span>'; }
+    let fkey = stage ? stage.querySelector('.fkey') : null;
+    if (stage && !fkey) { fkey = mk('div', 'fkey', stage); fkey.innerHTML = '<span><i class="k-out"></i>points out</span><span><i class="k-in"></i>points in</span><span><i class="k-both"></i>both ways</span>'; }
+    if (fkey) fkey.hidden = true;
     for (const [id, g] of nodeMap) {
       g.addEventListener('pointerenter', ev => { if (!sticky) set(id); const html = infoFn(id); if (html) showTip(html, ev); });
       g.addEventListener('pointermove', moveTip);
@@ -1881,12 +1921,12 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     }
   }
   const circleBoxes = ns => ns.map(d => [d.x - d.r, d.y - d.r, d.x + d.r, d.y + d.r]);
-  function labelItems(ns, map, side = 'right', only) {
+  function labelItems(ns, map, side = 'right', only, extraPrio) {
     const boost = new Set();
     groups.forEach((_, k) => ns.filter(d => d.grp === k).sort((a, b) => b.rep.deg - a.rep.deg || score(b.rep) - score(a.rep)).slice(0, 2).forEach(d => boost.add(d.id)));
     const set = (t, x, y, anchor, dy) => () => { t.setAttribute('x', x); t.setAttribute('y', y); t.setAttribute('text-anchor', anchor); t.setAttribute('dy', dy); };
     return ns.filter(d => !only || only.has(d.id)).map(d => {
-      const w = lw(d.rep.short); const pr = score(d.rep) + (boost.has(d.id) ? 1000 : 0) + (only && only.top === d.id ? 1e6 : 0); const t = map.get(d.id).querySelector('text');
+      const w = lw(d.rep.short); const pr = score(d.rep) + (boost.has(d.id) ? 1000 : 0) + (only && only.top === d.id ? 1e6 : 0) + (extraPrio ? extraPrio(d) : 0); const t = map.get(d.id).querySelector('text');
       const right = { cx: d.x + d.r + 3 + w / 2, cy: d.y, apply: set(t, d.r + 3, 0, 'start', '0.32em') };
       const left = { cx: d.x - d.r - 3 - w / 2, cy: d.y, apply: set(t, -d.r - 3, 0, 'end', '0.32em') };
       const below = { cx: d.x, cy: d.y + d.r + 6.5, apply: set(t, 0, d.r + 10, 'middle', '0') };
@@ -1923,15 +1963,16 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const dl = mk('datalist', '', wrap); dl.id = 'dl-' + Math.random().toString(36).slice(2, 9); inp.setAttribute('list', dl.id);
     const names = new Set(); R.list.forEach(r => { names.add(r.name); r.members.forEach(m => names.add(NAME(m))); });
     [...names].sort().forEach(n => { const o = document.createElement('option'); o.value = n; dl.appendChild(o); });
-    const pick = () => { const q = inp.value.trim().toLowerCase(); if (!q) { onPick(null); return; }
+    const pick = () => { const q = inp.value.trim().toLowerCase(); if (!q) { note.textContent = ''; onPick(null); return; }
       const hit = r => r.name.toLowerCase() === q || r.members.some(m => NAME(m).toLowerCase() === q);
       const near = r => r.name.toLowerCase().includes(q) || r.members.some(m => NAME(m).toLowerCase().includes(q));
       const r = R.list.find(hit) || R.list.find(near); if (!r) { note.textContent = 'No match'; return; }
       const member = r.members.map(NAME).find(nm => nm.toLowerCase() === q) || r.members.map(NAME).find(nm => nm.toLowerCase().includes(q));
       note.textContent = r.members.length > 1 && member && member !== r.name ? `${member} is in ${r.name}` : '';
-      onPick(r.id); };
+      onPick(r.id, r.members.length > 1 && member ? r.members.find(m => NAME(m) === member) : null); };
     const note = mk('span', 'crumb', parent);
     inp.addEventListener('change', pick); inp.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); });
+    inp.addEventListener('input', () => { if (!inp.value) note.textContent = ''; });
   }
   // Edges for rep pairs, styled by meaning: inside a group takes the group colour, unused relationships are dashed.
   function drawPairs(parent, R, by, o = {}) {
@@ -1996,104 +2037,132 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   })();
 
   /* ---------- Semantic zoom canvas ---------- */
-  // Zooming changes how much is shown, not just how big it is: spacing grows with the square root of the zoom,
-  // nodes and lines keep their on-screen size, names appear as room opens, and merged types open up when you go deep.
+  // Zooming changes what is shown, not how far apart things are. Groups (zoomed out) shows one mark per group with
+  // combined links; Types is the default; All types opens every merged type in place. The canvas magnifies at most
+  // 1.4×, so the whole graph stays in view, and nodes and lines keep their size on screen.
   const LEVELS = ['Groups', 'Types', 'All types'];
-  const levelOf = k => (k < 0.9 ? 0 : k < 3 ? 1 : 2);
+  const levelOf = k => (k < 0.9 ? 0 : k < 1.8 ? 1 : 2);
+  const scaleOf = k => (k < 1 ? 1 : 1 + 0.4 * Math.min(1, (k - 1) / 2));
   const famIndex = new Map(); families.forEach((f, fi) => f.members.forEach((m, j) => famIndex.set(m, j)));
+  const RG = buildReps(i => 'g' + GRP(i), typeName);
   function semantic(stage, w, h, self, spec) {
     stage.classList.add('pf');
-    const st = self.view && self.view.w === w && self.view.h === h ? self.view : (self.view = { k: 1, tx: 0, ty: 0, w, h });
+    const st0 = null; void st0;
+    const st = self.view && self.view.w === w && self.view.h === h ? self.view : (self.view = { k: 1, tx: 0, ty: 0, w, h, open: new Set() });
     const P1 = spec.layout(); const p1 = new Map(P1.map(d => [d.id, d]));
-    const svg = mkSvg(stage, w, h);
+    const gPos = groups.map((g, k) => { const m = P1.filter(d => d.grp === k); return m.length ? { x: d3.mean(m, d => d.x), y: d3.mean(m, d => d.y) } : { x: w / 2, y: h / 2 }; });
+    const svg = mkSvg(stage, w, h); svg.classList.add('smartlabels');
     const gDeco = el('g', {}, svg), gE = el('g', {}, svg), gTop = el('g', {}, svg), gN = el('g', {}, svg), gG = el('g', {}, svg), gFx = el('g', {}, svg);
     const c = { x: w / 2, y: h / 2 };
-    const S = () => Math.sqrt(st.k);
+    const S = () => scaleOf(st.k);
     const sx = x => (x - c.x) * S() + c.x + st.tx, sy = y => (y - c.y) * S() + c.y + st.ty;
     const tools = mk('div', 'mtools', stage);
-    let level = -1, cur = null, raf = 0, focusSet = null;
+    let level = -1, key = '', cur = null, raf = 0, focusSet = null, hop2Set = null;
     const lg = legend(stage);
-    const view = { w, h, sx, sy, S, gDeco, gTop, gFx, svg, stage, p1, cur: () => cur, level: () => level };
+    const view = { w, h, sx, sy, S, gDeco, gTop, gFx, svg, stage, p1, gPos, cur: () => cur, level: () => level, st };
+    const repsFor = L => L === 0 ? RG : L === 2 ? R0 : (st.open.size ? repsBy('open:' + [...st.open].sort().join(','), i => FAM(i) >= 0 && !st.open.has(FAM(i)) ? 'f' + FAM(i) : 'n' + i) : R1);
+    function place(r, L) {
+      if (L === 0) { const k = +r.id.slice(1); return { base: gPos[k], off: [0, 0], r: 7 + 3.2 * Math.sqrt(r.members.length) }; }
+      const i0 = r.members[0]; let base = p1.get(r.id), off = [0, 0];
+      if (!base && r.members.length === 1 && FAM(i0) >= 0 && p1.get('f' + FAM(i0))) {
+        base = p1.get('f' + FAM(i0)); const n = families[FAM(i0)].members.length, j = famIndex.get(i0);
+        const ring = base.r + 14 + n * 2.4, a = -Math.PI / 2 + j * 2 * Math.PI / n; off = [Math.cos(a) * ring, Math.sin(a) * ring];
+        return { base, off, r: 3.2 };
+      }
+      if (!base) base = { x: c.x, y: c.y, r: 4 };
+      return { base, off, r: spec.radius ? spec.radius(r, base) : base.r };
+    }
     function build(L) {
-      gE.textContent = ''; gN.textContent = ''; gTop.textContent = ''; gFx.textContent = '';
-      const R = L === 2 ? R0 : R1;
-      const nodes = R.list.map(r => {
-        const i0 = r.members[0]; let base = p1.get(r.id), off = [0, 0];
-        if (!base && r.members.length === 1 && FAM(i0) >= 0 && p1.get('f' + FAM(i0))) {
-          base = p1.get('f' + FAM(i0)); const n = families[FAM(i0)].members.length, j = famIndex.get(i0);
-          const ring = base.r + 10 + n * 1.6, a = -Math.PI / 2 + j * 2 * Math.PI / n; off = [Math.cos(a) * ring, Math.sin(a) * ring];
-        }
-        if (!base) base = { x: c.x, y: c.y, r: 4 };
-        return { id: r.id, rep: r, grp: r.grp, r: spec.radius ? spec.radius(r, base) : (r.members.length > 1 && L === 2 ? 3 : base.r ?? rad(r.rec) * 0.85), wx: base.x, wy: base.y, off, x: 0, y: 0 };
-      });
+      gE.textContent = ''; gN.textContent = ''; gTop.textContent = ''; gFx.textContent = ''; gDeco.textContent = '';
+      const R = repsFor(L);
+      const nodes = R.list.map(r => { const p = place(r, L); return { id: r.id, rep: r, grp: r.grp, r: p.r, wx: p.base.x, wy: p.base.y, off: p.off, x: 0, y: 0 }; });
       const by = new Map(nodes.map(d => [d.id, d]));
       nodes.forEach(d => { d.x = sx(d.wx) + d.off[0]; d.y = sy(d.wy) + d.off[1]; });
-      const map = drawNodes(gN, nodes, { cls: spec.nodeClass ? d => spec.nodeClass(d, L) : null, text: spec.labelSide === 'below' ? d => ({ x: 0, y: d.r + 10, 'text-anchor': 'middle' }) : null });
-      const E = [...R.pairs.values()].map(p => {
+      const map = drawNodes(gN, nodes, { cls: d => (L === 0 ? 'gmark' : '') + (spec.nodeClass && L > 0 ? ' ' + spec.nodeClass(d, L, R) : '') + (d.rep.kind === 'f' ? ' fam' : ''),
+        text: spec.labelSide === 'below' || L === 0 ? d => ({ x: 0, y: d.r + 11, 'text-anchor': 'middle' }) : null, label: d => L === 0 ? `${groups[d.grp].name} (${d.rep.members.length})` : d.rep.short });
+      const E = [];
+      for (const p of R.pairs.values()) {
         const ga = R.byId.get(p.a).grp, gb = R.byId.get(p.b).grp, inside = ga === gb;
-        const tintG = spec.tint === 'source' ? (p.ab >= p.ba ? ga : gb) : (inside ? ga : null);
-        const cls = 'e' + (tintG != null ? ' ing' + gc(tintG) : ' cross') + (spec.edgeClass ? ' ' + spec.edgeClass(p, R, L) : '');
-        return { el: el('path', { class: cls, 'stroke-width': spec.edgeWidth ? spec.edgeWidth(p) : (0.7 + Math.log2(p.ab + p.ba) * 0.45).toFixed(2) }, gE), ...p, ga, gb };
-      });
-      const f = focusable(svg, map, E, spec.info ? id => spec.info(R, id) : id => repInfo(R, id), (id, nb) => { focusSet = id ? new Set([id, ...nb]) : null; if (focusSet) focusSet.top = id; request(); if (spec.onFocus) spec.onFocus(id, nb, view); });
+        const pairs = spec.directed && L > 0 ? [[p.a, p.b, p.ab, ga], [p.b, p.a, p.ba, gb]].filter(x => x[2] > 0).map(([a, b, n, g]) => ({ a, b, ab: n, ba: 0, g })) : [{ a: p.a, b: p.b, ab: p.ab, ba: p.ba, g: spec.tint === 'source' ? (p.ab >= p.ba ? ga : gb) : (inside ? ga : null) }];
+        for (const x of pairs) {
+          const cls = L === 0 ? 'e gagg' : 'e' + (x.g != null ? ' ing' + gc(x.g) : ' cross') + (spec.edgeClass ? ' ' + spec.edgeClass(p, R, L) : '');
+          const sw = L === 0 ? (1 + Math.sqrt(p.ab + p.ba) * 0.75).toFixed(1) : spec.edgeWidth ? spec.edgeWidth(p, R, L) : (0.7 + Math.log2(p.ab + p.ba) * 0.45).toFixed(2);
+          E.push({ el: el('path', { class: cls, 'stroke-width': sw }, gE), ...p, a: x.a, b: x.b, ab: x.ab, ba: x.ba, ga: R.byId.get(x.a).grp, gb: R.byId.get(x.b).grp, pair: p });
+        }
+      }
+      const info = L === 0 ? id => { const k = +id.slice(1); return `<b>${esc(groups[k].name)}</b> · ${groups[k].members.length} types<br><span class="k">${esc(groups[k].members.slice(0, 16).map(NAME).join(', '))}${groups[k].members.length > 16 ? '…' : ''}</span><br>Press + to see its types`; } : spec.info ? id => spec.info(R, id) : id => repInfo(R, id);
+      const f = focusable(svg, map, E, info, (id, nb) => { focusSet = id ? new Set([id, ...nb]) : null; if (focusSet) focusSet.top = id; request(); if (spec.onFocus) spec.onFocus(id, nb, view); });
       cur = { R, nodes, by, map, E, f, L };
-      if (spec.fire) for (const [id, g] of map) g.addEventListener('click', () => fire(id));
+      if (L === 1) for (const d of nodes) if (d.rep.kind === 'f') map.get(d.id).addEventListener('click', ev => { ev.stopPropagation(); st.open.add(+d.id.slice(1)); key = ''; request(); });
+      if (spec.fire && L > 0) for (const [id, g] of map) g.addEventListener('click', () => fire(id));
       if (spec.onBuild) spec.onBuild(view, L);
+      closeBtn.hidden = !(L === 1 && st.open.size);
     }
     function frame() {
       raf = 0;
-      const L = levelOf(st.k); if (L !== level) { level = L; build(L); }
+      const L = levelOf(st.k); const R = repsFor(L); const k2 = L + ':' + (R === R1 ? 'r1' : R === R0 ? 'r0' : R === RG ? 'rg' : [...st.open].join(','));
+      if (k2 !== key) { key = k2; level = L; focusSet = null; build(L); }
       for (const d of cur.nodes) { d.x = sx(d.wx) + d.off[0]; d.y = sy(d.wy) + d.off[1]; cur.map.get(d.id).setAttribute('transform', `translate(${d.x.toFixed(1)},${d.y.toFixed(1)})`); }
       const cent = []; groups.forEach((_, k) => { const m = cur.nodes.filter(n => n.grp === k); if (m.length) cent[k] = { x: d3.mean(m, n => n.x), y: d3.mean(m, n => n.y), top: d3.min(m, n => n.y - n.r) }; });
       view.cent = cent;
-      for (const e of cur.E) e.el.setAttribute('d', (spec.edgePath || straight)(cur.by.get(e.a), cur.by.get(e.b), e, view));
+      const path = L === 0 ? (a, b) => qpath(a, b, 0.1) : (spec.edgePath || straight);
+      for (const e of cur.E) e.el.setAttribute('d', path(cur.by.get(e.a), cur.by.get(e.b), e, view));
       gG.textContent = ''; const gBoxes = [];
-      groups.forEach((g, k) => { const ce = cent[k]; if (!ce) return; const txt = g.name, tw = txt.length * (L === 0 ? 8.6 : 7.4) + 8;
+      if (L > 0) groups.forEach((g, k) => { const ce = cent[k]; if (!ce) return; const tw = g.name.length * 7.4 + 22;
         const x = clamp(ce.x, tw / 2 + 6, w - tw / 2 - 6), y = Math.max(18, ce.top - 12);
-        el('text', { x, y, 'text-anchor': 'middle', class: 'glabel' + (L === 0 ? ' big' : '') + ' gf' + gc(k) }, gG, txt); gBoxes.push([x - tw / 2, y - 13, x + tw / 2, y + 3]); });
-      if (spec.decorate) spec.decorate(view, L);
+        const t = el('text', { x, y, 'text-anchor': 'middle', class: 'glabel' }, gG); el('tspan', { class: 'gf' + gc(k) }, t, '● '); el('tspan', {}, t, g.name); gBoxes.push([x - tw / 2, y - 13, x + tw / 2, y + 3]); });
+      gDeco.textContent = '';
+      if (spec.decorate && L > 0) spec.decorate(view, L);
       let only = focusSet;
-      if (!only && L === 0) { only = new Set(); groups.forEach((_, k) => { const m = cur.nodes.filter(n => n.grp === k).sort((a, b) => b.rep.deg - a.rep.deg)[0]; if (m) only.add(m.id); }); }
+      if (hop2Set) only = new Set([...(only || []), ...hop2Set]);
       for (const d of cur.nodes) if (only && !only.has(d.id)) cur.map.get(d.id).querySelector('text').classList.add('lbl-off');
-      const box = elx => { if (!elx) return [0, 0, 0, 0]; const r = elx.getBoundingClientRect(), sr = stage.getBoundingClientRect(); return [r.left - sr.left - 4, r.top - sr.top - 4, r.right - sr.left + 4, r.bottom - sr.top + 4]; };
-      fitLabels(labelItems(cur.nodes, cur.map, spec.labelSide || 'right', only), [...circleBoxes(cur.nodes), ...gBoxes, box(lg), box(tools), ...(spec.obstacles ? spec.obstacles(view) : [])], w, h);
-      lvl.textContent = LEVELS[L] + ' · ' + st.k.toFixed(1) + '×';
+      const box = elx => { if (!elx || elx.hidden) return [0, 0, 0, 0]; const r = elx.getBoundingClientRect(), sr = stage.getBoundingClientRect(); return [r.left - sr.left - 4, r.top - sr.top - 4, r.right - sr.left + 4, r.bottom - sr.top + 4]; };
+      fitLabels(labelItems(cur.nodes, cur.map, L === 0 ? 'below' : spec.labelSide || 'right', only, spec.labelPrio), [...circleBoxes(cur.nodes), ...gBoxes, box(lg), box(tools), box(hintEl), ...(spec.obstacles ? spec.obstacles(view) : [])], w, h);
+      lvl.textContent = LEVELS[L];
     }
     const request = () => { if (!raf) raf = requestAnimationFrame(frame); };
-    const zoomAt = (mx, my, f) => { const s0 = S(); const k2 = clamp(st.k * f, 0.6, 6); const s1 = Math.sqrt(k2); const wx = (mx - c.x - st.tx) / s0 + c.x, wy = (my - c.y - st.ty) / s0 + c.y; st.k = k2; st.tx = mx - c.x - (wx - c.x) * s1; st.ty = my - c.y - (wy - c.y) * s1; request(); };
-    const centre = id => { const d = p1.get(id) || (cur && cur.by.get(id)); if (!d) return; st.k = Math.max(st.k, 1.6); if (st.k >= 3) st.k = 2.6; const s1 = S(); st.tx = -((d.wx ?? d.x) - c.x) * s1; st.ty = -((d.wy ?? d.y) - c.y) * s1; frame(); };
-    searchBox(tools, R1, id => { if (!id) return; centre(id); if (cur.R.byId.has(id)) cur.f.pin(id); });
+    const zoomAt = (mx, my, f) => { const s0 = S(); const k2 = clamp(st.k * f, 0.6, 3); const s1 = scaleOf(k2); const wx = (mx - c.x - st.tx) / s0 + c.x, wy = (my - c.y - st.ty) / s0 + c.y; st.k = k2; st.tx = mx - c.x - (wx - c.x) * s1; st.ty = my - c.y - (wy - c.y) * s1; if (k2 <= 1) { st.tx = 0; st.ty = 0; } request(); };
+    function find(id, member) {
+      const r = R1.byId.get(id); if (!r) return;
+      if (levelOf(st.k) === 0) st.k = 1;
+      let target = id;
+      if (member != null && r.members.length > 1) { if (levelOf(st.k) === 1) st.open.add(FAM(member)); target = 'n' + member; }
+      const base = p1.get(id) || p1.get(target) || { x: c.x, y: c.y };
+      const s1 = S(); if (s1 > 1) { st.tx = -(base.x - c.x) * s1; st.ty = -(base.y - c.y) * s1; }
+      frame(); if (cur.R.byId.has(target)) cur.f.pin(target);
+    }
+    searchBox(tools, R1, (id, member) => { if (id) find(id, member); });
     button(tools, '−', () => zoomAt(c.x, c.y, 1 / 1.5)).setAttribute('aria-label', 'Show less detail');
     const lvl = mk('span', 'crumb lvl', tools);
     button(tools, '+', () => zoomAt(c.x, c.y, 1.5)).setAttribute('aria-label', 'Show more detail');
-    button(tools, 'Reset', () => { st.k = 1; st.tx = 0; st.ty = 0; request(); });
+    const closeBtn = button(tools, 'Close opened', () => { st.open.clear(); request(); }); closeBtn.hidden = true;
+    button(tools, 'Reset', () => { st.k = 1; st.tx = 0; st.ty = 0; st.open.clear(); tools.querySelectorAll('.msearch input').forEach(i => { i.value = ''; }); tools.querySelectorAll('.crumb:not(.lvl)').forEach(n => { n.textContent = ''; }); if (cur) cur.f.pin(null); request(); });
     svg.addEventListener('wheel', ev => { if (!(ev.ctrlKey || ev.metaKey)) return; ev.preventDefault(); const r = svg.getBoundingClientRect(); zoomAt(ev.clientX - r.left, ev.clientY - r.top, Math.exp(-ev.deltaY * 0.0035)); }, { passive: false });
     let drag = null, moved = false;
-    svg.addEventListener('pointerdown', ev => { if (ev.button !== 0 || ev.target.closest('.n')) return; drag = { x: ev.clientX, y: ev.clientY, tx: st.tx, ty: st.ty }; moved = false; });
-    window.addEventListener('pointermove', ev => { if (!drag) return; const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) moved = true; st.tx = drag.tx + dx; st.ty = drag.ty + dy; request(); });
+    svg.addEventListener('pointerdown', ev => { if (ev.button !== 0 || ev.target.closest('.n') || S() <= 1) return; drag = { x: ev.clientX, y: ev.clientY, tx: st.tx, ty: st.ty }; moved = false; });
+    window.addEventListener('pointermove', ev => { if (!drag) return; const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) moved = true; const lim = (S() - 1) * 0.6; st.tx = clamp(drag.tx + dx, -w * lim, w * lim); st.ty = clamp(drag.ty + dy, -h * lim, h * lim); request(); });
     window.addEventListener('pointerup', () => { drag = null; });
     svg.addEventListener('click', ev => { if (moved) { ev.stopPropagation(); moved = false; } }, true);
-    // A pulse travels out along each link of the clicked type, then the types two steps away light up briefly.
+    // Fire: a pulse runs out along each link of the clicked type, then the types two steps away light up and get names.
     function fire(id) {
       gFx.textContent = '';
       const inc = cur.E.filter(e => e.a === id || e.b === id); const me = cur.by.get(id); if (!me) return;
-      const t0 = performance.now(), dur = 650;
-      const dots = inc.map(e => { const p = e.el; if (!p.getTotalLength) return null; const L2 = p.getTotalLength(); const start = p.getPointAtLength(0); const fromStart = Math.hypot(start.x - me.x, start.y - me.y) < 12; return { p, L2, fromStart, dot: el('circle', { r: 3, class: 'pulse' }, gFx) }; }).filter(Boolean);
       const hop1 = new Set(inc.map(e => e.a === id ? e.b : e.a));
-      const step = now => {
-        const t = Math.min(1, (now - t0) / dur);
-        for (const d of dots) { const q = d.p.getPointAtLength(d.L2 * (d.fromStart ? t : 1 - t)); d.dot.setAttribute('cx', q.x); d.dot.setAttribute('cy', q.y); d.dot.setAttribute('opacity', (1 - t * 0.6).toFixed(2)); }
-        if (t < 1) requestAnimationFrame(step);
-        else {
-          gFx.textContent = '';
-          const hop2 = new Set(); for (const e of cur.E) { if (hop1.has(e.a) && e.b !== id && !hop1.has(e.b)) hop2.add(e.b); if (hop1.has(e.b) && e.a !== id && !hop1.has(e.a)) hop2.add(e.a); }
-          for (const n of hop2) cur.map.get(n)?.classList.add('hop2');
-          setTimeout(() => { for (const n of hop2) cur.map.get(n)?.classList.remove('hop2'); }, 1400);
-        }
-      };
+      const hop2 = new Set(); for (const e of cur.E) { if (hop1.has(e.a) && e.b !== id && !hop1.has(e.b)) hop2.add(e.b); if (hop1.has(e.b) && e.a !== id && !hop1.has(e.a)) hop2.add(e.a); }
+      const msg = `Fired ${me.rep.short}: ${hop1.size} type${hop1.size === 1 ? '' : 's'} one step away, ${hop2.size} two steps away`;
+      hintEl.textContent = msg;
+      const t0 = performance.now(), dur = 650;
+      const dots = inc.map(e => { const p = e.el; if (!p.getTotalLength) return null; const L2 = p.getTotalLength(); const s0 = p.getPointAtLength(0); return { p, L2, fromStart: Math.hypot(s0.x - me.x, s0.y - me.y) < 14, dot: el('circle', { r: 3.2, class: 'pulse' }, gFx) }; }).filter(Boolean);
+      const done = () => { gFx.textContent = ''; for (const n of hop2) cur.map.get(n)?.classList.add('hop2'); hop2Set = hop2; request();
+        setTimeout(() => { for (const n of hop2) cur.map.get(n)?.classList.remove('hop2'); hop2Set = null; request(); hintEl.textContent = baseHint; }, 2200); };
+      if (!dots.length) { done(); return; }
+      const step = now => { const t = Math.min(1, (now - t0) / dur);
+        for (const d of dots) { const q = d.p.getPointAtLength(d.L2 * (d.fromStart ? t : 1 - t)); d.dot.setAttribute('cx', q.x); d.dot.setAttribute('cy', q.y); d.dot.setAttribute('opacity', (1 - t * 0.5).toFixed(2)); }
+        if (t < 1) requestAnimationFrame(step); else done(); };
       requestAnimationFrame(step);
     }
-    hint(stage, spec.hint || (spec.fire ? 'Click a type to fire it · hover for links · + / − or Ctrl/⌘ + scroll for detail · drag to pan' : 'Hover a type for its links · + / − or Ctrl/⌘ + scroll for detail · drag to pan'));
+    const baseHint = spec.hint || (spec.fire ? 'Click a type to fire it · + / − change the detail · Ctrl/⌘ + scroll works too' : 'Hover a type for its links · + / − change the detail · Ctrl/⌘ + scroll works too');
+    const hintEl = hint(stage, baseHint);
     frame();
     return view;
   }
@@ -2103,13 +2172,17 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const R = R1; const ns = R.list.map(r => ({ id: r.id, grp: r.grp, r: opts.r ? opts.r(r) : rad(r.rec) * 0.85, rep: r }));
     const links = [...R.pairs.values()].map(p => ({ source: p.a, target: p.b }));
     const A = groupAnchors(R, w, h, opts.anchorPad ?? 100, 40);
-    layout(ns, links, w, h, A, { collide: d => d.r + (opts.gap ?? 10), pull: opts.pull ?? 0.16, charge: opts.charge ?? -60, pad: 46, margin: { r: 110, t: 50 } });
+    layout(ns, links, w, h, A, { collide: d => d.r + (opts.gap ?? 10), pull: opts.pull ?? 0.16, charge: opts.charge ?? -60, pad: 46, margin: { r: 110, t: 50, b: opts.mb ?? 0 } });
     return ns.map(d => ({ id: d.id, x: d.x, y: d.y, r: d.r, grp: d.grp }));
   };
 
   const CHORD_RENDER = function (stage, w, h) {
-      const st = this.st || (this.st = { open: null });
+      const st = this.st || (this.st = { open: null, find: null });
       const tools = mk('div', 'mtools', stage);
+      searchBox(tools, R1, id => { if (!id) return; st.open = R1.byId.get(id).grp; st.find = id; rerender(this); });
+      button(tools, '−', () => { if (st.open != null) { st.open = null; rerender(this); } }).setAttribute('aria-label', 'Back to all groups');
+      mk('span', 'crumb lvl', tools, st.open == null ? 'Groups' : 'Types');
+      button(tools, '+', () => { if (st.open == null) { st.open = groups.map((g, k) => [k, g.members.length]).sort((a, b) => b[1] - a[1])[0][0]; rerender(this); } }).setAttribute('aria-label', 'Open the largest group');
       let units, unitOf;
       if (st.open == null) { units = groups.map((g, k) => ({ id: 'g' + k, name: g.name, grp: k })).filter(u => !isolatedGroup[u.grp]); const gp = new Map(units.map((u, i) => [u.grp, i])); unitOf = i => gp.get(GRP(i)); }
       else {
@@ -2121,7 +2194,8 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       }
       const n = units.length; const M = Array.from({ length: n }, () => new Array(n).fill(0)); const lab = Array.from({ length: n }, () => Array.from({ length: n }, () => new Map()));
       for (const [s, t, l] of edges) { const a = unitOf(s), b = unitOf(t); if (a == null || b == null || a === b) continue; M[a][b]++; lab[a][b].set(labels[l], (lab[a][b].get(labels[l]) || 0) + 1); }
-      const sideW = 260, cxw = (w - sideW) / 2;
+      stage.classList.add('pf');
+      const sideW = 290, cxw = (w - sideW) / 2;
       const outer = Math.min(cxw - 190, h / 2 - 70), inner = outer - 14;
       const chords = d3.chordDirected().padAngle(n > 20 ? 0.012 : 0.03).sortSubgroups(d3.descending)(M);
       const svg = mkSvg(stage, w - sideW, h); const g = el('g', { transform: `translate(${cxw},${h / 2 + 10})` }, svg);
@@ -2153,6 +2227,9 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
       });
       callouts.sort((p, q) => p.y - q.y);
       for (let i = 1; i < callouts.length; i++) for (let j = 0; j < i; j++) { const a = callouts[j], b = callouts[i]; if (a.x0 < b.x1 && b.x0 < a.x1 && b.y < a.y + 15) { b.y = a.y + 15; b.t.setAttribute('y', b.y); } }
+      mk('div', 'chord-head', side, st.open == null ? 'Relationships between groups' : `Types in ${groups[st.open].name}, and the other groups`);
+      const lone = groups.filter((_, k) => isolatedGroup[k]).flatMap(g => g.members.map(NAME));
+      if (lone.length) mk('div', 'chord-note', side, `${lone.join(', ')} ${lone.length === 1 ? 'has' : 'have'} no relationships and ${lone.length === 1 ? 'is' : 'are'} left out.`);
       units.map((u, i) => ({ u, i, tot: outN[i] + inN[i] })).sort((a, b) => b.tot - a.tot).forEach(({ u, i }) => {
         const row = mk('div', '', side); const nm = mk('span', '', row); nm.style.cssText = 'display:inline-flex;gap:6px;align-items:center;min-width:0';
         mk('i', 'dot gb' + gc(u.grp), nm); const tx = mk('span', '', nm, u.name); tx.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
@@ -2160,7 +2237,8 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         row.addEventListener('pointerenter', () => isoOf(i)); row.addEventListener('pointerleave', () => { if (pinnedIso != null) { isoOf(pinnedIso); return; } rib.forEach(r => r.p.classList.toggle('off', st.open != null && units[r.s].id[0] === 'g' && units[r.t].id[0] === 'g')); });
         if (u.id[0] === 'g' && u.grp !== st.open) { row.style.cursor = 'pointer'; row.title = 'Open this group'; row.addEventListener('click', () => { st.open = u.grp; rerender(this); }); }
       });
-      hint(stage, st.open == null ? 'Click a group arc or list row to open it · hover a ribbon' : 'Click a type arc to keep it highlighted · click another group to open it').style.right = (sideW + 10) + 'px';
+      if (st.find) { const fi = units.findIndex(u => u.id === st.find); if (fi >= 0) { pinnedIso = fi; isoOf(fi); } st.find = null; }
+      hint(stage, st.open == null ? '+ or click a group to open it · hover a ribbon' : '− goes back · click a type arc to keep it highlighted').style.right = (sideW + 10) + 'px';
     };
 
   /* ---------- Mocks ---------- */
@@ -2169,8 +2247,20 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   mock({
     short: 'Groups', title: 'Groups pull together', from: 'round 2 · 01',
     answers: 'Which types belong together, and how do the groups connect?',
-    read: 'Types in the same group sit close, so closeness means "same group"; lines are direct relationships, tinted inside a group and grey between groups. Zoom with + and − or Ctrl/⌘ + scroll: zoomed out shows only the groups, zoomed in names more types, and at the deepest level merged types open into their members. Drag to pan. Hover a type for its links.',
-    render(stage, w, h) { semantic(stage, w, h, this, { layout: forceLayout(w, h) }); },
+    read: 'Types in the same group sit close, so closeness means "same group". Lines inside a group are direct relationships, tinted with the group colour. Between groups, all the links are combined into one grey band per pair, with the count on it; hover a type to see its exact links. − shows only the groups, + names more types and then opens merged types in place (click a bold merged node to open just that one).',
+    render(stage, w, h) {
+      semantic(stage, w, h, this, { layout: forceLayout(w, h),
+        edgeClass: (p, R) => R.byId.get(p.a).grp !== R.byId.get(p.b).grp ? 'hid' : '',
+        decorate: (view) => {
+          const cur = view.cur(), agg = new Map();
+          for (const e of cur.E) { if (e.ga === e.gb) continue; const k2 = e.ga < e.gb ? e.ga + '|' + e.gb : e.gb + '|' + e.ga; agg.set(k2, (agg.get(k2) || 0) + e.ab + e.ba); }
+          for (const [k2, n] of agg) { const [ga, gb] = k2.split('|').map(Number); const a = view.cent[ga], b = view.cent[gb]; if (!a || !b) continue;
+            const pth = el('path', { d: qpath(a, b, 0.1), class: 'gband', 'stroke-width': (1.5 + Math.sqrt(n) * 1.1).toFixed(1) }, view.gDeco);
+            const mx = (a.x + b.x) / 2 - (b.y - a.y) * 0.05, my = (a.y + b.y) / 2 + (b.x - a.x) * 0.05;
+            el('text', { x: mx, y: my + 4, class: 'gband-n' }, view.gDeco, String(n));
+            const html = `<b>${esc(groups[ga].name)} ↔ ${esc(groups[gb].name)}</b> · ${n} relationships`; pth.addEventListener('pointermove', ev => showTip(html, ev)); pth.addEventListener('pointerleave', hideTip); }
+        } });
+    },
   });
 
   mock({
@@ -2185,7 +2275,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   mock({
     short: 'Constellation lines', title: 'Constellation lines, platform look', from: 'round 2 · 05',
     answers: 'What is the skeleton of the graph before the detail?',
-    read: 'Same layout, but only the strongest links are drawn: inside each group the strongest chain that reaches every type, and between groups the single strongest link (dashed). Everything else appears when you hover a type. Zoom works the same way: more detail, not just bigger.',
+    read: 'Same layout, but only a skeleton is drawn. Inside each group: the fewest links that still connect every type, choosing the pairs with the most relationships between them. Between groups: one dashed link per pair of groups, the type pair with the most relationships. Hover a type to see all of its links. − and + change the detail as in mock 1.',
     render(stage, w, h) {
       const bb = new Map();
       const backbone = R => { if (bb.has(R)) return bb.get(R); const set = new Set(); const pw = p => p.ab + p.ba;
@@ -2202,18 +2292,24 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   mock({
     short: 'Hub stubs', title: 'Hubs as landmarks, links to them as stubs', from: 'round 2 · 06, rebuilt',
     answers: 'What does the graph look like once the few types everyone links to stop pulling lines across it?',
-    read: 'Six types are linked to by far more types than any others (named in the key). Most of the long lines in the graph run to them. Here they stay in their groups, drawn as landmarks with a coloured ring, and every link to them becomes a short stub pointing towards that hub in its colour. All other links are drawn normally. Hover a hub to draw its full lines, or any type to see all of its own.',
+    read: 'Six types are linked to by far more types than any others, and most of the long lines in the graph run to them. Here they stay in their groups as landmarks with a coloured ring, and every link to one of them becomes a short arrow on the other type, pointing towards that hub and drawn in its colour. Hover a hub in the key at the bottom to light up its arrows and draw its full lines; hover any type for all of its own links.',
     render(stage, w, h) {
       const inN = new Map(R1.list.map(r => [r.id, new Set()]));
       for (const p of R1.pairs.values()) { if (p.ab) inN.get(p.b).add(p.a); if (p.ba) inN.get(p.a).add(p.b); }
       const hubs = R1.list.filter(r => r.members.length === 1).sort((a, b) => inN.get(b.id).size - inN.get(a.id).size).slice(0, 6);
-      const HUBC = ['var(--graph-node-rose-300)', 'var(--graph-node-brand-300)', 'var(--graph-node-steel-blue-400)', 'var(--graph-node-plum-300)', 'var(--graph-node-mulberry-300)', 'var(--graph-node-royal-violet-300)'];
+      const HUBC = [0, 1, 2, 3, 4, 5].map(i => `var(--h${i})`);
       const hubIdx = new Map(); hubs.forEach((r, i) => r.members.forEach(m => hubIdx.set('n' + m, i)));
       const hubOf = id => hubIdx.get(id);
       const key = mk('div', 'hubkey', stage);
-      mk('b', '', key, 'Hubs'); hubs.forEach((r, i) => { const s = mk('span', '', key); const sw = mk('i', '', s); sw.style.background = HUBC[i]; mk('span', '', s, `${r.name} · ${inN.get(r.id).size} types link here`); });
-      semantic(stage, w, h, this, {
-        layout: forceLayout(w, h),
+      mk('b', '', key, 'Hubs: stubs point towards the hub they link to');
+      let viewRef = null;
+      hubs.forEach((r, i) => { const s = mk('span', 'hubrow', key); const sw = mk('i', '', s); sw.style.background = HUBC[i]; mk('span', '', s, `${r.name} · ${inN.get(r.id).size}`);
+        s.tabIndex = 0; s.title = `Show the ${inN.get(r.id).size} types that link to ${r.name}`;
+        const on = () => { if (!viewRef) return; viewRef.svg.dataset.hub = i; const cur = viewRef.cur(); if (cur.R.byId.has(r.id)) cur.f.pin(r.id); };
+        const off = () => { if (!viewRef) return; delete viewRef.svg.dataset.hub; const cur = viewRef.cur(); cur.f.pin(null); };
+        s.addEventListener('pointerenter', on); s.addEventListener('pointerleave', off); s.addEventListener('focus', on); s.addEventListener('blur', off); });
+      viewRef = semantic(stage, w, h, this, {
+        layout: forceLayout(w, h, { mb: 44 }),
         nodeClass: d => hubOf(d.id) != null ? 'hub hub' + hubOf(d.id) : '',
         radius: (r, base) => hubOf(r.id) != null ? base.r + 4 : (base.r ?? rad(r.rec) * 0.85),
         edgeClass: p => (hubOf(p.a) != null) !== (hubOf(p.b) != null) ? 'hid' : '',
@@ -2224,13 +2320,14 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
           for (const e of cur.E) {
             const ha = hubOf(e.a), hb = hubOf(e.b); if ((ha != null) === (hb != null)) continue;
             const [n, hub, i] = ha != null ? [cur.by.get(e.b), cur.by.get(e.a), ha] : [cur.by.get(e.a), cur.by.get(e.b), hb];
-            const dx = hub.x - n.x, dy = hub.y - n.y, dl = Math.hypot(dx, dy) || 1, len = 11;
-            const sl = el('line', { x1: n.x + dx / dl * (n.r + 1), y1: n.y + dy / dl * (n.r + 1), x2: n.x + dx / dl * (n.r + 1 + len), y2: n.y + dy / dl * (n.r + 1 + len), class: 'stub' }, view.gTop); sl.style.stroke = HUBC[i];
+            const dx = hub.x - n.x, dy = hub.y - n.y, dl = Math.hypot(dx, dy) || 1, ux = dx / dl, uy = dy / dl, len = 12;
+            const x1 = n.x + ux * (n.r + 1), y1 = n.y + uy * (n.r + 1), x2 = n.x + ux * (n.r + 1 + len), y2 = n.y + uy * (n.r + 1 + len);
+            const sl = el('line', { x1, y1, x2: x2 - ux * 3, y2: y2 - uy * 3, class: 'stub h' + i }, view.gTop); sl.style.stroke = HUBC[i];
+            const tri = el('polygon', { points: `${x2},${y2} ${x2 - ux * 5 - uy * 3},${y2 - uy * 5 + ux * 3} ${x2 - ux * 5 + uy * 3},${y2 - uy * 5 - ux * 3}`, class: 'stub h' + i }, view.gTop); tri.style.fill = HUBC[i];
           }
         },
         obstacles: () => { const r = key.getBoundingClientRect(), sr = stage.getBoundingClientRect(); return [[r.left - sr.left - 4, r.top - sr.top - 4, r.right - sr.left + 4, r.bottom - sr.top + 4]]; },
       });
-      const ns = stage.querySelector('.legend'); if (ns) ns.style.top = (key.offsetHeight + 18) + 'px';
     },
   });
 
@@ -2246,7 +2343,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         const out = [];
         groups.forEach((g, k) => {
           const reps = R.list.filter(r => r.grp === k); if (!reps.length) return;
-          const soma = [...reps].sort((a, b) => b.deg - a.deg)[0]; somaOf[k] = soma.id;
+          const soma = [...reps].sort((a, b) => (a.members.length === 1 ? 0 : 1) - (b.members.length === 1 ? 0 : 1) || b.deg - a.deg)[0]; somaOf[k] = soma.id;
           const inG = new Set(reps.map(r => r.id)); const wgt = new Map();
           for (const p of R.pairs.values()) if (inG.has(p.a) && inG.has(p.b)) { const k2 = p.a + '|' + p.b; wgt.set(k2, p.ab + p.ba); }
           const reached = new Set([soma.id]), parent = new Map(), children = new Map(reps.map(r => [r.id, []]));
@@ -2266,20 +2363,35 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         return out;
       };
       const key = (a, b) => (a < b ? a + '|' + b : b + '|' + a);
+      // Branches for any detail level: a merged type's branch goes to the member with the most links across it,
+      // and the other members hang off that member through their own real links.
+      const treeCache = new Map();
+      const treeFor = R => {
+        if (R === R1) return tree; if (treeCache.has(R)) return treeCache.get(R);
+        const out = new Set(); const pw = (a, b) => { const p = R.pairs.get(key(a, b)); return p ? p.ab + p.ba : 0; };
+        const ids = id => R1.byId.get(id).members.map(m => R.byId.has('n' + m) ? 'n' + m : R.list.find(r => r.members.includes(m)).id);
+        const lead = new Map();
+        for (const k2 of tree) { const [a, b] = k2.split('|'); const A2 = [...new Set(ids(a))], B2 = [...new Set(ids(b))]; let best = null;
+          for (const x of A2) for (const y of B2) { const v = pw(x, y); if (v && (!best || v > best.v)) best = { x, y, v }; }
+          if (best) { out.add(key(best.x, best.y)); if (A2.length > 1 && !lead.has(a)) lead.set(a, best.x); if (B2.length > 1 && !lead.has(b)) lead.set(b, best.y); } }
+        for (const r of R1.list) { if (r.members.length < 2) continue; const m = [...new Set(ids(r.id))]; if (m.length < 2) continue; const l = lead.get(r.id) || m[0];
+          for (const x of m) if (x !== l && pw(x, l)) { out.add(key(x, l)); depthOf.set(x, (depthOf.get(r.id) ?? 2) + 1); } depthOf.set(l, depthOf.get(r.id) ?? 2); }
+        treeCache.set(R, out); return out; };
       semantic(stage, w, h, this, {
         layout,
         fire: true,
         nodeClass: d => somaOf[d.grp] === d.id ? 'soma' : '',
-        edgeClass: p => tree.has(key(p.a, p.b)) ? 'branch' : 'hid',
-        edgeWidth: p => { if (!tree.has(key(p.a, p.b))) return 1.1; const dp = Math.max(depthOf.get(p.a) ?? 3, depthOf.get(p.b) ?? 3); return [3.6, 3.6, 2.4, 1.6, 1.1][Math.min(dp, 4)]; },
-        edgePath: (a, b, e) => { if (!tree.has(key(e.a, e.b))) return qpath(a, b, 0.16); const bend = ((a.id.length + b.id.length) % 2 ? 1 : -1) * 0.18; return qpath(a, b, bend); },
+        labelPrio: d => somaOf[d.grp] === d.id ? 1e5 : 0,
+        edgeClass: (p, R) => treeFor(R).has(key(p.a, p.b)) ? 'branch' : 'hid',
+        edgeWidth: (p, R) => { if (!treeFor(R).has(key(p.a, p.b))) return 1.1; const dp = Math.max(depthOf.get(p.a) ?? 3, depthOf.get(p.b) ?? 3); return [3.6, 3.6, 2.4, 1.6, 1.1][Math.min(dp, 4)]; },
+        edgePath: (a, b, e, view) => { if (!treeFor(view.cur().R).has(key(e.a, e.b))) return qpath(a, b, 0.16); const bend = ((a.id.length + b.id.length) % 2 ? 1 : -1) * 0.18; return qpath(a, b, bend); },
         decorate: (view) => {
-          view.gDeco.textContent = ''; const cur = view.cur();
+          const cur = view.cur();
           const agg = new Map(); for (const e of cur.E) { if (e.ga === e.gb) continue; const k2 = e.ga < e.gb ? e.ga + '|' + e.gb : e.gb + '|' + e.ga; agg.set(k2, (agg.get(k2) || 0) + e.ab + e.ba); }
           const somaAt = k => { const d = view.p1.get(somaOf[k]); return d ? { x: view.sx(d.x), y: view.sy(d.y) } : null; };
           for (const [k2, n] of agg) { const [ga, gb] = k2.split('|').map(Number); const a = somaAt(ga), b = somaAt(gb); if (!a || !b) continue;
             const p = el('path', { d: qpath(a, b, 0.12), class: 'axon', 'stroke-width': (1.2 + Math.sqrt(n) * 0.9).toFixed(1) }, view.gDeco);
-            const html = `<b>${esc(groups[ga].name)} ↔ ${esc(groups[gb].name)}</b> · ${n} relationships`;
+            const html = `<b>${esc(groups[ga].name)} ↔ ${esc(groups[gb].name)}</b> · ${n} relationships between these groups`;
             p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip); }
         },
       });
@@ -2289,12 +2401,12 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   mock({
     short: 'Fibre tracts', title: 'Fibre tracts', from: 'new · neural layout',
     answers: 'Where do the main flows between groups run, the way fibre tracts run between brain regions?',
-    read: 'Types sit in their groups as in mock 1, but every link between two groups is routed through the centres of both groups, so hundreds of links merge into a few smooth tracts, coloured by the group they leave. Links inside a group curve through its centre. Click a type to fire it and watch the pulse travel its tracts; hover for exact links.',
+    read: 'Types sit in their groups as in mock 1, but every link between two groups is routed through the centres of both groups, so hundreds of links merge into a few smooth tracts. Each direction is drawn separately and coloured by the group the link leaves. Links inside a group curve through its centre. Click a type to fire it and watch the pulse travel its tracts; hover for exact links.',
     render(stage, w, h) {
       const line = d3.line().curve(d3.curveBundle.beta(0.82));
       semantic(stage, w, h, this, {
         layout: forceLayout(w, h, { pull: 0.24, gap: 11 }),
-        fire: true, tint: 'source',
+        fire: true, directed: true,
         edgeClass: () => 'tract',
         edgeWidth: () => 1,
         edgePath: (a, b, e, view) => { const ca = view.cent[e.ga], cb = view.cent[e.gb]; if (!ca || !cb) return straight(a, b);
