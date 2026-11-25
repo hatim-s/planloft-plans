@@ -2069,7 +2069,7 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       const R = R0;
       const ns = R.list.map(r => ({ id: r.id, dom: r.dom, r: 3 + Math.log10(1 + r.rec) * 1.1, rep: r, lw: lw(r.short) }));
       const tm = d3.hierarchy({ children: DOMAIN_ORDER.map(di => ({ di, value: ns.filter(n => n.dom === di).reduce((a, n) => a + (n.lw + 18) * 36, 0) })) }).sum(d => d.value || 0);
-      d3.treemap().size([w, h]).paddingInner(54).paddingOuter(34).tile(d3.treemapSquarify.ratio(1))(tm);
+      d3.treemap().size([w, h]).paddingInner(64).paddingOuter(34).tile(d3.treemapSquarify.ratio(1))(tm);
       const rect = []; tm.leaves().forEach(l => { rect[l.data.di] = l; });
       const cxr = di => (rect[di].x0 + rect[di].x1) / 2, cyr = di => (rect[di].y0 + rect[di].y1) / 2;
       ns.forEach((d, i) => { d.x = cxr(d.dom) + ((i * 37) % 60 - 30); d.y = cyr(d.dom) + ((i * 53) % 40 - 20); });
@@ -2083,22 +2083,29 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       }
       const svg = mkSvg(stage, w, h);
       const gH = el('g', { class: 'fadeable' }, svg), gR = el('g', {}, svg), gE = el('g', {}, svg), gN = el('g', {}, svg);
-      const smooth = d3.line().curve(d3.curveCatmullRomClosed.alpha(0.6));
+      const smooth = d3.line().curve(d3.curveCardinalClosed.tension(0.75));
       const hulls = [], cent = [];
       DOMAIN_ORDER.forEach(di => {
         const m = ns.filter(n => n.dom === di);
-        const pts = m.flatMap(n => [[n.x - n.lw / 2 - 8, n.y - 14], [n.x + n.lw / 2 + 8, n.y - 14], [n.x - n.lw / 2 - 8, n.y + 24], [n.x + n.lw / 2 + 8, n.y + 24]]);
+        const L = rect[di];
+        const pts = m.flatMap(n => [[n.x - n.lw / 2 - 6, n.y - 12], [n.x + n.lw / 2 + 6, n.y - 12], [n.x - n.lw / 2 - 6, n.y + 22], [n.x + n.lw / 2 + 6, n.y + 22]])
+          .map(([x, y]) => [clamp(x, L.x0 - 18, L.x1 + 18), clamp(y, L.y0 - 18, L.y1 + 18)]);
         const hull = d3.polygonHull(pts); hulls[di] = hull; cent[di] = d3.polygonCentroid(hull);
         el('path', { d: smooth(hull), class: `hull fill${di} st${di}` }, gH);
         el('text', { x: cent[di][0], y: d3.min(hull, p => p[1]) - 8, 'text-anchor': 'middle', class: `hull-name fill${di}` }, gH, domains[di]);
       });
+      const labelBoxes = ns.map(n => [n.x - n.lw / 2, n.y - n.r - 2, n.x + n.lw / 2, n.y + n.r + 16]);
       const nearest = (hull, [x, y]) => hull.reduce((best, p) => (Math.hypot(p[0] - x, p[1] - y) < Math.hypot(best[0] - x, best[1] - y) ? p : best), hull[0]);
       for (const p of domUnd.values()) {
         if (p.a === p.b) continue;
         const pa = nearest(hulls[p.a], cent[p.b]), pb = nearest(hulls[p.b], cent[p.a]);
         const a = { x: pa[0], y: pa[1] }, b = { x: pb[0], y: pb[1] };
         const road = el('path', { d: qpath(a, b, 0.12), class: 'road', 'stroke-width': (1.5 + Math.sqrt(p.n) * 1.1).toFixed(1) }, gR);
-        el('text', { x: (a.x + b.x) / 2 - (b.y - a.y) * 0.06, y: (a.y + b.y) / 2 + (b.x - a.x) * 0.06 + 3, class: 'roadn' }, gR, String(p.n));
+        const qx = (a.x + b.x) / 2 - (b.y - a.y) * 0.12, qy = (a.y + b.y) / 2 + (b.x - a.x) * 0.12;
+        const at = t => [(1 - t) * (1 - t) * a.x + 2 * (1 - t) * t * qx + t * t * b.x, (1 - t) * (1 - t) * a.y + 2 * (1 - t) * t * qy + t * t * b.y];
+        let rp = at(0.5);
+        for (const t of [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74]) { const q = at(t); if (!labelBoxes.some(bx => q[0] > bx[0] - 8 && q[0] < bx[2] + 8 && q[1] > bx[1] - 8 && q[1] < bx[3] + 8)) { rp = q; break; } }
+        el('text', { x: rp[0], y: rp[1] + 3, class: 'roadn' }, gR, String(p.n));
         const html = `<b>${esc(domains[p.a])} ↔ ${esc(domains[p.b])}</b> · ${p.n} edges<br>${topLabels(p.labels, 5)}`;
         road.addEventListener('pointermove', ev => showTip(html, ev)); road.addEventListener('pointerleave', hideTip);
       }
@@ -2442,6 +2449,7 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         return { p, s: c.source.index, t: c.target.index };
       });
       svg.addEventListener('click', () => { panel.hidden = true; rib.forEach(r => r.p.classList.remove('off')); });
+      const callouts = [];
       chords.groups.forEach(gr => {
         const di = order[gr.index];
         const a = el('path', { d: arc(gr), class: 'garc fill' + di }, g);
@@ -2452,12 +2460,21 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         const t = el('text', { x: tx, y: ty + (Math.cos(mid) > 0.6 ? -18 : Math.cos(mid) < -0.6 ? 12 : -4), class: 'glab', 'text-anchor': anchor }, g);
         el('tspan', { x: tx, dy: 0 }, t, domains[di]);
         el('tspan', { x: tx, dy: 14, class: 's' }, t, `${outN} out · ${inN} in` + (state.inside ? '' : ` · ${domDir[di][di].n} inside`));
+        const statLen = (`${outN} out · ${inN} in` + (state.inside ? '' : ` · ${domDir[di][di].n} inside`)).length * 5.6;
+        const wl = Math.max(domains[di].length * 6.6, statLen);
+        const x0 = anchor === 'start' ? tx : anchor === 'end' ? tx - wl : tx - wl / 2;
+        callouts.push({ t, x0, x1: x0 + wl, y: +t.getAttribute('y') });
         for (const target of [a, t]) {
           target.addEventListener('pointerenter', () => rib.forEach(r => r.p.classList.toggle('off', r.s !== gr.index && r.t !== gr.index)));
           target.addEventListener('pointerleave', () => { if (panel.hidden) rib.forEach(r => r.p.classList.remove('off')); });
         }
         t.style.cursor = 'pointer';
       });
+      callouts.sort((p, q) => p.y - q.y);
+      for (let i = 1; i < callouts.length; i++) for (let j = 0; j < i; j++) {
+        const a = callouts[j], b = callouts[i];
+        if (a.x0 < b.x1 && b.x0 < a.x1 && b.y < a.y + 32) { b.y = a.y + 32; b.t.setAttribute('y', b.y); }
+      }
       hint(stage, 'Hover an arc or a ribbon · click a ribbon to pin');
     },
   });
@@ -2475,11 +2492,14 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       mk('div', 'corner', pg, 'from ↓  to →');
       order.forEach(d => { const c = mk('div', 'hd col', pg); mk('i', 'dot bg' + d, c); mk('span', '', c, domains[d]); });
       const lines = h > 820 ? 4 : h > 680 ? 3 : 2;
-      const panel = mk('div', 'mpanel', stage); panel.hidden = true; Object.assign(panel.style, { left: 'auto', right: '14px', bottom: '14px' });
+      const panel = mk('div', 'mpanel', stage); panel.hidden = true;
+      const pw10 = clamp(w * 0.26, 280, 380);
+      Object.assign(panel.style, { left: 'auto', right: '10px', top: '10px', bottom: '10px', maxHeight: 'none', maxWidth: 'none', width: pw10 + 'px', boxShadow: 'none' });
+      const closePanel = () => { panel.hidden = true; pg.style.paddingRight = ''; };
       const show = (a, b) => {
-        const cell = domDir[a][b]; panel.hidden = false; panel.textContent = '';
+        const cell = domDir[a][b]; panel.hidden = false; panel.textContent = ''; pg.style.paddingRight = (pw10 + 20) + 'px';
         const hd = mk('h4', '', panel); mk('i', 'dot bg' + a, hd); mk('span', '', hd, `${domains[a]} → ${domains[b]} · ${cell.n}`);
-        const close = mk('button', 'tgl', hd, 'Close'); close.type = 'button'; close.style.marginLeft = 'auto'; close.addEventListener('click', () => { panel.hidden = true; });
+        const close = mk('button', 'tgl', hd, 'Close'); close.type = 'button'; close.style.marginLeft = 'auto'; close.addEventListener('click', closePanel);
         const byLabel = new Map();
         for (const [s, t, l] of edges) if (DOM(s) === a && DOM(t) === b) { const k = labels[l]; if (!byLabel.has(k)) byLabel.set(k, []); byLabel.get(k).push(`${NAME(s)} → ${NAME(t)}`); }
         [...byLabel].sort((x, y) => y[1].length - x[1].length).forEach(([lab, pairs]) => {
@@ -2517,7 +2537,7 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       const R = R1;
       const order = [...R.list].sort((a, b) => domRank[a.dom] - domRank[b.dom] || (b.fam >= 0) - (a.fam >= 0) || b.deg - a.deg);
       const n = order.length, pos = new Map(order.map((r, i) => [r.id, i]));
-      const panelW = clamp(w * 0.26, 240, 380), L = 150, T = 28;
+      const panelW = clamp(w * 0.26, 240, 380), L = 150, T = 44;
       const C = Math.max(4, Math.floor(Math.min((h - T - 16) / n, (w - panelW - L - 40) / n)));
       const S = n * C;
       const svg = mkSvg(stage, w - panelW - 20, h);
@@ -2528,8 +2548,9 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         el('rect', { x: L + start * C, y: T - 8, width: cnt * C - 1, height: 5, class: 'fill' + di }, svg);
         el('rect', { x: L - 8, y: T + start * C, width: 5, height: cnt * C - 1, class: 'fill' + di }, svg);
         el('text', { x: L - 14, y: T + (start + cnt / 2) * C + 3, 'text-anchor': 'end', class: 'mx-dom' }, svg, domains[di]);
-        const topName = cnt * C > domains[di].length * 5.6 ? domains[di] : cnt * C > 34 ? domains[di].split(' ')[0] : '';
-        if (topName) el('text', { x: L + (start + cnt / 2) * C, y: T - 12, 'text-anchor': 'middle', class: 'mx-dom mx-topdom' }, svg, topName);
+        const first = domains[di].split(' ')[0];
+        const topName = cnt * C > domains[di].length * 6.6 ? domains[di] : cnt * C > first.length * 6.6 ? first : '';
+        if (topName) { const k = DOMAIN_ORDER.indexOf(di); el('text', { x: L + (start + cnt / 2) * C, y: T - 12 - (k % 2) * 13, 'text-anchor': 'middle', class: 'mx-dom mx-topdom' }, svg, topName); }
         start += cnt;
       });
       const crossR = el('rect', { x: L, y: 0, width: S, height: C, class: 'mx-cross' }, svg);
