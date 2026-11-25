@@ -1374,6 +1374,44 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 .rh-cell-in { fill-opacity: 0.72; }
 .mock-read { color: var(--muted); font-size: 0.82rem; max-width: none; margin: 0; line-height: 1.45; }
 .mock-read b { color: var(--ink); font-weight: 600; }
+/* ---------- Round 3: platform canvas ---------- */
+:root { --pf-canvas: #FFFFFF; --pf-dot: color-mix(in srgb, #A3A3A3 55%, transparent); --pf-ink: #1F2328; --pf-muted: #667085; --pf-line: #E4E7EC; --pf-edge: #98A2B3; --pf-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --g0: var(--graph-node-teal-500); --g1: var(--graph-node-orange-300); --g2: var(--graph-node-royal-violet-400); --g3: var(--graph-node-lime-300); --g4: var(--graph-node-magenta-400);
+  --g5: var(--graph-node-pigeon-blue-300); --g6: var(--graph-node-terracotta-400); --g7: var(--graph-node-jade-green-300); --g8: var(--graph-node-gray-500); --g9: var(--graph-node-gray-500); }
+@media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { --pf-canvas: #0C111D; --pf-dot: color-mix(in srgb, #85888E 45%, transparent); --pf-ink: #F5F5F6; --pf-muted: #94969C; --pf-line: #333741; --pf-edge: #85888E; } }
+:root[data-planloft-color-scheme="dark"] { --pf-canvas: #0C111D; --pf-dot: color-mix(in srgb, #85888E 45%, transparent); --pf-ink: #F5F5F6; --pf-muted: #94969C; --pf-line: #333741; --pf-edge: #85888E; }
+.mstage.pf { background-color: var(--pf-canvas); background-image: radial-gradient(var(--pf-dot) 1px, transparent 1.3px); background-size: 16px 16px; border-color: var(--pf-line); font-family: var(--pf-font); }
+.pf .n text { font-family: var(--pf-font); font-size: 11px; fill: var(--pf-ink); stroke: var(--pf-canvas); }
+.pf .n .dot-c { stroke: var(--pf-canvas); stroke-width: 1.5px; }
+.pf .e { stroke: var(--pf-edge); stroke-opacity: 0.14; }
+.pf .e.cross { stroke-opacity: 0.13; }
+.pf .e[class*="ing"] { stroke-opacity: 0.24; }
+.pf .glabel { font-family: var(--pf-font); font-size: 11.5px; stroke: var(--pf-canvas); letter-spacing: 0.04em; }
+.pf .glabel.big { font-size: 14px; }
+.pf .legend, .pf .mhint, .pf .hubkey, .pf .fkey { font-family: var(--pf-font); background: color-mix(in srgb, var(--pf-canvas) 92%, transparent); border-color: var(--pf-line); color: var(--pf-ink); }
+.pf .tgl, .pf .msearch input { font-family: var(--pf-font); background: var(--pf-canvas); border-color: var(--pf-line); color: var(--pf-ink); }
+.pf .mtools .crumb { font-family: var(--pf-font); color: var(--pf-muted); }
+.pf .mtools .lvl { min-width: 96px; text-align: center; font-variant-numeric: tabular-nums; color: var(--pf-ink); }
+.pf svg.focus .e.out { stroke: var(--hi-out); stroke-opacity: 0.9; } .pf svg.focus .e.in { stroke: var(--hi-in); stroke-opacity: 0.9; } .pf svg.focus .e.both { stroke: var(--pf-ink); stroke-opacity: 0.85; }
+.pf svg.focus .e { stroke-opacity: 0.03; }
+.pf .e.bone { stroke-opacity: 0.4; }
+.pf .e.bone.bridge { stroke-dasharray: 4 3; stroke-opacity: 0.5; }
+.pf .e.branch { stroke-opacity: 0.5; stroke-linecap: round; }
+.pf .e.tract { stroke-opacity: 0.16; }
+.pf .axon { fill: none; stroke: var(--pf-edge); stroke-opacity: 0.22; stroke-linecap: round; }
+.pf .axon:hover { stroke-opacity: 0.45; }
+.pf svg.focus .axon { stroke-opacity: 0.06; }
+.pf .n.soma .dot-c { stroke-width: 3px; }
+.pf .n.soma text { font-weight: 700; }
+.pf .n.hub text { font-weight: 700; }
+.pf .hubring { fill: none; stroke-width: 2.5px; pointer-events: none; }
+.pf .stub { stroke-width: 2.2px; stroke-linecap: round; pointer-events: none; }
+.pf svg.focus .stub { opacity: 0.15; }
+.pf .pulse { fill: var(--accent); pointer-events: none; }
+.pf .n.hop2 .dot-c { stroke: var(--accent); stroke-width: 3px; }
+.pf .n.hop2 text { display: inline !important; }
+.hubkey { position: absolute; left: 10px; top: 10px; z-index: 3; display: grid; gap: 3px; font-size: 0.72rem; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); pointer-events: none; max-width: 300px; }
+.hubkey span { display: flex; align-items: center; gap: 6px; } .hubkey i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 
 /* Product node colours (packages/style default tokens) */
 :root { --graph-node-terracotta-400: #C0624A; --graph-node-pigeon-blue-300: #7B91B0; --graph-node-rose-300: #D47886; --graph-node-royal-violet-400: #684D82; --graph-node-lime-300: #96B460; --graph-node-gray-500: #9F9993; --graph-node-plum-300: #9E659E; --graph-node-magenta-400: #D13060; --graph-node-teal-500: #14A7B8; --graph-node-royal-violet-300: #8D75A8; --graph-node-mulberry-300: #D068A8; --graph-node-jade-green-300: #4D8547; --graph-node-steel-blue-400: #3870A8; --graph-node-orange-300: #FB803A; --graph-node-brand-300: #5E6E62; }
@@ -1576,7 +1614,7 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 <main>
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">Enterprise Context Graph · Graph tab · round 2 · prod export 2026-11-25</p>
+    <p class="eyebrow">Enterprise Context Graph · Graph tab · round 3 · prod export 2026-11-25</p>
     <h1>Draw each relationship once</h1>
     <p class="lede" id="lede"></p>
     <div class="stats" id="stats"></div>
@@ -1614,8 +1652,8 @@ html > body { max-width: none !important; padding-inline: 0 !important; margin: 
 
 <section class="gallery" id="mocks">
   <div class="gallery-head">
-    <p class="eyebrow">3 · Round 2 mocks</p>
-    <h2>Ten takes on the directions you kept</h2>
+    <p class="eyebrow">3 · Round 3 mocks</p>
+    <h2>Seven takes, all with semantic zoom</h2>
     <div class="prose" style="display:block" id="round2-intro"></div>
   </div>
   <div class="review-sum" id="review-sum" hidden></div>
@@ -1916,7 +1954,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
   const pairsTotal = new Set(edges.filter(e => e[0] !== e[1]).map(e => e[0] < e[1] ? e[0] + '|' + e[1] : e[1] + '|' + e[0])).size;
   const coveredByRules = labelStats.filter(x => x.count >= 5 && (x.S.size === 1 || x.T.size === 1 || x.count / (x.S.size * x.T.size) > 0.6)).reduce((a, x) => a + x.count, 0);
   (function sections() {
-    document.getElementById('lede').textContent = `This round uses the full export of the production graph "${D.graph.name}": ${N} types, ${fmt(edges.length)} relationships${hasInst ? ', and the number of records behind each one' : ''}. Every grouping is computed from those relationships; nothing is hand-labelled. It keeps the directions you liked from round 1 and drops the rest.`;
+    document.getElementById('lede').textContent = `This round uses the full export of the production graph "${D.graph.name}": ${N} types, ${fmt(edges.length)} relationships${hasInst ? ', and the number of records behind each one' : ''}. Every grouping is computed from those relationships; nothing is hand-labelled. This is round 3, built on what you kept from round 2.`;
     const st = document.getElementById('stats');
     const stat = (b, s) => { const d = mk('div', 'stat', st); mk('b', '', d, b); mk('span', '', d, s); };
     stat(String(N), 'entity types'); stat(fmt(edges.length), 'relationships, all drawn at rest today'); stat(String(labels.length), 'relationship names');
@@ -1953,336 +1991,123 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     groups.forEach((g, k) => { const tr = mk('tr', '', gb); const td = mk('td', '', tr); const s = mk('span', 't', td); s.style.cssText = 'display:inline-flex;gap:6px;align-items:center'; mk('i', 'dot gb' + gc(k), s); mk('span', '', s, g.name); mk('td', 'num', tr, String(g.members.length)); mk('td', '', tr, g.lead.join(', ')); });
     const fb = document.getElementById('families-body');
     families.forEach(f => { const tr = mk('tr', '', fb); mk('td', '', tr, f.name); mk('td', 'num', tr, String(f.members.length)); mk('td', '', tr, f.members.map(NAME).join(', ')); });
-    document.getElementById('round2-intro').innerHTML = `<p>From round 1 you liked <b>1</b> (similar types pulled close, clusters joined by edges), <b>2</b> (constellation) and the heatmap (<b>11</b>). <b>6</b>, <b>8</b> and <b>9</b> were okay, and you asked for something new in place of <b>10</b>. Everything else is gone. Each mock below is sized to the space the Graph tab canvas would get: full width, window height minus about 120px. Feedback by number works best.</p>`;
+    document.getElementById('round2-intro').innerHTML = `<p>From round 2 you kept the grouping (1), the constellation layouts (4 and 5) in the platform's look rather than dark, and the hub idea (6), which is rebuilt here as hub stubs. Two new layouts borrow from how neurons and fibre tracts are arranged in a brain. The chord (8) sits at the bottom. Every mock now zooms by detail: <b>−</b> shows groups only, <b>+</b> names more types and finally opens merged types, while nodes and lines keep their size on screen. Ctrl/⌘ + scroll zooms too, and dragging pans. Feedback by number works best.</p>`;
     document.getElementById('footer').innerHTML = `<p>Data: export of "${esc(D.graph.name)}" from es.prod${D.graph.capturedAt ? ', captured ' + esc(String(D.graph.capturedAt).slice(0, 10)) : ''}: ${N} types, ${fmt(edges.length)} relationships, ${D.sources.length} sources. Groups: Louvain communities on the type links. Similar types: relationship signatures overlapping by at least 60%. Similarity map: classical MDS on neighbour overlap.</p>`;
   })();
 
-  /* ---------- Mocks ---------- */
-  const MOCKS = []; const mock = o => MOCKS.push(o);
-
-  mock({
-    short: 'Groups pull together', title: 'Groups pull together', from: 'round 1 · 01',
-    answers: 'Which types belong together, and how do the groups connect?',
-    read: 'Types in the same group (found in the links themselves) sit close, so closeness means "same group". Lines are direct relationships: coloured inside a group, grey between groups' + (hasInst ? ', dashed when no records sit behind them' : '') + '. Similar types merge into one node. Names show where they fit; hover a type for its links, or search.',
-    render(stage, w, h) {
-      const st = this.st || (this.st = { hideUnused: false });
-      const R = R1;
-      const ns = R.list.map(r => ({ id: r.id, grp: r.grp, r: rad(r.rec), rep: r }));
-      const links = [...R.pairs.values()].map(p => ({ source: p.a, target: p.b }));
-      const A = groupAnchors(R, w, h, 90, 30);
-      layout(ns, links, w, h, A, { collide: d => d.r + 10, pull: 0.16, charge: -60, pad: 40, margin: { r: 110, t: 40 } });
-      const svg = mkSvg(stage, w, h); const by = new Map(ns.map(d => [d.id, d]));
-      const gE = el('g', {}, svg), gL = el('g', {}, svg), gN = el('g', {}, svg);
-      const E = drawPairs(gE, R, by, { colorInside: true, hideUnused: st.hideUnused });
-      const gl = groupLabels(gL, ns);
-      const map = drawNodes(gN, ns);
-      const lc = labelControl(svg, ns, map, gl, w, h);
-      const f = focusable(svg, map, E, id => repInfo(R, id), lc);
-      const tools = mk('div', 'mtools', stage);
-      if (hasInst) toggleBtn(tools, 'Hide unused relationships', st.hideUnused, v => { st.hideUnused = v; rerender(this); });
-      searchBox(tools, R, id => f.pin(id));
-      legend(stage); hint(stage, `${E.length} lines for ${fmt(edges.length)} relationships · hover a type, click to pin`);
-    },
-  });
-
-  mock({
-    short: 'Similarity map', title: 'Near means connected the same way', from: 'new, from round 1 · 01',
-    answers: 'Which types play the same role, even when they are not linked to each other?',
-    read: 'Each type is pulled towards the few types that link to the most of the same things, whether or not they link to each other. Hover a type for its most alike types and how much they share. Colour is the group. Direct relationships stay hidden until you hover or switch them on.',
-    render(stage, w, h) {
-      const st = this.st || (this.st = { links: false });
-      const R = R1;
-      const ns = R.list.map(r => ({ id: r.id, grp: r.grp, r: rad(r.rec), rep: r }));
-      const nbr = new Map(R.list.map(r => [r.id, new Set()]));
-      for (const p of R.pairs.values()) { nbr.get(p.a).add(p.b); nbr.get(p.b).add(p.a); }
-      const simOf = (a, b) => { const A = nbr.get(a), B = nbr.get(b); let i = 0; for (const x of A) if (B.has(x)) i++; const u = A.size + B.size - i; return u ? i / u : 0; };
-      const near = new Map(); const kl = [];
-      for (const a of ns) {
-        const best = ns.filter(b => b !== a).map(b => [b.id, simOf(a.id, b.id)]).filter(x => x[1] > 0.15).sort((x, y) => y[1] - x[1]).slice(0, 4);
-        near.set(a.id, best);
-        for (const [b, v] of best) if (a.id < b || !near.get(b)?.some(x => x[0] === a.id)) kl.push({ source: a.id, target: b, v });
-      }
-      ns.forEach((d, i) => { const a = i * 2.399963; d.x = w / 2 + Math.cos(a) * 9 * Math.sqrt(i + 1); d.y = h / 2 + Math.sin(a) * 9 * Math.sqrt(i + 1); });
-      const sim = d3.forceSimulation(ns).randomSource(d3.randomLcg(5))
-        .force('link', d3.forceLink(kl).id(d => d.id).distance(l => 18 + (1 - l.v) * 70).strength(l => 0.25 + 0.6 * l.v))
-        .force('charge', d3.forceManyBody().strength(-70).distanceMax(320)).force('collide', d3.forceCollide(d => d.r + 10).iterations(3))
-        .force('x', d3.forceX(w / 2).strength(0.03)).force('y', d3.forceY(h / 2).strength(0.05)).stop();
-      for (let i = 0; i < 360; i++) sim.tick();
-      fit(ns, w, h, 44, 0, { l: 0, r: 110, t: 46, b: 0 });
-      const svg = mkSvg(stage, w, h); const by = new Map(ns.map(d => [d.id, d]));
-      const gE = el('g', {}, svg), gN = el('g', {}, svg);
-      const E = drawPairs(gE, R, by, { extra: () => st.links ? '' : 'hid', path: (a, b) => qpath(a, b, 0.14) });
-      const map = drawNodes(gN, ns);
-      const ex = kl.filter(l => l.source.rep.deg >= 12 && l.target.rep.deg >= 12).sort((x, y) => y.v - x.v)[0];
-      const noteBoxes = [];
-      if (ex) {
-        const a = ex.source, b = ex.target, mx = (a.x + b.x) / 2, my = Math.max(54, Math.min(a.y, b.y) - 34);
-        const txt = `${a.rep.short} and ${b.rep.short} link to ${Math.round(ex.v * 100)}% of the same types`, tw = txt.length * 6.1;
-        el('path', { d: `M${a.x},${a.y}L${mx},${my}L${b.x},${b.y}`, class: 'sim-note-line' }, svg);
-        const nx = clamp(mx, tw / 2 + 8, w - tw / 2 - 8);
-        el('text', { x: nx, y: my - 6, 'text-anchor': 'middle', class: 'sim-note' }, svg, txt);
-        noteBoxes.push([nx - tw / 2 - 4, my - 20, nx + tw / 2 + 4, my - 1]);
-      }
-      const lc = labelControl(svg, ns, map, noteBoxes, w, h);
-      const simInfo = id => repInfo(R, id) + (near.get(id).length ? `<br><b>Most alike:</b> ${near.get(id).slice(0, 3).map(([b, v]) => `${esc(R.byId.get(b).short)} ${Math.round(v * 100)}%`).join(', ')}` : '');
-      const f = focusable(svg, map, E, simInfo, lc);
-      const tools = mk('div', 'mtools', stage);
-      toggleBtn(tools, 'Show direct links', st.links, v => { st.links = v; rerender(this); });
-      searchBox(tools, R, id => f.pin(id));
-      legend(stage); hint(stage, 'Close together = link to the same types · hover for direct links and most alike types');
-    },
-  });
-
-  mock({
-    short: 'Group bubbles', title: 'Start from groups, open one', from: 'new, from round 1 · 01 and 02',
-    answers: 'Can I start from a handful of groups and open only the one I care about?',
-    read: 'Each group found in the links is one bubble, sized by its types, with the number of relationships on the links between bubbles. Click a bubble to open it: its types spread out in the middle and the other groups wait around the edge, each linked to the types that reach it. Click another bubble to switch, or "All groups" to go back.',
-    render(stage, w, h) {
-      const st = this.st || (this.st = { open: null });
-      const svg = mkSvg(stage, w, h);
-      const tools = mk('div', 'mtools', stage);
-      const gl = new Map(); for (const p of R1.pairs.values()) { const a = R1.byId.get(p.a).grp, b = R1.byId.get(p.b).grp; if (a === b) continue; const k = a < b ? a + '|' + b : b + '|' + a; if (!gl.has(k)) gl.set(k, { a: Math.min(a, b), b: Math.max(a, b), n: 0, labels: new Map() }); const x = gl.get(k); x.n += p.ab + p.ba; for (const [l, c] of p.labels) x.labels.set(l, (x.labels.get(l) || 0) + c); }
-      const bubble = (parent, k, x, y, r, small) => {
-        const g = el('g', { class: 'bubble', transform: `translate(${x},${y})` }, parent);
-        el('circle', { r, class: `b gf${gc(k)} st${gc(k)}`, style: `stroke: var(--g${gc(k)})` }, g);
-        const outside = small || r < 52; const nT = groups[k].members.length;
-        el('text', { y: outside ? r + 15 : -4, class: 'bn' }, g, truncate(groups[k].name, outside ? 24 : 30));
-        if (!small) {
-          el('text', { y: outside ? r + 29 : 12, class: 'bm' }, g, `${nT} type${nT === 1 ? '' : 's'} · ${compact(groups[k].members.reduce((a, i) => a + REC(i), 0))} records`);
-          if (!outside) el('text', { y: 26, class: 'bm' }, g, truncate(groups[k].lead.slice(0, 3).join(', '), Math.max(12, Math.floor(r / 3))));
-        }
-        g.addEventListener('click', ev => { ev.stopPropagation(); st.open = k; rerender(this); });
-        g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', `Open ${groups[k].name}`);
-        g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); st.open = k; rerender(this); } });
-        g.addEventListener('pointermove', ev => showTip(`<b>${esc(groups[k].name)}</b><br>${groups[k].members.length} types: ${esc(groups[k].members.slice(0, 14).map(NAME).join(', '))}${groups[k].members.length > 14 ? '…' : ''}<br><span class="k">Click to open</span>`, ev));
-        g.addEventListener('pointerleave', hideTip);
-        return g;
-      };
-      if (st.open == null) {
-        const A = groupAnchors(R1, w, h, 110, 10);
-        const maxN = d3.max(groups, g => g.members.length);
-        const rOf = k => clamp(Math.sqrt(groups[k].members.length / maxN) * Math.min(w, h) * 0.13, 30, 130);
-        const gL = el('g', {}, svg), gB = el('g', {}, svg);
-        for (const x of gl.values()) {
-          const ca = A[x.a], cb = A[x.b], dx = cb[0] - ca[0], dy = cb[1] - ca[1], dl = Math.hypot(dx, dy) || 1;
-          const ra = rOf(x.a) + 4, rb = rOf(x.b) + 4;
-          const a = { x: ca[0] + dx / dl * ra, y: ca[1] + dy / dl * ra }, b = { x: cb[0] - dx / dl * rb, y: cb[1] - dy / dl * rb };
-          const p = el('path', { d: qpath(a, b, 0.08), class: 'glink', 'stroke-width': (1 + Math.sqrt(x.n) * 1.2).toFixed(1) }, gL);
-          const len = Math.hypot(b.x - a.x, b.y - a.y) || 1, nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;
-          const clear = (px, py) => groups.every((_, k) => Math.hypot(px - A[k][0], py - A[k][1]) > rOf(k) + 12);
-          let lp = [(a.x + b.x) / 2, (a.y + b.y) / 2];
-          search: for (const tt of [0.5, 0.4, 0.6, 0.3, 0.7]) for (const off of [0, 14, -14, 28, -28]) { const px = a.x + (b.x - a.x) * tt + nx * off, py = a.y + (b.y - a.y) * tt + ny * off; if (clear(px, py)) { lp = [px, py]; break search; } }
-          const t = el('text', { x: lp[0], y: lp[1] + 4, class: 'glink-n' }, gL, String(x.n));
-          const html = `<b>${esc(groups[x.a].name)} ↔ ${esc(groups[x.b].name)}</b> · ${x.n}<br>${topLabels(x.labels, 5)}`;
-          p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip); void t;
-        }
-        groups.forEach((g, k) => bubble(gB, k, A[k][0], A[k][1], rOf(k), false));
-        searchBox(tools, R1, id => { if (!id) return; st.open = R1.byId.get(id).grp; st.pin = id; rerender(this); });
-        hint(stage, 'Click a bubble to open it, or find a type');
-        return;
-      }
-      const k0 = st.open;
-      button(tools, '← All groups', () => { st.open = null; rerender(this); });
-      mk('span', 'crumb', tools, groups[k0].name);
-      const others = groups.map((_, k) => k).filter(k => k !== k0);
-      const cx = w / 2, cy = h / 2 + 10, RX = w / 2 - 90, RY = h / 2 - 70;
-      const pos = new Map();
-      others.forEach((k, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / others.length; pos.set(k, [cx + RX * Math.cos(a), cy + RY * Math.sin(a)]); });
-      const R = repsBy('open' + k0, i => GRP(i) === k0 ? (FAM(i) >= 0 ? 'f' + FAM(i) : 'n' + i) : 'g' + GRP(i));
-      const inner = R.list.filter(r => r.kind !== 'g');
-      const ns = inner.map(r => ({ id: r.id, grp: r.grp, r: rad(r.rec), rep: r }));
-      const links = [...R.pairs.values()].filter(p => p.a[0] !== 'g' && p.b[0] !== 'g').map(p => ({ source: p.a, target: p.b }));
-      const sim = d3.forceSimulation(ns).randomSource(d3.randomLcg(9)).force('charge', d3.forceManyBody().strength(-120)).force('x', d3.forceX(cx).strength(0.06)).force('y', d3.forceY(cy).strength(0.08)).force('collide', d3.forceCollide(d => d.r + 14)).stop();
-      if (links.length) sim.force('link', d3.forceLink(links).id(d => d.id).strength(0.05).distance(60));
-      ns.forEach((d, i) => { d.x = cx + Math.cos(i * 2.4) * 40; d.y = cy + Math.sin(i * 2.4) * 40; });
-      for (let i = 0; i < 300; i++) sim.tick();
-      fit(ns, w, h, 0, 0, { l: w * 0.22, r: w * 0.22 + 60, t: h * 0.2, b: h * 0.2 });
-      const gNodes = others.map(k => ({ id: 'g' + k, grp: k, r: clamp(6 + Math.sqrt(groups[k].members.length) * 3, 10, 26), rep: R.byId.get('g' + k), x: pos.get(k)[0], y: pos.get(k)[1] }));
-      const by = new Map([...ns, ...gNodes].map(d => [d.id, d]));
-      const gE = el('g', {}, svg), gG = el('g', {}, svg), gN = el('g', {}, svg);
-      const E = drawPairs(gE, R, by, { colorInside: true, skip: p => p.a[0] === 'g' && p.b[0] === 'g', path: (a, b) => qpath(a, b, 0.1) });
-      for (const d of gNodes) { const b = bubble(gG, d.grp, d.x, d.y, d.r, true); void b; }
-      const map = drawNodes(gN, ns);
-      for (const d of gNodes) { const g = el('g', { class: 'n', transform: `translate(${d.x},${d.y})` }, gN); el('circle', { r: d.r, class: 'hit' }, g); el('text', { class: 'lbl-off' }, g, ''); map.set(d.id, g); g.style.pointerEvents = 'none'; }
-      const lc = labelControl(svg, ns, map, gNodes.map(d => [d.x - 80, d.y - d.r, d.x + 80, d.y + d.r + 18]), w, h);
-      const f3 = focusable(svg, map, E, id => id[0] === 'g' ? null : repInfo(R, id), (id, nb) => lc(id && id[0] === 'g' ? null : id, nb));
-      searchBox(tools, R1, id => { if (!id) return; const k = R1.byId.get(id).grp; if (k !== k0) { st.open = k; st.pin = id; rerender(this); } else if (R.byId.has(id)) f3.pin(id); });
-      if (st.pin && R.byId.has(st.pin)) { f3.pin(st.pin); } st.pin = null;
-      hint(stage, 'Hover a type for its links · click a group on the edge to open it');
-    },
-  });
-
-  // Shared by the two constellation mocks.
-  function constellation(stage, w, h, self, backbone) {
-    const st = self.st || (self.st = {});
-    const R = R0;
-    const lg = legend(stage, STAR); void lg;
-    const ns = R.list.map(r => ({ id: r.id, grp: r.grp, r: 2.2 + Math.log10(1 + r.rec) * 1.5, rep: r }));
-    const links = [...R.pairs.values()].map(p => ({ source: p.a, target: p.b }));
-    const A = groupAnchors(R, w, h, 100, 30);
-    layout(ns, links, w, h, A, { collide: d => d.r + 8, pull: 0.2, charge: -45, pad: 50, margin: { t: 40 } });
-    const svg = mkSvg(stage, w, h); const root = el('g', {}, svg); const by = new Map(ns.map(d => [d.id, d]));
-    const gE = el('g', {}, root), gB = el('g', {}, root), gD = el('g', {}, root), gN = el('g', {}, root);
-    let bbSet = new Set();
-    if (backbone) {
-      const pw = p => (p.ab + p.ba) + (hasInst ? Math.log10(1 + p.inst) : 0);
-      const parent = new Map(R.list.map(r => [r.id, r.id])); const find = x => { while (parent.get(x) !== x) { parent.set(x, parent.get(parent.get(x))); x = parent.get(x); } return x; };
-      const sorted = [...R.pairs.values()].sort((a, b) => pw(b) - pw(a));
-      for (const p of sorted) { if (R.byId.get(p.a).grp !== R.byId.get(p.b).grp) continue; const ra = find(p.a), rb = find(p.b); if (ra !== rb) { parent.set(ra, rb); bbSet.add(p); } }
-      const best = new Map(); for (const p of sorted) { const a = R.byId.get(p.a).grp, b = R.byId.get(p.b).grp; if (a === b) continue; const k = a < b ? a + '|' + b : b + '|' + a; if (!best.has(k)) best.set(k, p); }
-      for (const p of best.values()) bbSet.add(p);
-      for (const p of bbSet) el('path', { d: `M${by.get(p.a).x},${by.get(p.a).y}L${by.get(p.b).x},${by.get(p.b).y}`, class: 'backbone' + (R.byId.get(p.a).grp !== R.byId.get(p.b).grp ? ' bridge' : '') }, gB);
-    }
-    const E = drawPairs(gE, R, by, { path: (a, b) => qpath(a, b, 0.14), extra: () => backbone ? 'hid' : '' });
-    const heads = [];
-    groups.forEach((g, k) => { const m = ns.filter(n => n.grp === k); if (!m.length) return; const tw = g.name.length * 9.4 + 10; const x = clamp(d3.mean(m, n => n.x), tw / 2 + 8, w - tw / 2 - 8), y = Math.max(22, d3.min(m, n => n.y) - 16);
-      el('text', { x, y, class: 'dlab', fill: STAR[gc(k)] }, gD, g.name.toUpperCase()); heads.push({ x, y, tw }); });
-    const map = drawNodes(gN, ns, { fill: d => STAR[gc(d.grp)], text: d => ({ x: 0, y: d.r + 11, 'text-anchor': 'middle' }) });
-    svg.classList.add('smartlabels');
-    let focusSet = null;
-    const f = focusable(svg, map, E, id => repInfo(R, id), (id, nb) => { focusSet = id ? new Set([id, ...nb]) : null; if (focusSet) focusSet.top = id; relabel(); });
-    let raf = 0, T = d3.zoomIdentity;
-    const relabel = () => {
-      raf = 0; const k = T.k, sk = Math.sqrt(k);
-      const boost = new Set(); groups.forEach((_, g) => ns.filter(d => d.grp === g).sort((a, b) => b.rep.rec - a.rep.rec).slice(0, 2).forEach(d => boost.add(d.id)));
-      for (const d of ns) { const c = map.get(d.id).querySelector('.dot-c'); c.setAttribute('r', (d.r / sk).toFixed(2)); c.style.filter = k > 2 ? 'none' : `drop-shadow(0 0 ${(4 + d.r).toFixed(0)}px ${STAR[gc(d.grp)]})`; }
-      const items = ns.map(d => { const t = map.get(d.id).querySelector('text'); t.setAttribute('y', (d.r / sk + 11 / k).toFixed(2)); if (focusSet && !focusSet.has(d.id)) { t.classList.add('lbl-off'); return null; } return { t, cx: d.x * k + T.x, cy: d.y * k + T.y + d.r * sk + 7, w: lw(d.rep.short) * 1.05, h: 13, prio: d.rep.rec + (boost.has(d.id) ? 1e9 : 0) + (focusSet && focusSet.top === d.id ? 1e12 : 0) }; }).filter(Boolean);
-      const lgEl = stage.querySelector('.legend'); const lgBox = lgEl ? [0, 0, (lgEl.offsetWidth || 0) + 14, (lgEl.offsetHeight || 0) + 14] : [0, 0, 0, 0];
-      const hb = T.k < 1.7 ? heads.map(hd => { const x = hd.x * k + T.x, y = hd.y * k + T.y; return [x - hd.tw / 2, y - 14, x + hd.tw / 2, y + 4]; }) : [];
-      fitLabels(items, [...ns.map(d => { const x = d.x * k + T.x, y = d.y * k + T.y, r = d.r * sk; return [x - r, y - r, x + r, y + r]; }), ...hb, lgBox], w, h);
-    };
-    const zoom = d3.zoom().scaleExtent([0.7, 8]).filter(ev => (ev.type === 'wheel' ? (ev.ctrlKey || ev.metaKey) : !ev.button))
-      .on('zoom', ev => { T = ev.transform; root.setAttribute('transform', T); root.style.setProperty('--k', T.k); svg.classList.toggle('z2', T.k >= 1.7); if (!raf) raf = requestAnimationFrame(relabel); });
-    const centreOn = id => { const d = by.get(id); if (!d) return; d3.select(svg).transition().duration(400).call(zoom.transform, d3.zoomIdentity.translate(w / 2, h / 2).scale(Math.max(T.k, 1.8)).translate(-d.x, -d.y)); };
-    d3.select(svg).call(zoom).on('dblclick.zoom', null);
-    relabel();
+  /* ---------- Semantic zoom canvas ---------- */
+  // Zooming changes how much is shown, not just how big it is: spacing grows with the square root of the zoom,
+  // nodes and lines keep their on-screen size, names appear as room opens, and merged types open up when you go deep.
+  const LEVELS = ['Groups', 'Types', 'All types'];
+  const levelOf = k => (k < 0.9 ? 0 : k < 3 ? 1 : 2);
+  const famIndex = new Map(); families.forEach((f, fi) => f.members.forEach((m, j) => famIndex.set(m, j)));
+  function semantic(stage, w, h, self, spec) {
+    stage.classList.add('pf');
+    const st = self.view && self.view.w === w && self.view.h === h ? self.view : (self.view = { k: 1, tx: 0, ty: 0, w, h });
+    const P1 = spec.layout(); const p1 = new Map(P1.map(d => [d.id, d]));
+    const svg = mkSvg(stage, w, h);
+    const gDeco = el('g', {}, svg), gE = el('g', {}, svg), gTop = el('g', {}, svg), gN = el('g', {}, svg), gG = el('g', {}, svg), gFx = el('g', {}, svg);
+    const c = { x: w / 2, y: h / 2 };
+    const S = () => Math.sqrt(st.k);
+    const sx = x => (x - c.x) * S() + c.x + st.tx, sy = y => (y - c.y) * S() + c.y + st.ty;
     const tools = mk('div', 'mtools', stage);
-    searchBox(tools, R, id => { f.pin(id); if (id) centreOn(id); });
-    button(tools, '+', () => d3.select(svg).transition().duration(250).call(zoom.scaleBy, 1.6)).setAttribute('aria-label', 'Zoom in');
-    button(tools, '−', () => d3.select(svg).transition().duration(250).call(zoom.scaleBy, 1 / 1.6)).setAttribute('aria-label', 'Zoom out');
-    button(tools, 'Reset', () => d3.select(svg).transition().duration(300).call(zoom.transform, d3.zoomIdentity));
-    hint(stage, (backbone ? `${bbSet.size} constellation lines shown of ${R.pairs.size} · ` : '') + 'Ctrl/⌘ + scroll or the buttons to zoom · drag to pan · hover a star');
-  }
-  mock({
-    short: 'Constellation', title: 'Constellation with semantic zoom', cls: 'dark', from: 'round 1 · 02',
-    answers: 'Can the whole graph feel like a sky I zoom into?',
-    read: 'All types, coloured by group, on a dark field. At rest you see group names and the names that fit; zoom with the buttons or Ctrl/⌘ + scroll and more names appear as space opens. Links stay faint' + (hasInst ? ', brighter when more records sit behind them,' : '') + ' until you hover a star.',
-    render(stage, w, h) { constellation(stage, w, h, this, false); },
-  });
-  mock({
-    short: 'Constellation lines', title: 'Constellation lines', cls: 'dark', from: 'new, from round 1 · 02',
-    answers: 'What is the skeleton of the graph, before the detail?',
-    read: 'Same sky, but only the strongest links are drawn, like the lines that join stars into a constellation: inside each group, the strongest chain that reaches every type; between groups, the single strongest link. Everything else appears when you hover a star.',
-    render(stage, w, h) { constellation(stage, w, h, this, true); },
-  });
-
-  mock({
-    short: 'Context band', title: 'Hubs in a context band', from: 'round 1 · 06',
-    answers: 'What remains once the types everyone points at are moved aside?',
-    read: 'The seven types most others point to sit in a strip at the top, and lines to them stay hidden until you switch them on or hover a type. Below, the other types gather by group, and the links between them get full emphasis.',
-    render(stage, w, h) {
-      const st = this.st || (this.st = { ctx: false });
-      const R = R1;
-      const inN = new Map(R.list.map(r => [r.id, new Set()]));
-      for (const p of R.pairs.values()) { if (p.ab) inN.get(p.b).add(p.a); if (p.ba) inN.get(p.a).add(p.b); }
-      const hubs = R.list.filter(r => r.members.length === 1).sort((a, b) => inN.get(b.id).size - inN.get(a.id).size).slice(0, 7);
-      const hubSet = new Set(hubs.map(r => r.id)); const bandH = 104;
-      const svg = mkSvg(stage, w, h);
-      el('rect', { x: 0, y: 0, width: w, height: bandH, class: 'bandbg' }, svg);
-      el('text', { x: 14, y: 20, class: 'bandlab' }, svg, 'CONTEXT · the 7 types most others point to');
-      const hubNodes = hubs.map((r, i) => ({ id: r.id, grp: r.grp, r: rad(r.rec) + 2, rep: r, x: 110 + i * (w - 220) / (hubs.length - 1), y: bandH / 2 + 4 }));
-      const rest = R.list.filter(r => !hubSet.has(r.id)).map(r => ({ id: r.id, grp: r.grp, r: rad(r.rec), rep: r }));
-      const restIds = new Set(rest.map(d => d.id));
-      const links = [...R.pairs.values()].filter(p => restIds.has(p.a) && restIds.has(p.b)).map(p => ({ source: p.a, target: p.b }));
-      const A = groupAnchors(R, w, h, 90, bandH + 30);
-      layout(rest, links, w, h, A, { collide: d => d.r + 10, pull: 0.16, charge: -60, pad: 40, top: bandH + 18, margin: { r: 110, t: 24 } });
-      const all = [...hubNodes, ...rest]; const by = new Map(all.map(d => [d.id, d]));
-      const gE = el('g', {}, svg), gL = el('g', {}, svg), gN = el('g', {}, svg);
-      const E = drawPairs(gE, R, by, { colorInside: true, extra: p => (hubSet.has(p.a) || hubSet.has(p.b)) ? (st.ctx ? 'ctx' : 'hid') : '',
-        path: (a, b, p) => { if (!(hubSet.has(p.a) || hubSet.has(p.b))) return `M${a.x},${a.y}L${b.x},${b.y}`; const [lo, hi] = hubSet.has(p.a) ? [b, a] : [a, b]; return `M${lo.x},${lo.y}C${lo.x},${(lo.y + hi.y) / 2} ${hi.x},${hi.y + 60} ${hi.x},${hi.y}`; } });
-      const gl = groupLabels(gL, rest);
-      const map = drawNodes(gN, all, { cls: d => hubSet.has(d.id) ? 'hub' : '', text: d => hubSet.has(d.id) ? { x: 0, y: d.r + 13, 'text-anchor': 'middle' } : { x: d.r + 3, dy: '0.32em' } });
-      const lc = labelControl(svg, rest, map, [...circleBoxes(hubNodes), ...gl, [0, 0, w, bandH]], w, h);
-      const f = focusable(svg, map, E, id => repInfo(R, id), lc);
-      const tools = mk('div', 'mtools', stage); tools.style.top = (bandH + 8) + 'px';
-      toggleBtn(tools, 'Show context links', st.ctx, v => { st.ctx = v; rerender(this); });
-      searchBox(tools, R, id => f.pin(id));
-      legend(stage).style.top = (bandH + 8) + 'px';
-      hint(stage, 'Hover a type to see all its links, including to the band');
-    },
-  });
-
-  mock({
-    short: 'Ring', title: 'A ring you open one group at a time', from: 'round 1 · 08',
-    answers: 'Can the bundled ring scale, and can I find my way around it?',
-    read: 'The ring starts with one node per group, so it stays readable at any size. Click a group name to open that group into its types; the others stay closed, and opening another group closes the first. Links bend through their group. Hover a type for its links. "Open all groups" shows every group at once, with similar types still merged.',
-    render(stage, w, h) {
-      const st = this.st || (this.st = { open: new Set(), all: false });
-      const key = st.all ? 'ringall' : 'ring' + [...st.open].sort().join(',');
-      const R = repsBy(key, i => (st.all || st.open.has(GRP(i))) ? (FAM(i) >= 0 ? 'f' + FAM(i) : 'n' + i) : 'g' + GRP(i));
-      const tools = mk('div', 'mtools', stage);
-      toggleBtn(tools, 'Open all groups', st.all, v => { st.all = v; st.open.clear(); rerender(this); });
-      if (st.open.size && !st.all) button(tools, 'Close all', () => { st.open.clear(); rerender(this); });
-      const panel = mk('div', 'mpanel', stage); panel.hidden = true;
-      const RR = Math.max(140, Math.min(w, h) / 2 - 186);
-      const svg = mkSvg(stage, w, h); svg.classList.add('ring'); const g = el('g', { transform: `translate(${w / 2},${h / 2})` }, svg);
-      const root = { id: 'root', children: groups.map((_, k) => ({ id: 'grp' + k, grp: k, children: R.list.filter(r => r.grp === k).sort((a, b) => (b.members.length > 1) - (a.members.length > 1) || b.deg - a.deg) })).filter(x => x.children.length) };
-      const hier = d3.hierarchy(root);
-      d3.cluster().size([2 * Math.PI, RR]).separation((a, b) => a.parent === b.parent ? 1 : 2)(hier);
-      const leafById = new Map(hier.leaves().map(l => [l.data.id, l]));
-      const line = d3.lineRadial().curve(d3.curveBundle.beta(0.85)).radius(d => d.y).angle(d => d.x);
-      const gE = el('g', {}, g);
-      const E = drawPairs(gE, R, null || new Map(), {}).concat([]);
-      gE.textContent = '';
-      const E2 = [...R.pairs.values()].map(p => ({ el: el('path', { d: line(leafById.get(p.a).path(leafById.get(p.b))), class: 'e' + (pairUnused(p) ? ' zero' : ''), 'stroke-width': pairWidth(p).toFixed(2) }, gE), ...p }));
-      void E;
-      for (const dn of hier.children) {
-        const ls = dn.leaves(); if (ls.length === 1 && ls[0].data.kind === 'g') continue;
-        const a0 = d3.min(ls, l => l.x) - 0.012, a1 = d3.max(ls, l => l.x) + 0.012;
-        el('path', { d: d3.arc().innerRadius(RR + 146).outerRadius(RR + 150).startAngle(a0).endAngle(a1)(), class: 'gf' + gc(dn.data.grp) }, g);
-        if (ls.length > 1) { const mid = (a0 + a1) / 2; el('text', { x: Math.sin(mid) * (RR + 162), y: -Math.cos(mid) * (RR + 162) + 4, class: 'hull-name gf' + gc(dn.data.grp), 'text-anchor': Math.abs(Math.sin(mid)) < 0.2 ? 'middle' : (mid < Math.PI ? 'start' : 'end') }, g, groups[dn.data.grp].name); }
-      }
-      const gN = el('g', {}, g); const map = new Map();
-      for (const l of hier.leaves()) {
-        const r = l.data; const deg2 = l.x * 180 / Math.PI - 90; const isG = r.kind === 'g';
-        const n = el('g', { class: 'n' + (isG ? ' ring-group' : ''), transform: `rotate(${deg2.toFixed(2)}) translate(${RR + 6},0)` }, gN);
-        el('circle', { r: 10, class: 'hit' }, n);
-        el('circle', { r: isG ? (4 + Math.sqrt(r.members.length)).toFixed(1) : (2 + Math.log10(1 + r.rec) * 0.9).toFixed(2), class: 'dot-c gf' + gc(r.grp) }, n);
-        const flip = l.x >= Math.PI;
-        const t = el('text', { x: flip ? -9 : 9, dy: '0.32em', 'text-anchor': flip ? 'end' : 'start', transform: flip ? 'rotate(180)' : null }, n, isG ? '' : truncate(r.name, 22));
-        if (r.members.length > 1 && !isG) t.style.fontWeight = 600;
-        map.set(r.id, n);
-        if (isG) {
-          const open = ev => { ev.stopPropagation(); st.open = new Set([r.grp]); st.all = false; rerender(this); };
-          n.addEventListener('click', open);
-          const lx = Math.sin(l.x) * (RR + 26), ly = -Math.cos(l.x) * (RR + 26);
-          const lab = el('text', { x: lx, y: ly + 4, class: 'ring-label gf' + gc(r.grp), 'text-anchor': Math.abs(Math.sin(l.x)) < 0.2 ? 'middle' : (l.x < Math.PI ? 'start' : 'end'), tabindex: 0, role: 'button', 'aria-label': `Open ${groups[r.grp].name}` }, g, `${groups[r.grp].name} (${r.members.length}) ▸`);
-          lab.addEventListener('click', open); lab.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(ev); } });
+    let level = -1, cur = null, raf = 0, focusSet = null;
+    const lg = legend(stage);
+    const view = { w, h, sx, sy, S, gDeco, gTop, gFx, svg, stage, p1, cur: () => cur, level: () => level };
+    function build(L) {
+      gE.textContent = ''; gN.textContent = ''; gTop.textContent = ''; gFx.textContent = '';
+      const R = L === 2 ? R0 : R1;
+      const nodes = R.list.map(r => {
+        const i0 = r.members[0]; let base = p1.get(r.id), off = [0, 0];
+        if (!base && r.members.length === 1 && FAM(i0) >= 0 && p1.get('f' + FAM(i0))) {
+          base = p1.get('f' + FAM(i0)); const n = families[FAM(i0)].members.length, j = famIndex.get(i0);
+          const ring = base.r + 10 + n * 1.6, a = -Math.PI / 2 + j * 2 * Math.PI / n; off = [Math.cos(a) * ring, Math.sin(a) * ring];
         }
-      }
-      for (const dn of hier.children) if (dn.children.length && dn.children[0].data.kind !== 'g' && !st.all) {
-        const ls = dn.leaves(); const mid = (d3.min(ls, l => l.x) + d3.max(ls, l => l.x)) / 2;
-        const b = el('text', { x: Math.sin(mid) * (RR + 162), y: -Math.cos(mid) * (RR + 162) + 20, class: 'hull-name', fill: 'var(--muted)', 'text-anchor': Math.abs(Math.sin(mid)) < 0.2 ? 'middle' : (mid < Math.PI ? 'start' : 'end'), style: 'cursor:pointer;font-size:10px;letter-spacing:0' }, g, 'close ▴');
-        b.addEventListener('click', ev => { ev.stopPropagation(); st.open.delete(dn.data.grp); rerender(this); });
-      }
-      focusable(svg, map, E2, () => null, id => {
-        panel.hidden = !id; panel.textContent = ''; if (!id) return;
-        const r = R.byId.get(id), rr = R.rels.get(id);
-        const hd = mk('h4', '', panel); mk('i', 'dot gb' + gc(r.grp), hd); mk('span', '', hd, `${r.name} · ${r.deg} relationships`);
-        if (r.kind === 'g') mk('div', 'lbls', panel, 'Click to open this group');
-        for (const dir of ['out', 'in']) for (const [lab, set] of [...rr[dir]].sort((a, b) => b[1].size - a[1].size).slice(0, 14)) { const row = mk('div', '', panel); mk('span', 'lbls', row, `${dir === 'out' ? '→' : '←'} ${lab}  `); mk('span', '', row, [...set].map(x => x === id ? 'itself' : R.byId.get(x).short).join(', ')); }
+        if (!base) base = { x: c.x, y: c.y, r: 4 };
+        return { id: r.id, rep: r, grp: r.grp, r: spec.radius ? spec.radius(r, base) : (r.members.length > 1 && L === 2 ? 3 : base.r ?? rad(r.rec) * 0.85), wx: base.x, wy: base.y, off, x: 0, y: 0 };
       });
-      searchBox(tools, R1, id => { if (!id) return; const k = R1.byId.get(id).grp; st.all = false; st.open = new Set([k]); rerender(this); });
-      const closed = R.list.filter(r => r.kind === 'g').length;
-      hint(stage, `${R.list.length} nodes · ${E2.length} lines` + (closed ? ' · click a group name to open it' : ' · hover a type for its links'));
-    },
-  });
+      const by = new Map(nodes.map(d => [d.id, d]));
+      nodes.forEach(d => { d.x = sx(d.wx) + d.off[0]; d.y = sy(d.wy) + d.off[1]; });
+      const map = drawNodes(gN, nodes, { cls: spec.nodeClass ? d => spec.nodeClass(d, L) : null, text: spec.labelSide === 'below' ? d => ({ x: 0, y: d.r + 10, 'text-anchor': 'middle' }) : null });
+      const E = [...R.pairs.values()].map(p => {
+        const ga = R.byId.get(p.a).grp, gb = R.byId.get(p.b).grp, inside = ga === gb;
+        const tintG = spec.tint === 'source' ? (p.ab >= p.ba ? ga : gb) : (inside ? ga : null);
+        const cls = 'e' + (tintG != null ? ' ing' + gc(tintG) : ' cross') + (spec.edgeClass ? ' ' + spec.edgeClass(p, R, L) : '');
+        return { el: el('path', { class: cls, 'stroke-width': spec.edgeWidth ? spec.edgeWidth(p) : (0.7 + Math.log2(p.ab + p.ba) * 0.45).toFixed(2) }, gE), ...p, ga, gb };
+      });
+      const f = focusable(svg, map, E, spec.info ? id => spec.info(R, id) : id => repInfo(R, id), (id, nb) => { focusSet = id ? new Set([id, ...nb]) : null; if (focusSet) focusSet.top = id; request(); if (spec.onFocus) spec.onFocus(id, nb, view); });
+      cur = { R, nodes, by, map, E, f, L };
+      if (spec.fire) for (const [id, g] of map) g.addEventListener('click', () => fire(id));
+      if (spec.onBuild) spec.onBuild(view, L);
+    }
+    function frame() {
+      raf = 0;
+      const L = levelOf(st.k); if (L !== level) { level = L; build(L); }
+      for (const d of cur.nodes) { d.x = sx(d.wx) + d.off[0]; d.y = sy(d.wy) + d.off[1]; cur.map.get(d.id).setAttribute('transform', `translate(${d.x.toFixed(1)},${d.y.toFixed(1)})`); }
+      const cent = []; groups.forEach((_, k) => { const m = cur.nodes.filter(n => n.grp === k); if (m.length) cent[k] = { x: d3.mean(m, n => n.x), y: d3.mean(m, n => n.y), top: d3.min(m, n => n.y - n.r) }; });
+      view.cent = cent;
+      for (const e of cur.E) e.el.setAttribute('d', (spec.edgePath || straight)(cur.by.get(e.a), cur.by.get(e.b), e, view));
+      gG.textContent = ''; const gBoxes = [];
+      groups.forEach((g, k) => { const ce = cent[k]; if (!ce) return; const txt = g.name, tw = txt.length * (L === 0 ? 8.6 : 7.4) + 8;
+        const x = clamp(ce.x, tw / 2 + 6, w - tw / 2 - 6), y = Math.max(18, ce.top - 12);
+        el('text', { x, y, 'text-anchor': 'middle', class: 'glabel' + (L === 0 ? ' big' : '') + ' gf' + gc(k) }, gG, txt); gBoxes.push([x - tw / 2, y - 13, x + tw / 2, y + 3]); });
+      if (spec.decorate) spec.decorate(view, L);
+      let only = focusSet;
+      if (!only && L === 0) { only = new Set(); groups.forEach((_, k) => { const m = cur.nodes.filter(n => n.grp === k).sort((a, b) => b.rep.deg - a.rep.deg)[0]; if (m) only.add(m.id); }); }
+      for (const d of cur.nodes) if (only && !only.has(d.id)) cur.map.get(d.id).querySelector('text').classList.add('lbl-off');
+      const box = elx => { if (!elx) return [0, 0, 0, 0]; const r = elx.getBoundingClientRect(), sr = stage.getBoundingClientRect(); return [r.left - sr.left - 4, r.top - sr.top - 4, r.right - sr.left + 4, r.bottom - sr.top + 4]; };
+      fitLabels(labelItems(cur.nodes, cur.map, spec.labelSide || 'right', only), [...circleBoxes(cur.nodes), ...gBoxes, box(lg), box(tools), ...(spec.obstacles ? spec.obstacles(view) : [])], w, h);
+      lvl.textContent = LEVELS[L] + ' · ' + st.k.toFixed(1) + '×';
+    }
+    const request = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const zoomAt = (mx, my, f) => { const s0 = S(); const k2 = clamp(st.k * f, 0.6, 6); const s1 = Math.sqrt(k2); const wx = (mx - c.x - st.tx) / s0 + c.x, wy = (my - c.y - st.ty) / s0 + c.y; st.k = k2; st.tx = mx - c.x - (wx - c.x) * s1; st.ty = my - c.y - (wy - c.y) * s1; request(); };
+    const centre = id => { const d = p1.get(id) || (cur && cur.by.get(id)); if (!d) return; st.k = Math.max(st.k, 1.6); if (st.k >= 3) st.k = 2.6; const s1 = S(); st.tx = -((d.wx ?? d.x) - c.x) * s1; st.ty = -((d.wy ?? d.y) - c.y) * s1; frame(); };
+    searchBox(tools, R1, id => { if (!id) return; centre(id); if (cur.R.byId.has(id)) cur.f.pin(id); });
+    button(tools, '−', () => zoomAt(c.x, c.y, 1 / 1.5)).setAttribute('aria-label', 'Show less detail');
+    const lvl = mk('span', 'crumb lvl', tools);
+    button(tools, '+', () => zoomAt(c.x, c.y, 1.5)).setAttribute('aria-label', 'Show more detail');
+    button(tools, 'Reset', () => { st.k = 1; st.tx = 0; st.ty = 0; request(); });
+    svg.addEventListener('wheel', ev => { if (!(ev.ctrlKey || ev.metaKey)) return; ev.preventDefault(); const r = svg.getBoundingClientRect(); zoomAt(ev.clientX - r.left, ev.clientY - r.top, Math.exp(-ev.deltaY * 0.0035)); }, { passive: false });
+    let drag = null, moved = false;
+    svg.addEventListener('pointerdown', ev => { if (ev.button !== 0 || ev.target.closest('.n')) return; drag = { x: ev.clientX, y: ev.clientY, tx: st.tx, ty: st.ty }; moved = false; });
+    window.addEventListener('pointermove', ev => { if (!drag) return; const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) moved = true; st.tx = drag.tx + dx; st.ty = drag.ty + dy; request(); });
+    window.addEventListener('pointerup', () => { drag = null; });
+    svg.addEventListener('click', ev => { if (moved) { ev.stopPropagation(); moved = false; } }, true);
+    // A pulse travels out along each link of the clicked type, then the types two steps away light up briefly.
+    function fire(id) {
+      gFx.textContent = '';
+      const inc = cur.E.filter(e => e.a === id || e.b === id); const me = cur.by.get(id); if (!me) return;
+      const t0 = performance.now(), dur = 650;
+      const dots = inc.map(e => { const p = e.el; if (!p.getTotalLength) return null; const L2 = p.getTotalLength(); const start = p.getPointAtLength(0); const fromStart = Math.hypot(start.x - me.x, start.y - me.y) < 12; return { p, L2, fromStart, dot: el('circle', { r: 3, class: 'pulse' }, gFx) }; }).filter(Boolean);
+      const hop1 = new Set(inc.map(e => e.a === id ? e.b : e.a));
+      const step = now => {
+        const t = Math.min(1, (now - t0) / dur);
+        for (const d of dots) { const q = d.p.getPointAtLength(d.L2 * (d.fromStart ? t : 1 - t)); d.dot.setAttribute('cx', q.x); d.dot.setAttribute('cy', q.y); d.dot.setAttribute('opacity', (1 - t * 0.6).toFixed(2)); }
+        if (t < 1) requestAnimationFrame(step);
+        else {
+          gFx.textContent = '';
+          const hop2 = new Set(); for (const e of cur.E) { if (hop1.has(e.a) && e.b !== id && !hop1.has(e.b)) hop2.add(e.b); if (hop1.has(e.b) && e.a !== id && !hop1.has(e.a)) hop2.add(e.a); }
+          for (const n of hop2) cur.map.get(n)?.classList.add('hop2');
+          setTimeout(() => { for (const n of hop2) cur.map.get(n)?.classList.remove('hop2'); }, 1400);
+        }
+      };
+      requestAnimationFrame(step);
+    }
+    hint(stage, spec.hint || (spec.fire ? 'Click a type to fire it · hover for links · + / − or Ctrl/⌘ + scroll for detail · drag to pan' : 'Hover a type for its links · + / − or Ctrl/⌘ + scroll for detail · drag to pan'));
+    frame();
+    return view;
+  }
+  const straight = (a, b) => `M${a.x.toFixed(1)},${a.y.toFixed(1)}L${b.x.toFixed(1)},${b.y.toFixed(1)}`;
+  const curved = (a, b) => qpath(a, b, 0.14);
+  const forceLayout = (w, h, opts = {}) => () => {
+    const R = R1; const ns = R.list.map(r => ({ id: r.id, grp: r.grp, r: opts.r ? opts.r(r) : rad(r.rec) * 0.85, rep: r }));
+    const links = [...R.pairs.values()].map(p => ({ source: p.a, target: p.b }));
+    const A = groupAnchors(R, w, h, opts.anchorPad ?? 100, 40);
+    layout(ns, links, w, h, A, { collide: d => d.r + (opts.gap ?? 10), pull: opts.pull ?? 0.16, charge: opts.charge ?? -60, pad: 46, margin: { r: 110, t: 50 } });
+    return ns.map(d => ({ id: d.id, x: d.x, y: d.y, r: d.r, grp: d.grp }));
+  };
 
-  mock({
-    short: 'Chord', title: 'Group chord you can drill into', from: 'round 1 · 09',
-    answers: 'How much does each group talk to each other group, and which types carry it?',
-    read: 'Each arc is a group, sized by its relationships. Ribbons run from source to target group, coloured by the source, with an arrow at the target. Click an arc to open that group: its types become arcs and the other groups stay as single arcs. Hover a ribbon for its relationships.',
-    render(stage, w, h) {
+  const CHORD_RENDER = function (stage, w, h) {
       const st = this.st || (this.st = { open: null });
       const tools = mk('div', 'mtools', stage);
       let units, unitOf;
@@ -2336,109 +2161,156 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
         if (u.id[0] === 'g' && u.grp !== st.open) { row.style.cursor = 'pointer'; row.title = 'Open this group'; row.addEventListener('click', () => { st.open = u.grp; rerender(this); }); }
       });
       hint(stage, st.open == null ? 'Click a group arc or list row to open it · hover a ribbon' : 'Click a type arc to keep it highlighted · click another group to open it').style.right = (sideW + 10) + 'px';
-    },
+    };
+
+  /* ---------- Mocks ---------- */
+  const MOCKS = []; const mock = o => MOCKS.push(o);
+
+  mock({
+    short: 'Groups', title: 'Groups pull together', from: 'round 2 · 01',
+    answers: 'Which types belong together, and how do the groups connect?',
+    read: 'Types in the same group sit close, so closeness means "same group"; lines are direct relationships, tinted inside a group and grey between groups. Zoom with + and − or Ctrl/⌘ + scroll: zoomed out shows only the groups, zoomed in names more types, and at the deepest level merged types open into their members. Drag to pan. Hover a type for its links.',
+    render(stage, w, h) { semantic(stage, w, h, this, { layout: forceLayout(w, h) }); },
   });
 
-  // Rows/columns ordered by group, then by the first similarity axis so similar types sit together.
-  const orderReps = R => [...R.list].sort((a, b) => a.grp - b.grp || d3.mean(a.members, m => D.sim[m][0]) - d3.mean(b.members, m => D.sim[m][0]));
   mock({
-    short: 'Heatmap', title: 'Heatmap with a crosshair', from: 'round 1 · 11',
-    answers: 'Exactly which types are linked, and how strongly?',
-    read: 'Rows point to columns, grouped by group and ordered so similar types sit together, which turns rules applied to many types into solid blocks. ' + (hasInst ? 'Shade is the number of records behind the link (log scale). ' : 'Shade is the number of relationships. ') + 'Hover any cell for both names and every relationship; click to pin; search lights up a type’s row and column.',
+    short: 'Constellation', title: 'Constellation layout, platform look', from: 'round 2 · 04',
+    answers: 'Can the whole graph read like a map that gains detail as I zoom?',
+    read: 'The constellation layout from round 2 in the Graph tab’s own look: small nodes, tighter groups, soft curved links, names below each node. Zoom in and more names appear while the nodes keep their size; zoom out and only group names remain. Hover a type for its links.',
     render(stage, w, h) {
-      const R = R1; const order = orderReps(R); const n = order.length, pos = new Map(order.map((r, i) => [r.id, i]));
-      const panelW = clamp(w * 0.24, 240, 360), L = 170, T = 60;
-      const C = Math.max(4, Math.min((h - T - 18) / n, (w - panelW - L - 40) / n)); const S = n * C;
-      const svg = mkSvg(stage, w - panelW - 20, h);
-      el('rect', { x: L, y: T, width: S, height: S, class: 'mx-bg' }, svg);
-      el('text', { x: L, y: 12, class: 'mx-axis' }, svg, 'Target →');
-      el('text', { x: 12, y: T + 4, class: 'mx-axis' }, svg, 'Source ↓');
-      let start = 0;
-      groups.forEach((g, k) => { const cnt = order.filter(r => r.grp === k).length; if (!cnt) return;
-        el('rect', { x: L + start * C, y: T - 8, width: cnt * C - 1, height: 5, class: 'gf' + gc(k) }, svg); el('rect', { x: L - 8, y: T + start * C, width: 5, height: cnt * C - 1, class: 'gf' + gc(k) }, svg);
-        el('text', { x: L - 14, y: T + (start + cnt / 2) * C + 3, 'text-anchor': 'end', class: 'mx-dom mx-gname' }, svg, g.name);
-        { const nm = g.name.replace(/ group$/, ''); el('text', { x: L + (start + cnt / 2) * C, y: T - 12 - (k % 3) * 11, 'text-anchor': 'middle', class: 'mx-dom mx-gname' }, svg, nm); }
-        if (start > 0) { el('line', { x1: L + start * C, y1: T, x2: L + start * C, y2: T + S, class: 'm-sep' }, svg); el('line', { x1: L, y1: T + start * C, x2: L + S, y2: T + start * C, class: 'm-sep' }, svg); }
-        start += cnt; });
-      const rawV = d => hasInst ? d.inst : d.labels.length;
-      const cap = Math.max(2, d3.quantile([...R.dir.values()].map(rawV).sort((a, b) => a - b), 0.95));
-      const shade = d => 0.4 + 0.6 * Math.log1p(Math.min(rawV(d), cap)) / Math.log1p(cap);
-      const maxI = cap;
-      const crossR = el('rect', { x: L, y: 0, width: S, height: C, class: 'mx-cross' }, svg), crossC = el('rect', { x: 0, y: T, width: C, height: S, class: 'mx-cross' }, svg);
-      const rowLab = el('text', { class: 'mx-lab', 'text-anchor': 'end' }, svg), colLab = el('text', { class: 'mx-lab' }, svg);
-      const hideCross = () => { crossR.style.display = crossC.style.display = 'none'; rowLab.textContent = colLab.textContent = ''; svg.querySelectorAll('.mx-gname').forEach(x => { x.style.opacity = 1; }); }; hideCross();
-      const gC = el('g', {}, svg);
-      for (const [k, d] of R.dir) { const [a, b] = k.split('>'); el('rect', { x: L + pos.get(b) * C + 0.4, y: T + pos.get(a) * C + 0.4, width: C - 0.8, height: C - 0.8, class: 'mx-cell', 'fill-opacity': shade(d).toFixed(2), 'pointer-events': 'none' }, gC); }
-      const read = mk('div', 'mx-read', stage); read.style.width = panelW + 'px';
-      const search = mk('input', '', read); search.type = 'search'; search.placeholder = 'Find a type'; search.setAttribute('aria-label', 'Find a type in the heatmap');
-      Object.assign(search.style, { font: 'inherit', fontSize: '0.8rem', padding: '5px 9px', border: '1px solid var(--line)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--ink)' });
-      const scale = mk('div', 'mx-scale', read);
-      [1, 2, Math.round(cap)].forEach((k, j) => { const i = mk('i', '', scale); i.style.opacity = shade({ labels: { length: k }, inst: k }).toFixed(2); mk('span', '', scale, j === 2 ? `${k}+` : String(k)); });
-      mk('span', '', scale, hasInst ? 'records (log)' : 'relationships per pair');
-      const unpin = mk('button', 'mpin', read, 'Unpin'); unpin.type = 'button'; unpin.hidden = true;
-      const out = mk('div', '', read); out.style.cssText = 'display:grid;gap:8px';
-      const idle = () => { out.innerHTML = `<span class="big">${R.dir.size} linked pairs</span><span class="muted">Hover a cell; click to pin it. Rows are sources, columns are targets.</span>`; }; idle();
-      const cross = (ia, ib) => { crossR.style.display = crossC.style.display = ''; svg.querySelectorAll('.mx-gname').forEach(x => { x.style.opacity = 0.15; }); crossR.setAttribute('y', T + ia * C); crossC.setAttribute('x', L + ib * C);
-        rowLab.setAttribute('x', L - 16); rowLab.setAttribute('y', T + ia * C + C / 2 + 3); rowLab.textContent = order[ia].short + ' →';
-        colLab.setAttribute('x', L + ib * C); colLab.setAttribute('y', T - 14); colLab.textContent = '↓ ' + order[ib].short; colLab.setAttribute('text-anchor', ib > n * 0.6 ? 'end' : 'start'); };
-      let pinned = false;
-      const setPin = v => { pinned = v; unpin.hidden = !v; };
-      unpin.addEventListener('click', () => { setPin(false); hideCross(); idle(); });
-      svg.addEventListener('click', () => setPin(!pinned));
-      svg.addEventListener('pointermove', ev => { if (pinned) return; const r = svg.getBoundingClientRect(); const ib = Math.floor((ev.clientX - r.left - L) / C), ia = Math.floor((ev.clientY - r.top - T) / C); if (ia < 0 || ib < 0 || ia >= n || ib >= n) return;
-        cross(ia, ib); const ra = order[ia], rb = order[ib], d = R.dir.get(ra.id + '>' + rb.id), back = R.dir.get(rb.id + '>' + ra.id);
-        out.innerHTML = `<span class="big">${esc(ra.name)} → ${esc(rb.name)}</span>` + (d ? `<span class="k mono">${d.labels.map((l, j) => esc(l) + (d.keys[j] ? ` <span class="muted">(${esc(d.keys[j])})</span>` : '')).join('<br>')}</span>${hasInst ? `<span class="muted">${fmt(d.inst)} records behind it</span>` : ''}` : '<span class="muted">0 relationships this way.</span>') + (back && ra.id !== rb.id ? `<span class="muted">Back the other way:</span><span class="k mono">${back.labels.map(esc).join('<br>')}</span>` : ''); });
-      svg.addEventListener('pointerleave', () => { if (!pinned) { hideCross(); idle(); } });
-      search.addEventListener('input', () => { setPin(false); const q = search.value.trim().toLowerCase(); if (!q) { hideCross(); idle(); return; }
-        const i = order.findIndex(r => r.name.toLowerCase().includes(q) || r.members.some(m => NAME(m).toLowerCase().includes(q))); if (i < 0) return;
-        cross(i, i); const r = order[i], rr = R.rels.get(r.id);
-        const list = (m, arrow) => [...m].sort((a, b) => b[1].size - a[1].size).map(([lab, set]) => `${arrow} ${esc(lab)} ${[...set].map(x => esc(R.byId.get(x).short)).join(', ')}`).join('<br>');
-        out.innerHTML = `<span class="big">${esc(r.name)}</span><span class="muted">Its row and column are lit. ${r.deg} relationships.</span><span class="k mono">${list(rr.out, '→')}${rr.out.size && rr.in.size ? '<br>' : ''}${list(rr.in, '←')}</span>`; });
-      hint(stage, 'Hover a cell · click to pin · search lights up a type').style.right = (panelW + 30) + 'px';
+      semantic(stage, w, h, this, { layout: forceLayout(w, h, { r: r => 2.4 + Math.log10(1 + r.rec) * 1.3, gap: 9, pull: 0.22, charge: -45, anchorPad: 110 }), edgePath: curved, labelSide: 'below', edgeWidth: () => 0.8 });
     },
   });
 
   mock({
-    short: 'Relationship heatmap', title: 'Types against relationship names', from: 'new, replaces round 1 · 10',
-    answers: 'Which relationships does each type take part in, and which are rules shared by many types?',
-    read: 'Rows are types, grouped by group. Columns are relationship names used more than once, most used first. An ink-coloured cell means the type is the source of that relationship, a light accent cell means it is the target, and a full accent cell means both (see the key in the panel). A tall stripe is a rule declared across many types at once. Hover any cell for the full name and who is on each side.',
+    short: 'Constellation lines', title: 'Constellation lines, platform look', from: 'round 2 · 05',
+    answers: 'What is the skeleton of the graph before the detail?',
+    read: 'Same layout, but only the strongest links are drawn: inside each group the strongest chain that reaches every type, and between groups the single strongest link (dashed). Everything else appears when you hover a type. Zoom works the same way: more detail, not just bigger.',
     render(stage, w, h) {
-      const R = R1; const order = orderReps(R); const nR = order.length;
-      const L = 190, T = 150, panelW = clamp(w * 0.22, 220, 320);
-      const cols = labelStats.filter(x => x.count >= 2); const one = labelStats.filter(x => x.count < 2);
-      const nC = cols.length;
-      const cw = Math.max(5, Math.floor((w - L - panelW - 40) / nC)), ch = Math.max(4, Math.floor((h - T - 16) / nR));
-      const svg = mkSvg(stage, w - panelW - 10, h);
-      const role = new Map();
-      for (const [s, t, l] of edges) { const a = R1.byId.has('f' + FAM(s)) && FAM(s) >= 0 ? 'f' + FAM(s) : 'n' + s, b = FAM(t) >= 0 ? 'f' + FAM(t) : 'n' + t; const c = cols.findIndex(x => x.label === labels[l]); if (c < 0) continue;
-        for (const [id, r] of [[a, 1], [b, 2]]) { const k = id + '|' + c; role.set(k, (role.get(k) || 0) | r); } }
-      const rowOf = new Map(order.map((r, i) => [r.id, i]));
-      let start = 0;
-      groups.forEach((g, k) => { const cnt = order.filter(r => r.grp === k).length; if (!cnt) return; el('rect', { x: L - 8, y: T + start * ch, width: 5, height: cnt * ch - 1, class: 'gf' + gc(k) }, svg); if (cnt * ch > 12) el('text', { x: L - 14, y: T + (start + cnt / 2) * ch + 3, 'text-anchor': 'end', class: 'mx-dom' }, svg, g.name); start += cnt; });
-      el('rect', { x: L, y: T, width: nC * cw, height: nR * ch, class: 'mx-bg' }, svg);
-      const gC = el('g', {}, svg);
-      for (const [k, v] of role) { const [id, c] = k.split('|'); const i = rowOf.get(id); if (i == null) continue; el('rect', { x: L + (+c) * cw + 0.5, y: T + i * ch + 0.5, width: cw - 1, height: ch - 1, class: v === 3 ? 'rh-cell-both' : v === 1 ? 'rh-cell-out' : 'rh-cell-in', 'pointer-events': 'none' }, gC); }
-      cols.map(x => `${x.label} · ${x.count}`).forEach((t, c) => { if (cw < 7 && c % 2) return; el('text', { x: 0, y: 0, class: 'rh-col', transform: `translate(${L + c * cw + cw / 2 + 3},${T - 6}) rotate(-60)` }, svg, truncate(t, 24)); });
-      const crossR = el('rect', { x: L, y: 0, width: nC * cw, height: ch, class: 'mx-cross' }, svg), crossC = el('rect', { x: 0, y: T, width: cw, height: nR * ch, class: 'mx-cross' }, svg); crossR.style.display = crossC.style.display = 'none';
-      const read = mk('div', 'mx-read', stage); read.style.width = panelW + 'px';
-      const key = mk('div', '', read); key.innerHTML = '<span class="rh-key"><i class="gb-ink" style="background:var(--ink)"></i>source</span><span class="rh-key"><i style="background:var(--accent);opacity:.55"></i>target</span><span class="rh-key"><i style="background:var(--accent)"></i>both</span>';
-      const out = mk('div', '', read); out.style.cssText = 'display:grid;gap:8px';
-      const idle = () => { out.innerHTML = `<span class="big">${cols.length} relationship names used more than once</span><span class="muted">${one.length} names used by a single pair are left out. Hover a cell or column for the full name.</span>`; }; idle();
-      svg.addEventListener('pointermove', ev => { const r = svg.getBoundingClientRect(); const c = Math.floor((ev.clientX - r.left - L) / cw), i = Math.floor((ev.clientY - r.top - T) / ch); if (i < 0 || c < 0 || i >= nR || c >= nC) return;
-        crossR.style.display = crossC.style.display = ''; crossR.setAttribute('y', T + i * ch); crossC.setAttribute('x', L + c * cw);
-        const rep = order[i]; const x = cols[c]; const v = role.get(rep.id + '|' + c) || 0;
-        const S = [...x.S].map(NAME), T2 = [...x.T].map(NAME);
-        out.innerHTML = `<span class="big">${esc(rep.name)}</span><span class="k mono">${esc(x.label)} · ${x.count} edges</span><span>${v === 0 ? 'Not part of it.' : v === 1 ? 'Source.' : v === 2 ? 'Target.' : 'Source and target.'}</span><span class="muted">From ${x.S.size} types: ${esc(S.slice(0, 8).join(', '))}${S.length > 8 ? '…' : ''}</span><span class="muted">To ${x.T.size} types: ${esc(T2.slice(0, 8).join(', '))}${T2.length > 8 ? '…' : ''}</span>`; });
-      svg.addEventListener('pointerleave', () => { crossR.style.display = crossC.style.display = 'none'; idle(); });
-      hint(stage, 'Hover a cell for the relationship and both sides').style.right = (panelW + 20) + 'px';
+      const bb = new Map();
+      const backbone = R => { if (bb.has(R)) return bb.get(R); const set = new Set(); const pw = p => p.ab + p.ba;
+        const parent = new Map(R.list.map(r => [r.id, r.id])); const find = x => { while (parent.get(x) !== x) { parent.set(x, parent.get(parent.get(x))); x = parent.get(x); } return x; };
+        const sorted = [...R.pairs.values()].sort((a, b) => pw(b) - pw(a));
+        for (const p of sorted) { if (R.byId.get(p.a).grp !== R.byId.get(p.b).grp) continue; const ra = find(p.a), rb = find(p.b); if (ra !== rb) { parent.set(ra, rb); set.add(p); } }
+        const best = new Map(); for (const p of sorted) { const a = R.byId.get(p.a).grp, b = R.byId.get(p.b).grp; if (a === b) continue; const k = a < b ? a + '|' + b : b + '|' + a; if (!best.has(k)) { best.set(k, p); set.add(p); } }
+        bb.set(R, set); return set; };
+      semantic(stage, w, h, this, { layout: forceLayout(w, h, { r: r => 2.4 + Math.log10(1 + r.rec) * 1.3, gap: 9, pull: 0.22, charge: -45, anchorPad: 110 }), labelSide: 'below', edgeWidth: () => 1,
+        edgeClass: (p, R) => backbone(R).has(p) ? (R.byId.get(p.a).grp !== R.byId.get(p.b).grp ? 'bone bridge' : 'bone') : 'hid' });
     },
   });
 
+  mock({
+    short: 'Hub stubs', title: 'Hubs as landmarks, links to them as stubs', from: 'round 2 · 06, rebuilt',
+    answers: 'What does the graph look like once the few types everyone links to stop pulling lines across it?',
+    read: 'Six types are linked to by far more types than any others (named in the key). Most of the long lines in the graph run to them. Here they stay in their groups, drawn as landmarks with a coloured ring, and every link to them becomes a short stub pointing towards that hub in its colour. All other links are drawn normally. Hover a hub to draw its full lines, or any type to see all of its own.',
+    render(stage, w, h) {
+      const inN = new Map(R1.list.map(r => [r.id, new Set()]));
+      for (const p of R1.pairs.values()) { if (p.ab) inN.get(p.b).add(p.a); if (p.ba) inN.get(p.a).add(p.b); }
+      const hubs = R1.list.filter(r => r.members.length === 1).sort((a, b) => inN.get(b.id).size - inN.get(a.id).size).slice(0, 6);
+      const HUBC = ['var(--graph-node-rose-300)', 'var(--graph-node-brand-300)', 'var(--graph-node-steel-blue-400)', 'var(--graph-node-plum-300)', 'var(--graph-node-mulberry-300)', 'var(--graph-node-royal-violet-300)'];
+      const hubIdx = new Map(); hubs.forEach((r, i) => r.members.forEach(m => hubIdx.set('n' + m, i)));
+      const hubOf = id => hubIdx.get(id);
+      const key = mk('div', 'hubkey', stage);
+      mk('b', '', key, 'Hubs'); hubs.forEach((r, i) => { const s = mk('span', '', key); const sw = mk('i', '', s); sw.style.background = HUBC[i]; mk('span', '', s, `${r.name} · ${inN.get(r.id).size} types link here`); });
+      semantic(stage, w, h, this, {
+        layout: forceLayout(w, h),
+        nodeClass: d => hubOf(d.id) != null ? 'hub hub' + hubOf(d.id) : '',
+        radius: (r, base) => hubOf(r.id) != null ? base.r + 4 : (base.r ?? rad(r.rec) * 0.85),
+        edgeClass: p => (hubOf(p.a) != null) !== (hubOf(p.b) != null) ? 'hid' : '',
+        decorate: (view) => {
+          view.gTop.textContent = '';
+          const cur = view.cur();
+          for (const d of cur.nodes) { const i = hubOf(d.id); if (i == null) continue; const c = el('circle', { cx: d.x, cy: d.y, r: d.r + 4, class: 'hubring' }, view.gTop); c.style.stroke = HUBC[i]; }
+          for (const e of cur.E) {
+            const ha = hubOf(e.a), hb = hubOf(e.b); if ((ha != null) === (hb != null)) continue;
+            const [n, hub, i] = ha != null ? [cur.by.get(e.b), cur.by.get(e.a), ha] : [cur.by.get(e.a), cur.by.get(e.b), hb];
+            const dx = hub.x - n.x, dy = hub.y - n.y, dl = Math.hypot(dx, dy) || 1, len = 11;
+            const sl = el('line', { x1: n.x + dx / dl * (n.r + 1), y1: n.y + dy / dl * (n.r + 1), x2: n.x + dx / dl * (n.r + 1 + len), y2: n.y + dy / dl * (n.r + 1 + len), class: 'stub' }, view.gTop); sl.style.stroke = HUBC[i];
+          }
+        },
+        obstacles: () => { const r = key.getBoundingClientRect(), sr = stage.getBoundingClientRect(); return [[r.left - sr.left - 4, r.top - sr.top - 4, r.right - sr.left + 4, r.bottom - sr.top + 4]]; },
+      });
+      const ns = stage.querySelector('.legend'); if (ns) ns.style.top = (key.offsetHeight + 18) + 'px';
+    },
+  });
+
+  mock({
+    short: 'Neurons', title: 'Neurons and axons', from: 'new · neural layout',
+    answers: 'Can the graph read like a nervous system: cells with branches, joined by long fibres?',
+    read: 'Each group is drawn as a neuron. Its most connected type is the cell body. The other types grow out from it on branches, and every branch is a real relationship: the strongest chain inside the group that reaches every type. Thick fibres between cell bodies are the links between groups, wider when there are more. Click a type to fire it: a pulse runs along its links and the types two steps away light up. Other links appear on hover.',
+    render(stage, w, h) {
+      let tree = new Set(), depthOf = new Map(), somaOf = [];
+      const layout = () => {
+        const R = R1; const A = groupAnchors(R, w, h, 130, 40);
+        const minD = k => d3.min(groups.map((_, j) => j === k ? Infinity : Math.hypot(A[k][0] - A[j][0], A[k][1] - A[j][1])));
+        const out = [];
+        groups.forEach((g, k) => {
+          const reps = R.list.filter(r => r.grp === k); if (!reps.length) return;
+          const soma = [...reps].sort((a, b) => b.deg - a.deg)[0]; somaOf[k] = soma.id;
+          const inG = new Set(reps.map(r => r.id)); const wgt = new Map();
+          for (const p of R.pairs.values()) if (inG.has(p.a) && inG.has(p.b)) { const k2 = p.a + '|' + p.b; wgt.set(k2, p.ab + p.ba); }
+          const reached = new Set([soma.id]), parent = new Map(), children = new Map(reps.map(r => [r.id, []]));
+          while (reached.size < reps.length) {
+            let best = null;
+            for (const [k2, v] of wgt) { const [a, b] = k2.split('|'); const ia = reached.has(a), ib = reached.has(b); if (ia === ib) continue; if (!best || v > best.v) best = { a: ia ? a : b, b: ia ? b : a, v, k2 }; }
+            if (!best) { const orphan = reps.find(r => !reached.has(r.id)); parent.set(orphan.id, soma.id); children.get(soma.id).push(orphan.id); reached.add(orphan.id); continue; }
+            parent.set(best.b, best.a); children.get(best.a).push(best.b); reached.add(best.b);
+            const [x, y] = best.k2.split('|'); tree.add(x < y ? x + '|' + y : y + '|' + x);
+          }
+          const hroot = d3.hierarchy(soma.id, id => children.get(id));
+          const radius = Math.min(minD(k) * 0.46, 34 + 15 * Math.sqrt(reps.length));
+          d3.tree().size([2 * Math.PI, radius]).separation((a, b) => (a.parent === b.parent ? 1 : 1.6) / Math.max(1, a.depth))(hroot);
+          hroot.each(nd => { const a = nd.x - Math.PI / 2; const r = R.byId.get(nd.data); depthOf.set(nd.data, nd.depth);
+            out.push({ id: nd.data, x: A[k][0] + Math.cos(a) * nd.y, y: A[k][1] + Math.sin(a) * nd.y, r: nd.depth === 0 ? 9 : clamp(rad(r.rec) * 0.7, 2.5, 7), grp: k }); });
+        });
+        return out;
+      };
+      const key = (a, b) => (a < b ? a + '|' + b : b + '|' + a);
+      semantic(stage, w, h, this, {
+        layout,
+        fire: true,
+        nodeClass: d => somaOf[d.grp] === d.id ? 'soma' : '',
+        edgeClass: p => tree.has(key(p.a, p.b)) ? 'branch' : 'hid',
+        edgeWidth: p => { if (!tree.has(key(p.a, p.b))) return 1.1; const dp = Math.max(depthOf.get(p.a) ?? 3, depthOf.get(p.b) ?? 3); return [3.6, 3.6, 2.4, 1.6, 1.1][Math.min(dp, 4)]; },
+        edgePath: (a, b, e) => { if (!tree.has(key(e.a, e.b))) return qpath(a, b, 0.16); const bend = ((a.id.length + b.id.length) % 2 ? 1 : -1) * 0.18; return qpath(a, b, bend); },
+        decorate: (view) => {
+          view.gDeco.textContent = ''; const cur = view.cur();
+          const agg = new Map(); for (const e of cur.E) { if (e.ga === e.gb) continue; const k2 = e.ga < e.gb ? e.ga + '|' + e.gb : e.gb + '|' + e.ga; agg.set(k2, (agg.get(k2) || 0) + e.ab + e.ba); }
+          const somaAt = k => { const d = view.p1.get(somaOf[k]); return d ? { x: view.sx(d.x), y: view.sy(d.y) } : null; };
+          for (const [k2, n] of agg) { const [ga, gb] = k2.split('|').map(Number); const a = somaAt(ga), b = somaAt(gb); if (!a || !b) continue;
+            const p = el('path', { d: qpath(a, b, 0.12), class: 'axon', 'stroke-width': (1.2 + Math.sqrt(n) * 0.9).toFixed(1) }, view.gDeco);
+            const html = `<b>${esc(groups[ga].name)} ↔ ${esc(groups[gb].name)}</b> · ${n} relationships`;
+            p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip); }
+        },
+      });
+    },
+  });
+
+  mock({
+    short: 'Fibre tracts', title: 'Fibre tracts', from: 'new · neural layout',
+    answers: 'Where do the main flows between groups run, the way fibre tracts run between brain regions?',
+    read: 'Types sit in their groups as in mock 1, but every link between two groups is routed through the centres of both groups, so hundreds of links merge into a few smooth tracts, coloured by the group they leave. Links inside a group curve through its centre. Click a type to fire it and watch the pulse travel its tracts; hover for exact links.',
+    render(stage, w, h) {
+      const line = d3.line().curve(d3.curveBundle.beta(0.82));
+      semantic(stage, w, h, this, {
+        layout: forceLayout(w, h, { pull: 0.24, gap: 11 }),
+        fire: true, tint: 'source',
+        edgeClass: () => 'tract',
+        edgeWidth: () => 1,
+        edgePath: (a, b, e, view) => { const ca = view.cent[e.ga], cb = view.cent[e.gb]; if (!ca || !cb) return straight(a, b);
+          const pts = e.ga === e.gb ? [[a.x, a.y], [ca.x, ca.y], [b.x, b.y]] : [[a.x, a.y], [ca.x, ca.y], [cb.x, cb.y], [b.x, b.y]]; return line(pts); },
+      });
+    },
+  });
+
+  mock({
+    short: 'Chord', title: 'Group chord you can drill into', from: 'round 2 · 08, kept at the bottom',
+    answers: 'How much does each group talk to each other group, and which types carry it?',
+    read: 'Each arc is a group, sized by its relationships; ribbons run from source to target group with an arrow at the target. Clicking an arc is this view’s zoom: it opens the group into its types while the other groups stay single arcs. Hover a ribbon for its relationships.',
+    render: CHORD_RENDER,
+  });
   /* ---------- Gallery shell ---------- */
   const list = document.getElementById('mock-list'), nav = document.getElementById('mock-nav');
-  const VERDICTS = [['keep', 'keep'], ['fix', 'drop'], ['fix', 'fix'], ['fix', 'fix'], ['keep', 'fix'], ['drop', 'fix'], ['fix', 'fix'], ['fix', 'drop'], ['keep', 'fix'], ['drop', 'fix']];
-  { const rs = document.getElementById('review-sum'); rs.hidden = false;
-    rs.innerHTML = '<p><b>First-cut review.</b> Gemini 4 Neon and GPT-6.2 Sol each tried every mock in a real browser at 1440×900 and 1672×976, light and dark. Both put <a href="#m1">1</a>, <a href="#m5">5</a> and <a href="#m4">4</a> in their top four; Sol ranked <a href="#m3">3</a> first and Gemini ranked it fifth. Neither agreed on dropping anything: Sol would drop 6 and 10, Gemini would drop 2 and 8. Every fixable issue they raised has been fixed, including mock 2, which was rebuilt. The verdict by each title is from before those fixes.</p>'; }
   function rerender(m) { m.w = m.h = 0; renderMock(m); }
   function renderMock(m) {
     if (!m.visible) return;
@@ -2452,7 +2324,7 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
     const a = mk('a', '', nav); a.href = '#m' + (i + 1); mk('b', '', a, String(i + 1)); a.appendChild(document.createTextNode(m.short));
     const art = mk('article', 'mock', list); art.id = 'm' + (i + 1);
     const hd = mk('div', 'mock-head', art); mk('span', 'num', hd, num); mk('h3', '', hd, m.title); mk('p', 'ans', hd, m.answers);
-    { const vs = mk('span', 'mock-verdict', hd); vs.append(m.from + ' · Sol '); const v = VERDICTS[i]; mk('b', 'v-' + v[0], vs, v[0]); vs.append(' · Gemini '); mk('b', 'v-' + v[1], vs, v[1]); }
+    mk('span', 'mock-verdict', hd, m.from);
     const ft = mk('p', 'mock-read', art); mk('b', '', ft, 'Read it: '); ft.appendChild(document.createTextNode(m.read));
     m.stage = mk('div', 'mstage', art); m.stage.setAttribute('role', 'region'); m.stage.setAttribute('aria-label', `Mock ${i + 1}: ${m.title}`);
   });
@@ -2470,18 +2342,16 @@ const ECG = {"colorTokens":{"--graph-node-terracotta-400":{"light":"#C0624A","da
 
   /* ---------- References ---------- */
   const refs = [
-    ['Cosmograph / cosmos.gl', 'https://cosmograph.app/', 'GPU force layout with clusters; links fade with distance; dark, star-field look.', '1, 4'],
-    ['Nomic Atlas', 'https://atlas.nomic.ai/', 'Map of points by similarity with labels that appear as you zoom.', '2, 4'],
-    ['Hindsight constellation view', 'https://hindsight.vectorize.io/blog/2026/04/16/constellation-view', 'Agent memory as a constellation with stable positions and coloured link types.', '4, 5'],
-    ['anvaka, Map of GitHub', 'https://github.com/anvaka/map-of-github', 'Clusters first, members on zoom, edges only when asked.', '3'],
-    ['Cambridge Intelligence KeyLines', 'https://cambridge-intelligence.com/visualize-large-networks', 'Combos: groups collapse into one node you can open.', '3, 7'],
-    ['Stardog Explorer', 'https://docs.stardog.com/stardog-applications/explorer/', 'Merges nodes that share the same relationships into one.', '1, 2'],
-    ['Neo4j Bloom', 'https://neo4j.com/docs/bloom-user-guide/current/bloom-perspectives/bloom-perspectives', 'Parallel relationships merge into one arrow with a count.', '1'],
-    ['Collibra diagrams', 'https://productresources.collibra.com/docs/collibra/latest/Content/Assets/Diagrams/EditDiagram/ref_diagram-layouts.htm', 'Context nodes in their own band with lighter edges.', '6'],
-    ['D3 / Vega edge bundling', 'https://vega.github.io/vega/examples/edge-bundling/', 'Ring by hierarchy with links bent through shared parents.', '7'],
-    ['d3-chord', 'https://d3js.org/d3-chord', 'Chord diagrams of flows between groups.', '8'],
-    ['MatrixExplorer / NodeTrix', 'https://arxiv.org/html/0705.0599v3', 'Adjacency matrices ordered so dense groups form blocks.', '9, 10'],
-    ['sigma.js', 'https://www.sigmajs.org/', 'Labels budgeted by space and size.', '1, 2, 4'],
+    ['Cosmograph / cosmos.gl', 'https://cosmograph.app/', 'Force layout with clusters; links fade with distance.', '1, 2'],
+    ['Nomic Atlas', 'https://atlas.nomic.ai/', 'Labels that appear as you zoom, by space and importance.', '1, 2, 3'],
+    ['anvaka, Map of GitHub', 'https://github.com/anvaka/map-of-github', 'Clusters first, members on zoom, edges only when asked.', '1, 2'],
+    ['Stardog Explorer', 'https://docs.stardog.com/stardog-applications/explorer/', 'Merges nodes that share the same relationships into one.', 'all'],
+    ['Collibra diagrams', 'https://productresources.collibra.com/docs/collibra/latest/Content/Assets/Diagrams/EditDiagram/ref_diagram-layouts.htm', 'Context nodes kept apart, with lighter edges.', '4'],
+    ['Partial edges / edge stubs (Bruckdorfer et al.)', 'https://arxiv.org/abs/1208.0758', 'Draw only the ends of long edges so dense graphs stay readable.', '4'],
+    ['Holten, hierarchical edge bundling', 'https://vega.github.io/vega/examples/edge-bundling/', 'Links bent through shared parents so they merge into bundles.', '6'],
+    ['Diffusion MRI tractography', 'https://en.wikipedia.org/wiki/Tractography', 'Brain fibre tracts drawn as smooth bundles between regions; the model for mock 6.', '6'],
+    ['Neuron morphology (dendrites, soma, axon)', 'https://en.wikipedia.org/wiki/Neuron', 'Cell body, branching dendrites and long axons; the model for mock 5.', '5'],
+    ['d3-chord', 'https://d3js.org/d3-chord', 'Chord diagrams of flows between groups.', '7'],
   ];
   const body = document.getElementById('refs-body');
   for (const [name, url, what, m] of refs) { const tr = mk('tr', '', body); const td = mk('td', '', tr); const a = mk('a', '', td, name); a.href = url; a.target = '_blank'; a.rel = 'noopener'; mk('td', '', tr, what); mk('td', '', tr, m); }
