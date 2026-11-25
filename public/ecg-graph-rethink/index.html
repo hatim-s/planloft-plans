@@ -1,0 +1,1923 @@
+<!doctype html>
+<html lang="en">
+<head><!-- planloft-render:head:start -->
+<style data-planloft-render data-planloft-sha256="07720fd08084a6e6cf986d518bdfaa248dcc4e165ccdc814c03072d73b001057">/* planloft theme: editorial. The long read. Baskerville at 19px on a 1.7 line, headings in
+   the same face at regular weight and a large size, so hierarchy comes from scale rather
+   than boldness. Stone white paper with the yellow kept out, espresso ink, madder red for
+   links. Dark is warm umber with the red lifted to a dusty rose. */
+/* planloft-color-schemes: light dark */
+:root {
+  color-scheme: light dark;
+  --planloft-font-body: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-heading: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --planloft-font-mono: "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", ui-monospace, monospace;
+  --planloft-font-size: 19px;
+  --planloft-line-height: 1.7;
+  --planloft-code-size: 0.8em;
+  --planloft-heading-weight: 400;
+  --planloft-heading-line-height: 1.1;
+  --planloft-heading-tracking: -0.005em;
+  --planloft-h1-size: 2.9em;
+  --planloft-h2-size: 1.75em;
+  --planloft-h3-size: 1.28em;
+}
+:root,
+:root[data-planloft-color-scheme="light"] {
+  color-scheme: light;
+  --planloft-paper: #f8f7f5;
+  --planloft-ink: #2a221d;
+  --planloft-muted: #6b625b;
+  --planloft-surface: #efedea;
+  --planloft-rule: #dad6d0;
+  --planloft-accent: #8c2f39;
+  --planloft-accent-contrast: #f8f7f5;
+  --planloft-code-paper: #edebe7;
+  --planloft-code-ink: #2a221d;
+  --planloft-chart-1: #8c2f39;
+  --planloft-chart-2: #2f5f8a;
+  --planloft-chart-3: #4c7a3a;
+  --planloft-chart-4: #8d6110;
+  --planloft-chart-5: #6a4f9e;
+  --planloft-chart-6: #2c8282;
+  --planloft-chart-sequential: #8c2f39;
+  --planloft-chart-neutral: #91877d;
+  --planloft-positive: #3f7a3a;
+  --planloft-negative: #a82f38;
+  --planloft-caution: #8d6110;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-planloft-color-scheme="light"]) {
+    color-scheme: dark;
+    --planloft-paper: #1c1815;
+    --planloft-ink: #e6dfd6;
+    --planloft-muted: #a79c91;
+    --planloft-surface: #27221e;
+    --planloft-rule: #3f3834;
+    --planloft-accent: #e39aa4;
+    --planloft-accent-contrast: #1c1815;
+    --planloft-code-paper: #26211d;
+    --planloft-code-ink: #e9e2d9;
+    --planloft-chart-1: #e39aa4;
+    --planloft-chart-2: #7fb0dc;
+    --planloft-chart-3: #92c27b;
+    --planloft-chart-4: #d8b25a;
+    --planloft-chart-5: #b7a0e6;
+    --planloft-chart-6: #6dc1c1;
+    --planloft-chart-sequential: #e39aa4;
+    --planloft-chart-neutral: #7d746c;
+    --planloft-positive: #92c27b;
+    --planloft-negative: #ee8e94;
+    --planloft-caution: #d8b25a;
+  }
+}
+:root[data-planloft-color-scheme="dark"] {
+  color-scheme: dark;
+  --planloft-paper: #1c1815;
+  --planloft-ink: #e6dfd6;
+  --planloft-muted: #a79c91;
+  --planloft-surface: #27221e;
+  --planloft-rule: #3f3834;
+  --planloft-accent: #e39aa4;
+  --planloft-accent-contrast: #1c1815;
+  --planloft-code-paper: #26211d;
+  --planloft-code-ink: #e9e2d9;
+  --planloft-chart-1: #e39aa4;
+  --planloft-chart-2: #7fb0dc;
+  --planloft-chart-3: #92c27b;
+  --planloft-chart-4: #d8b25a;
+  --planloft-chart-5: #b7a0e6;
+  --planloft-chart-6: #6dc1c1;
+  --planloft-chart-sequential: #e39aa4;
+  --planloft-chart-neutral: #7d746c;
+  --planloft-positive: #92c27b;
+  --planloft-negative: #ee8e94;
+  --planloft-caution: #d8b25a;
+}
+@media print {
+  html:root,
+  html:root:not([data-planloft-color-scheme="light"]),
+  html:root[data-planloft-color-scheme="dark"] {
+    color-scheme: light;
+    --planloft-paper: #ffffff;
+    --planloft-ink: #2a221d;
+    --planloft-muted: #6b625b;
+    --planloft-surface: #efedea;
+    --planloft-rule: #dad6d0;
+    --planloft-accent: #8c2f39;
+    --planloft-accent-contrast: #ffffff;
+    --planloft-code-paper: #edebe7;
+    --planloft-code-ink: #2a221d;
+    --planloft-chart-1: #8c2f39;
+    --planloft-chart-2: #2f5f8a;
+    --planloft-chart-3: #4c7a3a;
+    --planloft-chart-4: #8d6110;
+    --planloft-chart-5: #6a4f9e;
+    --planloft-chart-6: #2c8282;
+    --planloft-chart-sequential: #8c2f39;
+    --planloft-chart-neutral: #91877d;
+    --planloft-positive: #3f7a3a;
+    --planloft-negative: #a82f38;
+    --planloft-caution: #8d6110;
+  }
+}
+
+
+body:where(:has(> .planloft-plan > .planloft-prose)) {
+  margin: 0;
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  -webkit-text-size-adjust: 100%;
+}
+:where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.5rem 7rem; }
+:where(.planloft-prose) {
+  background: var(--planloft-paper, Canvas);
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-body, system-ui, sans-serif);
+  font-size: var(--planloft-font-size, 17px);
+  line-height: var(--planloft-line-height, 1.6);
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+:where(.planloft-prose) *, :where(.planloft-prose) *::before, :where(.planloft-prose) *::after { box-sizing: border-box; }
+:where(.planloft-prose) > :first-child { margin-top: 0; }
+:where(.planloft-prose) > :last-child { margin-bottom: 0; }
+
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--planloft-ink, CanvasText);
+  font-family: var(--planloft-font-heading, var(--planloft-font-body, system-ui, sans-serif));
+  font-weight: var(--planloft-heading-weight, 650);
+  line-height: var(--planloft-heading-line-height, 1.2);
+  letter-spacing: var(--planloft-heading-tracking, 0);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+:where(.planloft-prose) h1 { margin: 0 0 0.6em; font-size: var(--planloft-h1-size, 2.2em); }
+:where(.planloft-prose) h2 { margin: 1.8em 0 0.5em; font-size: var(--planloft-h2-size, 1.5em); }
+:where(.planloft-prose) h3 { margin: 1.6em 0 0.45em; font-size: var(--planloft-h3-size, 1.18em); }
+:where(.planloft-prose) h4 { margin: 1.5em 0 0.4em; font-size: 1em; }
+:where(.planloft-prose) h5 { margin: 1.4em 0 0.35em; font-size: 1em; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) h6 { margin: 1.4em 0 0.35em; font-size: 1em; font-weight: 500; font-style: italic; color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) :is(h1, h2, h3) + :is(h2, h3, h4) { margin-top: 0.8em; }
+/* A linked heading keeps the heading's colour and carries a thin accent underline, so
+   it reads as a link without hover; hover strengthens the line. */
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: color-mix(in srgb, var(--planloft-accent, LinkText) 55%, transparent);
+  text-underline-offset: 0.14em;
+}
+:where(.planloft-prose) :is(h1, h2, h3, h4, h5, h6) a:hover { text-decoration-color: var(--planloft-accent, LinkText); }
+/* The paragraph after the title is the summary; it reads a step larger and quieter. */
+:where(.planloft-prose) h1 + p { font-size: 1.12em; color: var(--planloft-muted, GrayText); }
+
+:where(.planloft-prose) p { margin: 0 0 1.2em; text-wrap: pretty; }
+:where(.planloft-prose) :is(ul, ol) { margin: 0 0 1.2em; padding-left: 1.6em; }
+:where(.planloft-prose) li { margin: 0.3em 0; }
+:where(.planloft-prose) li > p { margin-bottom: 0.6em; }
+:where(.planloft-prose) li :is(ul, ol) { margin: 0.3em 0 0.4em; }
+:where(.planloft-prose) li::marker { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0.2em; }
+:where(.planloft-prose) li > input[type="checkbox"] { margin: 0 0.55em 0 0; vertical-align: -0.1em; accent-color: var(--planloft-accent, currentColor); }
+:where(.planloft-prose) dl { margin: 0 0 1.2em; }
+:where(.planloft-prose) dt { font-weight: var(--planloft-heading-weight, 650); }
+:where(.planloft-prose) dd { margin: 0 0 0.6em 1.6em; }
+
+:where(.planloft-prose) a {
+  color: var(--planloft-accent, LinkText);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+:where(.planloft-prose) a:hover { text-decoration-color: currentColor; }
+:where(.planloft-prose) strong { font-weight: 700; }
+:where(.planloft-prose) mark { padding: 0 0.15em; background: color-mix(in srgb, var(--planloft-caution, #b98100) 28%, var(--planloft-paper, Canvas)); color: inherit; }
+:where(.planloft-prose) del { color: var(--planloft-muted, GrayText); }
+:where(.planloft-prose) abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; }
+:where(.planloft-prose) :is(sup, sub) { font-size: 0.78em; line-height: 0; }
+:where(.planloft-prose) small { font-size: 0.86em; }
+
+:where(.planloft-prose) :is(code, kbd, samp, pre) {
+  font-family: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  font-size: var(--planloft-code-size, 0.88em);
+}
+:where(.planloft-prose) code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+}
+:where(.planloft-prose) pre {
+  margin: 1.4em 0;
+  padding: 0.95em 1.1em;
+  overflow-x: auto;
+  border-radius: 4px;
+  background: var(--planloft-code-paper, color-mix(in srgb, CanvasText 7%, Canvas));
+  color: var(--planloft-code-ink, inherit);
+  line-height: 1.55;
+  tab-size: 2;
+}
+:where(.planloft-prose) pre code { padding: 0; border-radius: 0; background: transparent; color: inherit; font-size: 1em; }
+:where(.planloft-prose) kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--planloft-surface, color-mix(in srgb, CanvasText 5%, Canvas));
+  font-size: 0.82em;
+}
+
+:where(.planloft-prose) blockquote {
+  margin: 1.4em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  color: var(--planloft-muted, GrayText);
+}
+:where(.planloft-prose) blockquote > :last-child { margin-bottom: 0; }
+:where(.planloft-prose) blockquote cite { font-style: normal; }
+
+/* Tables keep their natural width and scroll sideways instead of breaking the page. */
+:where(.planloft-prose) table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  line-height: 1.45;
+  font-size: 0.94em;
+}
+:where(.planloft-prose) :is(th, td) {
+  padding: 0.45em 1.1em 0.45em 0;
+  border-bottom: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  text-align: left;
+  vertical-align: top;
+}
+:where(.planloft-prose) tr > :last-child { padding-right: 0; }
+:where(.planloft-prose) thead th { font-weight: var(--planloft-heading-weight, 650); border-bottom: 2px solid var(--planloft-ink, CanvasText); }
+:where(.planloft-prose) tbody th { font-weight: 600; }
+:where(.planloft-prose) td:has(> :is(code, kbd):only-child) { white-space: nowrap; }
+
+:where(.planloft-prose) hr { height: 0; margin: 2.8em 0; border: 0; border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas)); }
+:where(.planloft-prose) img, :where(.planloft-prose) video, :where(.planloft-prose) svg:not(.pl-chart__svg) { max-width: 100%; height: auto; }
+:where(.planloft-prose) figure { margin: 1.6em 0; }
+:where(.planloft-prose) figcaption { margin-top: 0.5em; color: var(--planloft-muted, GrayText); font-size: 0.9em; }
+:where(.planloft-prose) details {
+  margin: 1.2em 0;
+  padding: 0.6em 0.9em;
+  border: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+  border-radius: 4px;
+}
+:where(.planloft-prose) summary { cursor: pointer; font-weight: 600; }
+:where(.planloft-prose) details[open] > summary { margin-bottom: 0.5em; }
+
+:where(.planloft-prose) ::selection { background: color-mix(in srgb, var(--planloft-accent, Highlight) 24%, transparent); }
+:where(.planloft-prose) :focus-visible { outline: 2px solid var(--planloft-accent, currentColor); outline-offset: 3px; }
+:where(.planloft-plan) > .planloft-comments {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--planloft-rule, color-mix(in srgb, CanvasText 18%, Canvas));
+}
+
+@media (max-width: 40rem) {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 4.25rem 5rem; }
+  :where(.planloft-prose) { font-size: calc(var(--planloft-font-size, 17px) * 0.94); }
+  :where(.planloft-prose) h1 { font-size: calc(var(--planloft-h1-size, 2.2em) * 0.82); }
+}
+@media print {
+  :where(.planloft-plan:has(> .planloft-prose)) { padding-block: 0; }
+  :where(.planloft-prose) { font-size: 11pt; }
+  :where(.planloft-prose) a { text-decoration-color: currentColor; }
+  :where(.planloft-prose) :is(pre, blockquote, table, figure) { break-inside: avoid; }
+}
+
+
+.pl-callout, .pl-stats, .pl-stat, .pl-status, .pl-badge, .pl-checklist, .pl-todo, .pl-timeline, .pl-milestone, .pl-chart, .pl-sparkline, .pl-table, .pl-scroll, .pl-tip {
+  --pl-ink: var(--planloft-ink, CanvasText);
+  --pl-paper: var(--planloft-paper, Canvas);
+  --pl-muted: var(--planloft-muted, color-mix(in srgb, var(--pl-ink) 62%, var(--pl-paper)));
+  --pl-surface: var(--planloft-surface, color-mix(in srgb, var(--pl-ink) 5%, var(--pl-paper)));
+  --pl-rule: var(--planloft-rule, color-mix(in srgb, var(--pl-ink) 16%, var(--pl-paper)));
+  --pl-accent: var(--planloft-accent, var(--pl-ink));
+  --pl-accent-contrast: var(--planloft-accent-contrast, var(--pl-paper));
+  --pl-series-1: var(--planloft-chart-1, #2a78d6);
+  --pl-series-2: var(--planloft-chart-2, #eb6834);
+  --pl-series-3: var(--planloft-chart-3, #1baf7a);
+  --pl-series-4: var(--planloft-chart-4, #6250d6);
+  --pl-series-5: var(--planloft-chart-5, #e87ba4);
+  --pl-series-6: var(--planloft-chart-6, #eda100);
+  --pl-sequential: var(--planloft-chart-sequential, var(--pl-series-1));
+  --pl-neutral: var(--planloft-chart-neutral, color-mix(in srgb, var(--pl-ink) 52%, var(--pl-paper)));
+  --pl-positive: var(--planloft-positive, #1f8a52);
+  --pl-negative: var(--planloft-negative, #c8412b);
+  --pl-caution: var(--planloft-caution, #b98100);
+  --pl-font-body: var(--planloft-font-body, inherit);
+  --pl-font-heading: var(--planloft-font-heading, var(--pl-font-body));
+  --pl-font-mono: var(--planloft-font-mono, ui-monospace, Menlo, Consolas, monospace);
+  --pl-heading-weight: var(--planloft-heading-weight, 650);
+  --pl-radius: 6px;
+}
+
+.pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Hidden chart tables must not become keyboard-focusable scroll containers. */
+.pl-chart__data table { display: table; max-width: none; overflow: visible; }
+.pl-scroll { max-width: 100%; overflow-x: auto; }
+.pl-scroll > table { display: table; width: 100%; max-width: none; margin: 0; overflow: visible; }
+.pl-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Callout */
+.pl-callout {
+  --pl-tone: var(--pl-accent);
+  margin: 1.6em 0;
+  padding: 0.85em 1.1em 0.9em;
+  border-inline-start: 3px solid var(--pl-tone);
+  border-radius: 0 var(--pl-radius) var(--pl-radius) 0;
+  background: color-mix(in srgb, var(--pl-tone) 7%, var(--pl-paper));
+}
+.pl-callout[data-tone="note"] { --pl-tone: var(--pl-muted); }
+.pl-callout[data-tone="tip"] { --pl-tone: var(--pl-positive); }
+.pl-callout[data-tone="warning"] { --pl-tone: var(--pl-caution); }
+.pl-callout[data-tone="risk"] { --pl-tone: var(--pl-negative); }
+.pl-callout[data-tone="decision"] { --pl-tone: var(--pl-accent); }
+.pl-callout__heading {
+  font-family: var(--pl-font-heading);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15em 0.6em;
+  align-items: baseline;
+  margin: 0 0 0.35em;
+  line-height: 1.35;
+}
+.pl-callout__tone { font-weight: var(--pl-heading-weight); }
+.pl-callout__title { font-weight: var(--pl-heading-weight); }
+.pl-callout__body > :first-child { margin-top: 0; }
+.pl-callout__body > :last-child { margin-bottom: 0; }
+
+/* Stat and Stats */
+.pl-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  gap: 1.25rem 2rem;
+  margin: 1.75em 0;
+}
+.pl-stat { min-width: 0; padding-top: 0.7rem; border-top: 1px solid var(--pl-rule); }
+.pl-stats > .pl-stat { margin: 0; }
+.pl-stat__label { margin: 0; color: var(--pl-muted); font-size: 0.86em; line-height: 1.35; }
+.pl-stat__value {
+  font-family: var(--pl-font-heading);
+  margin: 0.15rem 0 0.1rem;
+  font-size: 2em;
+  font-weight: var(--pl-heading-weight);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+}
+.pl-stat__change { margin: 0; font-size: 0.86em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pl-stat__change[data-assessment="good"] .pl-stat__arrow { color: var(--pl-positive); }
+.pl-stat__change[data-assessment="bad"] .pl-stat__arrow { color: var(--pl-negative); }
+.pl-stat__arrow { display: inline-block; margin-inline-end: 0.2em; }
+.pl-stat__period { color: var(--pl-muted); font-weight: 400; }
+.pl-stat .pl-sparkline { display: block; width: 6.5em; height: 1.6em; margin-top: 0.5rem; color: var(--pl-muted); }
+.pl-stat__note { margin-top: 0.4rem; color: var(--pl-muted); font-size: 0.86em; }
+.pl-stat__note > :first-child { margin-top: 0; }
+.pl-stat__note > :last-child { margin-bottom: 0; }
+
+/* Status */
+.pl-status {
+  --pl-tone: var(--pl-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.05em 0.6em 0.1em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--pl-tone) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pl-tone) 10%, var(--pl-paper));
+  color: var(--pl-ink);
+  font-size: 0.82em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: 0.08em;
+}
+.pl-status::before { color: var(--pl-tone); font-size: 0.85em; line-height: 1; }
+.pl-status[data-tone="done"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="done"]::before { content: "\2713"; }
+.pl-status[data-tone="on-track"] { --pl-tone: var(--pl-positive); }
+.pl-status[data-tone="on-track"]::before { content: "\25CF"; }
+.pl-status[data-tone="at-risk"] { --pl-tone: var(--pl-caution); }
+.pl-status[data-tone="at-risk"]::before { content: "\25B2"; }
+.pl-status[data-tone="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-status[data-tone="blocked"]::before { content: "\25A0"; }
+.pl-status[data-tone="not-started"]::before { content: "\25CB"; }
+
+/* Todo and Checklist */
+.pl-checklist { margin: 1.5em 0; }
+.pl-checklist__title { margin: 0 0 0.35em; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); }
+.pl-todo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 0.7em;
+  align-items: start;
+  margin: 0;
+  padding: 0.5em 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+.pl-checklist > .pl-todo:first-of-type { border-top: 1px solid var(--pl-rule); }
+/* Drawn by hand: a native disabled checkbox renders as a grey block that reads as
+   checked. Checked is a filled inset square, legible in both modes and in print. */
+.pl-todo__box {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0.25em 0 0;
+  border: 1.5px solid color-mix(in srgb, var(--pl-ink) 55%, var(--pl-paper));
+  border-radius: 4px;
+  background: var(--pl-paper);
+  font: inherit;
+}
+.pl-todo__box:checked {
+  border-color: var(--pl-accent);
+  background: var(--pl-accent);
+  box-shadow: inset 0 0 0 2.5px var(--pl-accent-contrast);
+}
+.pl-todo__box:disabled { border-style: dashed; }
+.pl-todo__box:checked:disabled { border-style: solid; }
+.pl-todo__box:not(:disabled) { cursor: pointer; }
+.pl-todo__box:not(:disabled):hover { border-color: var(--pl-accent); }
+.pl-todo__box:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 2px; }
+.pl-todo__text { display: flex; flex-wrap: wrap; gap: 0.1em 1em; align-items: baseline; min-width: 0; }
+.pl-todo__label { flex: 1 1 14em; overflow-wrap: anywhere; }
+.pl-todo__box:not(:disabled) + .pl-todo__text .pl-todo__label { cursor: pointer; }
+.pl-todo:has(.pl-todo__box:checked) .pl-todo__label {
+  color: var(--pl-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.pl-todo__meta {
+  display: inline-flex;
+  gap: 0.9em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pl-todo__owner { font-weight: 600; }
+.pl-todo__detail { flex-basis: 100%; color: var(--pl-muted); font-size: 0.92em; }
+.pl-todo__detail > :first-child { margin-top: 0.2em; }
+.pl-todo__detail > :last-child { margin-bottom: 0; }
+
+/* Timeline and Milestone */
+.pl-timeline { margin: 1.75em 0; padding: 0; list-style: none; }
+.pl-milestone {
+  --pl-tone: var(--pl-rule);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  margin: 0;
+  padding: 0 0 1.35em;
+}
+.pl-milestone::marker { content: none; }
+.pl-milestone::before {
+  content: "";
+  position: absolute;
+  top: 0.95em;
+  bottom: -0.35em;
+  left: calc(0.45rem - 0.5px);
+  width: 1px;
+  background: var(--pl-rule);
+}
+.pl-milestone:last-child { padding-bottom: 0; }
+.pl-milestone:last-child::before { display: none; }
+.pl-milestone[data-state="done"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="done"]::before { background: var(--pl-accent); }
+.pl-milestone[data-state="active"] { --pl-tone: var(--pl-accent); }
+.pl-milestone[data-state="blocked"] { --pl-tone: var(--pl-negative); }
+.pl-milestone__node {
+  position: relative;
+  z-index: 1;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.3em;
+  border: 2px solid var(--pl-tone);
+  border-radius: 50%;
+  background: var(--pl-paper);
+}
+.pl-milestone[data-state="done"] .pl-milestone__node { background: var(--pl-tone); }
+.pl-milestone[data-state="active"] .pl-milestone__node {
+  box-shadow: inset 0 0 0 2px var(--pl-paper), inset 0 0 0 5px var(--pl-tone);
+}
+.pl-milestone[data-state="blocked"] .pl-milestone__node { border-radius: 2px; background: var(--pl-tone); }
+.pl-milestone__head { display: flex; flex-wrap: wrap; gap: 0 0.75em; align-items: baseline; grid-column: 2; }
+.pl-milestone__date {
+  flex-basis: 100%;
+  color: var(--pl-muted);
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+.pl-milestone__title { font-weight: var(--pl-heading-weight); line-height: 1.4; }
+.pl-milestone__state { color: var(--pl-muted); font-size: 0.82em; }
+.pl-milestone[data-state="active"] .pl-milestone__state,
+.pl-milestone[data-state="blocked"] .pl-milestone__state { color: var(--pl-ink); font-weight: 600; }
+.pl-milestone__body { grid-column: 2; margin-top: 0.25em; color: var(--pl-muted); }
+.pl-milestone__body > :first-child { margin-top: 0; }
+.pl-milestone__body > :last-child { margin-bottom: 0; }
+@media (min-width: 48rem) {
+  .pl-milestone { grid-template-columns: 7.5rem 1.6rem minmax(0, 1fr); }
+  .pl-milestone::before { left: calc(7.5rem + 0.45rem - 0.5px); }
+  .pl-milestone__node { grid-column: 2; grid-row: 1; }
+  .pl-milestone__head { grid-column: 3; grid-row: 1; }
+  .pl-milestone__date {
+    position: absolute;
+    left: 0;
+    width: 6.75rem;
+    padding-top: 0.1em;
+    text-align: right;
+  }
+  .pl-milestone__body { grid-column: 3; }
+}
+
+/* Charts */
+.pl-chart {
+  margin: 2em 0;
+  color: var(--pl-ink);
+  font-family: var(--pl-font-body);
+}
+.pl-chart__title { margin: 0 0 0.6rem; font-family: var(--pl-font-heading); font-weight: var(--pl-heading-weight); line-height: 1.35; }
+.pl-chart__plot { position: relative; container: pl-plot / inline-size; }
+.pl-chart__frame { display: none; }
+.pl-chart__frame[data-frame="compact"],
+.pl-chart__frame[data-frame="fixed"] { display: block; }
+@container pl-plot (min-width: 30rem) {
+  .pl-chart__frame[data-frame="compact"] { display: none; }
+  .pl-chart__frame[data-frame="regular"] { display: block; }
+}
+@container pl-plot (min-width: 56rem) {
+  .pl-chart__frame[data-frame="regular"] { display: none; }
+  .pl-chart__frame[data-frame="wide"] { display: block; }
+}
+.pl-chart__svg { display: block; width: 100%; height: auto; font-variant-numeric: tabular-nums; }
+.pl-chart__caption {
+  margin: 0.6rem 0 0;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  line-height: 1.5;
+}
+.pl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.25rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86em;
+  line-height: 1.4;
+}
+.pl-legend__item { display: inline-flex; gap: 0.45em; align-items: center; margin: 0; }
+.pl-legend__item::marker { content: none; }
+.pl-legend__value { color: var(--pl-muted); font-variant-numeric: tabular-nums; }
+.pl-swatch { flex: none; display: inline-block; background: var(--pl-swatch); }
+.pl-swatch--block { width: 0.75em; height: 0.75em; border-radius: 2px; }
+.pl-swatch--line { width: 1.1em; height: 2px; border-radius: 1px; }
+
+/* Pointer targets stay invisible; keyboard focus keeps an outline for navigation. */
+.pl-chart__hits { fill: transparent; stroke: none; }
+.pl-hit { outline: none; }
+.pl-hit:focus-visible { stroke: var(--pl-ink); stroke-width: 1.5; }
+/* Tooltip. A hairline and a short black shadow lift it off the chart; an ink-tinted
+   shadow would glow in dark themes. A mark with its own colour gets a key swatch on
+   the first row. Column hits cover every series and carry no colour. */
+.pl-tip {
+  position: fixed;
+  z-index: 20;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 6.5rem;
+  max-width: 18rem;
+  padding: 0.4rem 0.6rem 0.45rem;
+  border: 1px solid var(--pl-rule);
+  border-radius: var(--pl-radius);
+  background: var(--pl-paper);
+  color: var(--pl-ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 6px 16px -6px rgb(0 0 0 / 0.18);
+  font-family: var(--pl-font-body);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.pl-tip[hidden] { display: none; }
+.pl-tip__title { margin-bottom: 0.05rem; font-weight: 600; }
+.pl-tip__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1.25em; }
+.pl-tip__label { display: inline-flex; align-items: baseline; gap: 0.45em; min-width: 0; color: var(--pl-muted); }
+.pl-tip[data-keyed] .pl-tip__title + .pl-tip__row .pl-tip__label::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 2px;
+  background: var(--pl-tip-color);
+}
+.pl-tip__value { font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.pl-chart--donut {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 2rem;
+  align-items: center;
+}
+.pl-chart--donut > .pl-chart__plot { grid-row: 2; width: min(100%, 13.5rem); }
+.pl-chart--donut > .pl-legend {
+  grid-row: 3;
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0 0;
+}
+.pl-chart--donut .pl-legend__item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.6em; }
+.pl-chart--donut > .pl-chart__caption { grid-column: 1 / -1; }
+@media (min-width: 40rem) {
+  .pl-chart--donut { grid-template-columns: 13.5rem minmax(0, 24rem); }
+  .pl-chart--donut > .pl-chart__title { grid-column: 1 / -1; }
+  .pl-chart--donut > .pl-chart__plot { grid-row: 2; grid-column: 1; }
+  .pl-chart--donut > .pl-legend { grid-row: 2; grid-column: 2; margin: 0; }
+}
+.pl-chart__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  text-align: center;
+  line-height: 1.15;
+  pointer-events: none;
+}
+.pl-chart__center-value { font-size: 1.45em; font-weight: var(--pl-heading-weight); }
+.pl-chart__center-label { color: var(--pl-muted); font-size: 0.8em; }
+
+.pl-sparkline {
+  display: inline-block;
+  width: 4.5em;
+  height: 1.1em;
+  color: var(--pl-accent);
+  vertical-align: -0.15em;
+}
+.pl-sparkline__svg { width: 100%; height: 100%; }
+
+/* DataTable */
+.pl-table { margin: 1.75em 0; }
+.pl-table caption {
+  caption-side: bottom;
+  padding-top: 0.6em;
+  color: var(--pl-muted);
+  font-size: 0.86em;
+  text-align: left;
+}
+.pl-table tbody th { font-weight: 600; }
+.pl-table th[aria-sort]::after { content: " \2193"; color: var(--pl-muted); font-weight: 400; }
+.pl-table th[aria-sort="ascending"]::after { content: " \2191"; }
+.pl-table tfoot th,
+.pl-table tfoot td { border-top: 2px solid var(--pl-ink); font-weight: var(--pl-heading-weight); }
+
+
+/* Badge */
+.pl-badge {
+  --pl-badge-hue: var(--pl-muted);
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.04em 0.6em 0.08em;
+  border: 1px solid color-mix(in oklab, var(--pl-badge-hue) 30%, var(--pl-paper));
+  border-radius: 0.8em;
+  background: color-mix(in oklab, var(--pl-badge-hue) 14%, var(--pl-paper));
+  color: color-mix(in oklab, var(--pl-badge-hue) 55%, var(--pl-ink));
+  font-family: var(--pl-font-body);
+  font-size: 0.78em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.pl-badge[data-color="red"] { --pl-badge-hue: #d1453b; }
+.pl-badge[data-color="orange"] { --pl-badge-hue: #dd7020; }
+.pl-badge[data-color="yellow"] { --pl-badge-hue: #b98d00; }
+.pl-badge[data-color="green"] { --pl-badge-hue: #2f9a4e; }
+.pl-badge[data-color="teal"] { --pl-badge-hue: #17958f; }
+.pl-badge[data-color="blue"] { --pl-badge-hue: #2f74d0; }
+.pl-badge[data-color="purple"] { --pl-badge-hue: #7a55d4; }
+.pl-badge[data-color="pink"] { --pl-badge-hue: #d24f8e; }
+.pl-badge[data-color="accent"] { --pl-badge-hue: var(--pl-accent); }
+@media (forced-colors: active) {
+  .pl-badge { border-color: CanvasText; }
+}
+
+@media print {
+  .pl-chart,
+  .pl-table,
+  .pl-callout,
+  .pl-stat,
+  .pl-milestone,
+  .pl-todo { break-inside: avoid; }
+  .pl-tip { display: none; }
+}
+@media (forced-colors: active) {
+  .pl-swatch,
+  .pl-chart__svg,
+  .pl-sparkline__svg { forced-color-adjust: none; }
+  .pl-callout { border-inline-start-color: CanvasText; }
+}
+
+
+:root { color-scheme: light dark; }
+.planloft-controls {
+  --planloft-control-ink: var(--planloft-ink, CanvasText);
+  --planloft-control-paper: var(--planloft-paper, Canvas);
+  --planloft-control-rule: var(--planloft-rule, color-mix(in srgb, CanvasText 18%, transparent));
+  --planloft-control-accent: var(--planloft-accent, var(--planloft-control-ink));
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  color: var(--planloft-control-ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 0;
+}
+.planloft-theme-selector,
+.planloft-layout-selector {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--planloft-control-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--planloft-control-paper) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.planloft-layout-selector[hidden] { display: none; }
+.planloft-theme-option,
+.planloft-layout-option {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--planloft-control-ink) 60%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.planloft-theme-option:hover,
+.planloft-layout-option:hover {
+  color: var(--planloft-control-ink);
+  background: color-mix(in srgb, var(--planloft-control-ink) 9%, transparent);
+}
+.planloft-theme-option[aria-pressed="true"],
+.planloft-layout-option[aria-pressed="true"] {
+  background: var(--planloft-control-ink);
+  color: var(--planloft-control-paper);
+}
+.planloft-theme-option svg,
+.planloft-layout-option svg { width: 0.95rem; height: 0.95rem; pointer-events: none; }
+.planloft-theme-option:focus-visible,
+.planloft-layout-option:focus-visible {
+  outline: 2px solid var(--planloft-control-accent);
+  outline-offset: 2px;
+}
+@media (max-width: 40rem) {
+  .planloft-controls { top: 0.625rem; right: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planloft-theme-option, .planloft-layout-option { transition: none; }
+}
+@media print {
+  .planloft-controls { display: none; }
+}
+
+:root { --planloft-gutter: clamp(1.25rem, 5vw, 3rem); }
+.planloft-plan:has(> article) {
+  container: planloft-plan / inline-size;
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-bleed, 0rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+.planloft-plan:has(> article) > article {
+  --planloft-wide: min(var(--planloft-bleed, 0rem), max(0px, (100cqw - var(--planloft-measure, 44rem)) / 2));
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) > .planloft-comments {
+  max-width: var(--planloft-measure, 44rem);
+  margin-inline: auto;
+}
+.planloft-plan:has(> article) :is(article, section) > :is(pre, figure, .pl-stats) {
+  margin-inline: calc(-1 * var(--planloft-wide, 0px));
+  max-width: calc(100% + 2 * var(--planloft-wide, 0px));
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > article {
+  --planloft-wide: 0px;
+  max-width: none;
+}
+:root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+html > body:not(:has(.planloft-plan > article)) {
+  box-sizing: border-box;
+  max-width: calc(var(--planloft-measure, 44rem) + 2 * var(--planloft-gutter));
+  margin-inline: auto;
+  padding-inline: var(--planloft-gutter);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 6vw, 5rem);
+}
+:root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) > :is(main, article) {
+  max-width: none;
+}
+@media print {
+  html > body:not(:has(.planloft-plan > article)),
+  :root[data-planloft-layout="full"] > body:not(:has(.planloft-plan > article)) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article),
+  .planloft-plan:has(> article) { max-width: none; padding-inline: 0; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > article,
+  .planloft-plan:has(> article) > article { --planloft-wide: 0px; max-width: none; }
+  :root[data-planloft-layout="full"] .planloft-plan:has(> article) > .planloft-comments,
+  .planloft-plan:has(> article) > .planloft-comments { max-width: none; }
+}
+</style>
+<meta name="robots" content="noindex, nofollow" />
+<!-- planloft-render:head:end -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ECG Graph Rethink</title>
+<style>
+/* Layout: one reading column for the argument, full-width stages for the live graph views, aside panels beside each stage.
+   Colors and type come from the planloft theme; only the two extra domain hues are local. */
+:root {
+  --bg: var(--planloft-paper);
+  --surface: var(--planloft-paper);
+  --sunk: var(--planloft-surface);
+  --ink: var(--planloft-ink);
+  --muted: var(--planloft-muted);
+  --line: var(--planloft-rule);
+  --edge: var(--planloft-chart-neutral);
+  --accent: var(--planloft-accent);
+  --accent-soft: color-mix(in srgb, var(--planloft-accent) 14%, var(--planloft-paper));
+  --hi-out: var(--planloft-positive);
+  --hi-in: var(--planloft-caution);
+  --d0: var(--planloft-chart-2); --d1: var(--planloft-chart-1); --d2: var(--planloft-chart-4); --d3: var(--planloft-chart-5);
+  --d4: #A3456E; --d5: var(--planloft-chart-6); --d6: var(--planloft-chart-3); --d7: #B8642A;
+  --font-text: var(--planloft-font-body);
+  --font-display: var(--planloft-font-heading);
+  --font-mono: var(--planloft-font-mono);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { --d4: #E58AB0; --d7: #E9A06A; } }
+:root[data-planloft-color-scheme="dark"] { --d4: #E58AB0; --d7: #E9A06A; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+img { max-width: 100%; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-text); font-size: calc(var(--planloft-font-size, 19px) * 0.84); line-height: 1.55; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 64px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: var(--planloft-heading-weight, 600); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 4.2vw, 3.1rem); line-height: 1.08; }
+h2 { font-size: 1.7rem; line-height: 1.2; }
+h3 { font-size: 1.15rem; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 2px; }
+.prose { max-width: 66ch; display: grid; gap: 12px; }
+.prose p { color: var(--ink); }
+.muted { color: var(--muted); }
+.eyebrow { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--font-mono); }
+section { display: grid; gap: 20px; min-width: 0; }
+
+.hero { display: grid; gap: 18px; }
+.lede { font-size: 1.12rem; max-width: 62ch; color: var(--ink); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+.stat { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; }
+.stat b { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat span { color: var(--muted); font-size: 0.86rem; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+figcaption { font-size: 0.82rem; color: var(--muted); }
+.frame { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+#today-svg { display: block; width: 100%; height: auto; background-image: radial-gradient(var(--line) 1px, transparent 1px); background-size: 14px 14px; }
+.today-edges line { stroke: var(--edge); stroke-opacity: 0.32; stroke-width: 0.7px; vector-effect: non-scaling-stroke; }
+.findings { display: grid; gap: 14px; padding: 0; margin: 0; list-style: none; }
+.findings li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; }
+.findings li::before { content: attr(data-n); font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); padding-top: 2px; }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 500; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; background: var(--sunk); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+td .mono { font-size: 0.82rem; }
+
+.scroll-x { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+#matrix-svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.m-cell { fill: var(--ink); }
+.m-bg { fill: var(--sunk); }
+.m-sep { stroke: var(--line); stroke-width: 0.6; }
+.m-dom { font-size: 8.5px; fill: var(--muted); font-family: var(--font-text); }
+.m-block { fill: none; stroke: var(--hi-in); stroke-width: 1.2; }
+.m-note { font-size: 9.5px; fill: var(--ink); font-family: var(--font-text); }
+.m-note tspan.k { font-family: var(--font-mono); font-size: 8.5px; fill: var(--muted); }
+.m-lead { stroke: var(--hi-in); stroke-width: 0.7; fill: none; }
+
+.fill0 { fill: var(--d0); } .fill1 { fill: var(--d1); } .fill2 { fill: var(--d2); } .fill3 { fill: var(--d3); }
+.fill4 { fill: var(--d4); } .fill5 { fill: var(--d5); } .fill6 { fill: var(--d6); } .fill7 { fill: var(--d7); }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.bg0 { background: var(--d0); } .bg1 { background: var(--d1); } .bg2 { background: var(--d2); } .bg3 { background: var(--d3); }
+.bg4 { background: var(--d4); } .bg5 { background: var(--d5); } .bg6 { background: var(--d6); } .bg7 { background: var(--d7); }
+
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; max-width: 70ch; font-size: 1.02rem; }
+
+/* View tabs */
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid var(--line); }
+.tab { appearance: none; border: 0; background: none; font: inherit; color: var(--muted); padding: 10px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; font-weight: 500; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.panel { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+@media (max-width: 980px) { .panel { grid-template-columns: 1fr; } }
+.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; min-width: 0; overflow: hidden; }
+.stage-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 0.85rem; }
+.stage-bar .metric { color: var(--muted); font-variant-numeric: tabular-nums; }
+.stage-bar .metric b { color: var(--ink); font-weight: 600; }
+.toggles { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.tgl { appearance: none; font: inherit; font-size: 0.82rem; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.tgl[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); border-color: var(--accent); }
+select { font: inherit; font-size: 0.85rem; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); max-width: 100%; }
+aside.why { display: grid; gap: 14px; font-size: 0.9rem; }
+aside.why dl { margin: 0; display: grid; gap: 12px; }
+aside.why dt { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+aside.why dd { margin: 2px 0 0; }
+
+/* Domain map */
+.dm-scroll { overflow-x: auto; }
+.dm { position: relative; width: 100%; min-width: 780px; aspect-ratio: 1000 / 640; }
+.dm-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dm-band { fill: none; stroke: var(--edge); stroke-opacity: 0.42; stroke-linecap: round; cursor: pointer; }
+.dm-band.on { stroke: var(--accent); stroke-opacity: 0.85; }
+.dm-band.off { stroke-opacity: 0.08; }
+.dm-pill circle { fill: var(--surface); stroke: var(--line); }
+.dm-pill text { font-size: 11px; font-family: var(--font-mono); fill: var(--ink); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.dm-pill.off { opacity: 0.15; }
+.dm-tile { position: absolute; transform: translate(-50%, -50%); width: 18.5%; display: grid; gap: 3px; text-align: left; padding: 9px 11px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font: inherit; color: var(--ink); cursor: pointer; box-shadow: 0 1px 0 var(--line); }
+.dm-tile.center { width: 20%; border-width: 1.5px; }
+.dm-tile[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.dm-tile.dim { opacity: 0.45; }
+.dm-name { display: flex; align-items: center; gap: 7px; font-weight: 600; font-size: 0.92rem; }
+.dm-meta { font-size: 0.76rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.dm-top { font-size: 0.76rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dm-int { font-size: 0.72rem; font-family: var(--font-mono); color: var(--muted); }
+.detail { border-top: 1px solid var(--line); padding: 14px; display: grid; gap: 10px; font-size: 0.88rem; min-height: 96px; }
+.detail h4 { margin: 0; font-size: 0.95rem; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.rel-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.rel-list li { display: grid; grid-template-columns: minmax(150px, max-content) 1fr; gap: 10px; }
+@media (max-width: 560px) { .rel-list li { grid-template-columns: 1fr; gap: 2px; } }
+.rel-list .lbls { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); min-width: 0; overflow-wrap: anywhere; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 0.8rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; max-width: 100%; }
+.chip.fam { background: var(--sunk); font-weight: 500; }
+.chip:hover { border-color: var(--edge); }
+.chip span.t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Bundled ring */
+.hb-scroll { overflow-x: auto; }
+#hb-svg { display: block; width: 100%; min-width: 640px; height: auto; max-height: 860px; }
+.hb-link { fill: none; stroke: var(--edge); stroke-opacity: 0.3; }
+.hb-link.out { stroke: var(--hi-out); stroke-opacity: 0.95; }
+.hb-link.in { stroke: var(--hi-in); stroke-opacity: 0.95; }
+.hb-link.both { stroke: var(--ink); stroke-opacity: 0.95; }
+.hb-link.fade { stroke-opacity: 0.045; }
+.hb-leaf text { font-size: 9.5px; fill: var(--ink); font-family: var(--font-text); cursor: pointer; }
+.hb-leaf.fam text { font-weight: 600; }
+.hb-leaf.fade text { fill: var(--muted); opacity: 0.45; }
+.hb-leaf.on text { font-weight: 600; }
+.hb-loop { font-family: var(--font-mono); font-size: 8px; fill: var(--hi-in); }
+.hb-dom-arc { stroke-width: 3.5; fill: none; }
+.hb-dom-name { font-size: 11px; font-weight: 600; fill: var(--ink); font-family: var(--font-text); }
+
+/* Focus lanes */
+.fl-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.crumbs { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 0.8rem; color: var(--muted); }
+.crumbs button { font: inherit; border: 0; background: none; color: var(--accent); cursor: pointer; padding: 0 2px; }
+.fl { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 210px minmax(0, 1fr); gap: 56px; padding: 18px; align-items: start; }
+@media (max-width: 760px) { .fl { grid-template-columns: 1fr; gap: 14px; } #fl-svg { display: none; } }
+#fl-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.fl-col { display: grid; gap: 8px; min-width: 0; position: relative; z-index: 1; }
+.fl-col h5 { margin: 0 0 2px; font-family: var(--font-mono); font-weight: 500; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.fl-group { border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; background: var(--surface); display: grid; gap: 6px; }
+.fl-group header { display: flex; justify-content: space-between; gap: 8px; font-family: var(--font-mono); font-size: 0.74rem; }
+.fl-group header .n { color: var(--muted); }
+#fl-center-wrap { align-self: stretch; position: relative; z-index: 1; }
+.fl-center { position: sticky; top: 16px; z-index: 1; border: 1.5px solid var(--accent); border-radius: 12px; padding: 14px; background: var(--surface); display: grid; gap: 8px; }
+.fl-center .meta { font-size: 0.8rem; color: var(--muted); display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.fl-empty { font-size: 0.82rem; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; padding: 10px; }
+.fl-conn { fill: none; stroke: var(--edge); stroke-opacity: 0.55; stroke-width: 1.2; }
+.fl-conn.big { stroke-width: 2.2; }
+#arrowhead path { fill: var(--edge); }
+
+/* Rules + refs + plan */
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; padding: 0; margin: 0; list-style: none; }
+.rules li { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 4px; font-size: 0.9rem; }
+.rules li b { font-weight: 600; }
+.plan { display: grid; gap: 0; padding: 0; margin: 0; list-style: none; counter-reset: step; }
+.plan li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 16px 0; border-top: 1px solid var(--line); }
+.plan li::before { counter-increment: step; content: counter(step); font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; color: var(--accent); line-height: 1; }
+.plan li div { display: grid; gap: 4px; max-width: 72ch; }
+.plan li b { font-weight: 600; }
+footer { font-size: 0.82rem; color: var(--muted); display: grid; gap: 6px; max-width: 80ch; border-top: 1px solid var(--line); padding-top: 18px; }
+
+#tip { position: fixed; z-index: 20; max-width: 340px; background: var(--ink); color: var(--bg); font-size: 0.8rem; line-height: 1.45; padding: 8px 10px; border-radius: 6px; pointer-events: none; }
+#tip b { font-weight: 600; }
+#tip .k { font-family: var(--font-mono); font-size: 0.74rem; opacity: 0.85; }
+@media (prefers-reduced-motion: no-preference) { .dm-band, .hb-link, .dm-tile { transition: stroke-opacity .15s, opacity .15s; } }
+</style>
+</head>
+<body><!-- planloft-render:controls:start -->
+<div class="planloft-controls" data-planloft-ignore>
+<div class="planloft-theme-selector planloft-theme-toggle" role="group" aria-label="Color theme">
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="light" aria-label="Light theme" title="Light theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="dark" aria-label="Dark theme" title="Dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11z"/></svg>
+  </button>
+  <button class="planloft-theme-option" type="button" data-planloft-theme-option="system" aria-label="System theme" title="System theme" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+  </button>
+</div>
+<div class="planloft-layout-selector" role="group" aria-label="Page width" data-planloft-layout-selector hidden>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="reading" aria-label="Reading width" title="Reading width" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4.5v15M16 4.5v15M3.5 4.5h17M3.5 19.5h17"/><path d="M10.5 9h3M10.5 12h3M10.5 15h3"/></svg>
+  </button>
+  <button class="planloft-layout-option" type="button" data-planloft-layout-option="full" aria-label="Full width" title="Full width" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="1.5"/><path d="M6.5 9h11M6.5 12h11M6.5 15h11"/></svg>
+  </button>
+</div>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const options = Array.from(document.querySelectorAll("[data-planloft-theme-option]"));
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const key = "planloft-color-scheme";
+  let saved = null;
+  try { saved = localStorage.getItem(key); } catch {}
+  let selected = saved === "light" || saved === "dark" ? saved : "system";
+  const update = () => {
+    if (selected === "system") delete root.dataset.planloftColorScheme;
+    else root.dataset.planloftColorScheme = selected;
+    const effective = selected === "system" ? (media.matches ? "dark" : "light") : selected;
+    for (const option of options) {
+      const optionName = option.dataset.planloftThemeOption;
+      option.setAttribute("aria-pressed", String(optionName === selected));
+      if (optionName === "system") option.title = `System theme (currently ${effective})`;
+    }
+  };
+  for (const option of options) option.addEventListener("click", () => {
+    selected = option.dataset.planloftThemeOption;
+    try { localStorage.setItem(key, selected); } catch {}
+    update();
+  });
+  media.addEventListener?.("change", update);
+  update();
+})();
+(() => {
+  const initialize = () => {
+    const root = document.documentElement;
+    const group = document.querySelector("[data-planloft-layout-selector]");
+    const options = Array.from(group.querySelectorAll("[data-planloft-layout-option]"));
+    const key = "planloft-layout";
+    let saved = null;
+    try { saved = localStorage.getItem(key); } catch {}
+    let selected = saved === "full" ? "full" : "reading";
+    const update = () => {
+      if (selected === "reading") delete root.dataset.planloftLayout;
+      else root.dataset.planloftLayout = selected;
+      for (const option of options) {
+        option.setAttribute("aria-pressed", String(option.dataset.planloftLayoutOption === selected));
+      }
+    };
+    for (const option of options) option.addEventListener("click", () => {
+      selected = option.dataset.planloftLayoutOption;
+      try { localStorage.setItem(key, selected); } catch {}
+      update();
+    });
+    update();
+    group.hidden = false;
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  else initialize();
+})();
+</script>
+<script>
+(() => {
+  const HIT = ".pl-chart__hits > *";
+  let tip = null;
+  let current = null;
+  const hitOf = (event) => (event.target instanceof Element ? event.target.closest(HIT) : null);
+  const hide = () => {
+    if (tip) tip.hidden = true;
+    current = null;
+  };
+  const show = (hit, pointerY) => {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "pl-tip";
+      tip.setAttribute("data-planloft-ignore", "");
+      tip.setAttribute("aria-hidden", "true");
+      document.body.append(tip);
+    }
+    const [title, ...rows] = (hit.getAttribute("aria-label") || "").split("\n");
+    tip.replaceChildren();
+    const heading = document.createElement("div");
+    heading.className = "pl-tip__title";
+    heading.textContent = title;
+    tip.append(heading);
+    for (const row of rows) {
+      const split = row.lastIndexOf(": ");
+      const line = document.createElement("div");
+      line.className = "pl-tip__row";
+      const label = document.createElement("span");
+      label.className = "pl-tip__label";
+      label.textContent = split < 0 ? row : row.slice(0, split);
+      const value = document.createElement("span");
+      value.className = "pl-tip__value";
+      value.textContent = split < 0 ? "" : row.slice(split + 2);
+      line.append(label, value);
+      tip.append(line);
+    }
+    const color = hit.dataset.plColor;
+    tip.toggleAttribute("data-keyed", Boolean(color) && rows.length === 1);
+    if (color) tip.style.setProperty("--pl-tip-color", color);
+    tip.hidden = false;
+    current = hit;
+    place(hit, pointerY);
+  };
+  const place = (hit, pointerY) => {
+    // Above the mark, centred, kept inside the viewport; below it when the top is cut off.
+    // A column spans the whole plot, so it anchors to the pointer instead of its top.
+    const box = hit.getBoundingClientRect();
+    const column = hit.classList.contains("pl-hit--column") && pointerY !== undefined;
+    const anchorY = column ? pointerY : box.top;
+    // Leave room for the value label above a mark.
+    const gap = column ? 10 : 24;
+    const width = tip.offsetWidth;
+    const height = tip.offsetHeight;
+    const left = Math.max(8, Math.min(box.left + box.width / 2 - width / 2, window.innerWidth - width - 8));
+    let top = anchorY - height - gap;
+    if (top < 8) top = (column ? anchorY : box.bottom) + gap;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  };
+  const start = () => {
+    const titles = document.querySelectorAll(".pl-chart__hits > * > title");
+    if (titles.length === 0) return;
+    for (const title of titles) {
+      title.parentNode.setAttribute("aria-label", title.textContent);
+      title.remove();
+    }
+    document.addEventListener("pointerover", (event) => {
+      const hit = event.pointerType === "touch" ? null : hitOf(event);
+      if (hit) show(hit, event.clientY);
+    });
+    document.addEventListener("pointerout", (event) => {
+      if (event.pointerType !== "touch" && hitOf(event) === current) hide();
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch") return;
+      const hit = hitOf(event);
+      if (hit && hit !== current) show(hit, event.clientY);
+      else hide();
+    });
+    document.addEventListener("focusin", (event) => {
+      const hit = hitOf(event);
+      if (hit) show(hit);
+    });
+    document.addEventListener("focusout", (event) => {
+      if (hitOf(event) === current) hide();
+    });
+    const STEPS = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") return hide();
+      const hit = hitOf(event);
+      const step = STEPS[event.key];
+      if (!hit || event.altKey || event.ctrlKey || event.metaKey || (!step && event.key !== "Home" && event.key !== "End")) return;
+      event.preventDefault();
+      const hits = Array.from(hit.parentNode.children);
+      const next = event.key === "Home" ? hits[0] : event.key === "End" ? hits[hits.length - 1] : hits[hits.indexOf(hit) + step];
+      if (!next || next === hit) return;
+      hit.setAttribute("tabindex", "-1");
+      next.setAttribute("tabindex", "0");
+      next.focus();
+    });
+    // Focusing a hit can scroll it into view, so a focused hit keeps its tooltip and
+    // the tooltip moves with it. Hover tooltips close on scroll.
+    window.addEventListener("scroll", () => {
+      if (current && current === document.activeElement) place(current);
+      else hide();
+    }, { passive: true });
+    window.addEventListener("resize", hide);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+</script>
+<!-- planloft-render:controls:end -->
+<main class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Enterprise Context Graph · Graph tab · production data, 25 Nov 2026</p>
+    <h1>Draw each relationship once</h1>
+    <p class="lede">The ECG canvas draws 1,077 lines between 124 entity types, and most of them repeat a handful of facts. All 19 document types supersede each other, so that one rule is 361 lines. Group types into families and domains and the same graph becomes 8 regions joined by 23 links a reader can follow.</p>
+    <div class="stats">
+      <div class="stat"><b>124</b><span>entity types on the canvas</span></div>
+      <div class="stat"><b>1,077</b><span>edges, all drawn at rest</span></div>
+      <div class="stat"><b>192</b><span>relationship names</span></div>
+      <div class="stat"><b>78%</b><span>of edges come from rules applied to a whole family of types</span></div>
+    </div>
+  </header>
+
+  <section id="today">
+    <div class="prose">
+      <p class="eyebrow">1 · Today</p>
+      <h2>What a reader sees on load</h2>
+    </div>
+    <div class="split">
+      <figure>
+        <div class="frame"><svg id="today-svg" role="img" aria-label="The production context graph as it renders today: 124 nodes and 1,077 grey edges forming a dense mesh."></svg></div>
+        <figcaption>Redrawn from the positions the prod canvas used, with every edge it draws. Node colors copy today's per-type palette.</figcaption>
+      </figure>
+      <ol class="findings">
+        <li data-n="01"><p>All 1,077 edges draw at rest as straight grey lines. 726 of the 7,626 possible type pairs are connected, so every line crosses dozens of others and no path can be followed.</p></li>
+        <li data-n="02"><p>Every node is 48px. Bug holds 22,562 records and UCB holds 4, and they look identical.</p></li>
+        <li data-n="03"><p>At fit-to-view, names render at roughly 6px. A reader has to hover to learn what any node is.</p></li>
+        <li data-n="04"><p>Hovering Account fades the rest and prints all 81 of its relationship labels at once, stacked on top of each other around the node.</p></li>
+        <li data-n="05"><p>The legend filters Core, Secondary and Derived. All 124 types in this graph are Core, so the only grouping control does nothing.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="prose">
+      <p class="eyebrow">2 · Diagnosis</p>
+      <h2>Where the lines come from</h2>
+      <p>Most big relationships in this schema are declared as every type in one set linked to every type in another. For all of the 25 largest relationships, every possible combination exists. The renderer draws that product, so a single modeling decision turns into a solid block of lines.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Relationship</th><th>Declared between</th><th>Shape</th><th style="text-align:right">Edges</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">SUPERSEDES</td><td>every document type and every other document type</td><td>19 × 19</td><td class="num">361</td></tr>
+          <tr><td class="mono">PARENT_OF</td><td>every ticket and task type</td><td>8 × 8</td><td class="num">64</td></tr>
+          <tr><td class="mono">DUPLICATE_OF</td><td>every ticket type</td><td>7 × 7</td><td class="num">49</td></tr>
+          <tr><td class="mono">HAS_ATTACHMENT</td><td>Email, Message → 20 document types</td><td>2 × 20</td><td class="num">40</td></tr>
+          <tr><td class="mono">ASSIGNED_TO</td><td>11 work item types → Employee, Partner Member, Contractor</td><td>11 × 3</td><td class="num">33</td></tr>
+          <tr><td class="mono">RAISED_FROM</td><td>11 work item types → Email, Message, Meeting Call Transcript</td><td>11 × 3</td><td class="num">33</td></tr>
+          <tr><td class="mono">STORED_IN, DOC_ROLLS_UP_TO, SHARED_WITH</td><td>each document type → Gdrive, Account, Contact</td><td>~19 → 1, three times</td><td class="num">57</td></tr>
+          <tr><td class="mono">MENTIONS</td><td>Email, Message, Meeting Call Transcript → 9 types</td><td>3 × 9</td><td class="num">27</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure>
+      <div class="scroll-x"><svg id="matrix-svg" role="img" aria-label="Adjacency matrix of the 124 types ordered by domain. Solid squares show relationships declared across whole families."></svg></div>
+      <figcaption>Adjacency matrix. Rows are source types, columns are target types, both grouped by domain. Darker cells carry more than one relationship. Hover a cell to see which. This view is also the fourth proposal: it is the best tool for someone auditing the schema.</figcaption>
+    </figure>
+    <p class="callout">Collapse just the four families the data reveals on its own (types that share a relationship signature) and 1,077 edges become 389 typed links. One level up, at 8 domains, there are 23 links between domains.</p>
+  </section>
+
+  <section id="views">
+    <div class="prose">
+      <p class="eyebrow">3 · Proposal</p>
+      <h2>Three views on one canvas</h2>
+      <p>Each view answers a different question. The reader moves between them by zooming or clicking, the way a map goes from country to street. All three below run on the real prod graph. Domains were assigned by hand from the type names for this sketch.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Proposed views">
+      <button class="tab" role="tab" id="tab-dm" aria-controls="panel-dm" aria-selected="true">Domain map</button>
+      <button class="tab" role="tab" id="tab-hb" aria-controls="panel-hb" aria-selected="false" tabindex="-1">All types, bundled</button>
+      <button class="tab" role="tab" id="tab-fl" aria-controls="panel-fl" aria-selected="false" tabindex="-1">Focus lanes</button>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-dm" aria-labelledby="tab-dm">
+      <div class="stage">
+        <div class="stage-bar"><span class="metric"><b>8</b> domains · <b>23</b> links for 1,077 edges</span><span class="muted">Select a domain. Hover a link for its relationships.</span></div>
+        <div class="dm-scroll"><div class="dm" id="dm"></div></div>
+        <div class="detail" id="dm-detail"><p class="muted">Work items sits in the middle because it touches every other domain. Select any tile to list its relationships.</p></div>
+      </div>
+      <aside class="why"><dl>
+        <div><dt>Answers</dt><dd>What is in this graph, and how do the parts connect?</dd></div>
+        <div><dt>Show it</dt><dd>On first load, and whenever the reader zooms out past the type level.</dd></div>
+        <div><dt>Line count</dt><dd>One band per pair of domains, width by number of edges. Links inside a domain become a number on the tile.</dd></div>
+        <div><dt>Seen in</dt><dd>anvaka's Map of GitHub (territories, semantic zoom), KeyLines combos, Kiali's switch between app, version and workload level.</dd></div>
+        <div><dt>Needs</dt><dd>A domain on every node type. The source system or connector is a fair default, and builders can rename or regroup.</dd></div>
+      </dl></aside>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-hb" aria-labelledby="tab-hb" hidden>
+      <div class="stage">
+        <div class="stage-bar"><span class="metric" id="hb-metric"></span>
+          <span class="toggles"><button class="tgl" id="hb-collapse" aria-pressed="true">Collapse families</button><button class="tgl" id="hb-bundle" aria-pressed="true">Bundle by domain</button></span></div>
+        <div class="hb-scroll"><svg id="hb-svg" role="img" aria-label="Every type arranged on a ring by domain, with links bundled through their domains."></svg></div>
+        <div class="detail" id="hb-detail"><p class="muted">Hover a type to light up its links: green goes out, orange comes in. Click to keep it selected. A ↻ number is a rule a family applies to itself, such as SUPERSEDES.</p></div>
+      </div>
+      <aside class="why"><dl>
+        <div><dt>Answers</dt><dd>Show me everything, but let me read it.</dd></div>
+        <div><dt>How</dt><dd>Every type stays on screen, grouped by domain around a ring. Family members merge into one node. Links route through their domain like highways (hierarchical edge bundling), so 389 links read as a few dozen flows.</dd></div>
+        <div><dt>Try</dt><dd>Turn off both toggles to see the same data drawn the way it is today, with straight lines.</dd></div>
+        <div><dt>Seen in</dt><dd>Holten's hierarchical edge bundling (D3 and Vega examples), Neo4j Bloom merging parallel relationships into one arrow with a count, yFiles folding.</dd></div>
+        <div><dt>Trade-off</dt><dd>You can no longer trace one edge by eye at rest. Hover does that job.</dd></div>
+      </dl></aside>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-fl" aria-labelledby="tab-fl" hidden>
+      <div class="stage">
+        <div class="stage-bar">
+          <span class="fl-bar"><label for="fl-select" class="muted">Focus</label><select id="fl-select"></select><button class="tgl" id="fl-collapse" aria-pressed="true">Collapse families</button></span>
+          <span class="crumbs" id="fl-crumbs"></span>
+        </div>
+        <div class="fl" id="fl">
+          <svg id="fl-svg" aria-hidden="true"><defs><marker id="arrowhead" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z"></path></marker></defs><g id="fl-lines"></g></svg>
+          <div class="fl-col" id="fl-in"></div>
+          <div id="fl-center-wrap"></div>
+          <div class="fl-col" id="fl-out"></div>
+        </div>
+      </div>
+      <aside class="why"><dl>
+        <div><dt>Answers</dt><dd>What does this type connect to, and how?</dd></div>
+        <div><dt>Show it</dt><dd>When a reader searches for a type or clicks one. It replaces today's hover state, which prints 81 overlapping labels for Account.</dd></div>
+        <div><dt>How</dt><dd>Incoming relationships on the left, outgoing on the right, one row per relationship name. One line per relationship, never one per type. Click any chip to move the focus.</dd></div>
+        <div><dt>Seen in</dt><dd>Dynatrace Smartscape's related-nodes view (sources left, targets right, grouped by type and relationship), ExcaliBrain, TheBrain's plex, Backstage's depth-1 catalog graph.</dd></div>
+      </dl></aside>
+    </div>
+  </section>
+
+  <section id="rules">
+    <div class="prose">
+      <p class="eyebrow">4 · Everywhere</p>
+      <h2>Rules that apply in every view</h2>
+      <p>These also work as quick wins on today's canvas, before any new view ships.</p>
+    </div>
+    <ul class="rules">
+      <li><b>Keep an edge budget.</b><span>Never draw more than about 150 lines at rest. Past that, merge or hide until hover. Grafana's node graph stops at 200 nodes and shows "hidden nodes" markers instead of drawing everything.</span></li>
+      <li><b>Merge parallel edges.</b><span>276 type pairs here carry more than one edge. Draw one line per pair with a count, and list the relationships on hover or in the inspector.</span></li>
+      <li><b>Collapse families automatically.</b><span>Types with the same relationship signature merge into one node with a count. Stardog Explorer ships this: it groups nodes of the same class that share the same incoming and outgoing relationships, and a double-click splits the group.</span></li>
+      <li><b>Fade relationships nothing uses.</b><span>Weight each schema edge by the number of record-level links behind it. A declared relationship with no records behind it should be a faint dashed line or hidden, so the canvas shows what the data actually does.</span></li>
+      <li><b>Park hubs in a context band.</b><span>Account, Gdrive and Contact each receive a line from about 19 document types. Collibra puts such context nodes in a band above the main flow with thinner, lighter edges, so hubs stop pulling lines across the canvas.</span></li>
+      <li><b>Size by records, on a log scale.</b><span>Bug (22,562) should outweigh UCB (4). Use a floor so small types stay clickable.</span></li>
+      <li><b>Label by priority and zoom.</b><span>Show the names of the most connected and largest types first and reveal the rest as the reader zooms in, the way sigma.js budgets labels per grid cell. dbt's lineage graph shows only colored tags when zoomed far out.</span></li>
+      <li><b>Color edges by meaning.</b><span>Ownership, provenance, work and conversation each get a hue. Grey is for whatever is out of focus.</span></li>
+      <li><b>Search first.</b><span>Opening a type from search lands in focus lanes, not in the whole graph. Neo4j Bloom and Linkurious both open on a search box.</span></li>
+      <li><b>Grey out, don't remove.</b><span>Filters dim what they exclude so the shape stays put, as in Linkurious and Bloom.</span></li>
+      <li><b>Keep positions stable.</b><span>Expanding a domain or a family must not reshuffle the rest. yFiles calls this preserving the mental map.</span></li>
+      <li><b>Make the legend group by domain.</b><span>Domains are how readers think about the graph. Core, Secondary and Derived are not, and here all 124 types share one value.</span></li>
+      <li><b>Pair the graph with a table.</b><span>Every merged line and group opens a sortable list of the relationships or records inside it. OpenMetadata puts an impact table one tab away from lineage for when fan-out gets wide.</span></li>
+    </ul>
+  </section>
+
+  <section id="refs">
+    <div class="prose">
+      <p class="eyebrow">5 · Research</p>
+      <h2>What other products do with dense graphs</h2>
+      <p>Seven research agents (Claude Haiku 5.5, Gemini 4 Neon, GPT-6.1 Terra) read product docs, demos and posts. The pattern is consistent. No product that works at scale shows every node and edge at once. Each one starts from a scope, a group or a focus, and treats the whole graph as something the reader opens on purpose. The closest analogues, data catalogs and ontology tools, all split the type level from the record level, and one of them, Stardog Explorer, already ships the automatic family grouping proposed here.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Product</th><th>What it does about density</th><th>What we take</th></tr></thead>
+        <tbody id="refs-body"></tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:0.85rem;max-width:80ch">On the two examples you mentioned. Karpathy's LLM wiki is a markdown wiki browsed in Obsidian, and its best-known graph spin-off, nashsu's LLM Wiki, adds Louvain communities and a legend that names each community. Nobody found the X post about a Pi-based constellation view. The closest lead is Signet, an agent memory project tagged for the Pi coding agent, whose API serves a dashboard "constellation" graph payload.</p>
+  </section>
+
+  <section id="plan">
+    <div class="prose">
+      <p class="eyebrow">6 · Order of work</p>
+      <h2>Suggested order</h2>
+    </div>
+    <ol class="plan">
+      <li><div><b>Quick wins on today's canvas.</b><span>Merge parallel edges, collapse signature families, fade relationships with no records behind them, size by records, label by priority, color edges by relationship family, swap the legend to domains. No new view, and the hairball loses roughly two thirds of its lines.</span></div></li>
+      <li><div><b>Focus lanes as the selection state.</b><span>Replace the hover fan-out with the lanes layout. The inspector already loads a node's edges, so the data is there.</span></div></li>
+      <li><div><b>Domain map and semantic zoom.</b><span>Add a domain to node types (defaulting to the source system). Show domain tiles when zoomed out and types inside a domain when zoomed in, with stable positions between the two.</span></div></li>
+      <li><div><b>Type groups in the schema.</b><span>Let a relationship target a group: "any Document SUPERSEDES any Document" becomes one definition instead of 361. This fixes the density where it starts, and it also gives agents reading the graph fewer, clearer relationships to reason about.</span></div></li>
+      <li><div><b>Same rules for the record graph.</b><span>Add a supernode guard (Linkurious offers grouping and a cap when a node has more than a threshold of neighbours), draw join types as edges the way Palantir Vertex does, and move to a canvas or WebGL renderer such as sigma.js once a view holds thousands of records.</span></div></li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>Data: the production graph "[Final] UnifyApps Enterprise Context Graph", captured 25 Nov 2026 from the page's own API responses (124 node types, 1,077 edges, all six edge pages). Families were computed from relationship signatures, average linkage at 0.6 Jaccard, within a domain. Domains are a hand-made grouping for this sketch.</p>
+    <p>Research links were opened by the agents. A separate check confirmed the Dynatrace, Linkurious, Grafana, Obsidian Fast Graph View, Hindsight, nashsu LLM Wiki, Stardog, Collibra and dbt pages say what is quoted here. The Palantir page partly does.</p>
+  </footer>
+</main>
+<div id="tip" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","Work items","Product & code","Platform & cost","Conversations"],"labels":["FOR_SERVICE","INVOLVES_IDENTITY","TARGETS_BRANCH","HAS_REVIEW_COMMENT","APPROVED_BY","CONTAINS_COMMIT","FOR_RELEASE","RELEASED_FROM","TAGGED_COMMIT","DEPLOYED_COMMIT","HAS_COMMIT","DUPLICATE_OF","RESEARCH_DERIVED_FROM","FEEDBACK_BECOMES","FEEDBACK_ABOUT","ALERT_TRIGGERS_INCIDENT","LEAD_AT_ACCOUNT","OPP_BLOCKED_BY_FR","DECISION_RECORDED_IN","FR_NEEDS_MODULE","SYMPTOM_OF","FR_DUPLICATE_OF","ASSIGNED_TO","RAISED_FROM","MENTIONS","QUOTA_ATTAINMENT","RESEARCH_ON_ACCOUNT","PLAN_SETS_OBJECTIVE","ABOUT_ACCOUNT","PLAN_FOR_ACCOUNT","WORKS_ON","MERGED_BY","PARENT_OF","SUPERSEDES","DOC_ROLLS_UP_TO","CAMPAIGN_GENERATED","OEP_FOR_OPPORTUNITY","PARTNER_MEMBER_ON_OPP","MEMBER_OF_PARTNER","CAMPAIGN_TARGETS","OPP_HAS_CONTACT","PATCH_OWNED_BY","UCB_FOR_OPPORTUNITY","CAMPAIGN_INFLUENCED","IN_PATCH","QUOTA_FOR_PATCH","CAPACITY_REQUIRED","HAS_QUOTA","COST_TO_SERVE","LOST_TO_COMPETITOR","DEMAND_SIGNAL","EXPERT_IN","SIMILAR_USE_CASE","ENABLEMENT_REPORT_FOR","TRAINING_ON_MODULE","FEEDBACK_FROM","ENROLLED_IN","ATTENDED_TRAINING","COURSE_HAS_ASSIGNMENT","ASSIGNMENT_FOR_STAFF","HAS_SALARY","HAS_ATTENDANCE","HAS_PIP","APPROVED_BY_MANAGER","EXPENSE_FOR_ACCOUNT","HAS_LEAVE","REIMBURSEMENT_INCLUDES","CLAIMED_BY","SCENARIO_FOR_MODULE","CASE_VERIFIES","REPORT_COVERS_SCENARIO","COVERAGE_OF","SCENARIO_FOR_ACCOUNT","REPORT_FOR_RELEASE","LLM_COST_FOR_MODEL","SCENARIO_HAS_CASE","LLM_COST_FOR_AGENT","AGENT_DEPLOYED_AS_ASSET","SERVICE_OWNED_BY","SERVICE_IN_ENVIRONMENT","LLM_COST_FOR_ACCOUNT","MODEL_FROM_PROVIDER","INCIDENT_ROOT_CAUSE","INCIDENT_IMPACTS","COST_FOR_SERVICE","ALERT_ON","SHARED_WITH","ALERT_RAISED_IN","HAS_LATENCY","HAS_HEALTH","CONSUMES_RESOURCE","COST_FOR_CLOUD","SERVICE_RUNS_ON","SERVICE_USES_INFRA","ONBOARDING_FOR","QBR_COVERS","SPECIFIES","RFC_FOR","CASE_STUDY_ABOUT","RESPONDS_TO","RCA_FOR_INCIDENT","INVOICE_FOR_MILESTONE","SOW_UNDER_MSA","ORDER_UNDER_MSA","INVOICE_UNDER_ORDER","DOC_FOR_ACCOUNT","OPP_FOR_PRODUCT","LEAD_CONVERTS_TO","OWNED_BY","DECISION_AFFECTS","HAS_OPPORTUNITY","CO_SELL_WITH","CLIENT_TASK_OWNER","HAS_MILESTONE","HAS_CLIENT_TASK","SOURCED_BY_PARTNER","TASK_FOR_USE_CASE","UTILISATION_ON","HAS_DESIGN","OBJECTIVE_DRIVES","HAS_IMPACT","HAS_CHANGE_REQUEST","CR_CREATES_TASK","HAS_RISK","ESCALATION_ABOUT","HAS_ADOPTION","HAS_OBJECTIVE","HAS_RAG","HAS_ESCALATION","ENV_ON_CLOUD","ENV_RUNS_RELEASE","ASSET_BUILT_ON","FR_RAISED_BY_ACCOUNT","HAS_USE_CASE","COMMITMENT_FOR","ASSET_RUNS_IN","AT_STAGE","FR_FULFILLED_BY","HAS_ENVIRONMENT","COMPETES_WITH","BUILT_WITH","COVERS_COMPETITOR","COMMITTED_TO","ROADMAP_HAS_COMMITMENT","SHIPPED_IN","ON_ROADMAP","RELEASE_OF","MITIGATES","HAS_SUB_MODULE","FOUND_BY","HAS_MODULE","REGRESSION_FROM","ESCALATED_TO","BLOCKS","AFFECTS_ACCOUNT","AFFECTS_MODULE","TOUCHES_SERVICE","PLANNED_FOR_RELEASE","TARGETS_MILESTONE","HAS_COMMENT","RAISED_BY_CLIENT","RAISED_BY_STAFF","ON_BOARD","RESOLVES_TICKET","LOGGED_ON","STORED_IN","HAS_CHANGELOG","AGENT_USES_MODEL","ACCOUNT_AT_RISK","AUTHORED_PR","HAS_ATTACHMENT","HAS_IDENTITY","PIPELINE_COVERAGE","ORDER_FROM_OPPORTUNITY","ATTENDED_BY","AUTHORED_BY","HAS_TRANSCRIPT","STAFFED_ON","LEAD_RESOLVES_TO","UCB_SCOPES_USE_CASE","HAS_UTILIZATION","PERF_FEEDBACK_ON","REPLY_IN","HAS_THREAD","PARTNER_ON_ACCOUNT","PERF_FEEDBACK_BY","HAS_EMPLOYEE_DETAILS","HIERARCHY_TO_MANAGER","BELONGS_TO_ACCOUNT","POSTED_IN","HAS_HIERARCHY","ESCALATION_REALISES_RISK"],"nodes":[["Commit",5,41839,2652,1327],["Release",5,95,2781,1118],["Tags",5,131,2719,1224],["Deployment",5,25,2580,1427],["Identity",1,273,3003,545],["Microservice",6,2,3029,425],["Approvers",1,59260,2970,664],["Review Comments",5,54539,2932,781],["Branch",5,33257,2837,1008],["Enablement Report",2,0,428,1140],["Assignments",2,0,162,1211],["Training Sessions",2,0,-112,1222],["Courses",2,0,-383,1173],["Customer Feedback",0,1632,-458,-232],["Incident",4,12,-127,869],["Performance Feedback",2,0,1152,-446],["Attendance",2,0,1191,-314],["Salary",2,0,1216,-178],["Partners",0,223,273,-401],["Employee Details",1,0,1225,-41],["Hierarchy",1,0,1198,233],["PIP",2,0,1162,366],["Leaves",2,0,1112,494],["Reimbursement",2,0,1048,616],["Hotel Expense",2,0,882,835],["Flight Expenses",2,0,782,930],["Office Expenses",2,0,554,1083],["Other",3,17519,398,-1201],["MAAC",3,7,525,-1147],["Onboarding Documents",3,1210,971,730],["NDA",3,40,859,144],["Slides",3,760,824,274],["Case Study / Client Shared Notes",3,93,698,511],["QBR",3,221,275,349],["RCA",3,102,757,-1000],["RFP",3,55,770,397],["RFI",3,61,800,-384],["RFC",3,9,645,-1080],["Order Form",3,42,372,244],["MSA",3,10,434,115],["SOW",3,37,455,-26],["PRD",3,183,874,10],["BRD",3,287,869,-124],["Tracker",3,3412,845,-257],["Invoice",3,1317,433,-168],["OEP",3,2,131,-1265],["UCB",3,4,266,-1241],["Account Research",0,38,149,-472],["Account Plan",0,8,9,-504],["Partner Member",1,39,738,-503],["Marketing Campaign",0,0,209,-894],["Quota",0,0,77,-919],["Patch",5,0,-280,-1249],["Sales Partners",0,0,455,-786],["Cloud Partners",0,0,658,-611],["Leads",0,0,-266,-440],["Opportunity",0,0,-378,-350],["Decisions",0,1486,-321,-875],["Account Objective",0,547,-133,-493],["Feature Request",4,388,-850,334],["Figma Design Link / Prototype Link",3,0,-6,-1275],["Environment",5,4,-820,-447],["FDE Utilisations",2,4,-924,-60],["Tasks",4,13237,-895,207],["Impact - ROI",0,134,-909,-194],["Adoption",0,123,-874,-324],["Use Case Stage",0,792,-748,-561],["UA Assets",5,0,-660,-662],["Use Case",0,5893,-457,185],["Change Request",4,312,-558,-750],["Client Tasks",4,289,-444,-821],["Risk",4,3865,-919,74],["Escalation",0,183,-499,48],["RAG Status - Health Score",0,68,-500,-95],["Battlecard",0,35,563,-706],["Competitor",0,111,336,-849],["Commitment",0,614,-191,-910],["Roadmap",5,27,-788,453],["Release",5,46,-505,736],["Sub Module",5,0,-978,-834],["Module",5,1,-259,844],["Product",5,0,-376,303],["Test Scenario",5,0,-542,-1163],["Test Case",5,0,-664,-1100],["Coverage",5,0,-144,-1269],["QA Report",5,0,-413,-1213],["Microservice Health",6,0,-249,1205],["Alert",6,0,-513,1126],["Agent",6,0,-860,905],["LLM Cost",6,0,-636,1065],["Model",6,0,-752,992],["Provider",6,0,-957,808],["Service Latency",6,0,-1043,700],["Resources",6,0,-1177,460],["Microservice",6,355,25,1224],["Cloud Cost",6,0,-1223,330],["Infra Service",6,0,-1272,60],["Cloud",6,0,-1274,-78],["Milestone",4,1540,-57,-924],["Comments",4,33905,1219,97],["Board",4,80,672,1013],["Ops Task / IT",4,579,-1117,584],["Security Ticket",4,1447,7,874],["L3 / Support Ticket",4,364,-264,391],["Feature",4,6790,-386,799],["Regression",4,401,-1260,-215],["Bug",4,22562,2436,10],["Enhancements",4,4408,-613,656],["Builds",5,36,-1232,-350],["Changelog",5,3,-1189,-481],["Pull Request",5,61760,-1255,196],["Activity",4,21430,297,1183],["Gdrive",3,24575,610,612],["Email",7,10105,-86,-143],["Thread",7,880,860,-908],["Channel",7,8,952,-805],["Message",7,10481,508,700],["Meeting Call Transcript",7,1345,394,771],["Meeting",7,0,12,454],["Contact",1,2012,371,-297],["Identity",1,350,1032,-693],["Contractor",1,38,141,860],["Employee",1,1232,-130,443],["Account",0,721,-2,-53]],"edges":[[110,5,0],[110,4,1],[110,8,2],[110,7,3],[110,6,4],[110,0,5],[2,1,6],[1,8,7],[2,0,8],[3,0,9],[8,0,10],[102,107,11],[101,105,11],[101,106,11],[101,102,11],[101,104,11],[101,107,11],[101,103,11],[102,101,11],[102,104,11],[102,105,11],[102,106,11],[103,102,11],[103,101,11],[104,102,11],[103,106,11],[103,105,11],[102,103,11],[105,104,11],[103,107,11],[104,106,11],[105,101,11],[104,103,11],[104,107,11],[104,101,11],[104,105,11],[103,104,11],[105,106,11],[105,102,11],[105,103,11],[105,107,11],[106,102,11],[106,103,11],[106,101,11],[106,105,11],[107,103,11],[106,107,11],[107,104,11],[107,101,11],[107,106,11],[107,105,11],[107,102,11],[106,104,11],[47,117,12],[47,112,12],[47,113,12],[13,59,13],[13,106,13],[13,107,13],[13,68,14],[13,80,14],[13,81,14],[87,14,15],[13,78,14],[55,123,16],[56,59,17],[57,113,18],[57,116,18],[57,117,18],[59,80,19],[105,14,20],[59,79,19],[59,59,21],[102,102,11],[103,14,20],[106,14,20],[101,101,11],[106,106,11],[103,103,11],[105,105,11],[107,107,11],[104,104,11],[69,122,22],[71,122,22],[71,49,22],[69,121,22],[69,49,22],[70,49,22],[71,121,22],[70,122,22],[63,122,22],[101,49,22],[101,122,22],[104,122,22],[70,121,22],[102,122,22],[103,122,22],[105,122,22],[103,121,22],[63,49,22],[105,49,22],[101,121,22],[63,121,22],[102,49,22],[104,49,22],[105,121,22],[102,121,22],[103,49,22],[104,121,22],[106,49,22],[106,121,22],[106,122,22],[107,49,22],[107,122,22],[107,121,22],[71,116,23],[57,117,23],[57,116,23],[71,117,23],[57,113,23],[71,113,23],[72,116,23],[72,117,23],[72,113,23],[59,117,23],[101,116,23],[59,116,23],[104,116,23],[101,117,23],[105,116,23],[102,117,23],[59,113,23],[103,113,23],[103,117,23],[102,116,23],[102,113,23],[101,113,23],[103,116,23],[104,113,23],[104,117,23],[105,117,23],[105,113,23],[107,117,23],[106,116,23],[117,49,24],[107,116,23],[117,75,24],[107,113,23],[106,113,23],[117,78,24],[117,80,24],[117,121,24],[117,68,24],[117,119,24],[106,117,23],[117,122,24],[113,49,24],[113,78,24],[113,80,24],[117,123,24],[113,68,24],[113,122,24],[116,68,24],[116,122,24],[113,123,24],[113,121,24],[116,49,24],[113,75,24],[116,75,24],[116,121,24],[116,119,24],[116,78,24],[116,123,24],[116,80,24],[113,119,24],[51,56,25],[47,123,26],[48,58,27],[113,123,28],[118,123,28],[48,123,29],[114,123,28],[49,123,30],[116,123,28],[122,123,30],[121,123,30],[110,122,31],[63,101,32],[63,102,32],[101,105,32],[63,105,32],[63,107,32],[63,103,32],[101,63,32],[63,106,32],[63,104,32],[101,104,32],[101,103,32],[101,107,32],[101,102,32],[101,106,32],[102,101,32],[102,103,32],[102,63,32],[103,102,32],[103,101,32],[102,107,32],[104,103,32],[103,107,32],[103,105,32],[103,104,32],[102,104,32],[103,106,32],[104,63,32],[102,105,32],[104,102,32],[103,63,32],[104,101,32],[102,106,32],[104,105,32],[104,106,32],[105,63,32],[104,107,32],[105,103,32],[105,101,32],[105,104,32],[105,102,32],[105,107,32],[105,106,32],[106,63,32],[106,102,32],[106,101,32],[106,104,32],[106,103,32],[107,101,32],[106,105,32],[107,63,32],[107,102,32],[107,106,32],[37,35,33],[107,103,32],[106,107,32],[37,41,33],[37,38,33],[107,104,32],[107,105,32],[37,33,33],[37,42,33],[37,34,33],[37,32,33],[37,36,33],[37,44,33],[37,40,33],[37,43,33],[37,45,33],[37,46,33],[37,30,33],[41,42,33],[37,28,33],[41,37,33],[37,27,33],[41,36,33],[41,44,33],[37,39,33],[41,35,33],[41,34,33],[37,31,33],[41,33,33],[41,32,33],[41,40,33],[41,46,33],[41,28,33],[41,27,33],[41,45,33],[41,38,33],[41,43,33],[41,31,33],[42,34,33],[42,41,33],[42,32,33],[42,33,33],[42,37,33],[42,38,33],[41,39,33],[41,30,33],[42,40,33],[42,46,33],[42,27,33],[42,35,33],[42,36,33],[42,45,33],[42,31,33],[42,44,33],[42,28,33],[42,43,33],[42,30,33],[32,41,33],[42,39,33],[32,37,33],[32,42,33],[32,36,33],[32,34,33],[32,38,33],[32,27,33],[32,35,33],[32,33,33],[32,45,33],[32,31,33],[32,28,33],[32,30,33],[32,44,33],[32,40,33],[34,42,33],[32,46,33],[34,37,33],[34,36,33],[32,39,33],[34,33,33],[32,43,33],[34,38,33],[34,32,33],[34,35,33],[34,45,33],[34,41,33],[34,40,33],[34,44,33],[34,46,33],[34,27,33],[34,43,33],[34,31,33],[34,28,33],[34,39,33],[34,30,33],[36,37,33],[36,32,33],[36,42,33],[36,33,33],[36,30,33],[36,41,33],[36,44,33],[36,38,33],[36,31,33],[36,34,33],[36,40,33],[36,35,33],[36,39,33],[36,43,33],[36,46,33],[36,45,33],[36,27,33],[35,41,33],[36,28,33],[35,32,33],[35,40,33],[35,42,33],[35,38,33],[35,45,33],[35,44,33],[35,36,33],[35,27,33],[35,37,33],[35,30,33],[35,33,33],[35,34,33],[33,37,33],[35,43,33],[35,28,33],[35,46,33],[33,42,33],[35,39,33],[33,41,33],[33,34,33],[35,31,33],[33,44,33],[33,32,33],[33,35,33],[33,36,33],[33,38,33],[33,40,33],[33,45,33],[33,28,33],[33,46,33],[33,31,33],[44,38,33],[44,37,33],[44,42,33],[44,33,33],[33,30,33],[33,39,33],[44,40,33],[44,32,33],[44,34,33],[44,46,33],[44,35,33],[44,28,33],[44,41,33],[33,27,33],[33,43,33],[44,36,33],[44,27,33],[44,43,33],[44,45,33],[44,31,33],[44,30,33],[38,34,33],[38,42,33],[38,41,33],[38,37,33],[38,36,33],[38,32,33],[38,27,33],[44,39,33],[38,35,33],[38,28,33],[38,33,33],[38,44,33],[38,40,33],[38,39,33],[38,46,33],[38,45,33],[38,43,33],[38,31,33],[38,30,33],[40,32,33],[40,41,33],[40,37,33],[40,35,33],[40,34,33],[40,42,33],[40,44,33],[40,38,33],[40,45,33],[40,36,33],[40,27,33],[40,30,33],[40,33,33],[40,28,33],[40,46,33],[40,31,33],[45,33,33],[45,37,33],[45,41,33],[40,43,33],[45,32,33],[45,42,33],[45,34,33],[45,35,33],[40,39,33],[45,44,33],[45,36,33],[45,46,33],[45,38,33],[45,43,33],[45,28,33],[45,27,33],[45,39,33],[45,31,33],[45,30,33],[46,33,33],[46,41,33],[45,40,33],[46,45,33],[46,35,33],[46,36,33],[46,37,33],[46,42,33],[46,34,33],[46,27,33],[46,40,33],[46,32,33],[46,38,33],[46,44,33],[46,43,33],[46,28,33],[46,31,33],[46,30,33],[46,39,33],[27,32,33],[27,41,33],[27,42,33],[27,33,33],[27,37,33],[27,44,33],[27,45,33],[27,35,33],[27,40,33],[27,36,33],[27,28,33],[27,31,33],[27,46,33],[27,43,33],[27,34,33],[27,30,33],[27,38,33],[28,41,33],[27,39,33],[28,42,33],[28,37,33],[28,34,33],[28,32,33],[28,36,33],[28,35,33],[28,44,33],[28,39,33],[28,46,33],[28,30,33],[31,37,33],[28,27,33],[28,45,33],[28,31,33],[28,40,33],[28,33,33],[31,32,33],[28,43,33],[31,41,33],[28,38,33],[31,33,33],[31,42,33],[31,36,33],[31,44,33],[31,46,33],[31,35,33],[31,34,33],[31,38,33],[31,28,33],[31,45,33],[31,40,33],[31,30,33],[31,43,33],[43,37,33],[43,44,33],[31,27,33],[43,35,33],[43,41,33],[43,40,33],[43,32,33],[43,36,33],[31,39,33],[43,45,33],[43,42,33],[43,27,33],[43,46,33],[43,34,33],[43,38,33],[43,28,33],[43,33,33],[43,31,33],[43,39,33],[30,42,33],[43,30,33],[30,37,33],[30,41,33],[30,35,33],[39,36,33],[30,43,33],[39,34,33],[30,33,33],[30,27,33],[39,33,33],[30,36,33],[30,45,33],[30,28,33],[39,42,33],[30,44,33],[30,40,33],[30,46,33],[39,32,33],[30,39,33],[30,34,33],[39,35,33],[30,32,33],[39,44,33],[30,38,33],[39,38,33],[39,37,33],[39,41,33],[39,40,33],[30,31,33],[39,46,33],[27,123,34],[39,27,33],[42,123,34],[35,123,34],[39,45,33],[36,123,34],[41,123,34],[40,123,34],[39,28,33],[45,123,34],[39,31,33],[46,123,34],[39,43,33],[39,30,33],[33,123,34],[32,123,34],[34,123,34],[38,123,34],[37,123,34],[31,123,34],[44,123,34],[28,123,34],[43,123,34],[50,55,35],[45,56,36],[49,56,37],[49,54,38],[50,123,39],[56,119,40],[52,122,41],[46,56,42],[50,56,43],[123,52,44],[51,52,45],[49,53,38],[49,18,38],[56,62,46],[122,51,47],[123,62,48],[56,75,49],[123,24,48],[123,89,48],[123,95,48],[80,123,50],[123,25,48],[121,68,51],[49,68,51],[68,68,52],[49,80,51],[122,80,51],[49,94,51],[121,80,51],[122,68,51],[9,122,53],[121,94,51],[12,81,54],[13,123,55],[9,121,53],[13,119,55],[12,80,54],[9,12,53],[11,80,54],[11,81,54],[121,12,56],[121,11,57],[122,11,57],[12,10,58],[10,121,59],[122,17,60],[121,16,61],[10,122,59],[122,12,56],[122,21,62],[122,16,61],[23,122,63],[25,123,64],[24,123,64],[122,22,65],[23,24,66],[24,122,67],[24,121,67],[26,121,67],[25,122,67],[23,122,67],[23,25,66],[26,122,67],[25,121,67],[82,79,68],[23,121,67],[83,105,69],[85,82,70],[83,106,69],[83,104,69],[84,79,71],[84,123,71],[82,123,72],[83,107,69],[85,78,73],[84,80,71],[82,80,68],[89,90,74],[82,83,75],[89,88,76],[88,67,77],[94,122,78],[94,61,79],[89,123,80],[90,91,81],[14,78,82],[14,68,83],[94,121,78],[14,94,82],[14,110,82],[14,61,83],[95,96,84],[14,123,83],[87,94,85],[41,119,86],[87,115,87],[94,92,88],[94,86,89],[94,93,90],[95,97,91],[94,97,92],[94,96,93],[32,119,86],[95,94,84],[87,96,85],[33,119,86],[34,119,86],[42,119,86],[36,119,86],[44,119,86],[35,119,86],[38,119,86],[40,119,86],[45,119,86],[46,119,86],[27,119,86],[31,119,86],[28,119,86],[30,119,86],[43,119,86],[42,42,33],[39,119,86],[37,37,33],[41,41,33],[34,34,33],[36,36,33],[35,35,33],[32,32,33],[33,33,33],[40,40,33],[46,46,33],[44,44,33],[27,27,33],[38,38,33],[45,45,33],[31,31,33],[28,28,33],[43,43,33],[30,30,33],[29,122,94],[33,123,95],[29,121,94],[39,39,33],[42,80,96],[37,80,97],[37,69,97],[32,68,98],[33,65,95],[32,123,98],[36,56,99],[34,14,100],[33,64,95],[42,68,96],[42,104,96],[44,98,101],[35,56,99],[41,80,96],[41,104,96],[40,39,102],[38,39,103],[41,68,96],[44,38,104],[31,123,105],[27,123,105],[28,123,105],[56,81,106],[30,123,105],[39,123,105],[55,56,107],[43,123,105],[56,122,108],[57,56,109],[123,56,110],[56,54,111],[70,119,112],[123,98,113],[123,70,114],[56,53,115],[63,68,116],[57,68,109],[57,63,109],[62,123,117],[68,60,118],[57,123,109],[58,98,119],[123,64,120],[68,69,121],[69,63,122],[58,68,119],[58,57,119],[68,71,123],[72,102,124],[68,65,125],[72,103,124],[72,105,124],[123,58,126],[72,68,124],[72,106,124],[72,14,124],[78,71,123],[72,98,124],[68,64,120],[123,73,127],[123,72,128],[123,71,123],[61,97,129],[61,78,130],[98,71,123],[67,79,131],[59,123,132],[123,68,133],[76,78,134],[67,61,135],[68,66,136],[59,104,137],[67,80,131],[123,61,138],[81,75,139],[76,68,134],[59,107,137],[76,80,134],[68,67,140],[74,75,141],[76,104,134],[76,123,142],[77,76,143],[102,78,144],[59,77,145],[78,81,146],[106,78,144],[63,71,147],[105,78,144],[80,77,145],[104,77,145],[80,79,148],[107,78,144],[106,85,149],[104,78,144],[105,85,149],[81,80,150],[105,78,151],[103,72,152],[63,63,32],[102,102,32],[101,101,32],[70,68,153],[104,104,32],[105,105,32],[70,63,153],[103,103,32],[70,98,153],[106,106,32],[107,107,32],[103,123,154],[102,123,154],[105,123,154],[59,80,155],[104,123,154],[71,79,155],[107,123,154],[106,123,154],[102,79,155],[103,79,155],[105,80,155],[71,80,155],[102,80,155],[59,79,155],[105,79,155],[107,79,155],[103,80,155],[104,80,155],[104,79,155],[106,80,155],[106,79,155],[110,94,156],[104,78,157],[102,78,157],[107,80,155],[107,78,157],[104,98,158],[106,78,157],[70,99,159],[105,78,157],[63,98,158],[103,78,157],[68,98,158],[103,98,158],[102,98,158],[107,98,158],[106,98,158],[101,98,158],[101,99,159],[105,98,158],[63,99,159],[102,99,159],[104,99,159],[106,119,160],[103,99,159],[103,119,160],[106,99,159],[69,119,160],[101,49,161],[72,119,160],[102,119,160],[59,119,160],[101,122,161],[105,119,160],[103,49,161],[102,122,161],[102,49,161],[107,99,159],[105,99,159],[101,121,161],[107,119,160],[103,121,161],[102,121,161],[103,122,161],[106,49,161],[104,121,161],[105,122,161],[104,122,161],[106,122,161],[104,49,161],[107,49,161],[106,121,161],[105,121,161],[105,49,161],[107,122,161],[107,121,161],[70,100,162],[102,100,162],[103,100,162],[101,100,162],[106,100,162],[107,100,162],[63,100,162],[110,102,163],[105,100,162],[104,100,162],[110,105,163],[110,104,163],[110,103,163],[110,107,163],[111,110,164],[111,101,164],[111,68,164],[42,112,165],[111,104,164],[110,106,163],[32,112,165],[111,105,164],[111,106,164],[111,102,164],[111,63,164],[111,103,164],[111,107,164],[37,112,165],[111,69,164],[29,112,165],[36,112,165],[111,70,164],[41,112,165],[34,112,165],[44,112,165],[45,112,165],[38,112,165],[40,112,165],[33,112,165],[35,112,165],[46,112,165],[28,112,165],[39,112,165],[31,112,165],[43,112,165],[30,112,165],[27,112,165],[122,94,51],[78,109,166],[88,90,167],[123,71,168],[110,122,169],[110,121,169],[110,49,169],[113,41,170],[121,120,171],[113,37,170],[113,32,170],[113,34,170],[113,29,170],[113,36,170],[113,42,170],[113,33,170],[113,44,170],[113,30,170],[113,38,170],[113,35,170],[116,29,170],[113,28,170],[113,31,170],[52,51,172],[113,39,170],[113,27,170],[113,46,170],[113,40,170],[113,45,170],[113,43,170],[38,56,173],[116,36,170],[116,40,170],[116,42,170],[116,37,170],[116,34,170],[116,27,170],[116,45,170],[116,31,170],[116,44,170],[116,33,170],[116,41,170],[116,35,170],[116,46,170],[116,38,170],[116,32,170],[116,30,170],[116,28,170],[116,43,170],[116,39,170],[118,122,174],[30,123,34],[118,119,174],[118,49,174],[119,120,171],[118,121,174],[39,123,34],[13,119,175],[55,120,171],[49,120,171],[122,120,171],[118,117,176],[13,121,175],[13,122,175],[13,49,175],[99,121,175],[121,123,177],[99,119,175],[113,49,175],[55,119,178],[113,119,175],[99,49,175],[99,122,175],[49,123,177],[46,68,179],[113,122,175],[49,68,177],[113,121,175],[116,119,175],[122,123,177],[116,49,175],[116,121,175],[121,68,177],[121,62,180],[116,122,175],[49,62,180],[15,122,181],[122,62,180],[122,68,177],[116,114,182],[116,114,183],[18,123,184],[15,122,185],[122,19,186],[20,122,187],[119,123,188],[116,115,189],[122,20,190],[72,71,191]],"families":[{"name":"Travel expenses","members":[24,25]},{"name":"Document types","members":[27,28,30,31,43,39,32,33,34,35,36,40,41,42,45,44,46,37]},{"name":"Ticket types","members":[102,103,105,106,104,107]},{"name":"Email & Message","members":[113,116]}]};
+</script>
+<script>
+(() => {
+  const { domains, labels, nodes, edges, families } = ECG;
+  const N = nodes.length;
+  const NAME = i => nodes[i][0];
+  const DOM = i => nodes[i][1];
+  const REC = i => nodes[i][2];
+  const famOf = new Array(N).fill(-1);
+  families.forEach((f, fi) => f.members.forEach(m => { famOf[m] = fi; }));
+  const deg = new Array(N).fill(0);
+  for (const [s, t] of edges) { deg[s]++; deg[t]++; }
+  const fmt = n => n.toLocaleString('en-US');
+  const compact = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'k' : String(n);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent, text) {
+    const e = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function h(tag, cls, parent, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  const truncate = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+
+  const tip = document.getElementById('tip');
+  function showTip(html, ev) { tip.innerHTML = html; tip.hidden = false; moveTip(ev); }
+  function moveTip(ev) {
+    const pad = 14; const r = tip.getBoundingClientRect();
+    let x = ev.clientX + pad, y = ev.clientY + pad;
+    if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - pad;
+    if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - pad;
+    tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+  }
+  function hideTip() { tip.hidden = true; }
+  const topLabels = (map, k) => [...map].sort((a, b) => b[1] - a[1]).slice(0, k).map(([l, c]) => `<span class="k">${esc(l)}</span> ${c}`).join(' · ');
+
+  /* ---------- 1. Today ---------- */
+  (function today() {
+    const svg = document.getElementById('today-svg');
+    const xs = nodes.map(n => n[3] + 24), ys = nodes.map(n => n[4] + 24);
+    const minX = Math.min(...xs) - 60, maxX = Math.max(...xs) + 60, minY = Math.min(...ys) - 60, maxY = Math.max(...ys) + 60;
+    svg.setAttribute('viewBox', `${minX} ${minY} ${maxX - minX} ${maxY - minY}`);
+    const g = el('g', { class: 'today-edges' }, svg);
+    for (const [s, t] of edges) if (s !== t) el('line', { x1: xs[s], y1: ys[s], x2: xs[t], y2: ys[t] }, g);
+    const PAL = ['#5B8DB8', '#8E6BB0', '#C2697A', '#5FA37A', '#C98A4B', '#6F7F8F', '#B85C5C', '#4FA3A5', '#9A8B5B', '#7D6BC2'];
+    const r = (maxX - minX) / 150;
+    nodes.forEach((n, i) => el('circle', { cx: xs[i], cy: ys[i], r, fill: PAL[(i * 7) % PAL.length] }, svg));
+  })();
+
+  /* ---------- 2. Matrix ---------- */
+  (function matrix() {
+    const order = [...Array(N).keys()].sort((a, b) =>
+      DOM(a) - DOM(b) || (famOf[a] < 0) - (famOf[b] < 0) || famOf[a] - famOf[b] || deg[b] - deg[a]);
+    const pos = new Array(N); order.forEach((n, i) => { pos[n] = i; });
+    const C = 5, L = 118, T = 14, S = N * C, NOTE = 250;
+    const W = L + S + NOTE, H = T + S + 12;
+    const svg = document.getElementById('matrix-svg');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    el('rect', { x: L, y: T, width: S, height: S, class: 'm-bg' }, svg);
+    let start = 0;
+    domains.forEach((d, di) => {
+      const count = order.filter(n => DOM(n) === di).length;
+      el('rect', { x: L + start * C, y: T - 7, width: count * C - 1, height: 4, class: 'fill' + di }, svg);
+      el('rect', { x: L - 7, y: T + start * C, width: 4, height: count * C - 1, class: 'fill' + di }, svg);
+      el('text', { x: L - 11, y: T + (start + count / 2) * C + 3, 'text-anchor': 'end', class: 'm-dom' }, svg, `${d} (${count})`);
+      if (start > 0) {
+        el('line', { x1: L + start * C, y1: T, x2: L + start * C, y2: T + S, class: 'm-sep' }, svg);
+        el('line', { x1: L, y1: T + start * C, x2: L + S, y2: T + start * C, class: 'm-sep' }, svg);
+      }
+      start += count;
+    });
+    const cell = new Map();
+    for (const [s, t, l] of edges) { const k = s * N + t; if (!cell.has(k)) cell.set(k, []); cell.get(k).push(labels[l]); }
+    const g = el('g', {}, svg);
+    for (const [k, ls] of cell) {
+      const s = Math.floor(k / N), t = k % N;
+      const r = el('rect', { x: L + pos[t] * C + 0.3, y: T + pos[s] * C + 0.3, width: C - 0.6, height: C - 0.6, class: 'm-cell', 'fill-opacity': Math.min(1, 0.42 + 0.22 * (ls.length - 1)) }, g);
+      r.dataset.k = k;
+    }
+    g.addEventListener('pointermove', ev => {
+      const k = ev.target.dataset && ev.target.dataset.k;
+      if (!k) { hideTip(); return; }
+      const s = Math.floor(k / N), t = k % N;
+      showTip(`<b>${esc(NAME(s))}</b> → <b>${esc(NAME(t))}</b><br><span class="k">${cell.get(+k).map(esc).join(', ')}</span>`, ev);
+    });
+    g.addEventListener('pointerleave', hideTip);
+    // Callouts for family-wide blocks
+    const span = idxs => { const p = idxs.map(i => pos[i]); return [Math.min(...p), Math.max(...p)]; };
+    const docFam = families.findIndex(f => f.name === 'Document types');
+    const tickFam = families.findIndex(f => f.name === 'Ticket types');
+    const mailFam = families.findIndex(f => f.name === 'Email & Message');
+    const notes = [];
+    if (docFam >= 0) { const [a, b] = span(families[docFam].members); notes.push({ x0: a, x1: b, y0: a, y1: b, text: ['Document types × document types', 'SUPERSEDES, 361 edges'] }); }
+    if (tickFam >= 0) { const [a, b] = span(families[tickFam].members); notes.push({ x0: a, x1: b, y0: a, y1: b, text: ['Ticket types × ticket types', 'PARENT_OF, DUPLICATE_OF'] }); }
+    if (mailFam >= 0 && docFam >= 0) { const [ya, yb] = span(families[mailFam].members); const [xa, xb] = span(families[docFam].members); notes.push({ x0: xa, x1: xb, y0: ya, y1: yb, text: ['Email, Message → document types', 'HAS_ATTACHMENT'] }); }
+    notes.sort((p, q) => p.y0 - q.y0);
+    let lastY = -Infinity;
+    for (const n of notes) {
+      const bx = L + n.x0 * C, by = T + n.y0 * C, bw = (n.x1 - n.x0 + 1) * C, bh = (n.y1 - n.y0 + 1) * C;
+      el('rect', { x: bx - 1, y: by - 1, width: bw + 2, height: bh + 2, class: 'm-block', rx: 1.5 }, svg);
+      let ty = Math.max(by + bh / 2, lastY + 30); lastY = ty;
+      const tx = L + S + 18;
+      el('path', { d: `M${bx + bw + 1},${by + bh / 2} L${L + S + 8},${ty} L${tx - 4},${ty}`, class: 'm-lead' }, svg);
+      const t = el('text', { x: tx, y: ty - 2, class: 'm-note' }, svg);
+      el('tspan', { x: tx, dy: 0 }, t, n.text[0]);
+      el('tspan', { x: tx, dy: 12, class: 'k' }, t, n.text[1]);
+    }
+  })();
+
+  /* ---------- 3a. Domain map ---------- */
+  (function domainMap() {
+    const wrap = document.getElementById('dm');
+    const detail = document.getElementById('dm-detail');
+    const svg = el('svg', { viewBox: '0 0 1000 640', class: 'dm-svg', preserveAspectRatio: 'none' }, wrap);
+    const CENTER = domains.indexOf('Work items');
+    const ring = ['Documents', 'Conversations', 'People', 'HR & spend', 'Platform & cost', 'Product & code', 'Customers & revenue'].map(d => domains.indexOf(d));
+    const P = []; P[CENTER] = [500, 320];
+    ring.forEach((d, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / ring.length; P[d] = [500 + 385 * Math.cos(a), 320 + 238 * Math.sin(a)]; });
+    const members = domains.map((_, di) => nodes.map((_, i) => i).filter(i => DOM(i) === di));
+    const pairs = new Map();
+    for (const [s, t, l] of edges) {
+      const a = Math.min(DOM(s), DOM(t)), b = Math.max(DOM(s), DOM(t)); const k = a + '|' + b;
+      if (!pairs.has(k)) pairs.set(k, { a, b, count: 0, labels: new Map() });
+      const p = pairs.get(k); p.count++; p.labels.set(labels[l], (p.labels.get(labels[l]) || 0) + 1);
+    }
+    const bands = [];
+    const gB = el('g', {}, svg), gP = el('g', {}, svg);
+    for (const p of pairs.values()) {
+      if (p.a === p.b) continue;
+      const [x1, y1] = P[p.a], [x2, y2] = P[p.b];
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dist = Math.hypot(x2 - x1, y2 - y1);
+      let cx, cy;
+      if (p.a === CENTER || p.b === CENTER) { const nx = -(y2 - y1) / dist, ny = (x2 - x1) / dist; cx = mx + nx * 26; cy = my + ny * 26; }
+      else { let vx = mx - 500, vy = my - 320; const vl = Math.hypot(vx, vy) || 1; const push = dist > 500 ? 0.2 * dist + 40 : 0.12 * dist; cx = mx + vx / vl * push; cy = my + vy / vl * push; }
+      const path = el('path', { d: `M${x1},${y1} Q${cx},${cy} ${x2},${y2}`, class: 'dm-band', 'stroke-width': (1.5 + Math.sqrt(p.count) * 1.35).toFixed(1) }, gB);
+      const lx = 0.25 * x1 + 0.5 * cx + 0.25 * x2, ly = 0.25 * y1 + 0.5 * cy + 0.25 * y2;
+      const pill = el('g', { class: 'dm-pill', transform: `translate(${lx.toFixed(1)},${ly.toFixed(1)})` }, gP);
+      el('circle', { r: 12 }, pill); el('text', {}, pill, String(p.count));
+      const tipHtml = `<b>${esc(domains[p.a])} ↔ ${esc(domains[p.b])}</b> · ${p.count} edges<br>${topLabels(p.labels, 5)}`;
+      for (const target of [path, pill]) {
+        target.addEventListener('pointermove', ev => showTip(tipHtml, ev));
+        target.addEventListener('pointerleave', hideTip);
+      }
+      bands.push({ p, path, pill });
+    }
+    const tiles = [];
+    domains.forEach((d, di) => {
+      const recs = members[di].reduce((a, i) => a + REC(i), 0);
+      const inside = pairs.get(di + '|' + di);
+      const top = [...members[di]].sort((a, b) => REC(b) - REC(a)).slice(0, 3).map(NAME);
+      const btn = h('button', 'dm-tile' + (di === CENTER ? ' center' : ''), wrap);
+      btn.type = 'button'; btn.setAttribute('aria-pressed', 'false');
+      btn.style.left = (P[di][0] / 10) + '%'; btn.style.top = (P[di][1] / 6.4) + '%';
+      const nm = h('span', 'dm-name', btn); h('i', 'dot bg' + di, nm); h('span', '', nm, d);
+      h('span', 'dm-meta', btn, `${members[di].length} types · ${compact(recs)} records`);
+      h('span', 'dm-top', btn, top.join(' · '));
+      h('span', 'dm-int', btn, inside ? `${inside.count} edges inside` : 'no edges inside');
+      btn.addEventListener('click', () => select(btn.getAttribute('aria-pressed') === 'true' ? -1 : di));
+      tiles.push(btn);
+    });
+    function chipList(idxs, parent) {
+      const box = h('div', 'chips', parent); const seen = new Set();
+      for (const i of [...idxs].sort((a, b) => REC(b) - REC(a))) {
+        const f = famOf[i];
+        if (f >= 0) { if (seen.has(f)) continue; seen.add(f); const c = h('span', 'chip fam', box); h('i', 'dot bg' + DOM(i), c); h('span', 't', c, `${families[f].name} ×${families[f].members.length}`); c.title = families[f].members.map(NAME).join(', '); continue; }
+        const c = h('span', 'chip', box); h('i', 'dot bg' + DOM(i), c); h('span', 't', c, NAME(i));
+      }
+    }
+    function select(di) {
+      tiles.forEach((t, i) => { t.setAttribute('aria-pressed', String(i === di)); t.classList.toggle('dim', di >= 0 && i !== di); });
+      for (const b of bands) {
+        const on = di >= 0 && (b.p.a === di || b.p.b === di);
+        b.path.classList.toggle('on', on); b.path.classList.toggle('off', di >= 0 && !on); b.pill.classList.toggle('off', di >= 0 && !on);
+      }
+      detail.textContent = '';
+      if (di < 0) { h('p', 'muted', detail, 'Select any tile to list its relationships.'); return; }
+      const head = h('h4', '', detail); h('i', 'dot bg' + di, head); h('span', '', head, `${domains[di]}: ${members[di].length} types`);
+      chipList(members[di], detail);
+      const ul = h('ul', 'rel-list', detail);
+      const rows = [...pairs.values()].filter(p => p.a === di || p.b === di).sort((x, y) => y.count - x.count);
+      for (const p of rows) {
+        const li = h('li', '', ul);
+        const other = p.a === di ? p.b : p.a;
+        h('span', '', li, p.a === p.b ? `Inside · ${p.count}` : `${domains[other]} · ${p.count}`);
+        const l = h('span', 'lbls', li); l.textContent = [...p.labels].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([x, c]) => `${x} ${c}`).join(' · ');
+      }
+    }
+  })();
+
+  /* ---------- 3b. All types, bundled ---------- */
+  (function bundled() {
+    const svg = d3.select('#hb-svg');
+    const metric = document.getElementById('hb-metric');
+    const detail = document.getElementById('hb-detail');
+    const btnCollapse = document.getElementById('hb-collapse');
+    const btnBundle = document.getElementById('hb-bundle');
+    const state = { collapse: true, bundle: true, sticky: null };
+    const R = 245, OUT = R + 300;
+    svg.attr('viewBox', `${-OUT} ${-OUT + 20} ${OUT * 2} ${OUT * 2 - 40}`);
+
+    function build() {
+      const repOf = i => state.collapse && famOf[i] >= 0 ? 'f' + famOf[i] : 'n' + i;
+      const reps = new Map();
+      for (let i = 0; i < N; i++) {
+        const id = repOf(i);
+        if (!reps.has(id)) reps.set(id, { id, dom: DOM(i), members: [], fam: id[0] === 'f' ? famOf[i] : -1 });
+        reps.get(id).members.push(i);
+      }
+      for (const r of reps.values()) {
+        r.name = r.fam >= 0 ? `${families[r.fam].name} (${r.members.length})` : NAME(r.members[0]);
+        r.deg = r.members.reduce((a, i) => a + deg[i], 0);
+        r.rec = r.members.reduce((a, i) => a + REC(i), 0);
+      }
+      const root = { id: 'root', children: domains.map((d, di) => ({ id: 'd' + di, dom: di, children: [...reps.values()].filter(r => r.dom === di).sort((a, b) => (b.fam >= 0) - (a.fam >= 0) || b.deg - a.deg) })) };
+      const agg = new Map(), loops = new Map(), rels = new Map();
+      for (const [s, t, l] of edges) {
+        const a = repOf(s), b = repOf(t);
+        for (const [me, other, dir] of [[a, b, 'out'], [b, a, 'in']]) {
+          if (!rels.has(me)) rels.set(me, { out: new Map(), in: new Map() });
+          if (a === b && dir === 'in') continue;
+          const m = rels.get(me)[dir]; const key = labels[l];
+          if (!m.has(key)) m.set(key, new Set()); m.get(key).add(other);
+        }
+        if (a === b) { loops.set(a, (loops.get(a) || 0) + 1); continue; }
+        const [x, y] = a < b ? [a, b] : [b, a]; const k = x + '|' + y;
+        if (!agg.has(k)) agg.set(k, { a: x, b: y, ab: 0, ba: 0 });
+        const e = agg.get(k); if (a === x) e.ab++; else e.ba++;
+      }
+      return { root, agg, loops, reps, rels };
+    }
+
+    function render() {
+      svg.selectAll('*').remove();
+      const { root, agg, loops, reps, rels } = build();
+      const hier = d3.hierarchy(root);
+      d3.cluster().size([2 * Math.PI, R]).separation((a, b) => a.parent === b.parent ? 1 : 2.6)(hier);
+      const leafById = new Map(hier.leaves().map(l => [l.data.id, l]));
+      const line = d3.lineRadial().curve(d3.curveBundle.beta(state.bundle ? 0.85 : 0)).radius(d => d.y).angle(d => d.x);
+      const links = [...agg.values()];
+      const gL = svg.append('g');
+      const paths = gL.selectAll('path').data(links).join('path')
+        .attr('class', 'hb-link')
+        .attr('stroke-width', d => (0.7 + Math.log2(d.ab + d.ba) * 0.55).toFixed(2))
+        .attr('d', d => line(leafById.get(d.a).path(leafById.get(d.b))));
+      // Domain arcs and names
+      const gD = svg.append('g');
+      for (const dn of hier.children) {
+        const ls = dn.leaves(); const a0 = d3.min(ls, l => l.x) - 0.012, a1 = d3.max(ls, l => l.x) + 0.012;
+        const arc = d3.arc().innerRadius(R + 160).outerRadius(R + 164).startAngle(a0).endAngle(a1);
+        gD.append('path').attr('d', arc()).attr('class', 'fill' + dn.data.dom);
+        const mid = (a0 + a1) / 2, rx = Math.sin(mid) * (R + 178), ry = -Math.cos(mid) * (R + 178);
+        gD.append('text').attr('class', 'hb-dom-name').attr('x', rx).attr('y', ry + 4)
+          .attr('text-anchor', Math.abs(Math.sin(mid)) < 0.2 ? 'middle' : (mid < Math.PI ? 'start' : 'end')).text(domains[dn.data.dom]);
+      }
+      // Leaves
+      const leaves = svg.append('g').selectAll('g').data(hier.leaves()).join('g')
+        .attr('class', d => 'hb-leaf' + (d.data.fam >= 0 ? ' fam' : ''))
+        .attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${R + 6},0)`);
+      leaves.append('circle').attr('r', d => (2 + Math.log10(1 + d.data.rec) * 0.9).toFixed(2)).attr('class', d => 'fill' + d.data.dom);
+      leaves.append('text')
+        .attr('dy', '0.32em')
+        .attr('x', d => d.x < Math.PI ? 9 : -9)
+        .attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end')
+        .attr('transform', d => d.x >= Math.PI ? 'rotate(180)' : null)
+        .text(d => truncate(d.data.name, 26))
+        .append('tspan').attr('class', 'hb-loop').text(d => loops.get(d.data.id) ? `  ↻${loops.get(d.data.id)}` : '');
+      metric.innerHTML = `<b>${links.length}</b> lines for ${fmt(edges.length)} edges · <b>${reps.size}</b> nodes`;
+
+      function focus(id) {
+        if (!id) {
+          paths.attr('class', 'hb-link'); leaves.classed('fade', false).classed('on', false);
+          detail.innerHTML = '<p class="muted">Hover a type to light up its links: green goes out, orange comes in. Click to keep it selected. A ↻ number is a rule a family applies to itself, such as SUPERSEDES.</p>';
+          return;
+        }
+        const nbr = new Set([id]);
+        paths.attr('class', d => {
+          if (d.a !== id && d.b !== id) return 'hb-link fade';
+          nbr.add(d.a === id ? d.b : d.a);
+          const out = d.a === id ? d.ab : d.ba, inn = d.a === id ? d.ba : d.ab;
+          return 'hb-link ' + (out && inn ? 'both' : out ? 'out' : 'in');
+        });
+        paths.filter(d => d.a === id || d.b === id).raise();
+        leaves.classed('fade', d => !nbr.has(d.data.id)).classed('on', d => d.data.id === id);
+        const r = reps.get(id), rr = rels.get(id);
+        detail.textContent = '';
+        const head = h('h4', '', detail); h('i', 'dot bg' + r.dom, head); h('span', '', head, `${r.name}: ${r.deg} edges`);
+        if (r.fam >= 0) h('p', 'muted', detail, r.members.map(NAME).join(', '));
+        const ul = h('ul', 'rel-list', detail);
+        const nameOf = x => reps.get(x).name;
+        for (const dir of ['out', 'in']) {
+          if (!rr) continue;
+          for (const [lab, set] of [...rr[dir]].sort((a, b) => b[1].size - a[1].size)) {
+            const li = h('li', '', ul);
+            const self = set.has(id) && dir === 'out';
+            h('span', 'mono', li, (dir === 'out' ? '→ ' : '← ') + lab).style.fontSize = '0.78rem';
+            h('span', 'lbls', li, [...set].map(x => x === id ? 'itself' : nameOf(x)).join(', '));
+          }
+        }
+      }
+      leaves.on('pointerenter', (ev, d) => { if (!state.sticky) focus(d.data.id); })
+        .on('pointerleave', () => { if (!state.sticky) focus(null); })
+        .on('click', (ev, d) => { ev.stopPropagation(); state.sticky = state.sticky === d.data.id ? null : d.data.id; focus(state.sticky || d.data.id); });
+      svg.on('click', () => { state.sticky = null; focus(null); });
+      if (state.sticky && reps.has(state.sticky)) focus(state.sticky); else { state.sticky = null; focus(null); }
+    }
+    function toggle(btn, key) { btn.addEventListener('click', () => { state[key] = !state[key]; btn.setAttribute('aria-pressed', String(state[key])); render(); }); }
+    toggle(btnCollapse, 'collapse'); toggle(btnBundle, 'bundle');
+    render();
+  })();
+
+  /* ---------- 3c. Focus lanes ---------- */
+  (function lanes() {
+    const sel = document.getElementById('fl-select');
+    const colIn = document.getElementById('fl-in'), colOut = document.getElementById('fl-out');
+    const centerWrap = document.getElementById('fl-center-wrap');
+    const svg = document.getElementById('fl-svg'), gLines = document.getElementById('fl-lines');
+    const box = document.getElementById('fl');
+    const crumbs = document.getElementById('fl-crumbs');
+    const btnCollapse = document.getElementById('fl-collapse');
+    const byDeg = [...Array(N).keys()].sort((a, b) => deg[b] - deg[a] || NAME(a).localeCompare(NAME(b)));
+    byDeg.forEach(i => sel.add(new Option(`${NAME(i)} (${deg[i]})`, String(i))));
+    let focus = byDeg[0], collapse = true;
+    const trail = [focus];
+    const expanded = new Set();
+
+    function groups(f, dir) {
+      const m = new Map();
+      for (const [s, t, l] of edges) {
+        if (s === t) continue;
+        if (dir === 'in' ? t === f : s === f) { const other = dir === 'in' ? s : t; const k = labels[l]; if (!m.has(k)) m.set(k, []); m.get(k).push(other); }
+      }
+      return [...m].map(([label, list]) => ({ label, list })).sort((a, b) => b.list.length - a.list.length || a.label.localeCompare(b.label));
+    }
+    function chips(list, key, parent) {
+      const wrap = h('div', 'chips', parent); const seen = new Set();
+      for (const i of list) {
+        const f = famOf[i];
+        if (collapse && f >= 0 && !expanded.has(key + '|' + f)) {
+          const present = list.filter(j => famOf[j] === f);
+          if (present.length >= 2) {
+            if (seen.has(f)) continue; seen.add(f);
+            const c = h('button', 'chip fam', wrap); c.type = 'button';
+            h('i', 'dot bg' + DOM(i), c); h('span', 't', c, `${families[f].name} ×${present.length}`);
+            c.title = 'Show ' + present.map(NAME).join(', ');
+            c.addEventListener('click', () => { expanded.add(key + '|' + f); render(); });
+            continue;
+          }
+        }
+        const c = h('button', 'chip', wrap); c.type = 'button';
+        h('i', 'dot bg' + DOM(i), c); h('span', 't', c, NAME(i));
+        c.title = `Focus ${NAME(i)}`;
+        c.addEventListener('click', () => go(i));
+      }
+    }
+    function go(i) { focus = i; trail.push(i); if (trail.length > 6) trail.shift(); expanded.clear(); sel.value = String(i); render(); }
+    function column(col, dir) {
+      col.textContent = '';
+      const gs = groups(focus, dir);
+      h('h5', '', col, dir === 'in' ? `Points to ${NAME(focus)} · ${gs.length} relationships` : `${NAME(focus)} points to · ${gs.length} relationships`);
+      if (!gs.length) { h('div', 'fl-empty', col, dir === 'in' ? 'Nothing points here.' : 'No outgoing relationships.'); return []; }
+      return gs.map(g => {
+        const card = h('div', 'fl-group', col);
+        const head = h('header', '', card); h('span', '', head, g.label); h('span', 'n', head, String(g.list.length));
+        chips(g.list, dir + g.label, card);
+        return { card, n: g.list.length };
+      });
+    }
+    function render() {
+      const ins = column(colIn, 'in'), outs = column(colOut, 'out');
+      centerWrap.textContent = '';
+      const c = h('div', 'fl-center', centerWrap);
+      const hd = h('h3', '', c); hd.textContent = NAME(focus);
+      const chip = h('span', 'chip', c); chip.style.cursor = 'default'; h('i', 'dot bg' + DOM(focus), chip); h('span', 't', chip, domains[DOM(focus)]);
+      const nIn = edges.filter(([s, t]) => t === focus && s !== focus).length, nOut = edges.filter(([s, t]) => s === focus && t !== focus).length;
+      const selfL = [...new Set(edges.filter(([s, t]) => s === focus && t === focus).map(e => labels[e[2]]))];
+      const meta = h('div', 'meta', c);
+      h('span', '', meta, `${fmt(REC(focus))} records`);
+      h('span', '', meta, `${nIn} in · ${nOut} out${selfL.length ? ' · ' + selfL.length + ' self' : ''}`);
+      if (famOf[focus] >= 0) h('span', '', meta, `Member of ${families[famOf[focus]].name}`);
+      if (selfL.length) { const s = h('span', 'mono', meta, '↻ ' + selfL.join(', ')); s.style.fontSize = '0.74rem'; }
+      crumbs.textContent = '';
+      trail.forEach((t, i) => {
+        if (i) h('span', '', crumbs, '›');
+        if (i === trail.length - 1) { h('span', '', crumbs, NAME(t)); return; }
+        const b = h('button', '', crumbs, NAME(t)); b.type = 'button';
+        b.addEventListener('click', () => { trail.splice(i + 1); focus = t; expanded.clear(); sel.value = String(t); render(); });
+      });
+      requestAnimationFrame(() => draw(ins, outs, c));
+      last = { ins, outs, c };
+    }
+    let last = null;
+    function draw(ins, outs, center) {
+      gLines.textContent = '';
+      if (getComputedStyle(svg).display === 'none') return;
+      const b = box.getBoundingClientRect(), cr = center.getBoundingClientRect();
+      const cy = cr.top - b.top + Math.min(cr.height / 2, 60);
+      const xl = cr.left - b.left, xr = cr.right - b.left;
+      for (const { card, n } of ins) {
+        const r = card.getBoundingClientRect(); const x = r.right - b.left, y = r.top - b.top + 15;
+        const mx = (x + xl) / 2;
+        el('path', { d: `M${x},${y} C${mx},${y} ${mx},${cy} ${xl - 2},${cy}`, class: 'fl-conn' + (n > 2 ? ' big' : ''), 'marker-end': 'url(#arrowhead)' }, gLines);
+      }
+      for (const { card, n } of outs) {
+        const r = card.getBoundingClientRect(); const x = r.left - b.left, y = r.top - b.top + 15;
+        const mx = (x + xr) / 2;
+        el('path', { d: `M${xr},${cy} C${mx},${cy} ${mx},${y} ${x - 2},${y}`, class: 'fl-conn' + (n > 2 ? ' big' : ''), 'marker-end': 'url(#arrowhead)' }, gLines);
+      }
+    }
+    sel.addEventListener('change', () => go(Number(sel.value)));
+    btnCollapse.addEventListener('click', () => { collapse = !collapse; btnCollapse.setAttribute('aria-pressed', String(collapse)); render(); });
+    new ResizeObserver(() => { if (last) draw(last.ins, last.outs, last.c); }).observe(box);
+    window.addEventListener('scroll', () => { if (last) draw(last.ins, last.outs, last.c); }, { passive: true });
+    window.__drawLanes = () => { if (last) draw(last.ins, last.outs, last.c); };
+    render();
+  })();
+
+  /* ---------- Tabs ---------- */
+  (function tabs() {
+    const list = [...document.querySelectorAll('.tab')];
+    function show(tab) {
+      for (const t of list) {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      }
+      if (tab.id === 'tab-fl' && window.__drawLanes) requestAnimationFrame(window.__drawLanes);
+    }
+    list.forEach((t, i) => {
+      t.addEventListener('click', () => show(t));
+      t.addEventListener('keydown', ev => {
+        if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+        const n = list[(i + (ev.key === 'ArrowRight' ? 1 : list.length - 1)) % list.length]; n.focus(); show(n);
+      });
+    });
+  })();
+
+  /* ---------- References ---------- */
+  (function refs() {
+    const rows = [
+      ['Dynatrace Smartscape', 'https://docs.dynatrace.com/docs/analyze-explore-automate/smartscape/smartscape-modals/smartscape-view-topology', 'Topology opens from one entity. Perspectives each answer one question; related nodes are grouped by type and relationship, sources left and targets right.', 'Focus lanes'],
+      ['Kiali (Istio)', 'https://medium.com/kialiproject/different-mesh-visualizations-in-kiali-82a3428ae155', 'A dropdown switches the aggregation level: one node per app, per version, or per workload.', 'Domain, family and type as levels'],
+      ['Datadog Service Map', 'https://docs.datadoghq.com/tracing/services/services_map', 'Filters and environment scope cut the map before it draws. Paths through out-of-scope services collapse into one node. Health sits on the node border.', 'Scope first; reserve color for signal'],
+      ['Grafana Node Graph', 'https://grafana.com/docs/grafana/latest/visualizations/panels-visualizations/visualizations/node-graph/', 'Shows at most 200 nodes and puts "hidden nodes" markers where the rest would be.', 'Honest edge and node budget'],
+      ['Cambridge Intelligence KeyLines', 'https://cambridge-intelligence.com/visualize-large-networks', 'Combos group nodes and links into boxes you can open, close and nest. Their own guidance warns against loading too much into one chart.', 'Domain tiles that open'],
+      ['Neo4j Bloom', 'https://neo4j.com/docs/bloom-user-guide/current/bloom-perspectives/bloom-perspectives', 'Perspectives define the business view: categories, styling, what is visible. Parallel relationships merge into one arrow with a count. Opens on a search box.', 'Merged edges, search-first entry'],
+      ['Linkurious Enterprise', 'https://doc.linkurious.com/user-manual/2.9/expand/', 'A supernode threshold triggers a safeguard when expanding: filter by type, keep the most connected, cap the count. Filtered items turn grey instead of vanishing.', 'Supernode guard for records'],
+      ['yFiles', 'https://www.yfiles.com/resources/how-to/collapsing-groups-in-diagrams', 'Folding hides a group\'s children and merges their connections. Incremental layout moves only the affected area.', 'Stable positions on expand'],
+      ['Obsidian Fast Graph View', 'https://community.obsidian.md/plugins/fast-graph-view', 'Big folders collapse into one node labelled with a count. Click reveals 25 at a time.', 'Family collapse with counts'],
+      ['ExcaliBrain (Obsidian)', 'https://github.com/zsviczian/excalibrain', 'Focus note in the middle with parents, children, friends and siblings in fixed positions. Click a neighbour to move.', 'Typed lanes around a focus'],
+      ['anvaka, Map of GitHub', 'https://github.com/anvaka/map-of-github', 'Clusters become named countries on a map. Edges stay hidden at overview and appear in a "show related" view.', 'Domain map, semantic zoom'],
+      ['D3 / Vega edge bundling', 'https://vega.github.io/vega/examples/edge-bundling/', 'Nodes sit on a ring by hierarchy; links bend through shared ancestors; hover shows in and out links in two colors.', 'All types, bundled'],
+      ['VOSviewer', 'https://www.vosviewer.com/features', 'Caps the number of drawn lines to the strongest, prunes overlapping labels, and offers a density view. Weak ties disappear, which is the cost.', 'Edge budget, with its trade-off'],
+      ['sigma.js', 'https://www.sigmajs.org/', 'Labels are budgeted per grid cell and by rendered size; edges hide while the camera moves.', 'Label priority by zoom'],
+      ['nashsu LLM Wiki', 'https://github.com/nashsu/llm_wiki', 'Built on Karpathy\'s LLM wiki idea. sigma.js with ForceAtlas2, Louvain communities, and a legend that switches between type counts and named communities.', 'Name the groups for the reader'],
+      ['Hindsight constellation view', 'https://hindsight.vectorize.io/blog/2026/04/16/constellation-view', 'Agent memory drawn as a constellation with deterministic positions and link colors that say why two nodes connect.', 'Stable layout, colored link types'],
+      ['Stardog Explorer', 'https://docs.stardog.com/stardog-applications/explorer/', 'Groups two or more nodes of the same class with the same incoming and outgoing relationships into one node; a double-click splits it. A separate Designer app shows the schema.', 'Family collapse, already shipped'],
+      ['Palantir Foundry Vertex', 'https://www.palantir.com/docs/foundry/vertex/graphs-display-options', 'Can group transactional objects onto the edge between the two objects they connect, so join records stop being nodes.', 'Join types as edges in the record graph'],
+      ['Collibra diagrams', 'https://productresources.collibra.com/docs/collibra/latest/Content/Assets/Diagrams/EditDiagram/ref_diagram-layouts.htm', 'Flow / Context layout puts context nodes in a band above the flow, with thinner light-grey edges.', 'Context band for hubs'],
+      ['dbt Explorer', 'https://docs.getdbt.com/docs/explore/explore-projects', 'Lenses color lineage by resource type, materialization, layer or status. Zoomed far out, only the lens tags and colors remain.', 'Semantic zoom by lens'],
+      ['OpenMetadata lineage', 'https://docs.open-metadata.org/v2.0.x/how-to-guides/data-lineage/explore', 'Depth controls and nodes-per-layer pagination bound each view, and an Impact Analysis table sits one tab away.', 'Graph and table side by side'],
+      ['Kumu', 'https://docs.kumu.io/guides/focus', 'Prompted focus starts on a blank screen and steps out one degree at a time. Showcase fades everything unselected without moving it.', 'Focus by degree, fade in place'],
+    ];
+    const body = document.getElementById('refs-body');
+    for (const [name, url, what, take] of rows) {
+      const tr = h('tr', '', body);
+      const td = h('td', '', tr); const a = h('a', '', td, name); a.href = url; a.target = '_blank'; a.rel = 'noopener';
+      h('td', '', tr, what); h('td', '', tr, take);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
