@@ -15,10 +15,6 @@ planloft plan/doc deploys
 | [AI Factory adoption report](https://hatims-planloft.vercel.app/ai-factory-workflow-coverage/) | github.com/unify-apps/www | plan | 2026-12-24 |
 | [CopilotVoice product guide](https://hatims-planloft.vercel.app/copilotvoice-product-guide/) | github.com/unify-apps/www | plan | 2026-12-20 |
 | [ECG Graph Rethink](https://hatims-planloft.vercel.app/ecg-graph-rethink/) | github.com/unify-apps/www | plan | 2026-12-25 |
-| [ECG Graph Rethink · Round 1](https://hatims-planloft.vercel.app/ecg-graph-round-1/) | github.com/unify-apps/www | report | 2026-12-25 |
-| [ECG Graph Rethink · Round 2](https://hatims-planloft.vercel.app/ecg-graph-round-2/) | github.com/unify-apps/www | report | 2026-12-25 |
-| [ECG Graph Rethink · Round 3](https://hatims-planloft.vercel.app/ecg-graph-round-3/) | github.com/unify-apps/www | report | 2026-12-25 |
-| [ECG graph exploration log](https://hatims-planloft.vercel.app/ecg-graph-exploration-log/) | github.com/unify-apps/www | report | 2026-12-25 |
 | [Genesys IT call prep](https://hatims-planloft.vercel.app/genesys-it-call-prep/) | github.com/unify-apps/www | plan | 2026-12-12 |
 | [How AI Solutions Builder enforces spec-driven development](https://hatims-planloft.vercel.app/ai-solutions-spec-driven-development/) | github.com/unify-apps/www | plan | 2026-12-23 |
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
