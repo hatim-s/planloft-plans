@@ -1160,7 +1160,7 @@ footer { font-size: 0.82rem; color: var(--muted); display: grid; gap: 6px; max-w
 .stage5.focus .pill { opacity: 0.28; }
 .stage5.focus .pill.on, .stage5.focus .pill.nb { opacity: 1; }
 .stage5 .pill.on { border-color: var(--ink); }
-.ov5 path { fill: none; stroke-width: 1.4; stroke-opacity: 0.85; }
+.ov5 path { fill: none; stroke-opacity: 0.85; }
 .ov5 path.out { stroke: var(--hi-out); } .ov5 path.in { stroke: var(--hi-in); } .ov5 path.both { stroke: var(--ink); }
 .ov5 path.agg { stroke: var(--accent); stroke-opacity: 0.6; stroke-linecap: round; }
 .ov5 text { font-size: 11px; font-family: var(--font-mono); fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 3px; }
@@ -1230,6 +1230,80 @@ footer { font-size: 0.82rem; color: var(--muted); display: grid; gap: 6px; max-w
 .rule .n { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); float: right; }
 .rule .t { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .rule .t .dot { width: 7px; height: 7px; }
+
+/* ---------- v2: page width, palette, headers, search, label fitting ---------- */
+html > body { max-width: none !important; padding-inline: 0 !important; margin: 0 !important; }
+:root[data-planloft-layout="full"] .wrap { max-width: none; }
+:root { --d4: #6B645C; }
+@media (prefers-color-scheme: dark) { :root:not([data-planloft-color-scheme="light"]) { --d4: #B9B0A5; } }
+:root[data-planloft-color-scheme="dark"] { --d4: #B9B0A5; }
+.gallery { padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.mock-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 8px 200px 8px 0; }
+.mock { scroll-margin-top: calc(var(--navh, 40px) + 8px); gap: 6px; }
+.mock-head { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.mock-head .num { grid-row: auto; }
+.mock-head h3 { font-size: 1.2rem; white-space: nowrap; }
+.mock-head .ans { color: var(--muted); font-size: 0.86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; }
+.mock-foot { color: var(--muted); font-size: 0.84rem; max-width: 140ch; margin: 2px 0 0; }
+.mock-foot b { color: var(--ink); font-weight: 600; }
+.msearch input { font: inherit; font-size: 0.8rem; padding: 4px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); width: 190px; }
+.dark .msearch input { background: #121826; color: #DCE3F2; border-color: #2A3348; }
+.dark .tgl { background: #121826; color: #C9D2E6; border-color: #2A3348; }
+.dark .tgl[aria-pressed="true"] { background: #1E2A44; color: #FFFFFF; border-color: #5A74B0; }
+.clab { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-text); paint-order: stroke; stroke: var(--surface); stroke-width: 3px; pointer-events: none; }
+.mstage svg.focus .clab { opacity: 0.25; }
+.dark .n text.lbl-off { display: none; }
+.dark .n text { opacity: 1; }
+.dark svg.focus .n.nb text.lbl-off, .dark svg.focus .n.on text.lbl-off { display: inline; }
+.side4 { position: absolute; top: 10px; right: 10px; bottom: 10px; overflow: auto; border-left: 1px solid var(--line); padding: 4px 4px 4px 16px; display: grid; align-content: start; gap: 8px; font-size: 0.82rem; }
+.side4 h4 { margin: 0; font-size: 0.92rem; display: flex; gap: 7px; align-items: center; }
+.side4 .lbls { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); overflow-wrap: anywhere; }
+.side4 .chip { cursor: default; font-size: 0.72rem; padding: 1px 7px; }
+.pill.famopen { background: var(--accent-soft); font-weight: 600; }
+.pg .cell { cursor: pointer; }
+.pg .cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.mx-read input { width: 100%; box-sizing: border-box; }
+.mx-hit { fill: transparent; }
+.arcbase { pointer-events: none; }
+.e.inside { stroke-opacity: 0.45; }
+.mstage svg.focus .e.inside { stroke-opacity: 0.03; }
+.sm-summary { font-size: 10px; fill: var(--muted); font-family: var(--font-text); }
+.sm-pick { position: absolute; z-index: 3; font-size: 0.78rem; }
+.fl-conn { stroke-opacity: 0.18; }
+.fl-conn.on { stroke: var(--accent); stroke-opacity: 0.9; stroke-width: 2.2; }
+.r15bar { position: sticky; top: 0; z-index: 2; background: var(--surface); border-bottom: 1px solid var(--line); padding: 10px 20px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 0.8rem; }
+.r15bar a { color: var(--accent); text-decoration: none; }
+.rule button.more { font: inherit; font-size: 0.76rem; border: 1px dashed var(--line); background: none; color: var(--muted); border-radius: 999px; padding: 0 7px; cursor: pointer; }
+.rule.hide, .rules15 section.hide { display: none; }
+.mstage .e.inside.st0 { stroke: var(--d0); } .mstage .e.inside.st1 { stroke: var(--d1); } .mstage .e.inside.st2 { stroke: var(--d2); } .mstage .e.inside.st3 { stroke: var(--d3); }
+.mstage .e.inside.st4 { stroke: var(--d4); } .mstage .e.inside.st5 { stroke: var(--d5); } .mstage .e.inside.st6 { stroke: var(--d6); } .mstage .e.inside.st7 { stroke: var(--d7); }
+.ring .n text { font-size: 9.5px; }
+.roadn { font-size: 10px; font-family: var(--font-mono); fill: var(--muted); text-anchor: middle; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; pointer-events: none; }
+.mstage svg.focus .roadn { opacity: 0.2; }
+/* v3 review fixes */
+.mstage .e { pointer-events: none; }
+.mstage svg.focus .e.hid { stroke-opacity: 0; }
+.mstage svg.focus .e.hid.out, .mstage svg.focus .e.hid.in, .mstage svg.focus .e.hid.both { stroke-opacity: 0.85; }
+.mstage .e.thin { stroke-opacity: 0.1; }
+.mstage .n circle.hit { fill: transparent; stroke: none; }
+.mstage .n text { pointer-events: auto; cursor: pointer; }
+.ov5 path:not(.agg) { stroke-width: 1.4; }
+.tile4.dim { opacity: 0.55; filter: grayscale(1); }
+.r15tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.r15body { padding: 14px 20px 24px; display: grid; gap: 18px; }
+.r15panel { display: grid; gap: 10px; }
+.r15panel h4 { margin: 0; font-size: 0.95rem; display: flex; justify-content: space-between; gap: 8px; }
+.r15panel h4 span { font-weight: 400; color: var(--muted); font-size: 0.78rem; font-family: var(--font-mono); }
+.r15grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; align-items: start; }
+.rule.card { border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; background: var(--surface); border-top: 1px solid var(--line); }
+.r15domhd { display: flex; gap: 7px; align-items: center; margin-bottom: 4px; }
+.r15domhd .n { margin-left: auto; float: none; }
+.r15line { padding: 2px 0; font-size: 0.8rem; border-top: 1px dashed var(--line); }
+.r15line.hide { display: none; }
+.mock-verdict { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.mock-verdict b { font-weight: 500; }
+.mock-verdict .v-keep { color: var(--hi-out); } .mock-verdict .v-fix { color: var(--hi-in); } .mock-verdict .v-drop { color: var(--planloft-negative, #a82f38); }
+.review-sum { max-width: 1180px; width: 100%; margin: 0 auto; font-size: 0.88rem; color: var(--ink); display: grid; gap: 4px; }
 
 </style>
 </head>
@@ -1493,6 +1567,9 @@ footer { font-size: 0.82rem; color: var(--muted); display: grid; gap: 6px; max-w
     <h2>Fifteen ways to draw the same graph</h2>
     <p class="prose" style="display:block">Every mock below draws the same production data: 124 types, 1,077 edges, 192 relationship names. Each one is sized to the space the Graph tab canvas would get, which is the full width with the node list collapsed and the window height minus about 120px for the page header. Make the window the size you work at and the mocks follow. Hover or click to explore. When you send feedback, the mock numbers are enough: "7 reads well, 2 doesn't".</p>
   </div>
+  <div class="review-sum">
+    <p><b>First-cut review.</b> Gemini 4 Neon and GPT-6.2 Sol each tried every mock in a real browser at 1440×900 and 1672×976, in light and dark. Both ranked <a href="#m14">14 focus lanes</a>, <a href="#m10">10 domain grid</a>, <a href="#m5">5 nested boxes</a> and <a href="#m4">4 domain tiles</a> as the most readable, and both would drop <a href="#m7">7</a>, <a href="#m8">8</a> and <a href="#m12">12</a>. Every bug and legibility issue they raised that could be fixed has been fixed. The verdict next to each title is from before those fixes.</p>
+  </div>
   <nav class="mock-nav" id="mock-nav" aria-label="Jump to a mock"></nav>
   <div class="mock-list" id="mock-list"></div>
 </section>
@@ -1502,14 +1579,15 @@ footer { font-size: 0.82rem; color: var(--muted); display: grid; gap: 6px; max-w
     <div class="prose">
       <p class="eyebrow">4 · First pick</p>
       <h2>What I would combine, before your pass</h2>
-      <p>These are my bets until you have tried the mocks. Your readability notes override them.</p>
+      <p>These are my bets, informed by the two reviews, until you have tried the mocks yourself. Your readability notes override them.</p>
     </div>
     <ul class="rules">
-      <li><b>When the graph opens: 4 or 3.</b><span>Both start from eight domains instead of 124 types, and both name every type without drawing a single edge at rest.</span></li>
-      <li><b>When a type is clicked or searched: 14.</b><span>Focus lanes answer the question a reader actually has about one type, with one line per relationship.</span></li>
-      <li><b>On whatever canvas ships: the rules in 1.</b><span>Merged families and edges, size by records and a label budget cut today's view by about two thirds with no new layout.</span></li>
+      <li><b>When the graph opens: 4, with 10 one click away.</b><span>Both start from eight domains instead of 124 types. 4 shows where things are; 10 says exactly which relationships connect each pair of domains. Both reviewers put them in their top four.</span></li>
+      <li><b>When a type is clicked or searched: 14.</b><span>Focus lanes ranked first or third with both reviewers. They answer the question a reader has about one type, with one line per relationship.</span></li>
+      <li><b>For a full inventory: 5.</b><span>Nested boxes name every type at rest without drawing a single edge, and draw links only on hover.</span></li>
+      <li><b>On whatever canvas ships: the rules in 1.</b><span>Merged families and edges, size by records and names that show only where they fit cut today's view by about two thirds with no new layout.</span></li>
       <li><b>For people editing the schema: 15 and 11.</b><span>The written-out rules show the family-wide declarations at a glance; the matrix answers exactly which pairs are linked.</span></li>
-      <li><b>Probably not as a home view: 2, 9, 12, 13.</b><span>They are good for a look or for analysis, but each one says less per pixel than 3, 4 or 14.</span></li>
+      <li><b>Probably not: 7, 8, 12.</b><span>Both reviewers would drop them. They stay on the page so you can judge for yourself.</span></li>
     </ul>
   </section>
 
@@ -1581,6 +1659,7 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
 (() => {
   const { domains, labels, nodes, edges, families } = ECG;
   const N = nodes.length;
+  { const seen = new Map(); nodes.forEach(n => { const k = n[0]; seen.set(k, (seen.get(k) || 0) + 1); if (seen.get(k) > 1) n[0] = `${k} (${seen.get(k)})`; }); }
   const NAME = i => nodes[i][0];
   const DOM = i => nodes[i][1];
   const REC = i => nodes[i][2];
@@ -1625,7 +1704,8 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
 
   /* ---------- Shared model ---------- */
   function buildReps(collapse) {
-    const repOf = i => collapse && famOf[i] >= 0 ? 'f' + famOf[i] : 'n' + i;
+    const fold = typeof collapse === 'function' ? collapse : () => collapse;
+    const repOf = i => famOf[i] >= 0 && fold(famOf[i]) ? 'f' + famOf[i] : 'n' + i;
     const byId = new Map();
     for (let i = 0; i < N; i++) {
       const id = repOf(i);
@@ -1751,19 +1831,20 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       if (onFocus) onFocus(id);
     }
     for (const [id, g] of nodeMap) {
-      g.addEventListener('pointerenter', ev => { if (!sticky) set(id); showTip(infoFn(id), ev); });
+      g.addEventListener('pointerenter', ev => { if (!sticky) set(id); const html = infoFn(id); if (html) showTip(html, ev); });
       g.addEventListener('pointermove', moveTip);
       g.addEventListener('pointerleave', () => { if (!sticky) set(null); hideTip(); });
       g.addEventListener('click', ev => { ev.stopPropagation(); sticky = sticky === id ? null : id; set(sticky || id); });
     }
     svg.addEventListener('click', () => { sticky = null; set(null); });
-    return set;
+    return { pin(id) { sticky = id; set(id); } };
   }
   function drawNodes(parent, ns, o = {}) {
     const map = new Map();
     for (const d of ns) {
       const g = el('g', { class: 'n' + (o.cls ? ' ' + o.cls(d) : ''), transform: `translate(${d.x.toFixed(1)},${d.y.toFixed(1)})` }, parent);
-      el('circle', { r: d.r.toFixed(2), class: o.fill ? null : 'fill' + d.dom, fill: o.fill ? o.fill(d) : null }, g);
+      el('circle', { r: Math.max(d.r + 3, 8).toFixed(1), class: 'hit' }, g);
+      el('circle', { r: d.r.toFixed(2), class: o.fill ? 'dot-c' : 'dot-c fill' + d.dom, fill: o.fill ? o.fill(d) : null }, g);
       const t = el('text', o.text ? o.text(d) : { x: d.r + 3, dy: '0.32em' }, g, o.label ? o.label(d) : d.rep.short);
       if (o.hidden && o.hidden(d)) t.classList.add('lbl-off');
       map.set(d.id, g);
@@ -1773,6 +1854,57 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   const qpath = (a, b, bend = 0.12) => {
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y;
     return `M${a.x.toFixed(1)},${a.y.toFixed(1)}Q${(mx - dy * bend).toFixed(1)},${(my + dx * bend).toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
+  };
+
+  // Show labels in priority order only where they fit. items: { t, cx, cy, w, h, prio }.
+  function fitLabels(items, obstacles, W, H) {
+    const placed = obstacles.slice();
+    items.sort((a, b) => b.prio - a.prio);
+    for (const it of items) {
+      const r = [it.cx - it.w / 2 - 2, it.cy - it.h / 2, it.cx + it.w / 2 + 2, it.cy + it.h / 2];
+      const inside = W == null || (r[0] >= 2 && r[2] <= W - 2 && r[1] >= 2 && r[3] <= H - 2);
+      const ok = inside && !placed.some(p => p[0] < r[2] && p[2] > r[0] && p[1] < r[3] && p[3] > r[1]);
+      it.t.classList.toggle('lbl-off', !ok);
+      if (ok) placed.push(r);
+    }
+  }
+  const circleBoxes = ns => ns.map(d => [d.x - d.r, d.y - d.r, d.x + d.r, d.y + d.r]);
+  // Domain names above each cluster; returns their boxes so labels can avoid them.
+  function clusterLabels(parent, ns) {
+    const boxes = [];
+    domains.forEach((d, di) => {
+      const m = ns.filter(n => n.dom === di); if (!m.length) return;
+      const x = d3.mean(m, n => n.x), y = d3.min(m, n => n.y - n.r) - 12, w = d.length * 8.4;
+      el('text', { x, y, 'text-anchor': 'middle', class: 'clab fill' + di }, parent, d);
+      boxes.push([x - w / 2, y - 11, x + w / 2, y + 3]);
+    });
+    return boxes;
+  }
+  function searchBox(parent, R, onPick, placeholder = 'Find a type') {
+    const wrap = mk('span', 'msearch', parent);
+    const inp = mk('input', '', wrap); inp.type = 'search'; inp.placeholder = placeholder; inp.setAttribute('aria-label', placeholder);
+    const dl = mk('datalist', '', wrap); dl.id = 'dl-' + Math.random().toString(36).slice(2, 9); inp.setAttribute('list', dl.id);
+    const names = new Set(); R.list.forEach(r => { names.add(r.name); r.members.forEach(m => names.add(NAME(m))); });
+    [...names].sort().forEach(n => { const o = document.createElement('option'); o.value = n; dl.appendChild(o); });
+    const pick = () => {
+      const q = inp.value.trim().toLowerCase(); if (!q) { onPick(null); return; }
+      const hit = r => r.name.toLowerCase() === q || r.members.some(m => NAME(m).toLowerCase() === q);
+      const near = r => r.name.toLowerCase().includes(q) || r.members.some(m => NAME(m).toLowerCase().includes(q));
+      const r = R.list.find(hit) || R.list.find(near);
+      if (r) onPick(r.id);
+    };
+    inp.addEventListener('change', pick); inp.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); });
+    return inp;
+  }
+  const nodeLabelItems = (ns, map, side = 'right') => {
+    const boost = new Set();
+    domains.forEach((_, di) => ns.filter(d => d.dom === di).sort((a, b) => score(b.rep) - score(a.rep)).slice(0, 2).forEach(d => boost.add(d.id)));
+    return ns.map(d => {
+    const w = lw(d.rep.short); const pr = score(d.rep) + (boost.has(d.id) ? 1000 : 0);
+    return side === 'below'
+      ? { t: map.get(d.id).querySelector('text'), cx: d.x, cy: d.y + d.r + 6.5, w, h: 13, prio: pr }
+      : { t: map.get(d.id).querySelector('text'), cx: d.x + d.r + 3 + w / 2, cy: d.y, w, h: 13, prio: pr };
+    });
   };
 
   /* ---------- 1. Today, redrawn ---------- */
@@ -1849,24 +1981,28 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   /* ---------- 3. The mocks ---------- */
   const MOCKS = [];
   const mock = (o) => MOCKS.push(o);
+  const repCache = new Map();
+  const repsFor = (openFams) => { const k = [...openFams].sort().join(','); if (!repCache.has(k)) repCache.set(k, buildReps(f => !openFams.has(f))); return repCache.get(k); };
 
   mock({
     short: 'Quick wins', title: "Today's canvas with the quick wins",
     answers: 'What does today’s view look like with no new view built?',
-    read: 'Same node-link canvas. Families merge into one node, parallel edges merge into one line (thicker means more), size shows records, only the top names are labelled, and types settle near their domain.',
+    read: 'Same node-link canvas. Families merge into one node, parallel edges merge into one line (thicker means more), size shows records, and types settle near their domain, which is named on the canvas. Names show wherever they fit; the rest appear on hover. Use the search box to start from a type.',
     seen: 'Neo4j Bloom merged relationships, sigma.js label budgets',
     render(stage, w, h) {
-      const R = R1; legend(stage);
+      const R = R1;
       const ns = R.list.map(r => ({ id: r.id, dom: r.dom, r: rad(r.rec), rep: r }));
       const links = [...R.pairs.values()].map(p => ({ source: p.a, target: p.b }));
-      layout(ns, links, w, h, { collide: d => d.r + 9, pull: 0.12, charge: -70, pad: 40, margin: { r: 110, t: 30 } });
+      layout(ns, links, w, h, { collide: d => d.r + 10, pull: 0.13, charge: -70, pad: 44, margin: { r: 110, t: 36 } });
       const svg = mkSvg(stage, w, h);
       const by = new Map(ns.map(d => [d.id, d]));
-      const gE = el('g', {}, svg), gN = el('g', {}, svg);
-      const E = [...R.pairs.values()].map(p => ({ el: el('path', { d: `M${by.get(p.a).x},${by.get(p.a).y}L${by.get(p.b).x},${by.get(p.b).y}`, class: 'e', 'stroke-width': (0.6 + Math.log2(p.ab + p.ba) * 0.6).toFixed(2) }, gE), ...p }));
-      const top = new Set([...ns].sort((x, y) => score(y.rep) - score(x.rep)).slice(0, labelBudget(w, h)).map(d => d.id));
-      const map = drawNodes(gN, ns, { hidden: d => !top.has(d.id) });
-      focusable(svg, map, E, id => repInfo(R, id));
+      const gE = el('g', {}, svg), gL = el('g', {}, svg), gN = el('g', {}, svg);
+      const E = [...R.pairs.values()].map(p => ({ el: el('path', { d: `M${by.get(p.a).x},${by.get(p.a).y}L${by.get(p.b).x},${by.get(p.b).y}`, class: 'e' + (p.ab + p.ba === 1 ? ' thin' : ''), 'stroke-width': (0.6 + Math.log2(p.ab + p.ba) * 0.6).toFixed(2) }, gE), ...p }));
+      const dl = clusterLabels(gL, ns);
+      const map = drawNodes(gN, ns);
+      fitLabels(nodeLabelItems(ns, map), [...circleBoxes(ns), ...dl], w, h);
+      const f = focusable(svg, map, E, id => repInfo(R, id));
+      searchBox(mk('div', 'mtools', stage), R, id => f.pin(id));
       hint(stage, `${E.length} lines for ${fmt(edges.length)} edges · hover a type, click to pin`);
     },
   });
@@ -1874,71 +2010,104 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   mock({
     short: 'Constellation', title: 'Constellation with semantic zoom', cls: 'dark',
     answers: 'Can the whole graph feel like a map I zoom into?',
-    read: 'Dark map, all 124 types. At rest you see domain names and the biggest types. Scroll to zoom: past about 1.7× every name appears. Edges stay faint until you hover a star.',
+    read: 'Dark map, all 124 types. At rest you see domain names and the names that fit. Zoom with the + and − buttons or Ctrl/⌘ + scroll, and more names appear as space opens up. Edges stay faint until you hover a star.',
     seen: 'Cosmograph, Nomic Atlas, Hindsight constellation view',
     render(stage, w, h) {
-      const R = R0; const STAR = ['#7FB2FF', '#FF9E80', '#FFD166', '#C3A6FF', '#FF7EB6', '#5EEAD4', '#B5E48C', '#FDBA74'];
+      const R = R0; const STAR = ['#7FB2FF', '#FF9E80', '#FFD166', '#C3A6FF', '#C9C3BA', '#5EEAD4', '#B5E48C', '#FDBA74'];
       const lg = legend(stage); [...lg.querySelectorAll('i')].forEach((i, k) => { i.className = 'dot'; i.style.background = STAR[DOMAIN_ORDER[k]]; });
       const ns = R.list.map(r => ({ id: r.id, dom: r.dom, r: 2.2 + Math.log10(1 + r.rec) * 1.5, rep: r }));
       const links = [...R.pairs.values()].map(p => ({ source: p.a, target: p.b }));
-      layout(ns, links, w, h, { collide: d => d.r + 8, pull: 0.2, charge: -45, pad: 50, margin: { t: 30 } });
+      layout(ns, links, w, h, { collide: d => d.r + 8, pull: 0.2, charge: -45, pad: 50, margin: { t: 40 } });
       const svg = mkSvg(stage, w, h); const root = el('g', {}, svg);
       const by = new Map(ns.map(d => [d.id, d]));
       const gE = el('g', {}, root), gD = el('g', {}, root), gN = el('g', {}, root);
       const E = [...R.pairs.values()].map(p => ({ el: el('path', { d: qpath(by.get(p.a), by.get(p.b), 0.14), class: 'e' }, gE), ...p }));
       domains.forEach((d, di) => {
-        const m = ns.filter(n => n.dom === di); const cx = d3.mean(m, n => n.x), cy = d3.min(m, n => n.y) - 14;
+        const m = ns.filter(n => n.dom === di); const cx = d3.mean(m, n => n.x), cy = d3.min(m, n => n.y) - 16;
         el('text', { x: cx, y: cy, class: 'dlab', fill: STAR[di] }, gD, d.toUpperCase());
       });
-      const keep = new Set([...ns].sort((a, b) => b.rep.rec - a.rep.rec).slice(0, 14).map(d => d.id));
-      const map = drawNodes(gN, ns, { fill: d => STAR[d.dom], text: d => ({ x: 0, y: d.r + 11, 'text-anchor': 'middle', class: keep.has(d.id) ? 'keep' : null }) });
-      for (const [id, g] of map) g.firstChild.style.filter = `drop-shadow(0 0 ${(4 + by.get(id).r).toFixed(0)}px ${STAR[by.get(id).dom]})`;
-      focusable(svg, map, E, id => repInfo(R, id));
-      const zoom = d3.zoom().scaleExtent([0.7, 8]).on('zoom', ev => {
-        root.setAttribute('transform', ev.transform); root.style.setProperty('--k', ev.transform.k);
-        svg.classList.toggle('z2', ev.transform.k >= 1.7);
-      });
+      const map = drawNodes(gN, ns, { fill: d => STAR[d.dom], text: d => ({ x: 0, y: d.r + 11, 'text-anchor': 'middle' }) });
+      const f = focusable(svg, map, E, id => repInfo(R, id));
+      let raf = 0, T = d3.zoomIdentity;
+      const relabel = () => {
+        raf = 0; const k = T.k; const sk = Math.sqrt(k);
+        const boost = new Set(); domains.forEach((_, di) => ns.filter(d => d.dom === di).sort((a, b) => b.rep.rec - a.rep.rec).slice(0, 2).forEach(d => boost.add(d.id)));
+        for (const d of ns) { const c = map.get(d.id).querySelector('.dot-c'); c.setAttribute('r', (d.r / sk).toFixed(2)); c.style.filter = k > 2 ? 'none' : `drop-shadow(0 0 ${(4 + d.r).toFixed(0)}px ${STAR[d.dom]})`; }
+        const items = ns.map(d => {
+          const t = map.get(d.id).querySelector('text'); t.setAttribute('y', (d.r + 11 / k).toFixed(2));
+          const w2 = lw(d.rep.short) * 1.05;
+          t.setAttribute('y', (d.r / sk + 11 / k).toFixed(2));
+          return { t, cx: d.x * k + T.x, cy: d.y * k + T.y + d.r * sk + 7, w: w2, h: 13, prio: d.rep.rec + (boost.has(d.id) ? 1e7 : 0) };
+        });
+        fitLabels(items, ns.map(d => { const x = d.x * k + T.x, y = d.y * k + T.y, r = d.r * sk; return [x - r, y - r, x + r, y + r]; }), w, h);
+      };
+      const zoom = d3.zoom().scaleExtent([0.7, 8])
+        .filter(ev => (ev.type === 'wheel' ? (ev.ctrlKey || ev.metaKey) : !ev.button))
+        .on('zoom', ev => {
+          T = ev.transform; root.setAttribute('transform', T); root.style.setProperty('--k', T.k);
+          svg.classList.toggle('z2', T.k >= 1.7);
+          if (!raf) raf = requestAnimationFrame(relabel);
+        });
       d3.select(svg).call(zoom).on('dblclick.zoom', null);
+      relabel();
       const tools = mk('div', 'mtools', stage);
-      const reset = mk('button', 'tgl', tools, 'Reset zoom'); reset.type = 'button';
-      reset.addEventListener('click', () => d3.select(svg).transition().duration(300).call(zoom.transform, d3.zoomIdentity));
-      hint(stage, 'Scroll to zoom, drag to pan, hover a star');
+      searchBox(tools, R, id => f.pin(id));
+      const btn = (label, fn) => { const b = mk('button', 'tgl', tools, label); b.type = 'button'; b.addEventListener('click', fn); return b; };
+      btn('+', () => d3.select(svg).transition().duration(250).call(zoom.scaleBy, 1.6)).setAttribute('aria-label', 'Zoom in');
+      btn('−', () => d3.select(svg).transition().duration(250).call(zoom.scaleBy, 1 / 1.6)).setAttribute('aria-label', 'Zoom out');
+      btn('Reset', () => d3.select(svg).transition().duration(300).call(zoom.transform, d3.zoomIdentity));
+      hint(stage, 'Ctrl/⌘ + scroll or the buttons to zoom · drag to pan · hover a star');
     },
   });
 
   mock({
     short: 'Territories', title: 'Domain territories',
     answers: 'Where does each type live, and which regions trade the most?',
-    read: 'Each domain is a region and every type is named. Individual edges are hidden. Roads between regions get thicker with more edges. Hover a type to draw its real links.',
+    read: 'Each domain gets its own region, sized to fit its types. Individual edges are hidden. Roads between regions get thicker with more edges and carry the count. Names show where they fit; hover a type to see the rest of its name and its real links.',
     seen: "anvaka's Map of GitHub, Kumu clustering",
     render(stage, w, h) {
       const R = R0;
       const ns = R.list.map(r => ({ id: r.id, dom: r.dom, r: 3 + Math.log10(1 + r.rec) * 1.1, rep: r, lw: lw(r.short) }));
-      layout(ns, [], w, h, { collide: d => Math.max(d.r + 8, d.lw * 0.47), pull: 0.32, charge: -8, pad: 70, anchorScale: 0.8, margin: { t: 20 } });
+      const tm = d3.hierarchy({ children: DOMAIN_ORDER.map(di => ({ di, value: ns.filter(n => n.dom === di).reduce((a, n) => a + (n.lw + 18) * 36, 0) })) }).sum(d => d.value || 0);
+      d3.treemap().size([w, h]).paddingInner(54).paddingOuter(34).tile(d3.treemapSquarify.ratio(1))(tm);
+      const rect = []; tm.leaves().forEach(l => { rect[l.data.di] = l; });
+      const cxr = di => (rect[di].x0 + rect[di].x1) / 2, cyr = di => (rect[di].y0 + rect[di].y1) / 2;
+      ns.forEach((d, i) => { d.x = cxr(d.dom) + ((i * 37) % 60 - 30); d.y = cyr(d.dom) + ((i * 53) % 40 - 20); });
+      const sim = d3.forceSimulation(ns).randomSource(d3.randomLcg(3))
+        .force('x', d3.forceX(d => cxr(d.dom)).strength(0.04)).force('y', d3.forceY(d => cyr(d.dom)).strength(0.06))
+        .force('collide', d3.forceCollide(d => Math.max(d.r + 8, d.lw * 0.46)).iterations(3))
+        .force('charge', d3.forceManyBody().strength(-5)).stop();
+      for (let i = 0; i < 300; i++) {
+        sim.tick();
+        ns.forEach(d => { const L = rect[d.dom]; d.x = clamp(d.x, L.x0 + d.lw / 2 + 2, L.x1 - d.lw / 2 - 2); d.y = clamp(d.y, L.y0 + 6, L.y1 - 20); });
+      }
       const svg = mkSvg(stage, w, h);
       const gH = el('g', { class: 'fadeable' }, svg), gR = el('g', {}, svg), gE = el('g', {}, svg), gN = el('g', {}, svg);
-      const cent = [];
       const smooth = d3.line().curve(d3.curveCatmullRomClosed.alpha(0.6));
-      domains.forEach((d, di) => {
+      const hulls = [], cent = [];
+      DOMAIN_ORDER.forEach(di => {
         const m = ns.filter(n => n.dom === di);
         const pts = m.flatMap(n => [[n.x - n.lw / 2 - 8, n.y - 14], [n.x + n.lw / 2 + 8, n.y - 14], [n.x - n.lw / 2 - 8, n.y + 24], [n.x + n.lw / 2 + 8, n.y + 24]]);
-        const hull = d3.polygonHull(pts);
+        const hull = d3.polygonHull(pts); hulls[di] = hull; cent[di] = d3.polygonCentroid(hull);
         el('path', { d: smooth(hull), class: `hull fill${di} st${di}` }, gH);
-        cent[di] = [d3.mean(m, n => n.x), d3.mean(m, n => n.y)];
-        const topY = d3.min(hull, p => p[1]);
-        el('text', { x: d3.mean(m, n => n.x), y: topY - 6, 'text-anchor': 'middle', class: `hull-name fill${di}` }, gH, d);
+        el('text', { x: cent[di][0], y: d3.min(hull, p => p[1]) - 8, 'text-anchor': 'middle', class: `hull-name fill${di}` }, gH, domains[di]);
       });
+      const nearest = (hull, [x, y]) => hull.reduce((best, p) => (Math.hypot(p[0] - x, p[1] - y) < Math.hypot(best[0] - x, best[1] - y) ? p : best), hull[0]);
       for (const p of domUnd.values()) {
         if (p.a === p.b) continue;
-        const a = { x: cent[p.a][0], y: cent[p.a][1] }, b = { x: cent[p.b][0], y: cent[p.b][1] };
-        const road = el('path', { d: qpath(a, b, 0.18), class: 'road', 'stroke-width': (1.5 + Math.sqrt(p.n) * 1.1).toFixed(1) }, gR);
+        const pa = nearest(hulls[p.a], cent[p.b]), pb = nearest(hulls[p.b], cent[p.a]);
+        const a = { x: pa[0], y: pa[1] }, b = { x: pb[0], y: pb[1] };
+        const road = el('path', { d: qpath(a, b, 0.12), class: 'road', 'stroke-width': (1.5 + Math.sqrt(p.n) * 1.1).toFixed(1) }, gR);
+        el('text', { x: (a.x + b.x) / 2 - (b.y - a.y) * 0.06, y: (a.y + b.y) / 2 + (b.x - a.x) * 0.06 + 3, class: 'roadn' }, gR, String(p.n));
         const html = `<b>${esc(domains[p.a])} ↔ ${esc(domains[p.b])}</b> · ${p.n} edges<br>${topLabels(p.labels, 5)}`;
         road.addEventListener('pointermove', ev => showTip(html, ev)); road.addEventListener('pointerleave', hideTip);
       }
       const by = new Map(ns.map(d => [d.id, d]));
       const E = [...R.pairs.values()].map(p => ({ el: el('path', { d: qpath(by.get(p.a), by.get(p.b), 0.15), class: 'e hid', 'stroke-width': 1.1 }, gE), ...p }));
       const map = drawNodes(gN, ns, { text: d => ({ x: 0, y: d.r + 10, 'text-anchor': 'middle' }) });
-      focusable(svg, map, E, id => repInfo(R, id));
+      fitLabels(nodeLabelItems(ns, map, 'below'), circleBoxes(ns), w, h);
+      const f = focusable(svg, map, E, id => repInfo(R, id));
+      searchBox(mk('div', 'mtools', stage), R, id => f.pin(id));
       hint(stage, 'Hover a road for its relationships, or a type for its links');
     },
   });
@@ -1946,32 +2115,30 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   mock({
     short: 'Domain tiles', title: 'Domain tiles with link bands',
     answers: 'What is in this graph, and how do the parts connect?',
-    read: 'Eight tiles list the types in each domain. One band per pair of domains, wider means more edges, with the count on it. Click a tile to light up its bands and list its relationships.',
+    read: 'Eight tiles name the largest types in each domain. One band per pair of domains, wider means more edges, with the count on it. Click a tile: its bands light up and the panel on the right lists every type in it and every relationship it shares.',
     seen: 'KeyLines combos, Kiali aggregation levels',
     render(stage, w, h) {
       const R = R1; const W = DI['Work items'];
-      const P = []; const cx = w / 2, cy = h / 2 + 6;
+      const sideW = w > 1050 ? 320 : 0, wm = w - sideW;
+      const P = []; const cx = wm / 2, cy = h / 2 + 6;
       P[W] = [cx, cy];
-      RING.forEach((d, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / RING.length; P[DI[d]] = [cx + w * 0.37 * Math.cos(a), cy + (h / 2 - 95) * Math.sin(a)]; });
-      const svg = mkSvg(stage, w, h); const gB = el('g', {}, svg), gP = el('g', {}, svg);
-      const bands = [];
+      RING.forEach((d, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / RING.length; P[DI[d]] = [cx + wm * 0.37 * Math.cos(a), cy + (h / 2 - 95) * Math.sin(a)]; });
+      const svg = mkSvg(stage, wm, h); const gB = el('g', {}, svg), gP = el('g', {}, svg);
+      const bands = []; const bandDefs = [];
       for (const p of domUnd.values()) {
         if (p.a === p.b) continue;
         const [x1, y1] = P[p.a], [x2, y2] = P[p.b];
         const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dist = Math.hypot(x2 - x1, y2 - y1);
         let qx, qy;
         if (p.a === W || p.b === W) { qx = mx - (y2 - y1) / dist * 22; qy = my + (x2 - x1) / dist * 22; }
-        else { const vx = mx - cx, vy = my - cy, vl = Math.hypot(vx, vy) || 1; const push = dist > w * 0.45 ? 0.22 * dist + 40 : 0.12 * dist; qx = mx + vx / vl * push; qy = my + vy / vl * push; }
+        else { const vx = mx - cx, vy = my - cy, vl = Math.hypot(vx, vy) || 1; const push = dist > wm * 0.45 ? 0.22 * dist + 40 : 0.12 * dist; qx = mx + vx / vl * push; qy = my + vy / vl * push; }
         const path = el('path', { d: `M${x1},${y1}Q${qx},${qy} ${x2},${y2}`, class: 'band', 'stroke-width': (1.5 + Math.sqrt(p.n) * 1.35).toFixed(1) }, gB);
-        const lx = 0.25 * x1 + 0.5 * qx + 0.25 * x2, ly = 0.25 * y1 + 0.5 * qy + 0.25 * y2;
-        const pill = el('g', { class: 'bpill', transform: `translate(${lx.toFixed(1)},${ly.toFixed(1)})` }, gP);
-        el('circle', { r: 12 }, pill); el('text', {}, pill, String(p.n));
-        const html = `<b>${esc(domains[p.a])} ↔ ${esc(domains[p.b])}</b> · ${p.n} edges<br>${topLabels(p.labels, 5)}`;
-        for (const t of [path, pill]) { t.addEventListener('pointermove', ev => showTip(html, ev)); t.addEventListener('pointerleave', hideTip); }
-        bands.push({ p, path, pill });
+        bandDefs.push({ p, path, x1, y1, qx, qy, x2, y2 });
       }
-      const tw = clamp(w * 0.16, 170, 250);
-      const panel = mk('div', 'mpanel', stage); panel.hidden = true;
+      const tw = clamp(wm * 0.17, 165, 240);
+      const side = mk('div', sideW ? 'side4' : 'mpanel', stage); if (sideW) side.style.width = (sideW - 30) + 'px';
+      const idle = () => { side.textContent = ''; mk('h4', '', side, 'Select a domain'); mk('p', 'muted', side, 'Click any tile to list every type in it and every relationship it shares with the other domains.'); side.hidden = !sideW; };
+      idle();
       const tiles = [];
       domains.forEach((d, di) => {
         const reps = R.list.filter(r => r.dom === di).sort((a, b) => (b.fam >= 0) - (a.fam >= 0) || b.rec - a.rec);
@@ -1981,36 +2148,54 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         const nm = mk('span', 'nm', t); mk('i', 'dot bg' + di, nm); mk('span', '', nm, d);
         mk('span', 'meta', t, `${reps.reduce((a, r) => a + r.members.length, 0)} types · ${compact(reps.reduce((a, r) => a + r.rec, 0))} records · ${inside ? inside.n : 0} inside`);
         const chips = mk('span', 'chips', t);
-        const max = h < 700 ? 6 : 10;
+        const max = h < 700 ? 6 : 9;
         reps.slice(0, max).forEach(r => mk('span', 'chip' + (r.fam >= 0 ? ' fam' : ''), chips, truncate(r.name, 22)));
         if (reps.length > max) mk('span', 'chip', chips, `+${reps.length - max} more`);
         t.addEventListener('click', () => select(t.getAttribute('aria-pressed') === 'true' ? -1 : di));
         tiles.push(t);
       });
+      const boxes = tiles.map((t, di) => { const tw2 = t.offsetWidth || tw, th2 = t.offsetHeight || 150; return [P[di][0] - tw2 / 2 - 14, P[di][1] - th2 / 2 - 14, P[di][0] + tw2 / 2 + 14, P[di][1] + th2 / 2 + 14]; });
+      const inBox = (x, y) => boxes.some(b => x > b[0] && x < b[2] && y > b[1] && y < b[3]);
+      for (const b of bandDefs) {
+        const at = t => [(1 - t) * (1 - t) * b.x1 + 2 * (1 - t) * t * b.qx + t * t * b.x2, (1 - t) * (1 - t) * b.y1 + 2 * (1 - t) * t * b.qy + t * t * b.y2];
+        let pt = at(0.5);
+        for (const t of [0.5, 0.42, 0.58, 0.35, 0.65, 0.28, 0.72, 0.22, 0.78]) { const q = at(t); if (!inBox(q[0], q[1])) { pt = q; break; } }
+        const pill = el('g', { class: 'bpill', transform: `translate(${pt[0].toFixed(1)},${pt[1].toFixed(1)})` }, gP);
+        el('circle', { r: 12 }, pill); el('text', {}, pill, String(b.p.n));
+        const html = `<b>${esc(domains[b.p.a])} ↔ ${esc(domains[b.p.b])}</b> · ${b.p.n} edges<br>${topLabels(b.p.labels, 5)}`;
+        for (const t of [b.path, pill]) { t.addEventListener('pointermove', ev => showTip(html, ev)); t.addEventListener('pointerleave', hideTip); }
+        bands.push({ p: b.p, path: b.path, pill });
+      }
       function select(di) {
         tiles.forEach((t, i) => { t.setAttribute('aria-pressed', String(i === di)); t.classList.toggle('dim', di >= 0 && i !== di); });
         for (const b of bands) { const on = di >= 0 && (b.p.a === di || b.p.b === di); b.path.classList.toggle('on', on); b.path.classList.toggle('off', di >= 0 && !on); b.pill.classList.toggle('off', di >= 0 && !on); }
-        panel.hidden = di < 0; panel.textContent = '';
-        if (di < 0) return;
-        const hd = mk('h4', '', panel); mk('i', 'dot bg' + di, hd); mk('span', '', hd, domains[di]);
+        if (di < 0) { idle(); return; }
+        side.hidden = false; side.textContent = '';
+        const hd = mk('h4', '', side); mk('i', 'dot bg' + di, hd); mk('span', '', hd, domains[di]);
+        const chips = mk('div', 'chips', side);
+        R0.list.filter(r => r.dom === di).sort((a, b) => b.rec - a.rec).forEach(r => mk('span', 'chip', chips, r.name));
         [...domUnd.values()].filter(p => p.a === di || p.b === di).sort((x, y) => y.n - x.n).forEach(p => {
-          const row = mk('div', '', panel); const other = p.a === di ? p.b : p.a;
+          const row = mk('div', '', side); const other = p.a === di ? p.b : p.a;
           mk('b', '', row, p.a === p.b ? `Inside · ${p.n}` : `${domains[other]} · ${p.n}`);
-          mk('div', 'lbls', row, [...p.labels].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([x, c]) => `${x} ${c}`).join(' · '));
+          mk('div', 'lbls', row, [...p.labels].sort((a, b) => b[1] - a[1]).map(([x, c]) => `${x} ${c}`).join(' · '));
         });
       }
-      hint(stage, 'Click a tile · hover a band');
+      hint(stage, 'Click a tile · hover a band').style.right = (sideW + 10) + 'px';
     },
   });
 
   mock({
     short: 'Boxes', title: 'Nested boxes', cls: 'stage5',
     answers: 'Show every type, grouped, with nothing in the way until I ask.',
-    read: 'Each domain is a box sized by its content, with its types as pills. No lines at rest. Hover a pill to draw its links across boxes. Hover a box header to see how it connects to the other boxes.',
+    read: 'Each domain is a box sized by its content, with its types as pills. No lines at rest. Hover a pill to draw its links across boxes, and click to pin it. Click a family pill (bold) to open it into its member types. Hover a box header to see how it connects to the other boxes.',
     seen: 'KeyLines combos, yFiles groups, Collibra boxing',
     render(stage, w, h) {
-      const R = R1;
-      const domReps = domains.map((_, di) => R.list.filter(r => r.dom === di).sort((a, b) => (b.fam >= 0) - (a.fam >= 0) || b.rec - a.rec));
+      const open = this.open || (this.open = new Set());
+      const R = repsFor(open);
+      const domReps = domains.map((_, di) => R.list.filter(r => r.dom === di).sort((a, b) => {
+        const fa = famOf[a.members[0]], fb = famOf[b.members[0]];
+        const ka = fa >= 0 ? 0 : 1, kb = fb >= 0 ? 0 : 1; return ka - kb || (fa - fb) || b.rec - a.rec;
+      }));
       const root = d3.hierarchy({ children: DOMAIN_ORDER.map(di => ({ di, value: domReps[di].reduce((a, r) => a + (lw(r.short) + 34) * 30, 0) + 26000 })) }).sum(d => d.value || 0);
       d3.treemap().size([w, h]).paddingInner(14).paddingOuter(12).tile(d3.treemapSquarify.ratio(1.3))(root);
       const ov = mkSvg(stage, w, h); ov.classList.add('ov5'); ov.style.pointerEvents = 'none'; ov.style.zIndex = 4;
@@ -2023,43 +2208,58 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         box.style.background = `color-mix(in srgb, var(--d${di}) 5%, var(--surface))`;
         const hd = mk('header', '', box); const nm = mk('span', 'nm', hd); mk('i', 'dot bg' + di, nm); mk('span', '', nm, domains[di]);
         const outs = [...domUnd.values()].filter(p => p.a !== p.b && (p.a === di || p.b === di)).sort((x, y) => y.n - x.n).slice(0, 3);
-        mk('span', 'meta', hd, `${domReps[di].reduce((a, r) => a + r.members.length, 0)} types · ${outs.map(p => `${domains[p.a === di ? p.b : p.a].split(' ')[0]} ${p.n}`).join(' · ')}`);
+        mk('span', 'meta', hd, `${domReps[di].reduce((a, r) => a + r.members.length, 0)} types · most links with ${outs.slice(0, 2).map(p => `${domains[p.a === di ? p.b : p.a]} (${p.n})`).join(', ')}`);
         const pills = mk('div', 'pills', box);
+        const openedShown = new Set();
         for (const r of domReps[di]) {
-          const p = mk('span', 'pill' + (r.fam >= 0 ? ' fam' : ''), pills); mk('i', 'dot bg' + di, p); mk('span', '', p, r.short);
+          const f0 = famOf[r.members[0]];
+          if (r.fam < 0 && f0 >= 0 && open.has(f0) && !openedShown.has(f0)) {
+            openedShown.add(f0);
+            const c = mk('button', 'pill famopen', pills); c.type = 'button'; mk('span', '', c, `${families[f0].name} ▴`); c.title = 'Close this family';
+            c.addEventListener('click', ev => { ev.stopPropagation(); open.delete(f0); rerender(this); });
+          }
+          const p = mk('span', 'pill' + (r.fam >= 0 ? ' fam' : ''), pills); mk('i', 'dot bg' + di, p); mk('span', '', p, r.short + (r.fam >= 0 ? ' ▾' : ''));
+          if (r.fam >= 0) p.title = 'Open: ' + r.members.map(NAME).join(', ');
           pillEls.set(r.id, p);
         }
         hd.addEventListener('pointerenter', () => {
           ov.textContent = ''; const c0 = center(box);
+          const edgePt = (bx, toward) => { const s = stage.getBoundingClientRect(), r = bx.getBoundingClientRect(); const cx = r.left - s.left + r.width / 2, cy = r.top - s.top + r.height / 2; const dx = toward.x - cx, dy = toward.y - cy; const k = Math.min(Math.abs((r.width / 2) / (dx || 1e-6)), Math.abs((r.height / 2) / (dy || 1e-6))); return { x: cx + dx * k, y: cy + dy * k }; };
           for (const p of domUnd.values()) {
             if (p.a === p.b || (p.a !== di && p.b !== di)) continue;
             const other = boxEls[p.a === di ? p.b : p.a]; if (!other) continue;
-            const c1 = center(other);
-            el('path', { d: qpath(c0, c1, 0.1), class: 'agg', 'stroke-width': (2 + Math.sqrt(p.n) * 1.6).toFixed(1) }, ov);
-            el('text', { x: (c0.x + c1.x) / 2, y: (c0.y + c1.y) / 2, 'text-anchor': 'middle' }, ov, String(p.n));
+            const c1 = center(other); const a = edgePt(box, c1), b = edgePt(other, c0);
+            const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y, qx = mx - dy * 0.1, qy = my + dx * 0.1;
+            el('path', { d: `M${a.x},${a.y}Q${qx},${qy} ${b.x},${b.y}`, class: 'agg', 'stroke-width': (2 + Math.sqrt(p.n) * 1.6).toFixed(1) }, ov);
+            el('text', { x: 0.25 * a.x + 0.5 * qx + 0.25 * b.x, y: 0.25 * a.y + 0.5 * qy + 0.25 * b.y + 4, 'text-anchor': 'middle' }, ov, String(p.n));
           }
         });
         hd.addEventListener('pointerleave', () => { ov.textContent = ''; });
         boxEls[di] = box;
       }
       let sticky = null;
-      function focus(id) {
+      const focus = (id) => {
         ov.textContent = ''; stage.classList.toggle('focus', !!id);
         for (const p of pillEls.values()) p.classList.remove('on', 'nb');
         if (!id) return;
         const me = pillEls.get(id); me.classList.add('on'); const c0 = center(me);
         for (const p of R.pairs.values()) {
           if (p.a !== id && p.b !== id) continue;
-          const other = p.a === id ? p.b : p.a; const oe = pillEls.get(other); oe.classList.add('nb');
+          const other = p.a === id ? p.b : p.a; const oe = pillEls.get(other); if (!oe) continue; oe.classList.add('nb');
           const out = p.a === id ? p.ab : p.ba, inn = p.a === id ? p.ba : p.ab;
           el('path', { d: qpath(c0, center(oe), 0.12), class: out && inn ? 'both' : out ? 'out' : 'in' }, ov);
         }
-      }
+      };
       for (const [id, p] of pillEls) {
+        const r = R.byId.get(id);
         p.addEventListener('pointerenter', ev => { if (!sticky) focus(id); showTip(repInfo(R, id), ev); });
         p.addEventListener('pointermove', moveTip);
         p.addEventListener('pointerleave', () => { if (!sticky) focus(null); hideTip(); });
-        p.addEventListener('click', ev => { ev.stopPropagation(); sticky = sticky === id ? null : id; focus(sticky || id); });
+        p.addEventListener('click', ev => {
+          ev.stopPropagation();
+          if (r.fam >= 0) { open.add(r.fam); hideTip(); rerender(this); return; }
+          sticky = sticky === id ? null : id; focus(sticky || id);
+        });
       }
       stage.addEventListener('click', () => { sticky = null; focus(null); });
     },
@@ -2068,9 +2268,10 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   mock({
     short: 'Context band', title: 'Hubs in a context band',
     answers: 'What remains once the types everyone points at are moved aside?',
-    read: 'The seven types most others point to sit in a strip at the top. Lines to them are drawn very lightly. Below, the remaining types and the links between them get full emphasis.',
+    read: 'The seven types most others point to sit in a strip at the top, and lines to them are hidden until you switch them on or hover a type. Below, the remaining types cluster by domain, with each domain named, and the links between them get full emphasis.',
     seen: 'Collibra Flow / Context layout',
     render(stage, w, h) {
+      const st = this.st || (this.st = { ctx: false });
       const R = R1;
       const inN = new Map(R.list.map(r => [r.id, new Set()]));
       for (const p of R.pairs.values()) { if (p.ab) inN.get(p.b).add(p.a); if (p.ba) inN.get(p.a).add(p.b); }
@@ -2080,36 +2281,39 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       const svg = mkSvg(stage, w, h);
       el('rect', { x: 0, y: 0, width: w, height: bandH, class: 'bandbg' }, svg);
       el('text', { x: 14, y: 20, class: 'bandlab' }, svg, 'CONTEXT · the 7 types most others point to');
-      const hubNodes = hubs.map((r, i) => ({ id: r.id, dom: r.dom, r: rad(r.rec) + 2, rep: r, x: 90 + i * (w - 180) / (hubs.length - 1), y: bandH / 2 + 6 }));
+      const hubNodes = hubs.map((r, i) => ({ id: r.id, dom: r.dom, r: rad(r.rec) + 2, rep: r, x: 110 + i * (w - 220) / (hubs.length - 1), y: bandH / 2 + 4 }));
       const rest = R.list.filter(r => !hubSet.has(r.id)).map(r => ({ id: r.id, dom: r.dom, r: rad(r.rec), rep: r }));
       const restIds = new Set(rest.map(d => d.id));
       const links = [...R.pairs.values()].filter(p => restIds.has(p.a) && restIds.has(p.b)).map(p => ({ source: p.a, target: p.b }));
-      layout(rest, links, w, h, { collide: d => d.r + 9, pull: 0.14, charge: -60, pad: 36, top: bandH + 10, margin: { r: 110 } });
+      layout(rest, links, w, h, { collide: d => d.r + 10, pull: 0.15, charge: -60, pad: 40, top: bandH + 18, margin: { r: 110, t: 18 } });
       const all = [...hubNodes, ...rest]; const by = new Map(all.map(d => [d.id, d]));
-      const gE = el('g', {}, svg), gN = el('g', {}, svg);
+      const gE = el('g', {}, svg), gL = el('g', {}, svg), gN = el('g', {}, svg);
       const E = [...R.pairs.values()].map(p => {
         const a = by.get(p.a), b = by.get(p.b); const ctx = hubSet.has(p.a) || hubSet.has(p.b);
         let d;
         if (ctx) { const [lo, hi] = hubSet.has(p.a) ? [b, a] : [a, b]; d = `M${lo.x},${lo.y}C${lo.x},${(lo.y + hi.y) / 2} ${hi.x},${hi.y + 60} ${hi.x},${hi.y}`; }
         else d = `M${a.x},${a.y}L${b.x},${b.y}`;
-        return { el: el('path', { d, class: 'e' + (ctx ? ' ctx' : ''), 'stroke-width': (0.6 + Math.log2(p.ab + p.ba) * 0.6).toFixed(2) }, gE), ...p };
+        return { el: el('path', { d, class: 'e' + (ctx ? (st.ctx ? ' ctx' : ' hid') : ''), 'stroke-width': (0.6 + Math.log2(p.ab + p.ba) * 0.6).toFixed(2) }, gE), ...p };
       });
-      const top = new Set([...rest].sort((x, y) => score(y.rep) - score(x.rep)).slice(0, labelBudget(w, h)).map(d => d.id));
+      const dl = clusterLabels(gL, rest);
       const map = drawNodes(gN, all, {
         cls: d => hubSet.has(d.id) ? 'hub' : '',
         text: d => hubSet.has(d.id) ? { x: 0, y: d.r + 13, 'text-anchor': 'middle' } : { x: d.r + 3, dy: '0.32em' },
-        hidden: d => !hubSet.has(d.id) && !top.has(d.id),
       });
-      focusable(svg, map, E, id => repInfo(R, id));
+      fitLabels(nodeLabelItems(rest, map), [...circleBoxes(all), ...dl, [0, 0, w, bandH]], w, h);
+      const f = focusable(svg, map, E, id => repInfo(R, id));
+      const tools = mk('div', 'mtools', stage); tools.style.top = (bandH + 8) + 'px';
+      toggleBtn(tools, 'Show context links', st.ctx, v => { st.ctx = v; rerender(this); });
+      searchBox(tools, R, id => f.pin(id));
       legend(stage).style.top = (bandH + 8) + 'px';
-      hint(stage, 'Hover a type · lines to the band are context');
+      hint(stage, 'Hover a type to see all its links, including to the band');
     },
   });
 
   mock({
     short: 'Flow', title: 'Left-to-right flow',
     answers: 'Which types point at things, and which get pointed at?',
-    read: 'Types sit in five columns, from those that only point out (left) to those that are only pointed to (right). Order inside a column keeps linked types close. Dashed lines run backwards.',
+    read: 'Types sit in five columns by the balance of their edges, from those that mostly point out (left) to those mostly pointed to (right). Order inside a column keeps linked types close. Dashed lines run backwards. Hover a type to see its links with arrows.',
     seen: 'dbt and Atlan lineage, ELK layered layout',
     render(stage, w, h) {
       const R = R1;
@@ -2118,7 +2322,7 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       const colOf = r => { const { i, o } = io.get(r.id); if (!i && !o) return 2; const s = (i - o) / (i + o); return s < -0.6 ? 0 : s < -0.2 ? 1 : s <= 0.2 ? 2 : s <= 0.6 ? 3 : 4; };
       const cols = [[], [], [], [], []];
       R.list.forEach(r => cols[colOf(r)].push({ id: r.id, dom: r.dom, r: rad(r.rec) * 0.8, rep: r }));
-      const top = 54, bottom = 18, padL = 24, labelR = 150;
+      const top = 64, bottom = 50, padL = 24, labelR = 26;
       const colX = c => padL + 10 + c * (w - padL - labelR - 20) / 4;
       const nbr = new Map(R.list.map(r => [r.id, []]));
       for (const p of R.pairs.values()) { nbr.get(p.a).push(p.b); nbr.get(p.b).push(p.a); }
@@ -2127,14 +2331,16 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       place();
       const all = cols.flat(); const by = new Map(all.map(d => [d.id, d]));
       for (let it = 0; it < 4; it++) {
-        cols.forEach(list => {
-          list.forEach(d => { const ys = nbr.get(d.id).map(id => by.get(id).y); d.bc = ys.length ? d3.mean(ys) : d.y; });
-          list.sort((a, b) => a.bc - b.bc);
-        });
+        cols.forEach(list => { list.forEach(d => { const ys = nbr.get(d.id).map(id => by.get(id).y); d.bc = ys.length ? d3.mean(ys) : d.y; }); list.sort((a, b) => a.bc - b.bc); });
         place();
       }
       const svg = mkSvg(stage, w, h);
-      ['Only points out', 'Mostly points out', 'Both ways', 'Mostly pointed to', 'Only pointed to'].forEach((t, c) => el('text', { x: colX(c), y: 30, class: 'colhead', 'text-anchor': c === 4 ? 'end' : 'start' }, svg, `${t} · ${cols[c].length}`));
+      const mid = 'arr7-' + Math.random().toString(36).slice(2, 8);
+      const defs = el('defs', {}, svg); const mkr = el('marker', { id: mid, viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs); el('path', { d: 'M0,0 L8,4 L0,8 z', fill: 'var(--ink)' }, mkr);
+      ['Mostly points out', 'Points out more', 'Balanced', 'Pointed to more', 'Mostly pointed to'].forEach((t, c) => {
+        const tx = el('text', { x: colX(c), y: 26, class: 'colhead', 'text-anchor': c === 4 ? 'end' : 'start' }, svg);
+        el('tspan', { x: colX(c), dy: 0 }, tx, t); el('tspan', { x: colX(c), dy: 14 }, tx, `${cols[c].length} types`);
+      });
       const gE = el('g', {}, svg), gN = el('g', {}, svg);
       const colIdx = new Map(); cols.forEach((list, c) => list.forEach(d => colIdx.set(d.id, c)));
       const E = [...R.pairs.values()].map(p => {
@@ -2146,7 +2352,7 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         return { el: el('path', { d, class: cls, 'stroke-width': (0.6 + Math.log2(p.ab + p.ba) * 0.55).toFixed(2) }, gE), ...p };
       });
       const map = drawNodes(gN, all, { text: d => colIdx.get(d.id) === 4 ? { x: -d.r - 4, dy: '0.32em', 'text-anchor': 'end' } : { x: d.r + 4, dy: '0.32em' } });
-      focusable(svg, map, E, id => repInfo(R, id));
+      focusable(svg, map, E, id => repInfo(R, id), id => { for (const e of E) { const on = id && (e.a === id || e.b === id); if (on) e.el.setAttribute('marker-end', `url(#${mid})`); else e.el.removeAttribute('marker-end'); } });
       legend(stage).style.top = 'auto'; stage.querySelector('.legend').style.bottom = '10px';
     },
   });
@@ -2154,28 +2360,28 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   mock({
     short: 'Bundled ring', title: 'Ring with bundled links',
     answers: 'Show me everything, but readable.',
-    read: 'Every type sits on a ring grouped by domain. Links bend through their domain, so hundreds of lines read as a few dozen flows. Hover a type: green goes out, orange comes in. Toggle off both switches to see straight lines.',
+    read: 'Every type sits on a ring grouped by domain. Links bend through their domain, so hundreds of lines read as a few dozen flows. Hover a type: green goes out, orange comes in, and the panel lists its relationships. Turn off both switches to see straight lines.',
     seen: "Holten's hierarchical edge bundling (D3, Vega)",
     render(stage, w, h) {
-      const state = this.state || (this.state = { collapse: true, bundle: true, sticky: null });
+      const state = this.state || (this.state = { collapse: true, bundle: true });
       const R = state.collapse ? R1 : R0;
       const tools = mk('div', 'mtools', stage);
       toggleBtn(tools, 'Collapse families', state.collapse, v => { state.collapse = v; rerender(this); });
       toggleBtn(tools, 'Bundle by domain', state.bundle, v => { state.bundle = v; rerender(this); });
       const panel = mk('div', 'mpanel', stage); panel.hidden = true;
-      const RR = Math.max(150, Math.min(w, h) / 2 - 190);
-      const svg = mkSvg(stage, w, h); const g = el('g', { transform: `translate(${w / 2},${h / 2 + 8})` }, svg);
+      const RR = Math.max(140, Math.min(w, h) / 2 - 186);
+      const svg = mkSvg(stage, w, h); svg.classList.add('ring'); const g = el('g', { transform: `translate(${w / 2},${h / 2})` }, svg);
       const root = { id: 'root', children: DOMAIN_ORDER.map(di => ({ id: 'd' + di, dom: di, children: R.list.filter(r => r.dom === di).sort((a, b) => (b.fam >= 0) - (a.fam >= 0) || b.deg - a.deg) })) };
       const hier = d3.hierarchy(root);
-      d3.cluster().size([2 * Math.PI, RR]).separation((a, b) => a.parent === b.parent ? 1 : 2.6)(hier);
+      d3.cluster().size([2 * Math.PI, RR]).separation((a, b) => a.parent === b.parent ? 1 : 2)(hier);
       const leafById = new Map(hier.leaves().map(l => [l.data.id, l]));
       const line = d3.lineRadial().curve(d3.curveBundle.beta(state.bundle ? 0.85 : 0)).radius(d => d.y).angle(d => d.x);
       const gE = el('g', {}, g);
       const E = [...R.pairs.values()].map(p => ({ el: el('path', { d: line(leafById.get(p.a).path(leafById.get(p.b))), class: 'e', 'stroke-width': (0.7 + Math.log2(p.ab + p.ba) * 0.55).toFixed(2) }, gE), ...p }));
       for (const dn of hier.children) {
         const ls = dn.leaves(); const a0 = d3.min(ls, l => l.x) - 0.012, a1 = d3.max(ls, l => l.x) + 0.012;
-        el('path', { d: d3.arc().innerRadius(RR + 160).outerRadius(RR + 164).startAngle(a0).endAngle(a1)(), class: 'fill' + dn.data.dom }, g);
-        const mid = (a0 + a1) / 2, rx = Math.sin(mid) * (RR + 176), ry = -Math.cos(mid) * (RR + 176);
+        el('path', { d: d3.arc().innerRadius(RR + 146).outerRadius(RR + 150).startAngle(a0).endAngle(a1)(), class: 'fill' + dn.data.dom }, g);
+        const mid = (a0 + a1) / 2, rx = Math.sin(mid) * (RR + 162), ry = -Math.cos(mid) * (RR + 162);
         el('text', { x: rx, y: ry + 4, class: 'hull-name fill' + dn.data.dom, 'text-anchor': Math.abs(Math.sin(mid)) < 0.2 ? 'middle' : (mid < Math.PI ? 'start' : 'end') }, g, domains[dn.data.dom]);
       }
       const gN = el('g', {}, g); const map = new Map();
@@ -2184,12 +2390,12 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         const n = el('g', { class: 'n', transform: `rotate(${deg2.toFixed(2)}) translate(${RR + 6},0)` }, gN);
         el('circle', { r: (2 + Math.log10(1 + r.rec) * 0.9).toFixed(2), class: 'fill' + r.dom }, n);
         const flip = l.x >= Math.PI;
-        const t = el('text', { x: flip ? -9 : 9, dy: '0.32em', 'text-anchor': flip ? 'end' : 'start', transform: flip ? 'rotate(180)' : null }, n, truncate(r.name, 26));
+        const t = el('text', { x: flip ? -8 : 8, dy: '0.32em', 'text-anchor': flip ? 'end' : 'start', transform: flip ? 'rotate(180)' : null }, n, truncate(r.name, 22));
         if (r.fam >= 0) t.style.fontWeight = 600;
-        const loops = R.loops.get(r.id); if (loops) el('tspan', { fill: 'var(--hi-in)' }, t, `  ↻${loops}`);
+        const loops = R.loops.get(r.id); if (loops) el('tspan', { fill: 'var(--hi-in)' }, t, ` ↻${loops}`);
         map.set(r.id, n);
       }
-      focusable(svg, map, E, id => repInfo(R, id), id => {
+      const f = focusable(svg, map, E, () => null, id => {
         panel.hidden = !id; panel.textContent = ''; if (!id) return;
         const r = R.byId.get(id), rr = R.rels.get(id);
         const hd = mk('h4', '', panel); mk('i', 'dot bg' + r.dom, hd); mk('span', '', hd, `${r.name} · ${r.deg} edges`);
@@ -2198,25 +2404,27 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
           mk('span', '', row, [...set].map(x => x === id ? 'itself' : R.byId.get(x).short).join(', '));
         }
       });
-      hint(stage, `${E.length} lines · ↻ = a rule a family applies to itself`);
+      searchBox(tools, R, id => f.pin(id));
+      hint(stage, `${E.length} lines · ↻ = links to its own type`);
     },
   });
 
   mock({
     short: 'Chord', title: 'Domain chord',
     answers: 'How much does each domain talk to each other domain, and in which direction?',
-    read: 'Each arc is a domain, sized by its edges. Ribbons run from source to target domain, colored by the source, with arrows. Hover an arc to isolate it, or a ribbon for its relationships.',
+    read: 'Each arc is a domain, sized by its edges. Ribbons run from source to target domain, colored by the source, and end in an arrow at the target. Hover an arc to isolate it, hover a ribbon for its relationships, click a ribbon to pin its details.',
     seen: 'Circos and d3-chord',
     render(stage, w, h) {
       const state = this.state || (this.state = { inside: false });
       const tools = mk('div', 'mtools', stage);
       toggleBtn(tools, 'Include links inside a domain', state.inside, v => { state.inside = v; rerender(this); });
+      const panel = mk('div', 'mpanel', stage); panel.hidden = true;
       const order = DOMAIN_ORDER;
       const matrix = order.map(a => order.map(b => (a === b && !state.inside) ? 0 : domDir[a][b].n));
-      const outer = Math.min(w, h) / 2 - 96, inner = outer - 14;
+      const outer = Math.min(w * 0.5 - 230, h / 2 - 70), inner = outer - 14;
       const chords = d3.chordDirected().padAngle(0.035).sortSubgroups(d3.descending).sortChords(d3.descending)(matrix);
       const svg = mkSvg(stage, w, h); const g = el('g', { transform: `translate(${w / 2},${h / 2 + 10})` }, svg);
-      const ribbon = d3.ribbonArrow().radius(inner - 2).padAngle(1 / inner);
+      const ribbon = d3.ribbonArrow().radius(inner - 2).padAngle(1 / inner).headRadius(inner * 0.06);
       const arc = d3.arc().innerRadius(inner).outerRadius(outer);
       const gR = el('g', {}, g);
       const rib = chords.map(c => {
@@ -2225,28 +2433,39 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         const cell = domDir[s][t];
         const html = `<b>${esc(domains[s])} → ${esc(domains[t])}</b> · ${cell.n} edges<br>${topLabels(cell.labels, 6)}`;
         p.addEventListener('pointermove', ev => showTip(html, ev)); p.addEventListener('pointerleave', hideTip);
+        p.addEventListener('click', ev => {
+          ev.stopPropagation(); panel.hidden = false; panel.textContent = '';
+          const hd = mk('h4', '', panel); mk('i', 'dot bg' + s, hd); mk('span', '', hd, `${domains[s]} → ${domains[t]} · ${cell.n}`);
+          mk('div', 'lbls', panel, [...cell.labels].sort((a, b) => b[1] - a[1]).map(([x, c2]) => `${x} ${c2}`).join(' · '));
+          rib.forEach(r => r.p.classList.toggle('off', r.p !== p));
+        });
         return { p, s: c.source.index, t: c.target.index };
       });
+      svg.addEventListener('click', () => { panel.hidden = true; rib.forEach(r => r.p.classList.remove('off')); });
       chords.groups.forEach(gr => {
         const di = order[gr.index];
         const a = el('path', { d: arc(gr), class: 'garc fill' + di }, g);
         const mid = (gr.startAngle + gr.endAngle) / 2;
-        const tx = Math.sin(mid) * (outer + 12), ty = -Math.cos(mid) * (outer + 12);
+        const tx = Math.sin(mid) * (outer + 14), ty = -Math.cos(mid) * (outer + 14);
+        const anchor = Math.abs(Math.sin(mid)) < 0.15 ? 'middle' : (mid < Math.PI ? 'start' : 'end');
         const outN = d3.sum(order, b => (b === di && !state.inside) ? 0 : domDir[di][b].n), inN = d3.sum(order, b => (b === di && !state.inside) ? 0 : domDir[b][di].n);
-        const t = el('text', { x: tx, y: ty, class: 'glab', 'text-anchor': Math.abs(Math.sin(mid)) < 0.15 ? 'middle' : (mid < Math.PI ? 'start' : 'end'), dy: Math.cos(mid) > 0.6 ? '-0.2em' : Math.cos(mid) < -0.6 ? '1em' : '0.35em' }, g);
-        el('tspan', {}, t, domains[di]);
-        el('tspan', { class: 's', dx: 6 }, t, `${outN} out · ${inN} in` + (state.inside ? '' : ` · ${domDir[di][di].n} inside`));
-        a.addEventListener('pointerenter', () => rib.forEach(r => r.p.classList.toggle('off', r.s !== gr.index && r.t !== gr.index)));
-        a.addEventListener('pointerleave', () => rib.forEach(r => r.p.classList.remove('off')));
+        const t = el('text', { x: tx, y: ty + (Math.cos(mid) > 0.6 ? -18 : Math.cos(mid) < -0.6 ? 12 : -4), class: 'glab', 'text-anchor': anchor }, g);
+        el('tspan', { x: tx, dy: 0 }, t, domains[di]);
+        el('tspan', { x: tx, dy: 14, class: 's' }, t, `${outN} out · ${inN} in` + (state.inside ? '' : ` · ${domDir[di][di].n} inside`));
+        for (const target of [a, t]) {
+          target.addEventListener('pointerenter', () => rib.forEach(r => r.p.classList.toggle('off', r.s !== gr.index && r.t !== gr.index)));
+          target.addEventListener('pointerleave', () => { if (panel.hidden) rib.forEach(r => r.p.classList.remove('off')); });
+        }
+        t.style.cursor = 'pointer';
       });
-      hint(stage, 'Hover an arc or a ribbon');
+      hint(stage, 'Hover an arc or a ribbon · click a ribbon to pin');
     },
   });
 
   mock({
     short: 'Domain grid', title: 'Domain-to-domain grid',
     answers: 'Which relationships connect domain A to domain B?',
-    read: 'Rows are the source domain, columns the target. Each cell shows how many edges run that way and the top relationship names. Darker means more. Hover a cell for the full list.',
+    read: 'Rows are the source domain, columns the target. Each cell shows how many edges run that way and the top relationship names. A stronger fill means more. Click a cell (or focus it and press Enter) for every relationship and the type pairs behind it.',
     seen: 'PivotGraph (Wattenberg, 2006)',
     render(stage, w, h) {
       const order = DOMAIN_ORDER; const max = d3.max(order.flatMap(a => order.map(b => domDir[a][b].n)));
@@ -2256,19 +2475,34 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       mk('div', 'corner', pg, 'from ↓  to →');
       order.forEach(d => { const c = mk('div', 'hd col', pg); mk('i', 'dot bg' + d, c); mk('span', '', c, domains[d]); });
       const lines = h > 820 ? 4 : h > 680 ? 3 : 2;
+      const panel = mk('div', 'mpanel', stage); panel.hidden = true; Object.assign(panel.style, { left: 'auto', right: '14px', bottom: '14px' });
+      const show = (a, b) => {
+        const cell = domDir[a][b]; panel.hidden = false; panel.textContent = '';
+        const hd = mk('h4', '', panel); mk('i', 'dot bg' + a, hd); mk('span', '', hd, `${domains[a]} → ${domains[b]} · ${cell.n}`);
+        const close = mk('button', 'tgl', hd, 'Close'); close.type = 'button'; close.style.marginLeft = 'auto'; close.addEventListener('click', () => { panel.hidden = true; });
+        const byLabel = new Map();
+        for (const [s, t, l] of edges) if (DOM(s) === a && DOM(t) === b) { const k = labels[l]; if (!byLabel.has(k)) byLabel.set(k, []); byLabel.get(k).push(`${NAME(s)} → ${NAME(t)}`); }
+        [...byLabel].sort((x, y) => y[1].length - x[1].length).forEach(([lab, pairs]) => {
+          const row = mk('div', '', panel); mk('div', 'lbls', row, `${lab} · ${pairs.length}`);
+          mk('div', '', row, pairs.slice(0, 8).join(', ') + (pairs.length > 8 ? ` and ${pairs.length - 8} more` : ''));
+        });
+      };
       order.forEach(a => {
         const rh = mk('div', 'hd', pg); mk('i', 'dot bg' + a, rh); mk('span', '', rh, domains[a]);
         order.forEach(b => {
           const cell = domDir[a][b];
           const c = mk('div', 'cell' + (cell.n ? '' : ' zero'), pg);
           if (!cell.n) { mk('span', 'c', c, '·'); return; }
-          const pct = 4 + 46 * Math.log(cell.n + 1) / Math.log(max + 1);
+          c.tabIndex = 0; c.setAttribute('role', 'button'); c.setAttribute('aria-label', `${domains[a]} to ${domains[b]}: ${cell.n} edges`);
+          const pct = 3 + 27 * Math.log(cell.n + 1) / Math.log(max + 1);
           c.style.background = `color-mix(in srgb, var(--accent) ${pct.toFixed(0)}%, var(--surface))`;
-          if (pct > 36) c.style.color = 'var(--planloft-accent-contrast, #fff)';
+          c.style.borderColor = `color-mix(in srgb, var(--accent) ${(pct * 1.6).toFixed(0)}%, var(--line))`;
           mk('span', 'c', c, String(cell.n));
-          [...cell.labels].sort((x, y) => y[1] - x[1]).slice(0, lines).forEach(([l, n]) => { const s = mk('span', 'l', c, `${l} ${n}`); if (pct > 36) s.style.color = 'inherit'; });
-          const html = `<b>${esc(domains[a])} → ${esc(domains[b])}</b> · ${cell.n} edges<br>${topLabels(cell.labels, 12)}`;
+          [...cell.labels].sort((x, y) => y[1] - x[1]).slice(0, lines).forEach(([l, n]) => mk('span', 'l', c, `${l} ${n}`));
+          const html = `<b>${esc(domains[a])} → ${esc(domains[b])}</b> · ${cell.n} edges<br>${topLabels(cell.labels, 6)}<br><span class="k">Click for everything</span>`;
           c.addEventListener('pointermove', ev => showTip(html, ev)); c.addEventListener('pointerleave', hideTip);
+          c.addEventListener('click', () => { hideTip(); show(a, b); });
+          c.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); show(a, b); } });
         });
       });
     },
@@ -2277,7 +2511,7 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   mock({
     short: 'Matrix', title: 'Matrix with a crosshair',
     answers: 'Exactly which type pairs are linked, and by what?',
-    read: 'Rows point to columns. Types are grouped by domain, families merged. Hover any cell: its row and column light up and the panel on the right names both types and every relationship between them.',
+    read: 'Rows point to columns. Types are grouped by domain, families merged. Hover any cell, filled or empty: its row and column light up and the panel names both types and every relationship between them. Click to pin the readout. Type a name in the panel to light up that type’s row and column.',
     seen: 'MatrixExplorer, NodeTrix',
     render(stage, w, h) {
       const R = R1;
@@ -2287,49 +2521,72 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       const C = Math.max(4, Math.floor(Math.min((h - T - 16) / n, (w - panelW - L - 40) / n)));
       const S = n * C;
       const svg = mkSvg(stage, w - panelW - 20, h);
-      el('rect', { x: L, y: T, width: S, height: S, class: 'mx-bg' }, svg);
+      const bg = el('rect', { x: L, y: T, width: S, height: S, class: 'mx-bg' }, svg);
       let start = 0;
       DOMAIN_ORDER.forEach(di => {
         const cnt = order.filter(r => r.dom === di).length; if (!cnt) return;
         el('rect', { x: L + start * C, y: T - 8, width: cnt * C - 1, height: 5, class: 'fill' + di }, svg);
         el('rect', { x: L - 8, y: T + start * C, width: 5, height: cnt * C - 1, class: 'fill' + di }, svg);
         el('text', { x: L - 14, y: T + (start + cnt / 2) * C + 3, 'text-anchor': 'end', class: 'mx-dom' }, svg, domains[di]);
+        const topName = cnt * C > domains[di].length * 5.6 ? domains[di] : cnt * C > 34 ? domains[di].split(' ')[0] : '';
+        if (topName) el('text', { x: L + (start + cnt / 2) * C, y: T - 12, 'text-anchor': 'middle', class: 'mx-dom mx-topdom' }, svg, topName);
         start += cnt;
       });
       const crossR = el('rect', { x: L, y: 0, width: S, height: C, class: 'mx-cross' }, svg);
       const crossC = el('rect', { x: 0, y: T, width: C, height: S, class: 'mx-cross' }, svg);
-      crossR.style.display = crossC.style.display = 'none';
       const rowLab = el('text', { class: 'mx-lab', 'text-anchor': 'end' }, svg);
+      const colLab = el('text', { class: 'mx-lab', 'text-anchor': 'start' }, svg);
+      const hideCross = () => { crossR.style.display = crossC.style.display = 'none'; rowLab.textContent = colLab.textContent = ''; svg.querySelectorAll('.mx-topdom').forEach(x => { x.style.opacity = 1; }); };
+      let pinned = false;
+      hideCross();
       const gC = el('g', {}, svg);
       for (const [k, ls] of R.dir) {
         const [a, b] = k.split('>');
-        const r = el('rect', { x: L + pos.get(b) * C + 0.4, y: T + pos.get(a) * C + 0.4, width: C - 0.8, height: C - 0.8, class: 'mx-cell', 'fill-opacity': Math.min(1, 0.4 + 0.15 * (ls.length - 1)) }, gC);
-        r.dataset.k = k;
+        el('rect', { x: L + pos.get(b) * C + 0.4, y: T + pos.get(a) * C + 0.4, width: C - 0.8, height: C - 0.8, class: 'mx-cell', 'fill-opacity': Math.min(1, 0.4 + 0.15 * (ls.length - 1)), 'pointer-events': 'none' }, gC);
       }
       const read = mk('div', 'mx-read', stage); read.style.width = panelW + 'px';
-      const idle = () => { read.innerHTML = `<span class="big">${R.dir.size} linked pairs</span><span class="muted">Hover a cell. Row types point to column types. Darker cells carry more than one relationship.</span>`; };
+      const search = mk('input', '', read); search.type = 'search'; search.placeholder = 'Find a type'; search.setAttribute('aria-label', 'Find a type in the matrix');
+      search.className = 'msearch-input'; Object.assign(search.style, { font: 'inherit', fontSize: '0.8rem', padding: '5px 9px', border: '1px solid var(--line)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--ink)' });
+      const out = mk('div', '', read); out.style.cssText = 'display:grid;gap:8px';
+      const idle = () => { out.innerHTML = `<span class="big">${R.dir.size} linked pairs</span><span class="muted">Hover a cell; click to pin it. Row types point to column types. Stronger cells carry more than one relationship.</span>`; };
       idle();
-      gC.addEventListener('pointermove', ev => {
-        const k = ev.target.dataset && ev.target.dataset.k; if (!k) return;
-        const [a, b] = k.split('>'); const ra = R.byId.get(a), rb = R.byId.get(b);
-        const ia = pos.get(a), ib = pos.get(b);
+      const cross = (ia, ib) => {
         crossR.style.display = crossC.style.display = '';
         crossR.setAttribute('y', T + ia * C); crossC.setAttribute('x', L + ib * C);
-        rowLab.setAttribute('x', L + ib * C - 6); rowLab.setAttribute('y', T + ia * C + C / 2 + 3); rowLab.textContent = ra.short + ' →';
-        const back = R.dir.get(b + '>' + a);
-        read.innerHTML = `<span class="big">${esc(ra.name)} → ${esc(rb.name)}</span>`
-          + `<span class="k mono">${R.dir.get(k).map(esc).join('<br>')}</span>`
-          + (back && a !== b ? `<span class="muted">Back the other way:</span><span class="k mono">${back.map(esc).join('<br>')}</span>` : '')
+        rowLab.setAttribute('x', L - 16); rowLab.setAttribute('y', T + ia * C + C / 2 + 3); rowLab.textContent = order[ia].short + ' →';
+        colLab.setAttribute('x', L + ib * C); colLab.setAttribute('y', T - 12); colLab.textContent = '↓ ' + order[ib].short;
+        svg.querySelectorAll('.mx-topdom').forEach(x => { x.style.opacity = 0; });
+        colLab.setAttribute('text-anchor', ib > n * 0.6 ? 'end' : 'start');
+      };
+      svg.addEventListener('click', () => { pinned = !pinned; });
+      svg.addEventListener('pointermove', ev => {
+        if (pinned) return;
+        const r = svg.getBoundingClientRect(); const x = ev.clientX - r.left, y = ev.clientY - r.top;
+        const ib = Math.floor((x - L) / C), ia = Math.floor((y - T) / C);
+        if (ia < 0 || ib < 0 || ia >= n || ib >= n) { return; }
+        cross(ia, ib);
+        const ra = order[ia], rb = order[ib], k = ra.id + '>' + rb.id, ls = R.dir.get(k), back = R.dir.get(rb.id + '>' + ra.id);
+        out.innerHTML = `<span class="big">${esc(ra.name)} → ${esc(rb.name)}</span>`
+          + (ls ? `<span class="k mono">${ls.map(esc).join('<br>')}</span>` : '<span class="muted">0 relationships this way.</span>')
+          + (back && ra.id !== rb.id ? `<span class="muted">Back the other way:</span><span class="k mono">${back.map(esc).join('<br>')}</span>` : '')
           + `<span class="muted">${esc(ra.short)}: ${ra.deg} edges · ${esc(rb.short)}: ${rb.deg} edges</span>`;
       });
-      gC.addEventListener('pointerleave', () => { crossR.style.display = crossC.style.display = 'none'; rowLab.textContent = ''; idle(); });
+      svg.addEventListener('pointerleave', () => { if (!pinned) { hideCross(); idle(); } });
+      search.addEventListener('input', () => {
+        const q = search.value.trim().toLowerCase(); if (!q) { hideCross(); idle(); return; }
+        const i = order.findIndex(r => r.name.toLowerCase().includes(q) || r.members.some(m => NAME(m).toLowerCase().includes(q))); if (i < 0) return;
+        cross(i, i); const r = order[i], rr = R.rels.get(r.id);
+        const list = (m, arrow) => [...m].sort((a, b) => b[1].size - a[1].size).map(([lab, set]) => `${arrow} ${esc(lab)} ${[...set].map(x => esc(R.byId.get(x).short)).join(', ')}`).join('<br>');
+        out.innerHTML = `<span class="big">${esc(r.name)}</span><span class="muted">Its row and column are lit. ${r.deg} edges.</span><span class="k mono">${list(rr.out, '→')}${rr.out.size && rr.in.size ? '<br>' : ''}${list(rr.in, '←')}</span>`;
+      });
+      void bg;
     },
   });
 
   mock({
     short: 'Arcs', title: 'Arc diagram',
     answers: 'Which types reach across domains, and which stay local?',
-    read: 'Every type sits on one line, grouped by domain. Arcs join linked types: short arcs stay inside a domain, tall ones cross. Hover a type to light up its arcs.',
+    read: 'Every type sits on one line, grouped by domain. Colored arcs stay inside one domain; grey arcs cross between domains. Taller arcs span further along the line. Hover a type to light up its arcs.',
     seen: 'D3 arc diagram',
     render(stage, w, h) {
       const R = R1;
@@ -2338,71 +2595,90 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       const ns = order.map((r, i) => ({ id: r.id, dom: r.dom, r: 2.5 + Math.log10(1 + r.rec) * 0.9, rep: r, x: pad + i * (w - 2 * pad) / (order.length - 1), y: base }));
       const by = new Map(ns.map(d => [d.id, d]));
       const svg = mkSvg(stage, w, h);
-      const gE = el('g', {}, svg), gN = el('g', {}, svg);
+      const gE = el('g', {}, svg);
+      el('line', { x1: pad - 6, x2: w - pad + 6, y1: base, y2: base, class: 'arcbase' }, svg);
+      const gN = el('g', {}, svg);
       const E = [...R.pairs.values()].map(p => {
         let a = by.get(p.a), b = by.get(p.b); if (a.x > b.x) [a, b] = [b, a];
-        const rx = (b.x - a.x) / 2, ry = Math.min(rx, base - 50);
-        return { el: el('path', { d: `M${a.x},${base}A${rx},${ry} 0 0 1 ${b.x},${base}`, class: 'e', 'stroke-width': (0.6 + Math.log2(p.ab + p.ba) * 0.5).toFixed(2) }, gE), ...p };
+        const rx = (b.x - a.x) / 2, ry = Math.min(rx, base - 50); const inside = a.dom === b.dom;
+        return { el: el('path', { d: `M${a.x},${base}A${rx},${ry} 0 0 1 ${b.x},${base}`, class: 'e' + (inside ? ' inside st' + a.dom : ''), 'stroke-width': (0.6 + Math.log2(p.ab + p.ba) * 0.5).toFixed(2) }, gE), ...p };
       });
-      el('line', { x1: pad - 6, x2: w - pad + 6, y1: base, y2: base, class: 'arcbase' }, svg);
-      let start = 0;
       DOMAIN_ORDER.forEach(di => {
         const m = ns.filter(d => d.dom === di); if (!m.length) return;
         const x0 = m[0].x - 4, x1 = m[m.length - 1].x + 4;
         el('rect', { x: x0, y: h - 22, width: x1 - x0, height: 4, class: 'fill' + di }, svg);
-        el('text', { x: (x0 + x1) / 2, y: h - 28, 'text-anchor': 'middle', class: 'arcdom fill' + di }, svg, x1 - x0 > domains[di].length * 6 ? domains[di] : domains[di].split(' ')[0]);
-        start += m.length;
+        el('text', { x: (x0 + x1) / 2, y: h - 28, 'text-anchor': 'middle', class: 'arcdom fill' + di }, svg, x1 - x0 > domains[di].length * 7.2 ? domains[di] : domains[di].split(' ')[0]);
       });
       const map = drawNodes(gN, ns, { label: d => truncate(d.rep.name, 22), text: () => ({ transform: 'rotate(90)', x: 8, dy: '0.32em' }) });
-      focusable(svg, map, E, id => repInfo(R, id));
-      hint(stage, 'Hover a type').style.top = '10px';
-      stage.querySelector('.mhint').style.bottom = 'auto';
+      for (const g of map.values()) el('rect', { x: -6, y: -8, width: 12, height: 150, fill: 'transparent' }, g);
+      const f = focusable(svg, map, E, id => repInfo(R, id));
+      searchBox(mk('div', 'mtools', stage), R, id => f.pin(id));
+      const hn = hint(stage, 'Hover a type'); hn.style.top = '46px'; hn.style.bottom = 'auto';
     },
   });
 
   mock({
     short: 'Per relationship', title: 'One panel per relationship',
     answers: 'What does each big relationship actually connect?',
-    read: 'The eleven largest relationships get a panel each, plus one for everything else. Every panel uses the same positions, so a type is always in the same spot. Grey dots are types the relationship does not touch.',
+    read: 'The eleven largest relationships get a panel each, and the last panel lets you pick any of the 192. Every panel uses the same positions, so a type is always in the same spot. Each panel says what it connects; hover any dot for its name. Grey dots are types the relationship does not touch.',
     seen: 'Small multiples (Tufte)',
     render(stage, w, h) {
-      const panels = [...labelStats.slice(0, 11), { label: 'Everything else', rest: true }];
-      const cols = clamp(Math.round(Math.sqrt(panels.length * w / h)), 3, 6), rows = Math.ceil(panels.length / cols);
+      const st = this.st || (this.st = { pick: labelStats[11].label });
+      const top11 = labelStats.slice(0, 11);
+      const picked = labelStats.find(x => x.label === st.pick) || labelStats[11];
+      const panels = [...top11, { ...picked, pick: true }];
+      const ideal = Math.sqrt(panels.length * w / h); const cols = [3, 4, 6].reduce((b, c) => Math.abs(c - ideal) < Math.abs(b - ideal) ? c : b, 4), rows = Math.ceil(panels.length / cols);
       const gap = 10, pw = (w - gap * (cols + 1)) / cols, ph = (h - gap * (rows + 1)) / rows;
       const ns = R0.list.map(r => ({ id: r.id, dom: r.dom, r: 3, rep: r, i: r.members[0] }));
-      layout(ns, [...R0.pairs.values()].map(p => ({ source: p.a, target: p.b })), 1000, 1000 * (ph - 40) / pw, { collide: () => 9, pull: 0.25, charge: -30, pad: 10 });
-      const sx = (pw - 16) / 1000, H0 = 1000 * (ph - 40) / pw, sy = (ph - 44) / H0;
+      const headH = 52;
+      layout(ns, [...R0.pairs.values()].map(p => ({ source: p.a, target: p.b })), 1000, 1000 * (ph - headH - 8) / (pw - 16), { collide: () => 9, pull: 0.25, charge: -30, pad: 10 });
+      const sx = (pw - 16) / 1000, H0 = 1000 * (ph - headH - 8) / (pw - 16), sy = (ph - headH - 8) / H0;
       const posOf = new Map(ns.map(d => [d.i, d]));
       const svg = mkSvg(stage, w, h);
-      const topSet = new Set(panels.filter(p => !p.rest).map(p => p.label));
+      const side = set => {
+        const s = new Set(set); const parts = [];
+        families.forEach(f => { if (f.members.every(m => s.has(m))) { f.members.forEach(m => s.delete(m)); parts.push(f.name.toLowerCase()); } });
+        const rest = [...s];
+        if (rest.length <= 2) parts.push(...rest.map(NAME)); else parts.push(`${rest.length} ${parts.length ? 'more' : 'types'}`);
+        return parts.join(' + ');
+      };
       panels.forEach((p, k) => {
         const px = gap + (k % cols) * (pw + gap), py = gap + Math.floor(k / cols) * (ph + gap);
         const g = el('g', { transform: `translate(${px},${py})` }, svg);
         el('rect', { width: pw, height: ph, rx: 8, class: 'sm-frame' }, g);
-        const inner = el('g', { transform: 'translate(8,34)' }, g);
+        const inner = el('g', { transform: `translate(8,${headH})` }, g);
         const P = i => { const d = posOf.get(i); return [d.x * sx, d.y * sy]; };
-        let es, S = new Set(), T = new Set();
-        if (p.rest) { es = edges.filter(e => !topSet.has(labels[e[2]])); es.forEach(e => { S.add(e[0]); T.add(e[1]); }); }
-        else { const li = labels.indexOf(p.label); es = edges.filter(e => e[2] === li); S = p.S; T = p.T; }
+        const li = labels.indexOf(p.label); const es = edges.filter(e => e[2] === li); const S = p.S, T = p.T;
         const touched = new Set([...S, ...T]);
-        el('text', { x: 10, y: 17, class: 'sm-title' }, g, p.rest ? `${es.length} edges · ${new Set(es.map(e => e[2])).size} relationships` : p.label);
-        const same = !p.rest && S.size === T.size && [...S].every(x => T.has(x));
-        el('text', { x: 10, y: 29, class: 'sm-sub' }, g, p.rest ? 'Everything else' : same ? `${es.length} edges · ${S.size} types, each to each` : `${es.length} edges · ${S.size} → ${T.size} types`);
-        for (let i = 0; i < N; i++) if (!touched.has(i)) { const [x, y] = P(i); el('circle', { cx: x, cy: y, r: 1.6, class: 'sm-dot' }, inner); }
-        for (const [s, t] of es) { if (s === t) continue; const [x1, y1] = P(s), [x2, y2] = P(t); el('line', { x1, y1, x2, y2, class: 'sm-edge' + (p.rest ? ' rest' : '') }, inner); }
-        for (const i of touched) { const [x, y] = P(i); el('circle', { cx: x, cy: y, r: p.rest ? 2 : 3, class: 'fill' + DOM(i) }, inner); }
-        if (!p.rest) {
-          const side = S.size <= T.size ? S : T;
-          if (side.size <= 6) for (const i of side) { const [x, y] = P(i); el('text', { x: x + 5, y: y + 3, class: 'sm-lab' }, inner, truncate(NAME(i), 18)); }
+        if (!p.pick) el('text', { x: 10, y: 17, class: 'sm-title' }, g, `${p.label} · ${es.length}`);
+        const same = S.size === T.size && [...S].every(x => T.has(x));
+        el('text', { x: 10, y: 31, class: 'sm-sub' }, g, same ? `${S.size} types, each to each` : `${S.size} → ${T.size} types`);
+        el('text', { x: 10, y: 44, class: 'sm-summary' }, g, truncate(same ? side(S) : `${side(S)} → ${side(T)}`, Math.floor(pw / 5.4)));
+        for (let i = 0; i < N; i++) if (!touched.has(i)) { const [x, y] = P(i); const c = el('circle', { cx: x, cy: y, r: 1.6, class: 'sm-dot' }, inner); c.dataset.i = i; }
+        for (const [s, t] of es) { if (s === t) continue; const [x1, y1] = P(s), [x2, y2] = P(t); el('line', { x1, y1, x2, y2, class: 'sm-edge' }, inner); }
+        for (const i of touched) { const [x, y] = P(i); const c = el('circle', { cx: x, cy: y, r: 3.2, class: 'fill' + DOM(i) }, inner); c.dataset.i = i; }
+        const sideSet = S.size <= T.size ? S : T;
+        if (sideSet.size <= 6) {
+          const items = [...sideSet].map(i => { const [x, y] = P(i); const t = el('text', { x: x + 5, y: y + 3, class: 'sm-lab' }, inner, truncate(NAME(i), 18)); const wl = lw(truncate(NAME(i), 18)) * 0.95; return { t, cx: x + 5 + wl / 2, cy: y, w: wl, h: 12, prio: deg[i] }; });
+          fitLabels(items, [...touched].map(i => { const [x, y] = P(i); return [x - 3, y - 3, x + 3, y + 3]; }), pw - 16, ph - headH);
+        }
+        if (p.pick) {
+          const sel = mk('select', 'sm-pick', stage); sel.setAttribute('aria-label', 'Pick a relationship');
+          Object.assign(sel.style, { left: (px + 8) + 'px', top: (py + 4) + 'px', maxWidth: (pw - 20) + 'px' });
+          labelStats.forEach(x => sel.add(new Option(`${x.label} · ${x.count}`, x.label)));
+          sel.value = picked.label;
+          sel.addEventListener('change', () => { st.pick = sel.value; rerender(this); });
         }
       });
+      svg.addEventListener('pointermove', ev => { const i = ev.target.dataset && ev.target.dataset.i; if (i == null) { hideTip(); return; } showTip(`<b>${esc(NAME(+i))}</b> · ${esc(domains[DOM(+i)])}`, ev); });
+      svg.addEventListener('pointerleave', hideTip);
     },
   });
 
   mock({
     short: 'Focus lanes', title: 'Focus lanes',
     answers: 'What does this one type connect to, and how?',
-    read: 'Pick a type. Incoming relationships sit on the left, outgoing on the right, one card per relationship name and one line per card. Click any chip to move the focus there.',
+    read: 'Pick a type. Incoming relationships sit on the left, outgoing on the right, one card per relationship name. Connectors stay faint; hover a card to light up its own. Click a type name to move the focus there; click a family (bold, ×N) to list its members.',
     seen: 'Dynatrace Smartscape related nodes, ExcaliBrain, TheBrain',
     render(stage, w, h) {
       const byDeg = [...Array(N).keys()].sort((a, b) => deg[b] - deg[a] || NAME(a).localeCompare(NAME(b)));
@@ -2418,10 +2694,12 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
       const scroll = mk('div', 'flscroll', wrap);
       const box = mk('div', 'fl', scroll);
       const svg = el('svg', { class: 'flsvg', 'aria-hidden': 'true' }, box);
-      const defs = el('defs', {}, svg); const mkr = el('marker', { id: 'lane-arrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs); el('path', { d: 'M0,0 L8,4 L0,8 z', fill: 'var(--edge)' }, mkr);
+      const mid = 'lane-arrow-' + Math.random().toString(36).slice(2, 8);
+      const defs = el('defs', {}, svg); const mkr = el('marker', { id: mid, viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs); el('path', { d: 'M0,0 L8,4 L0,8 z', fill: 'var(--edge)' }, mkr);
       const gl = el('g', {}, svg);
       const colIn = mk('div', 'fl-col', box), centerWrap = mk('div', '', box), colOut = mk('div', 'fl-col', box);
-      centerWrap.id = ''; centerWrap.style.cssText = 'align-self: stretch; position: relative; z-index: 1;';
+      centerWrap.style.cssText = 'align-self: stretch; position: relative; z-index: 1;';
+      let hoverCard = null;
       function groups(f, dir) {
         const m = new Map();
         for (const [s, t, l] of edges) { if (s === t) continue; if (dir === 'in' ? t === f : s === f) { const o = dir === 'in' ? s : t; const k = labels[l]; if (!m.has(k)) m.set(k, []); m.get(k).push(o); } }
@@ -2451,7 +2729,12 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         const gs = groups(st.focus, dir);
         mk('h5', '', col, dir === 'in' ? `Points to ${NAME(st.focus)} · ${gs.length} relationships` : `${NAME(st.focus)} points to · ${gs.length} relationships`);
         if (!gs.length) { mk('div', 'fl-empty', col, dir === 'in' ? 'Nothing points here.' : 'No outgoing relationships.'); return []; }
-        return gs.map(g => { const card = mk('div', 'fl-group', col); const hd = mk('header', '', card); mk('span', '', hd, g.label); mk('span', 'n', hd, String(g.list.length)); chips(g.list, dir + g.label, card); return { card, n: g.list.length }; });
+        return gs.map(g => {
+          const card = mk('div', 'fl-group', col); const hd = mk('header', '', card); mk('span', '', hd, g.label); mk('span', 'n', hd, String(g.list.length)); chips(g.list, dir + g.label, card);
+          card.addEventListener('pointerenter', () => { hoverCard = card; lines(); });
+          card.addEventListener('pointerleave', () => { if (hoverCard === card) { hoverCard = null; lines(); } });
+          return { card, n: g.list.length };
+        });
       }
       let last = null;
       function lines() {
@@ -2459,8 +2742,11 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         if (getComputedStyle(svg).display === 'none') return;
         const b = box.getBoundingClientRect(), cr = last.c.getBoundingClientRect();
         const cy = cr.top - b.top + Math.min(cr.height / 2, 60), xl = cr.left - b.left, xr = cr.right - b.left;
-        for (const { card, n } of last.ins) { const r = card.getBoundingClientRect(); const x = r.right - b.left, y = r.top - b.top + 15, mx = (x + xl) / 2; el('path', { d: `M${x},${y} C${mx},${y} ${mx},${cy} ${xl - 2},${cy}`, class: 'fl-conn' + (n > 2 ? ' big' : ''), 'marker-end': 'url(#lane-arrow)' }, gl); }
-        for (const { card, n } of last.outs) { const r = card.getBoundingClientRect(); const x = r.left - b.left, y = r.top - b.top + 15, mx = (x + xr) / 2; el('path', { d: `M${xr},${cy} C${mx},${cy} ${mx},${y} ${x - 2},${y}`, class: 'fl-conn' + (n > 2 ? ' big' : ''), 'marker-end': 'url(#lane-arrow)' }, gl); }
+        const vr = scroll.getBoundingClientRect(); const visible = r => r.bottom > vr.top + 4 && r.top < vr.bottom - 4;
+        const add = (d, card) => el('path', { d, class: 'fl-conn' + (card === hoverCard ? ' on' : ''), 'marker-end': `url(#${mid})` }, gl);
+        for (const { card } of last.ins) { const r = card.getBoundingClientRect(); if (!visible(r)) continue; const x = r.right - b.left, y = r.top - b.top + 15, mx = (x + xl) / 2; add(`M${x},${y} C${mx},${y} ${mx},${cy} ${xl - 2},${cy}`, card); }
+        for (const { card } of last.outs) { const r = card.getBoundingClientRect(); if (!visible(r)) continue; const x = r.left - b.left, y = r.top - b.top + 15, mx = (x + xr) / 2; add(`M${xr},${cy} C${mx},${cy} ${mx},${y} ${x - 2},${y}`, card); }
+        const on = gl.querySelector('.on'); if (on) gl.appendChild(on);
       }
       function draw() {
         const f = st.focus;
@@ -2495,21 +2781,32 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
   mock({
     short: 'Rules', title: 'The schema, written out', cls: 'scroll',
     answers: 'Can I read the whole model without a picture at all?',
-    read: 'Relationships grouped by shape. Rules that apply to a whole family come first and read as one sentence each, then hubs that many types point to, then fan-outs, then the one-off relationships by source domain.',
+    read: 'Relationships grouped by shape, one tab each: rules that apply to a whole family (one sentence each), hubs that many types point to, fan-outs, and the one-off relationships by source domain. Typing in the filter searches every tab at once; "N more" opens the full list.',
     seen: 'Stardog Designer, schema docs',
     render(stage, w, h) {
-      const box = mk('div', 'rules15', stage);
+      const st = this.st || (this.st = { tab: 0 });
+      const bar = mk('div', 'r15bar', stage);
+      const q = mk('input', '', bar); q.type = 'search'; q.placeholder = 'Filter by type or relationship'; q.setAttribute('aria-label', 'Filter rules');
+      Object.assign(q.style, { font: 'inherit', fontSize: '0.8rem', padding: '5px 9px', border: '1px solid var(--line)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--ink)', width: '240px' });
+      const tabs = mk('span', 'r15tabs', bar); tabs.setAttribute('role', 'tablist');
+      const body = mk('div', 'r15body', stage);
       const famFull = set => families.map((f, k) => f.members.every(m => set.has(m)) ? k : -1).filter(k => k >= 0);
       function describe(set, parent) {
         const s = new Set(set); const fams = famFull(s);
         const parts = [];
         for (const k of fams) { families[k].members.forEach(m => s.delete(m)); parts.push({ text: /types$/.test(families[k].name) ? `every ${families[k].name.replace(/types$/, 'type').toLowerCase()} (${families[k].members.length})` : `${families[k].name} (${families[k].members.length})`, dom: DOM(families[k].members[0]), fam: true }); }
         const rest = [...s].sort((a, b) => deg[b] - deg[a]);
-        rest.slice(0, rest.length > 6 ? 5 : 6).forEach(i => parts.push({ text: NAME(i), dom: DOM(i) }));
-        if (rest.length > 6) parts.push({ text: `${rest.length - 5} more`, dom: -1, title: rest.slice(5).map(NAME).join(', ') });
+        const shown = rest.length > 6 ? 5 : 6;
+        rest.slice(0, shown).forEach(i => parts.push({ text: NAME(i), dom: DOM(i) }));
+        if (rest.length > 6) parts.push({ more: rest.slice(5) });
         parts.forEach((p, i) => {
           if (i) parent.appendChild(document.createTextNode(i === parts.length - 1 ? ' and ' : ', '));
-          const t = mk('span', 't', parent); if (p.dom >= 0) mk('i', 'dot bg' + p.dom, t); const x = mk('span', '', t, p.text); if (p.fam) x.style.fontWeight = 600; if (p.title) t.title = p.title;
+          if (p.more) {
+            const b = mk('button', 'more', parent, `${p.more.length} more`); b.type = 'button'; b.title = p.more.map(NAME).join(', ');
+            b.addEventListener('click', () => { const span = mk('span', '', null); p.more.forEach((m, j) => { if (j) span.appendChild(document.createTextNode(', ')); const t = mk('span', 't', span); mk('i', 'dot bg' + DOM(m), t); mk('span', '', t, NAME(m)); }); b.replaceWith(span); });
+            return;
+          }
+          const t = mk('span', 't', parent); if (p.dom >= 0) mk('i', 'dot bg' + p.dom, t); const x = mk('span', '', t, p.text); if (p.fam) x.style.fontWeight = 600;
         });
       }
       const groupsOf = { family: [], hub: [], fan: [], rest: [] };
@@ -2520,38 +2817,54 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
         else if (x.S.size === 1 && x.T.size >= 3) groupsOf.fan.push(x);
         else groupsOf.rest.push(x);
       }
-      function section(title, list, render) {
-        const sec = mk('section', '', box);
-        const h4 = mk('h4', '', sec, title); mk('span', '', h4, `${list.length} · ${d3.sum(list, x => x.count)} edges`);
-        list.forEach(x => render(x, sec));
+      const panels = [];
+      function panel(title, note) {
+        const p = mk('section', 'r15panel', body); const hd = mk('h4', '', p, title); mk('span', '', hd, note);
+        const grid = mk('div', 'r15grid', p); panels.push({ p, title, grid }); return grid;
       }
       const head = (x, row) => { mk('span', 'n', row, String(x.count)); mk('span', 'lab', row, x.label); row.appendChild(document.createElement('br')); };
-      section('Rules for a whole family', groupsOf.family, (x, sec) => {
-        const row = mk('div', 'rule', sec); head(x, row);
-        const same = x.S.size === x.T.size && [...x.S].every(i => x.T.has(i));
-        describe(x.S, row); row.appendChild(document.createTextNode(same ? ' → each other' : ' → ')); if (!same) describe(x.T, row);
-      });
-      section('Hubs: many types → one', groupsOf.hub, (x, sec) => { const row = mk('div', 'rule', sec); head(x, row); describe(x.S, row); row.appendChild(document.createTextNode(' → ')); describe(x.T, row); });
-      section('Fan-out: one type → many', groupsOf.fan, (x, sec) => { const row = mk('div', 'rule', sec); head(x, row); describe(x.S, row); row.appendChild(document.createTextNode(' → ')); describe(x.T, row); });
-      const byDom = new Map();
-      for (const x of groupsOf.rest) for (const [s, t, l] of edges) if (labels[l] === x.label) { const d = DOM(s); if (!byDom.has(d)) byDom.set(d, []); byDom.get(d).push([s, t, x.label]); }
+      const sentence = (x, grid, sameWord) => { const row = mk('div', 'rule card', grid); head(x, row); const same = sameWord && x.S.size === x.T.size && [...x.S].every(i => x.T.has(i)); describe(x.S, row); row.appendChild(document.createTextNode(same ? ' → each other' : ' → ')); if (!same) describe(x.T, row); };
+      let g = panel('Rules for a whole family', `${groupsOf.family.length} rules · ${d3.sum(groupsOf.family, x => x.count)} edges`); groupsOf.family.forEach(x => sentence(x, g, true));
+      g = panel('Hubs: many types → one', `${groupsOf.hub.length} rules · ${d3.sum(groupsOf.hub, x => x.count)} edges`); groupsOf.hub.forEach(x => sentence(x, g, false));
+      g = panel('Fan-out: one type → many', `${groupsOf.fan.length} rules · ${d3.sum(groupsOf.fan, x => x.count)} edges`); groupsOf.fan.forEach(x => sentence(x, g, false));
+      const restLabels = new Set(groupsOf.rest.map(x => x.label)); const byDom = new Map();
+      for (const [s, t, l] of edges) if (restLabels.has(labels[l])) { const d = DOM(s); if (!byDom.has(d)) byDom.set(d, []); byDom.get(d).push([s, t, labels[l]]); }
+      g = panel('One-off relationships', `${d3.sum([...byDom.values()], l => l.length)} edges, by source domain`);
       DOMAIN_ORDER.filter(d => byDom.has(d)).forEach(d => {
-        const list = byDom.get(d).sort((a, b) => NAME(a[0]).localeCompare(NAME(b[0])) || a[2].localeCompare(b[2]));
-        const sec = mk('section', '', box); const h4 = mk('h4', '', sec); const t = mk('span', 't', h4); t.style.cssText = 'font-family:inherit;font-size:inherit;color:inherit;display:inline-flex;gap:6px;align-items:center'; mk('i', 'dot bg' + d, t); mk('span', '', t, `${domains[d]}: one-off relationships`); mk('span', '', h4, `${list.length} edges`);
-        list.forEach(([s, tt, lab]) => { const row = mk('div', 'rule', sec); row.style.padding = '3px 0'; mk('span', '', row, NAME(s) + ' '); mk('span', 'lab', row, lab); mk('span', '', row, ' → ' + NAME(tt)); });
+        const card = mk('div', 'rule card r15dom', g); const hd = mk('div', 'r15domhd', card); mk('i', 'dot bg' + d, hd); mk('b', '', hd, domains[d]); mk('span', 'n', hd, String(byDom.get(d).length));
+        byDom.get(d).sort((a, b) => NAME(a[0]).localeCompare(NAME(b[0])) || a[2].localeCompare(b[2])).forEach(([s, tt, lab]) => { const row = mk('div', 'r15line', card); mk('span', '', row, NAME(s) + ' '); mk('span', 'lab', row, lab); mk('span', '', row, ' → ' + NAME(tt)); });
       });
+      const tabBtns = panels.map((p, i) => { const b = mk('button', 'tgl', tabs, p.title.replace(/:.*/, '')); b.type = 'button'; b.setAttribute('role', 'tab'); b.addEventListener('click', () => { st.tab = i; q.value = ''; apply(); }); return b; });
+      function apply() {
+        const v = q.value.trim().toLowerCase();
+        panels.forEach((p, i) => {
+          let hits = 0;
+          for (const r of p.grid.querySelectorAll('.r15line, .card:not(.r15dom)')) {
+            const txt = (r.textContent + ' ' + [...r.querySelectorAll('button.more')].map(b => b.title).join(' ')).toLowerCase();
+            const hit = !v || txt.includes(v); r.classList.toggle('hide', !hit); if (hit) hits++;
+          }
+          for (const c of p.grid.querySelectorAll('.r15dom')) c.classList.toggle('hide', !!v && !c.querySelector('.r15line:not(.hide)'));
+          p.p.hidden = v ? hits === 0 : i !== st.tab;
+          tabBtns[i].setAttribute('aria-pressed', String(!v && i === st.tab));
+          tabBtns[i].textContent = p.title.replace(/:.*/, '') + (v ? ` · ${hits}` : '');
+        });
+      }
+      q.addEventListener('input', apply);
+      apply();
     },
   });
 
   /* ---------- Gallery shell ---------- */
   const list = document.getElementById('mock-list'), nav = document.getElementById('mock-nav');
+  const VERDICTS = [['fix', 'fix'], ['fix', 'drop'], ['fix', 'fix'], ['fix', 'fix'], ['keep', 'fix'], ['fix', 'drop'], ['drop', 'drop'], ['drop', 'drop'], ['fix', 'drop'], ['keep', 'fix'], ['fix', 'fix'], ['drop', 'drop'], ['fix', 'drop'], ['keep', 'keep'], ['fix', 'fix']];
   function rerender(m) { m.w = m.h = 0; renderMock(m); }
   function renderMock(m) {
+    if (!m.visible) return;
     const w = m.stage.clientWidth || 1500, h = m.stage.clientHeight || 820;
     if (m.w === w && m.h === h) return;
     m.w = w; m.h = h;
     m.stage.textContent = ''; m.stage.className = 'mstage' + (m.cls ? ' ' + m.cls : '');
-    hideTip();
+    m.stage.scrollTop = 0; hideTip();
     try { m.render.call(m, m.stage, w, h); }
     catch (err) { console.error(err); mk('p', 'merr', m.stage, 'This mock failed to render: ' + err.message); }
   }
@@ -2560,15 +2873,22 @@ const ECG={"domains":["Customers & revenue","People","HR & spend","Documents","W
     const a = mk('a', '', nav); a.href = '#m' + (i + 1); mk('b', '', a, String(i + 1)); a.appendChild(document.createTextNode(m.short));
     const art = mk('article', 'mock', list); art.id = 'm' + (i + 1);
     const hd = mk('div', 'mock-head', art);
-    mk('span', 'num', hd, num); mk('h3', '', hd, m.title);
-    const p = mk('p', '', hd);
-    mk('b', '', p, 'Answers: '); p.appendChild(document.createTextNode(m.answers + ' '));
-    mk('b', '', p, 'Read it: '); p.appendChild(document.createTextNode(m.read + ' '));
-    mk('b', '', p, 'Seen in: '); p.appendChild(document.createTextNode(m.seen + '.'));
+    mk('span', 'num', hd, num); mk('h3', '', hd, m.title); mk('p', 'ans', hd, m.answers);
+    const v = VERDICTS[i]; if (v) { const vs = mk('span', 'mock-verdict', hd); vs.append('first review · Sol '); mk('b', 'v-' + v[0], vs, v[0]); vs.append(' · Gemini '); mk('b', 'v-' + v[1], vs, v[1]); }
     m.stage = mk('div', 'mstage', art);
     m.stage.setAttribute('role', 'region'); m.stage.setAttribute('aria-label', `Mock ${i + 1}: ${m.title}`);
+    const ft = mk('p', 'mock-foot', art);
+    mk('b', '', ft, 'Read it: '); ft.appendChild(document.createTextNode(m.read + ' '));
+    mk('b', '', ft, 'Seen in: '); ft.appendChild(document.createTextNode(m.seen + '.'));
   });
-  MOCKS.forEach(renderMock);
+  const setNavH = () => document.documentElement.style.setProperty('--navh', (nav.offsetHeight || 40) + 'px');
+  setNavH(); window.addEventListener('resize', setNavH);
+  if (typeof IntersectionObserver !== 'undefined') {
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) if (e.isIntersecting) { const m = e.target.__mock; io.unobserve(e.target); m.visible = true; renderMock(m); }
+    }, { rootMargin: '100% 0px' });
+    MOCKS.forEach(m => { m.stage.__mock = m; io.observe(m.stage); });
+  } else MOCKS.forEach(m => { m.visible = true; renderMock(m); });
   let rt = 0;
   if (typeof ResizeObserver !== 'undefined') {
     const ro = new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => MOCKS.forEach(m => { renderMock(m); if (m.relayout) m.relayout(); }), 160); });
