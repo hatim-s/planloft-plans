@@ -1,97 +1,96 @@
 <!doctype html>
 <html lang="en">
 <head><!-- planloft-render:head:start -->
-<style data-planloft-render data-planloft-sha256="07720fd08084a6e6cf986d518bdfaa248dcc4e165ccdc814c03072d73b001057">/* planloft theme: editorial. The long read. Baskerville at 19px on a 1.7 line, headings in
-   the same face at regular weight and a large size, so hierarchy comes from scale rather
-   than boldness. Stone white paper with the yellow kept out, espresso ink, madder red for
-   links. Dark is warm umber with the red lifted to a dusty rose. */
+<style data-planloft-render data-planloft-sha256="0c4cca5151eb38054e190ac891b5ffd49871a06742d6c0a5706b17fad39927d4">/* planloft theme: detailed. A datasheet: PT Sans body with PT Mono for code, DIN Alternate
+   for headings and stat values so numbers read like a drawing title block, a faint
+   blueprint-grey page and drawing-blue links. Dark is blue-black with the blue lifted. */
 /* planloft-color-schemes: light dark */
 :root {
   color-scheme: light dark;
-  --planloft-font-body: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  --planloft-font-heading: Baskerville, "Libre Baskerville", "Baskerville Old Face", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  --planloft-font-mono: "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", ui-monospace, monospace;
-  --planloft-font-size: 19px;
-  --planloft-line-height: 1.7;
-  --planloft-code-size: 0.8em;
-  --planloft-heading-weight: 400;
+  --planloft-font-body: "PT Sans", "Segoe UI", "Noto Sans", "Liberation Sans", Arial, sans-serif;
+  --planloft-font-heading: "DIN Alternate", Bahnschrift, "Franklin Gothic Medium", "Roboto Condensed", "Arial Narrow", "Liberation Sans Narrow", sans-serif;
+  --planloft-font-mono: "PT Mono", ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace;
+  --planloft-font-size: 16.5px;
+  --planloft-line-height: 1.62;
+  --planloft-code-size: 0.88em;
+  --planloft-heading-weight: 700;
   --planloft-heading-line-height: 1.1;
-  --planloft-heading-tracking: -0.005em;
-  --planloft-h1-size: 2.9em;
-  --planloft-h2-size: 1.75em;
-  --planloft-h3-size: 1.28em;
+  --planloft-heading-tracking: 0.01em;
+  --planloft-h1-size: 2.5em;
+  --planloft-h2-size: 1.6em;
+  --planloft-h3-size: 1.22em;
 }
 :root,
 :root[data-planloft-color-scheme="light"] {
   color-scheme: light;
-  --planloft-paper: #f8f7f5;
-  --planloft-ink: #2a221d;
-  --planloft-muted: #6b625b;
-  --planloft-surface: #efedea;
-  --planloft-rule: #dad6d0;
-  --planloft-accent: #8c2f39;
-  --planloft-accent-contrast: #f8f7f5;
-  --planloft-code-paper: #edebe7;
-  --planloft-code-ink: #2a221d;
-  --planloft-chart-1: #8c2f39;
-  --planloft-chart-2: #2f5f8a;
-  --planloft-chart-3: #4c7a3a;
-  --planloft-chart-4: #8d6110;
-  --planloft-chart-5: #6a4f9e;
-  --planloft-chart-6: #2c8282;
-  --planloft-chart-sequential: #8c2f39;
-  --planloft-chart-neutral: #91877d;
-  --planloft-positive: #3f7a3a;
-  --planloft-negative: #a82f38;
-  --planloft-caution: #8d6110;
+  --planloft-paper: #f2f5f9;
+  --planloft-ink: #19222e;
+  --planloft-muted: #525f70;
+  --planloft-surface: #e4eaf1;
+  --planloft-rule: #c3cdd9;
+  --planloft-accent: #1a4fd6;
+  --planloft-accent-contrast: #ffffff;
+  --planloft-code-paper: #e7edf5;
+  --planloft-code-ink: #132038;
+  --planloft-chart-1: #2457d8;
+  --planloft-chart-2: #c0561a;
+  --planloft-chart-3: #0e8767;
+  --planloft-chart-4: #8a4fc6;
+  --planloft-chart-5: #c53a62;
+  --planloft-chart-6: #0b86a9;
+  --planloft-chart-sequential: #1a4fd6;
+  --planloft-chart-neutral: #7d8898;
+  --planloft-positive: #167a4b;
+  --planloft-negative: #bf3030;
+  --planloft-caution: #9d5f00;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-planloft-color-scheme="light"]) {
     color-scheme: dark;
-    --planloft-paper: #1c1815;
-    --planloft-ink: #e6dfd6;
-    --planloft-muted: #a79c91;
-    --planloft-surface: #27221e;
-    --planloft-rule: #3f3834;
-    --planloft-accent: #e39aa4;
-    --planloft-accent-contrast: #1c1815;
-    --planloft-code-paper: #26211d;
-    --planloft-code-ink: #e9e2d9;
-    --planloft-chart-1: #e39aa4;
-    --planloft-chart-2: #7fb0dc;
-    --planloft-chart-3: #92c27b;
-    --planloft-chart-4: #d8b25a;
-    --planloft-chart-5: #b7a0e6;
-    --planloft-chart-6: #6dc1c1;
-    --planloft-chart-sequential: #e39aa4;
-    --planloft-chart-neutral: #7d746c;
-    --planloft-positive: #92c27b;
-    --planloft-negative: #ee8e94;
-    --planloft-caution: #d8b25a;
+    --planloft-paper: #0c1118;
+    --planloft-ink: #d8e0ea;
+    --planloft-muted: #96a2b2;
+    --planloft-surface: #141b25;
+    --planloft-rule: #283341;
+    --planloft-accent: #8db0ff;
+    --planloft-accent-contrast: #0c1118;
+    --planloft-code-paper: #121922;
+    --planloft-code-ink: #dde5ef;
+    --planloft-chart-1: #729dff;
+    --planloft-chart-2: #ea8a3c;
+    --planloft-chart-3: #25b891;
+    --planloft-chart-4: #b78ee8;
+    --planloft-chart-5: #f07a95;
+    --planloft-chart-6: #2fb5dc;
+    --planloft-chart-sequential: #8db0ff;
+    --planloft-chart-neutral: #6c7889;
+    --planloft-positive: #46c389;
+    --planloft-negative: #f47a72;
+    --planloft-caution: #e8a93f;
   }
 }
 :root[data-planloft-color-scheme="dark"] {
   color-scheme: dark;
-  --planloft-paper: #1c1815;
-  --planloft-ink: #e6dfd6;
-  --planloft-muted: #a79c91;
-  --planloft-surface: #27221e;
-  --planloft-rule: #3f3834;
-  --planloft-accent: #e39aa4;
-  --planloft-accent-contrast: #1c1815;
-  --planloft-code-paper: #26211d;
-  --planloft-code-ink: #e9e2d9;
-  --planloft-chart-1: #e39aa4;
-  --planloft-chart-2: #7fb0dc;
-  --planloft-chart-3: #92c27b;
-  --planloft-chart-4: #d8b25a;
-  --planloft-chart-5: #b7a0e6;
-  --planloft-chart-6: #6dc1c1;
-  --planloft-chart-sequential: #e39aa4;
-  --planloft-chart-neutral: #7d746c;
-  --planloft-positive: #92c27b;
-  --planloft-negative: #ee8e94;
-  --planloft-caution: #d8b25a;
+  --planloft-paper: #0c1118;
+  --planloft-ink: #d8e0ea;
+  --planloft-muted: #96a2b2;
+  --planloft-surface: #141b25;
+  --planloft-rule: #283341;
+  --planloft-accent: #8db0ff;
+  --planloft-accent-contrast: #0c1118;
+  --planloft-code-paper: #121922;
+  --planloft-code-ink: #dde5ef;
+  --planloft-chart-1: #729dff;
+  --planloft-chart-2: #ea8a3c;
+  --planloft-chart-3: #25b891;
+  --planloft-chart-4: #b78ee8;
+  --planloft-chart-5: #f07a95;
+  --planloft-chart-6: #2fb5dc;
+  --planloft-chart-sequential: #8db0ff;
+  --planloft-chart-neutral: #6c7889;
+  --planloft-positive: #46c389;
+  --planloft-negative: #f47a72;
+  --planloft-caution: #e8a93f;
 }
 @media print {
   html:root,
@@ -99,25 +98,25 @@
   html:root[data-planloft-color-scheme="dark"] {
     color-scheme: light;
     --planloft-paper: #ffffff;
-    --planloft-ink: #2a221d;
-    --planloft-muted: #6b625b;
-    --planloft-surface: #efedea;
-    --planloft-rule: #dad6d0;
-    --planloft-accent: #8c2f39;
+    --planloft-ink: #19222e;
+    --planloft-muted: #525f70;
+    --planloft-surface: #e4eaf1;
+    --planloft-rule: #c3cdd9;
+    --planloft-accent: #1a4fd6;
     --planloft-accent-contrast: #ffffff;
-    --planloft-code-paper: #edebe7;
-    --planloft-code-ink: #2a221d;
-    --planloft-chart-1: #8c2f39;
-    --planloft-chart-2: #2f5f8a;
-    --planloft-chart-3: #4c7a3a;
-    --planloft-chart-4: #8d6110;
-    --planloft-chart-5: #6a4f9e;
-    --planloft-chart-6: #2c8282;
-    --planloft-chart-sequential: #8c2f39;
-    --planloft-chart-neutral: #91877d;
-    --planloft-positive: #3f7a3a;
-    --planloft-negative: #a82f38;
-    --planloft-caution: #8d6110;
+    --planloft-code-paper: #e7edf5;
+    --planloft-code-ink: #132038;
+    --planloft-chart-1: #2457d8;
+    --planloft-chart-2: #c0561a;
+    --planloft-chart-3: #0e8767;
+    --planloft-chart-4: #8a4fc6;
+    --planloft-chart-5: #c53a62;
+    --planloft-chart-6: #0b86a9;
+    --planloft-chart-sequential: #1a4fd6;
+    --planloft-chart-neutral: #7d8898;
+    --planloft-positive: #167a4b;
+    --planloft-negative: #bf3030;
+    --planloft-caution: #9d5f00;
   }
 }
 
@@ -1122,6 +1121,13 @@ html > body:not(:has(.planloft-plan > article)) {
 </tbody></table>
 <h2>Round 1</h2>
 <p>Sol tested at 1440 × 900 in light mode. Its browser tool couldn&#39;t switch to dark mode.</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Sol audited the prototype as a business user and wrote up 8 findings.</li>
+<li><input checked="" disabled="" type="checkbox"> Gemini checked each one and confirmed 4 fully and 4 partly.</li>
+<li><input checked="" disabled="" type="checkbox"> I fixed every confirmed finding.</li>
+<li><input checked="" disabled="" type="checkbox"> Playwright checks and the repo&#39;s four checks passed, with earlier rounds rechecked.</li>
+<li><input checked="" disabled="" type="checkbox"> Pushed <code>4a89197b</code> to <code>proto/ecg-grouped-graph</code> for a preview deploy.</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -1183,7 +1189,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <th>Finding</th>
 <th>Sol</th>
 <th>Gemini</th>
-<th>What I changed</th>
 <th>Later rounds</th>
 </tr>
 </thead>
@@ -1192,7 +1197,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Account&#39;s rule list can&#39;t be expanded</td>
 <td>Major</td>
 <td>Confirmed, major</td>
-<td>The pinned card lists every rule. A rule that reaches more than three types opens into chips. The card scrolls inside the canvas.</td>
 <td>Round 2 partly holds, because a pan could slide the card over Reset. Fixed then. Holds in round 3.</td>
 </tr>
 <tr>
@@ -1200,7 +1204,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Records can only be read one card at a time</td>
 <td>Major</td>
 <td>Confirmed, down to minor</td>
-<td>The node list shows record counts, sorts by most records, and has a &quot;No records&quot; filter.</td>
 <td>Holds</td>
 </tr>
 <tr>
@@ -1208,7 +1211,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Searching Bug lands on a merged node</td>
 <td>Major</td>
 <td>Partly, down to minor</td>
-<td>The note now says &quot;Opened Regression + 5 similar to show Bug&quot;. Every chip in a pinned card goes to what it names, and the card then offers &quot;Back to …&quot;.</td>
 <td>Holds</td>
 </tr>
 <tr>
@@ -1216,7 +1218,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>The Groups view is hidden behind zooming</td>
 <td>Major</td>
 <td>Confirmed, major</td>
-<td>The level label opens a menu for Groups, Types, All types and Rule names. Hovering a band at Groups lights it and its two groups.</td>
 <td>Holds in round 2. Round 3 partly holds, because All types didn&#39;t exist at 1280 × 800. Fixed then.</td>
 </tr>
 <tr>
@@ -1224,7 +1225,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>The first view hides names and doesn&#39;t explain dashed lines</td>
 <td>Minor</td>
 <td>Partly, minor</td>
-<td>A key at the top left says what solid and dashed lines mean.</td>
 <td>Holds</td>
 </tr>
 <tr>
@@ -1232,7 +1232,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Merged-group labels instead of real types</td>
 <td>Minor</td>
 <td>Confirmed, minor</td>
-<td>A type&#39;s card reads its rules from the export&#39;s relationships, so Opportunity names OEP and UCB.</td>
 <td>Holds</td>
 </tr>
 <tr>
@@ -1240,7 +1239,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Reset keeps the search and the dimmed group</td>
 <td>Minor</td>
 <td>Confirmed, minor</td>
-<td>Searching now lets go of a highlighted group. Reset clears the view, pin, trail, search, filters and highlight.</td>
 <td>Round 2 partly holds, only because the card could cover Reset. Holds in round 3.</td>
 </tr>
 <tr>
@@ -1248,10 +1246,20 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Focusing Support doesn&#39;t isolate its neighbours</td>
 <td>Minor</td>
 <td>Partly, minor</td>
-<td>The complete, scrolling card covers it. I didn&#39;t build a neighbours-only view.</td>
 <td>Holds</td>
 </tr>
 </tbody></table>
+<p><strong>What I changed</strong>, in commit <code>4a89197b</code>:</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> F1. The pinned card lists every rule. A rule that reaches more than three types opens into chips. The card scrolls inside the canvas and stays clear of the controls.</li>
+<li><input checked="" disabled="" type="checkbox"> F2. The node list shows record counts, sorts by most records, and has a &quot;No records&quot; filter.</li>
+<li><input checked="" disabled="" type="checkbox"> F3. The note says &quot;Opened Regression + 5 similar to show Bug&quot;. Every chip in a pinned card goes to what it names, and the card then offers &quot;Back to …&quot;.</li>
+<li><input checked="" disabled="" type="checkbox"> F4. The level label opens a menu for Groups, Types, All types and Rule names. Hovering a band at Groups lights it and its two groups.</li>
+<li><input checked="" disabled="" type="checkbox"> F5. A key at the top left says what solid and dashed lines mean.</li>
+<li><input checked="" disabled="" type="checkbox"> F6. A type&#39;s card reads its rules from the export&#39;s relationships, so Opportunity names OEP and UCB.</li>
+<li><input checked="" disabled="" type="checkbox"> F7. Searching lets go of a highlighted group. Reset clears the view, pin, trail, search, filters and highlight.</li>
+<li><input checked="" disabled="" type="checkbox"> F8. The complete, scrolling card covers it. I chose not to build a neighbours-only view.</li>
+</ul>
 <p>Gemini corrected Sol on six points:</p>
 <ul>
 <li>Bug&#39;s card does open once the zoom lands. Sol had looked during the glide.</li>
@@ -1272,6 +1280,13 @@ html > body:not(:has(.planloft-plan > article)) {
 </ul>
 <h2>Round 2</h2>
 <p>Sol tested at 1440 × 900 and tried dark mode, which its browser tool rejected.</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Sol audited the prototype as a business user and wrote up 4 findings.</li>
+<li><input checked="" disabled="" type="checkbox"> Gemini checked each one and confirmed all 4.</li>
+<li><input checked="" disabled="" type="checkbox"> I fixed every confirmed finding.</li>
+<li><input checked="" disabled="" type="checkbox"> Playwright checks and the repo&#39;s four checks passed, with earlier rounds rechecked.</li>
+<li><input checked="" disabled="" type="checkbox"> Pushed <code>5b41731b</code> to <code>proto/ecg-grouped-graph</code> for a preview deploy.</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -1333,7 +1348,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <th>Finding</th>
 <th>Sol</th>
 <th>Gemini</th>
-<th>What I changed</th>
 <th>Later rounds</th>
 </tr>
 </thead>
@@ -1342,7 +1356,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Panning a pinned card hides Reset and Unpin</td>
 <td>Major</td>
 <td>Confirmed, major</td>
-<td>When no spot beside its node fits, which happens once the node is panned off, the card docks in the top-right corner and offers &quot;Show on canvas&quot;.</td>
 <td>Holds</td>
 </tr>
 <tr>
@@ -1350,7 +1363,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>Pull Request says 23 properties and shows 12</td>
 <td>Major</td>
 <td>Confirmed, down to minor</td>
-<td>The cause was the data. The lab&#39;s derive script kept only the first 12 names per type. The export now has every name from the production capture: Pull Request 23, Release and Release (2) 13 each.</td>
 <td>Holds</td>
 </tr>
 <tr>
@@ -1358,7 +1370,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>The node list ignores a picked group</td>
 <td>Minor</td>
 <td>Confirmed, minor</td>
-<td>Clicking a group narrows the list to its types (&quot;19 in Account&quot;), keeps it lit on the canvas, and adds a chip to let it go.</td>
 <td>Round 3 partly holds, because the empty count stayed graph-wide. Fixed then.</td>
 </tr>
 <tr>
@@ -1366,10 +1377,16 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>A card opened from a chip starts partway down</td>
 <td>Minor</td>
 <td>Confirmed, minor</td>
-<td>The card is rebuilt for each type, so it starts at the top with every rule closed.</td>
 <td>Holds</td>
 </tr>
 </tbody></table>
+<p><strong>What I changed</strong>, in commit <code>5b41731b</code>:</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> F1. When no spot beside its node fits, which happens once the node is panned off, the card docks in the top-right corner and offers &quot;Show on canvas&quot;.</li>
+<li><input checked="" disabled="" type="checkbox"> F2. The cause was the data. The lab&#39;s derive script kept only the first 12 names per type. The export now has every name from the production capture: Pull Request 23, Release and Release (2) 13 each. The derive script no longer cuts them.</li>
+<li><input checked="" disabled="" type="checkbox"> F3. Clicking a group narrows the list to its types (&quot;19 in Account&quot;), keeps it lit on the canvas, and adds a chip to let it go.</li>
+<li><input checked="" disabled="" type="checkbox"> F4. The card is rebuilt for each type, so it starts at the top with every rule closed.</li>
+</ul>
 <p>From this round, Gemini reproduced each finding with a Playwright script and reported exact positions and zoom values. That made the fixes quicker than round 1&#39;s code-only verdicts.</p>
 <p><strong>Learnings.</strong></p>
 <ul>
@@ -1380,6 +1397,13 @@ html > body:not(:has(.planloft-plan > article)) {
 </ul>
 <h2>Round 3</h2>
 <p>Sol tested at 1440 × 900 and 1280 × 800, in light and dark mode, and added a task to review one group end to end.</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Sol audited the prototype as a business user and wrote up 2 findings.</li>
+<li><input checked="" disabled="" type="checkbox"> Gemini checked each one and confirmed both.</li>
+<li><input checked="" disabled="" type="checkbox"> I fixed every confirmed finding.</li>
+<li><input checked="" disabled="" type="checkbox"> Playwright checks and the repo&#39;s four checks passed, with earlier rounds rechecked.</li>
+<li><input checked="" disabled="" type="checkbox"> Pushed <code>2625396f</code> to <code>proto/ecg-grouped-graph</code> for a preview deploy.</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -1441,7 +1465,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <th>Finding</th>
 <th>Sol</th>
 <th>Gemini</th>
-<th>What I changed</th>
 <th>Later rounds</th>
 </tr>
 </thead>
@@ -1450,7 +1473,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>All types lands on Rule names at 1280 × 800</td>
 <td>Minor</td>
 <td>Confirmed, minor</td>
-<td>Rule names started at a fixed 2.2× zoom. On the smaller canvas the last merged group only opens at 2.27×, so All types never existed. Rule names now start at whichever is later: 2.2×, or 1.2 times the zoom where the last merged group opens. That is 2.24× at 1440 × 900 and 2.73× at 1280 × 800.</td>
 <td>No round 4 to check</td>
 </tr>
 <tr>
@@ -1458,10 +1480,14 @@ html > body:not(:has(.planloft-plan > article)) {
 <td>The &quot;No records&quot; count stays graph-wide inside a group</td>
 <td>Minor</td>
 <td>Confirmed, minor</td>
-<td>The count follows the search and the picked group: Contact 6, Commit 0, back to 42 when the group is cleared.</td>
 <td>No round 4 to check</td>
 </tr>
 </tbody></table>
+<p><strong>What I changed</strong>, in commit <code>2625396f</code>:</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> F1. Rule names started at a fixed 2.2× zoom. On the smaller canvas the last merged group only opens at 2.27×, so All types never existed. Rule names now start at whichever is later: 2.2×, or 1.2 times the zoom where the last merged group opens. That is 2.24× at 1440 × 900 and 2.73× at 1280 × 800.</li>
+<li><input checked="" disabled="" type="checkbox"> F2. The count follows the search and the picked group: Contact 6, Commit 0, back to 42 when the group is cleared.</li>
+</ul>
 <p><strong>Learnings.</strong></p>
 <ul>
 <li>A fixed zoom threshold breaks on smaller screens when the layout scales with the canvas. Work it out from the same geometry.</li>
