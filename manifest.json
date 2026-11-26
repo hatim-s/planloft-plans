@@ -198,6 +198,15 @@
       "kind": "plan",
       "createdAt": "2026-11-25T10:28:31.958Z",
       "expiresAt": "2026-12-26T15:13:35.551Z"
+    },
+    {
+      "id": "Dl4ZYu1lof",
+      "project": "github.com/unify-apps/www",
+      "slug": "ecg-hill-climb",
+      "title": "ECG hill climb ledger",
+      "kind": "plan",
+      "createdAt": "2026-11-26T19:33:25.995Z",
+      "expiresAt": "2026-12-26T19:33:25.995Z"
     }
   ]
 }
