@@ -15,7 +15,7 @@ planloft plan/doc deploys
 | [AI Factory adoption report](https://hatims-planloft.vercel.app/ai-factory-workflow-coverage/) | github.com/unify-apps/www | plan | 2026-12-24 |
 | [CopilotVoice product guide](https://hatims-planloft.vercel.app/copilotvoice-product-guide/) | github.com/unify-apps/www | plan | 2026-12-20 |
 | [ECG Graph Rethink](https://hatims-planloft.vercel.app/ecg-graph-rethink/) | github.com/unify-apps/www | plan | 2026-12-26 |
-| [ECG hill climb ledger](https://hatims-planloft.vercel.app/ecg-hill-climb/) | github.com/unify-apps/www | plan | 2026-12-26 |
+| [ECG hill climb ledger](https://hatims-planloft.vercel.app/ecg-hill-climb/) | github.com/unify-apps/www | plan | 2026-12-27 |
 | [Genesys IT call prep](https://hatims-planloft.vercel.app/genesys-it-call-prep/) | github.com/unify-apps/www | plan | 2026-12-12 |
 | [How AI Solutions Builder enforces spec-driven development](https://hatims-planloft.vercel.app/ai-solutions-spec-driven-development/) | github.com/unify-apps/www | plan | 2026-12-23 |
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |

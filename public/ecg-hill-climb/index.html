@@ -1435,10 +1435,10 @@ html > body:not(:has(.planloft-plan > article)) {
 </script>
 <!-- planloft-render:controls:end -->
 <main class="planloft-plan">
-<article class="planloft-prose"><h1>Hill climb ledger</h1>
-<p>This is three rounds of improving the Graph tab prototype, run on 26 and 27 November 2026. In each round, Codex GPT-6.2 Sol used the prototype cold as a business user, with nine tasks taken from the brief&#39;s own success test. Antigravity Gemini 4 Neon then checked every finding against the running app, the code and the earlier decisions. I fixed what it confirmed, checked the fixes with Playwright and the repo&#39;s four checks, and pushed to <code>proto/ecg-grouped-graph</code>. The climb stopped after round 3, once no major finding was left.</p>
+<article class="planloft-prose"><h1>ECG hill climb ledger</h1>
+<p>Three rounds of testing improved the Graph tab prototype on 26 and 27 November 2026. Codex GPT-6.2 Sol ran nine tasks, and Antigravity Gemini 4 Neon checked every finding. I fixed confirmed issues on <code>proto/ecg-grouped-graph</code> and stopped after round 3 with no major findings.</p>
 <h2>Scoreboard</h2>
-<p>Sol scored each round out of 10, on the same scale every time.</p>
+<p>Sol scored each round out of 10 on the same scale. Gemini used Playwright from round 2, and Sol tested dark mode in round 3.</p>
 <table>
 <thead>
 <tr>
@@ -1451,7 +1451,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <th align="right">Findings</th>
 <th>Confirmed</th>
 <th align="right">Major</th>
-<th>Commit</th>
 </tr>
 </thead>
 <tbody><tr>
@@ -1464,7 +1463,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td align="right">8</td>
 <td>4 fully, 4 partly</td>
 <td align="right">2</td>
-<td><code>4a89197b</code></td>
 </tr>
 <tr>
 <td>2</td>
@@ -1476,7 +1474,6 @@ html > body:not(:has(.planloft-plan > article)) {
 <td align="right">4</td>
 <td>4</td>
 <td align="right">1</td>
-<td><code>5b41731b</code></td>
 </tr>
 <tr>
 <td>3</td>
@@ -1488,398 +1485,55 @@ html > body:not(:has(.planloft-plan > article)) {
 <td align="right">2</td>
 <td>2</td>
 <td align="right">0</td>
-<td><code>2625396f</code></td>
 </tr>
 </tbody></table>
 <h2>Round 1</h2>
-<p>Sol tested at 1440 × 900 in light mode. Its browser tool couldn&#39;t switch to dark mode.</p>
+<p>Sol tested at 1440 × 900 in light mode. Changes in <code>4a89197b</code>:</p>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> Sol audited the prototype as a business user and wrote up 8 findings.</li>
-<li><input checked="" disabled="" type="checkbox"> Gemini checked each one and confirmed 4 fully and 4 partly.</li>
-<li><input checked="" disabled="" type="checkbox"> I fixed every confirmed finding.</li>
-<li><input checked="" disabled="" type="checkbox"> Playwright checks and the repo&#39;s four checks passed, with earlier rounds rechecked.</li>
-<li><input checked="" disabled="" type="checkbox"> Pushed <code>4a89197b</code> to <code>proto/ecg-grouped-graph</code> for a preview deploy.</li>
+<li><input checked="" disabled="" type="checkbox"> Pinned cards list every rule and scroll inside the canvas clear of controls. A rule that reaches more than three types opens into chips.</li>
+<li><input checked="" disabled="" type="checkbox"> The node list shows record counts, sorts highest first, and includes a &quot;No records&quot; filter.</li>
+<li><input checked="" disabled="" type="checkbox"> Searching a merged type notes which group opened. Clicking any card chip opens that target and offers a &quot;Back to&quot; link.</li>
+<li><input checked="" disabled="" type="checkbox"> The level label opens a menu for Groups, Types, All types, and Rule names. At Groups, hovering a band lights it and its two groups.</li>
+<li><input checked="" disabled="" type="checkbox"> A top-left key explains what solid and dashed lines mean.</li>
+<li><input checked="" disabled="" type="checkbox"> Type cards now name real target types instead of merged labels. Opportunity names OEP and UCB.</li>
+<li><input checked="" disabled="" type="checkbox"> Searching clears any highlighted group. Reset clears the view, pin, trail, search, filters, and highlight.</li>
+<li><input checked="" disabled="" type="checkbox"> Focusing Support now relies on the full card. I chose not to build a neighbours-only view.</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Result</th>
-<th>What got in the way</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Name the groups</td>
-<td>Done</td>
-<td>The sidebar names all nine. What each is about had to be read off its types.</td>
-</tr>
-<tr>
-<td>Most connected pair</td>
-<td>Done</td>
-<td>It took two presses of − to reach the counts, after first clicking the Types label, which did nothing.</td>
-</tr>
-<tr>
-<td>Find Opportunity</td>
-<td>Partly</td>
-<td>Two rules read &quot;MSA + 17 similar&quot; instead of naming the types.</td>
-</tr>
-<tr>
-<td>List Account&#39;s rules</td>
-<td>Partly</td>
-<td>The card stopped at five rules each way. &quot;+8 more&quot; and &quot;+21 more&quot; did nothing.</td>
-</tr>
-<tr>
-<td>Bug to Commit</td>
-<td>Done</td>
-<td>Nine steps. Sol found the path by working back from Commit after the Bug search landed on a merged node.</td>
-</tr>
-<tr>
-<td>Most and fewest records</td>
-<td>Partly</td>
-<td>Counts showed one card at a time, with no ranking and no way to list the empty types.</td>
-</tr>
-<tr>
-<td>Where customer data lives</td>
-<td>Done</td>
-<td></td>
-</tr>
-<tr>
-<td>Back to the start</td>
-<td>Done</td>
-<td>Reset moved the view back but kept the search and a dimmed group.</td>
-</tr>
-<tr>
-<td>Focus on Support</td>
-<td>Partly</td>
-<td>Nothing explained the dashed lines.</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Finding</th>
-<th>Sol</th>
-<th>Gemini</th>
-<th>Later rounds</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>F1</td>
-<td>Account&#39;s rule list can&#39;t be expanded</td>
-<td>Major</td>
-<td>Confirmed, major</td>
-<td>Round 2 partly holds, because a pan could slide the card over Reset. Fixed then. Holds in round 3.</td>
-</tr>
-<tr>
-<td>F2</td>
-<td>Records can only be read one card at a time</td>
-<td>Major</td>
-<td>Confirmed, down to minor</td>
-<td>Holds</td>
-</tr>
-<tr>
-<td>F3</td>
-<td>Searching Bug lands on a merged node</td>
-<td>Major</td>
-<td>Partly, down to minor</td>
-<td>Holds</td>
-</tr>
-<tr>
-<td>F4</td>
-<td>The Groups view is hidden behind zooming</td>
-<td>Major</td>
-<td>Confirmed, major</td>
-<td>Holds in round 2. Round 3 partly holds, because All types didn&#39;t exist at 1280 × 800. Fixed then.</td>
-</tr>
-<tr>
-<td>F5</td>
-<td>The first view hides names and doesn&#39;t explain dashed lines</td>
-<td>Minor</td>
-<td>Partly, minor</td>
-<td>Holds</td>
-</tr>
-<tr>
-<td>F6</td>
-<td>Merged-group labels instead of real types</td>
-<td>Minor</td>
-<td>Confirmed, minor</td>
-<td>Holds</td>
-</tr>
-<tr>
-<td>F7</td>
-<td>Reset keeps the search and the dimmed group</td>
-<td>Minor</td>
-<td>Confirmed, minor</td>
-<td>Round 2 partly holds, only because the card could cover Reset. Holds in round 3.</td>
-</tr>
-<tr>
-<td>F8</td>
-<td>Focusing Support doesn&#39;t isolate its neighbours</td>
-<td>Minor</td>
-<td>Partly, minor</td>
-<td>Holds</td>
-</tr>
-</tbody></table>
-<p><strong>What I changed</strong>, in commit <code>4a89197b</code>:</p>
+<h3>Learnings</h3>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> F1. The pinned card lists every rule. A rule that reaches more than three types opens into chips. The card scrolls inside the canvas and stays clear of the controls.</li>
-<li><input checked="" disabled="" type="checkbox"> F2. The node list shows record counts, sorts by most records, and has a &quot;No records&quot; filter.</li>
-<li><input checked="" disabled="" type="checkbox"> F3. The note says &quot;Opened Regression + 5 similar to show Bug&quot;. Every chip in a pinned card goes to what it names, and the card then offers &quot;Back to …&quot;.</li>
-<li><input checked="" disabled="" type="checkbox"> F4. The level label opens a menu for Groups, Types, All types and Rule names. Hovering a band at Groups lights it and its two groups.</li>
-<li><input checked="" disabled="" type="checkbox"> F5. A key at the top left says what solid and dashed lines mean.</li>
-<li><input checked="" disabled="" type="checkbox"> F6. A type&#39;s card reads its rules from the export&#39;s relationships, so Opportunity names OEP and UCB.</li>
-<li><input checked="" disabled="" type="checkbox"> F7. Searching lets go of a highlighted group. Reset clears the view, pin, trail, search, filters and highlight.</li>
-<li><input checked="" disabled="" type="checkbox"> F8. The complete, scrolling card covers it. I chose not to build a neighbours-only view.</li>
-</ul>
-<p>Gemini corrected Sol on six points:</p>
-<ul>
-<li>Bug&#39;s card does open once the zoom lands. Sol had looked during the glide.</li>
-<li>The 49 between Employee and Feature shows on hover, not on click.</li>
-<li>The unnamed dots in Sol&#39;s screenshot came from a frame taken before labels settled. On a settled view, Commit names 4 of its 5 types.</li>
-<li>Keeping Unconnected off the canvas, leaving out names that would overlap, and zooming in until a merged group opens are earlier decisions. Gemini upheld all three.</li>
-<li>The stuck dimming wasn&#39;t a filter. Hovering a group row lit it, and typing a search removed the row before the pointer could leave it, so nothing turned the highlight off.</li>
-<li>Record ranking belongs mostly to the Nodes tab, so F2 dropped to minor.</li>
-</ul>
-<p>My own checks caught two problems with the first card fix. Capping the card at the canvas height pushed it up into the page header, because the popover library keeps a card inside the window, not the canvas. Sliding it back inside the canvas then put it over Reset. The placement scoring had rated covering the controls as cheaper than covering Account&#39;s many links. Covering the controls now costs more than covering any amount of links, and the card is capped to the band between the top bar and the controls.</p>
-<p><strong>Learnings.</strong></p>
-<ul>
-<li>Copy that promises behaviour is a test. &quot;Click to pin it for every rule&quot; above a card showing five rules cost a major finding.</li>
-<li>Merging belongs to the canvas. Cards are where people read detail, so they name the real types even inside a merged group.</li>
-<li>Anything shaped like a button gets clicked. The level label looked like one and did nothing, so the auditor tried it first.</li>
-<li>A highlight that only turns off when the pointer leaves an element gets stuck if that element is removed.</li>
-<li>The checker paid for itself. It corrected six claims and stopped three deliberate choices from being undone.</li>
+<li>Merging belongs on the canvas, not in detail cards. Cards should always name real types.</li>
+<li>The checker paid for itself. Gemini corrected six claims and upheld three prior design decisions.</li>
 </ul>
 <h2>Round 2</h2>
-<p>Sol tested at 1440 × 900 and tried dark mode, which its browser tool rejected.</p>
+<p>Sol tested again at 1440 × 900 in light mode. Changes in <code>5b41731b</code>:</p>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> Sol audited the prototype as a business user and wrote up 4 findings.</li>
-<li><input checked="" disabled="" type="checkbox"> Gemini checked each one and confirmed all 4.</li>
-<li><input checked="" disabled="" type="checkbox"> I fixed every confirmed finding.</li>
-<li><input checked="" disabled="" type="checkbox"> Playwright checks and the repo&#39;s four checks passed, with earlier rounds rechecked.</li>
-<li><input checked="" disabled="" type="checkbox"> Pushed <code>5b41731b</code> to <code>proto/ecg-grouped-graph</code> for a preview deploy.</li>
+<li><input checked="" disabled="" type="checkbox"> Panned cards dock in the top-right corner and offer &quot;Show on canvas&quot;. Reset and Unpin stay visible.</li>
+<li><input checked="" disabled="" type="checkbox"> Type cards now list every property name from production. Pull Request shows all 23 instead of 12.</li>
+<li><input checked="" disabled="" type="checkbox"> Clicking a group narrows the node list to its types and keeps it lit. A chip clears the filter.</li>
+<li><input checked="" disabled="" type="checkbox"> Cards opened from a chip start at the top with every rule closed.</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Result</th>
-<th>What got in the way</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Name the groups</td>
-<td>Done</td>
-<td>Two actions using the new menu. Some group names only partly describe their types.</td>
-</tr>
-<tr>
-<td>Most connected pair</td>
-<td>Done</td>
-<td>The band card confirmed Employee ↔ Feature, 49 relationships.</td>
-</tr>
-<tr>
-<td>Find Opportunity</td>
-<td>Done</td>
-<td>Search, select, scroll. 8 relationships out, 11 in.</td>
-</tr>
-<tr>
-<td>List Account&#39;s rules</td>
-<td>Done</td>
-<td>81 relationships across 39 rules, after expanding and scrolling.</td>
-</tr>
-<tr>
-<td>Bug to Commit</td>
-<td>Done</td>
-<td>Five steps. Pull Request resolves Bug and contains Commit.</td>
-</tr>
-<tr>
-<td>Most and fewest records</td>
-<td>Done</td>
-<td>Pull Request, Approvers and Review Comments lead. The filter lists 42 empty types.</td>
-</tr>
-<tr>
-<td>Where customer data lives</td>
-<td>Done</td>
-<td></td>
-</tr>
-<tr>
-<td>Back to the start</td>
-<td>Partly</td>
-<td>Reset worked when it could be reached. A panned card could cover it.</td>
-</tr>
-<tr>
-<td>Check a type&#39;s fields before publishing</td>
-<td>Partly</td>
-<td>Pull Request said 23 properties and showed 12.</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Finding</th>
-<th>Sol</th>
-<th>Gemini</th>
-<th>Later rounds</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>F1</td>
-<td>Panning a pinned card hides Reset and Unpin</td>
-<td>Major</td>
-<td>Confirmed, major</td>
-<td>Holds</td>
-</tr>
-<tr>
-<td>F2</td>
-<td>Pull Request says 23 properties and shows 12</td>
-<td>Major</td>
-<td>Confirmed, down to minor</td>
-<td>Holds</td>
-</tr>
-<tr>
-<td>F3</td>
-<td>The node list ignores a picked group</td>
-<td>Minor</td>
-<td>Confirmed, minor</td>
-<td>Round 3 partly holds, because the empty count stayed graph-wide. Fixed then.</td>
-</tr>
-<tr>
-<td>F4</td>
-<td>A card opened from a chip starts partway down</td>
-<td>Minor</td>
-<td>Confirmed, minor</td>
-<td>Holds</td>
-</tr>
-</tbody></table>
-<p><strong>What I changed</strong>, in commit <code>5b41731b</code>:</p>
+<h3>Learnings</h3>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> F1. When no spot beside its node fits, which happens once the node is panned off, the card docks in the top-right corner and offers &quot;Show on canvas&quot;.</li>
-<li><input checked="" disabled="" type="checkbox"> F2. The cause was the data. The lab&#39;s derive script kept only the first 12 names per type. The export now has every name from the production capture: Pull Request 23, Release and Release (2) 13 each. The derive script no longer cuts them.</li>
-<li><input checked="" disabled="" type="checkbox"> F3. Clicking a group narrows the list to its types (&quot;19 in Account&quot;), keeps it lit on the canvas, and adds a chip to let it go.</li>
-<li><input checked="" disabled="" type="checkbox"> F4. The card is rebuilt for each type, so it starts at the top with every rule closed.</li>
-</ul>
-<p>From this round, Gemini reproduced each finding with a Playwright script and reported exact positions and zoom values. That made the fixes quicker than round 1&#39;s code-only verdicts.</p>
-<p><strong>Learnings.</strong></p>
-<ul>
-<li>A placement fix has to hold in every state the card can be in. I tested the card when it opened, not after a pan.</li>
-<li>When the UI contradicts itself, check the data pipeline too. The 12 came from a slice in the derive script, two steps before the UI.</li>
-<li>A row that shows as selected has to change something. The group row looked picked and the list ignored it.</li>
-<li>Rebuilding a component per item is the simplest way to reset its scroll position and open rows.</li>
+<li>Test layout fixes in every state. Checking only the open state missed cards sliding over Reset after a pan.</li>
+<li>When numbers clash in the UI, check the data pipeline too. A derive script had capped properties at 12.</li>
 </ul>
 <h2>Round 3</h2>
-<p>Sol tested at 1440 × 900 and 1280 × 800, in light and dark mode, and added a task to review one group end to end.</p>
+<p>Sol tested at 1440 × 900 and 1280 × 800 in light and dark mode. It also added a full group review task. Changes in <code>2625396f</code>:</p>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> Sol audited the prototype as a business user and wrote up 2 findings.</li>
-<li><input checked="" disabled="" type="checkbox"> Gemini checked each one and confirmed both.</li>
-<li><input checked="" disabled="" type="checkbox"> I fixed every confirmed finding.</li>
-<li><input checked="" disabled="" type="checkbox"> Playwright checks and the repo&#39;s four checks passed, with earlier rounds rechecked.</li>
-<li><input checked="" disabled="" type="checkbox"> Pushed <code>2625396f</code> to <code>proto/ecg-grouped-graph</code> for a preview deploy.</li>
+<li><input checked="" disabled="" type="checkbox"> All types now works at 1280 × 800. Rule names start later on smaller screens.</li>
+<li><input checked="" disabled="" type="checkbox"> The &quot;No records&quot; count now matches the active search and picked group. Contact shows 6, Commit shows 0, and clearing returns to 42.</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Result</th>
-<th>What got in the way</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Name the groups</td>
-<td>Done</td>
-<td>QBR and Feature still needed reading their types.</td>
-</tr>
-<tr>
-<td>Most connected pair</td>
-<td>Done</td>
-<td>One hover.</td>
-</tr>
-<tr>
-<td>Find Opportunity</td>
-<td>Done</td>
-<td>Its incoming rules need a scroll.</td>
-</tr>
-<tr>
-<td>List Account&#39;s rules</td>
-<td>Done</td>
-<td>Eight steps, with five rule lists to expand.</td>
-</tr>
-<tr>
-<td>Bug to Commit</td>
-<td>Done</td>
-<td>The hop through Pull Request had to be worked out.</td>
-</tr>
-<tr>
-<td>Most and fewest records</td>
-<td>Done</td>
-<td>The list rounds counts, for example 61.8K.</td>
-</tr>
-<tr>
-<td>Where customer data lives</td>
-<td>Done</td>
-<td>Account, Contact and Opportunity span two groups.</td>
-</tr>
-<tr>
-<td>Back to the start</td>
-<td>Done</td>
-<td>The card takes a moment to dock after a pan.</td>
-</tr>
-<tr>
-<td>Review the Contact group</td>
-<td>Done</td>
-<td>Each of its nine types needs its own card.</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Finding</th>
-<th>Sol</th>
-<th>Gemini</th>
-<th>Later rounds</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>F1</td>
-<td>All types lands on Rule names at 1280 × 800</td>
-<td>Minor</td>
-<td>Confirmed, minor</td>
-<td>No round 4 to check</td>
-</tr>
-<tr>
-<td>F2</td>
-<td>The &quot;No records&quot; count stays graph-wide inside a group</td>
-<td>Minor</td>
-<td>Confirmed, minor</td>
-<td>No round 4 to check</td>
-</tr>
-</tbody></table>
-<p><strong>What I changed</strong>, in commit <code>2625396f</code>:</p>
+<h3>Learnings</h3>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> F1. Rule names started at a fixed 2.2× zoom. On the smaller canvas the last merged group only opens at 2.27×, so All types never existed. Rule names now start at whichever is later: 2.2×, or 1.2 times the zoom where the last merged group opens. That is 2.24× at 1440 × 900 and 2.73× at 1280 × 800.</li>
-<li><input checked="" disabled="" type="checkbox"> F2. The count follows the search and the picked group: Contact 6, Commit 0, back to 42 when the group is cleared.</li>
-</ul>
-<p><strong>Learnings.</strong></p>
-<ul>
-<li>A fixed zoom threshold breaks on smaller screens when the layout scales with the canvas. Work it out from the same geometry.</li>
-<li>A count on a filter has to follow the scope that filter works in.</li>
-<li>The climb levelled off: 8 findings, then 4, then 2, with none major in round 3. UI stayed at 7 in every round. A task-based audit finds problems with getting things done, not with how the page looks. Improving the look would need a round with its own brief.</li>
-</ul>
-<h2>Across the rounds</h2>
-<ul>
-<li>Gemini never reached Hatim&#39;s Chrome. Its browser tool returned &quot;Browser use requires a trusted Node REPL browser service&quot;. Round 1 verdicts came from the code and the screenshots alone. Rounds 2 and 3 used Playwright, which was more precise.</li>
-<li>My Chrome extension showed an error page for the local dev server, so I checked local builds with Playwright and the deployed preview in Chrome.</li>
-<li>I showed Sol the earlier scores to keep its scale steady. That may also have anchored it. The task counts are the firmer measure: 5, then 7, then all 9 done.</li>
-<li>After each round I reran every earlier round&#39;s Playwright check. None found a regression, and each run took about a minute.</li>
-<li>Every fix went into the prototype&#39;s <code>docs/decisions.md</code>, so the next auditor&#39;s &quot;kept on purpose&quot; list came straight from it.</li>
+<li>Fixed zoom cutoffs break on smaller screens when layouts scale. Calculate zoom thresholds from the canvas geometry.</li>
+<li>Task audits find workflow gaps, not visual ones. UI stayed at 7 every round, so visual changes need their own brief.</li>
 </ul>
 <h2>Still open</h2>
 <ul>
-<li>At 1280 × 800, picking Rule names over the dense Feature group can show no names, because the links there are too short to fit one. One more press of + brings them in.</li>
-<li>I didn&#39;t build a neighbours-only view, or tags on a focused type&#39;s links where they leave the canvas.</li>
-<li>UI held at 7 in every round, with no finding explaining why.</li>
-<li>Whether node size should follow link count instead of records is still Hatim&#39;s call.</li>
+<li>At 1280 × 800, Rule names can stay hidden over the dense Feature group. Pressing plus once more reveals them.</li>
+<li>I did not build a neighbours-only view. Focused types also lack tags where links leave the canvas.</li>
+<li>The UI score held at 7 across all rounds, with no finding explaining why.</li>
+<li>Whether node size follows link count or record count is still Hatim&#39;s call.</li>
 </ul>
 </article>
 </main>
