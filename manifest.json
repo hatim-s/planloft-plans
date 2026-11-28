@@ -207,6 +207,15 @@
       "kind": "plan",
       "createdAt": "2026-11-26T19:33:25.995Z",
       "expiresAt": "2026-12-27T07:59:20.549Z"
+    },
+    {
+      "id": "QDgynFnvi7",
+      "project": "github.com/unify-apps/www",
+      "slug": "copilot-client-tools-architecture",
+      "title": "How Copilot client tools work",
+      "kind": "plan",
+      "createdAt": "2026-11-28T10:47:24.887Z",
+      "expiresAt": "2026-12-28T10:47:24.887Z"
     }
   ]
 }

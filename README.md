@@ -18,6 +18,7 @@ planloft plan/doc deploys
 | [ECG hill climb ledger](https://hatims-planloft.vercel.app/ecg-hill-climb/) | github.com/unify-apps/www | plan | 2026-12-27 |
 | [Genesys IT call prep](https://hatims-planloft.vercel.app/genesys-it-call-prep/) | github.com/unify-apps/www | plan | 2026-12-12 |
 | [How AI Solutions Builder enforces spec-driven development](https://hatims-planloft.vercel.app/ai-solutions-spec-driven-development/) | github.com/unify-apps/www | plan | 2026-12-23 |
+| [How Copilot client tools work](https://hatims-planloft.vercel.app/copilot-client-tools-architecture/) | github.com/unify-apps/www | plan | 2026-12-28 |
 | [Personal connections for solutions: implementation plan](https://hatims-planloft.vercel.app/runtime-connections-solution-architecture/) | github.com/unify-apps/www | plan | 2026-11-29 |
 | [Power BI migration wrap-up](https://hatims-planloft.vercel.app/powerbi-migration-wrap-up/) | github.com/unify-apps/www | plan | 2026-12-02 |
 | [Salesforce C360 embedding plan](https://hatims-planloft.vercel.app/salesforce-c360-collaborative/) | github.com/unify-apps/www | plan | 2026-12-24 |
